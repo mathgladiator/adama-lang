@@ -8,32 +8,29 @@ import styles from './styles.module.css';
 
 const features = [
   {
-    title: <>Easy to Use</>,
+    title: <>Single File Infrastructure</>,
     imageUrl: 'img/undraw_docusaurus_mountain.svg',
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        A single file is responsible for all the infrastructure to connect people together in a durable and stateful experience.
       </>
     ),
   },
   {
-    title: <>Focus on What Matters</>,
+    title: <>Dungeon-Master as a Service</>,
     imageUrl: 'img/undraw_docusaurus_tree.svg',
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Adama allows you to perform complex transactions across a variety of connected people. You don't manipulate data, data manipulates you!
       </>
     ),
   },
   {
-    title: <>Powered by React</>,
+    title: <>Living Documents</>,
     imageUrl: 'img/undraw_docusaurus_react.svg',
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Documents are no longer dead bytes sitting around. Instead, they are alive and expressive automatons with whatever will you wish them to have.
       </>
     ),
   },

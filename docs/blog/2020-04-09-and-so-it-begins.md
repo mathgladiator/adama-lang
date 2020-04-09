@@ -4,7 +4,7 @@ title: First Announcement
 author: Jeffrey M. Barber
 author_title: Dark Lord
 author_url: https://github.com/mathgladiator
-author_image_url: https://tODO
+author_image_url: https://github.com/mathgladiator.png?size=96
 tags: [adama, empire]
 ---
 
@@ -40,5 +40,3 @@ And, if you hate it, then that's ok. I get it.
 
 TODO:
 * add more links
-* get a profile picture setup
-* vectorize Adama? (or just use a smaller pic for now?)

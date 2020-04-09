@@ -11,7 +11,7 @@ module.exports = {
       title: 'Adama Language Documentation',
       logo: {
         alt: 'The Goat Adama',
-        src: 'img/logo.svg',
+        src: 'img/adama-height-196.jpg',
       },
       links: [
         {
