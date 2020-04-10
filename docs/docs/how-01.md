@@ -1,6 +1,10 @@
 ---
-id: what
-title: What is Adama?
+id: how-devkit-install
+title: Install DevKit
 ---
 
-This is a link to [another document.](doc3.md) This is a link to an [external page.](http://www.example.com)
+TODO:
+* Install Java & Maven
+* Install the dev-kit
+* Bootstrap a new project
+* Talk about Users as a first class citizen

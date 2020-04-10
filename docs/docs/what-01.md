@@ -1,6 +1,10 @@
 ---
-id: what-01
+id: what-the-living-document
 title: Living Document
 ---
-
-This is a link to [another document.](doc3.md) This is a link to an [external page.](http://www.example.com)
+TODO:
+* Outline a JSON document.
+* Observe it.
+* It's dead, Jim!
+* What is life?
+* It's motion!

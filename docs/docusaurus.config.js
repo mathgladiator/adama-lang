@@ -1,6 +1,6 @@
 module.exports = {
   title: 'Adama Language',
-  tagline: 'Single File Infrastructure',
+  tagline: 'A Programming Language for Board Games... and more... maybe?',
   url: 'https://adama-lang.org',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
@@ -15,7 +15,7 @@ module.exports = {
       },
       links: [
         {
-          to: 'docs/why-01',
+          to: 'docs/why-the-origin-story',
           activeBasePath: 'docs',
           label: 'Documents',
           position: 'left',
@@ -32,33 +32,36 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'The Documents',
           items: [
             {
-              label: 'Style Guide',
-              to: 'docs/doc1',
+              label: 'Why',
+              to: 'docs/why-the-origin-story',
             },
             {
-              label: 'Second Doc',
-              to: 'docs/doc2',
+              label: 'What',
+              to: 'docs/what-the-living-document',
+            },
+            {
+              label: 'How',
+              to: 'docs/how-devkit-install',
+            },
+            {
+              label: 'Details',
+              to: 'docs/details-types',
             },
           ],
         },
         {
-          title: 'Community',
-          items: [
-            {
-              label: 'Discord',
-              href: 'https://discord.gg/9Ngzr8v',
-            },
-          ],
-        },
-        {
-          title: 'Social',
+          title: 'Links',
           items: [
             {
               label: 'Blog',
               to: 'blog',
+            },
+            {
+              label: 'Discord',
+              href: 'https://discord.gg/9Ngzr8v',
             },
             {
               label: 'GitHub',

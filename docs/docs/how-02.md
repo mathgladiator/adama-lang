@@ -1,6 +1,13 @@
 ---
-id: what
-title: What is Adama?
+id: how-hello-adama
+title: Hello Adama
 ---
 
-This is a link to [another document.](doc3.md) This is a link to an [external page.](http://www.example.com)
+TODO:
+* show the basic
+* message handling
+* demo the devkit
+* send document a message
+* get the game afoot
+
+

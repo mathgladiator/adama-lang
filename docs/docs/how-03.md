@@ -1,6 +1,16 @@
 ---
-id: what
-title: What is Adama?
+id: how-define-document
+title: Defining document
 ---
 
-This is a link to [another document.](doc3.md) This is a link to an [external page.](http://www.example.com)
+TODO:
+* outline the basic types, and link to specifics
+** bool
+** int
+** strings
+** double
+** client
+* introduce messages and records
+* link to more in specifics
+* building a table
+* connecting messages to data
