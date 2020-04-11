@@ -1,6 +1,6 @@
 ---
 id: why-redefine-ai
-title: Automate AI and Get Testing for Free!
+title: Automate AI and Get Testing for Free
 ---
 
 TODO:

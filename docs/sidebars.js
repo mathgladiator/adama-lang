@@ -23,6 +23,9 @@ module.exports = {
     ],
     Details: [
       'details-types',
-    ]
+    ],
+    Who: [
+      'who-jeff',
+    ],
   },
 };
