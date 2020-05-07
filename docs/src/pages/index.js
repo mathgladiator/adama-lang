@@ -69,7 +69,7 @@ function Home() {
                 styles.getStarted,
               )}
               to={useBaseUrl('docs/how-devkit-install')}>
-              Get Started
+              Coming Soon...
             </Link>
           </div>
         </div>

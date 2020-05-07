@@ -10,6 +10,7 @@ module.exports = {
     ],
     What: [
       'what-the-living-document',
+      'what-actors-are-actings',
       'what-workflow-dungeon-master-as-a-service',
       'what-a-single-file',
       'what-privacy-as-a-first-class-concept',

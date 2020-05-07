@@ -1,10 +1,13 @@
 ---
-id: what-workflow-dungeon-master-as-a-service
-title: Dungeon Master as a Service
+id: what-actors-are-actings
+title: Actors are for Acting!
 ---
 
-TODO: 
+The Actor Model
+--------------------------
 
-* Workflow
-* futures
-* await/async contracts and their role in simplify implicit state machines
+The [actor model](https://en.wikipedia.org/wiki/Actor_model) is worth considering because Adama code outlines a very basic actor. The **living** document which Adama defines is an actor of sorts; it can receive messages from people (or devices). 
+
+TODO:
+  Outline how to process messages
+

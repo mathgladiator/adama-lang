@@ -1,11 +1,10 @@
 ---
-id: what-mixed-compute-with-storage
-title: Mixing Compute and Storage
+id: what-privacy-as-a-first-class-concept
+title: Privacy as a First Class Concept
 ---
 
 TODO:
-* the boundary between EC2 and S3
-* Map Reduce
-* durability of data
-* durability compute
-* logs
+* Board games depend on secrets
+* Where do databases go wrong
+* Bugs, Proofs, Containment
+* Trust

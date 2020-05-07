@@ -1,10 +1,10 @@
 ---
-id: what-a-single-file
-title: Single File Infrastructure
+id: what-workflow-dungeon-master-as-a-service
+title: Dungeon Master as a Service
 ---
 
 TODO: 
-* I get chills about this, so I'm biased.
-* I also want to force myself to keep things simple
-* But a single file can define and outline an entire product which connects many people
-* Talk about limits
+
+* Workflow
+* futures
+* await/async contracts and their role in simplify implicit state machines
