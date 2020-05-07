@@ -35,8 +35,3 @@ I hope you enjoy reading what I write, and I hope you eventually decide to drink
 Thank for your time.
 
 And, if you hate it, then that's ok. I get it.
-
---------------
-
-TODO:
-* add more links
