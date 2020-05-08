@@ -12,7 +12,7 @@ const features = [
     imageUrl: 'img/infra.jpg',
     description: (
       <>
-        A single file is responsible for all the infrastructure to connect people together in a durable and stateful experience.
+        A single file is responsible for all the infrastructure to connect players together in a durable and stateful board game experience.
       </>
     ),
   },
@@ -21,7 +21,7 @@ const features = [
     imageUrl: 'img/dm.jpg',
     description: (
       <>
-        Adama allows you to perform complex transactions across a variety of connected people. You no longer manipulate data, data manipulates you!
+        Adama allows you to perform complex transactions across a variety of connected players. You no longer manipulate and query data, data manipulates and queries you!
       </>
     ),
   },
@@ -30,7 +30,7 @@ const features = [
     imageUrl: 'img/alive.jpg',
     description: (
       <>
-        Documents are no longer dead bytes sitting around. Instead, they are alive and expressive automatons with whatever will you wish them to have.
+        Documents are no longer dead bytes sitting around. Instead, they are alive and expressive automatons with whatever will you wish them to have. The combination of storage and compute yields an exceptionally tiny new server model.
       </>
     ),
   },
