@@ -1,6 +1,6 @@
 ---
 id: how-devkit-install
-title: Install DevKit
+title: Step 1 - Install DevKit
 ---
 
 TODO:

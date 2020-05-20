@@ -1,6 +1,6 @@
 ---
 id: how-hello-adama
-title: Hello Adama
+title: Step 2 - Hello Adama
 ---
 
 TODO:
@@ -9,5 +9,3 @@ TODO:
 * demo the devkit
 * send document a message
 * get the game afoot
-
-

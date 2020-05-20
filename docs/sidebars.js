@@ -11,16 +11,14 @@ module.exports = {
     What: [
       'what-the-living-document',
       'what-actors-are-actings',
+      'what-mixed-compute-with-storage',
       'what-workflow-dungeon-master-as-a-service',
       'what-a-single-file',
       'what-privacy-as-a-first-class-concept',
-      'what-mixed-compute-with-storage',
     ],
-    How: [
+    'How (the Tutorial)': [
       'how-devkit-install',
       'how-hello-adama',
-      'how-define-document',
-      'how-reactive-liveness',
     ],
     Details: [
       'details-types',
