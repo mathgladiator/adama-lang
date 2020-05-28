@@ -5,7 +5,7 @@ title: Affordability (i.e. Cheap)
 
 We live in magical times when you can spin up a linux machine for less than $5/mo. For the average individual, the power of that machine is unimaginable (when used efficiently). Unfortunately, this creates an illusion where things are cheap.
 
-That $5/mo machine could power thousands of games, and you could turn that $5 into way more than $5 with a reasonable business model. You will have too since there is a human cost for managing that $5/mo machine as machines fail. But, what happens when the revenue dips below the $5 + human cost? The game is shutdown, and a core group of fans are disenfranchised. You need not look further than [archive.org](https://archive.org/) to know that people generally have a hard time letting go of things.
+That $5/mo machine could power thousands of games, and you could turn that $5 into way more than $5 with a reasonable business model. You will have to since there is a human cost for managing that $5/mo machine as machines fail. But, what happens when the revenue dips below the $5 + human cost? The game is shutdown, and a core group of fans are disenfranchised. You need not look further than [archive.org](https://archive.org/) to know that people generally have a hard time letting go of things.
 
 Fixing this requires a new type of cloud which amortizes both the machine and human cost down. Furthermore, if the cost of a game can be driven so low, then investments could be leveraged to convert the ongoing cost to a single up-front payment.
 
