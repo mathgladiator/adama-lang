@@ -70,7 +70,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Jeffrey M. Barber.`,
+      copyright: `Copyright ©${new Date().getFullYear()} Jeffrey M. Barber. <br/><br/> This disclaimer informs readers (such as yourself) that the views, thoughts, and opinions expressed in the text and images belong solely to the author, and not necessarily to the author's employer, organization, committee or other group or individual. I say crazy shit all on my own.`,
     },
   },
   presets: [

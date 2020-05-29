@@ -11,10 +11,10 @@ module.exports = {
     What: [
       'what-the-living-document',
       'what-actors-are-actings',
-      'what-mixed-compute-with-storage',
       'what-workflow-dungeon-master-as-a-service',
-      'what-a-single-file',
+      'what-mixed-compute-with-storage',
       'what-privacy-as-a-first-class-concept',
+      'what-a-single-file',
     ],
     'How (the Tutorial)': [
       'how-devkit-install',
