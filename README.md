@@ -16,6 +16,7 @@ I am planning a big release for the code since it is a mess right now. I'll tell
 * a "good enough" runtime
 * a slim standard libary
 * a language server protocol implementation for diagnostics (working on the new parser to help me index for code complete and refactoring)
+* a ridiculous amount of test coverage
 * a complete back-end for a game that I love (yes, it is [BSG](https://boardgamegeek.com/boardgame/37111/battlestar-galactica-board-game))
 
 That's a lot, so why hold back... Well, there are oddities which I want to smooth over. The focus on shipping the game forced me out of shaving the Yak mode, but I need to return and polish the things I care about.
