@@ -12,7 +12,7 @@ const features = [
     imageUrl: 'img/infra.jpg',
     description: (
       <>
-        A single file is responsible for all the infrastructure to connect players together in a durable and stateful board game experience.
+        A single file is responsible for all the infrastructure to connect players together in a durable and stateful board game experience. It is like a whole slew of AWS services (like EC2, Lambda, S3, SWF, SQS, DynamoDB, and RDS) all in a single package.
       </>
     ),
   },
@@ -21,7 +21,7 @@ const features = [
     imageUrl: 'img/dm.jpg',
     description: (
       <>
-        Adama allows you to perform complex transactions across a variety of connected players. You no longer manipulate and query data, data manipulates and queries you!
+        Adama allows you to perform complex transactions across a variety of connected players. You no longer manipulate and query data, data manipulates and queries you! This changes the game in modelling the complex interactions between people that emerge in complex board games.
       </>
     ),
   },
