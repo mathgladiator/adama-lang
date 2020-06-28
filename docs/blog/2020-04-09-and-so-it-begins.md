@@ -12,7 +12,7 @@ Welcome, welcome, welcome...
 
 This is the first update on the Adama language project!
 
-I finally have set forth on the journey of telling people about my latest passion project. Surprise, it's a programming language! However, it is not a generic programming language, and I want to make this exceptionally clear. It's a domain specific programming language meant for board games. Yep, that's right! [Board Games!!!](docs/why-01). However, I have discovered this language has some very interesting properties which make it broadly applicable, and I have a vision for a new type of infrastructure!
+I finally have set forth on the journey of telling people about my latest passion project. Surprise, it's a programming language! However, it is not a generic programming language, and I want to make this exceptionally clear. It's a domain specific programming language meant for board games. Yep, that's right! [Board Games!!!](/docs/why-the-origin-story). However, I have discovered this language has some very interesting properties which make it broadly applicable, and I have a vision for a new type of infrastructure!
 
 Since there is not much to share about the project at the moment, and I am really just filling in the blog so I have some content. I'll share a bit about who I am and rant a bit. Maybe it will be entertaining! Let's see.
 
@@ -20,7 +20,13 @@ My day job is one of those "technical architects", "engineering leaders", and so
 
 I hate.
 
-Seriously, I hate the way we define Infrastructure via web services. I also hate the fact that the game is being defined by Amazon. I give mad credits to Andy Jassy and the engineering leadership at Amazon where I learned a great deal of the art of building web services. I spent 3.5 long, long, LONG years at Amazon working with Amazon S3. However, everyone is playing the me-too game to catch up to Amazon, and this is not how to win.
+I hate bad infrastructure.
+
+I hate leaky abstractions which become infrastructure.
+
+I hate unreliable infrastructure.
+
+Seriously, I hate the way we define Infrastructure via web services, but what other choice is there? This is a serious question.
 
 I also hate having to read a long ass list of products and realize that my core option is to buy stupid shit rather than build my own stupid shit where I have control. I hate buying shit because buying creates hard boundaries which more often than not requires some kludge or hack to make work well. I value reliability, and I believe reliability only comes from simplification where less is more. And, I don't mean less stuff to buy, but less total stuff period. However, simplification is exceptionally hard and extremely expensive for a multitude of reasons.
 

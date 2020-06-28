@@ -1,5 +1,8 @@
 module.exports = {
   xz: {
+    'Language Tour': [
+      'language-tour',
+    ],
     Why: [
       'why-the-origin-story',
       'why-being-lazy-is-key',
