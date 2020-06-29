@@ -3,20 +3,17 @@ id: reference-basic-constrol-statements
 title: Control Statements
 ---
 
-if
---
+## Fast Intro
 
-if-as
------
+## Diving Into Details
+### if
 
-while
------
+### if-as
 
-do-while
---------
+### while
 
-for
----
+### do-while
 
-foreach
--------
+### for
+
+### foreach

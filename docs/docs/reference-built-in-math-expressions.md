@@ -3,35 +3,28 @@ id: reference-built-in-math-expressions
 title: Built-in Math Expressions
 ---
 
-Parenthesis: ()
----------------
+## Fast Intro
 
-Unary Negation: -, !
---------------------
+## Diving Into Details
 
-Addition: +
-------------
+### Parenthesis: ()
 
-Subtraction: -
-------------
+### Unary Negation: -, !
 
-Multiplication: *
-------------
+### Addition: +
 
-Division: /
-------------
+### Subtraction: -
 
-Modulus: %
------------
+### Multiplication: *
 
-Comparison: <, <=, >, >=
-------------------------
+### Division: /
 
-Equality: ==, !=
-----------------
+### Modulus: %
 
-Logic: &&, ||
--------------
+### Comparison: <, <=, >, >=
 
-Conditional: ?
---------------
+### Equality: ==, !=
+
+### Logic: &&, ||
+
+### Conditional: ?

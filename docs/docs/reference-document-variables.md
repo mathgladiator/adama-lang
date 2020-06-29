@@ -17,7 +17,7 @@ These three fields will establish a persistent document in JSON:
 {"output":"","balance":0.0,"count":0}
 ```
 
-The *public* and *private* control what people will see, and the omission of either results in *private* by default. In this case case, people will see
+The *public* and *private* control what people will see, and the omission of either results in *private* by default. In this case, people will see
 ```js
 {"output":""}
 ````
@@ -36,7 +36,7 @@ The syntax which Adama parses for this is as follows:
 * _type_ is the type of the data; see [types for more details](#types).
 * _expression_ when provided will be computed at the [construction](/docs/reference-constructor) of the document.
 
-The privacy policy of this documentis limited and lacks data that people want to and should see. This is unfortunate, but can be corrected by changing the document to.
+The privacy policy of this document is limited and lacks data that people want to and should see. This is unfortunate, but can be corrected by changing the document to.
 ```adama
 public string output = "Hello World"
 private double balance = 13.42;
@@ -58,14 +58,17 @@ Adama has many built-in types, and the following tables outlines which types are
 | double | double is a floating point type which uses 64-bit IEEE754. This results in a range of 1.7E +/- 308 (15 digits) | 0.0 | 3.15 |
 | string | string is a [utf-8](https://en.wikipedia.org/wiki/UTF-8) encoded collection of code-points. | "" (empty string) | "Hello World" |
 | label | label is a pointer to a block of code which is used by [the state machine](/docs/reference-state-machine) | # (the no-state) | #hello |
-| client | client is a reference to a connected person, and the backing data establishes who they are on whos authority. This is used for [acquiring data from people](/docs/reference-channels-handlers-futures) | @no_one | @no_one |
+| client | client is a reference to a connected person, and the backing data establishes who they are. This is used for [acquiring data and decisions from people](/docs/reference-channels-handlers-futures) | @no_one | @no_one |
 
 ## Call-out to other types
 
+The above built-in types are building blocks for richer types, and the below table provides call-outs to other type mechanisms.
+
 | type | quick call out |
 |  --- | --- | --- |
-| [enum](/docs/reference-enumerations-dynamic-dispatch) |  |
-| [messages / records](/docs/reference-defining-structure-types) |  |
-| [maybe](/docs/reference-maybe-types) |  |
-| [table](/docs/reference-tables) | |
-| [channel](/docs/reference-channels-handlers-futures) | |
+| [enum](/docs/reference-enumerations-dynamic-dispatch) | An **enum**eration is a type that consists of a finite set of named constants |
+| [messages](/docs/reference-defining-structure-types) | A **message** is a collection of variables grouped under one name used for communication.  |
+| [records](/docs/reference-defining-structure-types) | A **record** is a collection of variables grouped under one name used for persistence.  |
+| [maybe](/docs/reference-maybe-types) | Sometimes things didn't or can't happen, and we use **maybe** to express that absense rather than null. Monads for the win! |
+| [table](/docs/reference-tables) | A **table** form the ultimate collection enabling maps, lists, sets, and more. Tables use **record**s to persist information in a structured way. |
+| [channel](/docs/reference-channels-handlers-futures) | Channels enable communication between the document and people via handlers and **future**s. |
