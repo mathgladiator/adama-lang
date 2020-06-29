@@ -23,8 +23,12 @@ module.exports = {
       'how-devkit-install',
       'how-hello-adama',
     ],
-    Details: [
-      'details-types',
+    'Guide & Reference': [
+      'reference-document-variables',
+      'reference-comments',
+      'reference-defining-types',
+      'reference-constructor',
+      'reference-local-variables',
     ],
     Who: [
       'who-jeff',
