@@ -26,7 +26,7 @@ module.exports = {
     'Guide & Reference': [
       'reference-document-variables',
       'reference-comments',
-      'reference-defining-types',
+      'reference-defining-structure-types',
       'reference-constructor',
       'reference-constants',
       'reference-local-variables',
