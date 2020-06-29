@@ -29,6 +29,13 @@ module.exports = {
       'reference-defining-types',
       'reference-constructor',
       'reference-local-variables',
+      'reference-built-in-math-expressions',
+      'reference-assignment',
+      'reference-maybe-types',
+      'reference-tables',
+      'reference-linq',
+      'reference-basic-constrol-statements',
+      'reference-defining-functions-and-procedures',
     ],
     Who: [
       'who-jeff',
