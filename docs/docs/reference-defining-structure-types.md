@@ -3,6 +3,8 @@ id: reference-defining-structure-types
 title: Defining Record & Message Types
 ---
 
+<h1><font color="red">Under Construction: Super Rough, Not Hardly Done</font></h1>
+
 A data structure is a collection of data elements grouped under one name. These data elements, also known as member fields or just fields, can have different types. Adama has two types of data structures: **record**s and **message**s. 
 
 ## Fast Intro: Record

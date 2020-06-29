@@ -5,7 +5,7 @@ title: Constants
 
 ## Fast Intro
 
-You want numbers? we got numbers. You want strings? We got strings.
+You want numbers? we got numbers. You want strings? We got strings. Constants are a fast way to bring data into a document. For instance, the following code outlines some basic constants:
 
 ```adama
 #we_got_constants {
@@ -19,7 +19,7 @@ You want numbers? we got numbers. You want strings? We got strings.
 
 ## Details
 
-There are a variety of ways to conjure up constants.
+There are a variety of ways to conjure up constants. The following table illustrates examples:
 
 | type | syntax | examples |
 | --- | --- | --- |
@@ -33,7 +33,7 @@ There are a variety of ways to conjure up constants.
  
 ## String escaping
 
-A character following a backslash (\) is an escape sequence, and it is an escape for the parser to inject special characters. For instance, if you are parsing a string initiated by the double quotes, then how does one get a double quote into the string? Well, that's what the escape valve is for. Adama's strings support the following escape sequences.
+A character following a backslash (\\) is an escape sequence within a string, and it is an escape for the parser to inject special characters. For instance, if you are parsing a string initiated by the double quotes, then how does one get a double quote into the string? Well, that's what the escape is for. Adama's strings support the following escape sequences:
 
 | escape code | behavior |
 | --- | --- |
@@ -43,5 +43,5 @@ A character following a backslash (\) is an escape sequence, and it is an escape
 | \r | a carriage return |
 | \f | a form feed |
 | \" | a double quote (") |
-| \\ | a backslash character (\) |
+| \\\\ | a backslash character (\\) |
 | \uABCD | a unicode character formed by the four adjoined hex characters after the \u |
