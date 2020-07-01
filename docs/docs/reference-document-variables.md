@@ -54,11 +54,12 @@ Adama has many built-in types, and the following tables outlines which types are
 | type | contents | default | fun example |
 |  --- | --- | --- | --- |
 | bool | bool can have one of the two values *true* or *false*. | false | true |
-| int | int is a signed integral number that uses 32-bits. This results in valid values between −2,147,483,648 to 2,147,483,647 | 0 | 42 |
-| double | double is a floating point type which uses 64-bit IEEE754. This results in a range of 1.7E +/- 308 (15 digits) | 0.0 | 3.15 |
+| int | int is a signed [integer](https://en.wikipedia.org/wiki/Integer) number that uses 32-bits. This results in valid values between −2,147,483,648 and 2,147,483,647. | 0 | 42 |
+| long | long is a signed [integer](https://en.wikipedia.org/wiki/Integer) number that uses 64-bits. This results in valid values between -9,223,372,036,854,775,808 and +9,223,372,036,854,775,807.  | 0 | 42 |
+| double | double is a floating point type which uses 64-bit IEEE754. This results in a range of 1.7E +/- 308 (15 digits). | 0.0 | 3.15 |
 | string | string is a [utf-8](https://en.wikipedia.org/wiki/UTF-8) encoded collection of code-points. | "" (empty string) | "Hello World" |
-| label | label is a pointer to a block of code which is used by [the state machine](/docs/reference-state-machine) | # (the no-state) | #hello |
-| client | client is a reference to a connected person, and the backing data establishes who they are. This is used for [acquiring data and decisions from people](/docs/reference-channels-handlers-futures) | @no_one | @no_one |
+| label | label is a pointer to a block of code which is used by [the state machine](/docs/reference-state-machine), | # (the no-state) | #hello |
+| client | client is a reference to a connected person, and the backing data establishes who they are. This is used for [acquiring data and decisions from people](/docs/reference-channels-handlers-futures), | @no_one | @no_one |
 
 ## Call-out to other types
 
@@ -66,7 +67,7 @@ The above built-in types are building blocks for richer types, and the below tab
 
 | type | quick call out |
 |  --- | --- | --- |
-| [enum](/docs/reference-enumerations-dynamic-dispatch) | An **enum**eration is a type that consists of a finite set of named constants |
+| [enum](/docs/reference-enumerations-dynamic-dispatch) | An **enum**eration is a type that consists of a finite set of named constants. |
 | [messages](/docs/reference-defining-structure-types) | A **message** is a collection of variables grouped under one name used for communication.  |
 | [records](/docs/reference-defining-structure-types) | A **record** is a collection of variables grouped under one name used for persistence.  |
 | [maybe](/docs/reference-maybe-types) | Sometimes things didn't or can't happen, and we use **maybe** to express that absense rather than null. Monads for the win! |
