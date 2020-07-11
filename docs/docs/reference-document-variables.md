@@ -5,7 +5,7 @@ title: Document Variables & Types
 
 ## Fast Intro
 
-As Adama is [a data-centric programming language](https://en.wikipedia.org/wiki/Data-centric_programming_language), the first order of business it organize your [data for state management](https://en.wikipedia.org/wiki/State_management). At the document level, state is laid out as a series of fields. For instance, the below Adama code outlines two fields:
+As Adama is [a data-centric programming language](https://en.wikipedia.org/wiki/Data-centric_programming_language), the first order of business it organize your [data for state management](https://en.wikipedia.org/wiki/State_management). At the document level, state is laid out as a series of fields. For instance, the below Adama code outlines three fields:
 ```adama
 public string output;
 private double balance;
