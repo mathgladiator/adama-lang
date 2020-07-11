@@ -99,7 +99,7 @@ This has much nicer physics. As the document size increases:
 
 And this is just what happens when using a reactive cache which can be blown away at any moment.
 
-With the physics sorting out as way better, we must return to the decision to leverage a stateful transport like WebSocket because it may be a horrific idea as stateful services are exceptionally hard. The moment you have a socket, you have a different game to play on the server. This new socket game is mucher hard to win. Now, it is very easy to get started and achieve impact, but the moment you consider reliability and must think about what happens when your stateful service dies. This is the path for understanding why databases exist.
+With the physics sorting out as way better, we must return to the decision to leverage a stateful transport like WebSocket because it may be a horrific idea as stateful services are exceptionally hard. The moment you have a socket, you have a different game to play on the server. This new socket game is mucher hard to win. Now, it is very easy to get started and achieve impact. However, the moment you consider reliability you must think about what happens when your stateful service dies. This is the path for understanding why databases exist. It's so hard that there is a reason that databases are basically empires!
 
 In this context, using a socket is appropriate because it has one job: leverage the prior state that the connection has in a predictable way. For devices to the server, the socket is used simply as a way of minimizing data churn on the client. For instance, the "stateful server code" is simply:
 
