@@ -176,7 +176,7 @@ private client player2;
 Now, we can define an incomplete for the document to ask these players for cards.
 
 ```adama
-channel how_many_cards : Draw;
+channel<Draw> how_many_cards;
 ```
 
 This incomplete channel will accept message only from code via a **fetch** method on the channel. We can leverage the state machine code to ask players for the number of cards they wish to draw thusly:

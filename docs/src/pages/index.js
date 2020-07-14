@@ -57,7 +57,7 @@ function Home() {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Programming Language for Online Board Games <head />">
+      description="Programming Language for Online Board Games">
       <header className={classnames('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <h1 className="hero__title">{siteConfig.title}</h1>
