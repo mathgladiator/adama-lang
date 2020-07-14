@@ -1,0 +1,10 @@
+record X {
+  public int x;
+}
+
+table<X> v;
+
+@construct {
+  1 <- {x:1};
+  v <- 1;
+}

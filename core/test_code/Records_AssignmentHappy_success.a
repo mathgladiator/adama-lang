@@ -1,0 +1,22 @@
+record R {
+  int x;
+}
+
+maybe<R> r1;
+R r2;
+
+function foo(R x) -> int {
+  return x.x;
+}
+
+#valid {
+  R r4 = r2;
+  if (r1 as r) {
+    r4 = r;
+    R r6 = r;
+  }
+  R r7 = r2;
+  r2.x = 7;
+  r7.x = foo(r2) + 100;
+  r7 <- {x:1};
+}

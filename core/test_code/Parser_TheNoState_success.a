@@ -1,0 +1,19 @@
+label x;
+string z;
+@construct {
+ x = #foo;
+ x = #;
+ x = #;
+ x = #foo;
+ z = "";
+ label y = #;
+ x = #foo;
+}
+
+# {
+
+}
+
+#foo {
+
+}

@@ -1,0 +1,13 @@
+long x;
+record R {
+  long y;
+}
+
+table<R> t;
+
+@construct {
+  x = 123L;
+  (iterate t).y = 42;
+  (iterate t).y ++;
+  (iterate t).y += 90L;
+}

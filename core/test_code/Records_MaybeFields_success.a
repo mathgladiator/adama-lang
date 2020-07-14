@@ -1,0 +1,17 @@
+record X {
+  public maybe<int> mi;
+}
+
+public X x;
+
+table<X> lst;
+
+test PrimaryTest {
+  x.mi = 42;
+  x.mi.delete();
+  (iterate lst).mi = 40;
+}
+
+@connected (who) {
+  return who == @no_one;
+}

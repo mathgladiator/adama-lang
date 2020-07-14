@@ -1,0 +1,14 @@
+record R {
+  int x;
+}
+
+maybe<R> r1;
+R r2;
+
+#invalid {
+  r1 = r2;
+  if (r1 as r) {
+    r2 = r;
+  }
+  R r5;
+}

@@ -1,0 +1,13 @@
+record X {
+}
+
+record Y {
+  X x;
+}
+
+table<Y> t;
+
+test PrimaryTest {
+  let z1 = (select t order by x);
+  let z2 = (select t order by z);
+}

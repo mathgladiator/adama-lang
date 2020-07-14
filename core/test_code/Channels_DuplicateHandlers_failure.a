@@ -1,0 +1,6 @@
+message X {}
+channel goo(X x) {
+}
+channel goo(X x) {
+}
+channel<X> goo;

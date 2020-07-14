@@ -1,0 +1,4 @@
+@construct {
+  if (1 as x) {
+  }
+}

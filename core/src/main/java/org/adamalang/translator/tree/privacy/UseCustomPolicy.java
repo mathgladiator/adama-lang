@@ -1,0 +1,71 @@
+/* The Adama Programming Language For Board Games!
+ *    See http://www.adama-lang.org/ for more information.
+ * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
+package org.adamalang.translator.tree.privacy;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.StructureStorage;
+
+/** a policy that refers to code within the record */
+public class UseCustomPolicy extends Policy {
+  public final Token customToken;
+  public final ArrayList<String> policyToChecks;
+  public final TokenizedItem<Token>[] policyToCheckTokens;
+
+  public UseCustomPolicy(final Token customToken, final TokenizedItem<Token>[] policyToCheckTokens) {
+    this.customToken = customToken;
+    policyToChecks = new ArrayList();
+    ingest(customToken);
+    for (final TokenizedItem<Token> token : policyToCheckTokens) {
+      policyToChecks.add(token.item.text);
+      ingest(token.item);
+      for (final Token afterToken : token.after) {
+        ingest(afterToken);
+      }
+    }
+    this.policyToCheckTokens = policyToCheckTokens;
+  }
+
+  @Override
+  public void emit(final Consumer<Token> yielder) {
+    yielder.accept(customToken);
+    for (final TokenizedItem<Token> token : policyToCheckTokens) {
+      token.emitBefore(yielder);
+      yielder.accept(token.item);
+      token.emitAfter(yielder);
+    }
+  }
+
+  @Override
+  public void typing(final Environment environment, final StructureStorage owningStructureStorage) {
+    for (final String policyToCheck : policyToChecks) {
+      final var dcp = owningStructureStorage.policies.get(policyToCheck);
+      if (dcp == null) {
+        environment.document.createError(this, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
+      }
+    }
+  }
+
+  @Override
+  public void writePrivacyCheckAndExtractJava(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
+    sb.append("if (");
+    var first = true;
+    for (final String policyToCheck : policyToChecks) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(" && ");
+      }
+      sb.append("__POLICY_").append(policyToCheck).append("(__who)");
+    }
+    sb.append(") {").tabUp().writeNewline();
+    writeAllow(sb, field, environment, true);
+    sb.append("}").writeNewline();
+  }
+}

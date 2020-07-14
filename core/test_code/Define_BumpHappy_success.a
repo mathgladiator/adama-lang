@@ -1,0 +1,10 @@
+bool b;
+record X {
+  bool b;
+}
+table<X> t;
+
+@construct {
+  let x = !b;
+  !((iterate t).b);
+}

@@ -1,0 +1,4 @@
+@construct {
+  int a = 1;
+  let x = a[0];
+}

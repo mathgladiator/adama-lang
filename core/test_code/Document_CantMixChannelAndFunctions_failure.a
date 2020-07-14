@@ -1,0 +1,14 @@
+message M {
+}
+
+channel<M> foo;
+
+function foo() -> int {
+  return 1;
+}
+
+function goo() -> int {
+  return 1;
+}
+
+channel<M> goo;

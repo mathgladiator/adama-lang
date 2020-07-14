@@ -1,0 +1,10 @@
+message X {
+  int x;
+}
+
+channel foo(X x) {
+}
+
+#foo {
+  abort;
+}

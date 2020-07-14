@@ -1,0 +1,22 @@
+record X {
+  public int i = 1;
+  public double d = 1;
+  public string s = "x";
+}
+
+table<X> t;
+
+@construct {
+  t <- {i:1, d:3};
+  (iterate t).i += 2;
+  (iterate t).i *= 5;
+  (iterate t).i -= 3;
+  (iterate t).i %= 5;
+
+  (iterate t).d += 2;
+  (iterate t).d *= 5;
+  (iterate t).d -= 3;
+  (iterate t).d /= 1.5;
+
+  (iterate t).s += "yz";
+}

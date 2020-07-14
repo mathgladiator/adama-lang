@@ -1,0 +1,7 @@
+procedure square_proc(int x) -> int {
+  return x * x;
+}
+
+@construct {
+  let z = square_proc("42");
+}

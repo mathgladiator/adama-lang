@@ -1,0 +1,58 @@
+@connected (who) {
+  return who == @no_one;
+}
+
+public string s1;
+public string s2;
+public string s5;
+public string s6;
+public int len;
+public string s7;
+public string re1;
+public string re2;
+public string re3;
+public string big_finish;
+public string mult1;
+
+/** the begin state */
+@construct {
+  s1 = "Hello ";
+  s2 = "World";
+  string s3 = s1 + s2;
+  string s4;
+  s5 = s3 + "/" + s4 + 3.14;
+  s6 = "cake" + " ninja" + "\"";
+  len = s6.length() + 1;
+  s7 = s6.reverse();
+
+  re1 = ("x" < "y") + ";" +
+        ("x" <= "y") + ";" +
+        ("x" > "y") + ";" +
+        ("x" >= "y") + ";" +
+        ("x" == "y") + ";" +
+        ("x" != "y") + ";";
+
+  re2 = ("y" < "x") + ";" +
+        ("y" <= "x") + ";" +
+        ("y" > "x") + ";" +
+        ("y" >= "x") + ";" +
+        ("y" == "x") + ";" +
+        ("y" != "x") + ";";
+
+  re3 = ("x" < "x") + ";" +
+        ("x" <= "x") + ";" +
+        ("x" > "x") + ";" +
+        ("x" >= "x") + ";" +
+        ("x" == "x") + ";" +
+        ("x" != "x") + ";";
+  big_finish = "X:";
+  big_finish += 1;
+  big_finish += "/";
+  big_finish += true; // nice
+  big_finish += " := ";
+  big_finish += 3.14;
+  big_finish += "\n\t\b\f\r\\\"' cake:" + 0x123fb; // woah
+  big_finish += "\n\t\b\f\r ninja:" + 0xFEDCBA;
+
+  mult1 = "Red" * 2;
+}

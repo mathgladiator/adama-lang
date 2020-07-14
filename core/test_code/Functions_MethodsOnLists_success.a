@@ -1,0 +1,44 @@
+record X {
+  int x;
+  int zzzz;
+
+  method foo(int z) {
+    x *= 10;
+  }
+
+  method goo() -> int {
+    return x;
+  }
+
+  method square_plus(int z) -> int {
+    return x*x + z;
+  }
+  method square_plus_plus(int z, int u, int w) -> int {
+    return x*x + z * (u + w);
+  }
+}
+
+table<X> t;
+public int value;
+public int value5;
+public int v2;
+
+@construct {
+  t <- {x:1};
+  t <- {x:2};
+  t <- {x:3};
+  int y = 42;
+  int seven = 7;
+  int five = 5;
+  int three = 3;
+  (iterate t).foo(y);
+  value = Statistics.sum((iterate t).square_plus(seven));
+  value5 = Statistics.sum((iterate t).square_plus_plus(seven, five, three));
+  y = 100;
+  v2 = Statistics.sum((iterate t).goo()); // no closure, has return type
+  (iterate t).delete(); // no closure, no return type
+}
+
+@connected (who) {
+  return who == @no_one;
+}

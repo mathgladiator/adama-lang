@@ -1,0 +1,7 @@
+function poo(int x) -> int {
+  return x + 1;
+}
+
+function poo(int x) -> int {
+  return x + 2;
+}

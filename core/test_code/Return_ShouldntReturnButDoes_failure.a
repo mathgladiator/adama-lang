@@ -1,0 +1,3 @@
+procedure foo() {
+  return 1;
+}

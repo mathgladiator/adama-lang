@@ -1,0 +1,21 @@
+message X {
+  int x;
+}
+
+channel<X> foo;
+channel<X> goo;
+channel<X[]> duo;
+
+procedure wacky(channel<X> ch) {
+  ch.fetch(@no_one);
+  ch.decide(@no_one, [{x:12}, {x:152}]);
+  duo.choose(@no_one, [{x:12}, {x:152}], 2);
+}
+
+procedure w00t(channel<X[]> carr) {
+}
+
+#neat {
+  wacky(true ? foo : goo);
+  w00t(false ? duo : duo);
+}

@@ -1,0 +1,15 @@
+record X {
+  method foo1() {
+  }
+
+  method goo() -> int {
+    return 1;
+  }
+}
+
+table<X> x;
+
+@construct {
+  (iterate x).foo1();
+  (iterate x).goo();
+}

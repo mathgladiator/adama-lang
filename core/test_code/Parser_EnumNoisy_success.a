@@ -1,0 +1,13 @@
+enum Fancy {
+  X:1,
+  Y:2
+}
+
+enum FancyWithSpicyComma {
+  ,,,
+  X:1,
+  Y:2,
+  ,,
+  Z:3,
+  ,,,
+}

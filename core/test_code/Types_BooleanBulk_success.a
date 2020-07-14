@@ -1,0 +1,11 @@
+bool b = true;
+auto ib = !b;
+
+@construct {
+ b = false;
+}
+
+test PrimaryTest {
+  assert !b;
+  assert ib;
+}

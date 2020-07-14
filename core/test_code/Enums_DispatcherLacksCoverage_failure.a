@@ -1,0 +1,7 @@
+enum X {
+  A, B
+}
+
+dispatch X::A foo() {
+  return 0;
+}

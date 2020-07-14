@@ -1,0 +1,18 @@
+record R {
+  public int x;
+  public int y;
+}
+
+maybe<R> mr;
+
+@construct {
+  transition #putdata;
+}
+
+bool got = false;
+#putdata {
+  mr <- {x:1, y:123};
+  if (mr as r) {
+    got = true;
+  }
+}

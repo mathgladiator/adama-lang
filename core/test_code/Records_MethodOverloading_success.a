@@ -1,0 +1,19 @@
+record R {
+  int v = 10;
+  method foo() {
+
+  }
+
+  method foo(int x) -> int {
+    v *= x;
+    return v + x;
+  }
+}
+
+R x;
+int v;
+
+@construct {
+  x.foo();
+  v = x.foo(7);
+}

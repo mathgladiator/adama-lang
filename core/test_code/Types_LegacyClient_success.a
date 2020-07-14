@@ -1,0 +1,20 @@
+client x;
+client y;
+
+@construct {
+  transition #setup;
+}
+
+@connected(who) {
+  let eq = @no_one == who;
+  let neq = @no_one != who;
+  return true;
+}
+
+#setup {
+  x = y;
+  client z = x;
+  client cake;
+  cake = z;
+  let eq = @no_one == @no_one;
+}

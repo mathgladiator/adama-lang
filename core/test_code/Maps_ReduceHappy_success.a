@@ -1,0 +1,37 @@
+record R {
+  int x;
+  int v;
+}
+
+table<R> t;
+
+function foo(list<R> z) -> int {
+  int sv = 0;
+  foreach(e in z) {
+    sv += e.v;
+  }
+  return sv;
+}
+
+int x1 = 0;
+int x2 = 0;
+int x3 = 0;
+
+@construct {
+  t <- {x:1, v:1};
+  t <- {x:2, v:5};
+  t <- {x:3, v:10};
+  t <- {x:2, v:10};
+  t <- {x:3, v:100};
+  t <- {x:3, v:1000};
+  let mp = (iterate t) reduce on x via foo;
+  if (mp[1] as v) {
+    x1 = v;
+  }
+  if (mp[2] as v) {
+    x2 = v;
+  }
+  if (mp[3] as v) {
+    x3 = v;
+  }
+}

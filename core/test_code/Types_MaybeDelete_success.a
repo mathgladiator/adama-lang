@@ -1,0 +1,44 @@
+
+maybe<string> s;
+
+@construct {
+  transition #start;
+}
+
+#start {
+  s = "xyz";
+  transition #next;
+}
+
+#next {
+  s = "abc";
+  transition #almost;
+}
+
+#almost {
+  s.delete();
+  transition #end;
+}
+
+#end {
+  s = "42";
+}
+
+maybe<string> w00t;
+
+test flow {
+  int haves = 0;
+  if (w00t as w) {
+    haves ++;
+  }
+  w00t = "noice";
+  if (w00t as w) {
+    haves ++;
+  }
+  w00t.delete();
+  if (w00t as w) {
+    haves ++;
+  }
+  assert haves == 1;
+}
+

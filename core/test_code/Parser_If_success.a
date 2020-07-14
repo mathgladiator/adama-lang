@@ -1,0 +1,21 @@
+
+@construct {
+  int x;
+  if (true) {
+    x = 1;
+  } else {
+    x = 2;
+  }
+  int y = 1;
+  if (x < 1) {
+    y++;
+  } else if (x < 5) {
+    y++;
+    y++;
+  } else {
+    y++;
+    y++;
+    y++;
+    y++;
+  }
+}

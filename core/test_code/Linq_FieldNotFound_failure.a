@@ -1,0 +1,10 @@
+record Y {
+}
+
+table<Y> t;
+Y y;
+
+test PrimaryTest {
+  let z1 = (select t).z;
+  let z2 = y.z;
+}

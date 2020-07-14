@@ -1,0 +1,78 @@
+public bool b1;
+public bool b2;
+
+public bool bAnd1;
+public bool bOr1;
+public bool bAnd2;
+public bool bOr2;
+public bool bAnd3;
+public bool bOr3;
+public bool bAnd4;
+public bool bOr4;
+
+@connected (who) {
+  return who == @no_one;
+}
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  b1 = false;
+  b2 = false;
+  bAnd1 = b1 && b2;
+  bOr1 = b1 || b2;
+  b1 = false;
+  b2 = true;
+  bAnd2 = b1 && b2;
+  bOr2 = b1 || b2;
+  b1 = true;
+  b2 = false;
+  bAnd3 = b1 && b2;
+  bOr3 = b1 || b2;
+  b1 = true;
+  b2 = true;
+  bAnd4 = b1 && b2;
+  bOr4 = b1 || b2;
+  transition #next;
+}
+
+#next {
+  bool b1;
+  bool b2;
+  bool bAnd1;
+  bool bOr1;
+  bool bAnd2;
+  bool bOr2;
+  bool bAnd3;
+  bool bOr3;
+  bool bAnd4;
+  bool bOr4;
+  bool checkEq;
+  bool checkNotEq;
+  b1 = false;
+  b2 = false;
+  bAnd1 = b1 && b2;
+  bOr1 = b1 || b2;
+  checkEq = b1 == b2;
+  checkNotEq = b1 != b2;
+  b1 = false;
+  b2 = true;
+  bAnd2 = b1 && b2;
+  bOr2 = b1 || b2;
+  checkEq = b1 == b2;
+  checkNotEq = b1 != b2;
+  b1 = true;
+  b2 = false;
+  bAnd3 = b1 && b2;
+  bOr3 = b1 || b2;
+  checkEq = b1 == b2;
+  checkNotEq = b1 != b2;
+  b1 = true;
+  b2 = true;
+  bAnd4 = b1 && b2;
+  bOr4 = b1 || b2;
+  checkEq = b1 == b2;
+  checkNotEq = b1 != b2;
+}

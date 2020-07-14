@@ -1,0 +1,17 @@
+message X {
+  int x;
+  int y;
+}
+
+int out;
+
+channel chan(X payload) {
+  out = payload.x + payload.y;
+}
+
+test pumping {
+  assert true;
+  @pump {x:4, y:8} into chan;
+  @step;
+  assert out == 12;
+}

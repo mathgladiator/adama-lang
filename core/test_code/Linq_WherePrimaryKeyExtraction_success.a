@@ -1,0 +1,22 @@
+record X {
+  int id;
+  int z;
+}
+
+table<X> t;
+
+@construct {
+  (iterate t) where id == 42;
+  (iterate t) where 42 == id;
+  (iterate t) where_as x: 42 == x.id;
+  (iterate t) where_as x: x.id == 42;
+  (iterate t) where_as x: ((x.id)) == 42;
+  (iterate t) where_as x: x.id == ((42));
+  (iterate t) where_as x: ((x.id == 42));
+  (iterate t) where_as x: ((x.id == 42 && x.z == 50));
+  (iterate t) where_as x: ((x.z == 50 && x.id == 42));
+  (iterate t) where z == 50 && id == 42;
+  (iterate t) where id == 42 && z == 50 && z == 50 && z == 50 && z == 50;
+  (iterate t) where z == 50 && z == 50 && z == 50 && z == 50 && id == 42;
+}
+

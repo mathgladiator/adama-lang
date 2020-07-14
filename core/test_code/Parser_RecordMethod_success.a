@@ -1,0 +1,15 @@
+record X {
+  method foo() -> int {
+    return 1;
+  }
+
+  method goo(int g) {
+  }
+}
+
+X x;
+
+@construct {
+  x.foo();
+  x.goo(123);
+}

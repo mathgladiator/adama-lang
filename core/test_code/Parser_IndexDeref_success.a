@@ -1,0 +1,12 @@
+message M { int x; }
+
+public int result;
+@construct {
+  M[] m = [{x:123}, {x:42}];
+  if (m[0] as mm) {
+    result = mm.x;
+  }
+  if (m[42] as mm) {
+    result = mm.x;
+  }
+}

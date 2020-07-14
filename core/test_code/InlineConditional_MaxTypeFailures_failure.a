@@ -1,0 +1,17 @@
+enum EE { A, B }
+
+message A { int x; }
+message B { int y; }
+
+
+@construct {
+  let x = true ? "3" : @maybe(2);
+  let y = true ? @maybe(2) : "x";
+  A a;
+  B b;
+  let z = true ? a :  b;
+
+  let u = true ? { x:1 } : {z:EE::A};
+  let v = true ? {z:EE::A} : {w:EE::B};
+  let w = true ? {z:EE::A} : {z:EE::B};
+}

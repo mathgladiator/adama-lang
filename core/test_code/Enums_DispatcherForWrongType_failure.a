@@ -1,0 +1,5 @@
+record E {
+}
+dispatch E::x foo(int x, int y) -> int {
+  return 1;
+}

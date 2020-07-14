@@ -1,0 +1,8 @@
+enum E { X };
+
+@construct {
+  let x = [{x:1}, ({y:2})];
+  let y = [{x:1}, (false ? {y:2} : {x:3})];
+  let z = {x:3, y:4};
+  let u = [{u:123L, b:false, v:42, d:42.0, e:E::X, s:"Hello World"},{}];
+}

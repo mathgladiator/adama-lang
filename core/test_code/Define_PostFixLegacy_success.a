@@ -1,0 +1,17 @@
+public int i;
+public double d;
+
+@construct {
+  i = 1;
+  d = 3.14;
+  int iP = i++;
+  int iM = i--;
+  double dP = d++;
+  double dM = d--;
+  int x = 42;
+  double y = 3.14;
+  int xP = x++;
+  int xM = x--;
+  double yP = y++;
+  double yM = y--;
+}

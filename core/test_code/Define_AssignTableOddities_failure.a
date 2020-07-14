@@ -1,0 +1,15 @@
+record X {}
+table<X> t;
+
+@construct {
+  t = 1;
+  t += 2;
+  t *= 3;
+  t -= 4;
+  t /= 5;
+  t %= 6;
+  t++;
+  ++t;
+  let x = -t;
+  let y = !t;
+}

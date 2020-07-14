@@ -1,0 +1,14 @@
+// by default, documents dont allow connections; this opens them up
+
+@connected(cv) {
+  // can inspect, but does not deny
+  return false;
+}
+
+
+@connected(cv) {
+  return true;
+}
+
+@disconnected(cv) {
+}

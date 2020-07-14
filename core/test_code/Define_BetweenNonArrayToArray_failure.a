@@ -1,0 +1,9 @@
+message M {
+  int x;
+}
+
+@construct {
+  M[] x = 123;
+  M[] y = convert<M>(42);
+  M z = [{x:1}];
+}

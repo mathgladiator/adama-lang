@@ -1,0 +1,9 @@
+record X {
+  public int x;
+}
+
+X x;
+
+@construct {
+ x.x = 123;
+}

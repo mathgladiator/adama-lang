@@ -1,0 +1,7 @@
+enum X {
+}
+
+@construct {
+  let y = Y::x;
+  let z = Y::*;
+}

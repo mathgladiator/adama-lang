@@ -1,0 +1,7 @@
+record X {
+}
+
+channel<X> foo;
+
+channel goo(X x) {
+}

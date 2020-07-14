@@ -1,0 +1,7 @@
+enum E {
+  @default X, Y, Z
+}
+
+dispatch E::Y x() -> int {
+  return 1;
+}

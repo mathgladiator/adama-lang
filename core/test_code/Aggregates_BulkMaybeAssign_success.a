@@ -1,0 +1,11 @@
+record X {
+  maybe<int> i;
+}
+
+table<X> x;
+
+@construct {
+  x <- [{}];
+  (iterate x).i = 123;
+}
+

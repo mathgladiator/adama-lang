@@ -1,0 +1,23 @@
+enum Lang { En:1, Es:2 }
+
+record X {}
+table<X> tbl;
+
+X src;
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  int i;
+  double d;
+  bool b;
+  string s;
+  Lang l = Lang::En;
+  list<X> lx = select tbl;
+  X ref = src;
+  auto v = b ? d : i;
+  maybe<bool> mb;
+  mb = true;
+}

@@ -1,0 +1,11 @@
+int raw;
+formula x = raw + raw + 1;
+
+#what {
+  let z = x;
+  int k = z + 42;
+  k += x;
+  k *= x;
+  k -= x;
+  k %= x;
+}

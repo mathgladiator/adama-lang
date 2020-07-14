@@ -1,0 +1,6 @@
+message M {
+}
+
+@construct {
+  let x = convert<M>([1, 2, 3]);
+}

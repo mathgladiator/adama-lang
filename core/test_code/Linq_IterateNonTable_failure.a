@@ -1,0 +1,4 @@
+
+@construct {
+  (iterate 1).x = 1;
+}

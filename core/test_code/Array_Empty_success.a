@@ -1,0 +1,5 @@
+public int count;
+
+@construct {
+  count = [].size();
+}

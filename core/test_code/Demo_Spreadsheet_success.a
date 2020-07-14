@@ -1,0 +1,48 @@
+
+int x;
+int y;
+
+double d;
+bool b;
+string name;
+
+auto z = x + y;
+auto z2 = (b ? x : y) * d;
+auto namex2 = name + name;
+auto name_len = namex2.length();
+auto bz = name_len > 100;
+auto baz = !bz;
+auto baz2 = !baz;
+double c1;
+double c2;
+
+@construct {
+  x = 2;
+  y = 3;
+  d = 1.5;
+  b = true;
+  name = "Jack Jillian";
+  transition #next;
+}
+
+#next {
+  name = "12345678901234567890123456789012345678901234567890 x ";
+  d = 3.14;
+  b = false;
+  x = 5;
+  y = 10;
+  transition #end;
+}
+
+int s;
+
+#end {
+  x = 0;
+  y = 1;
+  s = z;
+  d = 3.14;
+  b = true;
+  c1 = z2;
+  b = false;
+  c2 = z2;
+}

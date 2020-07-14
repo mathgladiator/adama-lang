@@ -1,0 +1,16 @@
+public double x;
+public double y = 3.14;
+public double z = 2.0e3;
+public auto sum = x + y + z;
+
+@construct {
+  x = 2.71;
+}
+
+test PrimaryTest {
+  assert sum == 2005.85;
+}
+
+@connected (who) {
+  return who == @no_one;
+}

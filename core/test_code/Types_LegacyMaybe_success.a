@@ -1,0 +1,13 @@
+public maybe<double> md;
+public maybe<int> mi;
+public maybe<string> ms;
+
+@construct {
+  md = 3.14;
+  mi = 2;
+  ms = "hi";
+}
+
+@connected (who) {
+  return who == @no_one;
+}

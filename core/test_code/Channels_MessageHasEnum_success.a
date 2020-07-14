@@ -1,0 +1,16 @@
+enum E { A, B }
+
+message X {
+  E e;
+}
+
+message Y {
+  E e;
+}
+
+channel<X> foo;
+channel<X> goo;
+channel<X> zoo;
+
+@construct {
+}

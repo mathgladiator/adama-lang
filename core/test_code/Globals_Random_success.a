@@ -1,0 +1,15 @@
+int v0;
+int v1;
+int v2;
+double d0;
+double d1;
+long l;
+
+@construct {
+  v0 = Random.genInt();
+  v1 = Random.genBoundInt(100);
+  v2 = Random.genBoundInt(-1);
+  d0 = Random.genDouble();
+  d1 = Random.getDoubleGaussian();
+  l = Random.genLong();
+}

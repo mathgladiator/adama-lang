@@ -1,0 +1,9 @@
+maybe<int> x;
+maybe<int> z;
+
+@construct {
+  x = 123;
+  maybe<int> y;
+  y = 123;
+  z = y;
+}

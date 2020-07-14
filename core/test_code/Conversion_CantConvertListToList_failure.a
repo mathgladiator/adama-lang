@@ -1,0 +1,14 @@
+record R {
+  int x;
+  int y;
+}
+
+message M {
+  int x;
+}
+
+table<R> t;
+
+@construct {
+  list<M> arr = @convert<M>(iterate t);
+}

@@ -1,0 +1,30 @@
+int x;
+int y;
+
+int z1;
+double z2;
+double z3;
+double z4;
+
+string s;
+
+string s2;
+string s3;
+
+int bump1;
+int bump2;
+
+@construct {
+  x = true ? 1 : 2;
+  y = false ? 1 : 2;
+  (true ? x : y) = 3;
+  (false ? x : y) = 4;
+  z1 = true ? 1 : 2;
+  z2 = true ? 1.0 : 2;
+  z3 = true ? 1 : 2.0;
+  z4 = false ? 1.0 : 2.0;
+  s = true ? "before" : "false";
+  (true ? s2 : s3) = "GOT POTATO";
+  (true ? bump1 : bump2)++;
+  ++(true ? bump1 : bump2);
+}

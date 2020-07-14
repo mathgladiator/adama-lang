@@ -1,0 +1,25 @@
+enum E { X:1, Y:2 }
+
+E x;
+
+bool check1;
+bool check2;
+
+enum D { one:1,
+         @default two:2,
+         three:0x3 }
+
+D d;
+E ee;
+
+@construct {
+  x = E::X;
+  check1 = x == E::X;
+  check2 = x == E::X;
+  assert E::X.to_int() == 1;
+  assert ee.to_int() == 1;
+}
+
+test hasDefaultAtStart {
+  assert d == D::two;
+}

@@ -1,0 +1,8 @@
+message X {
+  int x;
+  int y;
+}
+
+test drive_it {
+  @pump {x:4, y:8} into chanx;
+}

@@ -1,0 +1,10 @@
+record One {
+  public int x;
+  public E y;
+  public string z;
+
+  index nofound;
+  index z;
+  index x;
+  index x;
+}

@@ -1,0 +1,7 @@
+message M {
+}
+
+@construct {
+  M[] m;
+  let x = m["1"];
+}

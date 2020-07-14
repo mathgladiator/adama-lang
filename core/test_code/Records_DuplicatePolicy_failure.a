@@ -1,0 +1,15 @@
+record X {
+  policy x(c) {
+    return true;
+  }
+  policy x(c) {
+    return true;
+  }
+}
+
+@construct {
+}
+
+test PrimaryTest {
+  assert false;
+}

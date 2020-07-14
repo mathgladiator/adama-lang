@@ -1,0 +1,77 @@
+maybe<int> x;
+int y;
+
+maybe<bool> b;
+maybe<string> s;
+maybe<double> d;
+maybe<string> s2;
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  if (x as xx) {
+    y = xx * 2;
+  }
+  x = 42;
+  if (x as xx) {
+    y = xx * 3;
+  } else {
+    y = 42;
+  }
+
+  b = true;
+  s = "Hi There";
+  d = 3.14;
+  transition #next;
+}
+
+#next {
+  x = 40;
+  b = false;
+  s = "Hello There";
+  d = 2.71;
+  transition #end;
+}
+
+int testDel;
+#end {
+  x.delete();
+  b.delete();
+  s.delete();
+  d.delete();
+  transition #done;
+}
+
+bool bbbb;
+#done {
+  if (b as bbb) {
+    testDel = 1;
+  } else {
+    testDel = 0;
+  }
+
+  if (s as sss) {
+    testDel += 4;
+    s2 = sss;
+  } else {
+    testDel += 2;
+  }
+
+  if (d as ddd) {
+    testDel += 16;
+  } else {
+    testDel += 8;
+  }
+  maybe<bool> mmbb;
+  maybe<bool> mmbb2 = true;
+  mmbb = true;
+  if (mmbb as mbv) {
+    assert mbv;
+  }
+  mmbb.delete();
+  if (mmbb as mbv) {
+    bbbb = mbv;
+  }
+}

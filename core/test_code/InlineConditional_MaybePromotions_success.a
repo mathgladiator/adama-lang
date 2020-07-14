@@ -1,0 +1,6 @@
+
+@construct {
+  let x = true ? 3 : @maybe(2);
+  let y = true ? @maybe(2) : 3;
+  let z = true ? @maybe(3) : @maybe(2);
+}

@@ -1,0 +1,9 @@
+function whoops1(int x) -> int {
+}
+
+function whoops2(int x) -> int {
+  if (true) {
+    return 1;
+  }
+  // whoops
+}

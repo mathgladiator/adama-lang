@@ -1,0 +1,30 @@
+
+procedure square_proc(int x) -> int {
+  return x * x;
+}
+
+function square_func(int x) -> int {
+  return x * x;
+}
+
+function mult_func(int x, int y) -> int {
+  return x * y;
+}
+
+function pos_cube_func(int x) -> int {
+  if (x > 0) {
+    return x * x * x;
+  } else {
+    return - x * x * x;
+  }
+}
+
+int z;
+int cc;
+
+@construct {
+  z = square_proc(42);
+  int x = square_func(z);
+  int cube = pos_cube_func(x);
+  cc = mult_func(x, cube);
+}

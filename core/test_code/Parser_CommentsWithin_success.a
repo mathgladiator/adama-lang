@@ -1,0 +1,20 @@
+
+// A
+/* B */
+// C
+
+@construct {
+  int x; // WTF
+  /* nope */
+  // HUH
+  // HUH
+  // HUH
+  // HUH
+  /* sigh */
+  /* sigh */
+  /* sigh */
+  // OK NOW
+  int z; /* hi */
+  // cake
+  /* ninja */
+}

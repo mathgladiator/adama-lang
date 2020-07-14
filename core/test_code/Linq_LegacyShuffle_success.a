@@ -1,0 +1,19 @@
+record X {
+ int x;
+ int y;
+}
+
+table<X> tbl;
+
+public auto list_1 = select tbl shuffle;
+public auto list_2 = select tbl shuffle;
+
+@construct {
+  tbl <- {x:1, y:3};
+  tbl <- {x:2, y:2};
+  tbl <- {x:3, y:1};
+}
+
+@connected (who) {
+  return who == @no_one;
+}

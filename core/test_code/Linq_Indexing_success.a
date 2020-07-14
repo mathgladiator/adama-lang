@@ -1,0 +1,46 @@
+enum E { A, B }
+
+record One {
+  public int x;
+  public E y;
+  public client z;
+
+  index x;
+}
+
+record Two {
+  public int x;
+  public E y;
+  public client z;
+
+  index y;
+  index x;
+}
+
+record Issues {
+  public int x;
+  public int y;
+  public int z;
+  public int u;
+
+  index z;
+  index u;
+}
+
+table<Issues> itbl;
+
+record Three {
+  public int x;
+  public E y;
+  public client z;
+
+  index z;
+  index y;
+  index x;
+}
+
+#code {
+  (iterate itbl) where x == y;
+  (iterate itbl) where z == 123;
+  (iterate itbl) where z == 42 && u == 13;
+}

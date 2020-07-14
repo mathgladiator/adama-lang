@@ -1,0 +1,72 @@
+@connected (who) {
+  return who == @no_one;
+}
+
+public int open_int;
+public bool open_bool;
+public string open_string;
+public double open_double;
+
+public maybe<int> maybe_open_int;
+public maybe<bool> maybe_open_bool;
+public maybe<string> maybe_open_string;
+public maybe<double> maybe_open_double;
+
+public maybe<int> maybe_open_int2;
+public maybe<bool> maybe_open_bool2;
+public maybe<string> maybe_open_string2;
+public maybe<double> maybe_open_double2;
+
+private client owner = @no_one;
+
+record X {
+  use_policy<sane> int x;
+  use_policy<sane, sane2> int y;
+  use_policy<sane, sane2, sane3> auto sum = x + 1;
+
+  policy sane(who) {
+    return x < y;
+  }
+  policy sane2(who) {
+    return x < y;
+  }
+  policy sane3(who) {
+    return who == @no_one;
+  }
+
+  require sane;
+}
+
+record Y {
+  policy nope(who) {
+    return false;
+  }
+  require nope;
+}
+
+record Z {
+  policy yep(who) {
+    return true;
+  }
+  require yep;
+}
+
+viewer_is<owner> X x;
+viewer_is<owner> double owners_money;
+table<X> tbl;
+viewer_is<owner> auto listz = select tbl where x == 1;
+viewer_is<owner> auto listz2 = select tbl;
+public Y y;
+public Z z;
+
+@construct {
+  x.x = 13;
+  x.y = 42;
+  tbl <- {x:1, y:2};
+  tbl <- {x:2, y:3};
+  tbl <- {x:5, y:1};
+  maybe_open_int2 = 123;
+  maybe_open_bool2 = true;
+  maybe_open_string2 = "Cake";
+  maybe_open_double2 = 3.14;
+}

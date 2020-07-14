@@ -1,0 +1,22 @@
+enum X {
+  A:1, Ba, Bb
+}
+
+dispatch X::A foo(int x) -> int {
+  return 0;
+}
+
+dispatch X::* foo(int x) -> int {
+  return 0;
+}
+
+dispatch X::B* foo(int x) -> int {
+  return 0;
+}
+
+dispatch X::* g() {
+}
+
+dispatch X::* z(int x, int y, int z) {
+}
+

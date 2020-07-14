@@ -1,0 +1,4 @@
+@construct {
+  let x = "x";
+  x++;
+}

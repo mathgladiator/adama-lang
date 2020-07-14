@@ -1,0 +1,21 @@
+maybe<int> x;
+record R {
+  int x;
+  label lbl;
+}
+maybe<R> r;
+
+message M {
+  maybe<int> mi;
+}
+label garrrr;
+
+@construct {
+  r <- {x:1, lbl:#g};
+  M z = {mi:1};
+  garrrr = 123;
+  let z = [{g:#g},{}];
+}
+
+#g {
+}

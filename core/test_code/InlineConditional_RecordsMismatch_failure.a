@@ -1,0 +1,24 @@
+record X {
+}
+
+record Y {
+}
+
+X x;
+Y y;
+
+message U {
+}
+
+message V {
+}
+
+@construct {
+  let x = true ? x : y;
+}
+
+#what {
+  U u;
+  V v;
+  let y = true ? u : v;
+}

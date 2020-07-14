@@ -1,0 +1,4 @@
+
+@construct {
+  string s0 = "\z";
+}

@@ -1,0 +1,7 @@
+
+@construct {
+  let x = 1 where x == 1;
+  let y = 1 shuffle;
+  let z = 1 order by k;
+  let w = 1 limit 5;
+}

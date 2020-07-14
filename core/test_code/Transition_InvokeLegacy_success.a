@@ -1,0 +1,16 @@
+
+int x;
+
+#init {
+  invoke #change_x;
+  assert x==42;
+}
+
+@construct {
+ x = 10;
+ transition #init;
+}
+
+#change_x {
+  x = 42;
+}

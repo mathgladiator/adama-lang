@@ -1,0 +1,29 @@
+public int rx;
+public double ry;
+public double z;
+
+@construct {
+  int x = 4;
+  rx = x++;
+  x++;
+  ++x;
+  double y = 3.14;
+  ry = ++y;
+  ++y;
+  y++;
+  int x2 = ++rx;
+  int x3 = rx++;
+  double y2 = ++ry;
+  double y3 = ry++;
+  z = x2 + x3 + y2 + y3;
+}
+
+test Negate {
+  assert !false;
+  assert !(!true);
+  assert -(1 + 4) == -5;
+}
+
+@connected (who) {
+  return who == @no_one;
+}

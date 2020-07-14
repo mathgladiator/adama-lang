@@ -1,0 +1,14 @@
+int s;
+record X {
+  string s;
+}
+table<X> t;
+
+@construct {
+  let x = !s;
+  !((iterate t).s);
+  s++;
+  ++s;
+  (iterate t).s++;
+  ++((iterate t).s);
+}

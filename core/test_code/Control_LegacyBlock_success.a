@@ -1,0 +1,36 @@
+message X {
+  int v;
+}
+
+bool skip = false;
+bool done = false;
+
+int lastValue = 0;
+channel x(X msg) {
+  lastValue = msg.v;
+  if (msg.v == 50) {
+    skip = true;
+  }
+}
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  if (!skip) {
+    block;
+  }
+  done = true;
+}
+
+test foo {
+  @pump {v:42} into x;
+  @step;
+  assert !done;
+  assert !skip;
+  @pump {v:50} into x;
+  @step;
+  assert done;
+  assert skip;
+}

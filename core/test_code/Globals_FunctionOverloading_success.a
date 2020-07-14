@@ -1,0 +1,26 @@
+function poo() -> int {
+  return 1;
+}
+
+function poo(int x) -> int {
+  return x + 1;
+}
+
+int z1;
+int z2;
+
+@construct {
+  z1 = poo();
+  z2 = poo(122);
+}
+
+procedure dope() {
+}
+
+procedure dope(int z) {
+}
+
+#z {
+  dope();
+  dope(42);
+}

@@ -1,0 +1,12 @@
+@connected(cv) {
+  // can inspect, but does not deny
+  return false;
+}
+
+
+@connected(cv) {
+  return true;
+}
+
+@disconnected(cv) {
+}

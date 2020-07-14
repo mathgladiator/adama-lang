@@ -1,0 +1,4 @@
+@construct {
+  if (true);
+  if (false) let x = 123;
+}

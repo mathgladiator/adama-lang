@@ -1,0 +1,15 @@
+record R {
+  int x;
+}
+
+table<R> t;
+
+@construct {
+  t <- {x:4};
+  (iterate t).x ++;
+  ++((iterate t).x);
+}
+
+@connected (who) {
+  return who == @no_one;
+}

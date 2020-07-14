@@ -1,0 +1,13 @@
+message X {
+  int x;
+  int y;
+}
+
+#neat {
+  X a = {x:123};
+  let b = true ? {x:3} : a;
+  let c = true ? a : {y:3};
+  let d = true ? a : a;
+  X e = {y:42};
+  let f = true ? a : e;
+}

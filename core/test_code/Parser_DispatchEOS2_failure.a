@@ -1,0 +1,5 @@
+enum X {
+  A:1
+}
+
+dispatch X::

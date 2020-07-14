@@ -1,0 +1,15 @@
+record Z {
+  int z;
+}
+
+record X {
+  int x;
+  int y;
+  table<Z> z;
+}
+
+X v;
+
+@construct {
+  v <- {x:1, y:2, z:123};
+}

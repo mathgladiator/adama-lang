@@ -1,0 +1,13 @@
+int x = 1;
+int y = 0x02;
+int z;
+auto sum = x + y + z;
+@construct {
+  z = 3;
+}
+
+test PrimaryTest {
+  assert sum == 6;
+  z = 10;
+  assert sum == 13;
+}

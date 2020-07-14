@@ -1,0 +1,54 @@
+message M {
+  label foo;
+}
+record R {
+  client owner;
+}
+
+R x;
+
+enum E { A, B }
+
+channel<M> foo;
+
+test Natives {
+  M m;
+  m.foo();
+  x.nope();
+  let f0 = [{}];
+  let f1 = x.nope();
+  let f2 = foo.nope();
+  let f3 = x.owner.nope();
+  let f4 = (E::A).nope();
+  let f5 = (E::A*).nope();
+  let f6 = foo.fetch(@no_one);
+  let f7 = f6.nope();
+  let f8 = @maybe(12).nope();
+  list<M> empty;
+  let f9 = empty.nope();
+}
+
+bool rb;
+client rc;
+double rd;
+E re;
+int ri;
+formula rf = rb ? ri : rd;
+maybe<int> rmi;
+label rl;
+string rs;
+table<R> tbl;
+
+test Reactives {
+  let f0 = rb.nope();
+  let f1 = rc.nope();
+  let f2 = rd.nope();
+  let f3 = re.nope();
+  let f4 = ri.nope();
+  let f5 = rf.nope();
+  let f6 = rmi.nope();
+  let f7 = x.nope();
+  let f8 = rl.nope();
+  let f9 = rs.nope();
+  let f10 = tbl.nope();
+}

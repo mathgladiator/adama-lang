@@ -1,0 +1,22 @@
+message M {
+  int x;
+  int y;
+}
+
+procedure fill(table<M> ttt) {
+  ttt <- {x:1};
+  ttt <- {y:1};
+  ttt <- {x:1, y:1};
+  ttt <- [{x:4, y:3}, {x:2, y:2}];
+}
+
+int sz;
+int wz;
+
+@construct {
+  table<M> t;
+  fill(t);
+  fill(t);
+  sz = t.size();
+  wz = (iterate t where y == 2).size();
+}

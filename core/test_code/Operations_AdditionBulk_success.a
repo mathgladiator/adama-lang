@@ -1,0 +1,19 @@
+int x;
+int y;
+auto z = x + y;
+
+double u;
+double v;
+auto w = u + v;
+
+@construct {
+ x = 1 + 2;
+ y = x + 3;
+ u = 4.0 + 5.0;
+ v = u + 6.0;
+}
+
+test PrimaryTest {
+  assert x == 3;
+  assert y == 6;
+}

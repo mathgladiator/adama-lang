@@ -1,0 +1,36 @@
+string x;
+
+record X {
+  int z;
+  bool b;
+}
+
+table<X> zzz;
+
+@construct {
+  x = "Hello World";
+  zzz <- {z:2};
+  (select zzz).z ++;
+  (select zzz).z += 100;
+  (select zzz).z *= 3;
+  transition #next;
+}
+
+#next {
+  x = "Bye";
+}
+
+test Test1 {
+  assert x == "";
+  @step;
+  assert x == "Hello World";
+  @step;
+  assert x == "Bye";
+}
+
+test Test2 {
+  assert false;
+}
+
+test Test3 {
+}

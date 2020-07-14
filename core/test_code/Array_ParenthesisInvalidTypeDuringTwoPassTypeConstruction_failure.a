@@ -1,0 +1,4 @@
+@construct {
+  let x = [{x:1}, (true)];
+  let y = [1, 2];
+}

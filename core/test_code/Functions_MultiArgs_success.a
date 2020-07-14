@@ -1,0 +1,7 @@
+procedure x(int a, int b) {
+}
+
+record X {
+  method y(int a, int b) {
+  }
+}

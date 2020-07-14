@@ -1,0 +1,177 @@
+/* The Adama Programming Language For Board Games!
+ *    See http://www.adama-lang.org/ for more information.
+ * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
+package org.adamalang.translator.tree.definitions;
+
+import java.util.function.Consumer;
+import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.TokenizedItem;
+import org.adamalang.translator.tree.statements.Block;
+import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.natives.TyNativeArray;
+import org.adamalang.translator.tree.types.natives.TyNativeChannel;
+import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.traits.IsStructure;
+
+/** A handler is called when the document receives a message from a client.
+ * There are a variety of actions the document can take. For instance, the
+ * document could simply drop it. These behaviors are explain in the
+ * MessageHandlerBehavior. */
+public class DefineHandler extends Definition {
+  public MessageHandlerBehavior behavior;
+  public final String channel;
+  private final Token channelNameToken;
+  private final Token channelToken;
+  public String client;
+  private Token clientTypeToken = null;
+  private Token clientVarToken = null;
+  public Block code;
+  private Token commaToken = null;
+  private Token endParenToken = null;
+  private Token endType = null;
+  public boolean isArray;
+  private Token messageTypeArrayToken = null;
+  private Token messageTypeToken = null;
+  public String messageVar;
+  private Token messageVarToken = null;
+  private Token openParenToken = null;
+  private Token openType = null;
+  private Token semicolonToken = null;
+  public String typeName;
+
+  public DefineHandler(final Token channelToken, final Token channelNameToken) {
+    this.channelToken = channelToken;
+    this.channelNameToken = channelNameToken;
+    channel = channelNameToken.text;
+    typeName = null;
+    behavior = null;
+    messageVar = null;
+    isArray = false;
+    ingest(channelToken);
+    ingest(channelNameToken);
+  }
+
+  @Override
+  public void emit(final Consumer<Token> yielder) {
+    if (openType != null) {
+      yielder.accept(channelToken);
+      yielder.accept(openType);
+      yielder.accept(messageTypeToken);
+      if (messageTypeArrayToken != null) {
+        yielder.accept(messageTypeArrayToken);
+      }
+      yielder.accept(endType);
+      yielder.accept(channelNameToken);
+      yielder.accept(semicolonToken);
+      return;
+    }
+    yielder.accept(channelToken);
+    yielder.accept(channelNameToken);
+    if (openParenToken != null) {
+      yielder.accept(openParenToken);
+      if (clientTypeToken != null) {
+        yielder.accept(clientTypeToken);
+        yielder.accept(clientVarToken);
+        yielder.accept(commaToken);
+      }
+      yielder.accept(messageTypeToken);
+      if (messageTypeArrayToken != null) {
+        yielder.accept(messageTypeArrayToken);
+      }
+      yielder.accept(messageVarToken);
+      yielder.accept(endParenToken);
+      if (code != null) {
+        code.emit(yielder);
+      }
+    }
+  }
+
+  /** make the handler operate on arrays */
+  public DefineHandler makeArray() {
+    isArray = true;
+    return this;
+  }
+
+  public Environment prepareEnv(final Environment environment, final IsStructure messageType) {
+    final var next = environment.scopeAsMessageHandler();
+    if (messageVar != null) {
+      if (isArray) {
+        next.define(messageVar, new TyNativeArray((TyType) messageType, messageTypeArrayToken), false, this);
+      } else {
+        next.define(messageVar, (TyType) messageType, false, this);
+      }
+    }
+    if (client != null) {
+      next.define(client, new TyNativeClient(clientTypeToken).withPosition(this), true, this);
+    }
+    return next;
+  }
+
+  public void setFullHandler(final Token openParenToken, final Token clientTypeToken, final Token clientVarToken, final Token commaToken, final Token messageTypeToken, final Token messageTypeArrayToken, final Token messageVarToken,
+      final Token endParenToken, final Block code) {
+    this.openParenToken = openParenToken;
+    this.clientTypeToken = clientTypeToken;
+    this.clientVarToken = clientVarToken;
+    this.commaToken = commaToken;
+    this.messageTypeToken = messageTypeToken;
+    this.messageTypeArrayToken = messageTypeArrayToken;
+    this.messageVarToken = messageVarToken;
+    this.endParenToken = endParenToken;
+    typeName = this.messageTypeToken.text;
+    messageVar = this.messageVarToken.text;
+    client = this.clientVarToken.text;
+    if (this.messageTypeArrayToken != null) {
+      makeArray();
+    }
+    behavior = MessageHandlerBehavior.ExecuteAssociatedCode;
+    this.code = code;
+    ingest(code);
+  }
+
+  public void setFuture(final Token openType, final Token messageTypeToken, final Token messageTypeArrayToken, final Token endType, final Token semicolonToken) {
+    this.openType = openType;
+    this.messageTypeToken = messageTypeToken;
+    this.messageTypeArrayToken = messageTypeArrayToken;
+    this.endType = endType;
+    this.semicolonToken = semicolonToken;
+    behavior = MessageHandlerBehavior.EnqueueItemIntoNativeChannel;
+    typeName = this.messageTypeToken.text;
+    if (this.messageTypeArrayToken != null) {
+      makeArray();
+    }
+    ingest(openType);
+    ingest(messageTypeToken);
+    ingest(semicolonToken);
+  }
+
+  public void setMessageOnlyHandler(final Token openParenToken, final Token messageTypeToken, final Token messageTypeArrayToken, final Token messageVarToken, final Token endParenToken, final Block code) {
+    this.openParenToken = openParenToken;
+    this.messageTypeToken = messageTypeToken;
+    this.messageTypeArrayToken = messageTypeArrayToken;
+    this.messageVarToken = messageVarToken;
+    this.endParenToken = endParenToken;
+    typeName = this.messageTypeToken.text;
+    messageVar = this.messageVarToken.text;
+    if (this.messageTypeArrayToken != null) {
+      makeArray();
+    }
+    behavior = MessageHandlerBehavior.ExecuteAssociatedCode;
+    this.code = code;
+    ingest(code);
+  }
+
+  @Override
+  public void typing(final Environment environment) {
+    final IsStructure messageType = environment.rules.FindMessageStructure(typeName, this, false);
+    if (messageType == null) { return; }
+    final var next = prepareEnv(environment, messageType);
+    if (code != null) {
+      code.typing(next);
+    }
+    if (behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
+      final var nativeChannel = new TyNativeChannel(null, new TokenizedItem<>(isArray ? new TyNativeArray((TyType) messageType, null) : (TyType) messageType)).withPosition(this);
+      environment.define(channel, nativeChannel, false, nativeChannel);
+    }
+  }
+}

@@ -1,0 +1,18 @@
+public int x = 1;
+public string y = "2";
+public double z;
+public auto sum = x + y + z;
+
+@construct {
+  z = 3.14;
+}
+
+test PrimaryTest {
+  assert sum == "123.14";
+  z = 10;
+  assert sum == "1210.0";
+}
+
+@connected (who) {
+  return who == @no_one;
+}

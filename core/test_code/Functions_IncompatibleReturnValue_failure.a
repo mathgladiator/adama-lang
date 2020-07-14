@@ -1,0 +1,3 @@
+function square_func(int x) -> int {
+  return "x * x";
+}

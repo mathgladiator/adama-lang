@@ -1,0 +1,10 @@
+record X {
+  int x;
+}
+
+table<X> t;
+
+@construct {
+  t <- {x:1};
+  (iterate t where x == 1 || x == 2).x = 0;
+}

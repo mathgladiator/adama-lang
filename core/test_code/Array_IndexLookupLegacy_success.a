@@ -1,0 +1,31 @@
+record X {
+ int x;
+ int y;
+}
+
+table<X> tbl;
+
+int sum;
+bool found_impossible_thing;
+
+@construct {
+  tbl <- {x:100, y:3};
+  tbl <- {x:2, y:2};
+  tbl <- {x:100, y:1};
+  tbl <- {x:4, y:2};
+  tbl <- {x:5, y:2};
+  tbl <- {x:1, y:2};
+
+  if ((select tbl order by x desc, y desc)[0] as thing) {
+    sum = thing.x + thing.y;
+  }
+
+  found_impossible_thing = false;
+  if ((select tbl order by x desc, y desc)[100] as thing) {
+    found_impossible_thing = true;
+  }
+  if ((select tbl order by x desc, y desc)[-100] as thing) {
+    found_impossible_thing = true;
+  }
+}
+

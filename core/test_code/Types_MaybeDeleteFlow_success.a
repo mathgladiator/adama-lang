@@ -1,0 +1,6 @@
+maybe<int> x;
+
+@construct {
+  x = 123;
+  x.delete();
+}

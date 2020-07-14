@@ -1,0 +1,4 @@
+@construct {
+  let z1 = 123;
+  let z2 = 123(1,2);
+}

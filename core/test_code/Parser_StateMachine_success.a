@@ -1,0 +1,18 @@
+int x;
+
+label ptr;
+
+@construct {
+  x = 1;
+  ptr = #foo;
+  transition #foo;
+}
+
+#foo {
+  x = 2;
+  invoke #goo;
+}
+
+#goo {
+  x = 3;
+}

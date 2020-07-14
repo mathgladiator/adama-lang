@@ -1,0 +1,6 @@
+int z = 2;
+formula x = 12 + z;
+
+#wut {
+  x = 123;
+}

@@ -1,0 +1,24 @@
+record R {
+  int x;
+  int y;
+}
+
+message M {
+  int x;
+}
+
+message M2 {
+  int x;
+  int y;
+}
+
+R x;
+table<R> t;
+
+@construct {
+  t <- {x:1};
+  M m = @convert<M>(x);
+  M[] arr = @convert<M>(iterate t);
+  maybe<M> mm = @convert<M>(@maybe(x));
+  M2 m2 = @convert<M2>(x);
+}

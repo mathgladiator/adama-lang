@@ -1,0 +1,7 @@
+function square(int x) -> int {
+  return x * x;
+}
+
+@construct {
+  int z = square(4);
+}

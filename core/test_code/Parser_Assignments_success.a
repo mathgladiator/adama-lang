@@ -1,0 +1,11 @@
+@construct {
+  int x = 1;
+  x += 2;
+  int z;
+  z = 4;
+  z *= 7;
+  z++;
+  z--;
+  ++z;
+  --z;
+}

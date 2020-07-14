@@ -1,0 +1,21 @@
+function mesum(int[] s) -> int {
+  int r = 0;
+  foreach(v in s) {
+    r += v;
+  }
+  return r;
+}
+
+
+int x = 0;
+@construct {
+  x = mesum([1, 2, 3]);
+}
+
+procedure foo1(bool[] b) {
+}
+
+enum E { X, Y }
+
+procedure foo2(E[] b) {
+}

@@ -1,0 +1,9 @@
+record X {
+  bool x;
+}
+table<X> t;
+
+@construct {
+  let ls = !(!((select t).x));
+}
+

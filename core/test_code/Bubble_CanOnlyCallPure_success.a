@@ -1,0 +1,6 @@
+function square(int x) -> int {
+  return x* x;
+}
+public int x = 7;
+
+bubble<c> k = square((x + 1) * (x + 1));

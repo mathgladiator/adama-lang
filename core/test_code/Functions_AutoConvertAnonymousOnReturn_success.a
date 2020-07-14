@@ -1,0 +1,21 @@
+message M {
+  int x;
+  int y;
+}
+
+function foo1() -> M {
+  // this works
+  return {x:1};
+}
+
+
+function foo2(bool b) -> M {
+  // this works
+  return b ? {x:1} : {y:2};
+}
+
+// this does not work, should we make it work? it makes sense
+// function foo2() -> M {
+//  let v = {x:1};
+//  return v;
+// }

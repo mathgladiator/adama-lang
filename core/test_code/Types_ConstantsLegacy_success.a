@@ -1,0 +1,4 @@
+int x;
+double y;
+string z;
+bool u;

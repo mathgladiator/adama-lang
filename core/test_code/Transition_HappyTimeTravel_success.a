@@ -1,0 +1,11 @@
+
+@construct {
+  transition #start in 0.01;
+}
+
+#start {
+  transition #next in 0.01;
+}
+
+#next {
+}

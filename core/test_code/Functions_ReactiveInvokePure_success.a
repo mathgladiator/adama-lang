@@ -1,0 +1,6 @@
+function foo() -> int {
+  return 4;
+}
+
+formula goo = foo();
+bubble<c> you = foo();

@@ -1,0 +1,8 @@
+record R {
+}
+
+table<R> t;
+
+@construct {
+  int x = t;
+}

@@ -1,0 +1,34 @@
+@construct {
+}
+
+int rx = 3;
+int sx;
+
+test Ints {
+  int x = 4;
+  x += 1;
+  rx += 1;
+  x *= 7;
+  rx *= 7;
+  x -= 5;
+  rx -= 5;
+  x %= 100;
+  rx %= 100;
+  sx = x;
+}
+
+double ry = 3;
+double sy;
+
+test Doubles {
+  int y = 4;
+  y += 1;
+  ry += 1;
+  y *= 7;
+  ry *= 7;
+  y -= 5;
+  ry -= 5;
+  y /= 100;
+  ry /= 100;
+  sy = y;
+}

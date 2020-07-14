@@ -1,0 +1,26 @@
+
+@construct {
+}
+
+test PrimaryTest {
+  string x = "xyz";
+  let y = x.reverse();
+  assert x.length() == 3;
+}
+
+string y;
+maybe<int> mi;
+
+record R {
+}
+
+table<R> t;
+
+test SecondTest {
+  y = "xyz";
+  let z = y.reverse();
+  assert y.length() == 3;
+  mi = 123;
+  mi.delete();
+  assert t.size() == 0;
+}

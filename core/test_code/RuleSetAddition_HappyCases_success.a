@@ -1,0 +1,20 @@
+int i = 1;
+double d = 3.14;
+string s = "x";
+
+@construct {
+  int r0 = i + i;
+  int r1 = r0 + i;
+  int r2 = 1 + r0;
+  int r3 = 4 + 4 + r0 + r1 + r2;
+  double r4 = i + d;
+  double r5 = 2.71 + d;
+  double r6 = d + r4 + r5;
+  string r7 = s + "yz";
+  string r8 = s + true;
+  string r9 = s + 123;
+  string r10 = r7 + r8 + r9;
+}
+
+test PrimaryTest {
+}

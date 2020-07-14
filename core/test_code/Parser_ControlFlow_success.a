@@ -1,0 +1,29 @@
+message F {
+
+}
+
+channel foo(F x) {
+  abort;
+}
+
+int s = 0;
+
+@construct {
+  while (true) {
+    break;
+  }
+
+  int k = 0;
+
+  while (k < 10) {
+    k++;
+    if (k < 8) {
+      continue;
+    }
+    s += k;
+  }
+}
+
+#dead {
+  block;
+}

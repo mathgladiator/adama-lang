@@ -1,0 +1,19 @@
+
+procedure x(int x) -> int {
+  if (true) {
+    return 1;
+  }
+  // whoops
+}
+
+record X {
+  method foo() -> int {
+    if (true) {
+      return 1;
+    }
+    // whoops
+  }
+
+  policy p(c) {
+  }
+}

@@ -1,0 +1,6 @@
+enum X { A }
+enum T { A }
+
+@construct {
+  X x = T::A;
+}

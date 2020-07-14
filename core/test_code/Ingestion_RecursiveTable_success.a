@@ -1,0 +1,17 @@
+record Z {
+  int z;
+}
+
+record X {
+  int x;
+  int y;
+  table<Z> z;
+}
+
+X v;
+table<X> tbl;
+
+@construct {
+  v <- {x:1, y:2, z:[{z:1}]};
+  tbl <- {x:1, y:2, z:[{z:1}]};
+}

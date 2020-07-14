@@ -1,0 +1,14 @@
+int z = 1;
+
+procedure square(int x) -> int {
+  return x * x * z;
+}
+
+procedure set(int x) {
+  z = x;
+}
+
+@construct {
+  set(2);
+  int z = square(4);
+}

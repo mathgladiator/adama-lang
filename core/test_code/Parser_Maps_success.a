@@ -1,0 +1,3 @@
+#ok {
+  map<int, int> foo;
+}

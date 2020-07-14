@@ -1,0 +1,4 @@
+channel<X> foo;
+
+channel goo(X x) {
+}

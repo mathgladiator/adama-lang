@@ -1,0 +1,10 @@
+message X {
+  int x;
+  int y;
+}
+
+channel<X> chan;
+
+#huh {
+  @pump {x:4, y:8} into chan;
+}

@@ -1,0 +1,13 @@
+message M {
+  int x;
+  int y;
+}
+
+int sz;
+
+@construct {
+  table<M> t;
+  t <- {x:1};
+  table<M> t2 = t;
+  sz = t2.size();
+}

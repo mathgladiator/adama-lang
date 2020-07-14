@@ -1,0 +1,19 @@
+message M {
+  int x;
+  int y;
+}
+
+channel chan1(client c, M m) {
+  return;
+}
+
+channel chan2(M m) {
+}
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+
+}

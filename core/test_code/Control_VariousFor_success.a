@@ -1,0 +1,19 @@
+public int sum = 0;
+
+@construct {
+  for (int x = 0; x < 10; x++) {
+    sum += x;
+  }
+  int k = sum % 7;
+  for(; k < 100; k++) {
+    sum ++;
+  }
+
+  for(;;) {
+    break;
+  }
+
+  for(;true;k++) {
+    break;
+  }
+}

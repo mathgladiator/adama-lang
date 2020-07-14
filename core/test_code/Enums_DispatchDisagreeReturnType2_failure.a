@@ -1,0 +1,10 @@
+enum E {
+  Y, Z
+}
+
+dispatch E::Y x() -> int {
+  return 1;
+}
+
+dispatch E::Z x() {
+}

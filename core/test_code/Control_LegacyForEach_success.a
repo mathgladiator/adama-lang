@@ -1,0 +1,18 @@
+record X {
+  int z;
+}
+
+table<X> zzz;
+int out;
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  zzz <- {z:2};
+  zzz <- {z:3};
+  foreach (chk in (select zzz)) {
+    out += chk.z;
+  }
+}

@@ -1,0 +1,32 @@
+record Y {
+}
+
+record X {
+  int x = 13;
+  double d = 42.0;
+  bool b = true;
+  string s;
+  table<X> tbl;
+  maybe<Y> y;
+  maybe<string> ms = "Hi";
+}
+
+table<X> xs;
+
+int x = 3;
+double y = 2.71;
+bool b = true;
+string s = "Hello";
+
+X xyz;
+
+string defMS;
+
+@construct {
+  if (xyz.ms as xxxx) {
+    defMS = xxxx;
+  }
+  xyz.delete();
+}
+
+record Empty {}

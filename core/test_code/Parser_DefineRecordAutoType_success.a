@@ -1,0 +1,5 @@
+public int x = 0;
+
+record X {
+  public auto y = (x + 1) * (x + 2);
+}

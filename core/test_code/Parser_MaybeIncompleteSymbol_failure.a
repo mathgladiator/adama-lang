@@ -1,0 +1,6 @@
+
+@construct {
+  if (@maybe+ as x) {
+
+  }
+}

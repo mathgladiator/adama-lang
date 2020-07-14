@@ -1,0 +1,70 @@
+test Addition {
+  assert "xy" == "x" + "y";
+  assert "xtrue" == "x" + true;
+  assert "falsex" == false + "x";
+  assert "x1" == "x" + 1;
+  assert "1x" == 1 + "x";
+  assert "x3.14" == "x" + 3.14;
+  assert "3.14x" == 3.14 + "x";
+  assert 3 == 1 + 2;
+  assert 3 == 2.0 + 1;
+  assert 3 == 1 + 2.0;
+  assert 3.0 == 2.0 + 1.0;
+}
+
+test Subtraction {
+  assert 5 == 10 - 5;
+  assert 3.0 == 6 - 3;
+  assert 3.0 == 6.0 - 3.0;
+  assert 3.0 == 6.0 - 3;
+}
+
+test Multiply {
+  assert "xxx" == "x" * 3;
+  assert 6 == 2 * 3;
+  assert 10 == 2.0 * 5.0;
+  assert 10 == 2.0 * 5;
+  assert 10 == 2 * 5.0;
+}
+
+test Divide {
+  assert 2 == 4 / 2;
+  assert 2.0 == 4 / 2.0;
+  assert 2.0 == 4.0 / 2.0;
+  assert 1.5 == 3.0 / 2;
+}
+
+test Mod {
+  assert 2 == 7 % 5;
+}
+
+test Relate {
+  assert 1 < 2;
+  assert 1.5 < 4.3;
+}
+
+test Logic {
+  assert true == true;
+  assert false != true;
+  assert true && true;
+  assert !(true && false);
+  assert !(false && true);
+  assert !(false && false);
+  assert true || true;
+  assert true || false;
+  assert false || true;
+  assert !(false || false);
+}
+
+client other;
+string s;
+
+test Equals {
+  assert @no_one == @no_one;
+  assert @no_one == other;
+  assert other == @no_one;
+  assert !(@no_one != @no_one);
+  assert s == "";
+  assert "" == s;
+  assert s == s;
+}

@@ -1,0 +1,29 @@
+int v0 = 0;
+maybe<string> name = "Jeff";
+
+@construct {
+   maybe<int> x;
+   if (x as xx) {
+     v0 += 1;
+   }
+   x = 2;
+   if (x as xx) {
+     v0 += 2;
+   }
+   if (@maybe(4) as xx) {
+     v0 += xx;
+   }
+   maybe<int> z;
+   z = @maybe(1);
+   if (z as xx) {
+     v0 += 8;
+   }
+   name = "Dawg";
+   maybe<int> w = @maybe(4);
+   if (w as xx) {
+     v0 += 16;
+   }
+   if (@maybe<int> as xx) {
+     v0 += 32;
+   }
+}

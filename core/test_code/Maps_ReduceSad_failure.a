@@ -1,0 +1,26 @@
+record R {
+  int x;
+  int v;
+}
+
+table<R> t;
+
+procedure foo(list<R> z) {
+}
+
+function goo(list<R> z, int z2) -> int {
+}
+
+#w00t {
+  t <- {x:1, v:1};
+  t <- {x:2, v:5};
+  t <- {x:3, v:10};
+  t <- {x:2, v:10};
+  t <- {x:3, v:100};
+  t <- {x:3, v:1000};
+
+  let m1 = (iterate t) reduce x via foo; // no return type, not pure
+  let m2 = (iterate t) reduce x via goo; // too many args
+  let m3 = (iterate t) reduce on x via zoo; // not found
+  let m4 = (iterate t) reduce on z via foo; // not found
+}

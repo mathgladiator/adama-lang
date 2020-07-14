@@ -1,0 +1,17 @@
+enum E {
+  X:1
+}
+// this is not fine
+dispatch E::X foo(int x, int y) -> int {
+  return 0;
+}
+dispatch E::X* foo(int x, int y) -> int {
+  return 0;
+}
+
+// this is fine
+dispatch E::X zoo(int x, int y) {
+}
+
+dispatch E::X* zoo(int x, int y) {
+}

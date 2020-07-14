@@ -1,0 +1,7 @@
+message M {
+  int x;
+}
+
+message M {
+  int y;
+}

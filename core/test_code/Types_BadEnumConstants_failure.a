@@ -1,0 +1,17 @@
+
+message M {
+}
+
+record R {}
+
+@construct {
+  let t1 = M::z;
+  let t2 = R::y;
+  let t3 = Nope::x;
+  let t4 = M::*;
+  let t5 = R::*;
+  let t6 = Nope::*;
+  let t7 = M::Prefix*;
+  let t8 = R::Prefix*;
+  let t9 = Nope::Prefix*;
+}

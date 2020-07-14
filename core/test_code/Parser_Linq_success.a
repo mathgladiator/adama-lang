@@ -1,0 +1,34 @@
+@connected (who) {
+  return who == @no_one;
+}
+
+record X {
+  public int id;
+  public string name;
+  public int by;
+}
+
+table<X> x;
+
+public formula where1 = iterate x where name == "J";
+
+public formula where_as1 = iterate x where_as z: z.name == "J";
+
+public formula order1 = iterate x order id;
+public formula order2 = iterate x order by id desc;
+public formula order3 = iterate x order id asc;
+public formula order4 = iterate x order by by asc;
+public formula order5 = iterate x order by by asc, id desc;
+
+public formula shuffle1 = iterate x shuffle;
+
+public formula limit1 = iterate x limit 1;
+public formula limit2 = iterate x limit 1 offset 2;
+
+@construct {
+  x <- {name:"J"};
+  x <- {name:"B"};
+  x <- {name:"S"};
+  x <- {name:"E"};
+  x <- {name:"R"};
+}

@@ -1,0 +1,9 @@
+record X {
+  int x;
+}
+X a;
+X b;
+
+@construct {
+ (true ? a : b).x = 123;
+}

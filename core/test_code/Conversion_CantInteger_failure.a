@@ -1,0 +1,6 @@
+message X {
+}
+
+@construct {
+  let x = @convert<X>(1);
+}

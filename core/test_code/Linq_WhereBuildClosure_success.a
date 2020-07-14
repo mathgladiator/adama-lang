@@ -1,0 +1,18 @@
+record X {
+  int x;
+}
+
+table<X> t;
+
+procedure gotown(int x0) -> list<X> {
+  return iterate t where x == x0;
+}
+
+procedure gotown2(int x0, int x1) -> list<X> {
+  return iterate t where x == x0 || x == x1;
+}
+
+@construct {
+  t <- {x:1};
+  gotown(1).x = 2;
+}

@@ -1,0 +1,7 @@
+
+@construct {
+  string s0 = "xyz";
+  string s1 = "\n\t\b\f";
+  string s2 = "\u0012";
+  string s3 = "\uafaf";
+}

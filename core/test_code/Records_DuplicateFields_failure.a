@@ -1,0 +1,11 @@
+record X {
+  public int x;
+  private int x;
+
+  method foo() {
+  }
+  method foo(int x) {
+  }
+  method foo(int x, int y) -> int {
+  }
+}

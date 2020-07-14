@@ -1,0 +1,13 @@
+test PrimaryTest {
+  assert "x" == "x";
+  assert ("x" != "y");
+  assert !("x" == "y");
+  assert "x" < "y";
+  assert "x" <= "y";
+  assert !("x" > "y");
+  assert !("x" >= "y");
+  assert "y" > "x";
+  assert "y" >= "x";
+  assert !("y" < "x");
+  assert !("y" <= "x");
+}

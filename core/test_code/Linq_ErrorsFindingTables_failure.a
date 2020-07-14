@@ -1,0 +1,17 @@
+record X {}
+
+X z;
+
+table<Z> t;
+
+message K {}
+
+table<K> k;
+
+@construct {
+  int x;
+  (iterate 1).x = 1;
+  (iterate z);
+  (iterate t);
+  (iterate k);
+}

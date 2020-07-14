@@ -1,0 +1,24 @@
+label ptr;
+string output;
+string output2;
+
+@construct {
+  transition #begin;
+}
+
+#begin {
+  ptr = #begin;
+  if (ptr == #begin) {
+    output = "YES";
+  }
+  if (ptr != #end) {
+    output2 = "WHOOP";
+  }
+}
+
+#end {
+}
+
+@connected (who) {
+  return who == @no_one;
+}

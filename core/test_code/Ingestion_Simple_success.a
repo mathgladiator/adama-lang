@@ -1,0 +1,12 @@
+record X {
+  int x;
+  int y;
+}
+
+X v;
+table<X> tbl;
+
+@construct {
+  v <- {x:1, y:2};
+  tbl <- {x:1, y:2};
+}

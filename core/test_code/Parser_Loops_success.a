@@ -1,0 +1,22 @@
+message Foo {
+}
+
+@construct {
+  int x = 1;
+  while (x < 10) {
+    x++;
+  }
+
+  do {
+    x--;
+  } while (x > 0);
+
+  for (int k = 0; k < 10; k++) {
+    x += k;
+  }
+
+  Foo[] arr = [];
+  foreach (e in arr) {
+    x *= 7;
+  }
+}

@@ -1,0 +1,5 @@
+enum E {
+  X:1
+}
+dispatch E::X foo(int x, int y) -> int {
+}

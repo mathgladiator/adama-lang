@@ -1,0 +1,31 @@
+enum E {
+  X, Y
+}
+
+dispatch E::X foo(int z) -> int {
+  return 13;
+}
+
+dispatch E::Y foo(int z) -> int {
+  return 42;
+}
+
+dispatch E::X foo(double z) -> double {
+  return 13.5 + z;
+}
+
+dispatch E::Y foo(double z) -> double {
+  return 42.5 + z;
+}
+
+int x;
+int y;
+double u;
+double v;
+
+@construct {
+  x = E::X.foo(1);
+  y = E::Y.foo(1);
+  u = E::X.foo(1.5);
+  v = E::Y.foo(1.5);
+}

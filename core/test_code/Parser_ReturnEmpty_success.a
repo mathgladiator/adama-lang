@@ -1,0 +1,7 @@
+procedure foo() {
+  return;
+}
+
+@construct {
+  foo();
+}

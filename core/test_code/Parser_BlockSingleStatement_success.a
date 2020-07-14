@@ -1,0 +1,5 @@
+@construct {
+  if (false) let x = 123;
+}
+
+#foo ;

@@ -1,0 +1,40 @@
+message BigI {
+  int x;
+  string z;
+}
+
+message BigS {
+  string x;
+  string z;
+}
+
+message SmallS {
+  string x;
+}
+
+message SmallI {
+  int x;
+}
+
+#code {
+  BigI a;
+  BigS b;
+  SmallI c;
+  SmallS d;
+
+  let f0 = convert<SmallS>(a); // can't convert due to type
+  let f1 = convert<SmallI>(a); // should be fine
+  let f2 = convert<SmallS>(b); // should be fine
+  let f3 = convert<SmallI>(b); // can't convert due to type
+
+  let f4 = convert<BigS>(c); // can't invent data
+  let f5 = convert<BigI>(c); // can't invent data
+  let f6 = convert<BigS>(d); // can't invent data
+  let f7 = convert<BigI>(d); // can't invent data
+
+  let f8 = convert<BigI>(b); // can't due to type
+  let f9 = convert<BigS>(a); // can't due to type
+
+  let f10 = convert<SmallS>(c); // can't due to type
+  let f11 = convert<SmallI>(d); // can't due to type
+}

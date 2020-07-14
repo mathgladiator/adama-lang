@@ -1,0 +1,11 @@
+
+@construct {
+  transition #start in "x";
+}
+
+#start {
+  transition #next in true;
+}
+
+#next {
+}

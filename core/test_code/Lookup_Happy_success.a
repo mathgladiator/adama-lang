@@ -1,0 +1,19 @@
+message M {
+  int x;
+}
+
+record R {
+  int y;
+}
+
+table<R> t;
+
+@construct {
+  M[] m = [{x:1}];
+  if (m[0] as mm) {
+    mm.x = 2;
+  }
+  if ((iterate t)[0] as r) {
+    r.y = 1;
+  }
+}

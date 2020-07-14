@@ -1,0 +1,21 @@
+public double x;
+public int y;
+double zzz;
+
+@construct {
+  x = 12.7;
+  double d1 = Math.abs(x);
+  double d2 = Math.sin(x);
+  double d3 = Math.cos(x);
+  double d4 = Math.tan(x);
+  double d5 = (d1 + (d2 + d3) + d4);
+  zzz = Math.PI();
+}
+
+#next {
+  y = 3;
+  int i1 = Math.abs(y);
+  double i2 = Math.floor(x);
+  double i3 = Math.ceil(x);
+  long i4 = Math.round(x);
+}

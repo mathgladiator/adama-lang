@@ -1,0 +1,3 @@
+record X {
+  use_policy<p> int x;
+}

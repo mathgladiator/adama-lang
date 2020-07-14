@@ -1,0 +1,40 @@
+record X {
+  int z;
+  int v;
+  bool b;
+  client c;
+}
+
+table<X> zzz;
+table<X> zzz2;
+int count;
+int count_after;
+
+int vkzsum = 0;
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  zzz <- {z:2,b:false};
+  zzz <- {z:42,b:false};
+  zzz2 <- {z:2,b:false};
+  foreach( z in select zzz) {
+    z.z = 1000;
+  }
+  ((select zzz).z++)++;
+  ++ (select zzz).z;
+  !((select zzz).b);
+  foreach (kz in -(select zzz).z) {
+    vkzsum += kz;
+  }
+  (select zzz).z += 100;
+  (select zzz).z *= 3;
+  (select zzz).z ++;
+  (select zzz).v = 123;
+  count = (select zzz2).size();
+  (select zzz2).delete();
+  count_after = (select zzz2).size();
+  let lstc = (select zzz).c;
+}

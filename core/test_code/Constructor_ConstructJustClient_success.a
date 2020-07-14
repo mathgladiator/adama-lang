@@ -1,0 +1,5 @@
+client owner;
+
+@construct (client me) {
+  owner = me;
+}

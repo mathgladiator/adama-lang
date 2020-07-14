@@ -1,0 +1,33 @@
+enum E { A:42 };
+
+
+@construct {
+  let a0 = @stable;
+  let a1 = #foo;
+  let a2 = true;
+  let a3 = false;
+  let a4 = 123;
+  let a5 = 0xff;
+  let a6 = @no_one;
+  let a7 = @blocked;
+  let a8 = E::A;
+  let a9 = E::*;
+  let a10 = 1.23;
+  let a11 = 1.23e8;
+  let a12 = 1.23E91;
+  let a13 = -.12;
+  let a14 = {x:42};
+  let a15 = [{x:1}];
+  let a16 = [{x:1,y:2}];
+  let a17 = (((123)));
+  let a18 = [{x:1,a0,a1,a2}];
+  let a19 = [{x:1},{x:2}];
+}
+
+#foo {
+
+}
+
+test PrimaryTest {
+  assert true;
+}

@@ -1,0 +1,53 @@
+record X {
+ int x;
+ int y;
+}
+
+record Z {
+  table<X> tbl;
+}
+
+table<Z> z0;
+Z z1;
+table<X> tbl;
+
+int count1;
+int count2;
+int count3;
+
+table<X> tbl2;
+table<X> tbl3;
+
+auto list_w = select tbl2 where y == 2;
+auto list_w2 = select tbl2 where y == 2 order by x desc;
+auto list_w3 = select tbl2 where y == 2 order by x asc;
+auto list_w4 = select tbl2 order by y, x asc;
+auto list_w5 = select tbl2 order by x desc, y desc;
+auto list_w6 = select tbl2 order by x, y;
+auto list_w7 = select tbl2 order by x, y limit 1;
+auto list_w8 = select tbl2 order by x, y limit 1 offset 1;
+
+int count_tbl2;
+
+@construct {
+  tbl <- {x:1, y:3};
+  tbl <- {x:2, y:2};
+  tbl <- {x:3, y:1};
+  count1 = (select tbl).size();
+  count2 = (select tbl where x == 1).size();
+  count3 = (select tbl where x <= 2).size();
+
+  tbl2 <- {x:100, y:3};
+  tbl2 <- {x:2, y:2};
+  tbl2 <- {x:2, y:2};
+  tbl2 <- {x:100, y:1};
+  tbl2 <- {x:4, y:2};
+  tbl2 <- {x:5, y:2};
+  tbl2 <- {x:1, y:2};
+  count_tbl2 = tbl2.size();
+  if  ((select tbl2 where x == 5)[0] as vvv) {
+    vvv.delete();
+  }
+
+  tbl3 <- (select tbl2).toArray();
+}

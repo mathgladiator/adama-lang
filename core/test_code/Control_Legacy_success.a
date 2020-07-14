@@ -1,0 +1,43 @@
+int sum = 0;
+
+message X {
+  int v;
+}
+
+int lastV;
+
+channel x(X msg) {
+  lastV = msg.v;
+  if (msg.v == 32) {
+    abort;
+  }
+}
+
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  for (int k = 0; k < 100; k++) {
+    if (k == 5) {
+      continue;
+    }
+    if (k == 50) {
+      break;
+    }
+    sum += k;
+  }
+}
+
+test foo {
+  @pump {v:42} into x;
+  @step;
+  assert lastV == 42;
+  @pump {v:32} into x;
+  @step;
+  assert lastV == 42;
+  @pump {v:50} into x;
+  @step;
+  assert lastV == 50;
+}

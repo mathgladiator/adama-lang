@@ -1,0 +1,7 @@
+enum X {
+  Aa, Cd, Ab, Ac, B
+}
+
+test PrimaryTest {
+  assert (X::A*).size() == 3;
+}

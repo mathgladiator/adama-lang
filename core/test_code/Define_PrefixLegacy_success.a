@@ -1,0 +1,50 @@
+public int i;
+public double d;
+public bool b;
+
+public int i2;
+public double d2;
+public bool b2;
+
+public int i3;
+public double d3;
+public int i4;
+public double d4;
+
+public maybe<double> md;
+public maybe<int> mi;
+
+@construct {
+  i = 1;
+  d = 3.14;
+  b = true;
+  int x = -i;
+  double y = -d;
+  bool bb = !b;
+  int u1 = ++i;
+  double v1 = ++d;
+  int u2 = --i;
+  double w2 = --d;
+  i2 = --i;
+  i3 = ++i;
+  i4 = -i;
+  d2 = --d;
+  d3 = ++d;
+  d4 = -d;
+  b2 = !b;
+  int xZ = -x;
+  double yZ = -y;
+  bool bZ = !bb;
+  int xZ2 = --x;
+  double yZ2 = --y;
+  int xZ3 = ++x;
+  double yZ3 = ++y;
+  /*
+  md = 0;
+  md++;
+  mi = 1;
+  mi++;
+  ++md;
+  ++mi;
+  */
+}

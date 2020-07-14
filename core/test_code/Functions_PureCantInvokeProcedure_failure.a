@@ -1,0 +1,7 @@
+procedure foo() -> int {
+  return 4;
+}
+
+function goo() -> int {
+  return foo() * foo();
+}

@@ -1,0 +1,17 @@
+@construct {
+  map<int, int> foo;
+  foo = 123;
+  foo = "x";
+}
+
+#what {
+  map<int, int> f1;
+  map<double, int> f2;
+  map<int, double> f3;
+  f1 = f2;
+  f1 = f3;
+  f2 = f1;
+  f2 = f3;
+  f3 = f1;
+  f3 = f2;
+}

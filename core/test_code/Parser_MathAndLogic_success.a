@@ -1,0 +1,16 @@
+
+@construct {
+  let x = 1 + 2 + 3;
+  let y = 2 * 3 * 4;
+  let z = 10 - 5 - 3 - 1;
+  let u = true && true;
+  let v = false || false;
+  let eq = 1 == 2;
+  let ne = 1 != 2;
+  let lt = 1 < 2;
+  let gt = 1 > 2;
+  let lte = 1 <= 2;
+  let gte = 1 >= 2;
+  let t0 = true ? 4 : 5;
+  let t1 = false ? 4 : 5;
+}

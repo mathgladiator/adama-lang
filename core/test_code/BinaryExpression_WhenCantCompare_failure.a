@@ -1,0 +1,23 @@
+enum X { A }
+enum T { B }
+#eq {
+  let b0 = true == false;
+  let b1 = true == 1;
+  let b2 = 1 == true;
+  let b3 = true == 1.0;
+  let b4 = 1.0 == true;
+  let b5 = true == @no_one;
+  let b6 = @no_one == {};
+  let z = X::A == T::B;
+}
+
+#neq {
+  let b0 = true != false;
+  let b1 = true != 1;
+  let b2 = 1 != true;
+  let b3 = true != 1.0;
+  let b4 = 1.0 != true;
+  let b5 = true != @no_one;
+  let b6 = @no_one != {};
+  let z = X::A != T::B;
+}

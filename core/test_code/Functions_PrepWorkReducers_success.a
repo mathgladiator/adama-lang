@@ -1,0 +1,31 @@
+record Thing {
+  private int x;
+  private double y;
+}
+
+table<Thing> things;
+
+procedure foo(list<int> things) -> int {
+  int sum = 0;
+  foreach(x in things) {
+    sum += x;
+  }
+  return sum;
+}
+
+int result;
+int result2;
+double result3;
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  things <- {x:1, y:3.14};
+  things <- {x:2, y:10.0};
+  things <- {x:3, y:1000.0};
+  result = foo((select things).x);
+  result2 = Statistics.sum((select things).x);
+  result3 = Statistics.sum((select things).y);
+}

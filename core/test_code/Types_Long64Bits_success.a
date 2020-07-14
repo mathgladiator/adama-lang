@@ -1,0 +1,14 @@
+public long x;
+public long big;
+
+@construct {
+  x = 123;
+  long y = 42;
+  let z = x + y;
+  let u = 2423421234124213412L;
+  big = (z + u);
+}
+
+@connected (who) {
+  return who == @no_one;
+}

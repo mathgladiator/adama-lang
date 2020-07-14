@@ -1,0 +1,7 @@
+bool a;
+bool b;
+
+@construct {
+  a = @blocked;
+  b = @stable;
+}

@@ -1,0 +1,19 @@
+record R {
+  public int x = 1;
+}
+
+table<R> t;
+
+public formula even = iterate t where x % 2 == 0;
+
+@construct {
+ for (int k = 0; k < 10; k++) {
+   t <- {x:k};
+ }
+ (iterate t where x % 3 == 0).delete();
+ (iterate t where x % 8 == 0).delete();
+}
+
+@connected (who) {
+  return who == @no_one;
+}

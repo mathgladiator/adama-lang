@@ -1,0 +1,3 @@
+record R {
+  public formula x = y + 1;
+}

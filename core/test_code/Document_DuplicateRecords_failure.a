@@ -1,0 +1,7 @@
+record R {
+  public int x;
+}
+
+record R {
+  private int y;
+}

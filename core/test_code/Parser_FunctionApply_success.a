@@ -1,0 +1,14 @@
+function square(int x) -> int {
+  return x * x;
+}
+
+function miny(int a, int b) -> int {
+  return a < b ? a : b;
+}
+
+public int value;
+
+@construct {
+  value = square(4) + miny(1, 2);
+}
+

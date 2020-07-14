@@ -1,0 +1,7 @@
+message Foo {
+  int x;
+}
+
+@construct {
+  Foo[] arr = [];
+}

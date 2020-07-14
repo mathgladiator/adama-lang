@@ -1,0 +1,10 @@
+client owner;
+int v;
+message M {
+  int x;
+}
+
+@construct (client c, M m3) {
+  owner = c;
+  v = m3.x;
+}

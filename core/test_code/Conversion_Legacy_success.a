@@ -1,0 +1,33 @@
+message X {
+  int a;
+}
+
+message Y {
+  int a;
+  int b;
+}
+
+record Z {
+  int a;
+  int b;
+  int c;
+}
+
+table<Z> tbl;
+
+Z cake;
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  X[] x1 = convert<X>( convert<Y>( [{a:1, b:2, c:3}] ) );
+  X[] x2 = convert<X>(select tbl);
+  X[] x3 = convert<X>((select tbl).toArray());
+
+  Y[] y1 = convert<Y>(select tbl);
+  Y[] y2 = convert<Y>((select tbl).toArray());
+
+  Y y = convert<Y>(cake);
+}

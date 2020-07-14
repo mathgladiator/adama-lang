@@ -1,0 +1,13 @@
+record R {
+  int z;
+}
+
+R x;
+
+procedure foo(R r) {
+  r.z = 123;
+}
+
+@construct {
+  foo(x);
+}

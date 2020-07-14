@@ -1,0 +1,4 @@
+message M {
+}
+
+channel foo(client c, M m

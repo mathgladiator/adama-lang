@@ -1,0 +1,7 @@
+@construct {
+  return;
+  invoke #foo;
+}
+
+#foo {
+}

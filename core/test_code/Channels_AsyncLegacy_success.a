@@ -1,0 +1,42 @@
+string status;
+
+message X {
+  int x;
+  int y;
+}
+
+channel<X> chan;
+channel<X[]> bigchan;
+
+@construct {
+   transition #begin;
+}
+
+#begin {
+  status = "Blocked";
+  future<X> fut1 = chan.fetch(@no_one);
+  future<X> fut2 = chan.fetch(@no_one);
+  X val1 = fut1.await();
+  X val2 = fut2.await();
+  status = "Value:" + val1.x + "/" + val1.y + ":" + val2.x + "/" + val2.y;
+}
+
+test drive_it {
+  assert !(@blocked);
+  assert status == "";
+  @step;
+  assert @blocked;
+  assert status == "";
+  @pump {x:4, y:8} into chan;
+  assert @blocked;
+  assert status == "";
+  @step;
+  assert @blocked;
+  assert status == "";
+  @pump {x:5, y:10} into chan;
+  assert @blocked;
+  assert status == "";
+  @step;
+  assert !(@blocked);
+  assert status == "Value:4/8:5/10";
+}

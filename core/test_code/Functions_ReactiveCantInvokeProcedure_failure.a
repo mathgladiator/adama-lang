@@ -1,0 +1,7 @@
+procedure foo() -> int {
+  return 4;
+}
+
+bubble<c> you = foo();
+
+public formula goo = foo();

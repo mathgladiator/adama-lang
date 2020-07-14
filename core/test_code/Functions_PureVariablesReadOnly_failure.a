@@ -1,0 +1,22 @@
+function whoops1(int x) -> int {
+  x = 123;
+}
+
+int z = 0;
+
+procedure foo() {
+  z = 123;
+}
+
+procedure goo() @readonly {
+  z = 123;
+}
+
+
+function cantread() -> int {
+  return z;
+}
+
+procedure canread() -> int @readonly {
+  return z;
+}

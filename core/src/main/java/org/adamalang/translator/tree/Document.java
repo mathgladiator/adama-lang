@@ -1,0 +1,412 @@
+/* The Adama Programming Language For Board Games!
+ *    See http://www.adama-lang.org/ for more information.
+ * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
+package org.adamalang.translator.tree;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Consumer;
+import org.adamalang.translator.codegen.CodeGenConstructor;
+import org.adamalang.translator.codegen.CodeGenDocument;
+import org.adamalang.translator.codegen.CodeGenEventHandlers;
+import org.adamalang.translator.codegen.CodeGenFunctions;
+import org.adamalang.translator.codegen.CodeGenMessageHandling;
+import org.adamalang.translator.codegen.CodeGenRecords;
+import org.adamalang.translator.codegen.CodeGenStateMachine;
+import org.adamalang.translator.codegen.CodeGenTests;
+import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.env.EnvironmentState;
+import org.adamalang.translator.parser.Parser;
+import org.adamalang.translator.parser.TopLevelDocumentHandler;
+import org.adamalang.translator.parser.exceptions.ParseException;
+import org.adamalang.translator.parser.exceptions.ScanException;
+import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.parser.token.TokenEngine;
+import org.adamalang.translator.tree.common.DocumentError;
+import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.LatentCodeSnippet;
+import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.definitions.DefineConstructor;
+import org.adamalang.translator.tree.definitions.DefineDispatcher;
+import org.adamalang.translator.tree.definitions.DefineDocumentEvent;
+import org.adamalang.translator.tree.definitions.DefineFunction;
+import org.adamalang.translator.tree.definitions.DefineHandler;
+import org.adamalang.translator.tree.definitions.DefineStateTransition;
+import org.adamalang.translator.tree.definitions.DefineTest;
+import org.adamalang.translator.tree.definitions.ImportDocument;
+import org.adamalang.translator.tree.definitions.MessageHandlerBehavior;
+import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.natives.TyNativeEnum;
+import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
+import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
+import org.adamalang.translator.tree.types.structures.BubbleDefinition;
+import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.StorageSpecialization;
+import org.adamalang.translator.tree.types.structures.StructureStorage;
+import org.adamalang.translator.tree.types.traits.IsEnum;
+import org.adamalang.translator.tree.types.traits.IsStructure;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
+public class Document implements TopLevelDocumentHandler {
+  private int autoClassId;
+  public final HashSet<String> channelsThatAreFutures;
+  public final HashSet<String> channelsThatAreQueries;
+  public final HashMap<String, String> channelToMessageType;
+  private String className;
+  public final ArrayList<DefineDocumentEvent> connectionEvents;
+  public final ArrayList<DefineConstructor> constructors;
+  private final TreeMap<String, LatentCodeSnippet> dedupedLatentCodeSnippets;
+  private final ArrayList<DocumentError> errorLists;
+  public final ArrayList<DefineFunction> functionDefinitions;
+  private final HashSet<String> functionsDefines;
+  public final HashMap<String, TyNativeFunctional> functionTypes;
+  public final ArrayList<DefineHandler> handlers;
+  private final ArrayList<LatentCodeSnippet> latentCodeSnippets;
+  public final TyReactiveRecord rootDocument2;
+  private final ArrayList<File> searchPaths;
+  public final ArrayList<DefineTest> tests;
+  public final LinkedHashMap<String, DefineStateTransition> transitions;
+  private final ArrayList<Consumer<Environment>> typeCheckOrder;
+  public final LinkedHashMap<String, TyType> types;
+
+  public Document() {
+    autoClassId = 0;
+    errorLists = new ArrayList<>();
+    typeCheckOrder = new ArrayList<>();
+    rootDocument2 = new TyReactiveRecord(null, Token.WRAP("Root"), new StructureStorage(StorageSpecialization.Record, false, null));
+    types = new LinkedHashMap<>();
+    handlers = new ArrayList<>();
+    transitions = new LinkedHashMap<>();
+    tests = new ArrayList<>();
+    connectionEvents = new ArrayList<>();
+    channelToMessageType = new HashMap<>();
+    channelsThatAreFutures = new HashSet<>();
+    channelsThatAreQueries = new HashSet<>();
+    searchPaths = new ArrayList<>();
+    constructors = new ArrayList<>();
+    latentCodeSnippets = new ArrayList<>();
+    dedupedLatentCodeSnippets = new TreeMap<>();
+    className = "DemoDocument";
+    functionDefinitions = new ArrayList<>();
+    functionTypes = new HashMap<>();
+    functionsDefines = new HashSet<>();
+  }
+
+  @Override
+  public void add(final BubbleDefinition bd) {
+    if (rootDocument2.storage.has(bd.nameToken.text)) {
+      typeCheckOrder.add(env -> {
+        env.document.createError(bd, String.format("Global field '%s' was already defined", bd.nameToken.text), "GlobalDefine");
+      });
+      return;
+    }
+    rootDocument2.storage().add(bd, typeCheckOrder);
+  }
+
+  @Override
+  public void add(final DefineConstructor dc) {
+    constructors.add(dc);
+    typeCheckOrder.add(env -> {
+      dc.typing(env);
+    });
+  }
+
+  @Override
+  public void add(final DefineDispatcher dd) {
+    final var type = types.get(dd.enumNameToken.text);
+    if (type != null && type instanceof TyNativeEnum) {
+      typeCheckOrder.add(env -> {
+        dd.typing(env);
+      });
+      ((TyNativeEnum) type).storage.associate(dd);
+    } else {
+      if (type == null) {
+        typeCheckOrder.add(env -> {
+          env.document.createError(dd, String.format("Dispatcher '%s' was unable to find the given enumeration type of '%s'", dd.functionName.text, dd.enumNameToken.text), "DocumentDefine");
+        });
+      } else {
+        typeCheckOrder.add(env -> {
+          env.document.createError(dd, String.format("Dispatcher '%s' found '%s', but it was '%s'", dd.functionName.text, dd.enumNameToken.text, type.getAdamaType()), "DocumentDefine");
+        });
+      }
+    }
+  }
+
+  @Override
+  public void add(final DefineDocumentEvent dce) {
+    typeCheckOrder.add(env -> dce.typing(env));
+    connectionEvents.add(dce);
+  }
+
+  @Override
+  public void add(final DefineFunction func) {
+    functionsDefines.add(func.name);
+    if (channelsThatAreFutures.contains(func.name)) {
+      typeCheckOrder.add(env -> {
+        env.document.createError(func, String.format("Function/procedure '%s' was already defined as a channel.", func.name), "DocumentDefine");
+      });
+    }
+    functionDefinitions.add(func);
+    typeCheckOrder.add(env -> {
+      func.typing(env);
+    });
+  }
+
+  @Override
+  public void add(final DefineHandler handler) {
+    handlers.add(handler);
+    channelToMessageType.put(handler.channel, handler.typeName);
+    if (handler.behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
+      if (functionsDefines.contains(handler.channel)) {
+        typeCheckOrder.add(env -> {
+          env.document.createError(handler, String.format("Handler '%s' was already defined as a function.", handler.channel), "DocumentDefine");
+        });
+      }
+      channelsThatAreFutures.add(handler.channel);
+    }
+    typeCheckOrder.add(env -> {
+      handler.typing(env);
+    });
+  }
+
+  @Override
+  public void add(final DefineStateTransition transition) {
+    transitions.put(transition.name, transition);
+    typeCheckOrder.add(env -> {
+      transition.typing(env);
+    });
+  }
+
+  @Override
+  public void add(final DefineTest test) {
+    tests.add(test);
+    typeCheckOrder.add(env -> {
+      test.typing(env);
+    });
+  }
+
+  @Override
+  public void add(final FieldDefinition fd) {
+    if (rootDocument2.storage.has(fd.name)) {
+      typeCheckOrder.add(env -> {
+        env.document.createError(fd, String.format("Global field '%s' was already defined", fd.nameToken.text), "GlobalDefine");
+      });
+      return;
+    }
+    rootDocument2.storage().add(fd, typeCheckOrder);
+  }
+
+  @Override
+  public void add(final ImportDocument importDocument) {
+    importFile(importDocument.filename, importDocument);
+  }
+
+  @Override
+  public void add(final IsEnum storage) {
+    if (storage instanceof TyType) {
+      if (types.containsKey(storage.name())) {
+        typeCheckOrder.add(env -> {
+          env.document.createError((TyType) storage, String.format("Enum '%s' was already defined", storage.name()), "DocumentDefine");
+        });
+        return;
+      }
+      typeCheckOrder.add(env -> {
+        storage.storage().typing(env);
+      });
+      typeCheckOrder.add(env -> {
+        for (final String s : storage.storage().duplicates) {
+          env.document.createError((TyType) storage, String.format("Enum '%s' was has duplicates for %s defined", storage.name(), s), "DocumentDefine");
+        }
+      });
+      types.put(storage.name(), (TyType) storage);
+    }
+  }
+
+  @Override
+  public void add(final IsStructure storage) {
+    if (storage instanceof TyType) {
+      if (types.containsKey(storage.name())) {
+        typeCheckOrder.add(env -> {
+          env.document.createError((TyType) storage, String.format("Record '%s' was already", storage.name()), "DocumentDefine");
+        });
+      }
+      types.put(storage.name(), (TyType) storage);
+      typeCheckOrder.add(env -> {
+        storage.typing(env.scope());
+      });
+    }
+  }
+
+  public void add(final LatentCodeSnippet snippet) {
+    latentCodeSnippets.add(snippet);
+  }
+
+  public void add(final String key, final LatentCodeSnippet snippet) {
+    dedupedLatentCodeSnippets.put(key, snippet);
+  }
+
+  @Override
+  public void add(final Token token) {
+    // no-op
+  }
+
+  /** add a search path for importing files */
+  public void addSearchPath(final File path) {
+    searchPaths.add(path);
+  }
+
+  /** check the document is valid */
+  public boolean check(final EnvironmentState state) {
+    final var environment = Environment.fresh(this, state);
+    // we wall all functions to give them their ID and then index them
+    final var functionIndex = new HashMap<String, ArrayList<DefineFunction>>();
+    for (final DefineFunction df : functionDefinitions) {
+      df.getFuncId(environment);
+      var index = functionIndex.get(df.name);
+      if (index == null) {
+        index = new ArrayList<>();
+        functionIndex.put(df.name, index);
+      }
+      index.add(df);
+    }
+    for (final Map.Entry<String, ArrayList<DefineFunction>> entry : functionIndex.entrySet()) {
+      final var instances = new ArrayList<FunctionOverloadInstance>();
+      for (final DefineFunction df : entry.getValue()) {
+        instances.add(df.toFunctionOverloadInstance());
+      }
+      final var functional = new TyNativeFunctional(entry.getKey(), instances, FunctionStyleJava.InjectNameThenArgs);
+      typeCheckOrder.add(env -> functional.typing(environment));
+      functionTypes.put(entry.getKey(), functional);
+    }
+    while (typeCheckOrder.size() > 0) {
+      final var cloneTypeChecks = new ArrayList<>(typeCheckOrder);
+      typeCheckOrder.clear();
+      for (final Consumer<Environment> checkInOrder : cloneTypeChecks) {
+        checkInOrder.accept(environment);
+      }
+    }
+    return !hasErrors();
+  }
+
+  /** compile the document to java */
+  public String compileJava(final EnvironmentState state) {
+    var environment = Environment.fresh(this, state);
+    if (state.options.disableBillingCost) {
+      environment = environment.scopeAsNoCost();
+    }
+    final var sb = new StringBuilderWithTabs();
+    CodeGenDocument.writePrelude(sb, environment);
+    sb.append("public class " + className + " extends LivingDocument {").tabUp().writeNewline();
+    CodeGenRecords.writeRootDocument(rootDocument2.storage, sb, environment);
+    for (final TyType ty : types.values()) {
+      if (ty instanceof DetailTypeProducesRootLevelCode) {
+        ((DetailTypeProducesRootLevelCode) ty).compile(sb, environment);
+      }
+    }
+    CodeGenFunctions.writeFunctionsJava(sb, environment);
+    CodeGenMessageHandling.writeMessageHandlers(sb, environment);
+    CodeGenStateMachine.writeStateMachine(sb, environment);
+    CodeGenEventHandlers.writeEventHandlers(sb, environment);
+    CodeGenTests.writeTests(sb, environment);
+    CodeGenConstructor.writeConstructors(sb, environment);
+    // code snippets which are done after everything
+    for (final LatentCodeSnippet lcs : latentCodeSnippets) {
+      lcs.writeLatentJava(sb);
+    }
+    for (final LatentCodeSnippet lcs : dedupedLatentCodeSnippets.values()) {
+      lcs.writeLatentJava(sb);
+    }
+    sb.append("/* end of file */").tabDown().writeNewline();
+    sb.append("}").writeNewline(); // end file
+    return sb.toString();
+  }
+
+  /** create an error with a reference to a tutorial */
+  public DocumentError createError(final DocumentPosition position, final String message, final String tutorial) {
+    final var err = new DocumentError(position, message, tutorial);
+    errorLists.add(err);
+    return err;
+  }
+
+  public IsStructure findPriorMessage(final StructureStorage search, final Environment environment) {
+    for (final TyType other : types.values()) {
+      if (other instanceof TyNativeMessage) {
+        if (((IsStructure) other).storage().match(search, environment)) { return (IsStructure) other; }
+      }
+    }
+    return null;
+  }
+
+  /** get the class name */
+  public String getClassName() {
+    return className;
+  }
+
+  /** does the document have errors */
+  public boolean hasErrors() {
+    return errorLists.size() > 0;
+  }
+
+  /** @param filename the filename to import
+   * @param position the position within the document (can't be null, use
+   *                 DocumentPosition.ZERO for initial import) */
+  public void importFile(final String filename, final DocumentPosition position) {
+    final var file = search(filename);
+    if (!file.exists()) {
+      createError(position, String.format("File '%s' was not found", filename), "ImportIssue");
+      return;
+    }
+    try {
+      final var tokenEngine = new TokenEngine(filename, Files.readString(file.toPath()).codePoints().iterator());
+      final var parser = new Parser(tokenEngine);
+      parser.document().accept(this);
+    } catch (final ScanException e) {
+      createError(position, String.format("File '%s' failed to lex: %s", filename, e.getMessage()), "ParseException");
+      createError(position, String.format("Import failed (Lex): %s", e.getMessage()), "ImportIssue");
+    } catch (final ParseException e) {
+      createError(e.toDocumentPosition(), String.format("File '%s' failed to parse: %s", filename, e.getMessage()), "ParseException");
+      createError(position, String.format("Import failed (Parse): %s", e.getMessage()), "ImportIssue");
+    } catch (final Exception e) {
+      createError(position, String.format("File '%s' failed to import due to '%s'", filename, e.getMessage()), "ImportIssue");
+      createError(position, String.format("Import failed (Unknown): %s", e.getMessage()), "ImportIssue");
+    }
+  }
+
+  /** invent a class id */
+  public int inventClassId() {
+    return autoClassId++;
+  }
+
+  /** search for the given filename in the search paths; consumer must check if
+   * file exists or not */
+  private File search(final String filename) {
+    var file = new File(filename);
+    final var search = searchPaths.iterator();
+    while (!file.exists() && search.hasNext()) {
+      file = new File(search.next(), filename);
+    }
+    return file;
+  }
+
+  /** set the class name */
+  public void setClassName(final String className) {
+    this.className = className;
+  }
+
+  /** export errors in LSP format */
+  public void writeErrorsAsLanguageServerDiagnosticArray(final ArrayNode diagnostics) {
+    errorLists.forEach(err -> {
+      err.writeAsLanguageServerDiagnostic(diagnostics.addObject());
+    });
+  }
+}

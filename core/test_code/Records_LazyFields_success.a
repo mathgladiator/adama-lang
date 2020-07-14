@@ -1,0 +1,22 @@
+record Y {
+  public int u;
+  public formula v = u * u;
+}
+
+record X {
+  public int x;
+  public int y;
+  public formula z = x + y;
+
+  public Y w;
+}
+
+X x;
+
+test PrimaryTest {
+  x.x = 1;
+  x.y = 2;
+  assert x.z == 3;
+  x.w.u = 4;
+  assert x.w.v == 16;
+}

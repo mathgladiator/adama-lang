@@ -1,0 +1,10 @@
+record X {
+  bool x;
+}
+table<X> t;
+
+@construct {
+  (select t).x++;
+  ++((select t).x);
+}
+

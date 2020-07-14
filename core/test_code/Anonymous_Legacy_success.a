@@ -1,0 +1,20 @@
+record Thing {
+  public int x;
+  public int y;
+  public double z;
+}
+
+table<Thing> things;
+
+@construct {
+  transition #setup;
+}
+
+#setup {
+  things <- {x:1, y:2};
+  things <- [{x:2, y:3}];
+  things <- [{z:4}];
+  things <- [{x:3, y:4}, {x:4, y:5}];
+  things <- [{x:3, y:4, z:1}, {x:4, y:5, z:3.14}];
+}
+

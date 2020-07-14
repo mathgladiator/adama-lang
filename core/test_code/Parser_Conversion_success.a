@@ -1,0 +1,13 @@
+message X {
+  int x;
+}
+
+message XY {
+  int x;
+  int y;
+}
+
+@construct {
+  XY[] z = [{x:123, y:42}];
+  X[] x = @convert<X>(z);
+}

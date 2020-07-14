@@ -1,0 +1,16 @@
+message M {
+  int x;
+  int y;
+}
+
+int sz1 = 0;
+int sz2;
+int sz3;
+@construct {
+  table<M> t;
+  t <- {x:1};
+  sz1 = t.size();
+  sz2 = (iterate t).size();
+  t.delete();
+  sz3 = t.size() + 1000;
+}

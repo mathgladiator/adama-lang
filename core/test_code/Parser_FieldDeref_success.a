@@ -1,0 +1,7 @@
+message M { int x; }
+
+public int result;
+@construct {
+  M m = {x:123};
+  result = m.x;
+}

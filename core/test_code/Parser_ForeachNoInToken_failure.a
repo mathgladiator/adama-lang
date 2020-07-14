@@ -1,0 +1,4 @@
+@construct {
+  foreach(x : [{x:1}]) {
+  }
+}

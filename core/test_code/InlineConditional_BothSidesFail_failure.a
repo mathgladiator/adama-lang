@@ -1,0 +1,6 @@
+
+@construct {
+  let x = true ? (true + 1) : (1 + false);
+  let y = (true + 1) ? true : false;
+}
+

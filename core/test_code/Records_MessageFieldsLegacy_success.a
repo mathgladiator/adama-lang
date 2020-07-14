@@ -1,0 +1,30 @@
+message M {
+  string name;
+}
+
+message Y {
+  int val;
+}
+
+enum E { yes:1, no:0 }
+
+message X {
+  int x;
+  double d;
+  bool b;
+  string s;
+  Y[] ay;
+  maybe<M> mm;
+  maybe<int> mi;
+  maybe<double> md;
+  maybe<bool> mb;
+  maybe<string> ms;
+  maybe<E> me;
+  E e;
+  Y y;
+  label lbl;
+  maybe<label> mlbl;
+}
+
+@construct {
+}
