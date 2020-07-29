@@ -8,6 +8,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 
 /** A boolean constant with values true or false. */
@@ -28,12 +29,12 @@ public class BooleanConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    return new TyNativeBoolean(token).makeCopyWithNewPosition(this);
+    environment.mustBeComputeContext(this);
+    return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    environment.mustBeComputeContext(this);
     if (value) {
       sb.append("true");
     } else {

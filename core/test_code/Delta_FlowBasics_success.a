@@ -1,0 +1,33 @@
+
+public int i;
+public long l;
+public double d;
+public bool b;
+public string s;
+
+@construct {
+  i = 42;
+  l = 314;
+  d = 2.71;
+  b = true;
+  s = "Hi";
+  transition #one;
+}
+
+#one {
+  i = 100;
+  l = 4000000L;
+  d = 3.14;
+  b = false;
+  s = "There";
+  transition #two;
+}
+
+#two {
+  i = 1000;
+  l = 980000000000L;
+  d = 42.13;
+  b = true;
+  s = "Oh!!!";
+}
+

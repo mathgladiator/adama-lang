@@ -6,7 +6,8 @@ package org.adamalang.runtime.reactives;
 import java.util.ArrayList;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** the base class of any reactive object */
 public abstract class RxBase {
@@ -25,13 +26,18 @@ public abstract class RxBase {
   }
 
   /** commit the changes to the object, and emit a delta */
-  public abstract void __commit(String name, ObjectNode delta);
+  public abstract void __commit(String name, JsonStreamWriter writer);
+  /** take a dump of the data */
+  public abstract void __dump(JsonStreamWriter writer);
 
   /** how many children are subscribed to this item */
   public int __getSubscriberCount() {
     if (__subscribers != null) { return __subscribers.size(); }
     return 0;
   }
+
+  /** initialize data & merge data in */
+  public abstract void __insert(JsonStreamReader reader);
 
   /** tell all subscribers that they need to recompute */
   protected void __invalidateSubscribers() {

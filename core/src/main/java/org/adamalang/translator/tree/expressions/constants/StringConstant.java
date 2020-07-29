@@ -8,6 +8,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeString;
 
 /** utf-8 strings constant ("ninja") */
@@ -27,12 +28,12 @@ public class StringConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    return new TyNativeString(token).makeCopyWithNewPosition(this);
+    environment.mustBeComputeContext(this);
+    return new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    environment.mustBeComputeContext(this);
     sb.append(token.text);
   }
 }

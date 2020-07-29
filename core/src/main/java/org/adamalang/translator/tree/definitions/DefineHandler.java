@@ -9,6 +9,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeChannel;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
@@ -97,13 +98,13 @@ public class DefineHandler extends Definition {
     final var next = environment.scopeAsMessageHandler();
     if (messageVar != null) {
       if (isArray) {
-        next.define(messageVar, new TyNativeArray((TyType) messageType, messageTypeArrayToken), false, this);
+        next.define(messageVar, new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, messageTypeArrayToken), true, this);
       } else {
-        next.define(messageVar, (TyType) messageType, false, this);
+        next.define(messageVar, (TyType) messageType, true, this);
       }
     }
     if (client != null) {
-      next.define(client, new TyNativeClient(clientTypeToken).withPosition(this), true, this);
+      next.define(client, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientTypeToken).withPosition(this), true, this);
     }
     return next;
   }
@@ -170,7 +171,8 @@ public class DefineHandler extends Definition {
       code.typing(next);
     }
     if (behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
-      final var nativeChannel = new TyNativeChannel(null, new TokenizedItem<>(isArray ? new TyNativeArray((TyType) messageType, null) : (TyType) messageType)).withPosition(this);
+      final var nativeChannel = new TyNativeChannel(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(isArray ? new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null) : (TyType) messageType))
+          .withPosition(this);
       environment.define(channel, nativeChannel, false, nativeChannel);
     }
   }

@@ -18,32 +18,30 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.contracts.TransactionLogger;
 import org.adamalang.runtime.contracts.TimeSource;
-import org.adamalang.runtime.exceptions.DocumentRequestRejectedException;
-import org.adamalang.runtime.logger.TransactionResult;
+import org.adamalang.runtime.contracts.TransactionLogger;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
+import org.adamalang.runtime.logger.NoOpLogger;
 import org.adamalang.runtime.logger.ObjectNodeLogger;
 import org.adamalang.runtime.logger.Transaction;
 import org.adamalang.runtime.logger.Transactor;
+import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.SilentDocumentMonitor;
+import org.adamalang.runtime.ops.TestReportBuilder;
+import org.adamalang.runtime.stdlib.Utility;
+import org.adamalang.translator.env.CompilerOptions;
+import org.adamalang.translator.env.EnvironmentState;
+import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.StringBuilderDocumentHandler;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
-import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.adamalang.translator.env.EnvironmentState;
-import org.adamalang.translator.env.GlobalObjectPool;
-import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
-import org.adamalang.runtime.ops.TestReportBuilder;
-import org.adamalang.runtime.stdlib.Utility;
-import org.adamalang.runtime.natives.NtClient;
 
-/**
- * this class is a giant mess of stuff, and it could use a great deal of love.
- */
+/** this class is a giant mess of stuff, and it could use a great deal of
+ * love. */
 public class GenerateLanguageTests {
   public static class Test {
     public static Test fromFilename(final String filename) {
@@ -146,26 +144,22 @@ public class GenerateLanguageTests {
       Files.writeString(new File(root, "Generated" + clazz + "Tests.java").toPath(), outputFile.toString());
     }
   }
+
   private static String WTF = "" + (char) 92;
+
   public static String constructOutput(final boolean emission, final String className, final Path path, final Path inputRoot) {
-    var outputToWrite = constructOutputWithChaos(emission, className, path, inputRoot);
-    // outputToWrite = Pattern.compile("\"__entropy\"\\s*:\\s*\"-?[0-9]*\"").matcher(outputToWrite).replaceAll("!EntropyHiddenForStability!");
-    outputToWrite = Pattern.compile("\"__next_time\"\\s*:\\s*[0-9\\.E]*").matcher(outputToWrite).replaceAll("!TimeHiddenForStability!");
+    final var outputToWrite = constructOutputWithChaos(emission, className, path, inputRoot);
     return outputToWrite;
   }
+
   private static String constructOutputWithChaos(final boolean emission, final String className, final Path path, final Path inputRoot) {
-    AtomicLong testTime = new AtomicLong(0);
-    TimeSource time = new TimeSource() {
-      @Override
-      public long nowMilliseconds() {
-        return testTime.get();
-      }
-    };
-    CompilerOptions options = CompilerOptions.start().enableCodeCoverage().make();
-    GlobalObjectPool globals = GlobalObjectPool.createPoolWithStdLib();
-    EnvironmentState state = new EnvironmentState(globals, options);
+    final var testTime = new AtomicLong(0);
+    final var time = (TimeSource) () -> testTime.get();
+    final var options = CompilerOptions.start().enableCodeCoverage().make();
+    final var globals = GlobalObjectPool.createPoolWithStdLib();
+    final var state = new EnvironmentState(globals, options);
     final var outputFile = new StringBuilder();
-    final AtomicReference<Boolean> passedTests = new AtomicReference<>(true);
+    final var passedTests = new AtomicReference<>(true);
     var passedValidation = true;
     try {
       final var document = new Document();
@@ -179,7 +173,7 @@ public class GenerateLanguageTests {
         emission(path.toString(), path, outputFile);
       }
       outputFile.append("--ISSUES-------------------------------------------").append("\n");
-      final var java = document.compileJava(state);
+      final var java = document.hasErrors() ? "" : document.compileJava(state);
       final var issues = Utility.createArrayNode();
       document.writeErrorsAsLanguageServerDiagnosticArray(issues);
       outputFile.append(issues.toPrettyString()).append("\n");
@@ -203,32 +197,49 @@ public class GenerateLanguageTests {
           outputFile.append(new String(memoryResultsCompiler.toByteArray()));
         }
       }
-      SilentDocumentMonitor monitor = new SilentDocumentMonitor() {
+      final SilentDocumentMonitor monitor = new SilentDocumentMonitor() {
         @Override
-        public void assertFailureAt(int startLine, int startPosition, int endLine, int endLinePosition, int total, int failures) {
+        public void assertFailureAt(final int startLine, final int startPosition, final int endLine, final int endLinePosition, final int total, final int failures) {
           outputFile.append("ASSERT FAILURE:" + startLine + "," + startPosition + " --> " + endLine + "," + endLinePosition + " (" + failures + "/" + total + ")\n");
           passedTests.set(false);
         }
       };
       if (factory != null) {
         outputFile.append("--JAVA RUNNING-------------------------------------").append("\n");
-        ObjectNodeLogger objectNodeLog = ObjectNodeLogger.fresh();
-        TransactionLogger testTransactionLogger = new TransactionLogger() {
+        final var objectNodeLog = ObjectNodeLogger.fresh();
+        final TransactionLogger testTransactionLogger = new TransactionLogger() {
           @Override
-          public void ingest(Transaction t) throws Exception {
+          public void close() throws Exception {
+          }
+
+          @Override
+          public void ingest(final Transaction t) throws ErrorCodeException {
             outputFile.append(t.request.toString() + "-->" + t.delta.toString() + " need:" + t.transactionResult.needsInvalidation + " in:" + t.transactionResult.whenToInvalidMilliseconds + "\n");
             objectNodeLog.ingest(t);
             testTime.addAndGet(Math.max(t.transactionResult.whenToInvalidMilliseconds / 2, 25));
           }
-
-          @Override
-          public void close() throws Exception {
-          }
         };
-        Transactor transactor = new Transactor(factory, monitor, time, testTransactionLogger);
-        transactor.construct(NtClient.NO_ONE, Utility.createObjectNode(), "0");
+        final var transactor = new Transactor(factory, monitor, time, testTransactionLogger);
+        transactor.construct(NtClient.NO_ONE, "{}", "0");
         try {
-          TransactionResult transactionResult = transactor.invalidate();
+          transactor.createView(NtClient.NO_ONE, str -> {
+            outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
+          });
+          try {
+            transactor.connect(NtClient.NO_ONE);
+          } catch (final ErrorCodeException e) {
+            outputFile.append("NO_ONE was DENIED:" + e.code + "\n");
+          }
+          final var rando = new NtClient("rando", "random-place");
+          transactor.createView(rando, str -> {
+            outputFile.append("+ RANDO DELTA:").append(str).append("\n");
+          });
+          try {
+            transactor.connect(rando);
+          } catch (final ErrorCodeException e) {
+            outputFile.append("RANDO was DENIED:" + e.code + "\n");
+          }
+          var transactionResult = transactor.invalidate();
           while (transactionResult.needsInvalidation) {
             transactionResult = transactor.invalidate();
           }
@@ -239,27 +250,19 @@ public class GenerateLanguageTests {
         transactor.bill();
         outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
         outputFile.append(objectNodeLog.node.toString()).append("\n");
-        outputFile.append("--PRIVACY QUERIES----------------------------------").append("\n");
-        try {
-          transactor.connect(NtClient.NO_ONE);
-          transactor.invalidate();
-          final var randoValue = (ObjectNode) transactor.getView(NtClient.NO_ONE);
-          outputFile.append("AS NO_ONE:").append(randoValue.toString()).append("\n");
-        } catch (DocumentRequestRejectedException drre) {
-          outputFile.append("NO_ONE was DENIED\n");
-        }
-        NtClient rando = new NtClient("rando", "random-place");
-        try {
-          transactor.connect(rando);
-          transactor.invalidate();
-          final var randoValue = (ObjectNode) transactor.getView(rando);
-          outputFile.append("AS RANDO:").append(randoValue.toString()).append("\n");
-         } catch (DocumentRequestRejectedException drre) {
-            outputFile.append("RANDO was DENIED\n");
+        outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");
+        String json = transactor.json();
+        outputFile.append(json).append("\n");
+        Transactor __t = new Transactor(factory, monitor, time, new NoOpLogger());
+        __t.create();
+        __t.insert(json);
+        outputFile.append(__t.json()).append("\n");
+        if (!__t.json().equals(json)) {
+          throw new RuntimeException("Json were not equal");
         }
         outputFile.append("--JAVA TEST RESULTS--------------------------------").append("\n");
         final var report = new TestReportBuilder();
-        factory.populateTestReport(report, monitor);
+        factory.populateTestReport(report, monitor, "42");
         if (report.toString().contains("HAS FAILURES")) {
           passedTests.set(false);
         }
@@ -287,6 +290,7 @@ public class GenerateLanguageTests {
     }
     return outputFile.toString();
   }
+
   private static void emission(final String filename, final Path path, final StringBuilder outputFile) throws Exception {
     final var esb = new StringBuilderDocumentHandler();
     try {
@@ -314,6 +318,7 @@ public class GenerateLanguageTests {
       outputFile.append(new String(memory.toByteArray()));
     }
   }
+
   private static String escapeLine(final String line) {
     return line //
         .replaceAll(Pattern.quote(WTF), WTF + WTF + WTF + WTF) //
@@ -324,8 +329,8 @@ public class GenerateLanguageTests {
   public static void main(final String[] args) throws Exception {
     final var template = makeTemplate();
     final var tests = new ArrayList<Test>();
-    tests.add(new Test("Functions", "AutoConvertAnonymousOnReturn", true));
-    String hackSearch = null;
+    tests.add(new Test("Parser", "Preempt", true));
+    final String hackSearch = null;
     final var root = new File("./test_code");
     final var classMap = new TreeMap<String, TestClass>();
     for (final Test test : tests) {

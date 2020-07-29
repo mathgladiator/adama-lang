@@ -15,6 +15,7 @@ import org.adamalang.translator.tree.types.checking.LocalTypeAssignmentResult;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 
+/** left {=,+=,*=,/=,%=,-=,<-} right */
 public class Assignment extends Statement {
   public Expression altExpression;
   public final Expression expression;

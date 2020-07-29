@@ -17,10 +17,11 @@ public class CodeGenDocument {
     sb.append("import com.fasterxml.jackson.databind.node.ObjectNode;").writeNewline();
     sb.append("import org.adamalang.runtime.*;").writeNewline();
     sb.append("import org.adamalang.runtime.async.*;").writeNewline();
-    sb.append("import org.adamalang.runtime.bridges.*;").writeNewline();
     sb.append("import org.adamalang.runtime.contracts.*;").writeNewline();
+    sb.append("import org.adamalang.runtime.delta.*;").writeNewline();
     sb.append("import org.adamalang.runtime.exceptions.*;").writeNewline();
     sb.append("import org.adamalang.runtime.index.*;").writeNewline();
+    sb.append("import org.adamalang.runtime.json.*;").writeNewline();
     sb.append("import org.adamalang.runtime.natives.*;").writeNewline();
     sb.append("import org.adamalang.runtime.natives.lists.*;").writeNewline();
     sb.append("import org.adamalang.runtime.ops.*;").writeNewline();
@@ -30,6 +31,7 @@ public class CodeGenDocument {
     sb.append("import java.util.function.Function;").writeNewline();
     sb.append("import java.util.ArrayList;").writeNewline();
     sb.append("import java.util.Comparator;").writeNewline();
+    sb.append("import java.util.Map;").writeNewline();
     for (final String imp : environment.state.globals.imports()) {
       if (imp.startsWith("org.adamalang.runtime.stdlib")) {
         continue;

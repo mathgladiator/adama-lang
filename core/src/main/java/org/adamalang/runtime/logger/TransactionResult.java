@@ -3,22 +3,23 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.logger;
 
-import org.adamalang.runtime.bridges.NativeBridge;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 
 /** the result of a transaction */
 public class TransactionResult {
   public static TransactionResult from(final ObjectNode node) {
-    final boolean needsInvalidation = NativeBridge.BOOLEAN_NATIVE_SUPPORT.readFromMessageObject(node, "needsInvalidation");
-    final int whenToInvalidMilliseconds = NativeBridge.INTEGER_NATIVE_SUPPORT.readFromMessageObject(node, "whenToInvalidMilliseconds");
-    final int seq = NativeBridge.INTEGER_NATIVE_SUPPORT.readFromMessageObject(node, "seq");
+    final var needsInvalidationNode = node.get("needsInvalidation");
+    final var whenToInvalidMillisecondsNode = node.get("whenToInvalidMilliseconds");
+    final var seqNode = node.get("seq");
+    final var needsInvalidation = needsInvalidationNode != null && needsInvalidationNode.isBoolean() ? needsInvalidationNode.asBoolean() : false;
+    final var whenToInvalidMilliseconds = whenToInvalidMillisecondsNode != null && whenToInvalidMillisecondsNode.isIntegralNumber() ? whenToInvalidMillisecondsNode.asInt() : 0;
+    final var seq = seqNode != null && seqNode.isIntegralNumber() ? seqNode.asInt() : 0;
     return new TransactionResult(needsInvalidation, whenToInvalidMilliseconds, seq);
   }
 
   public final boolean needsInvalidation;
-  public final int whenToInvalidMilliseconds;
   public final int seq;
+  public final int whenToInvalidMilliseconds;
 
   public TransactionResult(final boolean needsInvalidation, final int whenToInvalidMilliseconds, final int seq) {
     this.needsInvalidation = needsInvalidation;

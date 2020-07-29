@@ -1,0 +1,31 @@
+message M {
+  int x;
+}
+
+function glist() -> list<M> {
+  table<M> tbl;
+  tbl <- {x:1};
+  tbl <- {x:2};
+  tbl <- {x:3};
+  return iterate tbl;
+}
+
+public formula tx1 = @maybe(glist());
+public formula tx2 = @maybe(@maybe(glist()));
+
+record R {
+  public int y;
+}
+
+table<R> t;
+
+public formula tx = @maybe(iterate t);
+
+function mp() -> map<int, int> {
+  map<int, int> m;
+  m[1] = 2;
+  return m;
+}
+
+public formula m1 = mp();
+public formula m2 = @maybe(mp());

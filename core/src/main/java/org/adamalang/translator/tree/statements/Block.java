@@ -9,6 +9,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 
+/** {statements*} */
 public class Block extends Statement {
   private Token closeBraceToken;
   private final Token openBraceToken;

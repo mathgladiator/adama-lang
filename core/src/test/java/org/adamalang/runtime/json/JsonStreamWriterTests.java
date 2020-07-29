@@ -3,7 +3,7 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.json;
 
-import org.adamalang.runtime.stdlib.Utility;
+import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,14 +15,67 @@ public class JsonStreamWriterTests {
         w.endObject();
         Assert.assertEquals("{}", w.toString());
     }
+
+    @Test
+    public void simpleNtClient1() {
+        JsonStreamWriter w = new JsonStreamWriter();
+        w.writeNtClient(NtClient.NO_ONE);
+        Assert.assertEquals("{\"agent\":\"?\",\"authority\":\"?\"}", w.toString());
+    }
+
+    @Test
+    public void simpleNtClient2() {
+        JsonStreamWriter w = new JsonStreamWriter();
+        w.writeNtClient(new NtClient("x", "y"));
+        Assert.assertEquals("{\"agent\":\"x\",\"authority\":\"y\"}", w.toString());
+    }
+
+    @Test
+    public void fieldWithIn() {
+        JsonStreamWriter w = new JsonStreamWriter();
+        w.beginObject();
+        w.writeObjectFieldIntro(42);
+        w.writeInteger(123);
+        w.endObject();
+        Assert.assertEquals("{\"42\":123}", w.toString());
+    }
+
+    @Test
+    public void inject() {
+        JsonStreamWriter w = new JsonStreamWriter();
+        w.beginObject();
+        w.writeObjectFieldIntro(42);
+        w.injectJson("[1,2,3]");
+        w.endObject();
+        Assert.assertEquals("{\"42\":[1,2,3]}", w.toString());
+    }
+
     @Test
     public void singleIntField() {
         JsonStreamWriter w = new JsonStreamWriter();
         w.beginObject();
         w.writeObjectFieldIntro("x");
-        w.writeInt(123);
+        w.writeInteger(123);
         w.endObject();
         Assert.assertEquals("{\"x\":123}", w.toString());
+    }
+    @Test
+    public void singleLongField() {
+        JsonStreamWriter w = new JsonStreamWriter();
+        w.beginObject();
+        w.writeObjectFieldIntro("x");
+        w.writeLong(123L);
+        w.endObject();
+        Assert.assertEquals("{\"x\":\"123\"}", w.toString());
+    }
+    @Test
+    public void singleNull() {
+        JsonStreamWriter w = new JsonStreamWriter();
+        w.beginObject();
+        w.writeObjectFieldIntro("x");
+        w.writeNull();
+        w.endObject();
+        Assert.assertEquals("{\"x\":null}", w.toString());
     }
     @Test
     public void singleDoubleField() {
@@ -47,7 +100,7 @@ public class JsonStreamWriterTests {
         JsonStreamWriter w = new JsonStreamWriter();
         w.beginObject();
         w.writeObjectFieldIntro("caaa");
-        w.writeBool(false);
+        w.writeBoolean(false);
         w.endObject();
         Assert.assertEquals("{\"caaa\":false}", w.toString());
     }
@@ -71,13 +124,13 @@ public class JsonStreamWriterTests {
         JsonStreamWriter w = new JsonStreamWriter();
         w.beginObject();
         w.writeObjectFieldIntro("f0");
-        w.writeInt(1);
+        w.writeInteger(1);
         w.writeObjectFieldIntro("f2");
-        w.writeInt(2);
+        w.writeInteger(2);
         w.writeObjectFieldIntro("f1");
-        w.writeInt(3);
+        w.writeInteger(3);
         w.writeObjectFieldIntro("f3");
-        w.writeInt(4);
+        w.writeInteger(4);
         w.endObject();
         Assert.assertEquals("{\"f0\":1,\"f2\":2,\"f1\":3,\"f3\":4}", w.toString());
     }
@@ -101,13 +154,13 @@ public class JsonStreamWriterTests {
         JsonStreamWriter w = new JsonStreamWriter();
         w.beginObject();
         w.writeObjectFieldIntro("f0");
-        w.writeBool(true);
+        w.writeBoolean(true);
         w.writeObjectFieldIntro("f2");
-        w.writeBool(false);
+        w.writeBoolean(false);
         w.writeObjectFieldIntro("f1");
-        w.writeBool(true);
+        w.writeBoolean(true);
         w.writeObjectFieldIntro("f3");
-        w.writeBool(false);
+        w.writeBoolean(false);
         w.endObject();
         Assert.assertEquals("{\"f0\":true,\"f2\":false,\"f1\":true,\"f3\":false}", w.toString());
     }
@@ -115,9 +168,9 @@ public class JsonStreamWriterTests {
     public void arrayOfInts() {
         JsonStreamWriter w = new JsonStreamWriter();
         w.beginArray();
-        w.writeInt(1);
-        w.writeInt(2);
-        w.writeInt(3);
+        w.writeInteger(1);
+        w.writeInteger(2);
+        w.writeInteger(3);
         w.endArray();
         Assert.assertEquals("[1,2,3]", w.toString());
     }
@@ -146,10 +199,10 @@ public class JsonStreamWriterTests {
     public void arrayOfBools() {
         JsonStreamWriter w = new JsonStreamWriter();
         w.beginArray();
-        w.writeBool(true);
-        w.writeBool(false);
-        w.writeBool(true);
-        w.writeBool(false);
+        w.writeBoolean(true);
+        w.writeBoolean(false);
+        w.writeBoolean(true);
+        w.writeBoolean(false);
         w.endArray();
         Assert.assertEquals("[true,false,true,false]", w.toString());
     }
@@ -159,7 +212,7 @@ public class JsonStreamWriterTests {
         w.beginArray();
         w.beginObject();
         w.writeObjectFieldIntro("x");
-        w.writeBool(true);
+        w.writeBoolean(true);
         w.endObject();
         w.beginObject();
         w.writeObjectFieldIntro("x");
@@ -171,6 +224,7 @@ public class JsonStreamWriterTests {
         w.endArray();
         Assert.assertEquals("[{\"x\":true},{\"x\":\"y\",\"zzz\":{}}]", w.toString());
     }
+
     @Test
     public void nesting() throws Exception {
         JsonStreamWriter w = new JsonStreamWriter();
@@ -181,11 +235,29 @@ public class JsonStreamWriterTests {
         w.beginObject();
         w.writeObjectFieldIntro("z");
         w.writeDouble(123);
+        w.writeObjectFieldIntro(42);
+        w.writeDouble(1235);
+        w.writeObjectFieldIntro(50L);
+        w.writeBoolean(true);
         w.endObject();
         w.writeString("k");
         w.endArray();
         w.endObject();
         w.endArray();
-        Assert.assertEquals("[{\"x\":[{\"z\":123.0},\"k\"]}]", w.toString());
+        Assert.assertEquals("[{\"x\":[{\"z\":123.0,\"42\":1235.0,\"50\":true},\"k\"]}]", w.toString());
+    }
+
+    @Test
+    public void unicode() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeString("猿も木から落ちる");
+        Assert.assertEquals("\"\\u733f\\u3082\\u6728\\u304b\\u3089\\u843d\\u3061\\u308b\"", writer.toString());
+    }
+
+    @Test
+    public void unicode2() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeString("" + (char) (5 * 256) + "" + (char) (40 * 256 + 5));
+        Assert.assertEquals("\"\\u0500\\u2805\"", writer.toString());
     }
 }

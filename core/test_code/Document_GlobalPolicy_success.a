@@ -1,0 +1,18 @@
+@connected (who) {
+  return true;
+}
+
+policy foo(who) {
+  return true;
+}
+
+record R {
+  use_policy<foo> int x;
+}
+
+table<R> r;
+
+@construct {
+  r <- {x:1};
+}
+

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @FunctionalInterface
 public interface CanConvertToObject {
-  /** This is a Hack for decide/choose/fetch on channels, so those functions can be polymoprhic */
+  /** This is a Hack for decide/choose/fetch on channels, so those functions can
+   * be polymoprhic */
   public ObjectNode convertToObjectNode();
 }

@@ -13,11 +13,14 @@ public class RuleSetMultiply {
       final var aInteger = RuleSetCommon.IsInteger(environment, typeA, true);
       final var bInteger = RuleSetCommon.IsInteger(environment, typeB, true);
       if (aInteger && bInteger) { return CanMathResult.YesAndResultIsInteger; }
+      final var aLong = RuleSetCommon.IsLong(environment, typeA, true);
+      final var bLong = RuleSetCommon.IsLong(environment, typeB, true);
+      if (aLong && bLong || aLong && bInteger || aInteger && bLong) { return CanMathResult.YesAndResultIsLong; }
       final var aString = RuleSetCommon.IsString(environment, typeA, true);
       if (aString && bInteger) { return CanMathResult.YesAndResultIsStringRepetitionUsingSpecialMultiplyOp; }
       final var aDouble = RuleSetCommon.IsDouble(environment, typeA, true);
       final var bDouble = RuleSetCommon.IsDouble(environment, typeB, true);
-      if (aDouble && bDouble || aDouble && bInteger || aInteger && bDouble) { return CanMathResult.YesAndResultIsDouble; }
+      if (aDouble && bDouble || aDouble && (bInteger || bLong) || (aInteger || aLong) && bDouble) { return CanMathResult.YesAndResultIsDouble; }
       if (RuleSetLists.TestReactiveList(environment, typeA, true)) {
         final var subTypeA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
         if (subTypeA != null) {

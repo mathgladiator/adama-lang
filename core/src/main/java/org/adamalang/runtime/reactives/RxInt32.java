@@ -6,7 +6,8 @@ package org.adamalang.runtime.reactives;
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive 32-bit integer (int) */
 public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet<Integer>, Indexable {
@@ -20,12 +21,24 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
   }
 
   @Override
-  public void __commit(final String name, final ObjectNode delta) {
+  public void __commit(final String name, final JsonStreamWriter writer) {
     if (__isDirty()) {
-      delta.put(name, value);
+      writer.writeObjectFieldIntro(name);
+      writer.writeInteger(value);
       backup = value;
       __lowerDirtyCommit();
     }
+  }
+
+  @Override
+  public void __dump(final JsonStreamWriter writer) {
+    writer.writeInteger(value);
+  }
+
+  @Override
+  public void __insert(final JsonStreamReader reader) {
+    backup = reader.readInteger();
+    value = backup;
   }
 
   @Override
@@ -64,6 +77,11 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
   @Override
   public int compareTo(final RxInt32 other) {
     return Integer.compare(value, other.value);
+  }
+
+  public void forceSet(final int id) {
+    backup = id;
+    value = id;
   }
 
   @Override

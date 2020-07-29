@@ -12,13 +12,13 @@ public class CompilerOptions {
     public String className;
     public boolean disableBillingCost;
     public int goodwillBudget;
+    public ArrayList<String> inputFiles;
+    public String outputFile;
     public String packageName;
     public boolean produceCodeCoverage;
     public boolean removeTests;
-    public boolean stderrLoggingCompiler;
-    public String outputFile;
     public ArrayList<String> searchPaths;
-    public ArrayList<String> inputFiles;
+    public boolean stderrLoggingCompiler;
 
     private Builder() {
       stderrLoggingCompiler = true;
@@ -33,7 +33,7 @@ public class CompilerOptions {
       inputFiles = new ArrayList<>();
     }
 
-    public Builder args(int offset, final String... args) {
+    public Builder args(final int offset, final String... args) {
       for (var k = offset; k + 1 < args.length; k += 2) {
         final var key = args[k];
         final var value = args[k + 1].toLowerCase().trim();
@@ -109,13 +109,13 @@ public class CompilerOptions {
   public final String className;
   public final boolean disableBillingCost; // G2G
   public final int goodwillBudget; // G2G
+  public final String[] inputFiles;
+  public final String outputFile;
   public final String packageName;
   public final boolean produceCodeCoverage; // G2G
   public final boolean removeTests;
-  public final boolean stderrLoggingCompiler; // G2G
-  public final String outputFile;
   public final String[] searchPaths;
-  public final String[] inputFiles;
+  public final boolean stderrLoggingCompiler; // G2G
 
   private CompilerOptions(final Builder builder) {
     stderrLoggingCompiler = builder.stderrLoggingCompiler;

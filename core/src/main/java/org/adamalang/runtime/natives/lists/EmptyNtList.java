@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.adamalang.runtime.contracts.Bridge;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMap;
@@ -16,10 +15,7 @@ import org.adamalang.runtime.natives.NtMaybe;
 
 /** a list backed by nothing */
 public class EmptyNtList<T> implements NtList<T> {
-  private final Bridge<T> bridge;
-
-  public EmptyNtList(final Bridge<T> bridge) {
-    this.bridge = bridge;
+  public EmptyNtList() {
   }
 
   @Override
@@ -81,13 +77,13 @@ public class EmptyNtList<T> implements NtList<T> {
   }
 
   @Override
-  public T[] toArray() {
-    return bridge.makeArray(0);
+  public T[] toArray(final Function<Integer, Object> arrayMaker) {
+    return (T[]) arrayMaker.apply(0);
   }
 
   @Override
-  public <Out> NtList<Out> transform(final Function<T, Out> t, final Bridge<Out> newBridge) {
-    return new EmptyNtList<>(newBridge);
+  public <Out> NtList<Out> transform(final Function<T, Out> t) {
+    return new EmptyNtList<>();
   }
 
   @Override

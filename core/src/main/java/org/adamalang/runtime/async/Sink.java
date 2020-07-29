@@ -31,7 +31,6 @@ public class Sink<T> {
 
   /** the communication channel for the sink */
   public final String channel;
-
   /** the various queues per users */
   private final HashMap<NtClient, ClientChannelQueue> queues;
 

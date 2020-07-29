@@ -31,7 +31,7 @@ public class PublicPolicy extends Policy {
   }
 
   @Override
-  public void writePrivacyCheckAndExtractJava(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
-    writeAllow(sb, field, environment, false);
+  public boolean writePrivacyCheckGuard(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
+    return false;
   }
 }

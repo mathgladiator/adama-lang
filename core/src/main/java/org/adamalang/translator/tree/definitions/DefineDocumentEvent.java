@@ -8,6 +8,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
 
@@ -43,9 +44,9 @@ public class DefineDocumentEvent extends Definition {
   public Environment nextEnvironment(final Environment environment) {
     final var next = environment.scope();
     if (which == DocumentEvent.ClientConnected) {
-      next.setReturnType(new TyNativeBoolean(clientVarToken).makeCopyWithNewPosition(this));
+      next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this));
     }
-    next.define(clientVarToken.text, new TyNativeClient(clientVarToken).withPosition(this), true, this);
+    next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
     return next;
   }
 

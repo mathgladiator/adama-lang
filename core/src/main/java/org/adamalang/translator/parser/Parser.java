@@ -67,12 +67,7 @@ import org.adamalang.translator.tree.statements.DefineVariable;
 import org.adamalang.translator.tree.statements.EmptyStatement;
 import org.adamalang.translator.tree.statements.Evaluate;
 import org.adamalang.translator.tree.statements.Statement;
-import org.adamalang.translator.tree.statements.control.AlterControlFlow;
-import org.adamalang.translator.tree.statements.control.AlterControlFlowMode;
-import org.adamalang.translator.tree.statements.control.InvokeStateMachine;
-import org.adamalang.translator.tree.statements.control.MegaIf;
-import org.adamalang.translator.tree.statements.control.Return;
-import org.adamalang.translator.tree.statements.control.TransitionStateMachine;
+import org.adamalang.translator.tree.statements.control.*;
 import org.adamalang.translator.tree.statements.loops.DoWhile;
 import org.adamalang.translator.tree.statements.loops.For;
 import org.adamalang.translator.tree.statements.loops.ForEach;
@@ -81,6 +76,7 @@ import org.adamalang.translator.tree.statements.testing.AssertTruth;
 import org.adamalang.translator.tree.statements.testing.Force;
 import org.adamalang.translator.tree.statements.testing.PumpMessage;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.natives.TyNativeChannel;
@@ -190,7 +186,6 @@ public class Parser {
           }
         case "@blocked":
           return new EnvStatus(token, EnvLookupName.Blocked);
-        case "convert": // TODO: REMOVE
         case "@convert": {
           final var openType = consumeExpectedSymbol("<");
           final var toType = tokens.pop();
@@ -276,7 +271,7 @@ public class Parser {
         return aa;
       }
       while (current != null && !current.isSymbolWithTextEq("]")) {
-        final var item = new TokenizedItem<>(atomic());
+        final var item = new TokenizedItem<>(expression());
         if (current.isSymbolWithTextEq(",")) {
           item.before(current);
         }
@@ -446,8 +441,9 @@ public class Parser {
         case "bubble":
           final var bubble = define_bubble(op);
           return doc -> doc.add(bubble);
-        /* case "policy": // TODO: enable global policies throw new
-         * RuntimeException("not available yet, policies need thinky-thoughts"); */
+        case "policy":
+          final var policy = define_policy_trailer(op);
+          return doc -> doc.add(policy);
       }
     }
     final var newField = define_field_record();
@@ -535,7 +531,6 @@ public class Parser {
     return doc -> doc.add(dd);
   }
 
-  // TODO: the enum needs a great deal of clean up
   public Consumer<TopLevelDocumentHandler> define_enum_trailer(final Token enumToken) throws AdamaLangException {
     var autoId = 0;
     final var enumName = id();
@@ -567,7 +562,7 @@ public class Parser {
       if (next == null) { throw new ParseException("Parser was expecting either a Symbol=} or an Identifer to define a new enum label, but got end of stream instead.", tokens.getLastTokenIfAvailable()); }
     }
     final var endBrace = next;
-    return doc -> doc.add(new TyNativeEnum(enumToken, enumName, openBrace, es, endBrace));
+    return doc -> doc.add(new TyNativeEnum(TypeBehavior.ReadWriteNative, enumToken, enumName, openBrace, es, endBrace));
   }
 
   public FieldDefinition define_field_record() throws AdamaLangException {
@@ -654,11 +649,16 @@ public class Parser {
     while (endBrace == null) {
       final var type = native_type();
       final var field = id();
-      storage.add(new FieldDefinition(new PublicPolicy(null), null, type, field, null, null, null, consumeExpectedSymbol(";")));
+      final var equalsToken = tokens.popIf(t -> t.isSymbolWithTextEq("="));
+      Expression defaultValueOverride = null;
+      if (equalsToken != null) {
+        defaultValueOverride = expression();
+      }
+      storage.add(new FieldDefinition(new PublicPolicy(null), null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";")));
       endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
     }
     storage.end(endBrace);
-    return doc -> doc.add(new TyNativeMessage(messageToken, name, storage));
+    return doc -> doc.add(new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, messageToken, name, storage));
   }
 
   public DefineMethod define_method_trailer(final Token methodToken) throws AdamaLangException {
@@ -671,8 +671,9 @@ public class Parser {
     if (hasReturnType != null) {
       returnType = native_type();
     }
+    final var readonlyToken = tokens.popIf(t -> t.isIdentifier("readonly"));
     final var code = block();
-    return new DefineMethod(methodToken, name, openParen, args, closeParen, hasReturnType, returnType, code);
+    return new DefineMethod(methodToken, name, openParen, args, closeParen, hasReturnType, returnType, readonlyToken, code);
   }
 
   public DefineCustomPolicy define_policy_trailer(final Token definePolicy) throws AdamaLangException {
@@ -694,7 +695,7 @@ public class Parser {
     if (introReturn != null) {
       returnType = native_type();
     }
-    final var readonlyToken = tokens.popIf(t -> t.isKeyword("@readonly"));
+    final var readonlyToken = tokens.popIf(t -> t.isIdentifier("readonly"));
     final var code = block();
     final var df = new DefineFunction(procedureToken, FunctionSpecialization.Impure, name, openParen, args, closeParen, introReturn, returnType, readonlyToken, code);
     return doc -> doc.add(df);
@@ -948,13 +949,13 @@ public class Parser {
     return result;
   }
 
-  public TyNativeMap native_map(final Token mapToken) throws AdamaLangException {
+  public TyNativeMap native_map(final TypeBehavior behavior, final Token mapToken) throws AdamaLangException {
     final var openThing = consumeExpectedSymbol("<");
     final var domainType = native_type();
     final var commaToken = consumeExpectedSymbol(",");
     final var rangeType = native_type();
     final var closeThing = consumeExpectedSymbol(">");
-    return new TyNativeMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing);
+    return new TyNativeMap(behavior, mapToken, openThing, domainType, commaToken, rangeType, closeThing);
   }
 
   public TokenizedItem<TyType> native_parameter_type() throws AdamaLangException {
@@ -970,43 +971,55 @@ public class Parser {
     final var baseType = native_type_base();
     if (baseType instanceof CanBeNativeArray) {
       final var arrayToken = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
-      if (arrayToken != null) { return new TyNativeArray(baseType, arrayToken); }
+      if (arrayToken != null) { return new TyNativeArray(baseType.behavior, baseType, arrayToken); }
     }
     return baseType;
   }
 
   public TyType native_type_base() throws AdamaLangException {
+    var readonlyToken = tokens.peek();
+    final var readonly = readonlyToken != null && readonlyToken.isIdentifier("readonly");
+    if (readonly) {
+      readonlyToken = tokens.pop();
+    } else {
+      readonlyToken = null;
+    }
+    return native_type_base_with_behavior(readonly, readonlyToken);
+  }
+
+  public TyType native_type_base_with_behavior(final boolean readonly, final Token readonlyToken) throws AdamaLangException {
+    final var behavior = readonly ? TypeBehavior.ReadOnlyNativeValue : TypeBehavior.ReadWriteNative;
     final var token = tokens.pop();
     switch (token.text) {
       case "bool":
-        return new TyNativeBoolean(token);
+        return new TyNativeBoolean(behavior, readonlyToken, token);
       case "client":
-        return new TyNativeClient(token);
+        return new TyNativeClient(behavior, readonlyToken, token);
       case "double":
-        return new TyNativeDouble(token);
+        return new TyNativeDouble(behavior, readonlyToken, token);
       case "int":
-        return new TyNativeInteger(token);
+        return new TyNativeInteger(behavior, readonlyToken, token);
       case "long":
-        return new TyNativeLong(token);
+        return new TyNativeLong(behavior, readonlyToken, token);
       case "string":
-        return new TyNativeString(token);
+        return new TyNativeString(behavior, readonlyToken, token);
       case "label":
-        return new TyNativeStateMachineRef(token);
+        return new TyNativeStateMachineRef(behavior, token);
       case "map":
-        return native_map(token);
+        return native_map(behavior, token);
       case "table":
         final var typeParameter = type_parameter();
-        return new TyNativeTable(token, typeParameter);
+        return new TyNativeTable(behavior, readonlyToken, token, typeParameter);
       case "channel":
-        return new TyNativeChannel(token, native_parameter_type());
+        return new TyNativeChannel(behavior, readonlyToken, token, native_parameter_type());
       case "list":
-        return new TyNativeList(token, native_parameter_type());
+        return new TyNativeList(behavior, readonlyToken, token, native_parameter_type());
       case "maybe":
-        return new TyNativeMaybe(token, native_parameter_type());
+        return new TyNativeMaybe(behavior, readonlyToken, token, native_parameter_type());
       case "future":
-        return new TyNativeFuture(token, native_parameter_type());
+        return new TyNativeFuture(behavior, readonlyToken, token, native_parameter_type());
       default:
-        return new TyNativeRef(token);
+        return new TyNativeRef(behavior, readonlyToken, token);
     }
   }
 
@@ -1149,7 +1162,7 @@ public class Parser {
     if (op != null) { return new EmptyStatement(op); }
     op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "do", "while", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("auto", "let", "transition", "invoke", "assert"));
+      op = tokens.popIf(t -> t.isIdentifier("auto", "let", "transition", "invoke", "assert", "preempt"));
     }
     if (op != null) {
       switch (op.text) {
@@ -1176,6 +1189,10 @@ public class Parser {
           final var testIn = tokens.popIf(t -> t.isIdentifier("in"));
           final var evalIn = testIn != null ? expression() : null;
           return new TransitionStateMachine(op, toTransition, testIn, evalIn, consumeExpectedSymbol(";"));
+        }
+        case "preempt": {
+          final var toTransition = expression();
+          return new PreemptStateMachine(op, toTransition, consumeExpectedSymbol(";"));
         }
         case "invoke": {
           final var toInvoke = expression();
@@ -1243,6 +1260,7 @@ public class Parser {
       case "future":
       case "map":
       case "table":
+      case "readonly":
         return true;
       default:
         final var futureToken = tokens.peek(1);

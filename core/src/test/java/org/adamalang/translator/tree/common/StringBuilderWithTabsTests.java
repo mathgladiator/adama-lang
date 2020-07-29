@@ -9,7 +9,7 @@ import org.junit.Test;
 public class StringBuilderWithTabsTests {
   @Test
   public void tabAndTabUpAndTabDownWithNewLines() {
-    StringBuilderWithTabs sb = new StringBuilderWithTabs();
+    final var sb = new StringBuilderWithTabs();
     sb.tab().tabUp().writeNewline().tabDown().writeNewline();
     Assert.assertEquals("  \n  \n", sb.toString());
     sb.tabDown().tabDown().tabDown().tabDown().writeNewline();

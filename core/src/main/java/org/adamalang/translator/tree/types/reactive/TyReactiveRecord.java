@@ -5,12 +5,14 @@ package org.adamalang.translator.tree.types.reactive;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import org.adamalang.translator.codegen.CodeGenDeltaClass;
 import org.adamalang.translator.codegen.CodeGenRecords;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
@@ -19,12 +21,12 @@ import org.adamalang.translator.tree.types.structures.IndexDefinition;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsStructure;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
 
 public class TyReactiveRecord extends TyType implements IsStructure, //
-    DetailHasBridge, //
+    DetailHasDeltaType, //
     DetailTypeProducesRootLevelCode, //
     DetailTypeHasMethods {
   public String name;
@@ -34,6 +36,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
   private boolean typedAlready;
 
   public TyReactiveRecord(final Token recordToken, final Token nameToken, final StructureStorage storage) {
+    super(TypeBehavior.ReadWriteWithSetGet);
     this.recordToken = recordToken;
     this.nameToken = nameToken;
     name = nameToken.text;
@@ -47,7 +50,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
   public void compile(final StringBuilderWithTabs sb, final Environment environment) {
     final var classFields = new StringBuilderWithTabs().tabUp().tabUp();
     final var classConstructor = new StringBuilderWithTabs().tabUp().tabUp().tabUp();
-    CodeGenRecords.writeCommonBetweenRecordAndRoot(storage, classConstructor, classFields, environment.scope(), "__node", true);
+    CodeGenRecords.writeCommonBetweenRecordAndRoot(storage, classConstructor, classFields, environment.scope(), true);
     classConstructor.append("if (__owner instanceof RxTable) {").tabUp().writeNewline();
     var colNum = 0;
     for (final IndexDefinition idefn : storage.indices) {
@@ -78,13 +81,12 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
     classConstructor.append("}").writeNewline();
     sb.append("private class RTx" + name + " extends RxRecordBase<RTx").append(name).append("> {").tabUp().writeNewline();
     sb.append(classFields.toString());
-    sb.append("private RTx" + name + "(ObjectNode __node, RxParent __owner) {");
+    sb.append("private RTx" + name + "(RxParent __owner) {");
     final var classConstructorStripped = classConstructor.toString().stripTrailing();
     sb.tabUp().writeNewline();
     sb.append(classConstructorStripped);
     sb.append("").tabDown().writeNewline().append("}").writeNewline();
     CodeGenRecords.writeMethods(storage, sb, environment);
-    CodeGenRecords.writePrivacyExtractor(storage, sb, environment, false);
     CodeGenRecords.writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment);
     CodeGenRecords.writeIndices(storage, sb, environment);
     CodeGenRecords.writeCommitAndRevert(storage, sb, environment, false);
@@ -108,22 +110,17 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
     sb.append("@Override").writeNewline();
     sb.append("public int __id() {").tabUp().writeNewline();
     sb.append("return id.get();").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    sb.append("@Override").writeNewline();
+    sb.append("public void __setId(int __id, boolean __force) {").tabUp().writeNewline();
+    sb.append("if (__force) {").tabUp().writeNewline();
+    sb.append("id.forceSet(__id);").tabDown().writeNewline();
+    sb.append("} else {").tabUp().writeNewline();
+    sb.append("id.set(__id);").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
     sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
-    sb.append("private final RecordBridge<RTx").append(name).append("> __BRIDGE_").append(name).append(" = new RecordBridge<>() {").tabUp().writeNewline();
-    sb.append("@Override").writeNewline();
-    sb.append("public int ").append(" getNumberColumns() {").tabUp().writeNewline();
-    sb.append("return ").append("" + storage.indices.size()).append(";").tabDown().writeNewline();
-    sb.append("}").writeNewline();
-    sb.append("@Override").writeNewline();
-    sb.append("public RTx").append(name).append(" construct(ObjectNode __item, RxParent __parent) {").tabUp().writeNewline();
-    sb.append("return new RTx").append(name).append("(__item, __parent);").tabDown().writeNewline();
-    sb.append("}").writeNewline();
-    sb.append("@Override").writeNewline();
-    sb.append("public RTx").append(name).append("[] makeArray(int __n) {").tabUp().writeNewline();
-    sb.append("return new RTx").append(name).append("[__n];").tabDown().writeNewline();
-    sb.append("}").tabDown().writeNewline();
-    sb.append("};").writeNewline();
+    CodeGenDeltaClass.writeRecordDeltaClass(storage, sb, environment, "RTx" + name, false);
   }
 
   @Override
@@ -139,8 +136,8 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return "__BRIDGE_" + name;
+  public String getDeltaType(final Environment environment) {
+    return "DeltaRTx" + name;
   }
 
   @Override
@@ -165,7 +162,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveRecord(recordToken, nameToken, storage).withPosition(position);
   }
 

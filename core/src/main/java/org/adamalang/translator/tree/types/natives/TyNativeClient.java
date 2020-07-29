@@ -11,24 +11,30 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.NoOneClientConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
-public class TyNativeClient extends TySimpleNative implements DetailHasBridge, //
+public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType, //
     DetailEqualityTestingRequiresWrapping, //
     AssignmentViaNative //
 {
+  public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeClient(final Token token) {
-    super("NtClient", "NtClient");
+  public TyNativeClient(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+    super(behavior, "NtClient", "NtClient");
+    this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
+    if (readonlyToken != null) {
+      yielder.accept(readonlyToken);
+    }
     yielder.accept(token);
   }
 
@@ -38,8 +44,8 @@ public class TyNativeClient extends TySimpleNative implements DetailHasBridge, /
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return "NativeBridge.CLIENT_NATIVE_SUPPORT";
+  public String getDeltaType(final Environment environment) {
+    return "DClient";
   }
 
   @Override
@@ -53,7 +59,7 @@ public class TyNativeClient extends TySimpleNative implements DetailHasBridge, /
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeClient(token).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeClient(newBehavior, readonlyToken, token).withPosition(position);
   }
 }

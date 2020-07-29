@@ -11,8 +11,8 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
 
 public class BubbleDefinition extends StructureComponent {
   public final Token bubbleToken;
@@ -21,7 +21,7 @@ public class BubbleDefinition extends StructureComponent {
   public final Token closeClient;
   public final Token equalsToken;
   public final Expression expression;
-  private TyType expressionType;
+  public TyType expressionType;
   public final Token nameToken;
   public final Token openClient;
   public final Token semicolonToken;
@@ -36,7 +36,7 @@ public class BubbleDefinition extends StructureComponent {
     this.equalsToken = equalsToken;
     this.expression = expression;
     this.semicolonToken = semicolonToken;
-    clientType = new TyNativeClient(clientVar);
+    clientType = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVar);
     ingest(bubbleToken);
     ingest(semicolonToken);
     variablesToWatch = new LinkedHashSet<>();
@@ -58,16 +58,6 @@ public class BubbleDefinition extends StructureComponent {
     final var next = environment.scopeWithComputeContext(ComputeContext.Computation).scopeReactiveExpression();
     next.define(clientVar.text, clientType, true, clientType);
     expressionType = environment.rules.Resolve(expression.typing(next, null), false);
-  }
-
-  public void writePolicy(final StringBuilderWithTabs sb, final Environment environment) {
-    if (expressionType instanceof DetailHasBridge) {
-      final var bridge = ((DetailHasBridge) expressionType).getBridge(environment);
-      sb.append(expressionType.getJavaBoxType(environment)).append(" __local_").append(nameToken.text).append(" = __COMPUTE_").append(nameToken.text).append("(__who);").writeNewline();
-      sb.append("if (__local_").append(nameToken.text).append(" != null) {").tabUp().writeNewline();
-      sb.append("__view.set(\"").append(nameToken.text).append("\", ").append(bridge).append(".toPrivateJsonNode(__who, __local_").append(nameToken.text).append("));").tabDown().writeNewline();
-      sb.append("}").writeNewline();
-    }
   }
 
   public void writeSetup(final StringBuilderWithTabs sb, final Environment environment) {

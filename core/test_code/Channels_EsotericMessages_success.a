@@ -1,0 +1,17 @@
+
+message Strange {
+  maybe<int[]> miarr;
+  list<int> li;
+  map<int, int> mii;
+  map<int, int[]> miiarr;
+  map<long, string> mls;
+  map<string, string> mss;
+  maybe<Strange> recur;
+}
+
+#wut {
+  int[] x;
+  Strange s;
+  list<Strange> lsts;
+  Strange[] sarr;
+}

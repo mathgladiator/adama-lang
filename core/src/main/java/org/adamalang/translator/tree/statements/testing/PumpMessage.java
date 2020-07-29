@@ -13,7 +13,9 @@ import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 
-/** inject a message into a channel; this made sense in the old type system. This should be a function exposed to channel<T>, and only available within a test. */
+/** inject a message into a channel; this made sense in the old type system.
+ * This should be a function exposed to channel<T>, and only available within a
+ * test. */
 public class PumpMessage extends Statement {
   public final Token channelToken;
   public final Expression expression;
@@ -48,11 +50,9 @@ public class PumpMessage extends Statement {
     if (!next.state.isTesting()) {
       environment.document.createError(this, String.format("Pumping a message is designed exclusively for testing"), "Testing");
     }
-    // TODD: pull the type from teh channel as a suggestion
     final var exprType = expression.typing(next, null /* ug */);
     environment.rules.IsNativeMessage(exprType, false);
     if (exprType != null) {
-      // TODO: consider using the TyNativeChannel
       final var messageNameType = next.document.channelToMessageType.get(channelToken.text);
       if (messageNameType == null) {
         environment.document.createError(this, String.format("Channel '%s' does not exist", channelToken.text), "Testing");
@@ -60,15 +60,14 @@ public class PumpMessage extends Statement {
       }
       messageType = environment.rules.FindMessageStructure(messageNameType, this, false);
       if (messageType == null) { return ControlFlow.Open; }
-      // TODO: do more sanity checking
     }
     return ControlFlow.Open;
   }
 
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("__queue.add(new AsyncTask(0, NtClient.NO_ONE, \"").append(channelToken.text).append("\", ");
+    sb.append("__queue.add(new AsyncTask(0, NtClient.NO_ONE, \"").append(channelToken.text).append("\", 0, ");
     expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
-    sb.append(".convertToObjectNode()));");
+    sb.append("));");
   }
 }

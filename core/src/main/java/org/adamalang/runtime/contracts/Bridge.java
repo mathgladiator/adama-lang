@@ -3,7 +3,6 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.contracts;
 
-import org.adamalang.runtime.natives.NtClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -17,8 +16,6 @@ public interface Bridge<Ty> {
   public Ty fromJsonNode(JsonNode node);
   /** invent an array with n elements */
   public Ty[] makeArray(int n);
-  /** convert the given value to a private JSON node for the given client */
-  public JsonNode toPrivateJsonNode(NtClient who, Ty value);
   /** write the given value to the given Object under the field `name */
   public void writeTo(String name, Ty value, ObjectNode node);
 }

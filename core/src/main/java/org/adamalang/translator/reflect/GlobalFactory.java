@@ -16,6 +16,8 @@ import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 
+/** has the job of turning static methods on a class into a format that can be
+ * consumed by Adama */
 public class GlobalFactory {
   public static FunctionOverloadInstance convertMethodToFunctionOverload(final Class<?> clazz, final Method method) {
     final var args = new ArrayList<TyType>();

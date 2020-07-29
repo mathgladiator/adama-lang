@@ -1,0 +1,41 @@
+function arr1(int x) -> int[] {
+  return [1 + x, 2 * x, 3 * x * x];
+}
+
+function arr2(int x) -> long[] {
+  return [1L + x, 2L * x, 3L * x * x];
+}
+
+function arr3(int x) -> double[] {
+  return [1 + x, 2.71 * x, 3.14 * x * x];
+}
+
+function arr4(int x) -> bool[] {
+  return [x % 2 == 0, x % 2 != 0];
+}
+
+function arr5(int x) -> string[] {
+  return ["Hi:" + x, "There:" + (x * x)];
+}
+
+
+public int input;
+public formula arr_int = arr1(input);
+public formula arr_long = arr2(input);
+public formula arr_double = arr3(input);
+public formula arr_bool = arr4(input);
+public formula arr_string = arr5(input);
+
+@construct {
+  input = 2;
+  transition #one;
+}
+
+#one {
+  input = 3;
+  transition #two;
+}
+
+#two {
+  input = 100;
+}

@@ -9,77 +9,60 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import org.adamalang.runtime.LivingDocument;
-import org.adamalang.runtime.bridges.NativeBridge;
-import org.adamalang.runtime.bridges.RecordBridge;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.index.ReactiveIndex;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.lists.SelectorRxObjectList;
-import org.adamalang.runtime.stdlib.Utility;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** a reactive table */
 public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iterable<Ty>, RxParent, RxChild {
   private int autoKey;
   private int autoKeyBackup;
-  public final RecordBridge<Ty> bridge;
   private final LinkedHashMap<Integer, Ty> createdObjects;
-  private final TreeSet<Ty> dirtySet;
   public final LivingDocument document;
   private final ReactiveIndex<Ty>[] indices;
   private final LinkedHashMap<Integer, Ty> itemsByKey;
+  public final Function<RxParent, Ty> maker;
   public final String name;
-  private final RxParent owner;
   private final TreeSet<Ty> unknowns;
 
-  public RxTable(final LivingDocument document, final String name, final ObjectNode node, final RxParent owner, final RecordBridge<Ty> bridge) {
+  public RxTable(final LivingDocument document, final RxParent owner, final String name, final Function<RxParent, Ty> maker, final int indicies) {
     super(owner);
     this.document = document;
     this.name = name;
-    this.owner = owner;
-    this.bridge = bridge;
-    if (bridge.getNumberColumns() == 0) {
+    this.maker = maker;
+    if (indicies == 0) {
       this.indices = null;
       this.unknowns = null;
     } else {
-      this.indices = new ReactiveIndex[bridge.getNumberColumns()];
+      this.indices = new ReactiveIndex[indicies];
       this.unknowns = new TreeSet<>();
-      for (var k = 0; k < bridge.getNumberColumns(); k++) {
+      for (var k = 0; k < indicies; k++) {
         this.indices[k] = new ReactiveIndex<>(unknowns);
       }
     }
     // check if we have rows; make sure we link into the JSON tree
     this.itemsByKey = new LinkedHashMap<>();
-    this.autoKey = NativeBridge.INTEGER_NATIVE_SUPPORT.readFromMessageObject(node, "auto_key");
+    this.autoKey = 0;
     this.autoKeyBackup = this.autoKey;
     this.createdObjects = new LinkedHashMap<>();
-    this.dirtySet = new TreeSet<>();
-    if (node.has("rows")) {
-      // ingest all prior data into memory
-      final var it = node.get("rows").fields();
-      while (it.hasNext()) {
-        final var entry = it.next();
-        final var itemNode = (ObjectNode) entry.getValue();
-        itemNode.put("id", entry.getKey());
-        final var tyObj = bridge.construct(itemNode, this);
-        itemsByKey.put(Integer.parseInt(entry.getKey()), tyObj);
-        if (unknowns != null) {
-          tyObj.__reindex();
-        }
-        tyObj.__subscribe(this);
-      }
-    }
   }
 
   @Override
-  public void __commit(final String name, final ObjectNode deltaParent) {
+  public void __commit(final String name, final JsonStreamWriter writer) {
     if (__isDirty()) {
-      final var delta = deltaParent.putObject(name);
-      delta.put("auto_key", this.autoKey);
-      final var rowsDelta = delta.putObject("rows");
+      writer.writeObjectFieldIntro(name);
+      writer.beginObject();
+      writer.writeObjectFieldIntro("auto_key");
+      writer.writeInteger(this.autoKey);
+      writer.writeObjectFieldIntro("rows");
+      writer.beginObject();
       this.autoKeyBackup = this.autoKey;
       final var keysToKill = new ArrayList<Integer>();
       for (final Map.Entry<Integer, Ty> entry : itemsByKey.entrySet()) {
@@ -87,14 +70,17 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
         final var row = entry.getValue();
         if (row.__isDying()) {
           if (!createdObjects.containsKey(key)) {
-            rowsDelta.putNull(key + "");
+            writer.writeObjectFieldIntro(key);
+            writer.writeNull();
           }
           row.__kill();
           keysToKill.add(key);
         } else if (row.__isDirty()) {
-          row.__commit(key + "", rowsDelta);
+          row.__commit(key + "", writer);
         }
       }
+      writer.endObject();
+      writer.endObject();
       createdObjects.clear();
       // murder the keys
       for (final Integer keyToKill : keysToKill) {
@@ -107,6 +93,73 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
         item.__reindex();
       }
       unknowns.clear();
+    }
+  }
+
+  @Override
+  public void __dump(final JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("auto_key");
+    writer.writeInteger(autoKey);
+    writer.writeObjectFieldIntro("rows");
+    writer.beginObject();
+    for (final Map.Entry<Integer, Ty> entry : itemsByKey.entrySet()) {
+      writer.writeObjectFieldIntro(entry.getKey());
+      entry.getValue().__dump(writer);
+    }
+    writer.endObject();
+    writer.endObject();
+  }
+
+  @Override
+  public void __insert(final JsonStreamReader reader) {
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        final var f1 = reader.fieldName();
+        switch (f1) {
+          case "auto_key":
+            this.autoKey = reader.readInteger();
+            this.autoKeyBackup = this.autoKey;
+            break;
+          case "rows":
+            if (reader.startObject()) {
+              while (reader.notEndOfObject()) {
+                final var f2 = reader.fieldName();
+                if (reader.testLackOfNull()) {
+                  final var key = Integer.parseInt(f2);
+                  final var tyPrior = itemsByKey.get(key);
+                  if (tyPrior == null) {
+                    final var tyObj = maker.apply(this);
+                    tyObj.__setId(key, true);
+                    tyObj.__insert(reader);
+                    itemsByKey.put(key, tyObj);
+                    if (unknowns != null) {
+                      tyObj.__reindex();
+                    }
+                    tyObj.__subscribe(this);
+                  } else {
+                    // it exists, so it is already subscribed
+                    tyPrior.__insert(reader);
+                    if (unknowns != null && !unknowns.contains(tyPrior)) {
+                      tyPrior.__deindex();
+                      unknowns.add(tyPrior);
+                    }
+                  }
+                } else {
+                  final var key = Integer.parseInt(f2);
+                  final var tyObject = itemsByKey.remove(key);
+                  if (tyObject != null) {
+                    tyObject.__delete();
+                    tyObject.__deindex();
+                  }
+                }
+              }
+            }
+            break;
+          default:
+            reader.skipValue();
+        }
+      }
     }
   }
 
@@ -147,7 +200,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   public NtList<Ty> iterate(final boolean done) {
-    return new SelectorRxObjectList<>(this, bridge);
+    return new SelectorRxObjectList<>(this);
   }
 
   @Override
@@ -158,9 +211,8 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   public Ty make() {
     final var key = autoKey;
     autoKey++;
-    final var row = Utility.createObjectNode();
-    row.put("id", key);
-    final var result = bridge.construct(row, this);
+    final var result = maker.apply(this);
+    result.__setId(key, false);
     result.__subscribe(this);
     result.__raiseDirty();
     if (unknowns != null) {

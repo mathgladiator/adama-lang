@@ -30,9 +30,11 @@ public class DefineMethod extends StructureComponent {
   /** arguments of the function */
   public final Token openParen;
   public TyType returnType;
+  public final Token tokenReadonly;
 
   /** construct the function of a type with a name */
-  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final Block code) {
+  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final Token tokenReadonly,
+      final Block code) {
     this.methodToken = methodToken;
     this.nameToken = nameToken;
     name = nameToken.text;
@@ -41,6 +43,7 @@ public class DefineMethod extends StructureComponent {
     this.closeParen = closeParen;
     this.introduceReturnToken = introduceReturnToken;
     this.returnType = returnType;
+    this.tokenReadonly = tokenReadonly;
     this.code = code;
     cachedInstance = null;
   }
@@ -62,12 +65,18 @@ public class DefineMethod extends StructureComponent {
       yielder.accept(introduceReturnToken);
       returnType.emit(yielder);
     }
+    if (tokenReadonly != null) {
+      yielder.accept(tokenReadonly);
+    }
     code.emit(yielder);
   }
 
   /** prepare the environment for execution */
   private Environment prepareEnvironment(final Environment environment) {
-    final var toUse = environment.scope();
+    var toUse = environment.scope();
+    if (tokenReadonly != null) {
+      toUse = environment.scopeAsReadOnlyBoundary();
+    }
     for (final FunctionArg arg : args) {
       toUse.define(arg.argName, arg.type, true, arg.type);
     }
@@ -88,7 +97,7 @@ public class DefineMethod extends StructureComponent {
       if (returnType != null && flow == ControlFlow.Open) {
         environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text), "MethodDefine");
       }
-      cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, false);
+      cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null);
     }
     return cachedInstance;
   }

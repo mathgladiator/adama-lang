@@ -4,6 +4,7 @@
 package org.adamalang.translator.tree.privacy;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -15,6 +16,7 @@ import org.adamalang.translator.tree.types.structures.StructureStorage;
 /** a policy that refers to code within the record */
 public class UseCustomPolicy extends Policy {
   public final Token customToken;
+  private final HashSet<String> globals;
   public final ArrayList<String> policyToChecks;
   public final TokenizedItem<Token>[] policyToCheckTokens;
 
@@ -30,6 +32,7 @@ public class UseCustomPolicy extends Policy {
       }
     }
     this.policyToCheckTokens = policyToCheckTokens;
+    globals = new HashSet<>();
   }
 
   @Override
@@ -45,15 +48,19 @@ public class UseCustomPolicy extends Policy {
   @Override
   public void typing(final Environment environment, final StructureStorage owningStructureStorage) {
     for (final String policyToCheck : policyToChecks) {
-      final var dcp = owningStructureStorage.policies.get(policyToCheck);
+      var dcp = owningStructureStorage.policies.get(policyToCheck);
       if (dcp == null) {
-        environment.document.createError(this, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
+        globals.add(policyToCheck);
+        dcp = environment.document.root.storage.policies.get(policyToCheck);
+        if (dcp == null) {
+          environment.document.createError(this, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
+        }
       }
     }
   }
 
   @Override
-  public void writePrivacyCheckAndExtractJava(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
+  public boolean writePrivacyCheckGuard(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
     sb.append("if (");
     var first = true;
     for (final String policyToCheck : policyToChecks) {
@@ -62,10 +69,12 @@ public class UseCustomPolicy extends Policy {
       } else {
         sb.append(" && ");
       }
-      sb.append("__POLICY_").append(policyToCheck).append("(__who)");
+      if (!globals.contains(policyToCheck)) {
+        sb.append("__item.");
+      }
+      sb.append("__POLICY_").append(policyToCheck).append("(__writer.who)");
     }
     sb.append(") {").tabUp().writeNewline();
-    writeAllow(sb, field, environment, true);
-    sb.append("}").writeNewline();
+    return true;
   }
 }

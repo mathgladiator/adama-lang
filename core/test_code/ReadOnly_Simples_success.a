@@ -1,0 +1,24 @@
+message M {
+  int xyz = 123;
+}
+channel<M> foo;
+
+@construct {
+  readonly int r0 = 1;
+  readonly bool r1 = true;
+  readonly long r2 = 3L;
+  readonly double r3 = 4.42;
+  readonly string r4 = "";
+  readonly list<int> r5;
+  readonly list<client> r6;
+  readonly client r7 = @no_one;
+  readonly maybe<int> r8 = 100;
+  table<M> p;
+  readonly table<M> r9 = p;
+  readonly channel<M> r10 = foo;
+  readonly table<M> r11;
+}
+
+#fooz {
+  readonly future<M> fut = foo.fetch(@no_one);
+}

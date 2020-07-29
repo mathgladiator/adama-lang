@@ -3,21 +3,20 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator.parser.token;
 
+import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
 public class TokenReaderStateMachineTests {
-    @Test
-    public void symbol_cluster() throws Exception {
-        ArrayList<Token> list = new ArrayList<>();
-        TokenReaderStateMachine trsm = new TokenReaderStateMachine("Source", list::add);
-        trsm.consume((int) '+');
-        trsm.consume((int) '+');
-        trsm.consume((int) '+');
-        trsm.consume((int) '+');
-        trsm.consume((int) '1');
-        Assert.assertEquals(4, list.size());
-    }
+  @Test
+  public void symbol_cluster() throws Exception {
+    final var list = new ArrayList<Token>();
+    final var trsm = new TokenReaderStateMachine("Source", list::add);
+    trsm.consume('+');
+    trsm.consume('+');
+    trsm.consume('+');
+    trsm.consume('+');
+    trsm.consume('1');
+    Assert.assertEquals(4, list.size());
+  }
 }

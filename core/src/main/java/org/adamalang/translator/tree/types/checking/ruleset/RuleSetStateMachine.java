@@ -7,6 +7,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.definitions.DefineStateTransition;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeStateMachineRef;
 import org.adamalang.translator.tree.types.reactive.TyReactiveStateMachineRef;
 
@@ -25,7 +26,7 @@ public class RuleSetStateMachine {
     final var tyType = RuleSetCommon.Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeStateMachineRef || tyType instanceof TyReactiveStateMachineRef) { return true; }
-      RuleSetCommon.SignalTypeFailure(environment, new TyNativeStateMachineRef(null), tyTypeOriginal, silent);
+      RuleSetCommon.SignalTypeFailure(environment, new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null), tyTypeOriginal, silent);
     }
     return false;
   }

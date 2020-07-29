@@ -10,6 +10,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.EnumConstant;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
 import org.adamalang.translator.tree.types.traits.IsEnum;
@@ -38,7 +39,7 @@ public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveEnum(token, storage).withPosition(position);
   }
 
@@ -54,6 +55,6 @@ public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
 
   @Override
   public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeEnum(token, token, token, storage, token).withPosition(this);
+    return new TyNativeEnum(TypeBehavior.ReadOnlyNativeValue, token, token, token, storage, token).withPosition(this);
   }
 }

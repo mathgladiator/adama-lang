@@ -1,0 +1,27 @@
+record R {
+  public int x;
+}
+
+table<R> t;
+
+public formula tx = iterate t;
+
+@construct {
+  t <- {x:1};
+  t <- {x:2};
+  t <- {x:3};
+  transition #one;
+}
+
+#one {
+  t <- {x:4};
+  t <- {x:5};
+  t <- {x:6};
+  transition #two;
+}
+
+#two {
+  t <- {x:7};
+  t <- {x:8};
+  t <- {x:9};
+}

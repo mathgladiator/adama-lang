@@ -1,0 +1,8 @@
+enum E { A:1, B:2, C:3 }
+
+@construct {
+  readonly E y = E::A;
+  y = E::B;
+  let z = E::A;
+  z = E::B;
+}

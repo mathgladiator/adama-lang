@@ -4,5 +4,6 @@
 package org.adamalang.runtime.logger;
 
 public class TransactorTests {
-    /* see LivingDocumentTests as Transactor is the primary API for LivingDocument */
+  /* see LivingDocumentTests as Transactor is the primary API for
+   * LivingDocument */
 }

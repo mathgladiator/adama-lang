@@ -9,6 +9,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
@@ -22,6 +23,7 @@ public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedT
   public final TokenizedItem<TyType> tokenizedElementType;
 
   public TyReactiveMaybe(final Token maybeToken, final TokenizedItem<TyType> elementType) {
+    super(TypeBehavior.ReadWriteWithSetGet);
     this.maybeToken = maybeToken;
     tokenizedElementType = elementType;
     ingest(maybeToken);
@@ -58,7 +60,7 @@ public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedT
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveMaybe(maybeToken, tokenizedElementType).withPosition(position);
   }
 
@@ -66,9 +68,9 @@ public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedT
   public TyType typeAfterGet(final Environment environment) {
     final var elementType = environment.rules.Resolve(tokenizedElementType.item, false);
     if (elementType instanceof TyReactiveRecord) {
-      return new TyNativeMaybe(maybeToken, new TokenizedItem<>(elementType));
+      return new TyNativeMaybe(TypeBehavior.ReadWriteNative, null, maybeToken, new TokenizedItem<>(elementType));
     } else {
-      return new TyNativeMaybe(maybeToken, new TokenizedItem<>(((DetailComputeRequiresGet) elementType).typeAfterGet(environment)));
+      return new TyNativeMaybe(TypeBehavior.ReadWriteNative, null, maybeToken, new TokenizedItem<>(((DetailComputeRequiresGet) elementType).typeAfterGet(environment)));
     }
   }
 

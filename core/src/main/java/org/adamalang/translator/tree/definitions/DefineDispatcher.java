@@ -12,6 +12,8 @@ import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 
+/** a dispatcher is a function attached to enum such that the enum controls the
+ * destiny of which function gets called */
 public class DefineDispatcher extends Definition {
   public final ArrayList<FunctionArg> args;
   public final Token closeParen;

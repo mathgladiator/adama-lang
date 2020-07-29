@@ -12,7 +12,6 @@ import org.adamalang.translator.tree.operands.PrefixMutateOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanBumpResult;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
 
 /** prefix mutation ($e--, $e++) and prefix change (!, -) */
 public class PrefixMutate extends Expression {
@@ -52,8 +51,8 @@ public class PrefixMutate extends Expression {
       result = expression.typing(environment.scopeWithComputeContext(newContext), null);
       bumpResult = environment.rules.CanBumpBool(result, false);
     }
-    if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) { return ((DetailComputeRequiresGet) result).typeAfterGet(environment).makeCopyWithNewPosition(this); }
-    return result.makeCopyWithNewPosition(this);
+    if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) { return ((DetailComputeRequiresGet) result).typeAfterGet(environment).makeCopyWithNewPosition(this, result.behavior); }
+    return result.makeCopyWithNewPosition(this, result.behavior);
   }
 
   @Override
@@ -70,13 +69,11 @@ public class PrefixMutate extends Expression {
         break;
       case YesWithListTransformSetter:
         expression.writeJava(sb, environment.scopeWithComputeContext(newContext));
-        sb.append(".transform((item) -> item").append(op.functionCall);
-        sb.append(", null /** no bridge needed */)");
+        sb.append(".transform((item) -> item").append(op.functionCall).append(")");
         break;
       case YesWithListTransformNative:
         expression.writeJava(sb, environment.scopeWithComputeContext(newContext));
-        final var bridge = (DetailHasBridge) environment.rules.ExtractEmbeddedType(cachedType, false);
-        sb.append(".transform((item) -> ").append(op.javaOp).append("item, ").append(bridge.getBridge(environment)).append(")");
+        sb.append(".transform((item) -> ").append(op.javaOp).append("item)");
         break;
     }
   }

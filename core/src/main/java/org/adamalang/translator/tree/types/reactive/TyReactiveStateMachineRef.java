@@ -10,6 +10,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.StateMachineConstant;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeStateMachineRef;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
@@ -18,7 +19,7 @@ import org.adamalang.translator.tree.types.traits.IsOrderable;
 public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrderable //
 {
   public TyReactiveStateMachineRef(final Token token) {
-    super(token, "RxString");
+    super(token, "RxFastString");
   }
 
   @Override
@@ -32,12 +33,12 @@ public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrd
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveStateMachineRef(token).withPosition(position);
   }
 
   @Override
   public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeStateMachineRef(token);
+    return new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, token);
   }
 }

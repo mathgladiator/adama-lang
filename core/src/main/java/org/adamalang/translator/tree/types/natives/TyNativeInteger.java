@@ -11,30 +11,36 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.IntegerConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 /** Represents the integral with 32 bits of storage; this uses the 'int' java
  * type */
 public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
     CanBeMapDomain, //
-    DetailHasBridge, //
+    DetailHasDeltaType, //
     IsOrderable, //
     AssignmentViaNative //
 {
+  public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeInteger(final Token token) {
-    super("int", "Integer");
+  public TyNativeInteger(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+    super(behavior, "int", "Integer");
+    this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
+    if (readonlyToken != null) {
+      yielder.accept(readonlyToken);
+    }
     yielder.accept(token);
   }
 
@@ -44,8 +50,8 @@ public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return "NativeBridge.INTEGER_NATIVE_SUPPORT";
+  public String getDeltaType(final Environment environment) {
+    return "DInt32";
   }
 
   @Override
@@ -54,7 +60,7 @@ public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeInteger(token).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeInteger(newBehavior, readonlyToken, token).withPosition(position);
   }
 }

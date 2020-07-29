@@ -5,7 +5,8 @@ package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxParent;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive double */
 public class RxDouble extends RxBase implements Comparable<RxDouble>, CanGetAndSet<Double> {
@@ -19,12 +20,24 @@ public class RxDouble extends RxBase implements Comparable<RxDouble>, CanGetAndS
   }
 
   @Override
-  public void __commit(final String name, final ObjectNode delta) {
+  public void __commit(final String name, final JsonStreamWriter writer) {
     if (__isDirty()) {
-      delta.put(name, value);
+      writer.writeObjectFieldIntro(name);
+      writer.writeDouble(value);
       backup = value;
       __lowerDirtyCommit();
     }
+  }
+
+  @Override
+  public void __dump(final JsonStreamWriter writer) {
+    writer.writeDouble(value);
+  }
+
+  @Override
+  public void __insert(final JsonStreamReader reader) {
+    backup = reader.readDouble();
+    value = backup;
   }
 
   @Override

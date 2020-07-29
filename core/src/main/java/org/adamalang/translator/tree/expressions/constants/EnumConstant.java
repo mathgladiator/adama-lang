@@ -8,6 +8,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 
 /** an enumeration constant */
 public class EnumConstant extends Expression {
@@ -37,6 +38,7 @@ public class EnumConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
+    environment.mustBeComputeContext(this);
     final var isEnum = environment.rules.FindEnumType(enumTypeName, this, false);
     if (isEnum != null) {
       final var valueFound = isEnum.storage().options.get(value);
@@ -45,14 +47,13 @@ public class EnumConstant extends Expression {
       } else {
         foundValue = valueFound;
       }
-      return ((TyType) isEnum).makeCopyWithNewPosition(this);
+      return ((TyType) isEnum).makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
     }
     return null;
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    environment.mustBeComputeContext(this);
     sb.append(foundValue);
   }
 }

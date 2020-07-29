@@ -7,10 +7,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ScannerStateTests {
-    @Test
-    public void coverage() {
-        for (ScannerState ss : ScannerState.values()) {
-            Assert.assertEquals(ss, ScannerState.valueOf(ss.name()));
-        }
+  @Test
+  public void coverage() {
+    for (final ScannerState ss : ScannerState.values()) {
+      Assert.assertEquals(ss, ScannerState.valueOf(ss.name()));
     }
+  }
 }

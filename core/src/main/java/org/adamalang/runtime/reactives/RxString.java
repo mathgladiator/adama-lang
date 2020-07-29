@@ -5,12 +5,13 @@ package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxParent;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive string */
 public class RxString extends RxBase implements Comparable<RxString>, CanGetAndSet<String> {
-  private String backup;
-  private String value;
+  protected String backup;
+  protected String value;
 
   public RxString(final RxParent owner, final String value) {
     super(owner);
@@ -19,12 +20,24 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
   }
 
   @Override
-  public void __commit(final String name, final ObjectNode delta) {
+  public void __commit(final String name, final JsonStreamWriter writer) {
     if (__isDirty()) {
-      delta.put(name, value);
+      writer.writeObjectFieldIntro(name);
+      writer.writeString(value);
       backup = value;
       __lowerDirtyCommit();
     }
+  }
+
+  @Override
+  public void __dump(final JsonStreamWriter writer) {
+    writer.writeString(value);
+  }
+
+  @Override
+  public void __insert(final JsonStreamReader reader) {
+    backup = reader.readString();
+    value = backup;
   }
 
   @Override

@@ -8,6 +8,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
 import org.adamalang.translator.tree.types.traits.details.DetailSpecialReactiveRefResolve;
 
@@ -16,6 +17,7 @@ public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
   public final Token refToken;
 
   public TyReactiveRef(final Token refToken) {
+    super(TypeBehavior.ReadWriteWithSetGet);
     this.refToken = refToken;
     ref = refToken.text;
     ingest(refToken);
@@ -42,7 +44,7 @@ public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveRef(refToken).withPosition(position);
   }
 

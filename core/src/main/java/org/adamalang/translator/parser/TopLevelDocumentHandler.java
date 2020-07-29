@@ -12,6 +12,7 @@ import org.adamalang.translator.tree.definitions.DefineHandler;
 import org.adamalang.translator.tree.definitions.DefineStateTransition;
 import org.adamalang.translator.tree.definitions.DefineTest;
 import org.adamalang.translator.tree.definitions.ImportDocument;
+import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsEnum;
@@ -21,6 +22,7 @@ import org.adamalang.translator.tree.types.traits.IsStructure;
 public interface TopLevelDocumentHandler {
   public void add(BubbleDefinition bd);
   public void add(DefineConstructor dc);
+  public void add(DefineCustomPolicy customPolicy);
   public void add(DefineDispatcher dd);
   public void add(DefineDocumentEvent dce);
   public void add(DefineFunction func);

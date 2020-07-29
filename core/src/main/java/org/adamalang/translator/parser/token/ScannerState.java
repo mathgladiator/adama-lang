@@ -9,7 +9,7 @@ enum ScannerState {
   /** scanner is scanning for an identifier */
   ScanIdentifer,
   /** scanner is scanning for a numeric literal */
-  ScanNumberLiteral, // converts to some keywords
+  ScanNumberLiteral,
   /** scanner is scanning for a double quote to end the string */
   ScanStringLiteral,
   /** scanner is scanning with a double quoted string, and is currently escaping a

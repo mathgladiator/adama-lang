@@ -1,0 +1,19 @@
+@connected (who) {
+  return true;
+}
+
+@construct {
+  transition #b;
+}
+
+public int v = 0;
+
+#b {
+  v = 500;
+  preempt #c;
+  block;
+}
+
+#c {
+  v = 1000;
+}

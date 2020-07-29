@@ -1,0 +1,6 @@
+message M {
+  int x;
+}
+
+public formula m = {x:1};
+public formula mlist = [{x:1}, {x:2}, {x:3}];

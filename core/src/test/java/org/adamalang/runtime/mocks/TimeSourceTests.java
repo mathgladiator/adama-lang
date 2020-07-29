@@ -8,11 +8,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TimeSourceTests {
-    @Test
-    public void coverage() throws Exception {
-        long start = TimeSource.REAL_TIME.nowMilliseconds();
-        Thread.sleep(5);
-        long stop = TimeSource.REAL_TIME.nowMilliseconds();
-        Assert.assertTrue((stop - start) >= 4);
-    }
+  @Test
+  public void coverage() throws Exception {
+    final var start = TimeSource.REAL_TIME.nowMilliseconds();
+    Thread.sleep(5);
+    final var stop = TimeSource.REAL_TIME.nowMilliseconds();
+    Assert.assertTrue(stop - start >= 4);
+  }
 }

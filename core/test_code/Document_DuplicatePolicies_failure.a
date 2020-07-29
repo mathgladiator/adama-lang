@@ -1,0 +1,7 @@
+policy foo(who) {
+  return true;
+}
+
+policy foo(who) {
+  return true;
+}

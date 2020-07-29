@@ -11,6 +11,7 @@ import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
 
@@ -50,6 +51,7 @@ public class EnumValuesArray extends Expression implements LatentCodeSnippet {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
+    environment.mustBeComputeContext(this);
     final var isEnum = environment.rules.FindEnumType(enumTypeName, this, false);
     if (isEnum != null) {
       if (prefixToken != null) {
@@ -57,14 +59,13 @@ public class EnumValuesArray extends Expression implements LatentCodeSnippet {
         storage = isEnum.storage();
         environment.document.add(this);
       }
-      return new TyNativeArray((TyType) isEnum, null).withPosition(this);
+      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) isEnum, null).withPosition(this);
     }
     return null;
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    environment.mustBeComputeContext(this);
     if (prefixToken == null) {
       sb.append("__ALL_VALUES_").append(enumTypeName);
     } else {

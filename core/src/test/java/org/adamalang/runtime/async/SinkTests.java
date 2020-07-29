@@ -3,48 +3,47 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.async;
 
-import org.adamalang.runtime.natives.NtMaybe;
-import org.adamalang.runtime.stdlib.Utility;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class SinkTests {
-    @Test
-    public void flow_in_and_out() {
-        Sink<String> sink = new Sink<>("channel");
-        sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", Utility.createObjectNode()), "Cake");
-        SimpleFuture<String> sf = sink.dequeue(NtClient.NO_ONE);
-        Assert.assertTrue(sf.exists());
-        Assert.assertEquals("Cake", sf.await());
-        SimpleFuture<String> sf2 = sink.dequeue(NtClient.NO_ONE);
-        Assert.assertFalse(sf2.exists());
-    }
+  @Test
+  public void flow_in_and_out() {
+    final var sink = new Sink<String>("channel");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "Cake");
+    final var sf = sink.dequeue(NtClient.NO_ONE);
+    Assert.assertTrue(sf.exists());
+    Assert.assertEquals("Cake", sf.await());
+    final var sf2 = sink.dequeue(NtClient.NO_ONE);
+    Assert.assertFalse(sf2.exists());
+  }
 
-    @Test
-    public void maybe_out_no_data() {
-        Sink<String> sink = new Sink<>("channel");
-        SimpleFuture<NtMaybe<String>> sf = sink.dequeueMaybe(NtClient.NO_ONE);
-        Assert.assertFalse(sf.exists());
-    }
+  @Test
+  public void flow_in_clear_out() {
+    final var sink = new Sink<String>("channel");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "Cake");
+    sink.clear();
+    final var sf2 = sink.dequeue(NtClient.NO_ONE);
+    Assert.assertFalse(sf2.exists());
+  }
 
-    @Test
-    public void maybe_out_with_data() {
-        Sink<String> sink = new Sink<>("channel");
-        sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", Utility.createObjectNode()), "Cake");
-        SimpleFuture<NtMaybe<String>> sf = sink.dequeueMaybe(NtClient.NO_ONE);
-        Assert.assertTrue(sf.exists());
-        Assert.assertEquals("Cake", sf.await().get());
-        SimpleFuture<String> sf2 = sink.dequeue(NtClient.NO_ONE);
-        Assert.assertFalse(sf2.exists());
-    }
+  @Test
+  public void maybe_out_no_data() {
+    final var sink = new Sink<String>("channel");
+    final var sf = sink.dequeueMaybe(NtClient.NO_ONE);
+    Assert.assertFalse(sf.exists());
+  }
 
-    @Test
-    public void flow_in_clear_out() {
-        Sink<String> sink = new Sink<>("channel");
-        sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", Utility.createObjectNode()), "Cake");
-        sink.clear();
-        SimpleFuture<String> sf2 = sink.dequeue(NtClient.NO_ONE);
-        Assert.assertFalse(sf2.exists());
-    }
+  @Test
+  public void maybe_out_with_data() {
+    final var sink = new Sink<String>("channel");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "Cake");
+    final var sf = sink.dequeueMaybe(NtClient.NO_ONE);
+    Assert.assertTrue(sf.exists());
+    Assert.assertEquals("Cake", sf.await().get());
+    final var sf2 = sink.dequeue(NtClient.NO_ONE);
+    Assert.assertFalse(sf2.exists());
+  }
 }

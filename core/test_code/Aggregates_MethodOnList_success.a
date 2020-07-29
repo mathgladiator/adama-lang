@@ -1,0 +1,22 @@
+record R {
+  int x;
+
+  method foo() -> int readonly {
+    return x * x;
+  }
+}
+
+table<R> tbl;
+
+public formula x = (iterate tbl).foo();
+
+@construct {
+  tbl <- {x:1};
+  tbl <- {x:2};
+  tbl <- {x:3};
+  tbl <- {x:4};
+}
+
+@connected (who) {
+  return true;
+}

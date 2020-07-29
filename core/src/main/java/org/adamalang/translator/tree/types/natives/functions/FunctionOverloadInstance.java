@@ -18,6 +18,7 @@ public class FunctionOverloadInstance {
     return list;
   }
 
+  public final ArrayList<String> hiddenSuffixArgs;
   public final String javaFunction;
   public final boolean pure;
   public final TyType returnType;
@@ -28,6 +29,7 @@ public class FunctionOverloadInstance {
     this.returnType = returnType;
     this.types = types;
     this.pure = pure;
+    hiddenSuffixArgs = new ArrayList<>();
   }
 
   public int score(final Environment environment, final ArrayList<TyType> args) {

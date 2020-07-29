@@ -8,8 +8,10 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.CanTestEqualityResult;
 import org.adamalang.translator.tree.types.checking.properties.WrapInstruction;
+import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.natives.TyNativeChannel;
 import org.adamalang.translator.tree.types.natives.TyNativeDouble;
@@ -52,11 +54,33 @@ public class RuleSetCommon {
   }
 
   public static TyType EnsureRegisteredAndDedupe(final Environment environment, final TyType type, final boolean silent) {
+    if (type != null && environment.rules.IsMaybe(type, true)) {
+      final var childType = environment.rules.ExtractEmbeddedType(type, silent);
+      final var newChildType = EnsureRegisteredAndDedupe(environment, childType, silent);
+      if (childType == newChildType) {
+        return type;
+      } else {
+        return new TyNativeMaybe(type.behavior, null, null, new TokenizedItem<>(newChildType));
+      }
+    }
+    if (type != null && environment.rules.IsNativeArrayOfStructure(type, true)) {
+      final var childType = environment.rules.ExtractEmbeddedType(type, silent);
+      final var newChildType = EnsureRegisteredAndDedupe(environment, childType, silent);
+      if (childType == newChildType) {
+        return type;
+      } else {
+        return new TyNativeArray(type.behavior, newChildType, null);
+      }
+    }
     if (type != null && environment.rules.IsNativeMessage(type, true)) {
       final var msg = (TyNativeMessage) type;
+      var next = (TyType) environment.document.findPriorMessage(msg.storage, environment);
+      if (next != null) { return next; }
       if (msg.storage.anonymous) {
-        // TODO: need recursion to dive into child elements of the type to dedupe them
-        final var next = (TyType) environment.document.findPriorMessage(msg.storage, environment);
+        for (final Map.Entry<String, FieldDefinition> entry : msg.storage.fields.entrySet()) {
+          entry.getValue().type = EnsureRegisteredAndDedupe(environment, entry.getValue().type, silent);
+        }
+        next = (TyType) environment.document.findPriorMessage(msg.storage, environment);
         if (next != null) { return next; }
         environment.document.add(msg);
         return msg;
@@ -79,13 +103,13 @@ public class RuleSetCommon {
     final var bReactive = RuleSetCommon.TestReactive(resolveB) && resolveB instanceof DetailComputeRequiresGet;
     if (aReactive && bReactive) {
       if (RuleSetEquality.CanTestEquality(environment, ((DetailComputeRequiresGet) resolveA).typeAfterGet(environment), ((DetailComputeRequiresGet) resolveB).typeAfterGet(environment), false) != CanTestEqualityResult.No) {
-        return resolveA.makeCopyWithNewPosition(typeB).withPosition(typeA);
+        return resolveA.makeCopyWithNewPosition(typeB, TypeBehavior.ReadOnlyNativeValue).withPosition(typeA);
       }
     }
     final var aRecord = resolveA instanceof TyReactiveRecord;
     final var bRecord = resolveB instanceof TyReactiveRecord;
     if (aRecord && bRecord) {
-      if (((TyReactiveRecord) resolveA).name.equals(((TyReactiveRecord) resolveB).name)) { return resolveA.makeCopyWithNewPosition(typeB).withPosition(typeA); }
+      if (((TyReactiveRecord) resolveA).name.equals(((TyReactiveRecord) resolveB).name)) { return resolveA.makeCopyWithNewPosition(typeB, TypeBehavior.ReadOnlyNativeValue).withPosition(typeA); }
     }
     if (AreBothChannelTypesCompatible(environment, resolveA, resolveB)) { return resolveA; }
     final var aInt = IsInteger(environment, resolveA, true);
@@ -95,11 +119,11 @@ public class RuleSetCommon {
     final var aDouble = IsDouble(environment, resolveA, true);
     final var bDouble = IsDouble(environment, resolveB, true);
     // both are integers
-    if (aInt && bInt) { return new TyNativeInteger(null).withPosition(resolveA).withPosition(typeB); }
-    if ((aInt || aLong) && (bInt || bLong)) { return new TyNativeLong(null).withPosition(resolveA).withPosition(typeB); }
+    if (aInt && bInt) { return new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(resolveA).withPosition(typeB); }
+    if ((aInt || aLong) && (bInt || bLong)) { return new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(resolveA).withPosition(typeB); }
     // all of numeric
-    if (aInt && bDouble || aDouble && bInt || aDouble && bDouble) { return new TyNativeDouble(null).withPosition(typeA).withPosition(typeB); }
-    if (RuleSetEquality.CanTestEquality(environment, resolveA, resolveB, true) != CanTestEqualityResult.No) { return resolveA.makeCopyWithNewPosition(typeB).withPosition(typeA); }
+    if (aInt && bDouble || aDouble && bInt || aDouble && bDouble) { return new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(typeA).withPosition(typeB); }
+    if (RuleSetEquality.CanTestEquality(environment, resolveA, resolveB, true) != CanTestEqualityResult.No) { return resolveA.makeCopyWithNewPosition(typeB, TypeBehavior.ReadOnlyNativeValue).withPosition(typeA); }
     final var aMessage = RuleSetMessages.IsNativeMessage(environment, resolveA, true);
     final var bMessage = RuleSetMessages.IsNativeMessage(environment, resolveB, true);
     if (aMessage && bMessage) {
@@ -121,8 +145,17 @@ public class RuleSetCommon {
         final var bChildType = RuleSetCommon.ExtractEmbeddedType(environment, resolveB, true);
         maxType = GetMaxType(environment, resolveA, bChildType, silent);
       }
-      if (maxType != null) { return new TyNativeMaybe(null, new TokenizedItem<>(maxType)); }
+      if (maxType != null) { return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(maxType)); }
     }
+    final var aArray = RuleSetArray.IsNativeArray(environment, resolveA, true);
+    final var bArray = RuleSetArray.IsNativeArray(environment, resolveB, true);
+    if (aArray && bArray) {
+      final var aChildType = RuleSetCommon.ExtractEmbeddedType(environment, resolveA, true);
+      final var bChildType = RuleSetCommon.ExtractEmbeddedType(environment, resolveB, true);
+      final TyType maxType = GetMaxType(environment, aChildType, bChildType, silent);
+      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, maxType, null);
+    }
+
     SignalTypeCompatibility(environment, typeA, typeB, silent);
     return null;
   }
@@ -143,7 +176,7 @@ public class RuleSetCommon {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeBoolean || tyType instanceof TyReactiveBoolean) { return true; }
-      SignalTypeFailure(environment, new TyNativeBoolean(null), tyTypeOriginal, silent);
+      SignalTypeFailure(environment, new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }
@@ -152,7 +185,7 @@ public class RuleSetCommon {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeDouble || tyType instanceof TyReactiveDouble) { return true; }
-      SignalTypeFailure(environment, new TyNativeDouble(null), tyTypeOriginal, silent);
+      SignalTypeFailure(environment, new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }
@@ -161,7 +194,7 @@ public class RuleSetCommon {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeInteger || tyType instanceof TyReactiveInteger) { return true; }
-      SignalTypeFailure(environment, new TyNativeInteger(null), tyTypeOriginal, silent);
+      SignalTypeFailure(environment, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }
@@ -170,7 +203,7 @@ public class RuleSetCommon {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeLong || tyType instanceof TyReactiveLong) { return true; }
-      SignalTypeFailure(environment, new TyNativeInteger(null), tyTypeOriginal, silent);
+      SignalTypeFailure(environment, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }
@@ -180,8 +213,9 @@ public class RuleSetCommon {
     if (tyType != null) {
       if (tyType instanceof TyNativeInteger || tyType instanceof TyReactiveInteger || tyType instanceof TyNativeDouble || tyType instanceof TyReactiveDouble) { return true; }
       if (!silent && tyTypeOriginal != null) {
-        environment.document.createError(tyTypeOriginal,
-            String.format("Type check failure: Must have a type of '%s' or '%s', but the type is actually '%s'", new TyNativeInteger(null).getAdamaType(), new TyNativeDouble(null).getAdamaType(), tyTypeOriginal.getAdamaType()),
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: Must have a type of '%s' or '%s', but the type is actually '%s'", //
+            new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).getAdamaType(), //
+            new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null).getAdamaType(), tyTypeOriginal.getAdamaType()), //
             "TypeCheckFailures");
       }
     }
@@ -192,13 +226,13 @@ public class RuleSetCommon {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeString || tyType instanceof TyReactiveString) { return true; }
-      SignalTypeFailure(environment, new TyNativeString(null), tyTypeOriginal, silent);
+      SignalTypeFailure(environment, new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }
 
   private static TyType messageUnion(final Environment environment, final TyNativeMessage aActualMessage, final TyNativeMessage bActualMessage, final boolean silent) {
-    if (aActualMessage == bActualMessage) { // they are the same
+    if (aActualMessage == bActualMessage || aActualMessage.storage == bActualMessage.storage || aActualMessage.name.equals(bActualMessage.name)) { // they are the same
       return aActualMessage;
     }
     if (aActualMessage.storage.anonymous) {
@@ -218,17 +252,15 @@ public class RuleSetCommon {
             newStorage.fields.put(bEntry.getKey(), bEntry.getValue());
           }
         }
-        return new TyNativeMessage(null, Token.WRAP("AutoMaxRecord" + environment.autoVariable()), newStorage);
+        return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("AutoMaxRecord" + environment.autoVariable()), newStorage);
       } else {
         if (environment.rules.CanStructureAProjectIntoStructureB(bActualMessage, aActualMessage, silent)) { return bActualMessage; }
       }
     } else {
       if (bActualMessage.storage.anonymous) {
         if (environment.rules.CanStructureAProjectIntoStructureB(aActualMessage, bActualMessage, silent)) { return aActualMessage; }
-      } else {
-        if (!aActualMessage.name.equals(bActualMessage.name) && !silent) {
-          environment.document.createError(aActualMessage, String.format("The message types `%s` and `%s` can not be joined.", aActualMessage.getAdamaType(), bActualMessage.getAdamaType()), "MaxUnionType");
-        }
+      } else if (!silent) {
+        environment.document.createError(aActualMessage, String.format("The message types `%s` and `%s` can not be joined.", aActualMessage.getAdamaType(), bActualMessage.getAdamaType()), "MaxUnionType");
       }
     }
     return null;

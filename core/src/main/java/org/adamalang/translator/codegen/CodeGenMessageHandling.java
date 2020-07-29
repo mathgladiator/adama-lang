@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.types.traits.IsStructure;
 public class CodeGenMessageHandling {
   public static void writeMessageHandlers(final StringBuilderWithTabs sb, final Environment environment) {
     final var dispatch = new StringBuilderWithTabs().tabUp().tabUp().tabUp();
+    final var parser2 = new StringBuilderWithTabs().tabUp().tabUp().tabUp();
     final var classFields = new StringBuilderWithTabs().tabUp();
     final var channelsPerMessageType = new LinkedHashMap<String, ArrayList<String>>();
     final var channelsPerMessageArrayType = new LinkedHashMap<String, ArrayList<String>>();
@@ -39,15 +40,29 @@ public class CodeGenMessageHandling {
       final IsStructure rawStorageType = environment.rules.FindMessageStructure(handler.typeName, handler, false);
       if (rawStorageType != null && rawStorageType instanceof TyNativeMessage) {
         final var associatedRecordType = (TyNativeMessage) rawStorageType;
+        parser2.append("case \"" + handler.channel + "\":").tabUp().writeNewline();
+        if (handler.isArray) {
+          parser2.append("{").tabUp().writeNewline();
+          parser2.append("ArrayList<RTx").append(handler.typeName).append("> __array_").append(handler.channel).append(" = new ArrayList<>();").writeNewline();
+          parser2.append("if (__reader.startArray()) {").tabUp().writeNewline();
+          parser2.append("while (__reader.notEndOfArray()) {").tabUp().writeNewline();
+          parser2.append("__array_").append(handler.channel).append(".add(new RTx").append(handler.typeName).append("(__reader));").tabDown().writeNewline();
+          parser2.append("}").tabDown().writeNewline();
+          parser2.append("}").writeNewline();
+          parser2.append("return __array_").append(handler.channel).append(".toArray(new RTx").append(handler.typeName).append("[__array_").append(handler.channel).append(".size()]);").tabDown().writeNewline();
+          parser2.append("}").writeNewline();
+        } else {
+          parser2.append("return new RTx").append(handler.typeName).append("(__reader);");
+        }
+        parser2.tabDown().writeNewline();
         if (handler.behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
-          dispatch.append("case \"" + handler.channel + "\":").tabUp().writeNewline();
-          dispatch.append("__queue_").append(handler.channel).append(".enqueue(task, ");
+          dispatch.append("case \"").append(handler.channel).append("\":").tabUp().writeNewline();
+          dispatch.append("__queue_").append(handler.channel).append(".enqueue(__task, ");
+          dispatch.append("(RTx").append(handler.typeName);
           if (handler.isArray) {
-            dispatch.append("__BRIDGE_").append(handler.typeName).append(".convertArrayMessage");
-          } else {
-            dispatch.append("new RTx").append(handler.typeName);
+            dispatch.append("[]");
           }
-          dispatch.append("(task.message));").writeNewline();
+          dispatch.append(") __task.message);").writeNewline();
           dispatch.append("return;").tabDown().writeNewline();
           final var mapToIndexIn = handler.isArray ? channelsPerMessageArrayType : channelsPerMessageType;
           var indexChannels = mapToIndexIn.get(handler.typeName);
@@ -56,11 +71,11 @@ public class CodeGenMessageHandling {
             mapToIndexIn.put(handler.typeName, indexChannels);
           }
           indexChannels.add(handler.channel);
-          classFields.append("private final Sink<RTx" + handler.typeName + "");
+          classFields.append("private final Sink<RTx").append(handler.typeName);
           if (handler.isArray) {
             classFields.append("[]");
           }
-          classFields.append("> __queue_").append(handler.channel).append(" = new Sink<>(\"" + handler.channel + "\");").writeNewline();
+          classFields.append("> __queue_").append(handler.channel).append(" = new Sink<>(\"").append(handler.channel).append("\");").writeNewline();
           classFields.append("private final NtChannel<RTx" + handler.typeName + "");
           if (handler.isArray) {
             classFields.append("[]");
@@ -69,12 +84,12 @@ public class CodeGenMessageHandling {
           resetFutureQueueBody.append("__queue_" + handler.channel + ".clear();").writeNewline();
         }
         if (handler.behavior == MessageHandlerBehavior.ExecuteAssociatedCode) {
-          dispatch.append("case \"" + handler.channel + "\":").tabUp().writeNewline();
+          dispatch.append("case \"").append(handler.channel).append("\":").tabUp().writeNewline();
+          dispatch.append("__task.setAction(() -> handleChannelMessage_").append(handler.channel).append("(__task.who, (RTx").append(handler.typeName);
           if (handler.isArray) {
-            dispatch.append("task.setAction(() -> handleChannelMessage_" + handler.channel + "(task.who, __BRIDGE_" + handler.typeName + ".convertArrayMessage(task.message)));").writeNewline();
-          } else {
-            dispatch.append("task.setAction(() -> handleChannelMessage_" + handler.channel + "(task.who, new RTx" + handler.typeName + "(task.message)));").writeNewline();
+            dispatch.append("[]");
           }
+          dispatch.append(")(__task.message)));").writeNewline();
           dispatch.append("return;").tabDown().writeNewline();
           final var child = handler.prepareEnv(environment, associatedRecordType);
           sb.append("private void handleChannelMessage_").append(handler.channel).append("(NtClient ").append(clientVarToUse).append(", RTx").append(handler.typeName);
@@ -88,18 +103,33 @@ public class CodeGenMessageHandling {
       }
     }
     sb.append(classFields.toString());
-    sb.append("@Override").writeNewline();
     if (environment.document.handlers.size() > 0) {
-      sb.append("protected void __route(AsyncTask task) {").tabUp().writeNewline();
-      sb.append("switch (task.channel) {").tabUp().writeNewline();
+      sb.append("@Override").writeNewline();
+      sb.append("protected void __route(AsyncTask __task) {").tabUp().writeNewline();
+      sb.append("switch (__task.channel) {").tabUp().writeNewline();
       sb.append(dispatch.toString());
       sb.append("default:").tabUp().writeNewline();
       sb.append("return;").tabDown().tabDown().writeNewline();
       sb.append("}").tabDown().writeNewline();
       sb.append("}").writeNewline();
+      sb.append("@Override").writeNewline();
+      sb.append("protected Object __parse_message2(String __channel, JsonStreamReader __reader) {").tabUp().writeNewline();
+      sb.append("switch (__channel) {").tabUp().writeNewline();
+      sb.append(parser2.toString());
+      sb.append("default:").tabUp().writeNewline();
+      sb.append("__reader.skipValue();").writeNewline();
+      sb.append("return NtMessageBase.NULL;").tabDown().tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+      sb.append("}").writeNewline();
     } else {
+      sb.append("@Override").writeNewline();
       sb.append("protected void __route(AsyncTask task) {").tabUp().writeNewline();
       sb.append("return;").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+      sb.append("@Override").writeNewline();
+      sb.append("protected Object __parse_message2(String channel, JsonStreamReader __reader) {").tabUp().writeNewline();
+      sb.append("__reader.skipValue();").writeNewline();
+      sb.append("return NtMessageBase.NULL;").tabDown().writeNewline();
       sb.append("}").writeNewline();
     }
     sb.append("@Override").writeNewline();

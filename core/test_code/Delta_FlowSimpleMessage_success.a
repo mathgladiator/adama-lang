@@ -1,0 +1,11 @@
+message Y {
+  int y;
+}
+
+message M {
+  int x;
+  Y y;
+}
+
+public formula m1 = {x:1};
+public formula m2 = {x:1, y:{y:123}};

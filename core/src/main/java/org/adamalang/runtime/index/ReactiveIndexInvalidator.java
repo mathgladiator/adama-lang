@@ -6,7 +6,8 @@ package org.adamalang.runtime.index;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.reactives.RxRecordBase;
 
-/** an index value must respond to change, and this enables that indexing to occur reactively to data changes */
+/** an index value must respond to change, and this enables that indexing to
+ * occur reactively to data changes */
 public abstract class ReactiveIndexInvalidator<Ty extends RxRecordBase<Ty>> implements RxChild {
   private final ReactiveIndex<Ty> index;
   private Integer indexedAt;

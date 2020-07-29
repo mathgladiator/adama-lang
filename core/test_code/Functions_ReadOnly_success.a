@@ -1,8 +1,8 @@
-procedure foo1() @readonly {}
-procedure foo2(int x) @readonly {}
-procedure foo3(int x, int y) @readonly {}
+procedure foo1() readonly {}
+procedure foo2(int x) readonly {}
+procedure foo3(int x, int y) readonly {}
 
 int z = 0;
-procedure foo4(int x, int y) -> int @readonly {
+procedure foo4(int x, int y) -> int readonly {
   return z;
 }

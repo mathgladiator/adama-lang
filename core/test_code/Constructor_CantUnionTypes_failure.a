@@ -1,0 +1,17 @@
+message MA {
+  string x;
+  int z;
+  MB u;
+}
+
+message MB {
+  int y;
+  string v;
+  bool u;
+}
+
+@construct (client who, MA a) {
+}
+
+@construct (client who, MB b) {
+}

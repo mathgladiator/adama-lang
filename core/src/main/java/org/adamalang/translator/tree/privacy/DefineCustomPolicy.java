@@ -9,6 +9,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
 
@@ -30,8 +31,8 @@ public class DefineCustomPolicy extends DocumentPosition {
     this.clientVar = clientVar;
     this.endParen = endParen;
     this.code = code;
-    policyType = new TyNativeBoolean(name);
-    clientType = new TyNativeClient(clientVar);
+    policyType = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, name);
+    clientType = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVar);
     ingest(name);
     ingest(code);
     clientType.ingest(clientVar);

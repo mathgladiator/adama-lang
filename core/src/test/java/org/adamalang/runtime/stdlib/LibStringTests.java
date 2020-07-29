@@ -8,8 +8,13 @@ import org.junit.Test;
 
 public class LibStringTests {
   @Test
-  public void reverse() {
-    Assert.assertEquals("zen", LibString.reverse("nez"));
+  public void compare() {
+    Assert.assertEquals(0, LibString.compare(null, null));
+    Assert.assertEquals(0, LibString.compare("x", "x"));
+    Assert.assertEquals(-1, LibString.compare("x", "y"));
+    Assert.assertEquals(1, LibString.compare("y", "x"));
+    Assert.assertEquals(1, LibString.compare("x", null));
+    Assert.assertEquals(-1, LibString.compare(null, "x"));
   }
 
   @Test
@@ -22,16 +27,6 @@ public class LibStringTests {
   }
 
   @Test
-  public void compare() {
-    Assert.assertEquals(0, LibString.compare(null, null));
-    Assert.assertEquals(0, LibString.compare("x", "x"));
-    Assert.assertEquals(-1, LibString.compare("x", "y"));
-    Assert.assertEquals(1, LibString.compare("y", "x"));
-    Assert.assertEquals(1, LibString.compare("x", null));
-    Assert.assertEquals(-1, LibString.compare(null, "x"));
-  }
-
-  @Test
   public void mult() {
     Assert.assertEquals("", LibString.multiply("x", 0));
     Assert.assertEquals("x", LibString.multiply("x", 1));
@@ -39,11 +34,17 @@ public class LibStringTests {
     Assert.assertEquals("xxx", LibString.multiply("x", 3));
     Assert.assertEquals("xxxxx", LibString.multiply("x", 5));
   }
+
   @Test
   public void of() {
     Assert.assertEquals("1", LibString.of(1));
     Assert.assertEquals("1", LibString.of(1L));
     Assert.assertEquals("1.5", LibString.of(1.5));
     Assert.assertEquals("true", LibString.of(true));
+  }
+
+  @Test
+  public void reverse() {
+    Assert.assertEquals("zen", LibString.reverse("nez"));
   }
 }

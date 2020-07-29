@@ -1,0 +1,7 @@
+
+@construct {
+  readonly double y = 3.14;
+  y = 2.71;
+  let z = 3.14;
+  z = 2.71;
+}

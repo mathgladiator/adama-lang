@@ -8,18 +8,19 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ObjectNodeLoggerTests {
-    @Test
-    public void flow1() {
-        ObjectNodeLogger log = ObjectNodeLogger.fresh();
-        log.ingest(new Transaction(-1, Utility.createObjectNode(), Utility.parseJsonObject("{\"x\":1}"), new TransactionResult(true, 0, 0)));
-        Assert.assertEquals("{\"x\":1}", log.node.toString());
-        log.close();
-    }
-    @Test
-    public void flow2() {
-        ObjectNodeLogger log = ObjectNodeLogger.recover(Utility.parseJsonObject("{\"x\":1}"));
-        Assert.assertEquals("{\"x\":1}", log.node.toString());
-        log.ingest(new Transaction(-1, Utility.createObjectNode(), Utility.parseJsonObject("{\"x\":5}"), new TransactionResult(true, 0, 0)));
-        Assert.assertEquals("{\"x\":5}", log.node.toString());
-    }
+  @Test
+  public void flow1() {
+    final var log = ObjectNodeLogger.fresh();
+    log.ingest(new Transaction(-1, "{}", "{\"x\":1}", new TransactionResult(true, 0, 0)));
+    Assert.assertEquals("{\"x\":1}", log.node.toString());
+    log.close();
+  }
+
+  @Test
+  public void flow2() {
+    final var log = ObjectNodeLogger.recover(Utility.parseJsonObject("{\"x\":1}"));
+    Assert.assertEquals("{\"x\":1}", log.node.toString());
+    log.ingest(new Transaction(-1, "{}", "{\"x\":5}", new TransactionResult(true, 0, 0)));
+    Assert.assertEquals("{\"x\":5}", log.node.toString());
+  }
 }

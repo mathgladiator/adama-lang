@@ -1,0 +1,33 @@
+
+public maybe<int> i;
+public maybe<long> l;
+public maybe<double> d;
+public maybe<bool> b;
+public maybe<string> s;
+
+@construct {
+  i = 42;
+  l = 314;
+  d = 2.71;
+  b = true;
+  s = "Hi";
+  transition #one;
+}
+
+#one {
+  i.delete();
+  l.delete();
+  d.delete();
+  b.delete();
+  s.delete();
+  transition #two;
+}
+
+#two {
+  i = 1000;
+  l = 980000000000L;
+  d = 42.13;
+  b = true;
+  s = "Oh!!!";
+}
+

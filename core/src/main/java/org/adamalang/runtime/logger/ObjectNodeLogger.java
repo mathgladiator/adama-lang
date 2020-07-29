@@ -14,7 +14,7 @@ public class ObjectNodeLogger implements TransactionLogger {
     return new ObjectNodeLogger(Utility.createObjectNode());
   }
 
-  public static ObjectNodeLogger recover(ObjectNode prior) {
+  public static ObjectNodeLogger recover(final ObjectNode prior) {
     return new ObjectNodeLogger(prior);
   }
 
@@ -30,6 +30,6 @@ public class ObjectNodeLogger implements TransactionLogger {
 
   @Override
   public void ingest(final Transaction transaction) {
-    node = (ObjectNode) JsonAlgebra.patch(node, transaction.delta);
+    node = (ObjectNode) JsonAlgebra.patch(node, Utility.parseJsonObject(transaction.delta));
   }
 }

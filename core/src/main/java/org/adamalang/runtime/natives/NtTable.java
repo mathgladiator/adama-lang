@@ -4,25 +4,23 @@
 package org.adamalang.runtime.natives;
 
 import java.util.ArrayList;
-import org.adamalang.runtime.bridges.MessageBridge;
-import org.adamalang.runtime.contracts.Bridge;
+import java.util.function.Supplier;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
-import org.adamalang.runtime.stdlib.Utility;
 
 /** a table defined within code */
 public class NtTable<Ty extends NtMessageBase> implements RxChild {
-  private final Bridge<Ty> bridge;
   private final ArrayList<Ty> items;
-
-  public NtTable(final MessageBridge<Ty> bridge) {
-    this.bridge = bridge;
-    this.items = new ArrayList<>();
-  }
+  private final Supplier<Ty> maker;
 
   public NtTable(final NtTable<Ty> other) {
-    this.bridge = other.bridge;
+    this.maker = other.maker;
     this.items = new ArrayList<>(other.items);
+  }
+
+  public NtTable(final Supplier<Ty> maker) {
+    this.maker = maker;
+    this.items = new ArrayList<>();
   }
 
   @Override
@@ -35,11 +33,11 @@ public class NtTable<Ty extends NtMessageBase> implements RxChild {
   }
 
   public NtList<Ty> iterate(final boolean done) {
-    return new ArrayNtList<>(items, bridge);
+    return new ArrayNtList<>(items);
   }
 
   public Ty make() {
-    final var item = bridge.fromJsonNode(Utility.createObjectNode());
+    final var item = maker.get();
     items.add(item);
     return item;
   }

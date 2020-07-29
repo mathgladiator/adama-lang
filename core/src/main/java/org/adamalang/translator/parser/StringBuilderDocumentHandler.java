@@ -13,6 +13,7 @@ import org.adamalang.translator.tree.definitions.DefineHandler;
 import org.adamalang.translator.tree.definitions.DefineStateTransition;
 import org.adamalang.translator.tree.definitions.DefineTest;
 import org.adamalang.translator.tree.definitions.ImportDocument;
+import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
@@ -45,6 +46,11 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   @Override
   public void add(final DefineConstructor dc) {
     dc.emit(this);
+  }
+
+  @Override
+  public void add(final DefineCustomPolicy customPolicy) {
+    customPolicy.emit(this);
   }
 
   @Override

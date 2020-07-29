@@ -11,25 +11,33 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.BooleanConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 /** Represents the type for a boolean value (true/false); this uses the native
  * 'boolean' java type */
-public class TyNativeBoolean extends TySimpleNative implements IsNativeValue, DetailHasBridge, //
+public class TyNativeBoolean extends TySimpleNative implements //
+    DetailHasDeltaType, //
+    IsNativeValue, //
     AssignmentViaNative //
 {
+  public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeBoolean(final Token token) {
-    super("boolean", "Boolean");
+  public TyNativeBoolean(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+    super(behavior, "boolean", "Boolean");
     this.token = token;
+    this.readonlyToken = readonlyToken;
     ingest(token);
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
+    if (readonlyToken != null) {
+      yielder.accept(readonlyToken);
+    }
     yielder.accept(token);
   }
 
@@ -39,8 +47,8 @@ public class TyNativeBoolean extends TySimpleNative implements IsNativeValue, De
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return "NativeBridge.BOOLEAN_NATIVE_SUPPORT";
+  public String getDeltaType(final Environment environment) {
+    return "DBoolean";
   }
 
   @Override
@@ -49,7 +57,7 @@ public class TyNativeBoolean extends TySimpleNative implements IsNativeValue, De
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeBoolean(token).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeBoolean(newBehavior, readonlyToken, token).withPosition(position);
   }
 }

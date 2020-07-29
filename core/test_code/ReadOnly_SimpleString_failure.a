@@ -1,0 +1,7 @@
+
+@construct {
+  readonly string y = "3";
+  y = "2";
+  let z = "3";
+  z = "2";
+}

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
+import org.adamalang.translator.codegen.CodeGenFunctions;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -14,13 +15,13 @@ import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.natives.TyNativeVoid;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
 
 /** functional application. This applies arguments to the given expression, and
  * the expectation is that the expression is a function of some sorts */
@@ -85,7 +86,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       sb.append("return __item.").append(functionInstance.javaFunction);
       sb.append("(");
       final var temp = new StringBuilder();
-      writeArgsJava(temp, environment, true);
+      CodeGenFunctions.writeArgsJava(temp, environment, true, args, functionInstance);
       sb.append(temp.toString());
       sb.append(");").tabDown().writeNewline();
     } else {
@@ -93,7 +94,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       sb.append("__item.").append(functionInstance.javaFunction);
       sb.append("(");
       final var temp = new StringBuilder();
-      writeArgsJava(temp, environment, true);
+      CodeGenFunctions.writeArgsJava(temp, environment, true, args, functionInstance);
       sb.append(temp.toString());
       sb.append(");").tabDown().writeNewline();
     }
@@ -136,7 +137,7 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       }
       final var argTypes = new ArrayList<TyType>();
       for (final TokenizedItem<Expression> arg : args) {
-        argTypes.add(arg.item.typing(environmentToUse, null));
+        argTypes.add(arg.item.typing(environmentToUse.scopeWithComputeContext(ComputeContext.Computation), null));
       }
       exprType.typing(environmentToUse);
       functionStyle = ((TyNativeFunctional) exprType).style;
@@ -156,26 +157,13 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         returnType = new TyNativeVoid();
       }
       if (isAggregate) {
-        return new TyNativeList(null, new TokenizedItem<>(returnType)).withPosition(this);
+        return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(returnType)).withPosition(this);
       } else {
-        return returnType.makeCopyWithNewPosition(this);
+        return returnType.makeCopyWithNewPosition(this, returnType.behavior);
       }
     }
     environmentX.document.createError(expression, String.format("Expression is not a function"), "FunctionInvoke");
     return null;
-  }
-
-  /** write the arguments */
-  private void writeArgsJava(final StringBuilder sb, final Environment environment, final boolean firstSeed) {
-    var first = firstSeed;
-    for (final TokenizedItem<Expression> arg : args) {
-      if (!first) {
-        sb.append(", ");
-      } else {
-        first = false;
-      }
-      arg.item.writeJava(sb, environment);
-    }
   }
 
   @Override
@@ -205,28 +193,24 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
               sb.append(method).append("((__item) -> __item.").append(functionInstance.javaFunction);
               sb.append("(");
               final var temp = new StringBuilder();
-              writeArgsJava(temp, environment, true);
+              CodeGenFunctions.writeArgsJava(temp, childEnv, true, args, functionInstance);
               sb.append(temp.toString());
               sb.append(")");
             } else {
               sb.append(method).append("((__item) -> { __item.").append(functionInstance.javaFunction);
               sb.append("(");
               final var temp = new StringBuilder();
-              writeArgsJava(temp, environment, true);
+              CodeGenFunctions.writeArgsJava(temp, childEnv, true, args, functionInstance);
               sb.append(temp.toString());
               sb.append("); }");
             }
-            if (functionInstance.returnType == null) {
-              sb.append(")");
-            } else {
-              sb.append(", ").append(((DetailHasBridge) functionInstance.returnType).getBridge(environment)).append(")");
-            }
+            sb.append(")");
           } else {
             if (functionStyle == FunctionStyleJava.ExpressionThenNameWithArgs) {
               sb.append(".").append(functionInstance.javaFunction);
             }
             sb.append("(");
-            writeArgsJava(sb, childEnv, true);
+            CodeGenFunctions.writeArgsJava(sb, childEnv, true, args, functionInstance);
             sb.append(")");
           }
           break;
@@ -236,14 +220,14 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         case InjectNameThenArgs:
           sb.append(functionInstance.javaFunction);
           sb.append("(");
-          writeArgsJava(sb, childEnv, true);
+          CodeGenFunctions.writeArgsJava(sb, childEnv, true, args, functionInstance);
           sb.append(")");
           break;
         case InjectNameThenExpressionAndArgs:
           sb.append(functionInstance.javaFunction);
           sb.append("(");
           expression.writeJava(sb, childEnv);
-          writeArgsJava(sb, childEnv, false);
+          CodeGenFunctions.writeArgsJava(sb, childEnv, false, args, functionInstance);
           sb.append(")");
           break;
         case None:

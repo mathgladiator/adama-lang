@@ -11,6 +11,7 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 
 /** defines a function */
@@ -92,7 +93,7 @@ public class DefineFunction extends Definition {
       }
     }
     for (final FunctionArg arg : args) {
-      toUse.define(arg.argName, arg.type, pure || readOnlyToken != null, arg.type);
+      toUse.define(arg.argName, arg.type, pure || readOnlyToken != null || arg.type instanceof TyNativeMessage, arg.type);
     }
     toUse.setReturnType(returnType);
     return toUse;

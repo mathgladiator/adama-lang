@@ -210,7 +210,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       }
       final var expressionType = expression.typing(toUse, null);
       environment.rules.IsBoolean(expressionType, false);
-      return typeFrom.makeCopyWithNewPosition(this);
+      return typeFrom.makeCopyWithNewPosition(this, typeFrom.behavior);
     }
     return null;
   }

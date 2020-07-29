@@ -11,28 +11,35 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.DoubleConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 /** represents a double precision floating point number. For instance, 3.14 is a
  * floating point number. This uses the native 'double' java type. */
 public class TyNativeDouble extends TySimpleNative implements //
-    IsNativeValue, DetailHasBridge, //
+    IsNativeValue, //
+    DetailHasDeltaType, //
     DetailEqualityTestingRequiresWrapping, //
     AssignmentViaNative //
 {
+  public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeDouble(final Token token) {
-    super("double", "Double");
+  public TyNativeDouble(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+    super(behavior, "double", "Double");
+    this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
+    if (readonlyToken != null) {
+      yielder.accept(readonlyToken);
+    }
     yielder.accept(token);
   }
 
@@ -42,8 +49,8 @@ public class TyNativeDouble extends TySimpleNative implements //
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return "NativeBridge.DOUBLE_NATIVE_SUPPORT";
+  public String getDeltaType(final Environment environment) {
+    return "DDouble";
   }
 
   @Override
@@ -57,7 +64,7 @@ public class TyNativeDouble extends TySimpleNative implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeDouble(token).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeDouble(newBehavior, readonlyToken, token).withPosition(position);
   }
 }

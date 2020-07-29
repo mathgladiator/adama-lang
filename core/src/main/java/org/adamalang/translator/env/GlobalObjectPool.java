@@ -12,6 +12,7 @@ import org.adamalang.runtime.stdlib.LibStatistics;
 import org.adamalang.runtime.stdlib.LibString;
 import org.adamalang.translator.reflect.GlobalFactory;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeDouble;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
@@ -20,6 +21,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 
+/** a pool of global objects like Math, Random, String */
 public class GlobalObjectPool {
   public static GlobalObjectPool createPoolWithStdLib() {
     final var pool = new GlobalObjectPool();
@@ -31,12 +33,15 @@ public class GlobalObjectPool {
     pool.add(GlobalFactory.makeGlobal("Secure", LibSecure.class));
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class));
     final var random = new TyNativeGlobalObject("Random", null);
-    random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", new TyNativeInteger(null), new TyNativeInteger(null)));
-    random.functions.put("genInt", generateInternalDocumentFunction("__randomInt", new TyNativeInteger(null)));
-    random.functions.put("genDouble", generateInternalDocumentFunction("__randomDouble", new TyNativeDouble(null)));
-    random.functions.put("getDoubleGaussian", generateInternalDocumentFunction("__randomGaussian", new TyNativeDouble(null)));
-    random.functions.put("genLong", generateInternalDocumentFunction("__randomLong", new TyNativeLong(null)));
+    random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("genInt", generateInternalDocumentFunction("__randomInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("genDouble", generateInternalDocumentFunction("__randomDouble", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("getDoubleGaussian", generateInternalDocumentFunction("__randomGaussian", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("genLong", generateInternalDocumentFunction("__randomLong", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
     pool.add(random);
+    final var time = new TyNativeGlobalObject("Time", null);
+    time.functions.put("now", generateInternalDocumentFunction("__timeNow", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    pool.add(time);
     return pool;
   }
 

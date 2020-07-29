@@ -9,8 +9,6 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.adamalang.runtime.bridges.RecordBridge;
-import org.adamalang.runtime.contracts.Bridge;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMap;
@@ -39,14 +37,12 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
     return x;
   }
 
-  private final RecordBridge<Ty> bridge;
   private WhereClause<Ty> filter;
   private ArrayList<Ty> finalized;
   private final RxTable<Ty> table;
 
-  public SelectorRxObjectList(final RxTable<Ty> table, final RecordBridge<Ty> bridge) {
+  public SelectorRxObjectList(final RxTable<Ty> table) {
     this.table = table;
-    this.bridge = bridge;
     this.filter = null;
   }
 
@@ -123,7 +119,7 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   @Override
   public NtMaybe<Ty> lookup(final int k) {
     ensureFinalized();
-    return new ArrayNtList<>(finalized, bridge).lookup(k);
+    return new ArrayNtList<>(finalized).lookup(k);
   }
 
   @Override
@@ -137,19 +133,19 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   @Override
   public NtList<Ty> orderBy(final boolean done, final Comparator<Ty> cmp) {
     ensureFinalized();
-    return new ArrayNtList<>(finalized, bridge).orderBy(true, cmp);
+    return new ArrayNtList<>(finalized).orderBy(true, cmp);
   }
 
   @Override
   public <TIn, TOut> NtMap<TIn, TOut> reduce(final Function<Ty, TIn> domain, final Function<NtList<Ty>, TOut> reducer) {
     ensureFinalized();
-    return new ArrayNtList<>(finalized, this.bridge).reduce(domain, reducer);
+    return new ArrayNtList<>(finalized).reduce(domain, reducer);
   }
 
   @Override
   public NtList<Ty> shuffle(final boolean done, final Random rng) {
     ensureFinalized();
-    return new ArrayNtList<>(finalized, bridge).shuffle(true, rng);
+    return new ArrayNtList<>(finalized).shuffle(true, rng);
   }
 
   @Override
@@ -162,19 +158,19 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   @Override
   public NtList<Ty> skipAndLimit(final boolean done, final int skip, final int limit) {
     ensureFinalized();
-    return new ArrayNtList<>(finalized, bridge).skipAndLimit(true, skip, limit);
+    return new ArrayNtList<>(finalized).skipAndLimit(true, skip, limit);
   }
 
   @Override
-  public Ty[] toArray() {
+  public Ty[] toArray(final Function<Integer, Object> arrayMaker) {
     ensureFinalized();
-    return finalized.toArray(bridge.makeArray(finalized.size()));
+    return finalized.toArray((Ty[]) arrayMaker.apply(finalized.size()));
   }
 
   @Override
-  public <Out> NtList<Out> transform(final Function<Ty, Out> t, final Bridge<Out> bridge) {
+  public <Out> NtList<Out> transform(final Function<Ty, Out> t) {
     ensureFinalized();
-    return new ArrayNtList<>(finalized, this.bridge).transform(t, bridge);
+    return new ArrayNtList<>(finalized).transform(t);
   }
 
   @Override
@@ -186,11 +182,11 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
         if (!primary.__isDying()) {
           finalized.add(primary);
         }
-        return new ArrayNtList<>(finalized, bridge).where(true, filter);
+        return new ArrayNtList<>(finalized).where(true, filter);
       }
     }
     this.filter = filter;
     ensureFinalized();
-    return new ArrayNtList<>(finalized, bridge);
+    return new ArrayNtList<>(finalized);
   }
 }

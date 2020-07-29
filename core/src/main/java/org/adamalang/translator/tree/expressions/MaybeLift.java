@@ -9,6 +9,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 
 public class MaybeLift extends Expression {
@@ -48,11 +49,12 @@ public class MaybeLift extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
+    environment.mustBeComputeContext(this);
     if (type != null) {
-      return new TyNativeMaybe(maybeToken, type);
+      return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, maybeToken, type);
     } else {
       final var valueType = value.typing(environment, null);
-      return new TyNativeMaybe(maybeToken, new TokenizedItem<>(valueType));
+      return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, maybeToken, new TokenizedItem<>(valueType));
     }
   }
 

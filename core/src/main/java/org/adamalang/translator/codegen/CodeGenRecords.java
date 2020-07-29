@@ -10,6 +10,7 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
 import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
@@ -25,7 +26,6 @@ import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 
 /** responsible for writing the code for records */
@@ -35,29 +35,28 @@ public class CodeGenRecords {
   }
 
   public static void writeCommitAndRevert(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {
+    writeInsert(storage, sb, environment, isRoot, others);
+    writerDump(storage, sb, environment, isRoot, others);
     sb.append("@Override").writeNewline();
-    sb.append("public void __commit(String __name, ObjectNode __delta) {").tabUp().writeNewline();
+    sb.append("public void __commit(String __name, JsonStreamWriter __writer) {").tabUp().writeNewline();
     if (!isRoot) {
       sb.append("if (__isDirty()) {").tabUp().writeNewline();
-      sb.append("ObjectNode __child = __delta.putObject(__name);").writeNewline();
-    } else {
-      sb.append("ObjectNode __child = __delta;").writeNewline();
+      sb.append("__writer.writeObjectFieldIntro(__name);").writeNewline();
+      sb.append("__writer.beginObject();").writeNewline();
     }
     for (final String other : others) {
-      sb.append(other).append(".__commit(\"").append(other).append("\", __child);").writeNewline();
+      sb.append(other).append(".__commit(\"").append(other).append("\", __writer);").writeNewline();
     }
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
-      if (fieldType == null) {
-        continue;
-      }
       if (isCommitRevertable(fieldType)) {
-        sb.append(fieldName).append(".__commit(\"").append(fieldName).append("\", __child);").writeNewline();
+        sb.append(fieldName).append(".__commit(\"").append(fieldName).append("\", __writer);").writeNewline();
       }
     }
     if (!isRoot) {
-      sb.append("__lowerDirtyRevert();").tabDown().writeNewline();
+      sb.append("__writer.endObject();").writeNewline();
+      sb.append("__lowerDirtyCommit();").tabDown().writeNewline();
       sb.append("}").tabDown().writeNewline();
     } else {
       sb.append("/* root */").tabDown().writeNewline();
@@ -75,9 +74,6 @@ public class CodeGenRecords {
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
-      if (fieldType == null) {
-        continue;
-      }
       if (isCommitRevertable(fieldType)) {
         sb.append(fieldName).append(".__revert();").writeNewline();
       }
@@ -91,25 +87,19 @@ public class CodeGenRecords {
     sb.append("}").writeNewline();
   }
 
-  public static void writeCommonBetweenRecordAndRoot(final StructureStorage storage, final StringBuilderWithTabs classConstructorX, final StringBuilderWithTabs classFields, final Environment environment, final String rootObject,
-      final boolean injectRootObject) {
+  public static void writeCommonBetweenRecordAndRoot(final StructureStorage storage, final StringBuilderWithTabs classConstructorX, final StringBuilderWithTabs classFields, final Environment environment, final boolean injectRootObject) {
     if (injectRootObject) {
       classConstructorX.append("super(__owner);").writeNewline();
     }
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
-      if (fieldType == null) {
-        continue;
-      }
       if (fieldType instanceof TyReactiveLazy && fdInOrder.computeExpression != null) {
         final var lazyType = ((TyReactiveLazy) fieldType).getEmbeddedType(environment);
         if (lazyType != null) {
           classFields.append("private final RxLazy<" + lazyType.getJavaBoxType(environment) + "> " + fieldName + ";").writeNewline();
         }
-        classConstructorX.append(fieldName).append(" = new RxLazy<>(this, ");
-        classConstructorX.append(((DetailHasBridge) lazyType).getBridge(environment));
-        classConstructorX.append(", () -> (");
+        classConstructorX.append(fieldName).append(" = new RxLazy<").append(lazyType.getJavaBoxType(environment)).append(">(this, () -> (");
         fdInOrder.computeExpression.writeJava(classConstructorX, environment.scopeWithComputeContext(ComputeContext.Computation));
         classConstructorX.append("));").writeNewline();
         environment.define(fieldName, new TyReactiveLazy(lazyType), false, fdInOrder);
@@ -124,11 +114,11 @@ public class CodeGenRecords {
       final var javaConcreteType = fieldType.getJavaConcreteType(environment);
       classFields.append("private final " + javaConcreteType + " " + fieldName + ";").writeNewline();
       if (fieldType instanceof TyReactiveTable) {
-        classConstructorX.append(fieldName).append(" = RxFactory.makeRxTable(__self, this, ").append(rootObject).append(", \"").append(fieldName).append("\", __BRIDGE_").append(((TyReactiveTable) fieldType).recordName).append(");")
-            .writeNewline();
+        final var numberIndicies = ((TyReactiveRecord) ((TyReactiveTable) fieldType).getEmbeddedType(environment)).storage.indices.size();
+        classConstructorX.append(fieldName).append(" = new RxTable<>(__self, this, \"").append(fieldName).append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName).append("(__parent), ")
+            .append("" + numberIndicies).append(");").writeNewline();
       } else if (fieldType instanceof TyReactiveRecord) {
-        classConstructorX.append(fieldName).append(" = new ").append(fieldType.getJavaConcreteType(environment)).append("(RxFactory.ensureChildNodeExists(").append(rootObject).append(", \"").append(fieldName).append("\"), this);")
-            .writeNewline();
+        classConstructorX.append(fieldName).append(" = new ").append(fieldType.getJavaConcreteType(environment)).append("(this);").writeNewline();
       } else if (fieldType instanceof IsReactiveValue) {
         if (fieldType instanceof DetailInventDefaultValueExpression) {
           var defaultValue = ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(fieldType);
@@ -136,18 +126,18 @@ public class CodeGenRecords {
             defaultValue = fdInOrder.defaultValueOverride;
           }
           if (defaultValue != null) {
-            defaultValue.typing(environment, null);
+            defaultValue.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
           }
-          classConstructorX.append(fieldName).append(" = RxFactory.make").append(javaConcreteType).append("(this, ").append(rootObject).append(", \"").append(fieldName).append("\", ");
+          classConstructorX.append(fieldName).append(" = new ").append(javaConcreteType).append("(this, ");
           defaultValue.writeJava(classConstructorX, environment.scopeWithComputeContext(ComputeContext.Computation));
           classConstructorX.append(");").writeNewline();
         }
       } else if (fieldType instanceof TyReactiveMaybe) {
         var doImmediateGet = false;
         final var elementType = ((DetailContainsAnEmbeddedType) fieldType).getEmbeddedType(environment);
-        classConstructorX.append(fieldName + " = RxFactory.makeRxMaybe(this, " + rootObject + ", \"" + fieldName + "\", (RxParent __parent) -> ");
+        classConstructorX.append(fieldName).append(" = new RxMaybe<>(this, (RxParent __parent) -> ");
         if (elementType instanceof TyReactiveRecord) {
-          classConstructorX.append("new ").append(elementType.getJavaConcreteType(environment)).append("(RxFactory.ensureChildNodeExists(").append(rootObject).append(", \"").append(fieldName).append("\"), __parent)");
+          classConstructorX.append("new ").append(elementType.getJavaConcreteType(environment)).append("(__parent)");
         } else if (elementType instanceof DetailInventDefaultValueExpression && elementType instanceof IsReactiveValue) {
           var defaultValue = ((DetailInventDefaultValueExpression) elementType).inventDefaultValueExpression(fieldType);
           if (fdInOrder.defaultValueOverride != null) {
@@ -155,9 +145,9 @@ public class CodeGenRecords {
             defaultValue = fdInOrder.defaultValueOverride;
           }
           if (defaultValue != null) {
-            defaultValue.typing(environment, null);
+            defaultValue.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
           }
-          classConstructorX.append("RxFactory.make" + elementType.getJavaConcreteType(environment) + "(__parent, " + rootObject + ", \"" + fieldName + "\", ");
+          classConstructorX.append("new " + elementType.getJavaConcreteType(environment) + "(__parent, ");
           defaultValue.writeJava(classConstructorX, environment.scopeWithComputeContext(ComputeContext.Computation));
           classConstructorX.append(")");
         }
@@ -222,6 +212,43 @@ public class CodeGenRecords {
     sb.append("}").writeNewline();
   }
 
+  public static void writeInsert(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {
+    sb.append("@Override").writeNewline();
+    sb.append("public void __insert(JsonStreamReader __reader) {").tabUp().writeNewline();
+    sb.append("if (__reader.startObject()) {").tabUp().writeNewline();
+    sb.append("while(__reader.notEndOfObject()) {").tabUp().writeNewline();
+    sb.append("String __fieldName = __reader.fieldName();").writeNewline();
+    sb.append("switch (__fieldName) {").tabUp().writeNewline();
+    for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
+      final var fieldName = fdInOrder.name;
+      final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
+      if (isCommitRevertable(fieldType)) {
+        sb.append("case \"").append(fieldName).append("\":").tabUp().writeNewline();
+        sb.append(fieldName).append(".__insert(__reader);").writeNewline();
+        sb.append("break;").tabDown().writeNewline();
+      }
+    }
+    for (final String other : others) {
+      sb.append("case \"").append(other).append("\":").tabUp().writeNewline();
+      sb.append(other).append(".__insert(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
+    }
+    if (isRoot) {
+      sb.append("case \"__clients\":").tabUp().writeNewline();
+      sb.append("__hydrateClients(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
+      sb.append("case \"__messages\":").tabUp().writeNewline();
+      sb.append("__hydrateMessages(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
+    }
+    sb.append("default:").tabUp().writeNewline();
+    sb.append("__reader.skipValue();").tabDown().tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+  }
+
   public static void writeMethods(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
     for (final DefineMethod dm : storage.methods) {
       dm.writeFunctionJava(sb, environment);
@@ -233,12 +260,11 @@ public class CodeGenRecords {
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
-      if (fieldType != null) {
-        policyRoot.define(fieldName, fieldType, true, fieldType);
-      }
+      policyRoot.define(fieldName, fieldType, true, fieldType);
     }
     for (final Map.Entry<String, DefineCustomPolicy> customPolicyEntry : storage.policies.entrySet()) {
-      final var policyExec = policyRoot.scopeAsNoCost().scopeWithComputeContext(ComputeContext.Computation).setReturnType(new TyNativeBoolean(customPolicyEntry.getValue().name).withPosition(customPolicyEntry.getValue()));
+      final var policyExec = policyRoot.scopeAsNoCost().scopeWithComputeContext(ComputeContext.Computation)
+          .setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, customPolicyEntry.getValue().name).withPosition(customPolicyEntry.getValue()));
       policyExec.define(customPolicyEntry.getValue().clientVar.text, customPolicyEntry.getValue().clientType, true, customPolicyEntry.getValue().clientType);
       sb.append("public boolean __POLICY_").append(customPolicyEntry.getKey()).append("(NtClient ").append(customPolicyEntry.getValue().clientVar.text).append(")");
       customPolicyEntry.getValue().code.typing(policyExec);
@@ -250,59 +276,62 @@ public class CodeGenRecords {
     }
   }
 
-  public static void writePrivacyExtractor(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot) {
+  public static void writerDump(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {
     sb.append("@Override").writeNewline();
-    sb.append("public JsonNode getPrivateViewFor(NtClient __who) {").tabUp().writeNewline();
-    if (storage.policiesForVisibility.size() == 0 && storage.fields.size() == 0 && storage.bubbles.size() == 0) {
-      sb.append("return null;").tabDown().writeNewline();
-      sb.append("}").writeNewline();
-    } else {
-      sb.append("if (!(true");
-      for (final String policyToCheck : storage.policiesForVisibility) {
-        sb.append(" && ").append("__POLICY_").append(policyToCheck).append("(__who)");
+    sb.append("public void __dump(JsonStreamWriter __writer) {").tabUp().writeNewline();
+    sb.append("__writer.beginObject();").writeNewline();
+    for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
+      final var fieldName = fdInOrder.name;
+      final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
+      if (isCommitRevertable(fieldType)) {
+        sb.append("__writer.writeObjectFieldIntro(\"").append(fieldName).append("\");").writeNewline();
+        sb.append(fieldName).append(".__dump(__writer);").writeNewline();
       }
-      sb.append(")) {").tabUp().writeNewline();
-      sb.append("return null;").tabDown().writeNewline();
-      sb.append("}").writeNewline();
-      sb.append("ObjectNode __view = Utility.createObjectNode();").writeNewline();
-      for (final Map.Entry<String, FieldDefinition> fieldDefinitionEntry : storage.fields.entrySet()) {
-        fieldDefinitionEntry.getValue().writePolicy(sb, environment);
-      }
-      for (final Map.Entry<String, BubbleDefinition> bubbleDefinitionEntry : storage.bubbles.entrySet()) {
-        bubbleDefinitionEntry.getValue().writePolicy(sb, environment);
-      }
-      sb.append("return __view;").tabDown().writeNewline();
-      sb.append("}").writeNewline();
     }
-    if (!isRoot) {
-      sb.append("@Override").writeNewline();
-      sb.append("public boolean __privacyPolicyAllowsCache() {").tabUp().writeNewline();
-      sb.append("return ").append(storage.hasViewerIndependentPrivacyPolicy(environment, 4) ? "true" : "false").append(";").tabDown().writeNewline();
-      sb.append("}").writeNewline();
+    for (final String otherField : others) {
+      sb.append("__writer.writeObjectFieldIntro(\"").append(otherField).append("\");").writeNewline();
+      sb.append(otherField).append(".__dump(__writer);").writeNewline();
     }
+    if (isRoot) {
+      sb.append("__dumpClients(__writer);").writeNewline();
+      sb.append("__dumpMessages(__writer);").writeNewline();
+    }
+    sb.append("__writer.endObject();").tabDown().writeNewline();
+    sb.append("}").writeNewline();
   }
 
   public static void writeRootDocument(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
     final var classConstructor = new StringBuilderWithTabs().tabUp().tabUp();
     final var classFields = new StringBuilderWithTabs().tabUp();
-    writeCommonBetweenRecordAndRoot(storage, classConstructor, classFields, environment, "__root", false);
+    writeCommonBetweenRecordAndRoot(storage, classConstructor, classFields, environment, false);
     final var trimedClassFields = classFields.toString().stripTrailing();
     if (trimedClassFields.length() > 0) {
       sb.append(trimedClassFields).writeNewline();
     }
     writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment);
     if (classConstructor.toString().length() > 0) {
-      sb.append("public " + environment.document.getClassName() + "(ObjectNode __root, DocumentMonitor __monitor) {").tabUp().writeNewline();
-      sb.append("super(__root, __monitor);").writeNewline();
+      sb.append("public " + environment.document.getClassName() + "(DocumentMonitor __monitor) {").tabUp().writeNewline();
+      sb.append("super(__monitor);").writeNewline();
       sb.append(classConstructor.toString().stripTrailing()).writeNewline();
     } else {
-      sb.append("public " + environment.document.getClassName() + "(ObjectNode __root, DocumentMonitor __monitor) {").tabUp().writeNewline();
-      sb.append("super(__root, __monitor);").writeNewline();
+      sb.append("public " + environment.document.getClassName() + "(DocumentMonitor __monitor) {").tabUp().writeNewline();
+      sb.append("super(__monitor);").writeNewline();
     }
     sb.append("__goodwillBudget = ").append(environment.state.options.goodwillBudget + ";").writeNewline();
     sb.append("__goodwillLimitOfBudget = ").append(environment.state.options.goodwillBudget + ";").tabDown().writeNewline();
     sb.append("}").writeNewline();
     writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time");
-    writePrivacyExtractor(storage, sb, environment, true);
+    CodeGenDeltaClass.writeRecordDeltaClass(storage, sb, environment, environment.document.getClassName(), true);
+    sb.append("@Override").writeNewline();
+    sb.append("public PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates) {").tabUp().writeNewline();
+    sb.append(environment.document.getClassName()).append(" __self = this;").writeNewline();
+    sb.append("Delta").append(environment.document.getClassName()).append(" __state = new Delta").append(environment.document.getClassName()).append("();").writeNewline();
+    sb.append("return new PrivateView(__who, __updates) {").tabUp().writeNewline();
+    sb.append("@Override").writeNewline();
+    sb.append("public void update(JsonStreamWriter __writer) {").tabUp().writeNewline();
+    sb.append("__state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer));").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("};").tabDown().writeNewline();
+    sb.append("}").writeNewline();
   }
 }

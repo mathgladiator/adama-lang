@@ -10,14 +10,17 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
 
+/** type var = expr; */
 public class DefineVariable extends Statement {
   private final Token endToken;
   private final Token equalToken;
@@ -84,12 +87,12 @@ public class DefineVariable extends Statement {
     // resolve it
     type = RuleSetCommon.Resolve(environment, type, false);
     // invent a value if we can
-    if (value == null && type != null && type instanceof DetailInventDefaultValueExpression) {
+    if (value == null && type != null && type instanceof DetailInventDefaultValueExpression && !(type instanceof DetailNativeDeclarationIsNotStandard)) {
       value = ((DetailInventDefaultValueExpression) type).inventDefaultValueExpression(this);
       valueType = value.typing(environment.scopeWithComputeContext(ComputeContext.Computation), type);
     }
     if (type != null && type instanceof TyReactiveRecord) {
-      type = new TyNativeReactiveRecordPtr((TyReactiveRecord) type);
+      type = new TyNativeReactiveRecordPtr(TypeBehavior.ReadWriteWithSetGet, (TyReactiveRecord) type);
       if (value == null) {
         environment.document.createError(type, String.format("Reactive pointers must be initialized"), "DefinePtr");
       }
@@ -100,6 +103,11 @@ public class DefineVariable extends Statement {
       final var canStore = environment.rules.CanTypeAStoreTypeB(type, valueType, StorageTweak.None, false);
       if (!canStore || result == CanAssignResult.No) {
         type = null;
+      }
+      if (type instanceof TyNativeMessage && valueType instanceof TyNativeMessage) {
+        if (((TyNativeMessage) valueType).isReadonly()) {
+          type = ((TyNativeMessage) type).makeReadonlyCopy();
+        }
       }
     }
     if (type != null) {

@@ -9,6 +9,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeMap;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -74,7 +75,7 @@ public class Reduce extends LinqExpression {
             fieldType = environment.rules.Resolve(((DetailComputeRequiresGet) fieldType).typeAfterGet(environment), false);
           }
           if (fieldType != null && functionInstance.returnType != null) {
-            resultType = new TyNativeMap(null, null, fieldType, null, functionInstance.returnType, null);
+            resultType = new TyNativeMap(TypeBehavior.ReadOnlyNativeValue, null, null, fieldType, null, functionInstance.returnType, null);
             resultType.typing(environment);
           }
         } else {

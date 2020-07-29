@@ -1,0 +1,17 @@
+message M {
+  int x;
+}
+
+channel<M> foo;
+
+#woot1 {
+  M x = foo.fetch(@no_one).await();
+  x.x = 123;
+}
+
+#woot2 {
+  M z;
+  z = foo.fetch(@no_one).await();
+  z.x = 123;
+}
+

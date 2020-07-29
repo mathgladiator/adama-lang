@@ -8,6 +8,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
 
 /** The only built-in client constant */
@@ -26,12 +27,12 @@ public class NoOneClientConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    return new TyNativeClient(token).makeCopyWithNewPosition(this);
+    environment.mustBeComputeContext(this);
+    return new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    environment.mustBeComputeContext(this);
     sb.append("NtClient.NO_ONE");
   }
 }

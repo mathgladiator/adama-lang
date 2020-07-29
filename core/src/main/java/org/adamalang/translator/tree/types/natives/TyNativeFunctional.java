@@ -9,6 +9,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 
@@ -18,6 +19,7 @@ public class TyNativeFunctional extends TyType {
   public final FunctionStyleJava style;
 
   public TyNativeFunctional(final String name, final ArrayList<FunctionOverloadInstance> overloads, final FunctionStyleJava style) {
+    super(TypeBehavior.ReadOnlyNativeValue);
     this.name = name;
     this.overloads = overloads;
     this.style = style;
@@ -59,7 +61,7 @@ public class TyNativeFunctional extends TyType {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeFunctional(name, overloads, style).withPosition(position);
   }
 

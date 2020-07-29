@@ -10,16 +10,17 @@ import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 import org.adamalang.runtime.LivingDocument;
 import org.adamalang.runtime.contracts.DocumentMonitor;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.stdlib.Utility;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** responsible for compiling java code into a LivingDocumentFactory */
 public class LivingDocumentFactory {
   private final Constructor<?> constructor;
 
-  public LivingDocumentFactory(final String className, final String javaSource) throws Exception {
+  public LivingDocumentFactory(final String className, final String javaSource) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
     final var diagnostics = new DiagnosticCollector<JavaFileObject>();
     final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
@@ -28,38 +29,45 @@ public class LivingDocumentFactory {
       for (final Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
         System.err.println(diagnostic.toString());
       }
-      throw new Exception("Failed to compile");
+      throw new ErrorCodeException(ErrorCodeException.FACTORY_CANT_COMPILE_JAVA_CODE);
     }
-    final var classBytes = fileManager.getClasses();
-    fileManager.close();
-    final var loader = new ByteArrayClassLoader(classBytes);
-    final Class<?> clazz = Class.forName(className, true, loader);
-    constructor = clazz.getConstructor(ObjectNode.class, DocumentMonitor.class);
+    try {
+      final var classBytes = fileManager.getClasses();
+      fileManager.close();
+      final var loader = new ByteArrayClassLoader(classBytes);
+      final Class<?> clazz = Class.forName(className, true, loader);
+      constructor = clazz.getConstructor(DocumentMonitor.class);
+    } catch (final Exception ex) {
+      throw new ErrorCodeException(ErrorCodeException.FACTORY_CANT_BIND_JAVA_CODE, ex);
+    }
   }
 
-  public LivingDocument create(final ObjectNode data, final DocumentMonitor monitor) throws Exception {
-    return (LivingDocument) constructor.newInstance(data, monitor);
+  public LivingDocument create(final DocumentMonitor monitor) throws ErrorCodeException {
+    try {
+      return (LivingDocument) constructor.newInstance(monitor);
+    } catch (final Exception ex) {
+      throw new ErrorCodeException(ErrorCodeException.FACTORY_CANT_CREATE_OBJECT_DUE_TO_EXCEPTION, ex);
+    }
   }
 
-  public void populateTestReport(final TestReportBuilder report, final DocumentMonitor monitor) throws Exception {
-    var candidate = prepareTestCandidate(monitor);
+  public void populateTestReport(final TestReportBuilder report, final DocumentMonitor monitor, String entropy) throws Exception {
+    var candidate = prepareTestCandidate(monitor, entropy);
     final var tests = candidate.__getTests();
     for (final String test : tests) {
-      report.annotate(test, candidate.__run_test(report, test));
-      candidate = prepareTestCandidate(monitor);
+      report.annotate(test, Utility.parseJsonObject(candidate.__run_test(report, test)));
+      candidate = prepareTestCandidate(monitor, entropy);
     }
   }
 
-  private LivingDocument prepareTestCandidate(final DocumentMonitor monitor) throws Exception {
-    final var root = Utility.createObjectNode();
-    root.put("__entropy", "42");
-    final var candidate = create(root, monitor);
+  private LivingDocument prepareTestCandidate(final DocumentMonitor monitor, String entropy) throws Exception {
+    final var candidate = create(monitor);
     final var consRequest = Utility.createObjectNode();
     consRequest.put("command", "construct");
     consRequest.put("timestamp", "0");
+    consRequest.put("entropy", entropy);
     NtClient.NO_ONE.dump(consRequest.putObject("who"));
     consRequest.set("arg", Utility.createObjectNode());
-    candidate.__transact(consRequest);
+    candidate.__transact(consRequest.toString());
     return candidate;
   }
 }

@@ -3,139 +3,114 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.logger;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import org.junit.Assert;
 import org.junit.Test;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 public class NewlineJsonTransactionDiskRecordTests {
-    public static BufferedReader readerOf(byte[] bytes) {
-        ByteArrayInputStream input = new ByteArrayInputStream(bytes);
-        InputStreamReader reader = new InputStreamReader(input);
-        return new BufferedReader(reader);
+  public static byte[] lines(final String... lines) {
+    final var baos = new ByteArrayOutputStream();
+    final var writer = new PrintWriter(baos, true, StandardCharsets.UTF_8);
+    for (final String line : lines) {
+      writer.println(line);
     }
-    public static byte[] lines(String... lines) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintWriter writer = new PrintWriter(baos, true, StandardCharsets.UTF_8);
-        for (String line : lines) {
-            writer.println(line);
-        }
-        return baos.toByteArray();
-    }
+    return baos.toByteArray();
+  }
 
+  public static BufferedReader readerOf(final byte[] bytes) {
+    final var input = new ByteArrayInputStream(bytes);
+    final var reader = new InputStreamReader(input);
+    return new BufferedReader(reader);
+  }
 
-    @Test
-    public void single() throws Exception {
-        byte[] lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"));
-        BufferedReader reader = readerOf(lines);
-        NewlineJsonTransactionDiskRecord record = new NewlineJsonTransactionDiskRecord(reader);
-        Assert.assertTrue(record.valid());
-        record = new NewlineJsonTransactionDiskRecord(reader);
-        Assert.assertFalse(record.valid());
-    }
+  @Test
+  public void bad3() throws Exception {
+    try {
+      final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), "x");
+      final var reader = readerOf(lines);
+      new NewlineJsonTransactionDiskRecord(reader);
+      Assert.fail();
+    } catch (final IOException ioe) {}
+  }
 
-    @Test
-    public void single_convert() throws Exception {
-        byte[] lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"));
-        BufferedReader reader = readerOf(lines);
-        NewlineJsonTransactionDiskRecord record = new NewlineJsonTransactionDiskRecord(reader);
-        Assert.assertTrue(record.valid());
-        Transaction t = record.toTransaction();
-        ByteArrayOutputStream memory = new ByteArrayOutputStream();
-        PrintWriter writer = new PrintWriter(memory);
-        NewlineJsonTransactionDiskRecord.writeTo(t, writer);
-        writer.flush();
-        String str = new String(memory.toByteArray());
-        Assert.assertEquals("{\"request\":\"data\"}\r\n" +
-                "{\"delta\":\"data\"}\r\n" +
-                "{\"needsInvalidation\":false,\"whenToInvalidMilliseconds\":0,\"seq\":0}", str.trim());
-    }
+  @Test
+  public void no_delta_1() throws Exception {
+    final var lines = lines(JsonHelper.encode("request", "data"));
+    final var reader = readerOf(lines);
+    NewlineJsonTransactionDiskRecord record = null;
+    try {
+      record = new NewlineJsonTransactionDiskRecord(reader);
+      Assert.fail();
+    } catch (final IOException ioe) {}
+    Assert.assertNull(record);
+  }
 
-    @Test
-    public void no_delta_1() throws Exception {
-        byte[] lines = lines(JsonHelper.encode("request", "data"));
-        BufferedReader reader = readerOf(lines);
-        NewlineJsonTransactionDiskRecord record = null;
-        try {
-            record = new NewlineJsonTransactionDiskRecord(reader);
-            Assert.fail();
-        } catch (IOException ioe) {
+  @Test
+  public void no_delta_2() throws Exception {
+    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"), JsonHelper.encode("request", "data"));
+    final var reader = readerOf(lines);
+    NewlineJsonTransactionDiskRecord record = null;
+    try {
+      record = new NewlineJsonTransactionDiskRecord(reader);
+      record = new NewlineJsonTransactionDiskRecord(reader);
+      Assert.fail();
+    } catch (final IOException ioe) {}
+    Assert.assertNotNull(record);
+  }
 
-        }
-        Assert.assertNull(record);
-    }
+  @Test
+  public void no_meta() throws Exception {
+    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"));
+    final var reader = readerOf(lines);
+    NewlineJsonTransactionDiskRecord record = null;
+    try {
+      record = new NewlineJsonTransactionDiskRecord(reader);
+      Assert.fail();
+    } catch (final IOException ioe) {}
+    Assert.assertNull(record);
+  }
 
-    @Test
-    public void no_delta_2() throws Exception {
-        byte[] lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"), JsonHelper.encode("request", "data"));
-        BufferedReader reader = readerOf(lines);
-        NewlineJsonTransactionDiskRecord record = null;
-        try {
-            record = new NewlineJsonTransactionDiskRecord(reader);
-            record = new NewlineJsonTransactionDiskRecord(reader);
-            Assert.fail();
-        } catch (IOException ioe) {
-        }
-        Assert.assertNotNull(record);
-    }
+  @Test
+  public void no_meta_2() throws Exception {
+    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"), JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"));
+    final var reader = readerOf(lines);
+    NewlineJsonTransactionDiskRecord record = null;
+    try {
+      record = new NewlineJsonTransactionDiskRecord(reader);
+      record = new NewlineJsonTransactionDiskRecord(reader);
+      Assert.fail();
+    } catch (final IOException ioe) {}
+    Assert.assertNotNull(record);
+  }
 
-    @Test
-    public void no_meta() throws Exception {
-        byte[] lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"));
-        BufferedReader reader = readerOf(lines);
-        NewlineJsonTransactionDiskRecord record = null;
-        try {
-            record = new NewlineJsonTransactionDiskRecord(reader);
-            Assert.fail();
-        } catch (IOException ioe) {
-        }
-        Assert.assertNull(record);
-    }
+  @Test
+  public void single() throws Exception {
+    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"));
+    final var reader = readerOf(lines);
+    var record = new NewlineJsonTransactionDiskRecord(reader);
+    Assert.assertTrue(record.valid());
+    record = new NewlineJsonTransactionDiskRecord(reader);
+    Assert.assertFalse(record.valid());
+  }
 
-    @Test
-    public void no_meta_2() throws Exception {
-        byte[] lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"), JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"));
-        BufferedReader reader = readerOf(lines);
-        NewlineJsonTransactionDiskRecord record = null;
-        try {
-            record = new NewlineJsonTransactionDiskRecord(reader);
-            record = new NewlineJsonTransactionDiskRecord(reader);
-            Assert.fail();
-        } catch (IOException ioe) {
-        }
-        Assert.assertNotNull(record);
-    }
-
-    @Test
-    public void bad1() throws Exception {
-        try {
-            byte[] lines = lines("x", JsonHelper.encode("delta", "data"), JsonHelper.encode("x"));
-            BufferedReader reader = readerOf(lines);
-            new NewlineJsonTransactionDiskRecord(reader);
-            Assert.fail();
-        } catch (IOException ioe) {
-        }
-    }
-
-    @Test
-    public void bad2() throws Exception {
-        try {
-            byte[] lines = lines(JsonHelper.encode("request", "data"), "x", JsonHelper.encode("x"));
-            BufferedReader reader = readerOf(lines);
-            new NewlineJsonTransactionDiskRecord(reader);
-            Assert.fail();
-        } catch (IOException ioe) {
-        }
-    }
-
-    @Test
-    public void bad3() throws Exception {
-        try {
-            byte[] lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), "x");
-            BufferedReader reader = readerOf(lines);
-            new NewlineJsonTransactionDiskRecord(reader);
-            Assert.fail();
-        } catch (IOException ioe) {
-        }
-    }
+  @Test
+  public void single_convert() throws Exception {
+    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"));
+    final var reader = readerOf(lines);
+    final var record = new NewlineJsonTransactionDiskRecord(reader);
+    Assert.assertTrue(record.valid());
+    final var t = record.toTransaction();
+    final var memory = new ByteArrayOutputStream();
+    final var writer = new PrintWriter(memory);
+    NewlineJsonTransactionDiskRecord.writeTo(t, writer);
+    writer.flush();
+    final var str = new String(memory.toByteArray());
+    Assert.assertEquals("{\"request\":\"data\"}\r\n" + "{\"delta\":\"data\"}\r\n" + "{\"needsInvalidation\":false,\"whenToInvalidMilliseconds\":0,\"seq\":0}", str.trim());
+  }
 }

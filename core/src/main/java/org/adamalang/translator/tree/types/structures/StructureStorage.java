@@ -12,17 +12,11 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
-import org.adamalang.translator.tree.privacy.PrivatePolicy;
-import org.adamalang.translator.tree.privacy.PublicPolicy;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
 import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
 import org.adamalang.translator.tree.types.reactive.TyReactiveInteger;
-import org.adamalang.translator.tree.types.traits.IsNativeValue;
-import org.adamalang.translator.tree.types.traits.IsReactiveValue;
-import org.adamalang.translator.tree.types.traits.IsStructure;
-import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 
 public class StructureStorage extends DocumentPosition {
   public final boolean anonymous;
@@ -69,7 +63,6 @@ public class StructureStorage extends DocumentPosition {
     ingest(bd);
     order.add(env -> {
       bd.typing(env.watch(name -> {
-        // TODO: This is a Hack at the moment...
         if (!env.document.functionTypes.containsKey(name)) {
           bd.variablesToWatch.add(name);
         }
@@ -120,7 +113,6 @@ public class StructureStorage extends DocumentPosition {
     }
     order.add(env -> {
       fd.typing(env.watch(name -> {
-        // TODO: This is a Hack at the moment...
         if (!env.document.functionTypes.containsKey(name)) {
           fd.variablesToWatch.add(name);
         }
@@ -195,31 +187,11 @@ public class StructureStorage extends DocumentPosition {
     return fields.containsKey(name) || bubbles.containsKey(name);
   }
 
-  /** can anyone see the same result */
-  public boolean hasViewerIndependentPrivacyPolicy(final Environment environment, final int depthLimit) {
-    if (depthLimit <= 0) { return false; }
-    if (bubbles.size() > 0 || policiesForVisibility.size() > 0) { return false; }
-    // ^ (1) no bubbles, (2) no policies for visibility
-    for (final FieldDefinition fd : fieldsByOrder) {
-      // every field must be private or public
-      final var policyCachable = fd.policy instanceof PrivatePolicy || fd.policy instanceof PublicPolicy || fd.policy == null;
-      if (!policyCachable) { return false; }
-      // the field...
-      var resolvedType = environment.rules.Resolve(fd.type, true);
-      // if maybe, list, lazy, then go extract inner type
-      if (resolvedType instanceof DetailContainsAnEmbeddedType) {
-        resolvedType = environment.rules.ExtractEmbeddedType(resolvedType, true);
-      }
-      // must be a structure
-      if (resolvedType instanceof IsStructure) {
-        // which is also open
-        if (!((IsStructure) resolvedType).storage().hasViewerIndependentPrivacyPolicy(environment, depthLimit - 1)) { return false; }
-      } else if (!(resolvedType instanceof IsReactiveValue || resolvedType instanceof IsNativeValue)) {
-        // or it must a primal type
-        return false;
-      }
-    }
-    return true;
+  public StructureStorage makeAnonymousCopy() {
+    final var storage = new StructureStorage(StorageSpecialization.Message, true, openBraceToken);
+    storage.fieldsByOrder.addAll(fieldsByOrder);
+    storage.fields.putAll(fields);
+    return storage;
   }
 
   public void markPolicyForVisibility(final Token requireToken, final Token policyToCheckToken, final Token semicolon) {

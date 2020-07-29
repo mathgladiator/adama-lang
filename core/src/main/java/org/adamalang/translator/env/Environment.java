@@ -10,6 +10,7 @@ import java.util.function.Function;
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.Rules;
 
 /** Defines the environment within */
@@ -86,7 +87,7 @@ public class Environment {
     var result = variables.get(name);
     if (result != null) {
       // is the current environment
-      if (!compute && readonly.contains(name) && !silent) {
+      if (!compute && (readonly.contains(name) || result.behavior == TypeBehavior.ReadOnlyNativeValue) && !silent) {
         document.createError(position, String.format("The variable '%s' is readonly", name), "VariableLookup");
       }
       return result;
@@ -118,7 +119,7 @@ public class Environment {
   /** assert the environment must be a compute environment */
   public Environment mustBeComputeContext(final DocumentPosition position) {
     if (!state.isContextComputation()) {
-      document.createError(position, String.format("Expression expected to be computed, rather than assigned to (probably a compiler bug)"), "Environment");
+      document.createError(position, String.format("Expression expected to be computed, rather than assigned to"), "Environment");
     }
     return this;
   }

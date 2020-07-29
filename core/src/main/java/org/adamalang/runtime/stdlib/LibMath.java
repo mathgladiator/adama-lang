@@ -3,7 +3,8 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.stdlib;
 
-/** a very simple math library which extends some of the already exposed Math calls */
+/** a very simple math library which extends some of the already exposed Math
+ * calls */
 public class LibMath {
   public static double SQRT2 = 1.4142135623730950488016887242097;
 

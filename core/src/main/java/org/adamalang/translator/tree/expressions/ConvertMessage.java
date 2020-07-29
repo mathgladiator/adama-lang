@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
@@ -57,13 +58,13 @@ public class ConvertMessage extends Expression {
       // X{]
       style = MessageConversionStyle.Multiple;
       if (environment.rules.CanStructureAProjectIntoStructureB(((DetailContainsAnEmbeddedType) exprType).getEmbeddedType(environment), idealType, false)) {
-        return new TyNativeArray(idealType.makeCopyWithNewPosition(this), null).withPosition(this);
+        return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, idealType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue), null).withPosition(this);
       }
     } else if (environment.rules.IsNativeListOfStructure(exprType, true)) {
       // list<X>
       style = MessageConversionStyle.Multiple;
       if (environment.rules.CanStructureAProjectIntoStructureB(((DetailContainsAnEmbeddedType) exprType).getEmbeddedType(environment), idealType, false)) {
-        return new TyNativeArray(idealType.makeCopyWithNewPosition(this), null).withPosition(this);
+        return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, idealType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue), null).withPosition(this);
       }
     } else if (environment.rules.IsStructure(exprType, true)) {
       // X

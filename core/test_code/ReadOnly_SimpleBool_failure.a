@@ -1,0 +1,8 @@
+
+@construct {
+  bool x = true;
+  readonly bool y = !x;
+  y = true;
+  let z = true;
+  z = false;
+}

@@ -11,7 +11,6 @@ import java.util.Random;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.adamalang.runtime.contracts.Bridge;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMap;
@@ -20,12 +19,10 @@ import org.adamalang.runtime.reactives.RxRecordBase;
 
 /** a list backed by an array */
 public class ArrayNtList<Ty> implements NtList<Ty> {
-  private final Bridge<Ty> bridge;
   private final ArrayList<Ty> list;
 
-  public ArrayNtList(final ArrayList<Ty> list, final Bridge<Ty> bridge) {
+  public ArrayNtList(final ArrayList<Ty> list) {
     this.list = list;
-    this.bridge = bridge;
   }
 
   @Override
@@ -83,7 +80,7 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
       bucket.add(item);
     }
     for (final Map.Entry<TIn, ArrayList<Ty>> entry : shredded.entrySet()) {
-      final var value = reducer.apply(new ArrayNtList<>(entry.getValue(), null));
+      final var value = reducer.apply(new ArrayNtList<>(entry.getValue()));
       map.storage.put(entry.getKey(), value);
     }
     return map;
@@ -117,21 +114,21 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
     for (var k = 0; k < limit && it.hasNext(); k++) {
       next.add(it.next());
     }
-    return new ArrayNtList<>(next, bridge);
+    return new ArrayNtList<>(next);
   }
 
   @Override
-  public Ty[] toArray() {
-    return list.toArray(bridge.makeArray(list.size()));
+  public Ty[] toArray(final Function<Integer, Object> arrayMaker) {
+    return list.toArray((Ty[]) arrayMaker.apply(list.size()));
   }
 
   @Override
-  public <Out> NtList<Out> transform(final Function<Ty, Out> t, final Bridge<Out> bridge) {
+  public <Out> NtList<Out> transform(final Function<Ty, Out> t) {
     final var output = new ArrayList<Out>(list.size());
     for (final Ty item : list) {
       output.add(t.apply(item));
     }
-    return new ArrayNtList<>(output, bridge);
+    return new ArrayNtList<>(output);
   }
 
   @Override
@@ -142,6 +139,6 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
         next.add(item);
       }
     }
-    return new ArrayNtList<>(next, bridge);
+    return new ArrayNtList<>(next);
   }
 }

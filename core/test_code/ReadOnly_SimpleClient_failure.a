@@ -1,0 +1,7 @@
+
+@construct {
+  readonly client y = @no_one;
+  y = @no_one;
+  let z = @no_one;
+  z = @no_one;
+}

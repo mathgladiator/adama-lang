@@ -40,3 +40,8 @@ test drive_it {
   assert !(@blocked);
   assert status == "Value:4/8:5/10";
 }
+
+#wut {
+  future<X[]> f = bigchan.fetch(@no_one);
+  X[] x = f.await();
+}

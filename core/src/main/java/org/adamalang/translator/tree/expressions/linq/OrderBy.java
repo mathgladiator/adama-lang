@@ -82,7 +82,7 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
           }
         }
       }
-      return typeSql.makeCopyWithNewPosition(this);
+      return typeSql.makeCopyWithNewPosition(this, typeSql.behavior);
     }
     return null;
   }

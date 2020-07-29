@@ -269,10 +269,10 @@ client current;
   // what does an await on no_one mean, it means the whole thing is fucked
 
   // we really need a future array since this has some awkward stuff
-  future<maybe<CardDecision[]>> pass1 = pass_channel.choose(player1, convert<CardDecision>(select deck where owner==player1), 3);
-  future<maybe<CardDecision[]>> pass2 = pass_channel.choose(player2, convert<CardDecision>(select deck where owner==player2), 3);
-  future<maybe<CardDecision[]>> pass3 = pass_channel.choose(player3, convert<CardDecision>(select deck where owner==player3), 3);
-  future<maybe<CardDecision[]>> pass4 = pass_channel.choose(player4, convert<CardDecision>(select deck where owner==player4), 3);
+  future<maybe<CardDecision[]>> pass1 = pass_channel.choose(player1, @convert<CardDecision>(select deck where owner==player1), 3);
+  future<maybe<CardDecision[]>> pass2 = pass_channel.choose(player2, @convert<CardDecision>(select deck where owner==player2), 3);
+  future<maybe<CardDecision[]>> pass3 = pass_channel.choose(player3, @convert<CardDecision>(select deck where owner==player3), 3);
+  future<maybe<CardDecision[]>> pass4 = pass_channel.choose(player4, @convert<CardDecision>(select deck where owner==player4), 3);
 
   // the reason we do the futures above and then await them below like this is so all players can pass at the same time.
   // the problem at hand is that the await will consume, so non-awaited futures will cause the client to sit dumbly... this can be fixed easily I think
@@ -363,7 +363,7 @@ public client last_winner;
   if (choices.size() == 0) {
     choices = select deck where owner==current && place == Place::Hand;
   }
-  future<maybe<CardDecision[]>> playX = single_play.choose(current, convert<CardDecision>(choices), 1);
+  future<maybe<CardDecision[]>> playX = single_play.choose(current, @convert<CardDecision>(choices), 1);
   if (playX.await() as thePlay) {
   // TODO: don't think hearts can be played, there are some rules here
   foreach (dec in thePlay) {

@@ -9,6 +9,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods {
@@ -17,6 +18,7 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
   public final String importPackage;
 
   public TyNativeGlobalObject(final String globalName, final String importPackage) {
+    super(TypeBehavior.ReadOnlyNativeValue);
     this.globalName = globalName;
     this.importPackage = importPackage;
     functions = new HashMap<>();
@@ -50,7 +52,7 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeGlobalObject(globalName, null).withPosition(position);
   }
 

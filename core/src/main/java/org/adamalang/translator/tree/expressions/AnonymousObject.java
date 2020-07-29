@@ -11,6 +11,8 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
@@ -82,31 +84,33 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
 
   @Override
   public TyType estimateType(final Environment environment) {
+    environment.mustBeComputeContext(this);
     final var storage = new StructureStorage(StorageSpecialization.Message, true, null);
     for (final Map.Entry<String, Expression> entry : fields.entrySet()) {
-      final var type = entry.getValue().typing(environment, null);
+      final var type = entry.getValue() instanceof SupportsTwoPhaseTyping ? ((SupportsTwoPhaseTyping) entry.getValue()).estimateType(environment) : entry.getValue().typing(environment, null);
       final var p = new PrivatePolicy(null);
       p.ingest(entry.getValue());
       final var fd = FieldDefinition.invent(type, entry.getKey());
       storage.add(fd);
     }
-    final var prior = environment.document.findPriorMessage(storage, environment);
-    if (prior != null) { return (TyNativeMessage) prior; }
-    final var msg = new TyNativeMessage(null, Token.WRAP("_AnonObjConvert_" + environment.autoVariable()), storage);
-    environment.document.add(msg);
-    return msg;
+    return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("_AnonObjConvert_" + environment.autoVariable()), storage);
   }
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
+    environment.mustBeComputeContext(this);
     if (suggestion != null) {
       var theType = environment.rules.GetMaxType(suggestion, estimateType(environment), false);
       theType = environment.rules.EnsureRegisteredAndDedupe(theType, false);
-      upgradeType(environment, theType);
-      return theType.makeCopyWithNewPosition(this);
-    } else {
-      return estimateType(environment);
+      if (theType != null) {
+        upgradeType(environment, theType);
+        return theType.makeCopyWithNewPosition(this, theType.behavior);
+      }
     }
+    var typeToUse = estimateType(environment);
+    typeToUse = environment.rules.EnsureRegisteredAndDedupe(typeToUse, false);
+    upgradeType(environment, typeToUse);
+    return typeToUse;
   }
 
   @Override
@@ -114,13 +118,26 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
     cachedType = newType;
     if (environment.rules.IsNativeMessage(newType, false)) {
       final var other = (TyNativeMessage) newType;
-      // inject default for new values
       for (final Map.Entry<String, FieldDefinition> otherField : other.storage().fields.entrySet()) {
-        if (!fields.containsKey(otherField.getKey())) {
-          final var otherFieldType = otherField.getValue().type;
+        var myField = fields.get(otherField.getKey());
+        final var otherFieldType = otherField.getValue().type;
+        if (myField == null) {
           if (otherFieldType != null) {
             final var newValue = ((DetailInventDefaultValueExpression) otherFieldType).inventDefaultValueExpression(this);
             fields.put(otherField.getKey(), newValue);
+          }
+        } else {
+          if (otherFieldType instanceof TyNativeMaybe && !(myField.typing(environment, null) instanceof TyNativeMaybe)) {
+            if (myField instanceof SupportsTwoPhaseTyping) {
+              ((SupportsTwoPhaseTyping) myField).upgradeType(environment, ((TyNativeMaybe) otherFieldType).tokenElementType.item);
+            }
+            myField = new MaybeLift(null, null, null, myField, null);
+            myField.typing(environment, otherFieldType);
+            fields.put(otherField.getKey(), myField);
+          } else {
+            if (myField instanceof SupportsTwoPhaseTyping) {
+              ((SupportsTwoPhaseTyping) myField).upgradeType(environment, otherFieldType);
+            }
           }
         }
       }
@@ -129,7 +146,6 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    environment.mustBeComputeContext(this);
     final var me = (TyNativeMessage) cachedType;
     if (me != null) {
       sb.append("new RTx" + me.name + "(");

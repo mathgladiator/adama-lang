@@ -7,10 +7,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class MinorTokenTypeTests {
-    @Test
-    public void coverage() {
-        for (MinorTokenType mtt : MinorTokenType.values()) {
-            Assert.assertEquals(mtt, MinorTokenType.valueOf(mtt.name()));
-        }
+  @Test
+  public void coverage() {
+    for (final MinorTokenType mtt : MinorTokenType.values()) {
+      Assert.assertEquals(mtt, MinorTokenType.valueOf(mtt.name()));
     }
+  }
 }

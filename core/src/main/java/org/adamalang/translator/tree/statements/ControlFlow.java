@@ -3,7 +3,8 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator.tree.statements;
 
+/** does the code block return or not */
 public enum ControlFlow {
-  Open, //
-  Returns
+  Open, // if this is a function, then it does not return a value
+  Returns // any statements after this imply dead code
 }

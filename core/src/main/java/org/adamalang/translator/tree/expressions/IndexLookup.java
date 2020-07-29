@@ -9,6 +9,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
@@ -53,21 +54,21 @@ public class IndexLookup extends Expression {
     if (environment.rules.IsMap(typeExpr)) {
       final var mapType = (IsMap) typeExpr;
       lookupStyle = IndexLookupStyle.Method;
-      final var typeArg = arg.typing(environment, mapType.getDomainType(environment));
+      final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), mapType.getDomainType(environment));
       if (environment.rules.CanTypeAStoreTypeB(mapType.getDomainType(environment), typeArg, StorageTweak.None, false)) {
-        resultType = new TyNativeMaybe(null, new TokenizedItem<>(mapType.getRangeType(environment))).withPosition(this);
+        resultType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(mapType.getRangeType(environment))).withPosition(this);
       }
     } else {
       environment.rules.IsIterable(typeExpr, false);
       if (typeExpr instanceof DetailIndexLookup) {
         lookupStyle = ((DetailIndexLookup) typeExpr).getLookupStyle(environment);
       }
-      final var typeArg = arg.typing(environment, new TyNativeInteger(null));
+      final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null));
       environment.rules.IsInteger(typeArg, false);
       if (typeExpr != null && typeExpr instanceof DetailContainsAnEmbeddedType) {
         final var elementType = ((DetailContainsAnEmbeddedType) typeExpr).getEmbeddedType(environment);
         if (elementType != null) {
-          resultType = new TyNativeMaybe(null, new TokenizedItem<>(elementType)).withPosition(this);
+          resultType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(elementType)).withPosition(this);
         }
       }
     }

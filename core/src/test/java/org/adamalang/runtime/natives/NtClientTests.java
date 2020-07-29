@@ -3,19 +3,17 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.natives;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.runtime.stdlib.Utility;
-import org.adamalang.runtime.reactives.RxClient;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class NtClientTests {
   @Test
   public void comparisons() {
-    NtClient cv1 = new NtClient("a", "b");
-    NtClient cv2 = new NtClient("b", "b");
-    NtClient cv3 = new NtClient("b", "a");
-    NtClient cv4 = new NtClient("b", "c");
+    final var cv1 = new NtClient("a", "b");
+    final var cv2 = new NtClient("b", "b");
+    final var cv3 = new NtClient("b", "a");
+    final var cv4 = new NtClient("b", "c");
     Assert.assertEquals(-1, cv1.compareTo(cv2));
     Assert.assertEquals(1, cv1.compareTo(cv3));
     Assert.assertEquals(-1, cv1.compareTo(cv4));
@@ -54,18 +52,18 @@ public class NtClientTests {
   @Test
   public void coverage() {
     NtClient.NO_ONE.toString();
-    ObjectNode on = Utility.createObjectNode();
+    final var on = Utility.createObjectNode();
     NtClient.NO_ONE.dump(on);
-    NtClient got = NtClient.from(on);
+    final var got = NtClient.from(on);
     Assert.assertEquals(got, NtClient.NO_ONE);
     Assert.assertEquals("{\"agent\":\"?\",\"authority\":\"?\"}", on.toString());
   }
-  
+
   @Test
   public void from() {
-    NtClient a = NtClient.from(null);
+    final var a = NtClient.from(null);
     Assert.assertEquals(a, NtClient.NO_ONE);
-    NtClient b = NtClient.from(Utility.createArrayNode());
+    final var b = NtClient.from(Utility.createArrayNode());
     Assert.assertEquals(b, NtClient.NO_ONE);
     Assert.assertEquals(2016, a.hashCode());
   }

@@ -44,11 +44,12 @@ public class TransitionStateMachine extends Statement {
 
   @Override
   public ControlFlow typing(final Environment environment) {
-    final var nextType = next.typing(environment, null);
-    environment.rules.IsStateMachineRef(nextType, false);
+    final var scoped = environment.scopeWithComputeContext(ComputeContext.Computation);
+    final var nextType = next.typing(scoped, null);
+    scoped.rules.IsStateMachineRef(nextType, false);
     if (evaluateIn != null) {
-      final var evaluateInType = evaluateIn.typing(environment, null);
-      environment.rules.IsNumeric(evaluateInType, false);
+      final var evaluateInType = evaluateIn.typing(scoped, null);
+      scoped.rules.IsNumeric(evaluateInType, false);
     }
     return ControlFlow.Open;
   }

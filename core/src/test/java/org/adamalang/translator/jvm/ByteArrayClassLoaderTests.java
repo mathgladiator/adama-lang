@@ -3,19 +3,18 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator.jvm;
 
+import java.util.TreeMap;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.TreeMap;
 
 public class ByteArrayClassLoaderTests {
   @Test
   public void coverage() throws Exception {
-    ByteArrayClassLoader bacl = new ByteArrayClassLoader(new TreeMap<>());
+    final var bacl = new ByteArrayClassLoader(new TreeMap<>());
     try {
       bacl.findClass("Ninja");
       Assert.fail();
-    } catch (ClassNotFoundException cnfe) {
+    } catch (final ClassNotFoundException cnfe) {
       Assert.assertEquals("Ninja", cnfe.getMessage());
     }
   }

@@ -8,7 +8,6 @@ import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.Policy;
 import org.adamalang.translator.tree.types.TyType;
@@ -97,7 +96,8 @@ public class FieldDefinition extends StructureComponent {
     return false;
   }
 
-  public void typing(final Environment environment, final StructureStorage owningStructureStorage) {
+  public void typing(final Environment priorEnv, final StructureStorage owningStructureStorage) {
+    final var environment = priorEnv.scopeWithComputeContext(ComputeContext.Computation);
     if (policy != null) {
       policy.typing(environment, owningStructureStorage);
     }
@@ -118,12 +118,6 @@ public class FieldDefinition extends StructureComponent {
           environment.rules.CanTypeAStoreTypeB(type, defType, StorageTweak.None, false);
         }
       }
-    }
-  }
-
-  public void writePolicy(final StringBuilderWithTabs sb, final Environment environment) {
-    if (policy != null) {
-      policy.writePrivacyCheckAndExtractJava(sb, this, environment);
     }
   }
 }

@@ -43,7 +43,7 @@ public class Lookup extends Expression {
       addGet = true;
       type = ((DetailComputeRequiresGet) type).typeAfterGet(environment);
       if (type != null) {
-        type = type.makeCopyWithNewPosition(this);
+        type = type.makeCopyWithNewPosition(this, type.behavior);
       }
     }
     return type;

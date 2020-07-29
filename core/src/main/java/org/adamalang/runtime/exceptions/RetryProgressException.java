@@ -3,7 +3,8 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.exceptions;
 
-/** when we abort, we need to restart the loop. A retry indicates what do the document's state */
+/** when we abort, we need to restart the loop. A retry indicates what do the
+ * document's state */
 public class RetryProgressException extends Exception {
   public final int messageIdToDelete;
 

@@ -10,6 +10,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
 import org.adamalang.translator.tree.types.checking.properties.CanMathResult;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 
 public class LocalTypeAssignmentResult {
   public CanAssignResult assignResult = CanAssignResult.No;
@@ -74,6 +75,11 @@ public class LocalTypeAssignmentResult {
   public void set() {
     ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
     rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+    if (ltype instanceof TyNativeMessage && rtype instanceof TyNativeMessage) {
+      if (((TyNativeMessage) ltype).isReadonly() != ((TyNativeMessage) rtype).isReadonly()) {
+        environment.document.createError(ltype, String.format("Unable to assign a readonly type"), "Readonly");
+      }
+    }
     assignResult = environment.rules.CanAssignWithSet(ltype, rtype, false);
     environment.rules.CanTypeAStoreTypeB(ltype, rtype, StorageTweak.None, false);
   }

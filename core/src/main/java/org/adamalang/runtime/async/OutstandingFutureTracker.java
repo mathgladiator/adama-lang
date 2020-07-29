@@ -5,12 +5,13 @@ package org.adamalang.runtime.async;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.reactives.RxInt32;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
-/** this class has the job of trakcing futures which get created and assigning them persistent ids. This is the class which buffers asks from the code such that we can turn around and ask the people */
+/** this class has the job of trakcing futures which get created and assigning
+ * them persistent ids. This is the class which buffers asks from the code such
+ * that we can turn around and ask the people */
 public class OutstandingFutureTracker {
   public final ArrayList<OutstandingFuture> created;
   private int maxId;
@@ -30,31 +31,37 @@ public class OutstandingFutureTracker {
     created.clear();
   }
 
-  /** dump the viewer's data into the provide node; this is how people learn that they must make a decision */
-  public void dumpIntoView(final ObjectNode view, final NtClient who) {
-    final var outstanding = view.putArray("outstanding");
-    final var blockers = view.putArray("blockers");
+  /** dump the viewer's data into the provide node; this is how people learn that
+   * they must make a decision */
+  public void dump(final JsonStreamWriter writer, final NtClient who) {
+    writer.writeObjectFieldIntro("outstanding");
+    writer.beginArray();
     final var clientsBlocking = new HashSet<NtClient>();
     for (final OutstandingFuture exist : created) {
       if (exist.outstanding()) {
         if (!clientsBlocking.contains(exist.who)) {
           clientsBlocking.add(exist.who);
-          exist.who.dump(blockers.addObject());
         }
         if (exist.who.equals(who)) {
-          exist.dump(outstanding.addObject());
+          writer.injectJson(exist.json);
         }
       }
     }
+    writer.endArray();
+    writer.writeObjectFieldIntro("blockers");
+    writer.beginArray();
+    for (final NtClient blocker : clientsBlocking) {
+      writer.writeNtClient(blocker);
+    }
+    writer.endArray();
   }
 
   /** create a future for the given channel and client should the client not
    * already know about one */
-  public OutstandingFuture make(final String channel, final NtClient client, final ArrayNode options, final int min, final int max, final boolean distinct) {
+  public OutstandingFuture make(final String channel, final NtClient client) {
     var newId = source.get() + 1;
     for (final OutstandingFuture exist : created) {
-      // TODO: if this gets large, then this is bad. Should we index by... person
-      if (exist.test(channel, client, options, min, max, distinct)) { return exist; }
+      if (exist.test(channel, client)) { return exist; }
       if (exist.id >= newId) {
         newId = exist.id + 1;
       }
@@ -62,7 +69,7 @@ public class OutstandingFutureTracker {
     if (newId > maxId) {
       maxId = newId;
     }
-    final var future = new OutstandingFuture(newId, channel, client, options, min, max, distinct);
+    final var future = new OutstandingFuture(newId, channel, client);
     created.add(future);
     return future;
   }

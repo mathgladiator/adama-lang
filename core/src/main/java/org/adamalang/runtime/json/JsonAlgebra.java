@@ -9,7 +9,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-/** This is a giant mess, but this is where the current logic sits for patching and diffing json objects. The diffing is currently too new. TODO: remove Diff in favor of code-gen client views */
+/** This is a giant mess, but this is where the current logic sits for patching
+ * and diffing json objects. The diffing is currently too new. in favor of
+ * code-gen client views */
 public class JsonAlgebra {
   public static class LazyJsonWriter {
     private final String fieldName;

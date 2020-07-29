@@ -12,6 +12,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.StringConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
@@ -19,13 +20,13 @@ import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailComparisonTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailSpecialMultiplyOp;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 /** The type representing a utf-8 encoded string. This uses the native 'String'
  * java type. */
-public class TyNativeString extends TySimpleNative implements IsNativeValue, DetailHasBridge, //
+public class TyNativeString extends TySimpleNative implements IsNativeValue, DetailHasDeltaType, //
     CanBeMapDomain, //
     DetailTypeHasMethods, //
     DetailSpecialMultiplyOp, //
@@ -33,16 +34,21 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
     DetailComparisonTestingRequiresWrapping, //
     AssignmentViaNative //
 {
+  public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeString(final Token token) {
-    super("String", "String");
+  public TyNativeString(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+    super(behavior, "String", "String");
+    this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
+    if (readonlyToken != null) {
+      yielder.accept(readonlyToken);
+    }
     yielder.accept(token);
   }
 
@@ -52,13 +58,13 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return "NativeBridge.STRING_NATIVE_SUPPORT";
+  public String getComparisonTestingBinaryPattern() {
+    return "LibString.compare(%s, %s)";
   }
 
   @Override
-  public String getComparisonTestingBinaryPattern() {
-    return "LibString.compare(%s, %s)";
+  public String getDeltaType(final Environment environment) {
+    return "DString";
   }
 
   @Override
@@ -79,17 +85,18 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("length".equals(name)) {
-      return new TyNativeFunctional("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(token).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true)),
+          FunctionStyleJava.ExpressionThenArgs);
     }
     if ("reverse".equals(name)) {
-      return new TyNativeFunctional("reverse", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("LibString.reverse", new TyNativeString(token).withPosition(this), new ArrayList<>(), true)),
+      return new TyNativeFunctional("reverse", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("LibString.reverse", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true)),
           FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     return null;
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeString(token).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeString(newBehavior, readonlyToken, token).withPosition(position);
   }
 }

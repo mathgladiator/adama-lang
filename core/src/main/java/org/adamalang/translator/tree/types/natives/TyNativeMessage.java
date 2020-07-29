@@ -6,36 +6,49 @@ package org.adamalang.translator.tree.types.natives;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Consumer;
+import org.adamalang.translator.codegen.CodeGenDeltaClass;
+import org.adamalang.translator.codegen.CodeGenMessage;
+import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.expressions.Expression;
+import org.adamalang.translator.tree.expressions.InjectExpression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
+import org.adamalang.translator.tree.types.traits.CanBeNativeArray;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNativeOnlyForSet;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
 
 public class TyNativeMessage extends TyType implements IsStructure, //
     DetailTypeProducesRootLevelCode, //
-    DetailHasBridge, //
+    DetailHasDeltaType, //
+    DetailInventDefaultValueExpression, //
+    CanBeNativeArray, //
     DetailNativeDeclarationIsNotStandard, //
     AssignmentViaNativeOnlyForSet {
   public Token messageToken;
   public String name;
   public Token nameToken;
+  private boolean readonly;
   public StructureStorage storage;
 
-  public TyNativeMessage(final Token messageToken, final Token nameToken, final StructureStorage storage) {
+  public TyNativeMessage(final TypeBehavior behavior, final Token messageToken, final Token nameToken, final StructureStorage storage) {
+    super(behavior);
     this.messageToken = messageToken;
     this.nameToken = nameToken;
     name = nameToken.text;
     this.storage = storage;
     ingest(messageToken);
     ingest(storage);
+    readonly = false;
   }
 
   @Override
@@ -47,48 +60,32 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     }
     sb.append("private static class RTx" + name + " implements NtMessageBase {").tabUp().writeNewline();
     for (final FieldDefinition fd : fields) {
-      sb.append("private ").append(fd.type.getJavaConcreteType(environment)).append(" ").append(fd.name).append(";").writeNewline();
-    }
-    { // CONSTRUCT FROM JSON
-      var countDownUntilTab = storage.fields.size();
-      if (countDownUntilTab == 0) {
-        sb.append("private RTx" + name + "(ObjectNode payload) {}").writeNewline();
+      sb.append("private ").append(fd.type.getJavaConcreteType(environment)).append(" ").append(fd.name);
+      final var fieldType = environment.rules.Resolve(fd.type, false);
+      if (fieldType instanceof DetailNativeDeclarationIsNotStandard) {
+        sb.append(" = ").append(((DetailNativeDeclarationIsNotStandard) fieldType).getStringWhenValueNotProvided(environment));
       } else {
-        sb.append("private RTx" + name + "(ObjectNode payload) {").tabUp().writeNewline();
-        for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
-          sb.append("this.").append(e.getKey()).append(" = ");
-          var bridge = "??";
-          if (e.getValue().type instanceof DetailHasBridge) {
-            bridge = ((DetailHasBridge) e.getValue().type).getBridge(environment);
-          }
-          sb.append(bridge).append(".readFromMessageObject(payload, \"").append(e.getKey()).append("\");");
-          if (--countDownUntilTab <= 0) {
-            sb.tabDown();
-          }
-          sb.writeNewline();
+        Expression defaultValueToUse = null;
+        if (fieldType instanceof DetailInventDefaultValueExpression) {
+          defaultValueToUse = ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(this);
         }
-        sb.append("}").writeNewline();
-      }
-      sb.append("@Override").writeNewline();
-    }
-    { // CONVERT TO OBJECT NODE
-      sb.append("public ObjectNode convertToObjectNode() {").tabUp().writeNewline();
-      sb.append("ObjectNode __node = Utility.createObjectNode();").writeNewline();
-      for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
-        final var outType = environment.rules.Resolve(e.getValue().type, true);
-        if (outType != null && outType instanceof DetailHasBridge) {
-          final var bridge = ((DetailHasBridge) outType).getBridge(environment);
-          sb.append(bridge).append(".writeTo(\"").append(e.getKey()).append("\", ").append(e.getKey()).append(", __node);").writeNewline();
+        if (fd.defaultValueOverride != null) {
+          defaultValueToUse = fd.defaultValueOverride;
+        }
+        if (defaultValueToUse != null) {
+          sb.append(" = ");
+          defaultValueToUse.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         }
       }
-      // sb.append(context.writeToTObject.toString());
-      sb.append("return __node;").tabDown().writeNewline();
-      sb.append("}").writeNewline();
+      sb.append(";").writeNewline();
     }
+    CodeGenMessage.generateJsonReaders(name, storage, sb, environment);
     { // CLOSE UP THE MESSAGE WITH A CONSTRUCTOR FOR ANONYMOUS OBJECTS
+      sb.append("private RTx" + name + "() {}");
       if (storage.fields.size() == 0) {
-        sb.append("private RTx" + name + "() {}").tabDown().writeNewline();
+        sb.tabDown().writeNewline();
       } else {
+        sb.writeNewline();
         sb.append("private RTx").append(name).append("(");
         var firstArg = true;
         for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
@@ -111,18 +108,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
       }
       sb.append("}").writeNewline();
     }
-    { // CREATE THE BRIDGE
-      sb.append("private static final MessageBridge<RTx").append(name).append("> __BRIDGE_").append(name).append(" = new MessageBridge<>() {").tabUp().writeNewline();
-      sb.append("@Override").writeNewline();
-      sb.append("public RTx").append(name).append(" convert(ObjectNode __node) {").tabUp().writeNewline();
-      sb.append("return new RTx").append(name).append("(__node);").tabDown().writeNewline();
-      sb.append("}").writeNewline();
-      sb.append("@Override").writeNewline();
-      sb.append("public RTx").append(name).append("[] makeArray(int __n) {").tabUp().writeNewline();
-      sb.append("return new RTx").append(name).append("[__n];").tabDown().writeNewline();
-      sb.append("}").tabDown().writeNewline();
-      sb.append("};").writeNewline();
-    }
+    CodeGenDeltaClass.writeMessageDeltaClass(storage, sb, environment, "RTx" + name);
   }
 
   @Override
@@ -138,8 +124,8 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return String.format("__BRIDGE_%s", name);
+  public String getDeltaType(final Environment environment) {
+    return "DeltaRTx" + name;
   }
 
   @Override
@@ -159,12 +145,40 @@ public class TyNativeMessage extends TyType implements IsStructure, //
 
   @Override
   public String getStringWhenValueNotProvided(final Environment environment) {
-    return "new RTx" + name + "(Utility.EMPTY_NODE)";
+    return "new RTx" + name + "()";
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeMessage(messageToken, nameToken, storage).withPosition(position);
+  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
+    return new InjectExpression(this) {
+      @Override
+      public void writeJava(final StringBuilder sb, final Environment environment) {
+        sb.append("new RTx").append(name).append("()");
+      }
+    };
+  }
+
+  public boolean isReadonly() {
+    return readonly;
+  }
+
+  public TyNativeMessage makeAnonymousCopy() {
+    return new TyNativeMessage(behavior, messageToken, nameToken, storage.makeAnonymousCopy());
+  }
+
+  @Override
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    final var copy = new TyNativeMessage(newBehavior, messageToken, nameToken, storage);
+    if (readonly) {
+      copy.readonly = true;
+    }
+    return copy.withPosition(position);
+  }
+
+  public TyNativeMessage makeReadonlyCopy() {
+    final var copy = new TyNativeMessage(behavior, messageToken, nameToken, storage);
+    copy.readonly = true;
+    return copy;
   }
 
   @Override

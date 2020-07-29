@@ -1,0 +1,7 @@
+
+@construct {
+  readonly long y = 3;
+  y = 2;
+  let z = 3L;
+  z = 2;
+}

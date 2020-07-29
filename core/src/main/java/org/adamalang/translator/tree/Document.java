@@ -41,6 +41,7 @@ import org.adamalang.translator.tree.definitions.DefineStateTransition;
 import org.adamalang.translator.tree.definitions.DefineTest;
 import org.adamalang.translator.tree.definitions.ImportDocument;
 import org.adamalang.translator.tree.definitions.MessageHandlerBehavior;
+import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
@@ -72,7 +73,7 @@ public class Document implements TopLevelDocumentHandler {
   public final HashMap<String, TyNativeFunctional> functionTypes;
   public final ArrayList<DefineHandler> handlers;
   private final ArrayList<LatentCodeSnippet> latentCodeSnippets;
-  public final TyReactiveRecord rootDocument2;
+  public final TyReactiveRecord root;
   private final ArrayList<File> searchPaths;
   public final ArrayList<DefineTest> tests;
   public final LinkedHashMap<String, DefineStateTransition> transitions;
@@ -83,7 +84,7 @@ public class Document implements TopLevelDocumentHandler {
     autoClassId = 0;
     errorLists = new ArrayList<>();
     typeCheckOrder = new ArrayList<>();
-    rootDocument2 = new TyReactiveRecord(null, Token.WRAP("Root"), new StructureStorage(StorageSpecialization.Record, false, null));
+    root = new TyReactiveRecord(null, Token.WRAP("Root"), new StructureStorage(StorageSpecialization.Record, false, null));
     types = new LinkedHashMap<>();
     handlers = new ArrayList<>();
     transitions = new LinkedHashMap<>();
@@ -104,21 +105,29 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(final BubbleDefinition bd) {
-    if (rootDocument2.storage.has(bd.nameToken.text)) {
+    if (root.storage.has(bd.nameToken.text)) {
       typeCheckOrder.add(env -> {
         env.document.createError(bd, String.format("Global field '%s' was already defined", bd.nameToken.text), "GlobalDefine");
       });
       return;
     }
-    rootDocument2.storage().add(bd, typeCheckOrder);
+    root.storage().add(bd, typeCheckOrder);
   }
 
   @Override
   public void add(final DefineConstructor dc) {
     constructors.add(dc);
-    typeCheckOrder.add(env -> {
-      dc.typing(env);
-    });
+  }
+
+  @Override
+  public void add(final DefineCustomPolicy customPolicy) {
+    if (root.storage.policies.containsKey(customPolicy.name.text)) {
+      typeCheckOrder.add(env -> {
+        env.document.createError(customPolicy, String.format("Global policy '%s' was already defined", customPolicy.name.text), "GlobalDefine");
+      });
+      return;
+    }
+    root.storage.policies.put(customPolicy.name.text, customPolicy);
   }
 
   @Override
@@ -197,13 +206,13 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(final FieldDefinition fd) {
-    if (rootDocument2.storage.has(fd.name)) {
+    if (root.storage.has(fd.name)) {
       typeCheckOrder.add(env -> {
         env.document.createError(fd, String.format("Global field '%s' was already defined", fd.nameToken.text), "GlobalDefine");
       });
       return;
     }
-    rootDocument2.storage().add(fd, typeCheckOrder);
+    root.storage().add(fd, typeCheckOrder);
   }
 
   @Override
@@ -295,6 +304,27 @@ public class Document implements TopLevelDocumentHandler {
         checkInOrder.accept(environment);
       }
     }
+    TyType constructorMessageType = null;
+    for (final DefineConstructor dc : constructors) {
+      if (dc.messageTypeToken != null) {
+        TyType currentType = environment.rules.FindMessageStructure(dc.messageTypeToken.text, dc, false);
+        if (currentType != null && currentType instanceof TyNativeMessage) {
+          currentType = ((TyNativeMessage) currentType).makeAnonymousCopy();
+          if (constructorMessageType != null) {
+            constructorMessageType = environment.rules.GetMaxType(constructorMessageType, currentType, false);
+          } else {
+            constructorMessageType = currentType;
+          }
+        }
+      }
+    }
+    if (constructorMessageType != null) {
+      constructorMessageType = environment.rules.EnsureRegisteredAndDedupe(constructorMessageType, false);
+    }
+    for (final DefineConstructor dc : constructors) {
+      dc.unifiedMessageType = constructorMessageType;
+      dc.typing(environment);
+    }
     return !hasErrors();
   }
 
@@ -307,7 +337,7 @@ public class Document implements TopLevelDocumentHandler {
     final var sb = new StringBuilderWithTabs();
     CodeGenDocument.writePrelude(sb, environment);
     sb.append("public class " + className + " extends LivingDocument {").tabUp().writeNewline();
-    CodeGenRecords.writeRootDocument(rootDocument2.storage, sb, environment);
+    CodeGenRecords.writeRootDocument(root.storage, sb, environment);
     for (final TyType ty : types.values()) {
       if (ty instanceof DetailTypeProducesRootLevelCode) {
         ((DetailTypeProducesRootLevelCode) ty).compile(sb, environment);

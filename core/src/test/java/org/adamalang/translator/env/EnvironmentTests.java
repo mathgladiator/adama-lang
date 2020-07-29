@@ -10,8 +10,8 @@ import org.junit.Test;
 public class EnvironmentTests {
   @Test
   public void coverage() {
-    CompilerOptions options = CompilerOptions.start().make();
-    Environment environment = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), options));
+    final var options = CompilerOptions.start().make();
+    final var environment = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), options));
     Assert.assertNull(environment.getMostRecentReturnType());
     Assert.assertFalse(environment.state.isPure());
     Assert.assertTrue(environment.scopeAsPureFunction().state.isPure());

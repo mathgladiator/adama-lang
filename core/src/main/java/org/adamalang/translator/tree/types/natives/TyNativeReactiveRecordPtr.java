@@ -8,6 +8,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
@@ -19,7 +20,8 @@ public class TyNativeReactiveRecordPtr extends TyType implements //
 {
   public final TyReactiveRecord source;
 
-  public TyNativeReactiveRecordPtr(final TyReactiveRecord source) {
+  public TyNativeReactiveRecordPtr(final TypeBehavior behavior, final TyReactiveRecord source) {
+    super(behavior);
     this.source = source;
     ingest(source);
   }
@@ -55,8 +57,8 @@ public class TyNativeReactiveRecordPtr extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeReactiveRecordPtr(source).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeReactiveRecordPtr(newBehavior, source).withPosition(position);
   }
 
   @Override

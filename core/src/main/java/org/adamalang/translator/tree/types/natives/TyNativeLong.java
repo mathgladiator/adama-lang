@@ -11,30 +11,36 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.LongConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 /** Represents the integral with 64 bits of storage; this uses the 'long' java
  * type */
 public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
     CanBeMapDomain, //
-    DetailHasBridge, //
+    DetailHasDeltaType, //
     IsOrderable, //
     AssignmentViaNative //
 {
+  public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeLong(final Token token) {
-    super("long", "Long");
+  public TyNativeLong(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+    super(behavior, "long", "Long");
+    this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
+    if (readonlyToken != null) {
+      yielder.accept(readonlyToken);
+    }
     yielder.accept(token);
   }
 
@@ -44,8 +50,8 @@ public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return "NativeBridge.LONG_NATIVE_SUPPORT";
+  public String getDeltaType(final Environment environment) {
+    return "DInt64";
   }
 
   @Override
@@ -54,7 +60,7 @@ public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeLong(token).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeLong(newBehavior, readonlyToken, token).withPosition(position);
   }
 }

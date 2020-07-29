@@ -9,8 +9,9 @@ import java.util.function.Function;
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtMaybe;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** a reactive maybe */
 public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxChild {
@@ -28,16 +29,41 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
   }
 
   @Override
-  public void __commit(final String name, final ObjectNode delta) {
+  public void __commit(final String name, final JsonStreamWriter writer) {
     if (__isDirty()) {
       priorValue = value;
       if (value != null) {
-        value.__commit(name, delta);
+        value.__commit(name, writer);
       } else { // value is null
-        delta.putNull(name);
+        writer.writeObjectFieldIntro(name);
+        writer.writeNull();
         __cancelAllSubscriptions();
       }
       __lowerDirtyCommit();
+    }
+  }
+
+  @Override
+  public void __dump(final JsonStreamWriter writer) {
+    if (value != null) {
+      value.__dump(writer);
+    } else {
+      writer.writeNull();
+    }
+  }
+
+  @Override
+  public void __insert(final JsonStreamReader reader) {
+    if (reader.testLackOfNull()) {
+      if (value == null) {
+        value = maker.apply(this);
+        value.__subscribe(this);
+      }
+      priorValue = value;
+      value.__insert(reader);
+    } else {
+      value = null;
+      priorValue = null;
     }
   }
 
@@ -87,7 +113,7 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
     if (value == null) {
       return new NtMaybe();
     } else {
-      if (make() instanceof CanGetAndSet) {
+      if (value instanceof CanGetAndSet) {
         return new NtMaybe(((CanGetAndSet) value).get()).withDeleteChain(this);
       } else {
         return new NtMaybe(value).withDeleteChain(this);

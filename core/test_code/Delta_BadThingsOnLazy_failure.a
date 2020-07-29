@@ -1,0 +1,20 @@
+record R {
+  public int x;
+}
+
+public R x;
+public formula xc1 = x;
+public formula xc2 = @maybe(x);
+
+message M { int z; }
+channel<M> foo;
+public formula y1 = foo;
+public formula y2 = @maybe(foo);
+
+@connected(who) {
+  return true;
+}
+
+@construct {
+  x.x = 123;
+}

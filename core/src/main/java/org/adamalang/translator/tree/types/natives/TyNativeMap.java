@@ -9,18 +9,19 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 public class TyNativeMap extends TyType implements //
     AssignmentViaSetter, //
-    DetailHasBridge, //
+    DetailHasDeltaType, //
     DetailTypeHasMethods, //
     DetailNativeDeclarationIsNotStandard, //
     IsMap //
@@ -32,7 +33,8 @@ public class TyNativeMap extends TyType implements //
   public final Token openThing;
   public final TyType rangeType;
 
-  public TyNativeMap(final Token mapToken, final Token openThing, final TyType domainType, final Token commaToken, final TyType rangeType, final Token closeThing) {
+  public TyNativeMap(final TypeBehavior behavior, final Token mapToken, final Token openThing, final TyType domainType, final Token commaToken, final TyType rangeType, final Token closeThing) {
+    super(behavior);
     this.mapToken = mapToken;
     this.openThing = openThing;
     this.domainType = domainType;
@@ -59,10 +61,8 @@ public class TyNativeMap extends TyType implements //
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return String.format("NativeBridge.WRAP_MAP(%s, %s)", //
-        ((DetailHasBridge) getDomainType(environment)).getBridge(environment), //
-        ((DetailHasBridge) getRangeType(environment)).getBridge(environment));
+  public String getDeltaType(final Environment environment) {
+    return "DMap<" + domainType.getJavaBoxType(environment) + "," + ((DetailHasDeltaType) rangeType).getDeltaType(environment) + ">";
   }
 
   @Override
@@ -74,11 +74,7 @@ public class TyNativeMap extends TyType implements //
   public String getJavaBoxType(final Environment environment) {
     final var dt = getDomainType(environment);
     final var rt = getRangeType(environment);
-    if (dt != null && rt != null) {
-      return "NtMap<" + dt.getJavaBoxType(environment) + "," + rt.getJavaBoxType(environment) + ">";
-    } else {
-      return "NtMap<?,?>";
-    }
+    return "NtMap<" + dt.getJavaBoxType(environment) + "," + rt.getJavaBoxType(environment) + ">";
   }
 
   @Override
@@ -109,14 +105,15 @@ public class TyNativeMap extends TyType implements //
       return new TyNativeFunctional("insert", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("insert", this, new ArrayList<>(args), true)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(mapToken).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true)),
+          FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeMap(newBehavior, mapToken, openThing, domainType, commaToken, rangeType, closeThing).withPosition(position);
   }
 
   @Override

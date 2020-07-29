@@ -10,6 +10,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.IntegerConstant;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
@@ -32,12 +33,12 @@ public class TyReactiveInteger extends TySimpleReactive implements IsOrderable /
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveInteger(token).withPosition(position);
   }
 
   @Override
   public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeInteger(token);
+    return new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 }

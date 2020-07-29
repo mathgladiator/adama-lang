@@ -13,6 +13,7 @@ import org.adamalang.translator.tree.expressions.FieldLookup;
 import org.adamalang.translator.tree.expressions.Lookup;
 import org.adamalang.translator.tree.statements.Assignment;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 
@@ -66,7 +67,7 @@ public class CodeGenIngestion {
       assignment.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
       sb.append(") {").tabUp().writeNewline();
       if (environment.rules.IngestionLeftSideRequiresBridgeCreate(refType)) {
-        generateAssignType = environment.rules.Resolve(environment.rules.ExtractEmbeddedType(refType, true), true);
+        generateAssignType = environment.rules.Resolve(environment.rules.ExtractEmbeddedType(refType, true), true).makeCopyWithNewPosition(refType, TypeBehavior.ReadWriteNative);
         generateAssignVar = "_CreateRef" + autoVar;
         sb.append(generateAssignType.getJavaConcreteType(environment)).append(" ").append(generateAssignVar).append(" = ").append(generatedRefVariable).append(".make();").writeNewline();
       }
@@ -78,7 +79,7 @@ public class CodeGenIngestion {
       assignment.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
       sb.append(";").writeNewline();
       if (environment.rules.IngestionLeftSideRequiresBridgeCreate(refType)) {
-        generateAssignType = environment.rules.Resolve(environment.rules.ExtractEmbeddedType(refType, true), true);
+        generateAssignType = environment.rules.Resolve(environment.rules.ExtractEmbeddedType(refType, true), true).makeCopyWithNewPosition(refType, TypeBehavior.ReadWriteNative);
         generateAssignVar = "_CreateRef" + autoVar;
         sb.append(generateAssignType.getJavaConcreteType(environment)).append(" ").append(generateAssignVar).append(" = ").append(generatedRefVariable).append(".make();").writeNewline();
       }

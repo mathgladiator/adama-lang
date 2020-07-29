@@ -20,6 +20,7 @@ public abstract class TySimpleReactive extends TyType implements DetailComputeRe
   public final Token token;
 
   public TySimpleReactive(final Token token, final String reactiveTreeType) {
+    super(TypeBehavior.ReadWriteWithSetGet);
     this.token = token;
     this.reactiveTreeType = reactiveTreeType;
     ingest(token);

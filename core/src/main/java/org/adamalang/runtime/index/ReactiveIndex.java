@@ -9,10 +9,11 @@ import org.adamalang.runtime.reactives.RxRecordBase;
 
 /** an index of a single column of data */
 public class ReactiveIndex<Ty extends RxRecordBase> {
-  /** a data structure which is precise; we know that the given item is in this bucket for SURE */
+  /** a data structure which is precise; we know that the given item is in this
+   * bucket for SURE */
   private final HashMap<Integer, TreeSet<Ty>> index;
-
-  /** as things change, we lose certainty of where items exist and have a grab-all bucket */
+  /** as things change, we lose certainty of where items exist and have a grab-all
+   * bucket */
   private final TreeSet<Ty> unknowns;
 
   public ReactiveIndex(final TreeSet<Ty> unknowns) {

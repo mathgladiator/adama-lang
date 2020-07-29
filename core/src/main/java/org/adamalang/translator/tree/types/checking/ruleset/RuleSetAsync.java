@@ -5,6 +5,7 @@ package org.adamalang.translator.tree.types.checking.ruleset;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
 
@@ -13,7 +14,7 @@ public class RuleSetAsync {
     final var tyType = RuleSetCommon.Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeClient || tyType instanceof TyReactiveClient) { return true; }
-      RuleSetCommon.SignalTypeFailure(environment, new TyNativeClient(null), tyTypeOriginal, silent);
+      RuleSetCommon.SignalTypeFailure(environment, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }

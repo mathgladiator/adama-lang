@@ -6,7 +6,8 @@ package org.adamalang.runtime.reactives;
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.Indexable;
 import org.adamalang.runtime.contracts.RxParent;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive 64-bit integer (long) */
 public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet<Long>, Indexable {
@@ -20,12 +21,24 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
   }
 
   @Override
-  public void __commit(final String name, final ObjectNode delta) {
+  public void __commit(final String name, final JsonStreamWriter writer) {
     if (__isDirty()) {
-      delta.put(name, String.valueOf(value));
+      writer.writeObjectFieldIntro(name);
+      writer.writeLong(value);
       backup = value;
       __lowerDirtyCommit();
     }
+  }
+
+  @Override
+  public void __dump(final JsonStreamWriter writer) {
+    writer.writeLong(value);
+  }
+
+  @Override
+  public void __insert(final JsonStreamReader reader) {
+    backup = reader.readLong();
+    value = backup;
   }
 
   @Override

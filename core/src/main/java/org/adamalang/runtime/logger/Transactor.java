@@ -3,17 +3,20 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.logger;
 
+import java.util.function.Consumer;
 import org.adamalang.runtime.LivingDocument;
 import org.adamalang.runtime.contracts.DocumentMonitor;
-import org.adamalang.runtime.contracts.TransactionLogger;
 import org.adamalang.runtime.contracts.TimeSource;
-import org.adamalang.runtime.exceptions.DocumentRequestRejectedException;
-import org.adamalang.runtime.exceptions.DocumentRequestRejectedReason;
+import org.adamalang.runtime.contracts.TransactionLogger;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.stdlib.Utility;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+/** this an exceptionally low-level class and provides the primitives to build
+ * an API. */
 public class Transactor {
   public LivingDocument document;
   public final LivingDocumentFactory factory;
@@ -29,79 +32,136 @@ public class Transactor {
     document = null;
   }
 
-  public synchronized TransactionResult bill() throws Exception {
+  /** log a bill, reset goodwill and cost */
+  public TransactionResult bill() throws ErrorCodeException {
     final var request = forge("bill", null);
-    final var transaction = document.__transact(request);
+    request.endObject();
+    final var transaction = document.__transact(request.toString());
     logger.ingest(transaction);
     return transaction.transactionResult;
   }
 
-  public synchronized void close() throws Exception {
+  public void close() throws Exception {
     logger.close();
   }
 
-  public synchronized TransactionResult connect(final NtClient who) throws Exception {
+  /** dump a json */
+  public String json() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    document.__dump(writer);
+    return writer.toString();
+  }
+
+  /** connect a client */
+  public TransactionResult connect(final NtClient who) throws ErrorCodeException {
     final var request = forge("connect", who);
-    final var transaction = document.__transact(request);
+    request.endObject();
+    final var transaction = document.__transact(request.toString());
     logger.ingest(transaction);
     return transaction.transactionResult;
   }
 
-  public synchronized TransactionResult construct(final NtClient who, final ObjectNode arg, final String entropy) throws Exception {
-    if (document != null) { throw new DocumentRequestRejectedException(DocumentRequestRejectedReason.AlreadyConstructed); }
-    final var root = Utility.createObjectNode();
+  /** construct the document */
+  public TransactionResult construct(final NtClient who, final String arg, final String entropy) throws ErrorCodeException {
+    if (document != null) { throw new ErrorCodeException(ErrorCodeException.TRANSACTOR_CANT_CREATE_BECAUSE_ALREADY_CREATED); }
+    document = factory.create(monitor);
+    final var writer = forge("construct", who);
+    writer.writeObjectFieldIntro("arg");
+    writer.injectJson(arg);
     if (entropy != null) {
-      root.put("__entropy", entropy);
+      writer.writeObjectFieldIntro("entropy");
+      writer.writeFastString(entropy);
     }
-    document = factory.create(root, monitor);
-    final var request = forge("construct", who);
-    request.set("arg", arg);
-    final var transaction = document.__transact(request);
-    if (entropy != null) {
-      transaction.delta.put("__entropy", entropy);
-    }
-    logger.ingest(transaction);
-    return transaction.transactionResult;
-  }
-
-  public synchronized TransactionResult disconnect(final NtClient who) throws Exception {
-    final var request = forge("disconnect", who);
-    final var transaction = document.__transact(request);
-    logger.ingest(transaction);
-    return transaction.transactionResult;
-  }
-
-  public ObjectNode forge(final String command, final NtClient who) {
-    final var request = Utility.createObjectNode();
-    request.put("command", command);
-    request.put("timestamp", Long.toString(time.nowMilliseconds()));
-    if (who != null) {
-      who.dump(request.putObject("who"));
-    }
-    return request;
-  }
-
-  public synchronized ObjectNode getView(final NtClient who) {
-    return document.__getView(who);
-  }
-
-  public synchronized TransactionResult invalidate() throws Exception {
-    final var request = forge("invalidate", null);
-    final var transaction = document.__transact(request);
+    writer.endObject();
+    final var transaction = document.__transact(writer.toString());
     logger.ingest(transaction);
     return transaction.transactionResult;
   }
 
   /** this suggests that the document should not do anything on setup */
-  public synchronized void seed(final ObjectNode node) throws Exception {
-    document = factory.create(node, monitor);
+  public void create() throws ErrorCodeException {
+    document = factory.create(monitor);
   }
 
-  public synchronized TransactionResult send(final NtClient who, final String channel, final ObjectNode message) throws Exception {
-    final var request = forge("send", who);
-    request.put("channel", channel);
-    request.set("message", message);
-    final var transaction = document.__transact(request);
+  /** construct a private view */
+  public PrivateView createView(final NtClient who, final Consumer<String> updates) {
+    return document.__createView(who, updates);
+  }
+
+  /** disconnect the client */
+  public void disconnect(final NtClient who) {
+    try {
+      final var request = forge("disconnect", who);
+      request.endObject();
+      final var transaction = document.__transact(request.toString());
+      logger.ingest(transaction);
+    } catch (final ErrorCodeException ece) {
+      // ignored because the failure mode is primarily they were not connected, and
+      // this is not useful to consumers
+    }
+  }
+
+  /** drive changes */
+  public TransactionResult drive() throws ErrorCodeException {
+    var initial = invalidate();
+    while (initial.needsInvalidation && initial.whenToInvalidMilliseconds == 0) {
+      initial = invalidate();
+    }
+    return initial;
+  }
+
+  /** forge a new request */
+  public JsonStreamWriter forge(final String command, final NtClient who) {
+    final var writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("command");
+    writer.writeFastString(command);
+    writer.writeObjectFieldIntro("timestamp");
+    writer.writeLong(time.nowMilliseconds());
+    if (who != null) {
+      writer.writeObjectFieldIntro("who");
+      writer.writeNtClient(who);
+    }
+    return writer;
+  }
+
+  /** garbage collect views for the given person */
+  public int gcViewsFor(final NtClient who) {
+    return document.__garbageCollectViews(who);
+  }
+
+  /** get how much the document has cost */
+  public int getCodeCost() {
+    return document.__getCodeCost();
+  }
+
+  public void insert(final String json) {
+    document.__insert(new JsonStreamReader(json));
+  }
+
+  /** drive a single change */
+  public TransactionResult invalidate() throws ErrorCodeException {
+    final var request = forge("invalidate", null);
+    request.endObject();
+    final var transaction = document.__transact(request.toString());
+    logger.ingest(transaction);
+    return transaction.transactionResult;
+  }
+
+  /** is the given user connected */
+  public boolean isConnected(final NtClient who) {
+    return document.__isConnected(who);
+  }
+
+  /** send a message from a person to a channel */
+  public TransactionResult send(final NtClient who, final String channel, final String message) throws ErrorCodeException {
+    final var writer = forge("send", who);
+    writer.writeObjectFieldIntro("channel");
+    writer.writeFastString(channel);
+    writer.writeObjectFieldIntro("message");
+    writer.injectJson(message);
+    writer.endObject();
+    final var transaction = document.__transact(writer.toString());
     logger.ingest(transaction);
     return transaction.transactionResult;
   }

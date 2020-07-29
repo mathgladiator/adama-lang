@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.adamalang.runtime.contracts.Bridge;
 import org.adamalang.runtime.contracts.WhereClause;
 
 /** the core list abstraction */
@@ -21,7 +20,7 @@ public interface NtList<Ty> extends Iterable<Ty> {
   public NtList<Ty> shuffle(boolean done, Random rng);
   public int size();
   public NtList<Ty> skipAndLimit(boolean done, int skip, int limit);
-  public Ty[] toArray();
-  public <Out> NtList<Out> transform(Function<Ty, Out> t, Bridge<Out> bridge);
+  public Ty[] toArray(Function<Integer, Object> arrayMaker);
+  public <Out> NtList<Out> transform(Function<Ty, Out> t);
   public NtList<Ty> where(boolean done, WhereClause<Ty> filter);
 }

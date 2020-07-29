@@ -28,7 +28,7 @@ public class LocalTypeAlgebraResult {
 
   public TyType add() {
     typeLeft = left.typing(environment, null);
-    typeLeft = environment.rules.Resolve(typeLeft, false); // TODO: can't these be removed
+    typeLeft = environment.rules.Resolve(typeLeft, false);
     typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
     mathResult = environment.rules.CanAdd(typeLeft, typeRight, false);

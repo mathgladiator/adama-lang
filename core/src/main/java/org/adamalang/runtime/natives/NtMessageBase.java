@@ -3,7 +3,11 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.natives;
 
-import org.adamalang.runtime.contracts.CanConvertToObject;
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** the base contract which messages must obey */
-public interface NtMessageBase extends CanConvertToObject {}
+public interface NtMessageBase /* extends CanConvertToObject */ {
+  public NtMessageBase NULL = writer -> {};
+
+  public void __writeOut(JsonStreamWriter writer);
+}

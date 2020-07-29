@@ -14,7 +14,8 @@ public abstract class TySimpleNative extends TyType implements //
   private final String javaBoxType;
   private final String javaConcreteType;
 
-  public TySimpleNative(final String javaConcreteType, final String javaBoxType) {
+  public TySimpleNative(final TypeBehavior behavior, final String javaConcreteType, final String javaBoxType) {
+    super(behavior);
     this.javaConcreteType = javaConcreteType;
     this.javaBoxType = javaBoxType;
   }

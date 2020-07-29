@@ -1,0 +1,8 @@
+
+@construct {
+  readonly maybe<int> x = 123;
+  x = 42;
+  let y = @maybe(100);
+  y = 99;
+}
+

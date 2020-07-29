@@ -13,7 +13,7 @@ public class RuleSetMessages {
     final var type = environment.document.types.get(name);
     if (type != null) {
       if (type instanceof TyNativeMessage) {
-        return (TyNativeMessage) type.makeCopyWithNewPosition(position);
+        return (TyNativeMessage) type.makeCopyWithNewPosition(position, type.behavior);
       } else if (!silent) {
         environment.document.createError(position, String.format("Type incorrect: expecting '%s' to be a message type; instead, found a type of '%s'.", name, type.getAdamaType()), "TypeCheckReferences");
       }

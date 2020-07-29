@@ -17,6 +17,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.EnumConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
@@ -25,12 +26,12 @@ import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailSpecialReactiveRefResolve;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
 
-public class TyNativeEnum extends TySimpleNative implements IsNativeValue, DetailHasBridge, //
+public class TyNativeEnum extends TySimpleNative implements IsNativeValue, DetailHasDeltaType, //
     CanBeMapDomain, //
     DetailSpecialReactiveRefResolve, //
     DetailTypeProducesRootLevelCode, //
@@ -38,15 +39,15 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
     IsEnum, //
     AssignmentViaNative //
 {
-  private final Token endBrace;
+  public final Token endBrace;
   public final Token enumToken;
   public final String name;
   public final Token nameToken;
-  private final Token openBrace;
+  public final Token openBrace;
   public final EnumStorage storage;
 
-  public TyNativeEnum(final Token enumToken, final Token nameToken, final Token openBrace, final EnumStorage storage, final Token endBrace) {
-    super("int", "Integer");
+  public TyNativeEnum(final TypeBehavior behavior, final Token enumToken, final Token nameToken, final Token openBrace, final EnumStorage storage, final Token endBrace) {
+    super(behavior, "int", "Integer");
     this.enumToken = enumToken;
     this.nameToken = nameToken;
     name = nameToken.text;
@@ -81,8 +82,8 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return "NativeBridge.INTEGER_NATIVE_SUPPORT";
+  public String getDeltaType(final Environment environment) {
+    return "DInt32";
   }
 
   @Override
@@ -93,15 +94,16 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("to_int".equals(name)) {
-      return new TyNativeFunctional("to_int", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("Utility.identity", new TyNativeInteger(enumToken).makeCopyWithNewPosition(this), new ArrayList<>(), true)),
+      return new TyNativeFunctional("to_int",
+          FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("Utility.identity", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, enumToken).withPosition(this), new ArrayList<>(), true)),
           FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     return storage.computeDispatcherType(name);
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeEnum(enumToken, nameToken, openBrace, storage, endBrace).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeEnum(newBehavior, enumToken, nameToken, openBrace, storage, endBrace).withPosition(position);
   }
 
   @Override

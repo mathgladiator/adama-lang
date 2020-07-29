@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD })
+/** override the name of the method in Adama. This is useful for mapping
+ * multiple functions to the same name such that overloading can do magic. */
 public @interface UseName {
   public String name();
 }

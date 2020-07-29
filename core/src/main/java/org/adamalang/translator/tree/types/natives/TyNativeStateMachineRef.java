@@ -11,21 +11,24 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.StateMachineConstant;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
+import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 /** The type representing a valid reference in the state machine; this uses the
  * native 'String' java type */
-public class TyNativeStateMachineRef extends TySimpleNative implements IsNativeValue, DetailHasBridge, //
+public class TyNativeStateMachineRef extends TySimpleNative implements //
+    IsNativeValue, //
+    DetailHasDeltaType, //
     DetailEqualityTestingRequiresWrapping, //
     AssignmentViaNative //
 {
   public final Token token;
 
-  public TyNativeStateMachineRef(final Token token) {
-    super("String", "String");
+  public TyNativeStateMachineRef(final TypeBehavior behavior, final Token token) {
+    super(behavior, "String", "String");
     this.token = token;
     ingest(token);
   }
@@ -41,8 +44,8 @@ public class TyNativeStateMachineRef extends TySimpleNative implements IsNativeV
   }
 
   @Override
-  public String getBridge(final Environment environment) {
-    return "NativeBridge.STRING_NATIVE_SUPPORT";
+  public String getDeltaType(final Environment environment) {
+    return "DFastString";
   }
 
   @Override
@@ -56,7 +59,7 @@ public class TyNativeStateMachineRef extends TySimpleNative implements IsNativeV
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
-    return new TyNativeStateMachineRef(token).withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeStateMachineRef(newBehavior, token).withPosition(position);
   }
 }

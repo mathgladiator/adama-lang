@@ -12,7 +12,6 @@ import org.adamalang.translator.tree.operands.PostfixMutateOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanBumpResult;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
 
 /** postfix mutation ($e--, $e++) */
 public class PostfixMutate extends Expression {
@@ -41,8 +40,8 @@ public class PostfixMutate extends Expression {
     final var result = expression.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null /* no suggestion makes sense */);
     bumpResult = environment.rules.CanBumpNumeric(result, false);
     if (bumpResult == CanBumpResult.No) { return null; }
-    if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) { return ((DetailComputeRequiresGet) result).typeAfterGet(environment).makeCopyWithNewPosition(this); }
-    return result.makeCopyWithNewPosition(this);
+    if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) { return ((DetailComputeRequiresGet) result).typeAfterGet(environment).makeCopyWithNewPosition(this, result.behavior); }
+    return result.makeCopyWithNewPosition(this, result.behavior);
   }
 
   @Override
@@ -56,12 +55,11 @@ public class PostfixMutate extends Expression {
         sb.append(op.functionCall);
         break;
       case YesWithListTransformSetter:
-        sb.append(".transform((item) -> item").append(op.functionCall);
-        sb.append(", null /** no bridge needed */)");
+        sb.append(".transform((item) -> item").append(op.functionCall).append(")");
         break;
       case YesWithListTransformNative:
-        final var bridge = (DetailHasBridge) environment.rules.ExtractEmbeddedType(cachedType, false);
-        sb.append(".transform((item) -> item").append(op.javaOp).append(", ").append(bridge.getBridge(environment)).append(")");
+        environment.rules.ExtractEmbeddedType(cachedType, false);
+        sb.append(".transform((item) -> item").append(op.javaOp).append(")");
         return;
     }
   }

@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /** some runtime exposed to the living document */
 public class Utility {
   public static final JsonMapper MAPPER = new JsonMapper();
-  public static final ObjectNode EMPTY_NODE = MAPPER.createObjectNode();
 
   public static <TyIn, TyOut> NtMaybe<TyOut> convertMaybe(final NtMaybe<TyIn> in, final Function<TyIn, TyOut> conv) {
     if (in.has()) {

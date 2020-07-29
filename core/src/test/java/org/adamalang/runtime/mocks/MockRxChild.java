@@ -7,20 +7,21 @@ import org.adamalang.runtime.contracts.RxChild;
 import org.junit.Assert;
 
 public class MockRxChild implements RxChild {
-    public int invalidCount;
-    public boolean alive;
-    public MockRxChild() {
-        this.invalidCount = 0;
-        this.alive = true;
-    }
+  public boolean alive;
+  public int invalidCount;
 
-    @Override
-    public boolean __raiseInvalid() {
-        this.invalidCount++;
-        return alive;
-    }
+  public MockRxChild() {
+    invalidCount = 0;
+    alive = true;
+  }
 
-    public void assertInvalidateCount(int expected) {
-        Assert.assertEquals(expected, invalidCount);
-    }
+  @Override
+  public boolean __raiseInvalid() {
+    invalidCount++;
+    return alive;
+  }
+
+  public void assertInvalidateCount(final int expected) {
+    Assert.assertEquals(expected, invalidCount);
+  }
 }

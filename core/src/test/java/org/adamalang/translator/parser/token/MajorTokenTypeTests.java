@@ -7,10 +7,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class MajorTokenTypeTests {
-    @Test
-    public void coverage() {
-        for (MajorTokenType mtt : MajorTokenType.values()) {
-            Assert.assertEquals(mtt, MajorTokenType.valueOf(mtt.name()));
-        }
+  @Test
+  public void coverage() {
+    for (final MajorTokenType mtt : MajorTokenType.values()) {
+      Assert.assertEquals(mtt, MajorTokenType.valueOf(mtt.name()));
     }
+  }
 }

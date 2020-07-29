@@ -6,14 +6,14 @@ package org.adamalang.runtime.mocks;
 import org.adamalang.runtime.contracts.TimeSource;
 
 public class MockTime implements TimeSource {
-    public long time;
+  public long time;
 
-    public MockTime() {
-        this.time = 0;
-    }
+  public MockTime() {
+    time = 0;
+  }
 
-    @Override
-    public long nowMilliseconds() {
-        return time;
-    }
+  @Override
+  public long nowMilliseconds() {
+    return time;
+  }
 }

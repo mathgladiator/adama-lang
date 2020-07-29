@@ -1,0 +1,41 @@
+
+record X {
+  use_policy<foo> int i;
+  use_policy<foo> long l;
+  use_policy<foo> double d;
+  use_policy<foo> bool b;
+  use_policy<foo> string s;
+
+  policy foo(who) {
+    return b;
+  }
+}
+
+public X x;
+
+@construct {
+  x.i = 42;
+  x.l = 314;
+  x.d = 2.71;
+  x.b = true;
+  x.s = "Hi";
+  transition #one;
+}
+
+#one {
+  x.i = 100;
+  x.l = 4000000L;
+  x.d = 3.14;
+  x.b = false;
+  x.s = "There";
+  transition #two;
+}
+
+#two {
+  x.i = 1000;
+  x.l = 980000000000L;
+  x.d = 42.13;
+  x.b = true;
+  x.s = "Oh!!!";
+}
+

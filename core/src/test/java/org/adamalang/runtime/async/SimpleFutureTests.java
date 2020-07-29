@@ -9,21 +9,20 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class SimpleFutureTests {
-    @Test
-    public void no_value() {
-        SimpleFuture<String> sf = new SimpleFuture<>("chan", NtClient.NO_ONE, null);
-        Assert.assertFalse(sf.exists());
-        try {
-            sf.await();
-            Assert.fail();
-        } catch (ComputeBlockedException cbe) {
-        }
-    }
+  @Test
+  public void has_value() {
+    final var sf = new SimpleFuture<>("chan", NtClient.NO_ONE, "cake");
+    Assert.assertTrue(sf.exists());
+    Assert.assertEquals("cake", sf.await());
+  }
 
-    @Test
-    public void has_value() {
-        SimpleFuture<String> sf = new SimpleFuture<>("chan", NtClient.NO_ONE, "cake");
-        Assert.assertTrue(sf.exists());
-        Assert.assertEquals("cake", sf.await());
-    }
+  @Test
+  public void no_value() {
+    final var sf = new SimpleFuture<String>("chan", NtClient.NO_ONE, null);
+    Assert.assertFalse(sf.exists());
+    try {
+      sf.await();
+      Assert.fail();
+    } catch (final ComputeBlockedException cbe) {}
+  }
 }

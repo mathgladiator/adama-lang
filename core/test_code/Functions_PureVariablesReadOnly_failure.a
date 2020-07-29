@@ -8,7 +8,7 @@ procedure foo() {
   z = 123;
 }
 
-procedure goo() @readonly {
+procedure goo() readonly {
   z = 123;
 }
 
@@ -17,6 +17,6 @@ function cantread() -> int {
   return z;
 }
 
-procedure canread() -> int @readonly {
+procedure canread() -> int readonly {
   return z;
 }

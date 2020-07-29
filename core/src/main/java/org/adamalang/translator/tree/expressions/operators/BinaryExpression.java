@@ -9,6 +9,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.LocalTypeAlgebraResult;
 import org.adamalang.translator.tree.types.checking.properties.CanMathResult;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
@@ -43,6 +44,7 @@ public class BinaryExpression extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
+    environment.mustBeComputeContext(this);
     typingResult = new LocalTypeAlgebraResult(environment, this, left, right);
     if (op != null) {
       switch (op) {
@@ -60,15 +62,15 @@ public class BinaryExpression extends Expression {
         case GreaterThan:
         case GreaterThanOrEqual:
         case LessThanOrEqual:
-          if (typingResult.compare()) { return new TyNativeBoolean(opToken).withPosition(this); }
+          if (typingResult.compare()) { return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this); }
           return null;
         case Equal:
         case NotEqual:
-          if (typingResult.equals()) { return new TyNativeBoolean(opToken).withPosition(this); }
+          if (typingResult.equals()) { return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this); }
           return null;
         case LogicalAnd:
         case LogicalOr:
-          if (typingResult.logic()) { return new TyNativeBoolean(opToken).withPosition(this); }
+          if (typingResult.logic()) { return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this); }
       }
     }
     return null;
@@ -76,7 +78,6 @@ public class BinaryExpression extends Expression {
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    environment.mustBeComputeContext(this);
     final var typeLeft = typingResult.typeLeft;
     final var leftStr = new StringBuilder();
     final var rightStr = new StringBuilder();

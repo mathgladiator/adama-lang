@@ -6,9 +6,11 @@ package org.adamalang.translator.tree.definitions;
 import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.statements.Block;
+import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 
 /** defines a constructor which runs when the document is created */
 public class DefineConstructor extends Definition {
@@ -22,6 +24,8 @@ public class DefineConstructor extends Definition {
   public final Token messageNameToken;
   public final Token messageTypeToken;
   public final Token openParenToken;
+  public TyType unifiedMessageType;
+  public String unifiedMessageTypeNameToUse;
 
   public DefineConstructor(final Token constructToken, final Token openParenToken, final Token clientTypeToken, final Token clientVarToken, final Token commaToken, final Token messageTypeToken, final Token messageNameToken,
       final Token endParenToken, final Block code) {
@@ -30,7 +34,7 @@ public class DefineConstructor extends Definition {
     this.clientTypeToken = clientTypeToken;
     this.clientVarToken = clientVarToken;
     if (clientTypeToken != null) {
-      clientType = new TyNativeClient(clientTypeToken);
+      clientType = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientTypeToken);
       clientType.ingest(clientTypeToken);
       clientType.ingest(clientVarToken);
     }
@@ -73,11 +77,9 @@ public class DefineConstructor extends Definition {
     if (clientType != null) {
       next.define(clientVarToken.text, clientType, true, clientType);
     }
-    if (messageTypeToken != null) {
-      final var messageType = next.rules.FindMessageStructure(messageTypeToken.text, new DocumentPosition(), false);
-      if (messageType != null) {
-        next.define(messageNameToken.text, messageType, false, messageType);
-      }
+    if (messageNameToken != null && messageTypeToken != null && unifiedMessageType != null) {
+      next.define(messageNameToken.text, unifiedMessageType, false, unifiedMessageType);
+      unifiedMessageTypeNameToUse = ((TyNativeMessage) unifiedMessageType).name;
     }
     next.setReturnType(null);
     if (code != null) {

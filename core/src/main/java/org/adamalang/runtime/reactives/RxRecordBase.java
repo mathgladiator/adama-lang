@@ -3,13 +3,12 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.reactives;
 
-import org.adamalang.runtime.contracts.HasPrivacyCheckAndExtract;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** the base object for generated record types */
-public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements HasPrivacyCheckAndExtract, Comparable<Ty>, RxParent, RxChild {
+public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, RxParent, RxChild {
   private boolean __alive;
   protected boolean __isDying;
   private ObjectNode cachedObjectNode;
@@ -41,7 +40,6 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   }
 
   public abstract String __name();
-  public abstract boolean __privacyPolicyAllowsCache();
 
   @Override
   public void __raiseDirty() {
@@ -56,6 +54,7 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   }
 
   public abstract void __reindex();
+  public abstract void __setId(int __id, boolean __useForce);
 
   @Override
   public int compareTo(final Ty o) {

@@ -8,15 +8,16 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
-import org.adamalang.translator.tree.types.traits.details.DetailHasBridge;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 /** field/method look up ($e.field) */
@@ -81,7 +82,7 @@ public class FieldLookup extends Expression {
               addGet = true;
               aggregateType = ((DetailComputeRequiresGet) aggregateType).typeAfterGet(environment);
             }
-            return new TyNativeList(null, new TokenizedItem<>(aggregateType.makeCopyWithNewPosition(this))).withPosition(this);
+            return new TyNativeList(TypeBehavior.ReadWriteWithSetGet, null, null, new TokenizedItem<>(aggregateType.makeCopyWithNewPosition(this, aggregateType.behavior))).withPosition(this);
           }
         }
       }
@@ -96,6 +97,9 @@ public class FieldLookup extends Expression {
         }
       }
       if (eType instanceof IsStructure) {
+        if (!environment.state.isContextComputation() && eType instanceof TyNativeMessage && ((TyNativeMessage) eType).isReadonly()) {
+          environment.document.createError(this, String.format("The field '%s' is on a readonly message", fieldName), "FieldLookup");
+        }
         final var hrs = (IsStructure) eType;
         final var fd = hrs.storage().fields.get(fieldName);
         if (fd != null) {
@@ -105,7 +109,7 @@ public class FieldLookup extends Expression {
               addGet = true;
               return ((DetailComputeRequiresGet) actualType).typeAfterGet(environment);
             } else {
-              return actualType.makeCopyWithNewPosition(this);
+              return actualType.makeCopyWithNewPosition(this, actualType.behavior);
             }
           }
         }
@@ -128,12 +132,9 @@ public class FieldLookup extends Expression {
       if (makeReactiveList && aggregateType != null) {
         sb.append("transform((item) -> item.").append(fieldNameToUse);
         if (addGet) {
-          sb.append(".get(), ");
-          final var bridge = (DetailHasBridge) aggregateType;
-          sb.append(bridge.getBridge(environment)).append(")");
-        } else {
-          sb.append(", null /* no bridge needed */)");
+          sb.append(".get()");
         }
+        sb.append(")");
       } else {
         sb.append(fieldNameToUse);
         if (addGet) {

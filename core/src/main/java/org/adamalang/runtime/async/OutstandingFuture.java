@@ -4,8 +4,6 @@
 package org.adamalang.runtime.async;
 
 import org.adamalang.runtime.natives.NtClient;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** This represents a future which has been vended to the runtime.
  *
@@ -15,43 +13,20 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class OutstandingFuture {
   public final String channel;
   private boolean claimed;
-  private boolean distinct;
   public final int id;
-  private int max;
-  private int min;
-  private ArrayNode options;
+  public String json;
   private boolean taken;
   public final NtClient who;
 
-  /** @param id   the unique id of the future (for client's reference)
-   * @param channel  the channel for the future to wait on
-   * @param who      the client we are waiting on
-   * @param options  what are the possible options for the future (if any)
-   * @param min      how many of the options must be used
-   * @param max      how many of the options must be used
-   * @param distinct should all the options be unique (i.e. choose 3 cards) */
-  public OutstandingFuture(final int id, final String channel, final NtClient who, final ArrayNode options, final int min, final int max, final boolean distinct) {
+  /** @param id  the unique id of the future (for client's reference)
+   * @param channel the channel for the future to wait on
+   * @param who     the client we are waiting on */
+  public OutstandingFuture(final int id, final String channel, final NtClient who) {
     this.id = id;
     this.channel = channel;
     this.who = who;
     claimed = true; // creation is an act of claiming
     taken = false;
-    this.options = options;
-    this.min = min;
-    this.max = max;
-    this.distinct = distinct;
-  }
-
-  /** persist the future into the given node */
-  public void dump(final ObjectNode node) {
-    node.put("id", id);
-    node.put("channel", channel);
-    if (options != null) {
-      node.set("options", options);
-      node.put("min", min);
-      node.put("max", max);
-      node.put("distinct", distinct);
-    }
   }
 
   /** has this future been claimed and not taken */
@@ -72,13 +47,9 @@ public class OutstandingFuture {
 
   /** does this future match the given channel and person; that is, can this
    * future pair up */
-  public boolean test(final String testChannel, final NtClient testClientId, final ArrayNode options, final int min, final int max, final boolean distinct) {
+  public boolean test(final String testChannel, final NtClient testClientId) {
     if (channel.equals(testChannel) && who.equals(testClientId) && !claimed) {
       claimed = true;
-      this.options = options;
-      this.min = min;
-      this.max = max;
-      this.distinct = distinct;
       return true;
     }
     return false;

@@ -1,0 +1,7 @@
+message M {
+  int x;
+}
+
+procedure foo(M x) {
+  x.x = 123;
+}

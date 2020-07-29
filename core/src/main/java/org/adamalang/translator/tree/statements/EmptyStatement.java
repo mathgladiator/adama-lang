@@ -8,6 +8,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 
+/** ; */
 public class EmptyStatement extends Statement {
   public final Token emptyStatementToken;
 

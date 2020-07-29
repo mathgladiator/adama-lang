@@ -10,6 +10,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -18,13 +19,15 @@ import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbedd
 import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
-public class TyReactiveTable extends TyType implements DetailContainsAnEmbeddedType, //
+public class TyReactiveTable extends TyType implements //
+    DetailContainsAnEmbeddedType, //
     DetailTypeHasMethods {
   public final String recordName;
   public final TokenizedItem<Token> recordNameToken;
   public final Token tableToken;
 
   public TyReactiveTable(final Token tableToken, final TokenizedItem<Token> recordNameToken) {
+    super(TypeBehavior.ReadWriteWithSetGet);
     this.tableToken = tableToken;
     this.recordNameToken = recordNameToken;
     recordName = recordNameToken.item.text;
@@ -56,7 +59,6 @@ public class TyReactiveTable extends TyType implements DetailContainsAnEmbeddedT
 
   @Override
   public String getJavaBoxType(final Environment environment) {
-    // introduce a template: <RTx%s>
     return String.format("RxTable<RTx%s>", recordName);
   }
 
@@ -68,13 +70,14 @@ public class TyReactiveTable extends TyType implements DetailContainsAnEmbeddedT
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(recordNameToken.item).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, recordNameToken.item).withPosition(this), new ArrayList<>(), true)),
+          FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveTable(tableToken, recordNameToken).withPosition(position);
   }
 

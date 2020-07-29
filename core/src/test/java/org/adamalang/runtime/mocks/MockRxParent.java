@@ -7,17 +7,18 @@ import org.adamalang.runtime.contracts.RxParent;
 import org.junit.Assert;
 
 public class MockRxParent implements RxParent {
-    public int dirtyCount;
-    public MockRxParent() {
-        this.dirtyCount = 0;
-    }
+  public int dirtyCount;
 
-    @Override
-    public void __raiseDirty() {
-        this.dirtyCount++;
-    }
+  public MockRxParent() {
+    dirtyCount = 0;
+  }
 
-    public void assertDirtyCount(int expected) {
-        Assert.assertEquals(expected, dirtyCount);
-    }
+  @Override
+  public void __raiseDirty() {
+    dirtyCount++;
+  }
+
+  public void assertDirtyCount(final int expected) {
+    Assert.assertEquals(expected, dirtyCount);
+  }
 }

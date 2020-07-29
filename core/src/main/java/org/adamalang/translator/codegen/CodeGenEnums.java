@@ -12,14 +12,17 @@ import org.adamalang.translator.tree.definitions.DefineDispatcher;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
 
+/** generates the code to support enumerations */
 public class CodeGenEnums {
   public static void writeDispatcher(final StringBuilderWithTabs sb, final EnumStorage storage, final ArrayList<DefineDispatcher> dispatchers, final int dispatcherIndex, final Environment environment) {
     // write the individual functions
     final var firstDispatcher = dispatchers.get(0);
     DefineDispatcher catchAll = null;
-    // this feels sucky
     for (final DefineDispatcher potential : storage.findFindingDispatchers(dispatchers, storage.getDefaultLabel(), true).values()) {
-      catchAll = potential;
+      final var takeIt = catchAll == null || potential.valueToken != null && storage.getDefaultLabel().equals(potential.valueToken.text) && potential.starToken == null;
+      if (takeIt) {
+        catchAll = potential;
+      }
     }
     for (final DefineDispatcher dispatcher : dispatchers) {
       sb.append("private ");
@@ -76,25 +79,18 @@ public class CodeGenEnums {
         }
         sb.writeNewline();
       }
-      if (atSpecifc == 0) {
-        sb.append("/* no value defined for this, :( */").tabDown().writeNewline();
-      }
       sb.append("}");
       sb.writeNewline();
     }
-    if (catchAll != null) {
-      if (catchAll.returnType != null) {
-        sb.append("return ");
-      }
-      sb.append("__IND_DISPATCH_").append(dispatcherIndex + "_").append(firstDispatcher.functionName.text).append("__" + catchAll.positionIndex).append("(__value");
-      for (final FunctionArg arg : catchAll.args) {
-        sb.append(", ");
-        sb.append(arg.argName);
-      }
-      sb.append(");").tabDown().writeNewline();
-    } else {
-      sb.append("/* no catch all */").tabDown().writeNewline();
+    if (catchAll.returnType != null) {
+      sb.append("return ");
     }
+    sb.append("__IND_DISPATCH_").append(dispatcherIndex + "_").append(firstDispatcher.functionName.text).append("__" + catchAll.positionIndex).append("(__value");
+    for (final FunctionArg arg : catchAll.args) {
+      sb.append(", ");
+      sb.append(arg.argName);
+    }
+    sb.append(");").tabDown().writeNewline();
     sb.append("}").writeNewline();
   }
 
@@ -104,6 +100,7 @@ public class CodeGenEnums {
     }
   }
 
+  /** write an enum array out, maybe it filtered by prefix */
   public static void writeEnumArray(final StringBuilderWithTabs sb, final String name, final String id, final String prefix, final EnumStorage storage) {
     sb.append("private static final int [] __").append(id).append("_").append(name).append(" = new int[] {");
     final var filtered = new ArrayList<Map.Entry<String, Integer>>();

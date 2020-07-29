@@ -8,6 +8,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeLong;
 
 /** an integral constant that is really big (9,223,372,036,854,775,807) */
@@ -30,12 +31,12 @@ public class LongConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    return new TyNativeLong(token).makeCopyWithNewPosition(this);
+    environment.mustBeComputeContext(this);
+    return new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    environment.mustBeComputeContext(this);
     sb.append(token.text);
   }
 }

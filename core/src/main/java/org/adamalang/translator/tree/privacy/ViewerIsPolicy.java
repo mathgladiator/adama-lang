@@ -46,9 +46,8 @@ public class ViewerIsPolicy extends Policy {
   }
 
   @Override
-  public void writePrivacyCheckAndExtractJava(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
-    sb.append("if (__who.equals(").append(fieldToken.text).append(".get())) {").tabUp().writeNewline();
-    writeAllow(sb, field, environment, true);
-    sb.append("}").writeNewline();
+  public boolean writePrivacyCheckGuard(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
+    sb.append("if (__writer.who.equals(__item.").append(fieldToken.text).append(".get())) {").tabUp().writeNewline();
+    return true;
   }
 }

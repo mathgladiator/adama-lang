@@ -5,7 +5,8 @@ package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxParent;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive boolean */
 public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAndSet<Boolean> {
@@ -19,12 +20,24 @@ public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAn
   }
 
   @Override
-  public void __commit(final String name, final ObjectNode delta) {
+  public void __commit(final String name, final JsonStreamWriter writer) {
     if (__isDirty()) {
-      delta.put(name, value);
+      writer.writeObjectFieldIntro(name);
+      writer.writeBoolean(value);
       backup = value;
       __lowerDirtyCommit();
     }
+  }
+
+  @Override
+  public void __dump(final JsonStreamWriter writer) {
+    writer.writeBoolean(value);
+  }
+
+  @Override
+  public void __insert(final JsonStreamReader reader) {
+    backup = reader.readBoolean();
+    value = backup;
   }
 
   @Override
