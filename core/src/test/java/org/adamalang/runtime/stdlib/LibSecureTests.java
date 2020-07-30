@@ -8,6 +8,16 @@ import org.junit.Test;
 
 public class LibSecureTests {
   @Test
+  public void errors() {
+    try {
+      LibSecure.hashPasswordV1("password", "z");
+      Assert.fail();
+    } catch (final RuntimeException re) {
+      Assert.assertEquals("java.lang.RuntimeException: not hex due to even", re.getMessage());
+    }
+  }
+
+  @Test
   public void flow() {
     Assert.assertEquals(32, LibSecure.generateSalt16().length());
     final var salt = "ABABABABABABABABABABABABABABABAB";
@@ -22,7 +32,7 @@ public class LibSecureTests {
       LibSecure.hashPasswordV1("password", "salt");
       Assert.fail();
     } catch (final RuntimeException re) {
-      Assert.assertEquals("org.apache.commons.codec.DecoderException: Illegal hexadecimal character s at index 0", re.getMessage());
+      Assert.assertEquals("java.lang.RuntimeException: invalid hex character", re.getMessage());
     }
   }
 }

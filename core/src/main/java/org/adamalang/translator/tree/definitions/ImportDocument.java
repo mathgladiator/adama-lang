@@ -6,7 +6,6 @@ package org.adamalang.translator.tree.definitions;
 import java.util.function.Consumer;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 /** imports a document into the given document */
 public class ImportDocument extends DocumentPosition {
@@ -26,7 +25,7 @@ public class ImportDocument extends DocumentPosition {
     if (rawFilename.length() <= 2) {
       filename = "";
     } else {
-      filename = StringEscapeUtils.escapeJava(rawFilename.substring(1, rawFilename.length() - 1));
+      filename = rawFilename.substring(1, rawFilename.length() - 1);
     }
   }
 
