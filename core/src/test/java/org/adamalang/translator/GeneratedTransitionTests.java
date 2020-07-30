@@ -44,7 +44,7 @@ public class GeneratedTransitionTests extends GeneratedBase {
   public void stable_HappyInstant_1() {
     String live = get_HappyInstant_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Transition_HappyInstant_success.a");
+    gold.append("Path:./test_code/Transition_HappyInstant_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -329,7 +329,7 @@ public class GeneratedTransitionTests extends GeneratedBase {
   public void stable_HappyTimeTravel_2() {
     String live = get_HappyTimeTravel_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Transition_HappyTimeTravel_success.a");
+    gold.append("Path:./test_code/Transition_HappyTimeTravel_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -614,7 +614,7 @@ public class GeneratedTransitionTests extends GeneratedBase {
   public void stable_InvokeLegacy_3() {
     String live = get_InvokeLegacy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Transition_InvokeLegacy_success.a");
+    gold.append("Path:./test_code/Transition_InvokeLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -903,7 +903,7 @@ public class GeneratedTransitionTests extends GeneratedBase {
   public void stable_RequiresNumber_4() {
     String live = get_RequiresNumber_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Transition_RequiresNumber_failure.a");
+    gold.append("Path:./test_code/Transition_RequiresNumber_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

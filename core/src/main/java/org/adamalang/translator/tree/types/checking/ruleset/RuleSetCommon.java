@@ -152,10 +152,9 @@ public class RuleSetCommon {
     if (aArray && bArray) {
       final var aChildType = RuleSetCommon.ExtractEmbeddedType(environment, resolveA, true);
       final var bChildType = RuleSetCommon.ExtractEmbeddedType(environment, resolveB, true);
-      final TyType maxType = GetMaxType(environment, aChildType, bChildType, silent);
+      final var maxType = GetMaxType(environment, aChildType, bChildType, silent);
       return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, maxType, null);
     }
-
     SignalTypeCompatibility(environment, typeA, typeB, silent);
     return null;
   }

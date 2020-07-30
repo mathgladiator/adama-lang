@@ -34,7 +34,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_CantCrossTypes_1() {
     String live = get_CantCrossTypes_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_CantCrossTypes_failure.a");
+    gold.append("Path:./test_code/Enums_CantCrossTypes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -98,7 +98,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_CantDefineDuplicates_2() {
     String live = get_CantDefineDuplicates_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_CantDefineDuplicates_failure.a");
+    gold.append("Path:./test_code/Enums_CantDefineDuplicates_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -162,7 +162,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_CantFindEnumName_3() {
     String live = get_CantFindEnumName_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_CantFindEnumName_failure.a");
+    gold.append("Path:./test_code/Enums_CantFindEnumName_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -240,7 +240,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_CantFindEnumValue_4() {
     String live = get_CantFindEnumValue_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_CantFindEnumValue_failure.a");
+    gold.append("Path:./test_code/Enums_CantFindEnumValue_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -290,7 +290,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchDisagreeReturnType1_5() {
     String live = get_DispatchDisagreeReturnType1_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatchDisagreeReturnType1_failure.a");
+    gold.append("Path:./test_code/Enums_DispatchDisagreeReturnType1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -354,7 +354,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchDisagreeReturnType2_6() {
     String live = get_DispatchDisagreeReturnType2_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatchDisagreeReturnType2_failure.a");
+    gold.append("Path:./test_code/Enums_DispatchDisagreeReturnType2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -428,7 +428,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchInvoke_7() {
     String live = get_DispatchInvoke_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatchInvoke_success.a");
+    gold.append("Path:./test_code/Enums_DispatchInvoke_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -738,7 +738,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchManyMissing_8() {
     String live = get_DispatchManyMissing_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatchManyMissing_failure.a");
+    gold.append("Path:./test_code/Enums_DispatchManyMissing_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -798,7 +798,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchOverloading_9() {
     String live = get_DispatchOverloading_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatchOverloading_success.a");
+    gold.append("Path:./test_code/Enums_DispatchOverloading_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1136,7 +1136,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherForNoEnum_10() {
     String live = get_DispatcherForNoEnum_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatcherForNoEnum_failure.a");
+    gold.append("Path:./test_code/Enums_DispatcherForNoEnum_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1186,7 +1186,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherForWrongType_11() {
     String live = get_DispatcherForWrongType_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatcherForWrongType_failure.a");
+    gold.append("Path:./test_code/Enums_DispatcherForWrongType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1236,7 +1236,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherFoundNoValues_12() {
     String live = get_DispatcherFoundNoValues_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatcherFoundNoValues_failure.a");
+    gold.append("Path:./test_code/Enums_DispatcherFoundNoValues_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1314,7 +1314,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherLacksCoverage_13() {
     String live = get_DispatcherLacksCoverage_13();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatcherLacksCoverage_failure.a");
+    gold.append("Path:./test_code/Enums_DispatcherLacksCoverage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1378,7 +1378,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherMustHaveNoOverlapWhenReturnValue_14() {
     String live = get_DispatcherMustHaveNoOverlapWhenReturnValue_14();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatcherMustHaveNoOverlapWhenReturnValue_failure.a");
+    gold.append("Path:./test_code/Enums_DispatcherMustHaveNoOverlapWhenReturnValue_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1428,7 +1428,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherWithShouldReturn_15() {
     String live = get_DispatcherWithShouldReturn_15();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Enums_DispatcherWithShouldReturn_failure.a");
+    gold.append("Path:./test_code/Enums_DispatcherWithShouldReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

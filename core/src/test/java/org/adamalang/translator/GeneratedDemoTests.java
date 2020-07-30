@@ -44,7 +44,7 @@ public class GeneratedDemoTests extends GeneratedBase {
   public void stable_Bomb_1() {
     String live = get_Bomb_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Demo_Bomb_success.a");
+    gold.append("Path:./test_code/Demo_Bomb_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -747,7 +747,7 @@ public class GeneratedDemoTests extends GeneratedBase {
   public void stable_GameHearts_2() {
     String live = get_GameHearts_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Demo_GameHearts_success.a");
+    gold.append("Path:./test_code/Demo_GameHearts_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3556,7 +3556,7 @@ public class GeneratedDemoTests extends GeneratedBase {
   public void stable_ServiceHandler_3() {
     String live = get_ServiceHandler_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Demo_ServiceHandler_success.a");
+    gold.append("Path:./test_code/Demo_ServiceHandler_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3909,7 +3909,7 @@ public class GeneratedDemoTests extends GeneratedBase {
   public void stable_Spreadsheet_4() {
     String live = get_Spreadsheet_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Demo_Spreadsheet_success.a");
+    gold.append("Path:./test_code/Demo_Spreadsheet_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

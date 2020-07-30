@@ -34,7 +34,7 @@ public class GeneratedConversionTests extends GeneratedBase {
   public void stable_CantConvertIntList_1() {
     String live = get_CantConvertIntList_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Conversion_CantConvertIntList_failure.a");
+    gold.append("Path:./test_code/Conversion_CantConvertIntList_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -84,7 +84,7 @@ public class GeneratedConversionTests extends GeneratedBase {
   public void stable_CantConvertListToList_2() {
     String live = get_CantConvertListToList_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Conversion_CantConvertListToList_failure.a");
+    gold.append("Path:./test_code/Conversion_CantConvertListToList_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -134,7 +134,7 @@ public class GeneratedConversionTests extends GeneratedBase {
   public void stable_CantInteger_3() {
     String live = get_CantInteger_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Conversion_CantInteger_failure.a");
+    gold.append("Path:./test_code/Conversion_CantInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -184,7 +184,7 @@ public class GeneratedConversionTests extends GeneratedBase {
   public void stable_CantMaybeInteger_4() {
     String live = get_CantMaybeInteger_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Conversion_CantMaybeInteger_failure.a");
+    gold.append("Path:./test_code/Conversion_CantMaybeInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -258,7 +258,7 @@ public class GeneratedConversionTests extends GeneratedBase {
   public void stable_Legacy_5() {
     String live = get_Legacy_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Conversion_Legacy_success.a");
+    gold.append("Path:./test_code/Conversion_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -863,7 +863,7 @@ public class GeneratedConversionTests extends GeneratedBase {
   public void stable_RecordToMessage_6() {
     String live = get_RecordToMessage_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Conversion_RecordToMessage_success.a");
+    gold.append("Path:./test_code/Conversion_RecordToMessage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1382,7 +1382,7 @@ public class GeneratedConversionTests extends GeneratedBase {
   public void stable_WhenCantConvertBasedOnFields_7() {
     String live = get_WhenCantConvertBasedOnFields_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Conversion_WhenCantConvertBasedOnFields_failure.a");
+    gold.append("Path:./test_code/Conversion_WhenCantConvertBasedOnFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

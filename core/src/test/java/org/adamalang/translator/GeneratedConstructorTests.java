@@ -34,7 +34,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
   public void stable_CantUnionTypes_1() {
     String live = get_CantUnionTypes_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Constructor_CantUnionTypes_failure.a");
+    gold.append("Path:./test_code/Constructor_CantUnionTypes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -94,7 +94,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
   public void stable_ConstructClientAndMessage_2() {
     String live = get_ConstructClientAndMessage_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Constructor_ConstructClientAndMessage_success.a");
+    gold.append("Path:./test_code/Constructor_ConstructClientAndMessage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -431,7 +431,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
   public void stable_ConstructJustClient_3() {
     String live = get_ConstructJustClient_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Constructor_ConstructJustClient_success.a");
+    gold.append("Path:./test_code/Constructor_ConstructJustClient_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -707,7 +707,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
   public void stable_ConstructJustMessage_4() {
     String live = get_ConstructJustMessage_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Constructor_ConstructJustMessage_success.a");
+    gold.append("Path:./test_code/Constructor_ConstructJustMessage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1033,7 +1033,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
   public void stable_ConstructNoArgs_5() {
     String live = get_ConstructNoArgs_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Constructor_ConstructNoArgs_success.a");
+    gold.append("Path:./test_code/Constructor_ConstructNoArgs_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1296,7 +1296,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
   public void stable_Legacy_6() {
     String live = get_Legacy_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Constructor_Legacy_success.a");
+    gold.append("Path:./test_code/Constructor_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1643,7 +1643,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
   public void stable_UnionTypes_7() {
     String live = get_UnionTypes_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Constructor_UnionTypes_success.a");
+    gold.append("Path:./test_code/Constructor_UnionTypes_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

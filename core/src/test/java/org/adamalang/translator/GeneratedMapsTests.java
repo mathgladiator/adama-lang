@@ -44,7 +44,7 @@ public class GeneratedMapsTests extends GeneratedBase {
   public void stable_Basic_1() {
     String live = get_Basic_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Maps_Basic_success.a");
+    gold.append("Path:./test_code/Maps_Basic_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -406,7 +406,7 @@ public class GeneratedMapsTests extends GeneratedBase {
   public void stable_InvalidAssignments_2() {
     String live = get_InvalidAssignments_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Maps_InvalidAssignments_failure.a");
+    gold.append("Path:./test_code/Maps_InvalidAssignments_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -568,7 +568,7 @@ public class GeneratedMapsTests extends GeneratedBase {
   public void stable_InvalidDomains_3() {
     String live = get_InvalidDomains_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Maps_InvalidDomains_failure.a");
+    gold.append("Path:./test_code/Maps_InvalidDomains_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -684,7 +684,7 @@ public class GeneratedMapsTests extends GeneratedBase {
   public void stable_ReduceHappy_4() {
     String live = get_ReduceHappy_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Maps_ReduceHappy_success.a");
+    gold.append("Path:./test_code/Maps_ReduceHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1163,7 +1163,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n      _CreateRef23.x.set(_AutoExpr24.x);");
     gold.append("\n    }");
     gold.append("\n    __track(6);");
-    gold.append("\n    NtMap<Integer,Integer> mp = new NtMap<Integer,Integer>((t.iterate(false)).reduce((__item) -> __item.x.get(), (__list) -> __FUNC_0_foo(__list)));");
+    gold.append("\n    final NtMap<Integer,Integer> mp = new NtMap<Integer,Integer>((t.iterate(false)).reduce((__item) -> __item.x.get(), (__list) -> __FUNC_0_foo(__list)));");
     gold.append("\n    __track(7);");
     gold.append("\n    NtMaybe<Integer> _AutoConditionv_25;");
     gold.append("\n    if ((_AutoConditionv_25 = mp.lookup(1)).has()) {");
@@ -1248,7 +1248,7 @@ public class GeneratedMapsTests extends GeneratedBase {
   public void stable_ReduceSad_5() {
     String live = get_ReduceSad_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Maps_ReduceSad_failure.a");
+    gold.append("Path:./test_code/Maps_ReduceSad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

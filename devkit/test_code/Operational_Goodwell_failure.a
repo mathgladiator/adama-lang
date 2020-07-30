@@ -1,0 +1,12 @@
+int z;
+
+@construct {
+  transition #setup in 0.01;
+}
+
+#setup {
+  z = 0;
+  while(true) {
+    z++;
+  }
+}

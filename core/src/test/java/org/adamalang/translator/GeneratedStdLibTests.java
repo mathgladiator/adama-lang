@@ -44,7 +44,7 @@ public class GeneratedStdLibTests extends GeneratedBase {
   public void stable_Security_1() {
     String live = get_Security_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\StdLib_Security_success.a");
+    gold.append("Path:./test_code/StdLib_Security_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

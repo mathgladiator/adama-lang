@@ -34,7 +34,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_CantAbortOutsideOfMessageHandler_1() {
     String live = get_CantAbortOutsideOfMessageHandler_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_CantAbortOutsideOfMessageHandler_failure.a");
+    gold.append("Path:./test_code/Control_CantAbortOutsideOfMessageHandler_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -84,7 +84,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_CantBlockOutsideOfStateTransition_2() {
     String live = get_CantBlockOutsideOfStateTransition_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_CantBlockOutsideOfStateTransition_failure.a");
+    gold.append("Path:./test_code/Control_CantBlockOutsideOfStateTransition_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -144,7 +144,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_LegacyBlock_3() {
     String live = get_LegacyBlock_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_LegacyBlock_success.a");
+    gold.append("Path:./test_code/Control_LegacyBlock_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -558,7 +558,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_LegacyForEach_4() {
     String live = get_LegacyForEach_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_LegacyForEach_success.a");
+    gold.append("Path:./test_code/Control_LegacyForEach_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1035,7 +1035,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_LegacyIf_5() {
     String live = get_LegacyIf_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_LegacyIf_success.a");
+    gold.append("Path:./test_code/Control_LegacyIf_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1522,7 +1522,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_LegacyLoops_6() {
     String live = get_LegacyLoops_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_LegacyLoops_success.a");
+    gold.append("Path:./test_code/Control_LegacyLoops_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2179,7 +2179,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_Legacy_7() {
     String live = get_Legacy_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_Legacy_success.a");
+    gold.append("Path:./test_code/Control_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2599,7 +2599,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_MegaIfLegacy_8() {
     String live = get_MegaIfLegacy_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_MegaIfLegacy_success.a");
+    gold.append("Path:./test_code/Control_MegaIfLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2906,7 +2906,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_NotMaybeInIf_9() {
     String live = get_NotMaybeInIf_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_NotMaybeInIf_failure.a");
+    gold.append("Path:./test_code/Control_NotMaybeInIf_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2966,7 +2966,7 @@ public class GeneratedControlTests extends GeneratedBase {
   public void stable_VariousFor_10() {
     String live = get_VariousFor_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Control_VariousFor_success.a");
+    gold.append("Path:./test_code/Control_VariousFor_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

@@ -53,52 +53,11 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
   }
 
   @Override
-  protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    environment.mustBeComputeContext(this);
-    if (suggestion != null) {
-      if (environment.rules.IsNativeArray(suggestion, false)) {
-        final var elementType = environment.rules.ExtractEmbeddedType(suggestion, false);
-        for (final TokenizedItem<Expression> elementExpr : elements) {
-          final var computedType = elementExpr.item.typing(environment, elementType);
-          environment.rules.CanTypeAStoreTypeB(elementType, computedType, StorageTweak.None, false);
-        }
-        return suggestion;
-      }
-      return null;
-    } else {
-      TyType proposal = estimateType(environment, suggestion);
-      if (proposal != null) {
-        proposal = environment.rules.EnsureRegisteredAndDedupe(proposal, false);
-        upgradeType(environment, proposal);
-      }
-      return proposal;
-    }
-  }
-
-  @Override
-  public void writeJava(final StringBuilder sb, final Environment environment) {
-    final var me = (TyNativeArray) cachedType;
-    if (me != null) {
-      sb.append("new ").append(me.getJavaConcreteType(environment)).append(" {");
-      var first = true;
-      for (final TokenizedItem<Expression> element : elements) {
-        if (first) {
-          first = false;
-        } else {
-          sb.append(", ");
-        }
-        element.item.writeJava(sb, environment);
-      }
-      sb.append("}");
-    }
-  }
-
-  @Override
-  public TyType estimateType(Environment environment) {
+  public TyType estimateType(final Environment environment) {
     return estimateType(environment, null);
   }
 
-  public TyType estimateType(Environment environment, TyType suggestion) {
+  public TyType estimateType(final Environment environment, final TyType suggestion) {
     TyType proposal = null;
     if (elements.size() > 0) {
       final var firstExpr = elements.get(0).item;
@@ -128,15 +87,56 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
   }
 
   @Override
-  public void upgradeType(Environment environment, TyType proposalArray) {
+  protected TyType typingInternal(final Environment environment, final TyType suggestion) {
+    environment.mustBeComputeContext(this);
+    if (suggestion != null) {
+      if (environment.rules.IsNativeArray(suggestion, false)) {
+        final var elementType = environment.rules.ExtractEmbeddedType(suggestion, false);
+        for (final TokenizedItem<Expression> elementExpr : elements) {
+          final var computedType = elementExpr.item.typing(environment, elementType);
+          environment.rules.CanTypeAStoreTypeB(elementType, computedType, StorageTweak.None, false);
+        }
+        return suggestion;
+      }
+      return null;
+    } else {
+      var proposal = estimateType(environment, suggestion);
+      if (proposal != null) {
+        proposal = environment.rules.EnsureRegisteredAndDedupe(proposal, false);
+        upgradeType(environment, proposal);
+      }
+      return proposal;
+    }
+  }
+
+  @Override
+  public void upgradeType(final Environment environment, final TyType proposalArray) {
     cachedType = proposalArray;
     if (proposalArray != null && proposalArray instanceof TyNativeArray) {
-      TyType proposalElement = ((TyNativeArray) proposalArray).getEmbeddedType(environment);
+      final var proposalElement = ((TyNativeArray) proposalArray).getEmbeddedType(environment);
       for (final TokenizedItem<Expression> elementExpr : elements) {
         if (elementExpr.item instanceof SupportsTwoPhaseTyping) {
           ((SupportsTwoPhaseTyping) elementExpr.item).upgradeType(environment, proposalElement);
         }
       }
+    }
+  }
+
+  @Override
+  public void writeJava(final StringBuilder sb, final Environment environment) {
+    final var me = (TyNativeArray) cachedType;
+    if (me != null) {
+      sb.append("new ").append(me.getJavaConcreteType(environment)).append(" {");
+      var first = true;
+      for (final TokenizedItem<Expression> element : elements) {
+        if (first) {
+          first = false;
+        } else {
+          sb.append(", ");
+        }
+        element.item.writeJava(sb, environment);
+      }
+      sb.append("}");
     }
   }
 }

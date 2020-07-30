@@ -34,7 +34,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_AssignTableOddities_1() {
     String live = get_AssignTableOddities_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_AssignTableOddities_failure.a");
+    gold.append("Path:./test_code/Define_AssignTableOddities_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -420,7 +420,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_BetweenNonArrayToArray_2() {
     String live = get_BetweenNonArrayToArray_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_BetweenNonArrayToArray_failure.a");
+    gold.append("Path:./test_code/Define_BetweenNonArrayToArray_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -508,7 +508,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_BringLazyIntoPicture_3() {
     String live = get_BringLazyIntoPicture_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_BringLazyIntoPicture_success.a");
+    gold.append("Path:./test_code/Define_BringLazyIntoPicture_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -701,7 +701,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  private void __step_what() {");
     gold.append("\n    __code_cost += 7;");
     gold.append("\n    __track(0);");
-    gold.append("\n    int z = x.get();");
+    gold.append("\n    final int z = x.get();");
     gold.append("\n    __track(1);");
     gold.append("\n    int k = z + 42;");
     gold.append("\n    __track(2);");
@@ -801,7 +801,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_BumpHappy_4() {
     String live = get_BumpHappy_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_BumpHappy_success.a");
+    gold.append("Path:./test_code/Define_BumpHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1126,7 +1126,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
-    gold.append("\n    boolean x = !b.get();");
+    gold.append("\n    final boolean x = !b.get();");
     gold.append("\n    __track(1);");
     gold.append("\n    ((t.iterate(true)).transform((item) -> item.b.get())).transform((item) -> !item);");
     gold.append("\n  }");
@@ -1189,7 +1189,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_BumpWrongType_5() {
     String live = get_BumpWrongType_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_BumpWrongType_failure.a");
+    gold.append("Path:./test_code/Define_BumpWrongType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1281,7 +1281,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_CantBumpString_6() {
     String live = get_CantBumpString_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_CantBumpString_failure.a");
+    gold.append("Path:./test_code/Define_CantBumpString_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1345,7 +1345,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_CantSetLazy_7() {
     String live = get_CantSetLazy_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_CantSetLazy_failure.a");
+    gold.append("Path:./test_code/Define_CantSetLazy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1419,7 +1419,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_DeclareVariableHappy_8() {
     String live = get_DeclareVariableHappy_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_DeclareVariableHappy_success.a");
+    gold.append("Path:./test_code/Define_DeclareVariableHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1735,7 +1735,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    __track(6);");
     gold.append("\n    RTxX ref = src;");
     gold.append("\n    __track(7);");
-    gold.append("\n    double v = (b ? d : i);");
+    gold.append("\n    final double v = (b ? d : i);");
     gold.append("\n    __track(8);");
     gold.append("\n    NtMaybe<Boolean> mb = new NtMaybe<Boolean>();");
     gold.append("\n    __track(9);");
@@ -1836,7 +1836,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_DoubleBumpList_9() {
     String live = get_DoubleBumpList_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_DoubleBumpList_success.a");
+    gold.append("Path:./test_code/Define_DoubleBumpList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2215,7 +2215,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_FailingAssignments_10() {
     String live = get_FailingAssignments_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_FailingAssignments_failure.a");
+    gold.append("Path:./test_code/Define_FailingAssignments_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2489,7 +2489,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_InappropriateType_11() {
     String live = get_InappropriateType_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_InappropriateType_failure.a");
+    gold.append("Path:./test_code/Define_InappropriateType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2549,7 +2549,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_LegacySuper_12() {
     String live = get_LegacySuper_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_LegacySuper_success.a");
+    gold.append("Path:./test_code/Define_LegacySuper_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2865,7 +2865,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    __track(6);");
     gold.append("\n    RTxX ref = src;");
     gold.append("\n    __track(7);");
-    gold.append("\n    double v = (b ? d : i);");
+    gold.append("\n    final double v = (b ? d : i);");
     gold.append("\n    __track(8);");
     gold.append("\n    NtMaybe<Boolean> mb = new NtMaybe<Boolean>();");
     gold.append("\n    __track(9);");
@@ -2966,7 +2966,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_MaybeAssignments_13() {
     String live = get_MaybeAssignments_13();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_MaybeAssignments_success.a");
+    gold.append("Path:./test_code/Define_MaybeAssignments_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3257,7 +3257,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_PostFixLegacy_14() {
     String live = get_PostFixLegacy_14();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_PostFixLegacy_success.a");
+    gold.append("Path:./test_code/Define_PostFixLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3571,7 +3571,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_PrefixLegacy_15() {
     String live = get_PrefixLegacy_15();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_PrefixLegacy_success.a");
+    gold.append("Path:./test_code/Define_PrefixLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4031,7 +4031,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_RightSideFailTyping_16() {
     String live = get_RightSideFailTyping_16();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_RightSideFailTyping_failure.a");
+    gold.append("Path:./test_code/Define_RightSideFailTyping_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -4081,7 +4081,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_ValueDoesntAssign_17() {
     String live = get_ValueDoesntAssign_17();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_ValueDoesntAssign_failure.a");
+    gold.append("Path:./test_code/Define_ValueDoesntAssign_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -4141,7 +4141,7 @@ public class GeneratedDefineTests extends GeneratedBase {
   public void stable_VariousAssignments_18() {
     String live = get_VariousAssignments_18();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Define_VariousAssignments_success.a");
+    gold.append("Path:./test_code/Define_VariousAssignments_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

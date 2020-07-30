@@ -44,7 +44,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Assignments_1() {
     String live = get_Assignments_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Assignments_success.a");
+    gold.append("Path:./test_code/Parser_Assignments_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -317,7 +317,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadArrayEOS1_2() {
     String live = get_AtomicsBadArrayEOS1_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadArrayEOS1_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadArrayEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -332,7 +332,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadArrayEOS1_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadArrayEOS1_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -381,7 +381,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadArrayEOS2_3() {
     String live = get_AtomicsBadArrayEOS2_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadArrayEOS2_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadArrayEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -396,7 +396,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadArrayEOS2_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadArrayEOS2_failure.a' failed to parse: Parser expected a `]`, but instead got end of stream. {Token: `[` @ (2,10) -> (2,11): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -445,7 +445,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadDouble_4() {
     String live = get_AtomicsBadDouble_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadDouble_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadDouble_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -460,7 +460,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadDouble_failure.a' failed to parse: Parser was unable to parse `1.2.3e1` as a double. {Token: `1.2.3e1` @ (2,10) -> (2,17): NumberLiteral:NumberIsDouble}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadDouble_failure.a' failed to parse: Parser was unable to parse `1.2.3e1` as a double. {Token: `1.2.3e1` @ (2,10) -> (2,17): NumberLiteral:NumberIsDouble}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -509,7 +509,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadEnumSymbol_5() {
     String live = get_AtomicsBadEnumSymbol_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadEnumSymbol_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadEnumSymbol_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -524,7 +524,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadEnumSymbol_failure.a' failed to parse: Parser was expecting either an identifier or an `*` after `::`, but got `+` instead. {Token: `::` @ (3,11) -> (3,13): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadEnumSymbol_failure.a' failed to parse: Parser was expecting either an identifier or an `*` after `::`, but got `+` instead. {Token: `::` @ (3,11) -> (3,13): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -573,7 +573,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadEnumValueEOS_6() {
     String live = get_AtomicsBadEnumValueEOS_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadEnumValueEOS_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadEnumValueEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -588,7 +588,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadEnumValueEOS_failure.a' failed to parse: Parser was expecting either an identifier or an `*` after `::`, but got end of stream instead. {Token: `::` @ (3,11) -> (3,13): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadEnumValueEOS_failure.a' failed to parse: Parser was expecting either an identifier or an `*` after `::`, but got end of stream instead. {Token: `::` @ (3,11) -> (3,13): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -637,7 +637,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadHex_7() {
     String live = get_AtomicsBadHex_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadHex_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadHex_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -652,7 +652,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadHex_failure.a' failed to parse: Parser was expecting a valid numeric sequence, but got a '0x123x12' instead. {Token: `0x123x12` @ (2,10) -> (2,18): NumberLiteral:NumberIsInteger}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadHex_failure.a' failed to parse: Parser was expecting a valid numeric sequence, but got a '0x123x12' instead. {Token: `0x123x12` @ (2,10) -> (2,18): NumberLiteral:NumberIsInteger}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -701,7 +701,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadObjectEOS1_8() {
     String live = get_AtomicsBadObjectEOS1_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadObjectEOS1_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadObjectEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -716,7 +716,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadObjectEOS1_failure.a' failed to parse: Parser expected a `}`, but instead got end of stream. {Token: `{` @ (2,10) -> (2,11): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadObjectEOS1_failure.a' failed to parse: Parser expected a `}`, but instead got end of stream. {Token: `{` @ (2,10) -> (2,11): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -765,7 +765,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadObjectEOS2_9() {
     String live = get_AtomicsBadObjectEOS2_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadObjectEOS2_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadObjectEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -780,7 +780,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadObjectEOS2_failure.a' failed to parse: Parser expected a `}` or `,`, but instead got end of stream. {Token: `123` @ (2,13) -> (2,16): NumberLiteral:NumberIsInteger}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadObjectEOS2_failure.a' failed to parse: Parser expected a `}` or `,`, but instead got end of stream. {Token: `123` @ (2,13) -> (2,16): NumberLiteral:NumberIsInteger}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -829,7 +829,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadParenthesisEOS_10() {
     String live = get_AtomicsBadParenthesisEOS_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadParenthesisEOS_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadParenthesisEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -844,7 +844,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadParenthesisEOS_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `(` @ (2,10) -> (2,11): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadParenthesisEOS_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `(` @ (2,10) -> (2,11): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -893,7 +893,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadParenthesisUnmatched_11() {
     String live = get_AtomicsBadParenthesisUnmatched_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadParenthesisUnmatched_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadParenthesisUnmatched_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -908,7 +908,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadParenthesisUnmatched_failure.a' failed to parse: Parser expected a ), but instead got an `]` {Token: `]` @ (2,14) -> (2,15): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadParenthesisUnmatched_failure.a' failed to parse: Parser expected a ), but instead got an `]` {Token: `]` @ (2,14) -> (2,15): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -957,7 +957,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsBadThing_12() {
     String live = get_AtomicsBadThing_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsBadThing_failure.a");
+    gold.append("Path:./test_code/Parser_AtomicsBadThing_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -972,7 +972,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_AtomicsBadThing_failure.a' failed to parse: Parser expected an atomic, but instead got `)` {Token: `)` @ (2,16) -> (2,17): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_AtomicsBadThing_failure.a' failed to parse: Parser expected an atomic, but instead got `)` {Token: `)` @ (2,16) -> (2,17): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1031,7 +1031,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_AtomicsEmptyArray_13() {
     String live = get_AtomicsEmptyArray_13();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_AtomicsEmptyArray_success.a");
+    gold.append("Path:./test_code/Parser_AtomicsEmptyArray_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1348,7 +1348,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Atomics_14() {
     String live = get_Atomics_14();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Atomics_success.a");
+    gold.append("Path:./test_code/Parser_Atomics_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1737,45 +1737,45 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 21;");
     gold.append("\n    __track(1);");
-    gold.append("\n    boolean a0 = (!__state.has());");
+    gold.append("\n    final boolean a0 = (!__state.has());");
     gold.append("\n    __track(2);");
-    gold.append("\n    String a1 = \"foo\";");
+    gold.append("\n    final String a1 = \"foo\";");
     gold.append("\n    __track(3);");
-    gold.append("\n    boolean a2 = true;");
+    gold.append("\n    final boolean a2 = true;");
     gold.append("\n    __track(4);");
-    gold.append("\n    boolean a3 = false;");
+    gold.append("\n    final boolean a3 = false;");
     gold.append("\n    __track(5);");
-    gold.append("\n    int a4 = 123;");
+    gold.append("\n    final int a4 = 123;");
     gold.append("\n    __track(6);");
-    gold.append("\n    int a5 = 255;");
+    gold.append("\n    final int a5 = 255;");
     gold.append("\n    __track(7);");
-    gold.append("\n    NtClient a6 = NtClient.NO_ONE;");
+    gold.append("\n    final NtClient a6 = NtClient.NO_ONE;");
     gold.append("\n    __track(8);");
-    gold.append("\n    boolean a7 = __blocked.get();");
+    gold.append("\n    final boolean a7 = __blocked.get();");
     gold.append("\n    __track(9);");
-    gold.append("\n    int a8 = 42;");
+    gold.append("\n    final int a8 = 42;");
     gold.append("\n    __track(10);");
-    gold.append("\n    int[] a9 = __ALL_VALUES_E;");
+    gold.append("\n    final int[] a9 = __ALL_VALUES_E;");
     gold.append("\n    __track(11);");
-    gold.append("\n    double a10 = 1.23;");
+    gold.append("\n    final double a10 = 1.23;");
     gold.append("\n    __track(12);");
-    gold.append("\n    double a11 = 1.23E8;");
+    gold.append("\n    final double a11 = 1.23E8;");
     gold.append("\n    __track(13);");
-    gold.append("\n    double a12 = 1.23E91;");
+    gold.append("\n    final double a12 = 1.23E91;");
     gold.append("\n    __track(14);");
-    gold.append("\n    double a13 = -0.12;");
+    gold.append("\n    final double a13 = -0.12;");
     gold.append("\n    __track(15);");
-    gold.append("\n    RTx_AnonObjConvert_0 a14 = new RTx_AnonObjConvert_0(42);");
+    gold.append("\n    final RTx_AnonObjConvert_0 a14 = new RTx_AnonObjConvert_0(42);");
     gold.append("\n    __track(16);");
-    gold.append("\n    RTx_AnonObjConvert_0[] a15 = new RTx_AnonObjConvert_0[] {new RTx_AnonObjConvert_0(1)};");
+    gold.append("\n    final RTx_AnonObjConvert_0[] a15 = new RTx_AnonObjConvert_0[] {new RTx_AnonObjConvert_0(1)};");
     gold.append("\n    __track(17);");
-    gold.append("\n    RTxAutoMaxRecord6[] a16 = new RTxAutoMaxRecord6[] {new RTxAutoMaxRecord6(1, 2)};");
+    gold.append("\n    final RTxAutoMaxRecord6[] a16 = new RTxAutoMaxRecord6[] {new RTxAutoMaxRecord6(1, 2)};");
     gold.append("\n    __track(18);");
-    gold.append("\n    int a17 = (123);");
+    gold.append("\n    final int a17 = (123);");
     gold.append("\n    __track(19);");
-    gold.append("\n    RTxAutoMaxRecord9[] a18 = new RTxAutoMaxRecord9[] {new RTxAutoMaxRecord9(a0, a1, a2, 1)};");
+    gold.append("\n    final RTxAutoMaxRecord9[] a18 = new RTxAutoMaxRecord9[] {new RTxAutoMaxRecord9(a0, a1, a2, 1)};");
     gold.append("\n    __track(20);");
-    gold.append("\n    RTx_AnonObjConvert_0[] a19 = new RTx_AnonObjConvert_0[] {new RTx_AnonObjConvert_0(1), new RTx_AnonObjConvert_0(2)};");
+    gold.append("\n    final RTx_AnonObjConvert_0[] a19 = new RTx_AnonObjConvert_0[] {new RTx_AnonObjConvert_0(1), new RTx_AnonObjConvert_0(2)};");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -1837,7 +1837,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BadChannelHandlerEOS1_15() {
     String live = get_BadChannelHandlerEOS1_15();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BadChannelHandlerEOS1_failure.a");
+    gold.append("Path:./test_code/Parser_BadChannelHandlerEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1852,7 +1852,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_BadChannelHandlerEOS1_failure.a' failed to parse: Parser was expecting a Symbol=`(`; instead, the parser got an end of stream. {Token: `foo` @ (3,8) -> (3,11): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_BadChannelHandlerEOS1_failure.a' failed to parse: Parser was expecting a Symbol=`(`; instead, the parser got an end of stream. {Token: `foo` @ (3,8) -> (3,11): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1901,7 +1901,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BadChannelHandlerEOS2_16() {
     String live = get_BadChannelHandlerEOS2_16();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BadChannelHandlerEOS2_failure.a");
+    gold.append("Path:./test_code/Parser_BadChannelHandlerEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1916,7 +1916,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_BadChannelHandlerEOS2_failure.a' failed to parse: Parser was expecting a Symbol=`,`; instead, the parser got an end of stream. {Token: `c` @ (3,19) -> (3,20): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_BadChannelHandlerEOS2_failure.a' failed to parse: Parser was expecting a Symbol=`,`; instead, the parser got an end of stream. {Token: `c` @ (3,19) -> (3,20): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1965,7 +1965,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BadChannelHandlerEOS3_17() {
     String live = get_BadChannelHandlerEOS3_17();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BadChannelHandlerEOS3_failure.a");
+    gold.append("Path:./test_code/Parser_BadChannelHandlerEOS3_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1980,7 +1980,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_BadChannelHandlerEOS3_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,24) -> (3,25): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_BadChannelHandlerEOS3_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,24) -> (3,25): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2029,7 +2029,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BadChannelHandlerEOS4_18() {
     String live = get_BadChannelHandlerEOS4_18();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BadChannelHandlerEOS4_failure.a");
+    gold.append("Path:./test_code/Parser_BadChannelHandlerEOS4_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2044,7 +2044,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_BadChannelHandlerEOS4_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_BadChannelHandlerEOS4_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parser got an end of stream. {Token: `m` @ (3,14) -> (3,15): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2093,7 +2093,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BadChannelHandlerUnexpected1_19() {
     String live = get_BadChannelHandlerUnexpected1_19();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BadChannelHandlerUnexpected1_failure.a");
+    gold.append("Path:./test_code/Parser_BadChannelHandlerUnexpected1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2108,7 +2108,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_BadChannelHandlerUnexpected1_failure.a' failed to parse: Parser was expecting a Symbol=`,`; instead, the parse got Symbol:+. {Token: `+` @ (3,20) -> (3,21): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_BadChannelHandlerUnexpected1_failure.a' failed to parse: Parser was expecting a Symbol=`,`; instead, the parse got Symbol:+. {Token: `+` @ (3,20) -> (3,21): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2157,7 +2157,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BadChannelHandlerUnexpected2_20() {
     String live = get_BadChannelHandlerUnexpected2_20();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BadChannelHandlerUnexpected2_failure.a");
+    gold.append("Path:./test_code/Parser_BadChannelHandlerUnexpected2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2172,7 +2172,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_BadChannelHandlerUnexpected2_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parse got Symbol:+. {Token: `+` @ (3,25) -> (3,26): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_BadChannelHandlerUnexpected2_failure.a' failed to parse: Parser was expecting a Symbol=`)`; instead, the parse got Symbol:+. {Token: `+` @ (3,25) -> (3,26): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2221,7 +2221,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BadChannelHandlerUnexpected3_21() {
     String live = get_BadChannelHandlerUnexpected3_21();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BadChannelHandlerUnexpected3_failure.a");
+    gold.append("Path:./test_code/Parser_BadChannelHandlerUnexpected3_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2236,7 +2236,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_BadChannelHandlerUnexpected3_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_BadChannelHandlerUnexpected3_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,13) -> (3,14): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2285,7 +2285,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BadChannelHandlerUnexpected4_22() {
     String live = get_BadChannelHandlerUnexpected4_22();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BadChannelHandlerUnexpected4_failure.a");
+    gold.append("Path:./test_code/Parser_BadChannelHandlerUnexpected4_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2300,7 +2300,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_BadChannelHandlerUnexpected4_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,8) -> (3,9): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_BadChannelHandlerUnexpected4_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:+ instead. {Token: `+` @ (3,8) -> (3,9): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2349,7 +2349,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BadChannelHandlerUnexpected5_23() {
     String live = get_BadChannelHandlerUnexpected5_23();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BadChannelHandlerUnexpected5_failure.a");
+    gold.append("Path:./test_code/Parser_BadChannelHandlerUnexpected5_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2364,7 +2364,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_BadChannelHandlerUnexpected5_failure.a' failed to parse: Parser was expecting a Symbol=`(`; instead, the parse got Symbol:!. {Token: `!` @ (3,11) -> (3,12): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_BadChannelHandlerUnexpected5_failure.a' failed to parse: Parser was expecting a Symbol=`(`; instead, the parse got Symbol:!. {Token: `!` @ (3,11) -> (3,12): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2423,7 +2423,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BlockEmpty_24() {
     String live = get_BlockEmpty_24();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BlockEmpty_success.a");
+    gold.append("Path:./test_code/Parser_BlockEmpty_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2629,7 +2629,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    if (false) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(3);");
-    gold.append("\n      int x = 123;");
+    gold.append("\n      final int x = 123;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2701,7 +2701,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_BlockSingleStatement_25() {
     String live = get_BlockSingleStatement_25();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_BlockSingleStatement_success.a");
+    gold.append("Path:./test_code/Parser_BlockSingleStatement_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2912,7 +2912,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    if (false) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(2);");
-    gold.append("\n      int x = 123;");
+    gold.append("\n      final int x = 123;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2984,7 +2984,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Channels_26() {
     String live = get_Channels_26();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Channels_success.a");
+    gold.append("Path:./test_code/Parser_Channels_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3358,7 +3358,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_CommentsWithin_27() {
     String live = get_CommentsWithin_27();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_CommentsWithin_success.a");
+    gold.append("Path:./test_code/Parser_CommentsWithin_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3627,7 +3627,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ConnectionEvents_28() {
     String live = get_ConnectionEvents_28();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ConnectionEvents_success.a");
+    gold.append("Path:./test_code/Parser_ConnectionEvents_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3911,7 +3911,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ControlFlow_29() {
     String live = get_ControlFlow_29();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ControlFlow_success.a");
+    gold.append("Path:./test_code/Parser_ControlFlow_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4264,7 +4264,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Conversion_30() {
     String live = get_Conversion_30();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Conversion_success.a");
+    gold.append("Path:./test_code/Parser_Conversion_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4633,7 +4633,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DefineConstructorNoBlockEOS_31() {
     String live = get_DefineConstructorNoBlockEOS_31();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DefineConstructorNoBlockEOS_failure.a");
+    gold.append("Path:./test_code/Parser_DefineConstructorNoBlockEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -4648,7 +4648,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_DefineConstructorNoBlockEOS_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `@construct` @ (0,0) -> (0,10): Keyword}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_DefineConstructorNoBlockEOS_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `@construct` @ (0,0) -> (0,10): Keyword}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -4707,7 +4707,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DefineConstructor_32() {
     String live = get_DefineConstructor_32();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DefineConstructor_success.a");
+    gold.append("Path:./test_code/Parser_DefineConstructor_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -5005,7 +5005,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DefineFunction_33() {
     String live = get_DefineFunction_33();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DefineFunction_success.a");
+    gold.append("Path:./test_code/Parser_DefineFunction_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -5277,7 +5277,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DefineProcedure_34() {
     String live = get_DefineProcedure_34();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DefineProcedure_success.a");
+    gold.append("Path:./test_code/Parser_DefineProcedure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -5565,7 +5565,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DefineRecordAutoType_35() {
     String live = get_DefineRecordAutoType_35();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DefineRecordAutoType_success.a");
+    gold.append("Path:./test_code/Parser_DefineRecordAutoType_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -5943,7 +5943,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DefineRecordNoNameEndOfStream_36() {
     String live = get_DefineRecordNoNameEndOfStream_36();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DefineRecordNoNameEndOfStream_failure.a");
+    gold.append("Path:./test_code/Parser_DefineRecordNoNameEndOfStream_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -5958,7 +5958,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_DefineRecordNoNameEndOfStream_failure.a' failed to parse: Parser was expecting an identifier, but got end of stream instead. {Token: `record` @ (0,0) -> (0,6): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_DefineRecordNoNameEndOfStream_failure.a' failed to parse: Parser was expecting an identifier, but got end of stream instead. {Token: `record` @ (0,0) -> (0,6): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6007,7 +6007,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DefineRecordNoNameSymbolInstead_37() {
     String live = get_DefineRecordNoNameSymbolInstead_37();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DefineRecordNoNameSymbolInstead_failure.a");
+    gold.append("Path:./test_code/Parser_DefineRecordNoNameSymbolInstead_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6022,7 +6022,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_DefineRecordNoNameSymbolInstead_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,7) -> (0,8): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_DefineRecordNoNameSymbolInstead_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,7) -> (0,8): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6071,7 +6071,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DispatchEOS1_38() {
     String live = get_DispatchEOS1_38();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DispatchEOS1_failure.a");
+    gold.append("Path:./test_code/Parser_DispatchEOS1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6086,7 +6086,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_DispatchEOS1_failure.a' failed to parse: Expected `::`, but got end of stream instead. {Token: `X` @ (4,9) -> (4,10): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_DispatchEOS1_failure.a' failed to parse: Expected `::`, but got end of stream instead. {Token: `X` @ (4,9) -> (4,10): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6135,7 +6135,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DispatchEOS2_39() {
     String live = get_DispatchEOS2_39();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DispatchEOS2_failure.a");
+    gold.append("Path:./test_code/Parser_DispatchEOS2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6150,7 +6150,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_DispatchEOS2_failure.a' failed to parse: Expected an id or `*`, but got end of stream instead {Token: `::` @ (4,10) -> (4,12): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_DispatchEOS2_failure.a' failed to parse: Expected an id or `*`, but got end of stream instead {Token: `::` @ (4,10) -> (4,12): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6209,7 +6209,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Dispatch_40() {
     String live = get_Dispatch_40();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Dispatch_success.a");
+    gold.append("Path:./test_code/Parser_Dispatch_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -6519,7 +6519,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DoWhileEOS_41() {
     String live = get_DoWhileEOS_41();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DoWhileEOS_failure.a");
+    gold.append("Path:./test_code/Parser_DoWhileEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6534,7 +6534,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_DoWhileEOS_failure.a' failed to parse: Parser was expecting `while`, but got an end of the stream instead. {Token: `}` @ (3,2) -> (3,3): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_DoWhileEOS_failure.a' failed to parse: Parser was expecting `while`, but got an end of the stream instead. {Token: `}` @ (3,2) -> (3,3): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6583,7 +6583,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_DoWhileNoWhile_42() {
     String live = get_DoWhileNoWhile_42();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_DoWhileNoWhile_failure.a");
+    gold.append("Path:./test_code/Parser_DoWhileNoWhile_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6598,7 +6598,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_DoWhileNoWhile_failure.a' failed to parse: Parser was expecting keyword:`while`, but got `(` instead. {Token: `(` @ (3,4) -> (3,5): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_DoWhileNoWhile_failure.a' failed to parse: Parser was expecting keyword:`while`, but got `(` instead. {Token: `(` @ (3,4) -> (3,5): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6647,7 +6647,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumEmpty_43() {
     String live = get_EnumEmpty_43();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumEmpty_failure.a");
+    gold.append("Path:./test_code/Parser_EnumEmpty_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6697,7 +6697,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumEndOfStreamAfterColon_44() {
     String live = get_EnumEndOfStreamAfterColon_44();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumEndOfStreamAfterColon_failure.a");
+    gold.append("Path:./test_code/Parser_EnumEndOfStreamAfterColon_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6712,7 +6712,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_EnumEndOfStreamAfterColon_failure.a' failed to parse: Parser was expecting an integer after ':', but got end of stream instead. {Token: `:` @ (0,15) -> (0,16): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_EnumEndOfStreamAfterColon_failure.a' failed to parse: Parser was expecting an integer after ':', but got end of stream instead. {Token: `:` @ (0,15) -> (0,16): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6761,7 +6761,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumEndOfStreamAfterLabel_45() {
     String live = get_EnumEndOfStreamAfterLabel_45();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumEndOfStreamAfterLabel_failure.a");
+    gold.append("Path:./test_code/Parser_EnumEndOfStreamAfterLabel_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6776,7 +6776,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_EnumEndOfStreamAfterLabel_failure.a' failed to parse: Parser was expecting either a Symbol=} or an Identifer to define a new enum label, but got end of stream instead. {Token: `Y` @ (0,14) -> (0,15): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_EnumEndOfStreamAfterLabel_failure.a' failed to parse: Parser was expecting either a Symbol=} or an Identifer to define a new enum label, but got end of stream instead. {Token: `Y` @ (0,14) -> (0,15): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6825,7 +6825,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumErrorNoIdentLabel_46() {
     String live = get_EnumErrorNoIdentLabel_46();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumErrorNoIdentLabel_failure.a");
+    gold.append("Path:./test_code/Parser_EnumErrorNoIdentLabel_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6840,7 +6840,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_EnumErrorNoIdentLabel_failure.a' failed to parse: Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (0,12) -> (0,13): NumberLiteral:NumberIsInteger}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_EnumErrorNoIdentLabel_failure.a' failed to parse: Parser was expecting an identifier, but got a NumberLiteral:1 instead. {Token: `1` @ (0,12) -> (0,13): NumberLiteral:NumberIsInteger}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6889,7 +6889,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumErrorNoName_47() {
     String live = get_EnumErrorNoName_47();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumErrorNoName_failure.a");
+    gold.append("Path:./test_code/Parser_EnumErrorNoName_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6904,7 +6904,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_EnumErrorNoName_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,6) -> (0,7): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_EnumErrorNoName_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:{ instead. {Token: `{` @ (0,6) -> (0,7): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6953,7 +6953,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumErrorNoOpenBrace_48() {
     String live = get_EnumErrorNoOpenBrace_48();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumErrorNoOpenBrace_failure.a");
+    gold.append("Path:./test_code/Parser_EnumErrorNoOpenBrace_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6968,7 +6968,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_EnumErrorNoOpenBrace_failure.a' failed to parse: Parser was expecting a Symbol=`{`; instead, the parse got Identifer:X. {Token: `X` @ (0,10) -> (0,11): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_EnumErrorNoOpenBrace_failure.a' failed to parse: Parser was expecting a Symbol=`{`; instead, the parse got Identifer:X. {Token: `X` @ (0,10) -> (0,11): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -7027,7 +7027,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumLazy_49() {
     String live = get_EnumLazy_49();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumLazy_success.a");
+    gold.append("Path:./test_code/Parser_EnumLazy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -7278,7 +7278,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumNoIntegerAfterColon_50() {
     String live = get_EnumNoIntegerAfterColon_50();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumNoIntegerAfterColon_failure.a");
+    gold.append("Path:./test_code/Parser_EnumNoIntegerAfterColon_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -7293,7 +7293,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_EnumNoIntegerAfterColon_failure.a' failed to parse: Parser was expecting a valid numeric sequence, but got a Identifer instead. {Token: `Y` @ (0,15) -> (0,16): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_EnumNoIntegerAfterColon_failure.a' failed to parse: Parser was expecting a valid numeric sequence, but got a Identifer instead. {Token: `Y` @ (0,15) -> (0,16): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -7352,7 +7352,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumNoisy_51() {
     String live = get_EnumNoisy_51();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumNoisy_success.a");
+    gold.append("Path:./test_code/Parser_EnumNoisy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -7614,7 +7614,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumPrefix_52() {
     String live = get_EnumPrefix_52();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumPrefix_success.a");
+    gold.append("Path:./test_code/Parser_EnumPrefix_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -7892,7 +7892,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumSetDefault_53() {
     String live = get_EnumSetDefault_53();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumSetDefault_success.a");
+    gold.append("Path:./test_code/Parser_EnumSetDefault_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -8153,7 +8153,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_EnumWithHexValue_54() {
     String live = get_EnumWithHexValue_54();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_EnumWithHexValue_success.a");
+    gold.append("Path:./test_code/Parser_EnumWithHexValue_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -8414,7 +8414,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_FieldDeref_55() {
     String live = get_FieldDeref_55();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_FieldDeref_success.a");
+    gold.append("Path:./test_code/Parser_FieldDeref_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -8736,7 +8736,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ForeachEOS_56() {
     String live = get_ForeachEOS_56();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ForeachEOS_failure.a");
+    gold.append("Path:./test_code/Parser_ForeachEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -8751,7 +8751,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_ForeachEOS_failure.a' failed to parse: Parser was expecting `in`, but got an end of the stream instead. {Token: `x` @ (1,10) -> (1,11): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_ForeachEOS_failure.a' failed to parse: Parser was expecting `in`, but got an end of the stream instead. {Token: `x` @ (1,10) -> (1,11): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -8800,7 +8800,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ForeachNoInToken_57() {
     String live = get_ForeachNoInToken_57();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ForeachNoInToken_failure.a");
+    gold.append("Path:./test_code/Parser_ForeachNoInToken_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -8815,7 +8815,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_ForeachNoInToken_failure.a' failed to parse: Parser was expecting `in`, but got `:` instead. {Token: `:` @ (1,12) -> (1,13): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_ForeachNoInToken_failure.a' failed to parse: Parser was expecting `in`, but got `:` instead. {Token: `:` @ (1,12) -> (1,13): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -8874,7 +8874,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_FunctionApply_58() {
     String live = get_FunctionApply_58();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_FunctionApply_success.a");
+    gold.append("Path:./test_code/Parser_FunctionApply_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -9164,7 +9164,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_GlobalDefinePublicInt_59() {
     String live = get_GlobalDefinePublicInt_59();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_GlobalDefinePublicInt_success.a");
+    gold.append("Path:./test_code/Parser_GlobalDefinePublicInt_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -9439,7 +9439,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_GlobalDefineVariableHangingNoDefault_60() {
     String live = get_GlobalDefineVariableHangingNoDefault_60();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_GlobalDefineVariableHangingNoDefault_failure.a");
+    gold.append("Path:./test_code/Parser_GlobalDefineVariableHangingNoDefault_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -9454,7 +9454,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_GlobalDefineVariableHangingNoDefault_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `=` @ (0,13) -> (0,14): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_GlobalDefineVariableHangingNoDefault_failure.a' failed to parse: Parser was expecting an atomic expression, but got end of stream instead. {Token: `=` @ (0,13) -> (0,14): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -9503,7 +9503,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_GlobalDefineVariableHangingNoSemicolon_61() {
     String live = get_GlobalDefineVariableHangingNoSemicolon_61();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_GlobalDefineVariableHangingNoSemicolon_failure.a");
+    gold.append("Path:./test_code/Parser_GlobalDefineVariableHangingNoSemicolon_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -9518,7 +9518,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_GlobalDefineVariableHangingNoSemicolon_failure.a' failed to parse: Parser was expecting a Symbol=`;`; instead, the parser got an end of stream. {Token: `x` @ (0,11) -> (0,12): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_GlobalDefineVariableHangingNoSemicolon_failure.a' failed to parse: Parser was expecting a Symbol=`;`; instead, the parser got an end of stream. {Token: `x` @ (0,11) -> (0,12): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -9567,7 +9567,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_GlobalDefineVariableNoName_62() {
     String live = get_GlobalDefineVariableNoName_62();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_GlobalDefineVariableNoName_failure.a");
+    gold.append("Path:./test_code/Parser_GlobalDefineVariableNoName_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -9582,7 +9582,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_GlobalDefineVariableNoName_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,11) -> (0,12): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_GlobalDefineVariableNoName_failure.a' failed to parse: Parser was expecting an identifier, but got a Symbol:; instead. {Token: `;` @ (0,11) -> (0,12): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -9631,7 +9631,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_GlobalDefineVariablePolicyOnly_63() {
     String live = get_GlobalDefineVariablePolicyOnly_63();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_GlobalDefineVariablePolicyOnly_failure.a");
+    gold.append("Path:./test_code/Parser_GlobalDefineVariablePolicyOnly_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -9646,7 +9646,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_GlobalDefineVariablePolicyOnly_failure.a' failed to parse: Parser was expecting a reactive type, but got an end of stream instead. {Token: `public` @ (0,0) -> (0,6): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_GlobalDefineVariablePolicyOnly_failure.a' failed to parse: Parser was expecting a reactive type, but got an end of stream instead. {Token: `public` @ (0,0) -> (0,6): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -9705,7 +9705,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_If_64() {
     String live = get_If_64();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_If_success.a");
+    gold.append("Path:./test_code/Parser_If_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -10006,7 +10006,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ImportDoc_65() {
     String live = get_ImportDoc_65();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ImportDoc_success.a");
+    gold.append("Path:./test_code/Parser_ImportDoc_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -10297,7 +10297,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ImportFailureEOS_66() {
     String live = get_ImportFailureEOS_66();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ImportFailureEOS_failure.a");
+    gold.append("Path:./test_code/Parser_ImportFailureEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -10312,7 +10312,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_ImportFailureEOS_failure.a' failed to parse: Parser tried to read a string literal, but got end of stream {Token: `import` @ (0,0) -> (0,6): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_ImportFailureEOS_failure.a' failed to parse: Parser tried to read a string literal, but got end of stream {Token: `import` @ (0,0) -> (0,6): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -10361,7 +10361,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ImportFailureInvalid_67() {
     String live = get_ImportFailureInvalid_67();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ImportFailureInvalid_failure.a");
+    gold.append("Path:./test_code/Parser_ImportFailureInvalid_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -10376,7 +10376,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_ImportFailureInvalid_failure.a' failed to parse: Parser tried to read a string literal, but got a Identifer instead {Token: `Nope` @ (0,7) -> (0,11): Identifer}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_ImportFailureInvalid_failure.a' failed to parse: Parser tried to read a string literal, but got a Identifer instead {Token: `Nope` @ (0,7) -> (0,11): Identifer}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -10435,7 +10435,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_IndexDeref_68() {
     String live = get_IndexDeref_68();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_IndexDeref_success.a");
+    gold.append("Path:./test_code/Parser_IndexDeref_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -10771,7 +10771,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_InvalidCharacterFast_69() {
     String live = get_InvalidCharacterFast_69();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_InvalidCharacterFast_failure.a");
+    gold.append("Path:./test_code/Parser_InvalidCharacterFast_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -10786,7 +10786,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_InvalidCharacterFast_failure.a' failed to lex: Failed to understand codepoint:96('`')(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_InvalidCharacterFast_failure.a' failed to lex: Failed to understand codepoint:96('`')(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -10835,7 +10835,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_InvalidCharacterSlow_70() {
     String live = get_InvalidCharacterSlow_70();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_InvalidCharacterSlow_failure.a");
+    gold.append("Path:./test_code/Parser_InvalidCharacterSlow_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -10850,7 +10850,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_InvalidCharacterSlow_failure.a' failed to lex: Codepoint fell outside of valid range:29503('猿') is outside of [0, 256)(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_InvalidCharacterSlow_failure.a' failed to lex: Codepoint fell outside of valid range:29503('猿') is outside of [0, 256)(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -10899,7 +10899,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_InvalidLong_71() {
     String live = get_InvalidLong_71();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_InvalidLong_failure.a");
+    gold.append("Path:./test_code/Parser_InvalidLong_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -10914,7 +10914,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_InvalidLong_failure.a' failed to parse: Parser was expecting a valid integral sequence, but got a '123x01xL' instead. {Token: `123x01xL` @ (1,11) -> (1,19): NumberLiteral:NumberIsInteger}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_InvalidLong_failure.a' failed to parse: Parser was expecting a valid integral sequence, but got a '123x01xL' instead. {Token: `123x01xL` @ (1,11) -> (1,19): NumberLiteral:NumberIsInteger}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -10963,7 +10963,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_InvalidMultiPolicyRecord_72() {
     String live = get_InvalidMultiPolicyRecord_72();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_InvalidMultiPolicyRecord_failure.a");
+    gold.append("Path:./test_code/Parser_InvalidMultiPolicyRecord_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -10978,7 +10978,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_InvalidMultiPolicyRecord_failure.a' failed to parse: Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_InvalidMultiPolicyRecord_failure.a' failed to parse: Parser was expecting one of the following symbols:,, >; instead, the parse got Symbol:+. {Token: `+` @ (6,19) -> (6,20): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -11037,7 +11037,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_JustComments_73() {
     String live = get_JustComments_73();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_JustComments_success.a");
+    gold.append("Path:./test_code/Parser_JustComments_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -11297,7 +11297,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Linq_74() {
     String live = get_Linq_74();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Linq_success.a");
+    gold.append("Path:./test_code/Parser_Linq_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -12079,7 +12079,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Loops_75() {
     String live = get_Loops_75();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Loops_success.a");
+    gold.append("Path:./test_code/Parser_Loops_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -12404,7 +12404,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Maps_76() {
     String live = get_Maps_76();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Maps_success.a");
+    gold.append("Path:./test_code/Parser_Maps_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -12675,7 +12675,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_MathAndLogic_77() {
     String live = get_MathAndLogic_77();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_MathAndLogic_success.a");
+    gold.append("Path:./test_code/Parser_MathAndLogic_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -12871,31 +12871,31 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 14;");
     gold.append("\n    __track(0);");
-    gold.append("\n    int x = 1 + 2 + 3;");
+    gold.append("\n    final int x = 1 + 2 + 3;");
     gold.append("\n    __track(1);");
-    gold.append("\n    int y = 2 * 3 * 4;");
+    gold.append("\n    final int y = 2 * 3 * 4;");
     gold.append("\n    __track(2);");
-    gold.append("\n    int z = 10 - 5 - 3 - 1;");
+    gold.append("\n    final int z = 10 - 5 - 3 - 1;");
     gold.append("\n    __track(3);");
-    gold.append("\n    boolean u = true && true;");
+    gold.append("\n    final boolean u = true && true;");
     gold.append("\n    __track(4);");
-    gold.append("\n    boolean v = false || false;");
+    gold.append("\n    final boolean v = false || false;");
     gold.append("\n    __track(5);");
-    gold.append("\n    boolean eq = 1 == 2;");
+    gold.append("\n    final boolean eq = 1 == 2;");
     gold.append("\n    __track(6);");
-    gold.append("\n    boolean ne = 1 != 2;");
+    gold.append("\n    final boolean ne = 1 != 2;");
     gold.append("\n    __track(7);");
-    gold.append("\n    boolean lt = 1 < 2;");
+    gold.append("\n    final boolean lt = 1 < 2;");
     gold.append("\n    __track(8);");
-    gold.append("\n    boolean gt = 1 > 2;");
+    gold.append("\n    final boolean gt = 1 > 2;");
     gold.append("\n    __track(9);");
-    gold.append("\n    boolean lte = 1 <= 2;");
+    gold.append("\n    final boolean lte = 1 <= 2;");
     gold.append("\n    __track(10);");
-    gold.append("\n    boolean gte = 1 >= 2;");
+    gold.append("\n    final boolean gte = 1 >= 2;");
     gold.append("\n    __track(11);");
-    gold.append("\n    int t0 = (true ? 4 : 5);");
+    gold.append("\n    final int t0 = (true ? 4 : 5);");
     gold.append("\n    __track(12);");
-    gold.append("\n    int t1 = (false ? 4 : 5);");
+    gold.append("\n    final int t1 = (false ? 4 : 5);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -12956,7 +12956,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_MaybeIncompleteEOS_78() {
     String live = get_MaybeIncompleteEOS_78();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_MaybeIncompleteEOS_failure.a");
+    gold.append("Path:./test_code/Parser_MaybeIncompleteEOS_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -12971,7 +12971,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_MaybeIncompleteEOS_failure.a' failed to parse: Parser was expected either a '<' or '(' after @maybe, but got end of stream instead. {Token: `@maybe` @ (2,6) -> (2,12): Keyword}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_MaybeIncompleteEOS_failure.a' failed to parse: Parser was expected either a '<' or '(' after @maybe, but got end of stream instead. {Token: `@maybe` @ (2,6) -> (2,12): Keyword}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -13020,7 +13020,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_MaybeIncompleteSymbol_79() {
     String live = get_MaybeIncompleteSymbol_79();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_MaybeIncompleteSymbol_failure.a");
+    gold.append("Path:./test_code/Parser_MaybeIncompleteSymbol_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -13035,7 +13035,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_MaybeIncompleteSymbol_failure.a' failed to parse: Parser was expected either a '<' or '(' after @maybe, but got `+` instead. {Token: `+` @ (2,12) -> (2,13): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_MaybeIncompleteSymbol_failure.a' failed to parse: Parser was expected either a '<' or '(' after @maybe, but got `+` instead. {Token: `+` @ (2,12) -> (2,13): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -13094,7 +13094,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Maybe_80() {
     String live = get_Maybe_80();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Maybe_success.a");
+    gold.append("Path:./test_code/Parser_Maybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -13438,7 +13438,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_NativeTypes_81() {
     String live = get_NativeTypes_81();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_NativeTypes_success.a");
+    gold.append("Path:./test_code/Parser_NativeTypes_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -13763,7 +13763,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Preempt_82() {
     String live = get_Preempt_82();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Preempt_success.a");
+    gold.append("Path:./test_code/Parser_Preempt_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -14065,7 +14065,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_PureFunctionMustReturn_83() {
     String live = get_PureFunctionMustReturn_83();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_PureFunctionMustReturn_failure.a");
+    gold.append("Path:./test_code/Parser_PureFunctionMustReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -14080,7 +14080,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_PureFunctionMustReturn_failure.a' failed to parse: Parser was expecting -> for the pure function, and pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol}(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_PureFunctionMustReturn_failure.a' failed to parse: Parser was expecting -> for the pure function, and pure functions must have return types. {Token: `)` @ (0,16) -> (0,17): Symbol}(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -14139,7 +14139,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ReactiveRef_84() {
     String live = get_ReactiveRef_84();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ReactiveRef_success.a");
+    gold.append("Path:./test_code/Parser_ReactiveRef_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -14530,7 +14530,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_RecordMethod_85() {
     String live = get_RecordMethod_85();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_RecordMethod_success.a");
+    gold.append("Path:./test_code/Parser_RecordMethod_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -14916,7 +14916,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_RecordPolicies_86() {
     String live = get_RecordPolicies_86();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_RecordPolicies_success.a");
+    gold.append("Path:./test_code/Parser_RecordPolicies_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -15368,7 +15368,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ReturnEmpty_87() {
     String live = get_ReturnEmpty_87();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ReturnEmpty_success.a");
+    gold.append("Path:./test_code/Parser_ReturnEmpty_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -15640,7 +15640,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_StateMachine_88() {
     String live = get_StateMachine_88();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_StateMachine_success.a");
+    gold.append("Path:./test_code/Parser_StateMachine_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -15940,7 +15940,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_StringEscapingBadUnicodeHex_89() {
     String live = get_StringEscapingBadUnicodeHex_89();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_StringEscapingBadUnicodeHex_failure.a");
+    gold.append("Path:./test_code/Parser_StringEscapingBadUnicodeHex_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -15955,7 +15955,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_StringEscapingBadUnicodeHex_failure.a' failed to lex: Unrecognized hex value within the unicode escape value:33('!')(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_StringEscapingBadUnicodeHex_failure.a' failed to lex: Unrecognized hex value within the unicode escape value:33('!')(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -16004,7 +16004,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_StringEscapingBad_90() {
     String live = get_StringEscapingBad_90();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_StringEscapingBad_failure.a");
+    gold.append("Path:./test_code/Parser_StringEscapingBad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -16019,7 +16019,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '.\\\\test_code\\\\Parser_StringEscapingBad_failure.a' failed to lex: Unrecognized string escape value:122('z')(ParseException)\"");
+    gold.append("\n  \"message\" : \"File './test_code/Parser_StringEscapingBad_failure.a' failed to lex: Unrecognized string escape value:122('z')(ParseException)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -16078,7 +16078,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_StringEscaping_91() {
     String live = get_StringEscaping_91();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_StringEscaping_success.a");
+    gold.append("Path:./test_code/Parser_StringEscaping_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -16351,7 +16351,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_SymbolClustering_92() {
     String live = get_SymbolClustering_92();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_SymbolClustering_success.a");
+    gold.append("Path:./test_code/Parser_SymbolClustering_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -16627,7 +16627,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_Testing_93() {
     String live = get_Testing_93();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_Testing_success.a");
+    gold.append("Path:./test_code/Parser_Testing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -16981,7 +16981,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_TheNoState_94() {
     String live = get_TheNoState_94();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_TheNoState_success.a");
+    gold.append("Path:./test_code/Parser_TheNoState_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -17289,7 +17289,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_UnicodeInString_95() {
     String live = get_UnicodeInString_95();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_UnicodeInString_success.a");
+    gold.append("Path:./test_code/Parser_UnicodeInString_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -17556,7 +17556,7 @@ public class GeneratedParserTests extends GeneratedBase {
   public void stable_ViewerCompute_96() {
     String live = get_ViewerCompute_96();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Parser_ViewerCompute_success.a");
+    gold.append("Path:./test_code/Parser_ViewerCompute_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

@@ -44,7 +44,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_Array_1() {
     String live = get_Array_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_Array_success.a");
+    gold.append("Path:./test_code/Ingestion_Array_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -491,7 +491,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_CantIngestIntegers_2() {
     String live = get_CantIngestIntegers_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_CantIngestIntegers_failure.a");
+    gold.append("Path:./test_code/Ingestion_CantIngestIntegers_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -569,7 +569,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_CantIngestStrings_3() {
     String live = get_CantIngestStrings_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_CantIngestStrings_failure.a");
+    gold.append("Path:./test_code/Ingestion_CantIngestStrings_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -657,7 +657,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_Copy_4() {
     String live = get_Copy_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_Copy_success.a");
+    gold.append("Path:./test_code/Ingestion_Copy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1109,7 +1109,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_DataLoss_5() {
     String live = get_DataLoss_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_DataLoss_failure.a");
+    gold.append("Path:./test_code/Ingestion_DataLoss_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1159,7 +1159,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_FailurePassthrough_6() {
     String live = get_FailurePassthrough_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_FailurePassthrough_failure.a");
+    gold.append("Path:./test_code/Ingestion_FailurePassthrough_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1265,7 +1265,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_IncompatibleField_7() {
     String live = get_IncompatibleField_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_IncompatibleField_failure.a");
+    gold.append("Path:./test_code/Ingestion_IncompatibleField_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1339,7 +1339,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_IntoMaybeRecord_8() {
     String live = get_IntoMaybeRecord_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_IntoMaybeRecord_success.a");
+    gold.append("Path:./test_code/Ingestion_IntoMaybeRecord_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1827,7 +1827,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_RecursiveBreakage_9() {
     String live = get_RecursiveBreakage_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_RecursiveBreakage_failure.a");
+    gold.append("Path:./test_code/Ingestion_RecursiveBreakage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1887,7 +1887,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_RecursiveTable_10() {
     String live = get_RecursiveTable_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_RecursiveTable_success.a");
+    gold.append("Path:./test_code/Ingestion_RecursiveTable_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2584,7 +2584,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
   public void stable_Simple_11() {
     String live = get_Simple_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Ingestion_Simple_success.a");
+    gold.append("Path:./test_code/Ingestion_Simple_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

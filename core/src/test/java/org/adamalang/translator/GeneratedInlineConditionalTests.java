@@ -44,7 +44,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   public void stable_AssignmentRecordProxy_1() {
     String live = get_AssignmentRecordProxy_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\InlineConditional_AssignmentRecordProxy_success.a");
+    gold.append("Path:./test_code/InlineConditional_AssignmentRecordProxy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -430,7 +430,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   public void stable_BothSidesFail_2() {
     String live = get_BothSidesFail_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\InlineConditional_BothSidesFail_failure.a");
+    gold.append("Path:./test_code/InlineConditional_BothSidesFail_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -518,7 +518,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   public void stable_Legacy_3() {
     String live = get_Legacy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\InlineConditional_Legacy_success.a");
+    gold.append("Path:./test_code/InlineConditional_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -896,7 +896,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   public void stable_MaxTypeFailures_4() {
     String live = get_MaxTypeFailures_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\InlineConditional_MaxTypeFailures_failure.a");
+    gold.append("Path:./test_code/InlineConditional_MaxTypeFailures_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1026,7 +1026,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   public void stable_MaybePromotions_5() {
     String live = get_MaybePromotions_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\InlineConditional_MaybePromotions_success.a");
+    gold.append("Path:./test_code/InlineConditional_MaybePromotions_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1222,11 +1222,11 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(0);");
-    gold.append("\n    NtMaybe<Integer> x = new NtMaybe<Integer>((true ? new NtMaybe<>(3) : new NtMaybe<Integer>(2)));");
+    gold.append("\n    final NtMaybe<Integer> x = new NtMaybe<Integer>((true ? new NtMaybe<>(3) : new NtMaybe<Integer>(2)));");
     gold.append("\n    __track(1);");
-    gold.append("\n    NtMaybe<Integer> y = new NtMaybe<Integer>((true ? new NtMaybe<Integer>(2) : new NtMaybe<>(3)));");
+    gold.append("\n    final NtMaybe<Integer> y = new NtMaybe<Integer>((true ? new NtMaybe<Integer>(2) : new NtMaybe<>(3)));");
     gold.append("\n    __track(2);");
-    gold.append("\n    NtMaybe<Integer> z = new NtMaybe<Integer>((true ? new NtMaybe<Integer>(3) : new NtMaybe<Integer>(2)));");
+    gold.append("\n    final NtMaybe<Integer> z = new NtMaybe<Integer>((true ? new NtMaybe<Integer>(3) : new NtMaybe<Integer>(2)));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -1297,7 +1297,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   public void stable_MessageRectify_6() {
     String live = get_MessageRectify_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\InlineConditional_MessageRectify_success.a");
+    gold.append("Path:./test_code/InlineConditional_MessageRectify_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1538,17 +1538,17 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n  private void __step_neat() {");
     gold.append("\n    __code_cost += 7;");
     gold.append("\n    __track(0);");
-    gold.append("\n    RTxX a = new RTxX(123, 0);");
+    gold.append("\n    final RTxX a = new RTxX(123, 0);");
     gold.append("\n    __track(1);");
-    gold.append("\n    RTxX b = (true ? new RTxX(3, 0) : a);");
+    gold.append("\n    final RTxX b = (true ? new RTxX(3, 0) : a);");
     gold.append("\n    __track(2);");
-    gold.append("\n    RTxX c = (true ? a : new RTxX(0, 3));");
+    gold.append("\n    final RTxX c = (true ? a : new RTxX(0, 3));");
     gold.append("\n    __track(3);");
-    gold.append("\n    RTxX d = (true ? a : a);");
+    gold.append("\n    final RTxX d = (true ? a : a);");
     gold.append("\n    __track(4);");
-    gold.append("\n    RTxX e = new RTxX(0, 42);");
+    gold.append("\n    final RTxX e = new RTxX(0, 42);");
     gold.append("\n    __track(5);");
-    gold.append("\n    RTxX f = (true ? a : e);");
+    gold.append("\n    final RTxX f = (true ? a : e);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {");
@@ -1628,7 +1628,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   public void stable_RecordsMismatch_7() {
     String live = get_RecordsMismatch_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\InlineConditional_RecordsMismatch_failure.a");
+    gold.append("Path:./test_code/InlineConditional_RecordsMismatch_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

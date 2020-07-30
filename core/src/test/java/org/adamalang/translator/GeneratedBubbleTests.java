@@ -44,7 +44,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
   public void stable_CanOnlyCallPure_1() {
     String live = get_CanOnlyCallPure_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Bubble_CanOnlyCallPure_success.a");
+    gold.append("Path:./test_code/Bubble_CanOnlyCallPure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -337,7 +337,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
   public void stable_Define_2() {
     String live = get_Define_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Bubble_Define_success.a");
+    gold.append("Path:./test_code/Bubble_Define_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

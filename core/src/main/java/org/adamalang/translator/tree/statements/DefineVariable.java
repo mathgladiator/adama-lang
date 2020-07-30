@@ -120,6 +120,9 @@ public class DefineVariable extends Statement {
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
     if (type != null) {
+      if (type.behavior == TypeBehavior.ReadOnlyNativeValue) {
+        sb.append("final ");
+      }
       sb.append(type.getJavaConcreteType(environment)).append(" " + name);
       if (value != null) {
         sb.append(" = ");

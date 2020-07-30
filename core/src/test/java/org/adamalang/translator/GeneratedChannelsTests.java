@@ -44,7 +44,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
   public void stable_AsyncLegacy_1() {
     String live = get_AsyncLegacy_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Channels_AsyncLegacy_success.a");
+    gold.append("Path:./test_code/Channels_AsyncLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -480,7 +480,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
   public void stable_DuplicateHandlers_2() {
     String live = get_DuplicateHandlers_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Channels_DuplicateHandlers_failure.a");
+    gold.append("Path:./test_code/Channels_DuplicateHandlers_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -794,7 +794,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
   public void stable_EsotericMessages_3() {
     String live = get_EsotericMessages_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Channels_EsotericMessages_success.a");
+    gold.append("Path:./test_code/Channels_EsotericMessages_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1367,7 +1367,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
   public void stable_HandlerLegacy_4() {
     String live = get_HandlerLegacy_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Channels_HandlerLegacy_success.a");
+    gold.append("Path:./test_code/Channels_HandlerLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1727,7 +1727,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
   public void stable_MessageHasEnum_5() {
     String live = get_MessageHasEnum_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Channels_MessageHasEnum_success.a");
+    gold.append("Path:./test_code/Channels_MessageHasEnum_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2111,7 +2111,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
   public void stable_MessageTypeWasRecord_6() {
     String live = get_MessageTypeWasRecord_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Channels_MessageTypeWasRecord_failure.a");
+    gold.append("Path:./test_code/Channels_MessageTypeWasRecord_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2175,7 +2175,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
   public void stable_UndefinedMessage_7() {
     String live = get_UndefinedMessage_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Channels_UndefinedMessage_failure.a");
+    gold.append("Path:./test_code/Channels_UndefinedMessage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

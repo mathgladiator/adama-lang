@@ -44,7 +44,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
   public void stable_Legacy_1() {
     String live = get_Legacy_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Anonymous_Legacy_success.a");
+    gold.append("Path:./test_code/Anonymous_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -683,7 +683,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
   public void stable_MegaTypeConstruction_2() {
     String live = get_MegaTypeConstruction_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Anonymous_MegaTypeConstruction_success.a");
+    gold.append("Path:./test_code/Anonymous_MegaTypeConstruction_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1378,17 +1378,17 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 7;");
     gold.append("\n    __track(0);");
-    gold.append("\n    RTxAutoMaxRecord4[] a = new RTxAutoMaxRecord4[] {new RTxAutoMaxRecord4(0), new RTxAutoMaxRecord4(1)};");
+    gold.append("\n    final RTxAutoMaxRecord4[] a = new RTxAutoMaxRecord4[] {new RTxAutoMaxRecord4(0), new RTxAutoMaxRecord4(1)};");
     gold.append("\n    __track(1);");
-    gold.append("\n    RTxAutoMaxRecord9[] b = new RTxAutoMaxRecord9[] {new RTxAutoMaxRecord9(new NtMaybe<Integer>(1)), new RTxAutoMaxRecord9(new NtMaybe<Integer>(1))};");
+    gold.append("\n    final RTxAutoMaxRecord9[] b = new RTxAutoMaxRecord9[] {new RTxAutoMaxRecord9(new NtMaybe<Integer>(1)), new RTxAutoMaxRecord9(new NtMaybe<Integer>(1))};");
     gold.append("\n    __track(2);");
-    gold.append("\n    RTxAutoMaxRecord25[] c = new RTxAutoMaxRecord25[] {new RTxAutoMaxRecord25(new RTxAutoMaxRecord24(0, 0), 0), new RTxAutoMaxRecord25(new RTxAutoMaxRecord24(1, 0), 0), new RTxAutoMaxRecord25(new RTxAutoMaxRecord24(), 2), new RTxAutoMaxRecord25(new RTxAutoMaxRecord24(0, 3), 0)};");
+    gold.append("\n    final RTxAutoMaxRecord25[] c = new RTxAutoMaxRecord25[] {new RTxAutoMaxRecord25(new RTxAutoMaxRecord24(0, 0), 0), new RTxAutoMaxRecord25(new RTxAutoMaxRecord24(1, 0), 0), new RTxAutoMaxRecord25(new RTxAutoMaxRecord24(), 2), new RTxAutoMaxRecord25(new RTxAutoMaxRecord24(0, 3), 0)};");
     gold.append("\n    __track(3);");
-    gold.append("\n    RTxAutoMaxRecord34[] d = new RTxAutoMaxRecord34[] {new RTxAutoMaxRecord34(new NtMaybe<Integer>(1), new int[]{}), new RTxAutoMaxRecord34(new NtMaybe<Integer>(2), new int[]{}), new RTxAutoMaxRecord34(new NtMaybe<Integer>(), new int[] {1, 2, 3}), new RTxAutoMaxRecord34(new NtMaybe<Integer>(), new int[]{})};");
+    gold.append("\n    final RTxAutoMaxRecord34[] d = new RTxAutoMaxRecord34[] {new RTxAutoMaxRecord34(new NtMaybe<Integer>(1), new int[]{}), new RTxAutoMaxRecord34(new NtMaybe<Integer>(2), new int[]{}), new RTxAutoMaxRecord34(new NtMaybe<Integer>(), new int[] {1, 2, 3}), new RTxAutoMaxRecord34(new NtMaybe<Integer>(), new int[]{})};");
     gold.append("\n    __track(4);");
-    gold.append("\n    RTxAutoMaxRecord42[] e = new RTxAutoMaxRecord42[] {new RTxAutoMaxRecord42(new NtMaybe<RTx_AnonObjConvert_35>(new RTx_AnonObjConvert_35(1))), new RTxAutoMaxRecord42(new NtMaybe<RTx_AnonObjConvert_35>(new RTx_AnonObjConvert_35(1)))};");
+    gold.append("\n    final RTxAutoMaxRecord42[] e = new RTxAutoMaxRecord42[] {new RTxAutoMaxRecord42(new NtMaybe<RTx_AnonObjConvert_35>(new RTx_AnonObjConvert_35(1))), new RTxAutoMaxRecord42(new NtMaybe<RTx_AnonObjConvert_35>(new RTx_AnonObjConvert_35(1)))};");
     gold.append("\n    __track(5);");
-    gold.append("\n    RTxAutoMaxRecord59[] f = new RTxAutoMaxRecord59[] {new RTxAutoMaxRecord59(new RTxAutoMaxRecord58[] {new RTxAutoMaxRecord58(1, 0)}), new RTxAutoMaxRecord59(new RTxAutoMaxRecord58[] {new RTxAutoMaxRecord58(0, 1)})};");
+    gold.append("\n    final RTxAutoMaxRecord59[] f = new RTxAutoMaxRecord59[] {new RTxAutoMaxRecord59(new RTxAutoMaxRecord58[] {new RTxAutoMaxRecord58(1, 0)}), new RTxAutoMaxRecord59(new RTxAutoMaxRecord58[] {new RTxAutoMaxRecord58(0, 1)})};");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -1459,7 +1459,7 @@ public class GeneratedAnonymousTests extends GeneratedBase {
   public void stable_TypeConstruction_3() {
     String live = get_TypeConstruction_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Anonymous_TypeConstruction_success.a");
+    gold.append("Path:./test_code/Anonymous_TypeConstruction_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1790,13 +1790,13 @@ public class GeneratedAnonymousTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 5;");
     gold.append("\n    __track(0);");
-    gold.append("\n    RTxAutoMaxRecord4[] x = new RTxAutoMaxRecord4[] {new RTxAutoMaxRecord4(1, 0), (new RTxAutoMaxRecord4(0, 2))};");
+    gold.append("\n    final RTxAutoMaxRecord4[] x = new RTxAutoMaxRecord4[] {new RTxAutoMaxRecord4(1, 0), (new RTxAutoMaxRecord4(0, 2))};");
     gold.append("\n    __track(1);");
-    gold.append("\n    RTxAutoMaxRecord4[] y = new RTxAutoMaxRecord4[] {new RTxAutoMaxRecord4(1, 0), (false ? new RTxAutoMaxRecord4(0, 2) : new RTxAutoMaxRecord4(3, 0))};");
+    gold.append("\n    final RTxAutoMaxRecord4[] y = new RTxAutoMaxRecord4[] {new RTxAutoMaxRecord4(1, 0), (false ? new RTxAutoMaxRecord4(0, 2) : new RTxAutoMaxRecord4(3, 0))};");
     gold.append("\n    __track(2);");
-    gold.append("\n    RTxAutoMaxRecord4 z = new RTxAutoMaxRecord4(3, 4);");
+    gold.append("\n    final RTxAutoMaxRecord4 z = new RTxAutoMaxRecord4(3, 4);");
     gold.append("\n    __track(3);");
-    gold.append("\n    RTxAutoMaxRecord17[] u = new RTxAutoMaxRecord17[] {new RTxAutoMaxRecord17(false, 42.0, 0, \"Hello World\", 123L, 42), new RTxAutoMaxRecord17(false, 0.0, 0, \"\", 0L, 0)};");
+    gold.append("\n    final RTxAutoMaxRecord17[] u = new RTxAutoMaxRecord17[] {new RTxAutoMaxRecord17(false, 42.0, 0, \"Hello World\", 123L, 42), new RTxAutoMaxRecord17(false, 0.0, 0, \"\", 0L, 0)};");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");

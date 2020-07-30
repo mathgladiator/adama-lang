@@ -24,7 +24,6 @@ public class GeneratedBase {
       for (int k = 1; k < lines.length; k++) {
         reconstructed.append("\n").append(lines[k]);
       }
-      System.out.println(output);
       return reconstructed.toString();
     } catch (Throwable t) {
       t.printStackTrace();

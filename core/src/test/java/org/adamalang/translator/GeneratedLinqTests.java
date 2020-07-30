@@ -34,7 +34,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_ErrorsFindingTables_1() {
     String live = get_ErrorsFindingTables_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_ErrorsFindingTables_failure.a");
+    gold.append("Path:./test_code/Linq_ErrorsFindingTables_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -126,7 +126,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_FieldNotFound_2() {
     String live = get_FieldNotFound_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_FieldNotFound_failure.a");
+    gold.append("Path:./test_code/Linq_FieldNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -190,7 +190,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_IndexingCant_3() {
     String live = get_IndexingCant_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_IndexingCant_failure.a");
+    gold.append("Path:./test_code/Linq_IndexingCant_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -306,7 +306,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_Indexing_4() {
     String live = get_Indexing_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_Indexing_success.a");
+    gold.append("Path:./test_code/Linq_Indexing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1298,7 +1298,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_IterateNonTable_5() {
     String live = get_IterateNonTable_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_IterateNonTable_failure.a");
+    gold.append("Path:./test_code/Linq_IterateNonTable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1372,7 +1372,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_LegacyShuffle_6() {
     String live = get_LegacyShuffle_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_LegacyShuffle_success.a");
+    gold.append("Path:./test_code/Linq_LegacyShuffle_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1904,7 +1904,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_Legacy_7() {
     String live = get_Legacy_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_Legacy_success.a");
+    gold.append("Path:./test_code/Linq_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2816,7 +2816,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_NonOrderable_8() {
     String live = get_NonOrderable_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_NonOrderable_failure.a");
+    gold.append("Path:./test_code/Linq_NonOrderable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2880,7 +2880,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_NotApplicableToNonLists_9() {
     String live = get_NotApplicableToNonLists_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_NotApplicableToNonLists_failure.a");
+    gold.append("Path:./test_code/Linq_NotApplicableToNonLists_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2982,7 +2982,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_SortLegacy_10() {
     String live = get_SortLegacy_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_SortLegacy_success.a");
+    gold.append("Path:./test_code/Linq_SortLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3745,7 +3745,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_WhereBuildClosure_11() {
     String live = get_WhereBuildClosure_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_WhereBuildClosure_success.a");
+    gold.append("Path:./test_code/Linq_WhereBuildClosure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4250,7 +4250,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_WhereDuplicateFields_12() {
     String live = get_WhereDuplicateFields_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_WhereDuplicateFields_success.a");
+    gold.append("Path:./test_code/Linq_WhereDuplicateFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4717,7 +4717,7 @@ public class GeneratedLinqTests extends GeneratedBase {
   public void stable_WherePrimaryKeyExtraction_13() {
     String live = get_WherePrimaryKeyExtraction_13();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Linq_WherePrimaryKeyExtraction_success.a");
+    gold.append("Path:./test_code/Linq_WherePrimaryKeyExtraction_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

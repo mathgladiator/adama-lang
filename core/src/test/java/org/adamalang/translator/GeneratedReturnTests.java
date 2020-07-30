@@ -34,7 +34,7 @@ public class GeneratedReturnTests extends GeneratedBase {
   public void stable_ShouldReturnButDoesnt_1() {
     String live = get_ShouldReturnButDoesnt_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Return_ShouldReturnButDoesnt_failure.a");
+    gold.append("Path:./test_code/Return_ShouldReturnButDoesnt_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -84,7 +84,7 @@ public class GeneratedReturnTests extends GeneratedBase {
   public void stable_ShouldntReturnButDoes_2() {
     String live = get_ShouldntReturnButDoes_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Return_ShouldntReturnButDoes_failure.a");
+    gold.append("Path:./test_code/Return_ShouldntReturnButDoes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

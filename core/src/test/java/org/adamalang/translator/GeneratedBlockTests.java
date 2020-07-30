@@ -34,7 +34,7 @@ public class GeneratedBlockTests extends GeneratedBase {
   public void stable_DeadCode_1() {
     String live = get_DeadCode_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Block_DeadCode_failure.a");
+    gold.append("Path:./test_code/Block_DeadCode_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -84,7 +84,7 @@ public class GeneratedBlockTests extends GeneratedBase {
   public void stable_DuplicateVariable_2() {
     String live = get_DuplicateVariable_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Block_DuplicateVariable_failure.a");
+    gold.append("Path:./test_code/Block_DuplicateVariable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

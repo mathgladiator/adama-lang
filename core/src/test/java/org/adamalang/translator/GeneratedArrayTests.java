@@ -44,7 +44,7 @@ public class GeneratedArrayTests extends GeneratedBase {
   public void stable_Empty_1() {
     String live = get_Empty_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Array_Empty_success.a");
+    gold.append("Path:./test_code/Array_Empty_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -353,7 +353,7 @@ public class GeneratedArrayTests extends GeneratedBase {
   public void stable_IndexLookupLegacy_2() {
     String live = get_IndexLookupLegacy_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Array_IndexLookupLegacy_success.a");
+    gold.append("Path:./test_code/Array_IndexLookupLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -913,7 +913,7 @@ public class GeneratedArrayTests extends GeneratedBase {
   public void stable_OfAllTypes_3() {
     String live = get_OfAllTypes_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Array_OfAllTypes_success.a");
+    gold.append("Path:./test_code/Array_OfAllTypes_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1195,7 +1195,7 @@ public class GeneratedArrayTests extends GeneratedBase {
   public void stable_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4() {
     String live = get_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Array_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_failure.a");
+    gold.append("Path:./test_code/Array_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

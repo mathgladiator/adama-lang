@@ -34,7 +34,7 @@ public class GeneratedOperationalTests extends GeneratedBase {
   public void stable_Goodwell_1() {
     String live = get_Goodwell_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Operational_Goodwell_failure.a");
+    gold.append("Path:./test_code/Operational_Goodwell_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ ]");
     gold.append("\n--JAVA---------------------------------------------");

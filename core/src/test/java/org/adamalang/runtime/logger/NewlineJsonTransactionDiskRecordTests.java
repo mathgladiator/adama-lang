@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -111,6 +113,6 @@ public class NewlineJsonTransactionDiskRecordTests {
     NewlineJsonTransactionDiskRecord.writeTo(t, writer);
     writer.flush();
     final var str = new String(memory.toByteArray());
-    Assert.assertEquals("{\"request\":\"data\"}\r\n" + "{\"delta\":\"data\"}\r\n" + "{\"needsInvalidation\":false,\"whenToInvalidMilliseconds\":0,\"seq\":0}", str.trim());
+    Assert.assertEquals("{\"request\":\"data\"}\n" + "{\"delta\":\"data\"}\n" + "{\"needsInvalidation\":false,\"whenToInvalidMilliseconds\":0,\"seq\":0}", str.trim().replaceAll(Pattern.quote("\r"), ""));
   }
 }

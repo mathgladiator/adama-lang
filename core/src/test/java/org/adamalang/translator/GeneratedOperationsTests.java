@@ -44,7 +44,7 @@ public class GeneratedOperationsTests extends GeneratedBase {
   public void stable_AdditionBulk_1() {
     String live = get_AdditionBulk_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Operations_AdditionBulk_success.a");
+    gold.append("Path:./test_code/Operations_AdditionBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

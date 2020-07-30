@@ -44,7 +44,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_AggregateMath_1() {
     String live = get_AggregateMath_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_AggregateMath_success.a");
+    gold.append("Path:./test_code/BinaryExpression_AggregateMath_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -580,7 +580,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_NumberCompare_2() {
     String live = get_NumberCompare_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_NumberCompare_success.a");
+    gold.append("Path:./test_code/BinaryExpression_NumberCompare_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -908,7 +908,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_OperationsHappy_3() {
     String live = get_OperationsHappy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_OperationsHappy_success.a");
+    gold.append("Path:./test_code/BinaryExpression_OperationsHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1365,7 +1365,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_StringCompare_4() {
     String live = get_StringCompare_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_StringCompare_success.a");
+    gold.append("Path:./test_code/BinaryExpression_StringCompare_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1651,7 +1651,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantAdd_5() {
     String live = get_WhenCantAdd_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_WhenCantAdd_failure.a");
+    gold.append("Path:./test_code/BinaryExpression_WhenCantAdd_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1785,7 +1785,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantCompare_6() {
     String live = get_WhenCantCompare_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_WhenCantCompare_failure.a");
+    gold.append("Path:./test_code/BinaryExpression_WhenCantCompare_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2017,7 +2017,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantDivide_7() {
     String live = get_WhenCantDivide_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_WhenCantDivide_failure.a");
+    gold.append("Path:./test_code/BinaryExpression_WhenCantDivide_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2151,7 +2151,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantLogic_8() {
     String live = get_WhenCantLogic_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_WhenCantLogic_failure.a");
+    gold.append("Path:./test_code/BinaryExpression_WhenCantLogic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2551,7 +2551,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantMod_9() {
     String live = get_WhenCantMod_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_WhenCantMod_failure.a");
+    gold.append("Path:./test_code/BinaryExpression_WhenCantMod_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2685,7 +2685,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantMultiply_10() {
     String live = get_WhenCantMultiply_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_WhenCantMultiply_failure.a");
+    gold.append("Path:./test_code/BinaryExpression_WhenCantMultiply_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2819,7 +2819,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantRelate_11() {
     String live = get_WhenCantRelate_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_WhenCantRelate_failure.a");
+    gold.append("Path:./test_code/BinaryExpression_WhenCantRelate_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -3051,7 +3051,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantSubtract_12() {
     String live = get_WhenCantSubtract_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\BinaryExpression_WhenCantSubtract_failure.a");
+    gold.append("Path:./test_code/BinaryExpression_WhenCantSubtract_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

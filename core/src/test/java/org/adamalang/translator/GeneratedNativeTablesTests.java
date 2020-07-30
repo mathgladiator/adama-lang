@@ -34,7 +34,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   public void stable_BadMethod_1() {
     String live = get_BadMethod_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\NativeTables_BadMethod_failure.a");
+    gold.append("Path:./test_code/NativeTables_BadMethod_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -108,7 +108,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   public void stable_FunctionPassing_2() {
     String live = get_FunctionPassing_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\NativeTables_FunctionPassing_success.a");
+    gold.append("Path:./test_code/NativeTables_FunctionPassing_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -617,7 +617,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   public void stable_Happy_3() {
     String live = get_Happy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\NativeTables_Happy_success.a");
+    gold.append("Path:./test_code/NativeTables_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1027,7 +1027,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   public void stable_NoMessage_4() {
     String live = get_NoMessage_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\NativeTables_NoMessage_failure.a");
+    gold.append("Path:./test_code/NativeTables_NoMessage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1087,7 +1087,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   public void stable_TableCopy_5() {
     String live = get_TableCopy_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\NativeTables_TableCopy_success.a");
+    gold.append("Path:./test_code/NativeTables_TableCopy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

@@ -16,29 +16,29 @@ From [last time](/blog/performance-updates-and-good-enough), the performance and
 
 This seems good enough...
 
-Unfortunately, this number does not account for the end to end story where clients get changes rather than entire copies of their personalized view. Ideally, clients will connect and get an entire snapshot of the document, then subsequent updates will require a [JSON merge](https://tools.ietf.org/html/rfc7386) to integrate updates. Alas, the above number represents the cost to construct a copy of their complete personalized view for every update and then produce a delta. So, let's account for  taking the difference between two versions of the view.
+Unfortunately, this number does not account for the end to end story where clients get changes rather than entire copies of their personalized view. Ideally, clients will connect and get an entire snapshot of the document, then subsequent updates will require a [JSON merge](https://tools.ietf.org/html/rfc7386) to integrate updates. Alas, the above number represents the cost to construct a copy of their complete personalized view for every update. Outside of that measure, we then produce a delta. So, let's account for taking the difference between two versions of the view.
 
 | ms | billing cost |
 | --- | --- |
 | 350 | 1938080 |
 
-Ouch! That's a punch to the gut. This makes sense since we are now computing the entire view, then comparing it to the previous view and emiting a delta. It's a bunch of work! Instead, what if we compute the delta as we go. That is, store a resident copy of the private view and then update it in a way which produces a delta as a side-effect. This means we avoid construction the JSON tree along with a bunch of memory allocations. This will then also avoid the costly JSON to JSON comparison.
+Ouch! That's a punch to the gut. This makes sense since we are now computing the entire view, then comparing it to the previous view and emitting a delta. It is a bunch of work! Instead, what if we compute the delta as we go. That is, store a resident copy of the private view and then update it in a way which produces a delta as a side-effect. This means we avoid construction the JSON tree along with a bunch of memory allocations. This will then also avoid the costly JSON to JSON comparison.
 
 | ms | billing cost |
 | --- | --- |
 | 137 | 1143089 |
 
-That's not half bad. We are providing more value for almost the same cost. However, this work also reverted the benefits of caching views between people which is reasonable as people may be at different points of synchronization. However, it also revealed the costs of working with JSON trees, so let's remove them and use streaming readers and writers everywhere!
+That is not half bad. We are providing more value for almost the same cost. However, this work also reverted the benefits of caching views between people which is reasonable as people may be at different points of synchronization. However, it also revealed the costs of working with JSON trees, so let's remove them and use streaming readers and writers everywhere!
 
 | ms | billing cost |
 | --- | --- |
 | 95 | 1143089 |
 
-Yay, more work done at a lower cost is the way to go. Now, this is the last update for July, but it is also the last update on performance for a while. 95 ms is pretty good for 802 user actions over 4 users. That means we take 0.03 ms/user-action which is pretty fast. I think this is good enough, but something else that is interesting emerged.
+Yay, more work done at a lower cost is the way to go. Now, this is the last update for July, but it is also the last update on performance for a while. 95 ms is fairly good for 802 user actions over 4 users. That means we take 0.03 ms/user-action which is fast. I think this is good enough, but something else that is interesting emerged.
 
-As part of testing, I validated that snapshots work as expected. A core value of this system is that you can stop the computation (or a crash happens), and move it to another machine without people noticing beyond a touch of latency. 
+As part of testing, I validated that snapshots work as expected. A core value of this system is that you can stop the computation (i.e. deployment or crash) and move it to another machine without people noticing beyond a touch of latency. 
 
-The test that I did was simple. After each decision, I'd snapshot the state, then throw away everything in memory, and then reconstruct the memory and compute the next decision. This naturally slows it down, but it also illustrates the opportunity of this concept. From a time perspective, the numbers are sadness inducing because they are bad:
+The test that I did was simple. After each decision, I'd snapshot the state, then throw away everything in memory, and then reconstruct the memory and compute the next decision. This naturally slows it down, but it also illustrates the opportunity of this concept. The measurements are sadness inducing because they are bad:
 
 | ms | billing cost |
 | --- | --- |
@@ -90,7 +90,7 @@ function on_decision(player, decision) {
 }
 ```
 
-Now, this example has all sorts of problems, but it shows how a stateless server can be used to kinda-power an Adama experience. You can refer to [first case study](/blog/first-case-study-and-thoughts) to contrast the above code to how this would work with Adama (without any hacks or holes). We can leverage the above to outline two useful metrics. First, there is the "client bandwidth" which measures the bytes going from the server to all the clients (in aggregate). Second, there us "storage bandwidth" which measures all the bytes from the stateless server to some database or storage service. We can use the tooling to estimate these metrics for our example game. Here "cmp-set" refers to the above code, and we compare this to the adama version.
+Now, this example has all sorts of problems, but it shows how a stateless server can almost be used to power an Adama experience. You can refer to [first case study](/blog/first-case-study-and-thoughts) to contrast the above code to how this would work with Adama (without any hacks or holes). We can leverage the above mental model to outline two useful metrics. First, there is the "client bandwidth" which measures the bytes going from the server to all the clients (in aggregate). Second, there us "storage bandwidth" which measures all the bytes from the stateless server to some database or storage service. We can use the tooling to estimate these metrics for our example game. Here "cmp-set" refers to the above code, and we compare this to the adama version.
 
 | dimension | cmp-set| adama | adama/cmp-set % |
 | --- | --- | --- | --- |

@@ -44,7 +44,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
   public void stable_AggregateOps_1() {
     String live = get_AggregateOps_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Unary_AggregateOps_success.a");
+    gold.append("Path:./test_code/Unary_AggregateOps_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -497,7 +497,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
   public void stable_Happy_2() {
     String live = get_Happy_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Unary_Happy_success.a");
+    gold.append("Path:./test_code/Unary_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

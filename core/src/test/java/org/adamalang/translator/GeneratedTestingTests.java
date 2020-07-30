@@ -34,7 +34,7 @@ public class GeneratedTestingTests extends GeneratedBase {
   public void stable_CantForceOutsideOfTest_1() {
     String live = get_CantForceOutsideOfTest_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Testing_CantForceOutsideOfTest_failure.a");
+    gold.append("Path:./test_code/Testing_CantForceOutsideOfTest_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -84,7 +84,7 @@ public class GeneratedTestingTests extends GeneratedBase {
   public void stable_CantPumpOutsideOfTest_2() {
     String live = get_CantPumpOutsideOfTest_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Testing_CantPumpOutsideOfTest_failure.a");
+    gold.append("Path:./test_code/Testing_CantPumpOutsideOfTest_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -134,7 +134,7 @@ public class GeneratedTestingTests extends GeneratedBase {
   public void stable_Legacy_3() {
     String live = get_Legacy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Testing_Legacy_failure.a");
+    gold.append("Path:./test_code/Testing_Legacy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ ]");
     gold.append("\n--JAVA---------------------------------------------");
@@ -671,7 +671,7 @@ public class GeneratedTestingTests extends GeneratedBase {
   public void stable_MessagingLegacy_4() {
     String live = get_MessagingLegacy_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Testing_MessagingLegacy_success.a");
+    gold.append("Path:./test_code/Testing_MessagingLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1039,7 +1039,7 @@ public class GeneratedTestingTests extends GeneratedBase {
   public void stable_PumpMessages_5() {
     String live = get_PumpMessages_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Testing_PumpMessages_success.a");
+    gold.append("Path:./test_code/Testing_PumpMessages_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1432,7 +1432,7 @@ public class GeneratedTestingTests extends GeneratedBase {
   public void stable_PumpNoChannel_6() {
     String live = get_PumpNoChannel_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Testing_PumpNoChannel_failure.a");
+    gold.append("Path:./test_code/Testing_PumpNoChannel_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1482,7 +1482,7 @@ public class GeneratedTestingTests extends GeneratedBase {
   public void stable_PumpNoMessage_7() {
     String live = get_PumpNoMessage_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Testing_PumpNoMessage_failure.a");
+    gold.append("Path:./test_code/Testing_PumpNoMessage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

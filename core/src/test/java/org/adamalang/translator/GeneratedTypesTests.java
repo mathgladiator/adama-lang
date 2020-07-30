@@ -34,7 +34,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_BadEnumConstants_1() {
     String live = get_BadEnumConstants_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_BadEnumConstants_failure.a");
+    gold.append("Path:./test_code/Types_BadEnumConstants_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -206,7 +206,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_BooleanBulk_2() {
     String live = get_BooleanBulk_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_BooleanBulk_success.a");
+    gold.append("Path:./test_code/Types_BooleanBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -503,7 +503,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_BooleanLegacy_3() {
     String live = get_BooleanLegacy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_BooleanLegacy_success.a");
+    gold.append("Path:./test_code/Types_BooleanLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1021,7 +1021,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_ChannelFunky_4() {
     String live = get_ChannelFunky_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_ChannelFunky_success.a");
+    gold.append("Path:./test_code/Types_ChannelFunky_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1393,7 +1393,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_ConstantsLegacy_5() {
     String live = get_ConstantsLegacy_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_ConstantsLegacy_success.a");
+    gold.append("Path:./test_code/Types_ConstantsLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1689,7 +1689,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_DoubleBulk_6() {
     String live = get_DoubleBulk_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_DoubleBulk_success.a");
+    gold.append("Path:./test_code/Types_DoubleBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2028,7 +2028,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_IntegerBulk_7() {
     String live = get_IntegerBulk_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_IntegerBulk_success.a");
+    gold.append("Path:./test_code/Types_IntegerBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2348,7 +2348,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LabelLegacy_8() {
     String live = get_LabelLegacy_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LabelLegacy_success.a");
+    gold.append("Path:./test_code/Types_LabelLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2665,7 +2665,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LabelNotFound_9() {
     String live = get_LabelNotFound_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LabelNotFound_failure.a");
+    gold.append("Path:./test_code/Types_LabelNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2725,7 +2725,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LegacyClient_10() {
     String live = get_LegacyClient_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LegacyClient_success.a");
+    gold.append("Path:./test_code/Types_LegacyClient_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2932,7 +2932,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __track(3);");
     gold.append("\n    cake = z;");
     gold.append("\n    __track(4);");
-    gold.append("\n    boolean eq = (NtClient.NO_ONE.equals(NtClient.NO_ONE));");
+    gold.append("\n    final boolean eq = (NtClient.NO_ONE.equals(NtClient.NO_ONE));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {");
@@ -2945,9 +2945,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who){");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(5);");
-    gold.append("\n    boolean eq = (NtClient.NO_ONE.equals(who));");
+    gold.append("\n    final boolean eq = (NtClient.NO_ONE.equals(who));");
     gold.append("\n    __track(6);");
-    gold.append("\n    boolean neq = !(NtClient.NO_ONE.equals(who));");
+    gold.append("\n    final boolean neq = !(NtClient.NO_ONE.equals(who));");
     gold.append("\n    __track(7);");
     gold.append("\n    return true;");
     gold.append("\n  }");
@@ -3039,7 +3039,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LegacyDouble_11() {
     String live = get_LegacyDouble_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LegacyDouble_success.a");
+    gold.append("Path:./test_code/Types_LegacyDouble_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3423,7 +3423,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LegacyEnum_12() {
     String live = get_LegacyEnum_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LegacyEnum_success.a");
+    gold.append("Path:./test_code/Types_LegacyEnum_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3761,7 +3761,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LegacyEnvironment_13() {
     String live = get_LegacyEnvironment_13();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LegacyEnvironment_success.a");
+    gold.append("Path:./test_code/Types_LegacyEnvironment_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4048,7 +4048,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LegacyInt_14() {
     String live = get_LegacyInt_14();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LegacyInt_success.a");
+    gold.append("Path:./test_code/Types_LegacyInt_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4387,7 +4387,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LegacyMaybe_15() {
     String live = get_LegacyMaybe_15();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LegacyMaybe_success.a");
+    gold.append("Path:./test_code/Types_LegacyMaybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4719,7 +4719,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LegacyStrings_16() {
     String live = get_LegacyStrings_16();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LegacyStrings_success.a");
+    gold.append("Path:./test_code/Types_LegacyStrings_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -5163,7 +5163,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_Long64Bits_17() {
     String live = get_Long64Bits_17();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_Long64Bits_success.a");
+    gold.append("Path:./test_code/Types_Long64Bits_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -5394,9 +5394,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __track(2);");
     gold.append("\n    long y = 42;");
     gold.append("\n    __track(3);");
-    gold.append("\n    long z = x.get() + y;");
+    gold.append("\n    final long z = x.get() + y;");
     gold.append("\n    __track(4);");
-    gold.append("\n    long u = 2423421234124213412L;");
+    gold.append("\n    final long u = 2423421234124213412L;");
     gold.append("\n    __track(5);");
     gold.append("\n    big.set((z + u));");
     gold.append("\n  }");
@@ -5469,7 +5469,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_LongFun_18() {
     String live = get_LongFun_18();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_LongFun_success.a");
+    gold.append("Path:./test_code/Types_LongFun_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -5879,7 +5879,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_MaybeDeleteFlow_19() {
     String live = get_MaybeDeleteFlow_19();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_MaybeDeleteFlow_success.a");
+    gold.append("Path:./test_code/Types_MaybeDeleteFlow_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -6157,7 +6157,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_MaybeDelete_20() {
     String live = get_MaybeDelete_20();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_MaybeDelete_success.a");
+    gold.append("Path:./test_code/Types_MaybeDelete_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -6539,7 +6539,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_NumberBulk_21() {
     String live = get_NumberBulk_21();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_NumberBulk_success.a");
+    gold.append("Path:./test_code/Types_NumberBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -6849,7 +6849,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_ReactiveAssignmentMismatches_22() {
     String live = get_ReactiveAssignmentMismatches_22();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_ReactiveAssignmentMismatches_failure.a");
+    gold.append("Path:./test_code/Types_ReactiveAssignmentMismatches_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -6937,7 +6937,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_SpecialConstants_23() {
     String live = get_SpecialConstants_23();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_SpecialConstants_success.a");
+    gold.append("Path:./test_code/Types_SpecialConstants_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -7197,7 +7197,7 @@ public class GeneratedTypesTests extends GeneratedBase {
   public void stable_StringBulk_24() {
     String live = get_StringBulk_24();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Types_StringBulk_success.a");
+    gold.append("Path:./test_code/Types_StringBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

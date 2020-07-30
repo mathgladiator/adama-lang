@@ -44,7 +44,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_AcceptRecord_1() {
     String live = get_AcceptRecord_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_AcceptRecord_success.a");
+    gold.append("Path:./test_code/Functions_AcceptRecord_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -426,7 +426,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_ApplyOnNotAFunction_2() {
     String live = get_ApplyOnNotAFunction_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_ApplyOnNotAFunction_failure.a");
+    gold.append("Path:./test_code/Functions_ApplyOnNotAFunction_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -490,7 +490,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_ArityMismatch_3() {
     String live = get_ArityMismatch_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_ArityMismatch_failure.a");
+    gold.append("Path:./test_code/Functions_ArityMismatch_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -564,7 +564,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_AutoConvertAnonymousOnReturn_4() {
     String live = get_AutoConvertAnonymousOnReturn_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_AutoConvertAnonymousOnReturn_success.a");
+    gold.append("Path:./test_code/Functions_AutoConvertAnonymousOnReturn_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -884,7 +884,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_BadArgType_5() {
     String live = get_BadArgType_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_BadArgType_failure.a");
+    gold.append("Path:./test_code/Functions_BadArgType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -944,7 +944,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_Happy_6() {
     String live = get_Happy_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_Happy_success.a");
+    gold.append("Path:./test_code/Functions_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1253,7 +1253,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_IncompatibleReturnValue_7() {
     String live = get_IncompatibleReturnValue_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_IncompatibleReturnValue_failure.a");
+    gold.append("Path:./test_code/Functions_IncompatibleReturnValue_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1317,7 +1317,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_LookupFailures_8() {
     String live = get_LookupFailures_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_LookupFailures_failure.a");
+    gold.append("Path:./test_code/Functions_LookupFailures_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1951,7 +1951,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_MethodsOnLists_9() {
     String live = get_MethodsOnLists_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_MethodsOnLists_success.a");
+    gold.append("Path:./test_code/Functions_MethodsOnLists_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2536,7 +2536,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_MultiArgs_10() {
     String live = get_MultiArgs_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_MultiArgs_success.a");
+    gold.append("Path:./test_code/Functions_MultiArgs_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2890,7 +2890,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_MustReturn_11() {
     String live = get_MustReturn_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_MustReturn_failure.a");
+    gold.append("Path:./test_code/Functions_MustReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2978,7 +2978,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_PrepWorkReducers_12() {
     String live = get_PrepWorkReducers_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_PrepWorkReducers_success.a");
+    gold.append("Path:./test_code/Functions_PrepWorkReducers_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3506,7 +3506,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_PureCantInvokeProcedure_13() {
     String live = get_PureCantInvokeProcedure_13();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_PureCantInvokeProcedure_failure.a");
+    gold.append("Path:./test_code/Functions_PureCantInvokeProcedure_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -3580,7 +3580,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_PureInvokePure_14() {
     String live = get_PureInvokePure_14();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_PureInvokePure_success.a");
+    gold.append("Path:./test_code/Functions_PureInvokePure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3840,7 +3840,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_PureMustReturn_15() {
     String live = get_PureMustReturn_15();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_PureMustReturn_failure.a");
+    gold.append("Path:./test_code/Functions_PureMustReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -3904,7 +3904,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_PureVariablesReadOnly_16() {
     String live = get_PureVariablesReadOnly_16();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_PureVariablesReadOnly_failure.a");
+    gold.append("Path:./test_code/Functions_PureVariablesReadOnly_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -4010,7 +4010,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_ReactiveCantInvokeProcedure_17() {
     String live = get_ReactiveCantInvokeProcedure_17();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_ReactiveCantInvokeProcedure_failure.a");
+    gold.append("Path:./test_code/Functions_ReactiveCantInvokeProcedure_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -4084,7 +4084,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_ReactiveInvokePure_18() {
     String live = get_ReactiveInvokePure_18();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_ReactiveInvokePure_success.a");
+    gold.append("Path:./test_code/Functions_ReactiveInvokePure_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4366,7 +4366,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_ReadOnly_19() {
     String live = get_ReadOnly_19();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_ReadOnly_success.a");
+    gold.append("Path:./test_code/Functions_ReadOnly_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4643,7 +4643,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   public void stable_TypeBuiltIn_20() {
     String live = get_TypeBuiltIn_20();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Functions_TypeBuiltIn_success.a");
+    gold.append("Path:./test_code/Functions_TypeBuiltIn_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4966,7 +4966,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __track(0);");
     gold.append("\n      String x = \"xyz\";");
     gold.append("\n      __track(1);");
-    gold.append("\n      String y = LibString.reverse(x);");
+    gold.append("\n      final String y = LibString.reverse(x);");
     gold.append("\n      __track(2);");
     gold.append("\n      __assert_truth(x.length() == 3, 7, 2, 7, 25);");
     gold.append("\n    }");
@@ -4979,7 +4979,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n      __track(3);");
     gold.append("\n      y.set(\"xyz\");");
     gold.append("\n      __track(4);");
-    gold.append("\n      String z = LibString.reverse(y.get());");
+    gold.append("\n      final String z = LibString.reverse(y.get());");
     gold.append("\n      __track(5);");
     gold.append("\n      __assert_truth(y.get().length() == 3, 21, 2, 21, 25);");
     gold.append("\n      __track(6);");

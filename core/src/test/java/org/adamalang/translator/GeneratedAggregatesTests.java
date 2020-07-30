@@ -44,7 +44,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
   public void stable_BulkMaybeAssign_1() {
     String live = get_BulkMaybeAssign_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Aggregates_BulkMaybeAssign_success.a");
+    gold.append("Path:./test_code/Aggregates_BulkMaybeAssign_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -462,7 +462,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
   public void stable_CantBumpBoolList_2() {
     String live = get_CantBumpBoolList_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Aggregates_CantBumpBoolList_failure.a");
+    gold.append("Path:./test_code/Aggregates_CantBumpBoolList_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -536,7 +536,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
   public void stable_InvokeMethods_3() {
     String live = get_InvokeMethods_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Aggregates_InvokeMethods_success.a");
+    gold.append("Path:./test_code/Aggregates_InvokeMethods_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -922,7 +922,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
   public void stable_Legacy_4() {
     String live = get_Legacy_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Aggregates_Legacy_success.a");
+    gold.append("Path:./test_code/Aggregates_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1514,7 +1514,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
   public void stable_MethodOnList_5() {
     String live = get_MethodOnList_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Aggregates_MethodOnList_success.a");
+    gold.append("Path:./test_code/Aggregates_MethodOnList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2015,7 +2015,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
   public void stable_NegateBoolList_6() {
     String live = get_NegateBoolList_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Aggregates_NegateBoolList_success.a");
+    gold.append("Path:./test_code/Aggregates_NegateBoolList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2402,7 +2402,7 @@ public class GeneratedAggregatesTests extends GeneratedBase {
   public void stable_NegateIntList_7() {
     String live = get_NegateIntList_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Aggregates_NegateIntList_success.a");
+    gold.append("Path:./test_code/Aggregates_NegateIntList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

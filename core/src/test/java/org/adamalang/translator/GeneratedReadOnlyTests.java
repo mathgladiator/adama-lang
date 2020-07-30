@@ -34,7 +34,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_FutureResultReadOnly_1() {
     String live = get_FutureResultReadOnly_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_FutureResultReadOnly_failure.a");
+    gold.append("Path:./test_code/ReadOnly_FutureResultReadOnly_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -98,7 +98,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_ProcedureArgs_2() {
     String live = get_ProcedureArgs_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_ProcedureArgs_failure.a");
+    gold.append("Path:./test_code/ReadOnly_ProcedureArgs_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -148,7 +148,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleBool_3() {
     String live = get_SimpleBool_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_SimpleBool_failure.a");
+    gold.append("Path:./test_code/ReadOnly_SimpleBool_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -212,7 +212,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleClient_4() {
     String live = get_SimpleClient_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_SimpleClient_failure.a");
+    gold.append("Path:./test_code/ReadOnly_SimpleClient_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -276,7 +276,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleDouble_5() {
     String live = get_SimpleDouble_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_SimpleDouble_failure.a");
+    gold.append("Path:./test_code/ReadOnly_SimpleDouble_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -340,7 +340,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleEnum_6() {
     String live = get_SimpleEnum_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_SimpleEnum_failure.a");
+    gold.append("Path:./test_code/ReadOnly_SimpleEnum_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -404,7 +404,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleInteger_7() {
     String live = get_SimpleInteger_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_SimpleInteger_failure.a");
+    gold.append("Path:./test_code/ReadOnly_SimpleInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -468,7 +468,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleLong_8() {
     String live = get_SimpleLong_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_SimpleLong_failure.a");
+    gold.append("Path:./test_code/ReadOnly_SimpleLong_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -532,7 +532,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleMaybe_9() {
     String live = get_SimpleMaybe_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_SimpleMaybe_failure.a");
+    gold.append("Path:./test_code/ReadOnly_SimpleMaybe_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -596,7 +596,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleString_10() {
     String live = get_SimpleString_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_SimpleString_failure.a");
+    gold.append("Path:./test_code/ReadOnly_SimpleString_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -670,7 +670,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_Simples_11() {
     String live = get_Simples_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ReadOnly_Simples_success.a");
+    gold.append("Path:./test_code/ReadOnly_Simples_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -915,7 +915,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  private void __step_fooz() {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    SimpleFuture<RTxM> fut = foo.fetch(NtClient.NO_ONE);");
+    gold.append("\n    final SimpleFuture<RTxM> fut = foo.fetch(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {");
@@ -941,31 +941,31 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
     gold.append("\n    __code_cost += 14;");
     gold.append("\n    __track(1);");
-    gold.append("\n    int r0 = 1;");
+    gold.append("\n    final int r0 = 1;");
     gold.append("\n    __track(2);");
-    gold.append("\n    boolean r1 = true;");
+    gold.append("\n    final boolean r1 = true;");
     gold.append("\n    __track(3);");
-    gold.append("\n    long r2 = 3L;");
+    gold.append("\n    final long r2 = 3L;");
     gold.append("\n    __track(4);");
-    gold.append("\n    double r3 = 4.42;");
+    gold.append("\n    final double r3 = 4.42;");
     gold.append("\n    __track(5);");
-    gold.append("\n    String r4 = \"\";");
+    gold.append("\n    final String r4 = \"\";");
     gold.append("\n    __track(6);");
-    gold.append("\n    NtList<Integer> r5 = new EmptyNtList<Integer>();");
+    gold.append("\n    final NtList<Integer> r5 = new EmptyNtList<Integer>();");
     gold.append("\n    __track(7);");
-    gold.append("\n    NtList<NtClient> r6 = new EmptyNtList<NtClient>();");
+    gold.append("\n    final NtList<NtClient> r6 = new EmptyNtList<NtClient>();");
     gold.append("\n    __track(8);");
-    gold.append("\n    NtClient r7 = NtClient.NO_ONE;");
+    gold.append("\n    final NtClient r7 = NtClient.NO_ONE;");
     gold.append("\n    __track(9);");
-    gold.append("\n    NtMaybe<Integer> r8 = new NtMaybe<Integer>(100);");
+    gold.append("\n    final NtMaybe<Integer> r8 = new NtMaybe<Integer>(100);");
     gold.append("\n    __track(10);");
     gold.append("\n    NtTable<RTxM> p = new NtTable<RTxM>(() -> new RTxM());");
     gold.append("\n    __track(11);");
-    gold.append("\n    NtTable<RTxM> r9 = new NtTable<RTxM>(p);");
+    gold.append("\n    final NtTable<RTxM> r9 = new NtTable<RTxM>(p);");
     gold.append("\n    __track(12);");
-    gold.append("\n    NtChannel<RTxM> r10 = foo;");
+    gold.append("\n    final NtChannel<RTxM> r10 = foo;");
     gold.append("\n    __track(13);");
-    gold.append("\n    NtTable<RTxM> r11 = new NtTable<RTxM>(() -> new RTxM());");
+    gold.append("\n    final NtTable<RTxM> r11 = new NtTable<RTxM>(() -> new RTxM());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");

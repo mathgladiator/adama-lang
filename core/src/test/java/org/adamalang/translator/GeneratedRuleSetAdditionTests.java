@@ -44,7 +44,7 @@ public class GeneratedRuleSetAdditionTests extends GeneratedBase {
   public void stable_HappyCases_1() {
     String live = get_HappyCases_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\RuleSetAddition_HappyCases_success.a");
+    gold.append("Path:./test_code/RuleSetAddition_HappyCases_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

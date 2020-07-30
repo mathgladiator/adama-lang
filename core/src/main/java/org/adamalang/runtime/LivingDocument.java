@@ -3,7 +3,12 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
@@ -46,6 +51,7 @@ public abstract class LivingDocument implements RxParent {
   protected final RxInt32 __message_id;
   public final DocumentMonitor __monitor;
   protected final RxInt64 __next_time;
+  private String __preemptedStateOnNextComputeBlocked = null;
   protected final ArrayList<AsyncTask> __queue;
   protected Random __random;
   public final LivingDocument __self;
@@ -55,7 +61,6 @@ public abstract class LivingDocument implements RxParent {
   protected final RxInt64 __time;
   protected ArrayList<Integer> __trace;
   private final HashMap<NtClient, ArrayList<PrivateView>> __trackedViews = new HashMap<>();
-  private String __preemptedStateOnNextComputeBlocked = null;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -93,6 +98,26 @@ public abstract class LivingDocument implements RxParent {
 
   /** code generated: commit the tree, and push data into the given delta */
   public abstract void __commit(String name, JsonStreamWriter writer);
+
+  private Transaction __commit_trailer(final long seedUsed, final String request) {
+    __blocked.set(false);
+    __seq.bumpUpPre();
+    __entropy.set(Long.toString(__random.nextLong()));
+    __futures.commit();
+    __queue.clear();
+    __reset_future_queues();
+    final var writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("__messages");
+    writer.writeNull();
+    writer.writeObjectFieldIntro("__seedUsed");
+    writer.writeLong(seedUsed);
+    __commit(null, writer);
+    writer.endObject();
+    __distributeClientViews();
+    return new Transaction(__seq.get(), request, writer.toString(), new TransactionResult(__state.has(), (int) (__next_time.get() - __time.get()), __seq.get()));
+  }
+
   /** code generated: what happens when the document is constructed */
   protected abstract void __construct_intern(NtClient who, NtMessageBase message);
   /** code generated: create a private view for the given person */
@@ -147,6 +172,30 @@ public abstract class LivingDocument implements RxParent {
   /** code generator: dump the entire thing */
   public abstract void __dump(JsonStreamWriter __writer);
 
+  protected void __dumpClients(final JsonStreamWriter writer) {
+    if (__clients.size() > 0) {
+      writer.writeObjectFieldIntro("__clients");
+      writer.beginObject();
+      for (final Map.Entry<NtClient, Integer> entry : __clients.entrySet()) {
+        writer.writeObjectFieldIntro(entry.getValue());
+        writer.writeNtClient(entry.getKey());
+      }
+      writer.endObject();
+    }
+  }
+
+  protected void __dumpMessages(final JsonStreamWriter writer) {
+    if (__queue.size() > 0) {
+      writer.writeObjectFieldIntro("__messages");
+      writer.beginObject();
+      for (final AsyncTask task : __queue) {
+        writer.writeObjectFieldIntro(task.messageId);
+        task.dump(writer);
+      }
+      writer.endObject();
+    }
+  }
+
   public int __garbageCollectViews(final NtClient __who) {
     final var views = __trackedViews.get(__who);
     if (views == null) { return 0; }
@@ -187,20 +236,8 @@ public abstract class LivingDocument implements RxParent {
     return true;
   }
 
-  protected void __dumpClients(final JsonStreamWriter writer) {
-    if (__clients.size() > 0) {
-      writer.writeObjectFieldIntro("__clients");
-      writer.beginObject();
-      for(Map.Entry<NtClient, Integer> entry : __clients.entrySet()) {
-        writer.writeObjectFieldIntro(entry.getValue());
-        writer.writeNtClient(entry.getKey());
-      }
-      writer.endObject();
-    }
-  }
-
   protected void __hydrateClients(final JsonStreamReader reader) {
-    HashSet<Integer> killSet = new HashSet<>();
+    final var killSet = new HashSet<Integer>();
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         final var key = Integer.parseInt(reader.fieldName());
@@ -211,23 +248,11 @@ public abstract class LivingDocument implements RxParent {
         }
       }
     }
-    Iterator<Map.Entry<NtClient, Integer>> it = __clients.entrySet().iterator();
+    final var it = __clients.entrySet().iterator();
     while (it.hasNext()) {
       if (killSet.contains(it.next().getValue())) {
         it.remove();
       }
-    }
-  }
-
-  protected void __dumpMessages(final JsonStreamWriter writer) {
-    if (__queue.size() > 0) {
-      writer.writeObjectFieldIntro("__messages");
-      writer.beginObject();
-      for (AsyncTask task : __queue) {
-        writer.writeObjectFieldIntro(task.messageId);
-        task.dump(writer);
-      }
-      writer.endObject();
     }
   }
 
@@ -237,7 +262,7 @@ public abstract class LivingDocument implements RxParent {
         while (reader.notEndOfObject()) {
           final var msgId = Integer.parseInt(reader.fieldName());
           final var tasks = new TreeMap<Integer, AsyncTask>();
-          for (AsyncTask oldTask : __queue) {
+          for (final AsyncTask oldTask : __queue) {
             tasks.put(oldTask.messageId, oldTask);
           }
           __queue.clear();
@@ -315,6 +340,11 @@ public abstract class LivingDocument implements RxParent {
   protected abstract NtMessageBase __parse_construct_arg(JsonStreamReader reader);
   /** parse the message for the channel, and cache the result */
   protected abstract Object __parse_message2(String channel, JsonStreamReader reader);
+
+  /** exposed: preempty the state machine */
+  protected void __preemptStateMachine(final String next) {
+    __preemptedStateOnNextComputeBlocked = next;
+  }
 
   /** artifact: from RxParent */
   @Override
@@ -607,25 +637,6 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
-  private Transaction __commit_trailer(long seedUsed, final String request) {
-    __blocked.set(false);
-    __seq.bumpUpPre();
-    __entropy.set(Long.toString(__random.nextLong()));
-    __futures.commit();
-    __queue.clear();
-    __reset_future_queues();
-    final var writer = new JsonStreamWriter();
-    writer.beginObject();
-    writer.writeObjectFieldIntro("__messages");
-    writer.writeNull();
-    writer.writeObjectFieldIntro("__seedUsed");
-    writer.writeLong(seedUsed);
-    __commit(null, writer);
-    writer.endObject();
-    __distributeClientViews();
-    return new Transaction(__seq.get(), request, writer.toString(), new TransactionResult(__state.has(), (int) (__next_time.get() - __time.get()), __seq.get()));
-  }
-
   /** transaction: an invalidation is happening on the document (no monitor) */
   private Transaction __transaction_invalidate_body(final String request) {
     __preemptedStateOnNextComputeBlocked = null;
@@ -750,11 +761,6 @@ public abstract class LivingDocument implements RxParent {
   protected void __transitionStateMachine(final String next, final double timeToTransitionSeconds) {
     __state.set(next);
     __next_time.set((long) (__time.get() + timeToTransitionSeconds * 1000.0));
-  }
-
-  /** exposed: preempty the state machine */
-  protected void __preemptStateMachine(String next) {
-    this.__preemptedStateOnNextComputeBlocked = next;
   }
 
   /** get the current number of assertion failures, then return the prior number

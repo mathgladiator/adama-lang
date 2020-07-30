@@ -45,13 +45,6 @@ public class Transactor {
     logger.close();
   }
 
-  /** dump a json */
-  public String json() {
-    JsonStreamWriter writer = new JsonStreamWriter();
-    document.__dump(writer);
-    return writer.toString();
-  }
-
   /** connect a client */
   public TransactionResult connect(final NtClient who) throws ErrorCodeException {
     final var request = forge("connect", who);
@@ -151,6 +144,13 @@ public class Transactor {
   /** is the given user connected */
   public boolean isConnected(final NtClient who) {
     return document.__isConnected(who);
+  }
+
+  /** dump a json */
+  public String json() {
+    final var writer = new JsonStreamWriter();
+    document.__dump(writer);
+    return writer.toString();
   }
 
   /** send a message from a person to a channel */

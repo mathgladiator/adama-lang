@@ -34,7 +34,7 @@ public class GeneratedImportTests extends GeneratedBase {
   public void stable_EmptyStringBad_1() {
     String live = get_EmptyStringBad_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Import_EmptyStringBad_failure.a");
+    gold.append("Path:./test_code/Import_EmptyStringBad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -49,7 +49,7 @@ public class GeneratedImportTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '' failed to import due to '.\\\\test_code'(ImportIssue)\"");
+    gold.append("\n  \"message\" : \"File '' failed to import due(ImportIssue)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -63,7 +63,7 @@ public class GeneratedImportTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Import failed (Unknown): .\\\\test_code(ImportIssue)\"");
+    gold.append("\n  \"message\" : \"Import failed (Unknown)(ImportIssue)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -98,7 +98,7 @@ public class GeneratedImportTests extends GeneratedBase {
   public void stable_NotFoundFile_2() {
     String live = get_NotFoundFile_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Import_NotFoundFile_failure.a");
+    gold.append("Path:./test_code/Import_NotFoundFile_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

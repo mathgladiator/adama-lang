@@ -34,7 +34,7 @@ public class GeneratedLookupTests extends GeneratedBase {
   public void stable_ByIndexNotInteger_1() {
     String live = get_ByIndexNotInteger_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Lookup_ByIndexNotInteger_failure.a");
+    gold.append("Path:./test_code/Lookup_ByIndexNotInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -84,7 +84,7 @@ public class GeneratedLookupTests extends GeneratedBase {
   public void stable_ByIndexNotIterable_2() {
     String live = get_ByIndexNotIterable_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Lookup_ByIndexNotIterable_failure.a");
+    gold.append("Path:./test_code/Lookup_ByIndexNotIterable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -144,7 +144,7 @@ public class GeneratedLookupTests extends GeneratedBase {
   public void stable_Happy_3() {
     String live = get_Happy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Lookup_Happy_success.a");
+    gold.append("Path:./test_code/Lookup_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -587,7 +587,7 @@ public class GeneratedLookupTests extends GeneratedBase {
   public void stable_NotFound_4() {
     String live = get_NotFound_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Lookup_NotFound_failure.a");
+    gold.append("Path:./test_code/Lookup_NotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

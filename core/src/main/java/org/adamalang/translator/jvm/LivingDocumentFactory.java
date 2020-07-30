@@ -11,7 +11,6 @@ import javax.tools.ToolProvider;
 import org.adamalang.runtime.LivingDocument;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.stdlib.Utility;
@@ -50,7 +49,7 @@ public class LivingDocumentFactory {
     }
   }
 
-  public void populateTestReport(final TestReportBuilder report, final DocumentMonitor monitor, String entropy) throws Exception {
+  public void populateTestReport(final TestReportBuilder report, final DocumentMonitor monitor, final String entropy) throws Exception {
     var candidate = prepareTestCandidate(monitor, entropy);
     final var tests = candidate.__getTests();
     for (final String test : tests) {
@@ -59,7 +58,7 @@ public class LivingDocumentFactory {
     }
   }
 
-  private LivingDocument prepareTestCandidate(final DocumentMonitor monitor, String entropy) throws Exception {
+  private LivingDocument prepareTestCandidate(final DocumentMonitor monitor, final String entropy) throws Exception {
     final var candidate = create(monitor);
     final var consRequest = Utility.createObjectNode();
     consRequest.put("command", "construct");

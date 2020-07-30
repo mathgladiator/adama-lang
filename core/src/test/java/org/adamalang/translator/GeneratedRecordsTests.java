@@ -44,7 +44,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_AssignmentHappy_1() {
     String live = get_AssignmentHappy_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_AssignmentHappy_success.a");
+    gold.append("Path:./test_code/Records_AssignmentHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -510,7 +510,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_AssignmentIssues_2() {
     String live = get_AssignmentIssues_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_AssignmentIssues_failure.a");
+    gold.append("Path:./test_code/Records_AssignmentIssues_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -588,7 +588,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_ClientRefNotFound_3() {
     String live = get_ClientRefNotFound_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_ClientRefNotFound_failure.a");
+    gold.append("Path:./test_code/Records_ClientRefNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -648,7 +648,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_ComputedFields_4() {
     String live = get_ComputedFields_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_ComputedFields_success.a");
+    gold.append("Path:./test_code/Records_ComputedFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -929,7 +929,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_DeleteOnList_5() {
     String live = get_DeleteOnList_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_DeleteOnList_success.a");
+    gold.append("Path:./test_code/Records_DeleteOnList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1460,7 +1460,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_DuplicateFields_6() {
     String live = get_DuplicateFields_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_DuplicateFields_failure.a");
+    gold.append("Path:./test_code/Records_DuplicateFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1524,7 +1524,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_DuplicatePolicy_7() {
     String live = get_DuplicatePolicy_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_DuplicatePolicy_failure.a");
+    gold.append("Path:./test_code/Records_DuplicatePolicy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1574,7 +1574,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_DuplicateViewerComputeFields_8() {
     String live = get_DuplicateViewerComputeFields_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_DuplicateViewerComputeFields_failure.a");
+    gold.append("Path:./test_code/Records_DuplicateViewerComputeFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1652,7 +1652,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_FailedFindPolicyForView_9() {
     String live = get_FailedFindPolicyForView_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_FailedFindPolicyForView_failure.a");
+    gold.append("Path:./test_code/Records_FailedFindPolicyForView_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1702,7 +1702,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_InvalidFormula_10() {
     String live = get_InvalidFormula_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_InvalidFormula_failure.a");
+    gold.append("Path:./test_code/Records_InvalidFormula_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1776,7 +1776,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_LazyFields_11() {
     String live = get_LazyFields_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_LazyFields_success.a");
+    gold.append("Path:./test_code/Records_LazyFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2349,7 +2349,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_MaybeFields_12() {
     String live = get_MaybeFields_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_MaybeFields_success.a");
+    gold.append("Path:./test_code/Records_MaybeFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2783,7 +2783,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_MessageFieldsLegacy_13() {
     String live = get_MessageFieldsLegacy_13();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_MessageFieldsLegacy_success.a");
+    gold.append("Path:./test_code/Records_MessageFieldsLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3462,7 +3462,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_MethodOverloading_14() {
     String live = get_MethodOverloading_14();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_MethodOverloading_success.a");
+    gold.append("Path:./test_code/Records_MethodOverloading_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3858,7 +3858,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_PolicyNotFound_15() {
     String live = get_PolicyNotFound_15();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_PolicyNotFound_failure.a");
+    gold.append("Path:./test_code/Records_PolicyNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -3918,7 +3918,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_PrivacyLegacy_16() {
     String live = get_PrivacyLegacy_16();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_PrivacyLegacy_success.a");
+    gold.append("Path:./test_code/Records_PrivacyLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -5010,7 +5010,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
   public void stable_RecordFieldsLegacy_17() {
     String live = get_RecordFieldsLegacy_17();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Records_RecordFieldsLegacy_success.a");
+    gold.append("Path:./test_code/Records_RecordFieldsLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

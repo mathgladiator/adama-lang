@@ -1,0 +1,17 @@
+@connected (who) {
+  return true;
+}
+
+public int x;
+
+@construct {
+  x = 123;
+}
+
+message M {
+  int dx;
+}
+
+channel change(M m) {
+  x += m.dx;
+}

@@ -34,7 +34,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   public void stable_FunctionOverloadingIncorrect_1() {
     String live = get_FunctionOverloadingIncorrect_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Globals_FunctionOverloadingIncorrect_failure.a");
+    gold.append("Path:./test_code/Globals_FunctionOverloadingIncorrect_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -94,7 +94,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   public void stable_FunctionOverloading_2() {
     String live = get_FunctionOverloading_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Globals_FunctionOverloading_success.a");
+    gold.append("Path:./test_code/Globals_FunctionOverloading_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -406,7 +406,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   public void stable_MathLib_3() {
     String live = get_MathLib_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Globals_MathLib_success.a");
+    gold.append("Path:./test_code/Globals_MathLib_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -728,7 +728,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   public void stable_NotFound_4() {
     String live = get_NotFound_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Globals_NotFound_failure.a");
+    gold.append("Path:./test_code/Globals_NotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -802,7 +802,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   public void stable_Random_5() {
     String live = get_Random_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Globals_Random_success.a");
+    gold.append("Path:./test_code/Globals_Random_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

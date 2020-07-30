@@ -34,7 +34,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_CantMixChannelAndFunctions_1() {
     String live = get_CantMixChannelAndFunctions_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Document_CantMixChannelAndFunctions_failure.a");
+    gold.append("Path:./test_code/Document_CantMixChannelAndFunctions_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -98,7 +98,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateComputeFields_2() {
     String live = get_DuplicateComputeFields_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Document_DuplicateComputeFields_failure.a");
+    gold.append("Path:./test_code/Document_DuplicateComputeFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -162,7 +162,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateEnums_3() {
     String live = get_DuplicateEnums_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Document_DuplicateEnums_failure.a");
+    gold.append("Path:./test_code/Document_DuplicateEnums_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -212,7 +212,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateFields_4() {
     String live = get_DuplicateFields_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Document_DuplicateFields_failure.a");
+    gold.append("Path:./test_code/Document_DuplicateFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -262,7 +262,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateMessages_5() {
     String live = get_DuplicateMessages_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Document_DuplicateMessages_failure.a");
+    gold.append("Path:./test_code/Document_DuplicateMessages_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -312,7 +312,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicatePolicies_6() {
     String live = get_DuplicatePolicies_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Document_DuplicatePolicies_failure.a");
+    gold.append("Path:./test_code/Document_DuplicatePolicies_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -362,7 +362,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateRecords_7() {
     String live = get_DuplicateRecords_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Document_DuplicateRecords_failure.a");
+    gold.append("Path:./test_code/Document_DuplicateRecords_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -422,7 +422,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_GlobalPolicy_8() {
     String live = get_GlobalPolicy_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Document_GlobalPolicy_success.a");
+    gold.append("Path:./test_code/Document_GlobalPolicy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -874,7 +874,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_UnknownType_9() {
     String live = get_UnknownType_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Document_UnknownType_failure.a");
+    gold.append("Path:./test_code/Document_UnknownType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

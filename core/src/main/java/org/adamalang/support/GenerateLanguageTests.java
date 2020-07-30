@@ -17,7 +17,6 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
-
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.contracts.TransactionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -86,10 +85,8 @@ public class GenerateLanguageTests {
       outputFile.append("    if (cached_" + varName + " != null) {\n");
       outputFile.append("      return cached_" + varName + ";\n");
       outputFile.append("    }\n");
-      final var correctedPath = "./test_code/" + test.filename();// path.toString().replaceAll(Pattern.quote(WTF), "/");
-      System.out.println(correctedPath);
+      final var correctedPath = "./test_code/" + test.filename();
       final var xyz = new File(correctedPath);
-      System.out.println(xyz.exists());
       outputFile.append(String.format("    cached_" + varName + " = generateTestOutput(" + test.success + ", \"%s\", \"%s\");\n", varName, correctedPath));
       outputFile.append("    return cached_" + varName + ";\n");
       outputFile.append("  }\n\n");
@@ -167,7 +164,7 @@ public class GenerateLanguageTests {
       document.importFile(path.toString(), DocumentPosition.ZERO);
       document.setClassName(className);
       document.check(state);
-      outputFile.append("Path:").append(path.toString()).append("\n");
+      outputFile.append("Path:").append(path.toString().replaceAll(Pattern.quote("\\"), "/")).append("\n");
       if (emission) {
         outputFile.append("--EMISSION-----------------------------------------").append("\n");
         emission(path.toString(), path, outputFile);
@@ -251,15 +248,13 @@ public class GenerateLanguageTests {
         outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
         outputFile.append(objectNodeLog.node.toString()).append("\n");
         outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");
-        String json = transactor.json();
+        final var json = transactor.json();
         outputFile.append(json).append("\n");
-        Transactor __t = new Transactor(factory, monitor, time, new NoOpLogger());
+        final var __t = new Transactor(factory, monitor, time, new NoOpLogger());
         __t.create();
         __t.insert(json);
         outputFile.append(__t.json()).append("\n");
-        if (!__t.json().equals(json)) {
-          throw new RuntimeException("Json were not equal");
-        }
+        if (!__t.json().equals(json)) { throw new RuntimeException("Json were not equal"); }
         outputFile.append("--JAVA TEST RESULTS--------------------------------").append("\n");
         final var report = new TestReportBuilder();
         factory.populateTestReport(report, monitor, "42");
@@ -288,7 +283,12 @@ public class GenerateLanguageTests {
       writer.flush();
       outputFile.append(new String(memory.toByteArray())).append("\n");
     }
-    return outputFile.toString();
+    return outputFile.toString() //
+        .replaceAll(Pattern.quote("\\\\test_code\\\\"), "/test_code/") //
+        .replaceAll(Pattern.quote("\\test_code\\"), "/test_code/") //
+        .replaceAll(Pattern.quote("\\\\\\\\test_code"), "/test_code") //
+        .replaceAll(Pattern.quote("\\\\test_code"), "/test_code") //
+        .replaceAll(Pattern.quote("\\test_code"), "/test_code"); //
   }
 
   private static void emission(final String filename, final Path path, final StringBuilder outputFile) throws Exception {

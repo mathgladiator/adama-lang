@@ -32,28 +32,8 @@ public class AsyncTask {
     aborted = false;
   }
 
-  /** execute the task */
-  public void execute() throws RetryProgressException {
-    /** we must have either an action and not be aborted */
-    if (action != null && !aborted) {
-      try {
-        action.execute(); // compute
-      } catch (final AbortMessageException aborted) {
-        // this did not go so well
-        this.aborted = true;
-        throw new RetryProgressException(messageId);
-      }
-    }
-  }
-
-  /** associate code to run on this task. This is done within the generated code
-   * to invert the execution flow. */
-  public void setAction(final AsyncAction action) {
-    this.action = action;
-  }
-
   /** dump to a Json Stream Writer */
-  public void dump(JsonStreamWriter writer) {
+  public void dump(final JsonStreamWriter writer) {
     writer.beginObject();
     writer.writeObjectFieldIntro("who");
     writer.writeNtClient(who);
@@ -73,5 +53,25 @@ public class AsyncTask {
       writer.endArray();
     }
     writer.endObject();
+  }
+
+  /** execute the task */
+  public void execute() throws RetryProgressException {
+    /** we must have either an action and not be aborted */
+    if (action != null && !aborted) {
+      try {
+        action.execute(); // compute
+      } catch (final AbortMessageException aborted) {
+        // this did not go so well
+        this.aborted = true;
+        throw new RetryProgressException(messageId);
+      }
+    }
+  }
+
+  /** associate code to run on this task. This is done within the generated code
+   * to invert the execution flow. */
+  public void setAction(final AsyncAction action) {
+    this.action = action;
   }
 }

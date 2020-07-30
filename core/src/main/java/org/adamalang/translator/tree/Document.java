@@ -407,8 +407,8 @@ public class Document implements TopLevelDocumentHandler {
       createError(e.toDocumentPosition(), String.format("File '%s' failed to parse: %s", filename, e.getMessage()), "ParseException");
       createError(position, String.format("Import failed (Parse): %s", e.getMessage()), "ImportIssue");
     } catch (final Exception e) {
-      createError(position, String.format("File '%s' failed to import due to '%s'", filename, e.getMessage()), "ImportIssue");
-      createError(position, String.format("Import failed (Unknown): %s", e.getMessage()), "ImportIssue");
+      createError(position, String.format("File '%s' failed to import due", filename), "ImportIssue");
+      createError(position, String.format("Import failed (Unknown)"), "ImportIssue");
     }
   }
 

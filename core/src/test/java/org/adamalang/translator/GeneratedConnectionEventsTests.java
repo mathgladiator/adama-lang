@@ -34,7 +34,7 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
   public void stable_ConnectMustReturn_1() {
     String live = get_ConnectMustReturn_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ConnectionEvents_ConnectMustReturn_failure.a");
+    gold.append("Path:./test_code/ConnectionEvents_ConnectMustReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -94,7 +94,7 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
   public void stable_Happy_2() {
     String live = get_Happy_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ConnectionEvents_Happy_success.a");
+    gold.append("Path:./test_code/ConnectionEvents_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -369,7 +369,7 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
   public void stable_Legacy_3() {
     String live = get_Legacy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\ConnectionEvents_Legacy_success.a");
+    gold.append("Path:./test_code/ConnectionEvents_Legacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");

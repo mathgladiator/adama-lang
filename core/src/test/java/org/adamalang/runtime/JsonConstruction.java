@@ -19,14 +19,4 @@ public class JsonConstruction {
         "{\"__constructed\":true,\"__entropy\":\"8270396388693936851\",\"__seedUsed\":\"786253046697430328\",\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":1,\"xx\":123,\"yy\":3.14,\"zz\":\"w00t\",\"bb\":true}",
         setup.logger.node.toString());
   }
-  /* @Test public void sendMessageArray() throws Exception { RealDocumentSetup
-   * setup = new
-   * RealDocumentSetup("@connected (who) { return true; } message M { long[] s; } long v; channel foo(M m) { foreach (ss in m.s) { v += ss; } }"
-   * ); setup.drive(setup.transactor.construct(NtClient.NO_ONE,
-   * Utility.createObjectNode(), "123"));
-   * setup.drive(setup.transactor.connect(NtClient.NO_ONE));
-   * setup.transactor.send2(NtClient.NO_ONE, "foo", "{\"s\":[\"123\",\"1000\"]}");
-   * setup.transactor.drive(); Assert.assertEquals(
-   * "{\"__constructed\":true,\"__entropy\":\"8270396388693936851\",\"__seedUsed\":\"786253046697430328\",\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":1,\"xx\":123,\"yy\":3.14,\"zz\":\"w00t\",\"bb\":true}",
-   * setup.logger.node.toString()); } */
 }

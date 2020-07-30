@@ -34,7 +34,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_BadThingsOnLazy_1() {
     String live = get_BadThingsOnLazy_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_BadThingsOnLazy_failure.a");
+    gold.append("Path:./test_code/Delta_BadThingsOnLazy_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -108,7 +108,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowBasics_2() {
     String live = get_FlowBasics_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowBasics_success.a");
+    gold.append("Path:./test_code/Delta_FlowBasics_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -486,7 +486,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowChildRecordWithPrivacyChange_3() {
     String live = get_FlowChildRecordWithPrivacyChange_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowChildRecordWithPrivacyChange_success.a");
+    gold.append("Path:./test_code/Delta_FlowChildRecordWithPrivacyChange_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1008,7 +1008,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowMaybeComplex_4() {
     String live = get_FlowMaybeComplex_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowMaybeComplex_success.a");
+    gold.append("Path:./test_code/Delta_FlowMaybeComplex_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1617,7 +1617,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowMessageArray_5() {
     String live = get_FlowMessageArray_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowMessageArray_success.a");
+    gold.append("Path:./test_code/Delta_FlowMessageArray_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1959,7 +1959,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowMessageList_6() {
     String live = get_FlowMessageList_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowMessageList_success.a");
+    gold.append("Path:./test_code/Delta_FlowMessageList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2322,7 +2322,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowRecordArray_7() {
     String live = get_FlowRecordArray_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowRecordArray_success.a");
+    gold.append("Path:./test_code/Delta_FlowRecordArray_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2878,7 +2878,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowRecordList_8() {
     String live = get_FlowRecordList_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowRecordList_success.a");
+    gold.append("Path:./test_code/Delta_FlowRecordList_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3434,7 +3434,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowSimpleArray_9() {
     String live = get_FlowSimpleArray_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowSimpleArray_success.a");
+    gold.append("Path:./test_code/Delta_FlowSimpleArray_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3875,7 +3875,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowSimpleMaybe_10() {
     String live = get_FlowSimpleMaybe_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowSimpleMaybe_success.a");
+    gold.append("Path:./test_code/Delta_FlowSimpleMaybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -4283,7 +4283,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
   public void stable_FlowSimpleMessage_11() {
     String live = get_FlowSimpleMessage_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:.\\test_code\\Delta_FlowSimpleMessage_success.a");
+    gold.append("Path:./test_code/Delta_FlowSimpleMessage_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
