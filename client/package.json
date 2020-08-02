@@ -1,0 +1,31 @@
+{
+  "name": "modern_client",
+  "version": "1.0.0",
+  "description": "Hi there",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx webpack --config=webpack.config.js --mode=development",
+    "release": "npx webpack --config=webpack.config.js --mode=production",
+    "test": "jasmine-ts --config=jasmine.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mathgladiator/adama-lang/issues"
+  },
+  "homepage": "https://github.com/mathgladiator/adama-lang#readme",
+  "devDependencies": {
+    "@types/jasmine": "^3.5.11",
+    "isomorphic-ws": "^4.0.1",
+    "jasmine": "^3.5.0",
+    "jasmine-spec-reporter": "^5.0.2",
+    "jasmine-ts": "^0.3.0",
+    "ts-loader": "^8.0.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "ws": "^7.3.1"
+  }
+}
