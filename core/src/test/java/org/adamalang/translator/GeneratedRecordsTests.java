@@ -1674,33 +1674,83 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_InvalidFormula_10 = null;
-  private String get_InvalidFormula_10() {
-    if (cached_InvalidFormula_10 != null) {
-      return cached_InvalidFormula_10;
+  private String cached_IdMustBeInt_10 = null;
+  private String get_IdMustBeInt_10() {
+    if (cached_IdMustBeInt_10 != null) {
+      return cached_IdMustBeInt_10;
     }
-    cached_InvalidFormula_10 = generateTestOutput(false, "InvalidFormula_10", "./test_code/Records_InvalidFormula_failure.a");
-    return cached_InvalidFormula_10;
+    cached_IdMustBeInt_10 = generateTestOutput(false, "IdMustBeInt_10", "./test_code/Records_IdMustBeInt_failure.a");
+    return cached_IdMustBeInt_10;
+  }
+
+  @Test
+  public void testIdMustBeIntFailure() {
+    assertLiveFail(get_IdMustBeInt_10());
+  }
+
+  @Test
+  public void testIdMustBeIntExceptionFree() {
+    assertExceptionFree(get_IdMustBeInt_10());
+  }
+
+  @Test
+  public void testIdMustBeIntTODOFree() {
+    assertTODOFree(get_IdMustBeInt_10());
+  }
+
+  @Test
+  public void stable_IdMustBeInt_10() {
+    String live = get_IdMustBeInt_10();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:./test_code/Records_IdMustBeInt_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[ {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 1");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"id must be type int(Record)\"");
+    gold.append("\n} ]");
+    gold.append("\n--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_InvalidFormula_11 = null;
+  private String get_InvalidFormula_11() {
+    if (cached_InvalidFormula_11 != null) {
+      return cached_InvalidFormula_11;
+    }
+    cached_InvalidFormula_11 = generateTestOutput(false, "InvalidFormula_11", "./test_code/Records_InvalidFormula_failure.a");
+    return cached_InvalidFormula_11;
   }
 
   @Test
   public void testInvalidFormulaFailure() {
-    assertLiveFail(get_InvalidFormula_10());
+    assertLiveFail(get_InvalidFormula_11());
   }
 
   @Test
   public void testInvalidFormulaExceptionFree() {
-    assertExceptionFree(get_InvalidFormula_10());
+    assertExceptionFree(get_InvalidFormula_11());
   }
 
   @Test
   public void testInvalidFormulaTODOFree() {
-    assertTODOFree(get_InvalidFormula_10());
+    assertTODOFree(get_InvalidFormula_11());
   }
 
   @Test
-  public void stable_InvalidFormula_10() {
-    String live = get_InvalidFormula_10();
+  public void stable_InvalidFormula_11() {
+    String live = get_InvalidFormula_11();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:./test_code/Records_InvalidFormula_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1738,43 +1788,43 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_LazyFields_11 = null;
-  private String get_LazyFields_11() {
-    if (cached_LazyFields_11 != null) {
-      return cached_LazyFields_11;
+  private String cached_LazyFields_12 = null;
+  private String get_LazyFields_12() {
+    if (cached_LazyFields_12 != null) {
+      return cached_LazyFields_12;
     }
-    cached_LazyFields_11 = generateTestOutput(true, "LazyFields_11", "./test_code/Records_LazyFields_success.a");
-    return cached_LazyFields_11;
+    cached_LazyFields_12 = generateTestOutput(true, "LazyFields_12", "./test_code/Records_LazyFields_success.a");
+    return cached_LazyFields_12;
   }
 
   @Test
   public void testLazyFieldsEmission() {
-    assertEmissionGood(get_LazyFields_11());
+    assertEmissionGood(get_LazyFields_12());
   }
 
   @Test
   public void testLazyFieldsSuccess() {
-    assertLivePass(get_LazyFields_11());
+    assertLivePass(get_LazyFields_12());
   }
 
   @Test
   public void testLazyFieldsGoodWillHappy() {
-    assertGoodWillHappy(get_LazyFields_11());
+    assertGoodWillHappy(get_LazyFields_12());
   }
 
   @Test
   public void testLazyFieldsExceptionFree() {
-    assertExceptionFree(get_LazyFields_11());
+    assertExceptionFree(get_LazyFields_12());
   }
 
   @Test
   public void testLazyFieldsTODOFree() {
-    assertTODOFree(get_LazyFields_11());
+    assertTODOFree(get_LazyFields_12());
   }
 
   @Test
-  public void stable_LazyFields_11() {
-    String live = get_LazyFields_11();
+  public void stable_LazyFields_12() {
+    String live = get_LazyFields_12();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:./test_code/Records_LazyFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1803,9 +1853,9 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LazyFields_11 extends LivingDocument {");
+    gold.append("\npublic class LazyFields_12 extends LivingDocument {");
     gold.append("\n  private final RTxX x;");
-    gold.append("\n  public LazyFields_11(DocumentMonitor __monitor) {");
+    gold.append("\n  public LazyFields_12(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxX(this);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -1921,12 +1971,12 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLazyFields_11 {");
+    gold.append("\n  private class DeltaLazyFields_12 {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLazyFields_11() {");
+    gold.append("\n    private DeltaLazyFields_12() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LazyFields_11 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LazyFields_12 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -1942,8 +1992,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates) {");
-    gold.append("\n    LazyFields_11 __self = this;");
-    gold.append("\n    DeltaLazyFields_11 __state = new DeltaLazyFields_11();");
+    gold.append("\n    LazyFields_12 __self = this;");
+    gold.append("\n    DeltaLazyFields_12 __state = new DeltaLazyFields_12();");
     gold.append("\n    return new PrivateView(__who, __updates) {");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
@@ -2311,43 +2361,43 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_MaybeFields_12 = null;
-  private String get_MaybeFields_12() {
-    if (cached_MaybeFields_12 != null) {
-      return cached_MaybeFields_12;
+  private String cached_MaybeFields_13 = null;
+  private String get_MaybeFields_13() {
+    if (cached_MaybeFields_13 != null) {
+      return cached_MaybeFields_13;
     }
-    cached_MaybeFields_12 = generateTestOutput(true, "MaybeFields_12", "./test_code/Records_MaybeFields_success.a");
-    return cached_MaybeFields_12;
+    cached_MaybeFields_13 = generateTestOutput(true, "MaybeFields_13", "./test_code/Records_MaybeFields_success.a");
+    return cached_MaybeFields_13;
   }
 
   @Test
   public void testMaybeFieldsEmission() {
-    assertEmissionGood(get_MaybeFields_12());
+    assertEmissionGood(get_MaybeFields_13());
   }
 
   @Test
   public void testMaybeFieldsSuccess() {
-    assertLivePass(get_MaybeFields_12());
+    assertLivePass(get_MaybeFields_13());
   }
 
   @Test
   public void testMaybeFieldsGoodWillHappy() {
-    assertGoodWillHappy(get_MaybeFields_12());
+    assertGoodWillHappy(get_MaybeFields_13());
   }
 
   @Test
   public void testMaybeFieldsExceptionFree() {
-    assertExceptionFree(get_MaybeFields_12());
+    assertExceptionFree(get_MaybeFields_13());
   }
 
   @Test
   public void testMaybeFieldsTODOFree() {
-    assertTODOFree(get_MaybeFields_12());
+    assertTODOFree(get_MaybeFields_13());
   }
 
   @Test
-  public void stable_MaybeFields_12() {
-    String live = get_MaybeFields_12();
+  public void stable_MaybeFields_13() {
+    String live = get_MaybeFields_13();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:./test_code/Records_MaybeFields_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2376,10 +2426,10 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class MaybeFields_12 extends LivingDocument {");
+    gold.append("\npublic class MaybeFields_13 extends LivingDocument {");
     gold.append("\n  private final RTxX x;");
     gold.append("\n  private final RxTable<RTxX> lst;");
-    gold.append("\n  public MaybeFields_12(DocumentMonitor __monitor) {");
+    gold.append("\n  public MaybeFields_13(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxX(this);");
     gold.append("\n    lst = new RxTable<>(__self, this, \"lst\", (RxParent __parent) -> new RTxX(__parent), 0);");
@@ -2503,14 +2553,14 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    lst.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaMaybeFields_12 {");
+    gold.append("\n  private class DeltaMaybeFields_13 {");
     gold.append("\n    private DeltaRTxX __dx;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaMaybeFields_12() {");
+    gold.append("\n    private DeltaMaybeFields_13() {");
     gold.append("\n      __dx = new DeltaRTxX();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(MaybeFields_12 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(MaybeFields_13 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 1;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -2528,8 +2578,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates) {");
-    gold.append("\n    MaybeFields_12 __self = this;");
-    gold.append("\n    DeltaMaybeFields_12 __state = new DeltaMaybeFields_12();");
+    gold.append("\n    MaybeFields_13 __self = this;");
+    gold.append("\n    DeltaMaybeFields_13 __state = new DeltaMaybeFields_13();");
     gold.append("\n    return new PrivateView(__who, __updates) {");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
@@ -2745,43 +2795,43 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_MessageFieldsLegacy_13 = null;
-  private String get_MessageFieldsLegacy_13() {
-    if (cached_MessageFieldsLegacy_13 != null) {
-      return cached_MessageFieldsLegacy_13;
+  private String cached_MessageFieldsLegacy_14 = null;
+  private String get_MessageFieldsLegacy_14() {
+    if (cached_MessageFieldsLegacy_14 != null) {
+      return cached_MessageFieldsLegacy_14;
     }
-    cached_MessageFieldsLegacy_13 = generateTestOutput(true, "MessageFieldsLegacy_13", "./test_code/Records_MessageFieldsLegacy_success.a");
-    return cached_MessageFieldsLegacy_13;
+    cached_MessageFieldsLegacy_14 = generateTestOutput(true, "MessageFieldsLegacy_14", "./test_code/Records_MessageFieldsLegacy_success.a");
+    return cached_MessageFieldsLegacy_14;
   }
 
   @Test
   public void testMessageFieldsLegacyEmission() {
-    assertEmissionGood(get_MessageFieldsLegacy_13());
+    assertEmissionGood(get_MessageFieldsLegacy_14());
   }
 
   @Test
   public void testMessageFieldsLegacySuccess() {
-    assertLivePass(get_MessageFieldsLegacy_13());
+    assertLivePass(get_MessageFieldsLegacy_14());
   }
 
   @Test
   public void testMessageFieldsLegacyGoodWillHappy() {
-    assertGoodWillHappy(get_MessageFieldsLegacy_13());
+    assertGoodWillHappy(get_MessageFieldsLegacy_14());
   }
 
   @Test
   public void testMessageFieldsLegacyExceptionFree() {
-    assertExceptionFree(get_MessageFieldsLegacy_13());
+    assertExceptionFree(get_MessageFieldsLegacy_14());
   }
 
   @Test
   public void testMessageFieldsLegacyTODOFree() {
-    assertTODOFree(get_MessageFieldsLegacy_13());
+    assertTODOFree(get_MessageFieldsLegacy_14());
   }
 
   @Test
-  public void stable_MessageFieldsLegacy_13() {
-    String live = get_MessageFieldsLegacy_13();
+  public void stable_MessageFieldsLegacy_14() {
+    String live = get_MessageFieldsLegacy_14();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:./test_code/Records_MessageFieldsLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2810,8 +2860,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class MessageFieldsLegacy_13 extends LivingDocument {");
-    gold.append("\n  public MessageFieldsLegacy_13(DocumentMonitor __monitor) {");
+    gold.append("\npublic class MessageFieldsLegacy_14 extends LivingDocument {");
+    gold.append("\n  public MessageFieldsLegacy_14(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -2919,12 +2969,12 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    __time.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaMessageFieldsLegacy_13 {");
+    gold.append("\n  private class DeltaMessageFieldsLegacy_14 {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaMessageFieldsLegacy_13() {");
+    gold.append("\n    private DeltaMessageFieldsLegacy_14() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(MessageFieldsLegacy_13 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(MessageFieldsLegacy_14 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -2940,8 +2990,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates) {");
-    gold.append("\n    MessageFieldsLegacy_13 __self = this;");
-    gold.append("\n    DeltaMessageFieldsLegacy_13 __state = new DeltaMessageFieldsLegacy_13();");
+    gold.append("\n    MessageFieldsLegacy_14 __self = this;");
+    gold.append("\n    DeltaMessageFieldsLegacy_14 __state = new DeltaMessageFieldsLegacy_14();");
     gold.append("\n    return new PrivateView(__who, __updates) {");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
@@ -3424,43 +3474,43 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_MethodOverloading_14 = null;
-  private String get_MethodOverloading_14() {
-    if (cached_MethodOverloading_14 != null) {
-      return cached_MethodOverloading_14;
+  private String cached_MethodOverloading_15 = null;
+  private String get_MethodOverloading_15() {
+    if (cached_MethodOverloading_15 != null) {
+      return cached_MethodOverloading_15;
     }
-    cached_MethodOverloading_14 = generateTestOutput(true, "MethodOverloading_14", "./test_code/Records_MethodOverloading_success.a");
-    return cached_MethodOverloading_14;
+    cached_MethodOverloading_15 = generateTestOutput(true, "MethodOverloading_15", "./test_code/Records_MethodOverloading_success.a");
+    return cached_MethodOverloading_15;
   }
 
   @Test
   public void testMethodOverloadingEmission() {
-    assertEmissionGood(get_MethodOverloading_14());
+    assertEmissionGood(get_MethodOverloading_15());
   }
 
   @Test
   public void testMethodOverloadingSuccess() {
-    assertLivePass(get_MethodOverloading_14());
+    assertLivePass(get_MethodOverloading_15());
   }
 
   @Test
   public void testMethodOverloadingGoodWillHappy() {
-    assertGoodWillHappy(get_MethodOverloading_14());
+    assertGoodWillHappy(get_MethodOverloading_15());
   }
 
   @Test
   public void testMethodOverloadingExceptionFree() {
-    assertExceptionFree(get_MethodOverloading_14());
+    assertExceptionFree(get_MethodOverloading_15());
   }
 
   @Test
   public void testMethodOverloadingTODOFree() {
-    assertTODOFree(get_MethodOverloading_14());
+    assertTODOFree(get_MethodOverloading_15());
   }
 
   @Test
-  public void stable_MethodOverloading_14() {
-    String live = get_MethodOverloading_14();
+  public void stable_MethodOverloading_15() {
+    String live = get_MethodOverloading_15();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:./test_code/Records_MethodOverloading_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -3489,10 +3539,10 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class MethodOverloading_14 extends LivingDocument {");
+    gold.append("\npublic class MethodOverloading_15 extends LivingDocument {");
     gold.append("\n  private final RTxR x;");
     gold.append("\n  private final RxInt32 v;");
-    gold.append("\n  public MethodOverloading_14(DocumentMonitor __monitor) {");
+    gold.append("\n  public MethodOverloading_15(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RTxR(this);");
     gold.append("\n    v = new RxInt32(this, 0);");
@@ -3616,12 +3666,12 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    v.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaMethodOverloading_14 {");
+    gold.append("\n  private class DeltaMethodOverloading_15 {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaMethodOverloading_14() {");
+    gold.append("\n    private DeltaMethodOverloading_15() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(MethodOverloading_14 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(MethodOverloading_15 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -3637,8 +3687,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates) {");
-    gold.append("\n    MethodOverloading_14 __self = this;");
-    gold.append("\n    DeltaMethodOverloading_14 __state = new DeltaMethodOverloading_14();");
+    gold.append("\n    MethodOverloading_15 __self = this;");
+    gold.append("\n    DeltaMethodOverloading_15 __state = new DeltaMethodOverloading_15();");
     gold.append("\n    return new PrivateView(__who, __updates) {");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
@@ -3830,33 +3880,33 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_PolicyNotFound_15 = null;
-  private String get_PolicyNotFound_15() {
-    if (cached_PolicyNotFound_15 != null) {
-      return cached_PolicyNotFound_15;
+  private String cached_PolicyNotFound_16 = null;
+  private String get_PolicyNotFound_16() {
+    if (cached_PolicyNotFound_16 != null) {
+      return cached_PolicyNotFound_16;
     }
-    cached_PolicyNotFound_15 = generateTestOutput(false, "PolicyNotFound_15", "./test_code/Records_PolicyNotFound_failure.a");
-    return cached_PolicyNotFound_15;
+    cached_PolicyNotFound_16 = generateTestOutput(false, "PolicyNotFound_16", "./test_code/Records_PolicyNotFound_failure.a");
+    return cached_PolicyNotFound_16;
   }
 
   @Test
   public void testPolicyNotFoundFailure() {
-    assertLiveFail(get_PolicyNotFound_15());
+    assertLiveFail(get_PolicyNotFound_16());
   }
 
   @Test
   public void testPolicyNotFoundExceptionFree() {
-    assertExceptionFree(get_PolicyNotFound_15());
+    assertExceptionFree(get_PolicyNotFound_16());
   }
 
   @Test
   public void testPolicyNotFoundTODOFree() {
-    assertTODOFree(get_PolicyNotFound_15());
+    assertTODOFree(get_PolicyNotFound_16());
   }
 
   @Test
-  public void stable_PolicyNotFound_15() {
-    String live = get_PolicyNotFound_15();
+  public void stable_PolicyNotFound_16() {
+    String live = get_PolicyNotFound_16();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:./test_code/Records_PolicyNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3880,43 +3930,43 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_PrivacyLegacy_16 = null;
-  private String get_PrivacyLegacy_16() {
-    if (cached_PrivacyLegacy_16 != null) {
-      return cached_PrivacyLegacy_16;
+  private String cached_PrivacyLegacy_17 = null;
+  private String get_PrivacyLegacy_17() {
+    if (cached_PrivacyLegacy_17 != null) {
+      return cached_PrivacyLegacy_17;
     }
-    cached_PrivacyLegacy_16 = generateTestOutput(true, "PrivacyLegacy_16", "./test_code/Records_PrivacyLegacy_success.a");
-    return cached_PrivacyLegacy_16;
+    cached_PrivacyLegacy_17 = generateTestOutput(true, "PrivacyLegacy_17", "./test_code/Records_PrivacyLegacy_success.a");
+    return cached_PrivacyLegacy_17;
   }
 
   @Test
   public void testPrivacyLegacyEmission() {
-    assertEmissionGood(get_PrivacyLegacy_16());
+    assertEmissionGood(get_PrivacyLegacy_17());
   }
 
   @Test
   public void testPrivacyLegacySuccess() {
-    assertLivePass(get_PrivacyLegacy_16());
+    assertLivePass(get_PrivacyLegacy_17());
   }
 
   @Test
   public void testPrivacyLegacyGoodWillHappy() {
-    assertGoodWillHappy(get_PrivacyLegacy_16());
+    assertGoodWillHappy(get_PrivacyLegacy_17());
   }
 
   @Test
   public void testPrivacyLegacyExceptionFree() {
-    assertExceptionFree(get_PrivacyLegacy_16());
+    assertExceptionFree(get_PrivacyLegacy_17());
   }
 
   @Test
   public void testPrivacyLegacyTODOFree() {
-    assertTODOFree(get_PrivacyLegacy_16());
+    assertTODOFree(get_PrivacyLegacy_17());
   }
 
   @Test
-  public void stable_PrivacyLegacy_16() {
-    String live = get_PrivacyLegacy_16();
+  public void stable_PrivacyLegacy_17() {
+    String live = get_PrivacyLegacy_17();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:./test_code/Records_PrivacyLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -3945,7 +3995,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class PrivacyLegacy_16 extends LivingDocument {");
+    gold.append("\npublic class PrivacyLegacy_17 extends LivingDocument {");
     gold.append("\n  private final RxInt32 open_int;");
     gold.append("\n  private final RxBoolean open_bool;");
     gold.append("\n  private final RxString open_string;");
@@ -3966,7 +4016,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  private final RxLazy<NtList<RTxX>> listz2;");
     gold.append("\n  private final RTxY y;");
     gold.append("\n  private final RTxZ z;");
-    gold.append("\n  public PrivacyLegacy_16(DocumentMonitor __monitor) {");
+    gold.append("\n  public PrivacyLegacy_17(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    open_int = new RxInt32(this, 0);");
     gold.append("\n    open_bool = new RxBoolean(this, false);");
@@ -4222,7 +4272,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaPrivacyLegacy_16 {");
+    gold.append("\n  private class DeltaPrivacyLegacy_17 {");
     gold.append("\n    private DInt32 __dopen_int;");
     gold.append("\n    private DBoolean __dopen_bool;");
     gold.append("\n    private DString __dopen_string;");
@@ -4244,7 +4294,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    private DeltaRTxY __dy;");
     gold.append("\n    private DeltaRTxZ __dz;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaPrivacyLegacy_16() {");
+    gold.append("\n    private DeltaPrivacyLegacy_17() {");
     gold.append("\n      __dopen_int = new DInt32();");
     gold.append("\n      __dopen_bool = new DBoolean();");
     gold.append("\n      __dopen_string = new DString();");
@@ -4267,7 +4317,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n      __dz = new DeltaRTxZ();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(PrivacyLegacy_16 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(PrivacyLegacy_17 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 18;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -4400,8 +4450,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates) {");
-    gold.append("\n    PrivacyLegacy_16 __self = this;");
-    gold.append("\n    DeltaPrivacyLegacy_16 __state = new DeltaPrivacyLegacy_16();");
+    gold.append("\n    PrivacyLegacy_17 __self = this;");
+    gold.append("\n    DeltaPrivacyLegacy_17 __state = new DeltaPrivacyLegacy_17();");
     gold.append("\n    return new PrivateView(__who, __updates) {");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
@@ -4972,43 +5022,43 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_RecordFieldsLegacy_17 = null;
-  private String get_RecordFieldsLegacy_17() {
-    if (cached_RecordFieldsLegacy_17 != null) {
-      return cached_RecordFieldsLegacy_17;
+  private String cached_RecordFieldsLegacy_18 = null;
+  private String get_RecordFieldsLegacy_18() {
+    if (cached_RecordFieldsLegacy_18 != null) {
+      return cached_RecordFieldsLegacy_18;
     }
-    cached_RecordFieldsLegacy_17 = generateTestOutput(true, "RecordFieldsLegacy_17", "./test_code/Records_RecordFieldsLegacy_success.a");
-    return cached_RecordFieldsLegacy_17;
+    cached_RecordFieldsLegacy_18 = generateTestOutput(true, "RecordFieldsLegacy_18", "./test_code/Records_RecordFieldsLegacy_success.a");
+    return cached_RecordFieldsLegacy_18;
   }
 
   @Test
   public void testRecordFieldsLegacyEmission() {
-    assertEmissionGood(get_RecordFieldsLegacy_17());
+    assertEmissionGood(get_RecordFieldsLegacy_18());
   }
 
   @Test
   public void testRecordFieldsLegacySuccess() {
-    assertLivePass(get_RecordFieldsLegacy_17());
+    assertLivePass(get_RecordFieldsLegacy_18());
   }
 
   @Test
   public void testRecordFieldsLegacyGoodWillHappy() {
-    assertGoodWillHappy(get_RecordFieldsLegacy_17());
+    assertGoodWillHappy(get_RecordFieldsLegacy_18());
   }
 
   @Test
   public void testRecordFieldsLegacyExceptionFree() {
-    assertExceptionFree(get_RecordFieldsLegacy_17());
+    assertExceptionFree(get_RecordFieldsLegacy_18());
   }
 
   @Test
   public void testRecordFieldsLegacyTODOFree() {
-    assertTODOFree(get_RecordFieldsLegacy_17());
+    assertTODOFree(get_RecordFieldsLegacy_18());
   }
 
   @Test
-  public void stable_RecordFieldsLegacy_17() {
-    String live = get_RecordFieldsLegacy_17();
+  public void stable_RecordFieldsLegacy_18() {
+    String live = get_RecordFieldsLegacy_18();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:./test_code/Records_RecordFieldsLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -5037,7 +5087,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class RecordFieldsLegacy_17 extends LivingDocument {");
+    gold.append("\npublic class RecordFieldsLegacy_18 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> xs;");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxDouble y;");
@@ -5045,7 +5095,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  private final RxString s;");
     gold.append("\n  private final RTxX xyz;");
     gold.append("\n  private final RxString defMS;");
-    gold.append("\n  public RecordFieldsLegacy_17(DocumentMonitor __monitor) {");
+    gold.append("\n  public RecordFieldsLegacy_18(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    xs = new RxTable<>(__self, this, \"xs\", (RxParent __parent) -> new RTxX(__parent), 0);");
     gold.append("\n    x = new RxInt32(this, 3);");
@@ -5209,12 +5259,12 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    defMS.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaRecordFieldsLegacy_17 {");
+    gold.append("\n  private class DeltaRecordFieldsLegacy_18 {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRecordFieldsLegacy_17() {");
+    gold.append("\n    private DeltaRecordFieldsLegacy_18() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RecordFieldsLegacy_17 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(RecordFieldsLegacy_18 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -5230,8 +5280,8 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates) {");
-    gold.append("\n    RecordFieldsLegacy_17 __self = this;");
-    gold.append("\n    DeltaRecordFieldsLegacy_17 __state = new DeltaRecordFieldsLegacy_17();");
+    gold.append("\n    RecordFieldsLegacy_18 __self = this;");
+    gold.append("\n    DeltaRecordFieldsLegacy_18 __state = new DeltaRecordFieldsLegacy_18();");
     gold.append("\n    return new PrivateView(__who, __updates) {");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");

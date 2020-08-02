@@ -56,20 +56,24 @@ Adama has many built-in types, and the following tables outlines which types are
 | bool | bool can have one of the two values *true* or *false*. | false | true |
 | int | int is a signed [integer](https://en.wikipedia.org/wiki/Integer) number that uses 32-bits. This results in valid values between −2,147,483,648 and 2,147,483,647. | 0 | 42 |
 | long | long is a signed [integer](https://en.wikipedia.org/wiki/Integer) number that uses 64-bits. This results in valid values between -9,223,372,036,854,775,808 and +9,223,372,036,854,775,807.  | 0 | 42 |
-| double | double is a floating point type which uses 64-bit IEEE754. This results in a range of 1.7E +/- 308 (15 digits). | 0.0 | 3.15 |
+| double | double is a floating-point type which uses 64-bit IEEE754. This results in a range of 1.7E +/- 308 (15 digits). | 0.0 | 3.15 |
 | string | string is a [utf-8](https://en.wikipedia.org/wiki/UTF-8) encoded collection of code-points. | "" (empty string) | "Hello World" |
 | label | label is a pointer to a block of code which is used by [the state machine](/docs/reference-state-machine), | # (the no-state) | #hello |
 | client | client is a reference to a connected person, and the backing data establishes who they are. This is used for [acquiring data and decisions from people](/docs/reference-channels-handlers-futures), | @no_one | @no_one |
 
 ## Call-out to other types
 
-The above built-in types are building blocks for richer types, and the below table provides call-outs to other type mechanisms.
+The above built-in types are building blocks for richer types, and the below table provides callouts to other type mechanisms. Not all types are valid at the document level.
 
-| type | quick call out |
+| type | quick call out | applicable to document/record |
 |  --- | --- | --- |
-| [enum](/docs/reference-enumerations-dynamic-dispatch) | An **enum**eration is a type that consists of a finite set of named constants. |
-| [messages](/docs/reference-defining-structure-types) | A **message** is a collection of variables grouped under one name used for communication.  |
-| [records](/docs/reference-defining-structure-types) | A **record** is a collection of variables grouped under one name used for persistence.  |
-| [maybe](/docs/reference-maybe-types) | Sometimes things didn't or can't happen, and we use **maybe** to express that absense rather than null. Monads for the win! |
-| [table](/docs/reference-tables) | A **table** form the ultimate collection enabling maps, lists, sets, and more. Tables use **record**s to persist information in a structured way. |
-| [channel](/docs/reference-channels-handlers-futures) | Channels enable communication between the document and people via handlers and **future**s. |
+| [enum](/docs/reference-enumerations-dynamic-dispatch) | An **enum**eration is a type that consists of a finite set of named constants. | yes |
+| [messages](/docs/reference-defining-structure-types) | A **message** is a collection of variables grouped under one name used for communication.  | no |
+| [records](/docs/reference-defining-structure-types) | A **record** is a collection of variables grouped under one name used for persistence.  | yes |
+| [maybe](/docs/reference-maybe-types) | Sometimes things didn't or can't happen, and we use **maybe** to express that absence rather than null. Monads for the win! | yes (only of applicable types) |
+| [table](/docs/reference-tables) | A **table** form the ultimate collection enabling maps, lists, sets, and more. Tables use **record**s to persist information in a structured way. | yes |
+| [channel](/docs/reference-channels-handlers-futures) | Channels enable communication between the document and people via handlers and **future**s. | only root document |
+| [future](/docs/reference-channels-handlers-futures) | A future is a result that will arrive in the **future**. | no |
+| [maps](/docs/reference-maps-and-reduce) | **map**s enable associating keys to values, but they can also be the result of a reduction. | not yet |
+| [lists](/docs/reference-linq) | A **list** is created by using language integrated query on a table | only via a formula |
+| arrays | An array is a finite collection of a adjacent items| no |

@@ -49,7 +49,23 @@ public class DevKitServer {
   public static ServerNexus prepare(final String[] args) throws Exception {
     final var serverOptions = new CliServerOptions(args);
     final var compilerOptions = CompilerOptions.start().args(0, args).make();
-    final var db = new GameSpaceDB(new File("./devkit2/source"), new File("./devkit2/data"), compilerOptions, TimeSource.REAL_TIME);
+    String data = "./data";
+    String html = "./html";
+    String source = "./source";
+    for (int k = 0; k + 1 < args.length; k += 2) {
+      switch (args[k]) {
+        case "--data":
+          data = args[k+1];
+          break;
+        case "--html":
+          html = args[k+1];
+          break;
+        case "--source":
+          source = args[k+1];
+          break;
+      }
+    }
+    final var db = new GameSpaceDB(new File(source), new File(data), compilerOptions, TimeSource.REAL_TIME);
     final var authenticator = new Authenticator() {
       @Override
       public void authenticate(final String token, final AuthCallback callback) {
@@ -91,7 +107,7 @@ public class DevKitServer {
         serviceHandler.shutdown();
       }
     };
-    final var site = new UncachedDiskStaticSite(new File("./devkit2/source"));
+    final var site = new UncachedDiskStaticSite(new File(html));
     return new ServerNexus(serverOptions, db, handler, authenticator, site);
   }
 }

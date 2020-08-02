@@ -6,36 +6,53 @@ title: Maybe Types
 
 ## Fast Intro
 
-Too many times, a value could not be found nor make sense to compute with the data at head. The lack of a value is something to contend with, and [failing to contend with it well has proven to be a billion dollar mistake](https://www.youtube.com/watch?v=ybrQvs4x0Ps). Adama uses [the maybe (or optional) pattern](https://en.wikipedia.org/wiki/Monad_(functional_programming)#An_example:\_Maybe).
+Too many times, a value could not be found nor make sense to compute with the data at hand. The lack of a value is something to contend with, and [failing to contend with it well has proven to be a billion dollar mistake](https://www.youtube.com/watch?v=ybrQvs4x0Ps). Adama uses [the maybe (or optional) pattern](https://en.wikipedia.org/wiki/Monad_(functional_programming)#An_example:\_Maybe). For example, the following defines an age which may or may not be available.
 
 ```
 public maybe<int> age;
+
+// how to write
+#sm1 {
+ age = 40;
+}
+
+// how to read
+#sm2 {
+ if (age as a) {
+  // so something with a if it exists
+ } else {
+  // age has no value, :(
+ }
+}
 ```
 
 ## Philosophy
 
-Maybe enforces better discipline by leveraging the type system to ask "Did you mean that?"
+The concept of ```maybe<>``` enforces better coding-discipline by leveraging the type system as a forcing function to prevent bad things from happening. [Segmentation fault](https://en.wikipedia.org/wiki/Segmentation_fault), [NullPointerException](https://en.wikibooks.org/wiki/Java_Programming/Preventing_NullPointerException), and index out of range exceptions are avoided entirely. Within Adama, a failure feels catastrophic as a failure signals the end of the game. This is a core motivation why Adama is a closed ecosystem (i.e. no disk or networking) such that the failures are limited to logic bugs or division by zero (and the jury is out as to whether or not division should result in a ```maybe<double>``` or not)
 
+## Using maybes
 
-## As a poor-mans Either; thinking about non-recoverable problems.
+Data can always freely enter a maybe using regular assignment.
 
-@reason_timeout
-@reason_zero_inputs
+```adama
+maybe<int> key;
 
+#sm {
+  key = 123;
+}
 
-## Built-in Methods
+```
 
-A key goal of Adama was to limit the number of ways that failure can happen, but this is exceptionally hard in some situations.
+The real interesting part is how to get data out, and there is a safe way using an ```if ... as``` statement.
 
-.has()
-.haltGet()
-.delete()
+```adama
+maybe<int> key;
 
-## Details
-
-The mechanism
-
-
-
-
-There is a real problem that Optional tries to solve, and this article shows a better way to solve it. Therefore, you are better off using a regular possibly-null Java reference, rather than using Optional. 
+#sm {
+  if (key as k) {
+  	// yay, I have the value
+  } else {
+  	// nay, I don't have a value
+  }
+}
+```

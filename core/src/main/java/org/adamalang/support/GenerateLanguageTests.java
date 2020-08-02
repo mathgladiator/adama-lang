@@ -145,11 +145,6 @@ public class GenerateLanguageTests {
   private static String WTF = "" + (char) 92;
 
   public static String constructOutput(final boolean emission, final String className, final Path path, final Path inputRoot) {
-    final var outputToWrite = constructOutputWithChaos(emission, className, path, inputRoot);
-    return outputToWrite;
-  }
-
-  private static String constructOutputWithChaos(final boolean emission, final String className, final Path path, final Path inputRoot) {
     final var testTime = new AtomicLong(0);
     final var time = (TimeSource) () -> testTime.get();
     final var options = CompilerOptions.start().enableCodeCoverage().make();
@@ -329,7 +324,7 @@ public class GenerateLanguageTests {
   public static void main(final String[] args) throws Exception {
     final var template = makeTemplate();
     final var tests = new ArrayList<Test>();
-    tests.add(new Test("Parser", "Preempt", true));
+    tests.add(new Test("Records", "IdMustBeInt", false));
     final String hackSearch = null;
     final var root = new File("./test_code");
     final var classMap = new TreeMap<String, TestClass>();

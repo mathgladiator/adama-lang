@@ -3,8 +3,6 @@ id: reference-defining-structure-types
 title: Defining Record & Message Types
 ---
 
-<h1><font color="red">Under Construction: Super Rough, Not Hardly Done</font></h1>
-
 A data structure is a collection of data elements grouped under one name. These data elements, also known as member fields or just fields, can have different types. Adama has two types of data structures: **record**s and **message**s. 
 
 ## Fast Intro: Record
@@ -34,17 +32,72 @@ Beyond fields, it is worth nothing that records can have [methods](/docs/referen
 
 ## Fast Intro: Message
 
-A message is similar to a record except without any privacy awareness. All fields within a message are public, and the privacy option is unavailable. The following defines a reasonable message.
+A message is similar to a record except without any privacy awareness or privacy concerns. All fields within a message are public, and the expectation is that messages come from people. The following defines a reasonable message.
 ```adama
-message SetName {
+message JoinGroup {
   string name;
+  int age;
+  bool ready;
 }
 ```
 
-Unlike records, messages can have only fields without any privacy awareness. The expectation is that messages flow freely from people to the document, or within the document.
-
 ## Diving Into Details: Records
+The types that are allowed in records is limited to:
+* ```bool```
+* ```enum```
+* ```int```
+* ```long```
+* ```double```
+* ```string```
+* ```label```
+* maybe&lt;t&gt; for any type in this list (except maybe and maybe)
+* table&lt;r&gt; where r is a record 
+
+The best mental model for a record is a row within a table. As a convention, every record has a hidden field called **id** with type ```int``` which can be revealed by defining it (without changing type).
+
+Records also have:
+* [index definitions to make tables go faster](/docs/reference-tables)
+* [bubbles for viewer-dependent computation/view and privacy policies](/docs/reference-privacy-and-bubbles)
 
 ## Diving Into Details: Messages
 
-## Easy Structural Copying (@convert)
+Most types that can be defined within code can be defined within a messages; the exceptions are channels and futures.
+
+Messages can also be constructed anonymously on the fly.
+```adama
+#yo {
+  let msg = {x:1, y:2};  
+}
+```
+
+It is worth noting that the type of messages undergo static type rectification, so the above is 100% statically typed. It also leverages a simplified form of type inference such that messages of a known type can me constructed.
+```adama
+message M {
+  int x;
+  int y;
+}
+
+@construct (who) {
+  M m = {x:1, y:1};
+}
+```
+
+## Easy copying and type conversion (@convert)
+
+Given a message or record, we can convert it into a message type via the  ```@convert``` keyword.
+```adama
+record R {
+  public int x;
+}
+R r;
+
+message M {
+  int x;
+}
+
+#sm {
+ M m = @convert<M>(r);
+}
+```
+
+The useful of this conversion will become clear when [channels and futures are outlined.](/docs/reference-channels-handlers-futures).
