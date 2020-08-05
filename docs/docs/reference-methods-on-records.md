@@ -3,8 +3,16 @@ id: reference-methods-on-records
 title: Methods on Records
 ---
 
-<h1><font color="red">Under Construction: Super Rough, Not Hardly Done</font></h1>
+[Records](/docs/reference-defining-structure-types) can have methods which allow code to run within the context of a record.
 
-## Fast Intro
+```adama
+record Point {
+  public double x;
+  public double y;
 
-## Diving Into Details
+  method lensqr() -> double {
+  	return x * x + y * y;
+  }
+}
+```
+

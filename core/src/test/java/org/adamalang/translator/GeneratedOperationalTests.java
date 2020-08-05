@@ -6,35 +6,35 @@ package org.adamalang.translator;
 import org.junit.Test;
 
 public class GeneratedOperationalTests extends GeneratedBase {
-  private String cached_Goodwell_1 = null;
-  private String get_Goodwell_1() {
-    if (cached_Goodwell_1 != null) {
-      return cached_Goodwell_1;
+  private String cached_Goodwill_1 = null;
+  private String get_Goodwill_1() {
+    if (cached_Goodwill_1 != null) {
+      return cached_Goodwill_1;
     }
-    cached_Goodwell_1 = generateTestOutput(false, "Goodwell_1", "./test_code/Operational_Goodwell_failure.a");
-    return cached_Goodwell_1;
+    cached_Goodwill_1 = generateTestOutput(false, "Goodwill_1", "./test_code/Operational_Goodwill_failure.a");
+    return cached_Goodwill_1;
   }
 
   @Test
-  public void testGoodwellFailure() {
-    assertLiveFail(get_Goodwell_1());
+  public void testGoodwillFailure() {
+    assertLiveFail(get_Goodwill_1());
   }
 
   @Test
-  public void testGoodwellExceptionFree() {
-    assertExceptionFree(get_Goodwell_1());
+  public void testGoodwillExceptionFree() {
+    assertExceptionFree(get_Goodwill_1());
   }
 
   @Test
-  public void testGoodwellTODOFree() {
-    assertTODOFree(get_Goodwell_1());
+  public void testGoodwillTODOFree() {
+    assertTODOFree(get_Goodwill_1());
   }
 
   @Test
-  public void stable_Goodwell_1() {
-    String live = get_Goodwell_1();
+  public void stable_Goodwill_1() {
+    String live = get_Goodwill_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Operational_Goodwell_failure.a");
+    gold.append("Path:./test_code/Operational_Goodwill_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ ]");
     gold.append("\n--JAVA---------------------------------------------");
@@ -59,9 +59,9 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Goodwell_1 extends LivingDocument {");
+    gold.append("\npublic class Goodwill_1 extends LivingDocument {");
     gold.append("\n  private final RxInt32 z;");
-    gold.append("\n  public Goodwell_1(DocumentMonitor __monitor) {");
+    gold.append("\n  public Goodwill_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    z = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -177,12 +177,12 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaGoodwell_1 {");
+    gold.append("\n  private class DeltaGoodwill_1 {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaGoodwell_1() {");
+    gold.append("\n    private DeltaGoodwill_1() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Goodwell_1 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Goodwill_1 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -198,8 +198,8 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates) {");
-    gold.append("\n    Goodwell_1 __self = this;");
-    gold.append("\n    DeltaGoodwell_1 __state = new DeltaGoodwell_1();");
+    gold.append("\n    Goodwill_1 __self = this;");
+    gold.append("\n    DeltaGoodwill_1 __state = new DeltaGoodwill_1();");
     gold.append("\n    return new PrivateView(__who, __updates) {");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");

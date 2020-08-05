@@ -1,3 +1,5 @@
+<img style="float:right" width="48" src="docs/static/img/adama-height-196.jpg">
+
 # Adama Programming Language
 A language, run-time, and service platform for building board games online. Now, this begs the question: why on earth do board games need their own programming language. Well, many modern board games are exceptionally hard to model because they rely on the human mind to evaluate the complex interactions which emerge from a loose set of rules.
 

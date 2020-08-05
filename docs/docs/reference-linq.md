@@ -3,8 +3,20 @@ id: reference-linq
 title: Language Integrated Query
 ---
 
-<h1><font color="red">Under Construction: Super Rough, Not Hardly Done</font></h1>
-
 ## Fast Intro
 
+The only way to get data out of a table is to iterate the table.
+
 ## Diving Into Details
+
+### iterate
+
+### where
+
+### shuffle
+
+### order
+
+### limit
+
+### Bulk Assignments

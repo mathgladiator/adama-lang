@@ -3,7 +3,7 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator;
 
-import org.adamalang.support.GenerateLanguageTests;
+import org.adamalang.support.testgen.TestForge;
 import org.junit.Assert;
 
 import java.io.File;
@@ -14,7 +14,7 @@ public class GeneratedBase {
     Assert.assertTrue(file.exists());
     Assert.assertTrue(file.getParentFile().isDirectory());
     try {
-      String output = GenerateLanguageTests.constructOutput(emission, className, file.toPath(), file.getParentFile().toPath());
+      String output = TestForge.forge(emission, className, file.toPath(), file.getParentFile().toPath());
       String[] lines = output.split("\n");
       for (int k = 0; k < lines.length; k++) {
         lines[k] = lines[k].stripTrailing();

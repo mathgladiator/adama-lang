@@ -3,8 +3,6 @@ id: reference-local-variables-assignment
 title: Local Variables & Assignment
 ---
 
-<h1><font color="red">Under Construction: Super Rough, Not Hardly Done</font></h1>
-
 ## Fast Intro
 While [document variables](/doc/reference-document-variables) are persisted, variables can be defined locally within code blocks (like [constructors](/docs/reference-constructor), TODO complete listing of where code is defined).
 
@@ -19,7 +17,9 @@ private int score;
 
 ### By Type
 
-### Via the "let" keyword
+### readonly
+
+### bia the "let" keyword
 
 ## Diving Into Details
 
@@ -27,6 +27,11 @@ private int score;
 
 #### Add To (+=)
 
-...
+#### Subtract From (-=)
 
-### Bulk Assignments
+#### Multiply By (\*=)
+
+#### Divide By (/=)
+
+#### Mod (%=)
+

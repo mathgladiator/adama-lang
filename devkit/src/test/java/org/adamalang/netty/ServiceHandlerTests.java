@@ -59,6 +59,11 @@ public class ServiceHandlerTests {
   }
 
   @Test
+  public void forceClean() {
+    cleanOnShutdown();
+  }
+
+  @Test
   public void connectAndSend() throws Exception {
     final var options = new CliServerOptions("--port", "9815");
     final var runnable = new ServerRunnable(ServiceHandlerTests.nexus(options));
@@ -143,7 +148,7 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Operational_Goodwell_failure.a\",\"game\":\"game-4\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Operational_Goodwill_failure.a\",\"game\":\"game-4\",\"data\":{}}"));
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(3, output.size());

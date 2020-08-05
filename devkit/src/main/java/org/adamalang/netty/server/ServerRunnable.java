@@ -29,10 +29,10 @@ public class ServerRunnable implements Runnable {
 
   private synchronized void channelRegistered(final Channel channel) {
     this.channel = channel;
-    ready.countDown();
     if (stopped) {
       channel.close();
     }
+    ready.countDown();
   }
 
   public synchronized boolean isAccepting() {

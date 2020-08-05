@@ -3,10 +3,12 @@ id: reference-defining-functions-and-procedures
 title: Defining Functions & Procedures
 ---
 
-<h1><font color="red">Under Construction: Super Rough, Not Hardly Done</font></h1>
-
 ## Fast Intro
 
+Adama has two forms of colliqual function.
+
+
+Functions in Adama are pure in that they have no side-effects and also are context-free.
 ```adama
 function square(int x) -> int {
   return x * x;

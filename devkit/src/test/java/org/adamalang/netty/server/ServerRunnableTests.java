@@ -1,6 +1,9 @@
 /* The Adama Programming Language For Board Games!
  *    See http://www.adama-lang.org/ for more information.
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
+/* The Adama Programming Language For Board Games!
+ *    See http://www.adama-lang.org/ for more information.
+ * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.netty.server;
 
 import java.io.File;
@@ -24,8 +27,12 @@ public class ServerRunnableTests {
     thread.start();
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
+    System.err.println("Interrupt:9993");
     thread.interrupt();
+    System.err.println("Wait:9993");
+    System.err.flush();
     thread.join();
+    System.err.println("Finish:9993");
   }
 
   @Test
@@ -37,7 +44,9 @@ public class ServerRunnableTests {
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
     runnable.shutdown();
+    System.err.println("Wait:9995");
     thread.join();
+    System.err.println("Finish:9995");
   }
 
   @Test
@@ -47,6 +56,8 @@ public class ServerRunnableTests {
     runnable.shutdown();
     final var thread = new Thread(runnable);
     thread.start();
+    System.err.println("Wait:9994");
     thread.join();
+    System.err.println("Finish:9994");
   }
 }
