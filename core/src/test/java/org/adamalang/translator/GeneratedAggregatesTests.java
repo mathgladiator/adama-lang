@@ -449,6 +449,11 @@ public class GeneratedAggregatesTests extends GeneratedBase {
   }
 
   @Test
+  public void testCantBumpBoolListNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantBumpBoolList_2());
+  }
+
+  @Test
   public void testCantBumpBoolListExceptionFree() {
     assertExceptionFree(get_CantBumpBoolList_2());
   }
@@ -472,12 +477,12 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 6,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 15");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<bool>'(CanBumpNumeric)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<bool>' (CanBumpNumeric)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -486,12 +491,12 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 17");
+    gold.append("\n      \"character\" : 18");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<bool>'(CanBumpNumeric)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<bool>' (CanBumpNumeric)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

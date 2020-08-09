@@ -890,6 +890,11 @@ public class GeneratedTransitionTests extends GeneratedBase {
   }
 
   @Test
+  public void testRequiresNumberNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_RequiresNumber_4());
+  }
+
+  @Test
   public void testRequiresNumberExceptionFree() {
     assertExceptionFree(get_RequiresNumber_4());
   }
@@ -918,7 +923,7 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'bool'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'bool' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -932,7 +937,7 @@ public class GeneratedTransitionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'string'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int' or 'double', but the type is actually 'string' (TypeCheckFailures)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

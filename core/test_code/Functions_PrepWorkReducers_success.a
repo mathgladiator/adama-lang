@@ -25,7 +25,7 @@ double result3;
   things <- {x:1, y:3.14};
   things <- {x:2, y:10.0};
   things <- {x:3, y:1000.0};
-  result = foo((select things).x);
-  result2 = Statistics.sum((select things).x);
-  result3 = Statistics.sum((select things).y);
+  result = foo((iterate things).x);
+  result2 = Statistics.sum((iterate things).x);
+  result3 = Statistics.sum((iterate things).y);
 }

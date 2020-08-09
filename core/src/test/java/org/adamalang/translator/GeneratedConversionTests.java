@@ -21,6 +21,11 @@ public class GeneratedConversionTests extends GeneratedBase {
   }
 
   @Test
+  public void testCantConvertIntListNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantConvertIntList_1());
+  }
+
+  @Test
   public void testCantConvertIntListExceptionFree() {
     assertExceptionFree(get_CantConvertIntList_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type `int[]` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message.(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type `int[]` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. (TypeCheckFailures)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -68,6 +73,11 @@ public class GeneratedConversionTests extends GeneratedBase {
   @Test
   public void testCantConvertListToListFailure() {
     assertLiveFail(get_CantConvertListToList_2());
+  }
+
+  @Test
+  public void testCantConvertListToListNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantConvertListToList_2());
   }
 
   @Test
@@ -99,7 +109,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'list<M>' is unable to store type 'M[]'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'list<M>' is unable to store type 'M[]'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -118,6 +128,11 @@ public class GeneratedConversionTests extends GeneratedBase {
   @Test
   public void testCantIntegerFailure() {
     assertLiveFail(get_CantInteger_3());
+  }
+
+  @Test
+  public void testCantIntegerNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantInteger_3());
   }
 
   @Test
@@ -149,7 +164,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type `int` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message.(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type `int` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. (TypeCheckFailures)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -168,6 +183,11 @@ public class GeneratedConversionTests extends GeneratedBase {
   @Test
   public void testCantMaybeIntegerFailure() {
     assertLiveFail(get_CantMaybeInteger_4());
+  }
+
+  @Test
+  public void testCantMaybeIntegerNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantMaybeInteger_4());
   }
 
   @Test
@@ -199,7 +219,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'record' or 'message', but got a type of 'int'.(RuleSetStructures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'record' or 'message', but got a type of 'int'. (RuleSetStructures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -213,7 +233,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type `maybe<int>` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message.(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type `maybe<int>` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. (TypeCheckFailures)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1369,6 +1389,11 @@ public class GeneratedConversionTests extends GeneratedBase {
   }
 
   @Test
+  public void testWhenCantConvertBasedOnFieldsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_WhenCantConvertBasedOnFields_7());
+  }
+
+  @Test
   public void testWhenCantConvertBasedOnFieldsExceptionFree() {
     assertExceptionFree(get_WhenCantConvertBasedOnFields_7());
   }
@@ -1397,7 +1422,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'string' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1411,7 +1436,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1425,49 +1450,49 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'string' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'BigS' contains field 'z' which is not found within 'SmallI'.(RuleSetStructures)\"");
+    gold.append("\n  \"message\" : \"The type 'BigS' contains field 'z' which is not found within 'SmallI'. (RuleSetStructures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'BigI' contains field 'z' which is not found within 'SmallI'.(RuleSetStructures)\"");
+    gold.append("\n  \"message\" : \"The type 'BigI' contains field 'z' which is not found within 'SmallI'. (RuleSetStructures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 22,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 22,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'BigS' contains field 'z' which is not found within 'SmallS'.(RuleSetStructures)\"");
+    gold.append("\n  \"message\" : \"The type 'BigS' contains field 'z' which is not found within 'SmallS'. (RuleSetStructures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1481,21 +1506,21 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 22,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 22,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'BigI' contains field 'z' which is not found within 'SmallS'.(RuleSetStructures)\"");
+    gold.append("\n  \"message\" : \"The type 'BigI' contains field 'z' which is not found within 'SmallS'. (RuleSetStructures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1509,7 +1534,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1523,7 +1548,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'string' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1537,7 +1562,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'string' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1551,7 +1576,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

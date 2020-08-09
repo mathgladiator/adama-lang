@@ -52,7 +52,7 @@ public class ConvertMessage extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    final var idealType = environment.rules.FindMessageStructure(newMessageType, this, false);
+    final var idealType = environment.rules.FindMessageStructure(newMessageType, this, false).makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
     final var exprType = expression.typing(environment, null);
     if (environment.rules.IsNativeArrayOfStructure(exprType, true)) {
       // X{]

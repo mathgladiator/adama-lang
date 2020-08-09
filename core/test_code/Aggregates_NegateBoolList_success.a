@@ -4,6 +4,6 @@ record X {
 table<X> t;
 
 @construct {
-  let ls = !(!((select t).x));
+  let ls = !(!((iterate t).x));
 }
 

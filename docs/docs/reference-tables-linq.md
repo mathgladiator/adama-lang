@@ -1,5 +1,5 @@
 ---
-id: reference-linq
+id: reference-tables-linq
 title: Language Integrated Query
 ---
 

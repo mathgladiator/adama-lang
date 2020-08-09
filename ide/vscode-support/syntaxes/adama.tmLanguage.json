@@ -1,0 +1,78 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Adama",
+	"patterns": [
+		{ "include": "#keywords" },
+		{ "include": "#strings" },
+		{ "include": "#labels" },
+		{ "include": "#constants" },
+		{ "include": "#variables" },
+		{ "include": "#entities" },
+		{ "include": "#comment_block" }
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.adama",
+				"match": "\\b(if|while|for|return|abort|block|break|continue|for|do|foreach|transition|preempt|invoke)\\b"
+			},{
+				"name": "keyword.other.adama",
+				"match": "\\b(function|procedure|method|dispatch|import)\\b"
+			},{
+				"name": "entity.name.type.adama",
+				"match": "\\b(record|message|int|bool|double|long|string|client|table|list|maybe|enum|future|channel|map)\\b"
+			},{
+				"name": "keyword.privacy.adama",
+				"match": "\\b(public|private|viewer_is|use_policy|policy|bubble)\\b"
+			},{
+				"name": "keyword.auto.adama",
+				"match": "\\b(formula|let|auto)\\b"
+			},{
+				"name": "keyword.linq.adama",
+				"match": "\\b(iterate|where|shuffle|order|reduce|via|limit|by|asc|desc)\\b"
+			},{
+				"name": "keyword.other.adama",
+				"match": "@construct|@connected|@disconnected|@pump|@convert|@maybe|@step"
+			},{
+				"name": "keyword.modifiers.adama",
+				"match": "\\b(readonly)\\b"
+			},{
+				"name": "keyword.testing.adama",
+				"match": "\\b(assert|test)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.adama",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.adama",
+					"match": "\\\\."
+				}
+			]
+		},
+		"labels": {
+			"name": "string.quoted.double.adama",
+			"match": "#[0-9a-zA-Z]*"
+		},
+		"constants": {
+			"name": "constant.numeric.adama",
+			"match": "true|false|@no_one|[0-9][0-9eE\\.]*"
+		},
+		"variables": {
+			"name": "variable.adama",
+			"match": "[a-z][A-Za-z0-9]*"
+		},
+		"entities": {
+			"name": "entity.name.type.adama",
+			"match": "[A-Z][A-Za-z0-9]*"
+		},
+		"comment_block": {
+			"name": "comment.block.adama",
+			"begin": "/\\*",
+			"end": "\\*/"
+		}
+	},
+	"scopeName": "source.adama"
+}

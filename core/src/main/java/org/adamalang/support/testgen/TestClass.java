@@ -9,6 +9,15 @@ import java.nio.file.Files;
 import java.util.regex.Pattern;
 
 public class TestClass {
+  private static String WTF = "" + (char) 92;
+
+  public static String escapeLine(final String line) {
+    return line //
+        .replaceAll(Pattern.quote(WTF), WTF + WTF + WTF + WTF) //
+        .replaceAll("\"", WTF + WTF + "\"") //
+    ;
+  }
+
   private final String clazz;
   private final StringBuilder outputFile;
   private int testId;
@@ -53,6 +62,10 @@ public class TestClass {
       outputFile.append("  public void test" + test.name + "Failure() {\n");
       outputFile.append("    assertLiveFail(get_" + varName + "());\n");
       outputFile.append("  }\n\n");
+      outputFile.append("  @Test\n");
+      outputFile.append("  public void test" + test.name + "NotTerribleLineNumbers() {\n");
+      outputFile.append("    assertNotTerribleLineNumbers(get_" + varName + "());\n");
+      outputFile.append("  }\n\n");
     }
     outputFile.append("  @Test\n");
     outputFile.append("  public void test" + test.name + "ExceptionFree() {\n");
@@ -84,14 +97,5 @@ public class TestClass {
   public void finish(final File root) throws IOException {
     outputFile.append("}\n");
     Files.writeString(new File(root, "Generated" + clazz + "Tests.java").toPath(), outputFile.toString());
-  }
-
-  private static String WTF = "" + (char) 92;
-
-  public static String escapeLine(final String line) {
-    return line //
-            .replaceAll(Pattern.quote(WTF), WTF + WTF + WTF + WTF) //
-            .replaceAll("\"", WTF + WTF + "\"") //
-            ;
   }
 }

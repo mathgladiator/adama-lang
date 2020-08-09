@@ -21,6 +21,11 @@ public class GeneratedOperationalTests extends GeneratedBase {
   }
 
   @Test
+  public void testGoodwillNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_Goodwill_1());
+  }
+
+  @Test
   public void testGoodwillExceptionFree() {
     assertExceptionFree(get_Goodwill_1());
   }

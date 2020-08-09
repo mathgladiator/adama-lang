@@ -21,6 +21,11 @@ public class GeneratedBlockTests extends GeneratedBase {
   }
 
   @Test
+  public void testDeadCodeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DeadCode_1());
+  }
+
+  @Test
   public void testDeadCodeExceptionFree() {
     assertExceptionFree(get_DeadCode_1());
   }
@@ -39,17 +44,17 @@ public class GeneratedBlockTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"line\" : 2,");
     gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 9");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 14");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"This code is unreachable.(Block)\"");
+    gold.append("\n  \"message\" : \"This code is unreachable. (Block)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -68,6 +73,11 @@ public class GeneratedBlockTests extends GeneratedBase {
   @Test
   public void testDuplicateVariableFailure() {
     assertLiveFail(get_DuplicateVariable_2());
+  }
+
+  @Test
+  public void testDuplicateVariableNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicateVariable_2());
   }
 
   @Test
@@ -99,7 +109,7 @@ public class GeneratedBlockTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Variable 'x' was already defined(EnvironmentDefine)\"");
+    gold.append("\n  \"message\" : \"Variable 'x' was already defined (EnvironmentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

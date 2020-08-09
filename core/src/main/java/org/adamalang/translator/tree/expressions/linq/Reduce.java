@@ -34,6 +34,9 @@ public class Reduce extends LinqExpression {
     this.functionToReduceWith = functionToReduceWith;
     functionInstance = null;
     requireGet = false;
+    ingest(sql);
+    ingest(fieldToken);
+    ingest(functionToReduceWith);
   }
 
   @Override

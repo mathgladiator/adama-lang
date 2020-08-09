@@ -3,30 +3,22 @@ id: reference-built-in-math-expressions
 title: Built-in Math Expressions
 ---
 
-<h1><font color="red">Under Construction: Super Rough, Not Hardly Done</font></h1>
+Adama lets you do math, and that's awesome! It has the typical operations that you would expect, and then some fun twists. So, let's get into it.
 
-## Fast Intro
+## Parenthesis: ()
+## Unary Negation: -, !
+## Addition: +
 
-## Diving Into Details
+## Subtraction: -
 
-### Parenthesis: ()
+## Multiplication: *
+## Division: /
 
-### Unary Negation: -, !
+## Modulus: %
 
-### Addition: +
+## Comparison: <, <=, >, >=
 
-### Subtraction: -
+## Equality: ==, !=
 
-### Multiplication: *
-
-### Division: /
-
-### Modulus: %
-
-### Comparison: <, <=, >, >=
-
-### Equality: ==, !=
-
-### Logic: &&, ||
-
-### Conditional: ?
+## Logic: &&, ||
+## Conditional: ?

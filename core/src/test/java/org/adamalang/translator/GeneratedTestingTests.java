@@ -21,6 +21,11 @@ public class GeneratedTestingTests extends GeneratedBase {
   }
 
   @Test
+  public void testCantForceOutsideOfTestNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantForceOutsideOfTest_1());
+  }
+
+  @Test
   public void testCantForceOutsideOfTestExceptionFree() {
     assertExceptionFree(get_CantForceOutsideOfTest_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Forcing a step designed exclusively for testing(Testing)\"");
+    gold.append("\n  \"message\" : \"Forcing a step designed exclusively for testing (Testing)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -68,6 +73,11 @@ public class GeneratedTestingTests extends GeneratedBase {
   @Test
   public void testCantPumpOutsideOfTestFailure() {
     assertLiveFail(get_CantPumpOutsideOfTest_2());
+  }
+
+  @Test
+  public void testCantPumpOutsideOfTestNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantPumpOutsideOfTest_2());
   }
 
   @Test
@@ -99,7 +109,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Pumping a message is designed exclusively for testing(Testing)\"");
+    gold.append("\n  \"message\" : \"Pumping a message is designed exclusively for testing (Testing)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -118,6 +128,11 @@ public class GeneratedTestingTests extends GeneratedBase {
   @Test
   public void testLegacyFailure() {
     assertLiveFail(get_Legacy_3());
+  }
+
+  @Test
+  public void testLegacyNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_Legacy_3());
   }
 
   @Test
@@ -1419,6 +1434,11 @@ public class GeneratedTestingTests extends GeneratedBase {
   }
 
   @Test
+  public void testPumpNoChannelNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_PumpNoChannel_6());
+  }
+
+  @Test
   public void testPumpNoChannelExceptionFree() {
     assertExceptionFree(get_PumpNoChannel_6());
   }
@@ -1447,7 +1467,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Channel 'chanx' does not exist(Testing)\"");
+    gold.append("\n  \"message\" : \"Channel 'chanx' does not exist (Testing)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1466,6 +1486,11 @@ public class GeneratedTestingTests extends GeneratedBase {
   @Test
   public void testPumpNoMessageFailure() {
     assertLiveFail(get_PumpNoMessage_7());
+  }
+
+  @Test
+  public void testPumpNoMessageNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_PumpNoMessage_7());
   }
 
   @Test
@@ -1497,7 +1522,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: a message named 'X' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1511,7 +1536,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: a message named 'X' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1525,7 +1550,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'message', but got a type of 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'message', but got a type of 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1539,7 +1564,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Channel 'x' does not exist(Testing)\"");
+    gold.append("\n  \"message\" : \"Channel 'x' does not exist (Testing)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

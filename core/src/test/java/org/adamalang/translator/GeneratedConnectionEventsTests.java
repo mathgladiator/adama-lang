@@ -21,6 +21,11 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
   }
 
   @Test
+  public void testConnectMustReturnNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ConnectMustReturn_1());
+  }
+
+  @Test
   public void testConnectMustReturnExceptionFree() {
     assertExceptionFree(get_ConnectMustReturn_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedConnectionEventsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The @connected handler must return a boolean(ConnectionEvents)\"");
+    gold.append("\n  \"message\" : \"The @connected handler must return a boolean (ConnectionEvents)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

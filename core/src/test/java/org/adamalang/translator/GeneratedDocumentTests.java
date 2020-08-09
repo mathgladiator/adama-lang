@@ -21,6 +21,11 @@ public class GeneratedDocumentTests extends GeneratedBase {
   }
 
   @Test
+  public void testCantMixChannelAndFunctionsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantMixChannelAndFunctions_1());
+  }
+
+  @Test
   public void testCantMixChannelAndFunctionsExceptionFree() {
     assertExceptionFree(get_CantMixChannelAndFunctions_1());
   }
@@ -39,17 +44,17 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 5,");
+    gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 7,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function/procedure 'foo' was already defined as a channel.(DocumentDefine)\"");
+    gold.append("\n  \"message\" : \"The function 'foo' was already defined as a channel. (DocumentDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -63,7 +68,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Handler 'goo' was already defined as a function.(DocumentDefine)\"");
+    gold.append("\n  \"message\" : \"Handler 'goo' was already defined as a function. (DocumentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -82,6 +87,11 @@ public class GeneratedDocumentTests extends GeneratedBase {
   @Test
   public void testDuplicateComputeFieldsFailure() {
     assertLiveFail(get_DuplicateComputeFields_2());
+  }
+
+  @Test
+  public void testDuplicateComputeFieldsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicateComputeFields_2());
   }
 
   @Test
@@ -113,7 +123,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Global field 'x' was already defined(GlobalDefine)\"");
+    gold.append("\n  \"message\" : \"Global field 'x' was already defined (GlobalDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -127,7 +137,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Global field 'y' was already defined(GlobalDefine)\"");
+    gold.append("\n  \"message\" : \"Global field 'y' was already defined (GlobalDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -149,6 +159,11 @@ public class GeneratedDocumentTests extends GeneratedBase {
   }
 
   @Test
+  public void testDuplicateEnumsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicateEnums_3());
+  }
+
+  @Test
   public void testDuplicateEnumsExceptionFree() {
     assertExceptionFree(get_DuplicateEnums_3());
   }
@@ -167,17 +182,31 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"line\" : 1,");
     gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 12");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Enum 'X' was already defined(DocumentDefine)\"");
+    gold.append("\n  \"message\" : \"The enumeration 'X' was already defined. (DocumentDefine)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"character\" : 12");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"The enumeration 'X' was defined here. (DocumentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -196,6 +225,11 @@ public class GeneratedDocumentTests extends GeneratedBase {
   @Test
   public void testDuplicateFieldsFailure() {
     assertLiveFail(get_DuplicateFields_4());
+  }
+
+  @Test
+  public void testDuplicateFieldsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicateFields_4());
   }
 
   @Test
@@ -227,7 +261,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Global field 'x' was already defined(GlobalDefine)\"");
+    gold.append("\n  \"message\" : \"Global field 'x' was already defined (GlobalDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -249,6 +283,11 @@ public class GeneratedDocumentTests extends GeneratedBase {
   }
 
   @Test
+  public void testDuplicateMessagesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicateMessages_5());
+  }
+
+  @Test
   public void testDuplicateMessagesExceptionFree() {
     assertExceptionFree(get_DuplicateMessages_5());
   }
@@ -267,17 +306,31 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"line\" : 4,");
     gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 6,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'M' was already(DocumentDefine)\"");
+    gold.append("\n  \"message\" : \"The message 'M' was already defined. (DocumentDefine)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 1");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"The message 'M' was defined here. (DocumentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -296,6 +349,11 @@ public class GeneratedDocumentTests extends GeneratedBase {
   @Test
   public void testDuplicatePoliciesFailure() {
     assertLiveFail(get_DuplicatePolicies_6());
+  }
+
+  @Test
+  public void testDuplicatePoliciesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicatePolicies_6());
   }
 
   @Test
@@ -327,7 +385,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Global policy 'foo' was already defined(GlobalDefine)\"");
+    gold.append("\n  \"message\" : \"Global policy 'foo' was already defined (GlobalDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -346,6 +404,11 @@ public class GeneratedDocumentTests extends GeneratedBase {
   @Test
   public void testDuplicateRecordsFailure() {
     assertLiveFail(get_DuplicateRecords_7());
+  }
+
+  @Test
+  public void testDuplicateRecordsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicateRecords_7());
   }
 
   @Test
@@ -377,7 +440,21 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'R' was already(DocumentDefine)\"");
+    gold.append("\n  \"message\" : \"The record 'R' was already defined. (DocumentDefine)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 1");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"The record 'R' was defined here. (DocumentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -861,6 +938,11 @@ public class GeneratedDocumentTests extends GeneratedBase {
   }
 
   @Test
+  public void testUnknownTypeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_UnknownType_9());
+  }
+
+  @Test
   public void testUnknownTypeExceptionFree() {
     assertExceptionFree(get_UnknownType_9());
   }
@@ -889,7 +971,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: the type 'X' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: the type 'X' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -903,7 +985,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Variable 'x' has no backing type(EnvironmentDefine)\"");
+    gold.append("\n  \"message\" : \"Variable 'x' has no backing type (EnvironmentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

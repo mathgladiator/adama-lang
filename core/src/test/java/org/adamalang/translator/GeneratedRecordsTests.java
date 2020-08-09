@@ -497,6 +497,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testAssignmentIssuesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_AssignmentIssues_2());
+  }
+
+  @Test
   public void testAssignmentIssuesExceptionFree() {
     assertExceptionFree(get_AssignmentIssues_2());
   }
@@ -525,7 +530,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'maybe<R>' is unable to store type 'R'.(TypeCheckReferencesX)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'maybe<R>' is unable to store type 'R'. (TypeCheckReferencesX)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -539,7 +544,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'R' is not applicable for assignment (=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'R' is not applicable for assignment (=) (Assignment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -553,7 +558,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Reactive pointers must be initialized(DefinePtr)\"");
+    gold.append("\n  \"message\" : \"Reactive pointers must be initialized (DefinePtr)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -572,6 +577,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   @Test
   public void testClientRefNotFoundFailure() {
     assertLiveFail(get_ClientRefNotFound_3());
+  }
+
+  @Test
+  public void testClientRefNotFoundNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ClientRefNotFound_3());
   }
 
   @Test
@@ -603,7 +613,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Field 'c' was not defined within the record(ViewerPolicy)\"");
+    gold.append("\n  \"message\" : \"Field 'c' was not defined within the record (ViewerPolicy)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1447,6 +1457,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testDuplicateFieldsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicateFields_6());
+  }
+
+  @Test
   public void testDuplicateFieldsExceptionFree() {
     assertExceptionFree(get_DuplicateFields_6());
   }
@@ -1475,21 +1490,21 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Field 'x' was already defined(StructureDefine)\"");
+    gold.append("\n  \"message\" : \"Field 'x' was already defined (StructureDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 8,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 9,");
+    gold.append("\n      \"character\" : 3");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function 'foo' does not return in all cases(MethodDefine)\"");
+    gold.append("\n  \"message\" : \"Function 'foo' does not return in all cases (MethodDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1508,6 +1523,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   @Test
   public void testDuplicatePolicyFailure() {
     assertLiveFail(get_DuplicatePolicy_7());
+  }
+
+  @Test
+  public void testDuplicatePolicyNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicatePolicy_7());
   }
 
   @Test
@@ -1539,7 +1559,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Policy 'x' was already defined(RecordMethodDefine)\"");
+    gold.append("\n  \"message\" : \"Policy 'x' was already defined (RecordMethodDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1558,6 +1578,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   @Test
   public void testDuplicateViewerComputeFieldsFailure() {
     assertLiveFail(get_DuplicateViewerComputeFields_8());
+  }
+
+  @Test
+  public void testDuplicateViewerComputeFieldsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicateViewerComputeFields_8());
   }
 
   @Test
@@ -1589,7 +1614,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Bubble 'x' was already defined(StructureDefine)\"");
+    gold.append("\n  \"message\" : \"Bubble 'x' was already defined (StructureDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1603,7 +1628,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Bubble 'x' was already defined(StructureDefine)\"");
+    gold.append("\n  \"message\" : \"Bubble 'x' was already defined (StructureDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1617,7 +1642,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Bubble 'y' was already defined(StructureDefine)\"");
+    gold.append("\n  \"message\" : \"Bubble 'y' was already defined (StructureDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1639,6 +1664,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testFailedFindPolicyForViewNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_FailedFindPolicyForView_9());
+  }
+
+  @Test
   public void testFailedFindPolicyForViewExceptionFree() {
     assertExceptionFree(get_FailedFindPolicyForView_9());
   }
@@ -1657,17 +1687,17 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 12");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Policy 'p' was not found(CustomPolicy)\"");
+    gold.append("\n  \"message\" : \"Policy 'p' was not found (CustomPolicy)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1686,6 +1716,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   @Test
   public void testIdMustBeIntFailure() {
     assertLiveFail(get_IdMustBeInt_10());
+  }
+
+  @Test
+  public void testIdMustBeIntNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_IdMustBeInt_10());
   }
 
   @Test
@@ -1717,7 +1752,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"id must be type int(Record)\"");
+    gold.append("\n  \"message\" : \"id must be type int (Record)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1736,6 +1771,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   @Test
   public void testInvalidFormulaFailure() {
     assertLiveFail(get_InvalidFormula_11());
+  }
+
+  @Test
+  public void testInvalidFormulaNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_InvalidFormula_11());
   }
 
   @Test
@@ -1767,7 +1807,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' was not defined(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' was not defined (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1781,7 +1821,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Variable 'x' has no backing type(EnvironmentDefine)\"");
+    gold.append("\n  \"message\" : \"Variable 'x' has no backing type (EnvironmentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -3895,6 +3935,11 @@ public class GeneratedRecordsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPolicyNotFoundNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_PolicyNotFound_16());
+  }
+
+  @Test
   public void testPolicyNotFoundExceptionFree() {
     assertExceptionFree(get_PolicyNotFound_16());
   }
@@ -3923,7 +3968,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Policy 'p' was not found(CustomPolicy)\"");
+    gold.append("\n  \"message\" : \"Policy 'p' was not found (CustomPolicy)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

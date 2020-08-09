@@ -46,6 +46,11 @@ public class DefineMethod extends StructureComponent {
     this.tokenReadonly = tokenReadonly;
     this.code = code;
     cachedInstance = null;
+    ingest(methodToken);
+    ingest(nameToken);
+    ingest(openParen);
+    ingest(closeParen);
+    ingest(code);
   }
 
   @Override
@@ -98,6 +103,7 @@ public class DefineMethod extends StructureComponent {
         environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text), "MethodDefine");
       }
       cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null);
+      cachedInstance.ingest(this);
     }
     return cachedInstance;
   }

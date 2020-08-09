@@ -23,6 +23,17 @@ public class DocumentPosition {
     endLinePosition = 0;
   }
 
+  /** aggregate the positions together */
+  public static DocumentPosition sum(DocumentPosition... positions) {
+    DocumentPosition result = new DocumentPosition();
+    for (DocumentPosition position : positions) {
+      if (position != null) {
+        result.ingest(position);
+      }
+    }
+    return result;
+  }
+
   /** @param other another document position to ingest */
   public DocumentPosition ingest(final DocumentPosition other) {
     if (other != null) {

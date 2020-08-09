@@ -17,7 +17,6 @@ public class DefineDocumentEvent extends Definition {
   public final Token clientVarToken;
   public final Token closeParen;
   public final Block code;
-  private ControlFlow codeControlFlow;
   public final Token eventToken;
   public final Token openParen;
   public final DocumentEvent which;
@@ -52,7 +51,7 @@ public class DefineDocumentEvent extends Definition {
 
   @Override
   public void typing(final Environment environment) {
-    codeControlFlow = code.typing(nextEnvironment(environment));
+    ControlFlow codeControlFlow = code.typing(nextEnvironment(environment));
     if (which == DocumentEvent.ClientConnected && codeControlFlow == ControlFlow.Open) {
       environment.document.createError(this, String.format("The @connected handler must return a boolean"), "ConnectionEvents");
     }

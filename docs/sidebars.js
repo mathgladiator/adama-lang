@@ -33,8 +33,7 @@ module.exports = {
       'reference-built-in-math-expressions',
       'reference-anonymous-messages-and-arrays',
       'reference-maybe-types',
-      'reference-tables',
-      'reference-linq',
+      'reference-tables-linq',
       'reference-control-statements',
       'reference-defining-functions-and-procedures',
       'reference-methods-on-records',
@@ -47,6 +46,7 @@ module.exports = {
       'reference-connection-events',
       'reference-built-in-testing',
       'reference-anonymous-messages-and-arrays',
+      'reference-errors',
     ],
     Who: [
       'who-jeff',

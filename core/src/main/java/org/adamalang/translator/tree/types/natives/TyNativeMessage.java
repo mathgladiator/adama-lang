@@ -163,7 +163,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   }
 
   public TyNativeMessage makeAnonymousCopy() {
-    return new TyNativeMessage(behavior, messageToken, nameToken, storage.makeAnonymousCopy());
+    return (TyNativeMessage) (new TyNativeMessage(behavior, messageToken, nameToken, storage.makeAnonymousCopy()).withPosition(this));
   }
 
   @Override
@@ -178,7 +178,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   public TyNativeMessage makeReadonlyCopy() {
     final var copy = new TyNativeMessage(behavior, messageToken, nameToken, storage);
     copy.readonly = true;
-    return copy;
+    return (TyNativeMessage) (copy.withPosition(this));
   }
 
   @Override

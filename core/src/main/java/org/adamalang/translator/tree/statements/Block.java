@@ -83,15 +83,13 @@ public class Block extends Statement {
   @Override
   public ControlFlow typing(final Environment environment) {
     var flow = ControlFlow.Open;
-    var n = statements.size();
     for (final Statement stmt : statements) {
-      n--;
       // check that it must be Open
+      if (flow == ControlFlow.Returns) {
+        environment.document.createError(stmt, String.format("This code is unreachable."), "Block");
+      }
       if (stmt.typing(environment) == ControlFlow.Returns) {
         flow = ControlFlow.Returns;
-      }
-      if (n > 0 && flow == ControlFlow.Returns) {
-        environment.document.createError(stmt, String.format("This code is unreachable."), "Block");
       }
     }
     return flow;

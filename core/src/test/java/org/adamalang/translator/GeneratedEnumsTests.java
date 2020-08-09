@@ -21,6 +21,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testCantCrossTypesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantCrossTypes_1());
+  }
+
+  @Test
   public void testCantCrossTypesExceptionFree() {
     assertExceptionFree(get_CantCrossTypes_1());
   }
@@ -43,13 +48,13 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"character\" : 12");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: enum types are incompatible 'X' vs 'T'.(Assignment)\"");
+    gold.append("\n  \"message\" : \"Type check failure: enum types are incompatible 'X' vs 'T'. (Assignment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -57,13 +62,13 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"character\" : 12");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'X' is unable to store type 'T'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'X' is unable to store type 'T'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -82,6 +87,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   @Test
   public void testCantDefineDuplicatesFailure() {
     assertLiveFail(get_CantDefineDuplicates_2());
+  }
+
+  @Test
+  public void testCantDefineDuplicatesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantDefineDuplicates_2());
   }
 
   @Test
@@ -107,13 +117,13 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"character\" : 32");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Enum 'E' was has duplicates for X defined(DocumentDefine)\"");
+    gold.append("\n  \"message\" : \"The enumeration 'E' has duplicates for 'X' defined. (DocumentDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -121,13 +131,13 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 0,");
+    gold.append("\n      \"character\" : 32");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Enum 'E' was has duplicates for Z defined(DocumentDefine)\"");
+    gold.append("\n  \"message\" : \"The enumeration 'E' has duplicates for 'Z' defined. (DocumentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -149,6 +159,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testCantFindEnumNameNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantFindEnumName_3());
+  }
+
+  @Test
   public void testCantFindEnumNameExceptionFree() {
     assertExceptionFree(get_CantFindEnumName_3());
   }
@@ -167,17 +182,17 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 0,");
     gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"enum 'X' has no values(EnumStorage)\"");
+    gold.append("\n  \"message\" : \"enum 'X' has no values (EnumStorage)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -191,7 +206,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Y' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Y' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -205,7 +220,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Y' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Y' was not found. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -224,6 +239,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   @Test
   public void testCantFindEnumValueFailure() {
     assertLiveFail(get_CantFindEnumValue_4());
+  }
+
+  @Test
+  public void testCantFindEnumValueNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantFindEnumValue_4());
   }
 
   @Test
@@ -255,7 +275,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type lookup failure: unable to find value 'x' within the enumeration 'X'(Enumerations)\"");
+    gold.append("\n  \"message\" : \"Type lookup failure: unable to find value 'x' within the enumeration 'X' (Enumerations)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -274,6 +294,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   @Test
   public void testDispatchDisagreeReturnType1Failure() {
     assertLiveFail(get_DispatchDisagreeReturnType1_5());
+  }
+
+  @Test
+  public void testDispatchDisagreeReturnType1NotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DispatchDisagreeReturnType1_5());
   }
 
   @Test
@@ -305,7 +330,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Dispatcher 'x' do not agree on return type.(EnumStorage)\"");
+    gold.append("\n  \"message\" : \"Dispatcher 'x' do not agree on return type. (EnumStorage)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -319,7 +344,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Dispatcher 'x' do not agree on return type.(EnumStorage)\"");
+    gold.append("\n  \"message\" : \"Dispatcher 'x' do not agree on return type. (EnumStorage)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -338,6 +363,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   @Test
   public void testDispatchDisagreeReturnType2Failure() {
     assertLiveFail(get_DispatchDisagreeReturnType2_6());
+  }
+
+  @Test
+  public void testDispatchDisagreeReturnType2NotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DispatchDisagreeReturnType2_6());
   }
 
   @Test
@@ -369,7 +399,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Dispatcher 'x' do not agree on return type.(EnumStorage)\"");
+    gold.append("\n  \"message\" : \"Dispatcher 'x' do not agree on return type. (EnumStorage)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -383,7 +413,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Dispatcher 'x' do not agree on return type.(EnumStorage)\"");
+    gold.append("\n  \"message\" : \"Dispatcher 'x' do not agree on return type. (EnumStorage)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -725,6 +755,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testDispatchManyMissingNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DispatchManyMissing_8());
+  }
+
+  @Test
   public void testDispatchManyMissingExceptionFree() {
     assertExceptionFree(get_DispatchManyMissing_8());
   }
@@ -743,17 +778,17 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 0,");
     gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Enum 'E' has a dispatcher 'x' which is incomplete and lacks: X, Z.(EnumStorage)\"");
+    gold.append("\n  \"message\" : \"Enum 'E' has a dispatcher 'x' which is incomplete and lacks: X, Z. (EnumStorage)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1123,6 +1158,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testDispatcherForNoEnumNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DispatcherForNoEnum_10());
+  }
+
+  @Test
   public void testDispatcherForNoEnumExceptionFree() {
     assertExceptionFree(get_DispatcherForNoEnum_10());
   }
@@ -1151,7 +1191,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Dispatcher 'foo' was unable to find the given enumeration type of 'E'(DocumentDefine)\"");
+    gold.append("\n  \"message\" : \"Dispatcher 'foo' was unable to find the given enumeration type of 'E' (DocumentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1170,6 +1210,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   @Test
   public void testDispatcherForWrongTypeFailure() {
     assertLiveFail(get_DispatcherForWrongType_11());
+  }
+
+  @Test
+  public void testDispatcherForWrongTypeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DispatcherForWrongType_11());
   }
 
   @Test
@@ -1201,7 +1246,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Dispatcher 'foo' found 'E', but it was 'E'(DocumentDefine)\"");
+    gold.append("\n  \"message\" : \"Dispatcher 'foo' found 'E', but it was 'E' (DocumentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1220,6 +1265,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   @Test
   public void testDispatcherFoundNoValuesFailure() {
     assertLiveFail(get_DispatcherFoundNoValues_12());
+  }
+
+  @Test
+  public void testDispatcherFoundNoValuesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DispatcherFoundNoValues_12());
   }
 
   @Test
@@ -1251,7 +1301,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Dispatcher 'foo' has a value prefix 'C' which does not relate to any value within enum 'X'(EnumStorage)\"");
+    gold.append("\n  \"message\" : \"Dispatcher 'foo' has a value prefix 'C' which does not relate to any value within enum 'X' (EnumStorage)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1265,7 +1315,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The return statement expects no expression(ReturnFlow)\"");
+    gold.append("\n  \"message\" : \"The return statement expects no expression (ReturnFlow)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1279,7 +1329,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The return statement expects no expression(ReturnFlow)\"");
+    gold.append("\n  \"message\" : \"The return statement expects no expression (ReturnFlow)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1301,6 +1351,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   }
 
   @Test
+  public void testDispatcherLacksCoverageNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DispatcherLacksCoverage_13());
+  }
+
+  @Test
   public void testDispatcherLacksCoverageExceptionFree() {
     assertExceptionFree(get_DispatcherLacksCoverage_13());
   }
@@ -1319,17 +1374,17 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 0,");
     gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Enum 'X' has a dispatcher 'foo' which is incomplete and lacks: B.(EnumStorage)\"");
+    gold.append("\n  \"message\" : \"Enum 'X' has a dispatcher 'foo' which is incomplete and lacks: B. (EnumStorage)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1343,7 +1398,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The return statement expects no expression(ReturnFlow)\"");
+    gold.append("\n  \"message\" : \"The return statement expects no expression (ReturnFlow)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1362,6 +1417,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   @Test
   public void testDispatcherMustHaveNoOverlapWhenReturnValueFailure() {
     assertLiveFail(get_DispatcherMustHaveNoOverlapWhenReturnValue_14());
+  }
+
+  @Test
+  public void testDispatcherMustHaveNoOverlapWhenReturnValueNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DispatcherMustHaveNoOverlapWhenReturnValue_14());
   }
 
   @Test
@@ -1393,7 +1453,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Dispatcher 'foo' returns and matches too many for 'X'(EnumStorage)\"");
+    gold.append("\n  \"message\" : \"Dispatcher 'foo' returns and matches too many for 'X' (EnumStorage)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1412,6 +1472,11 @@ public class GeneratedEnumsTests extends GeneratedBase {
   @Test
   public void testDispatcherWithShouldReturnFailure() {
     assertLiveFail(get_DispatcherWithShouldReturn_15());
+  }
+
+  @Test
+  public void testDispatcherWithShouldReturnNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DispatcherWithShouldReturn_15());
   }
 
   @Test
@@ -1443,7 +1508,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Dispatch 'foo' does not return in all cases(DefineDispatcher)\"");
+    gold.append("\n  \"message\" : \"Dispatch 'foo' does not return in all cases (DefineDispatcher)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

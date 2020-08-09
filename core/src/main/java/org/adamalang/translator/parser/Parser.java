@@ -52,7 +52,7 @@ import org.adamalang.translator.tree.expressions.linq.Shuffle;
 import org.adamalang.translator.tree.expressions.linq.Where;
 import org.adamalang.translator.tree.expressions.operators.BinaryExpression;
 import org.adamalang.translator.tree.expressions.operators.InlineConditional;
-import org.adamalang.translator.tree.expressions.operators.Parenthesis;
+import org.adamalang.translator.tree.expressions.operators.Parentheses;
 import org.adamalang.translator.tree.expressions.operators.PostfixMutate;
 import org.adamalang.translator.tree.expressions.operators.PrefixMutate;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
@@ -67,7 +67,13 @@ import org.adamalang.translator.tree.statements.DefineVariable;
 import org.adamalang.translator.tree.statements.EmptyStatement;
 import org.adamalang.translator.tree.statements.Evaluate;
 import org.adamalang.translator.tree.statements.Statement;
-import org.adamalang.translator.tree.statements.control.*;
+import org.adamalang.translator.tree.statements.control.AlterControlFlow;
+import org.adamalang.translator.tree.statements.control.AlterControlFlowMode;
+import org.adamalang.translator.tree.statements.control.InvokeStateMachine;
+import org.adamalang.translator.tree.statements.control.MegaIf;
+import org.adamalang.translator.tree.statements.control.PreemptStateMachine;
+import org.adamalang.translator.tree.statements.control.Return;
+import org.adamalang.translator.tree.statements.control.TransitionStateMachine;
 import org.adamalang.translator.tree.statements.loops.DoWhile;
 import org.adamalang.translator.tree.statements.loops.For;
 import org.adamalang.translator.tree.statements.loops.ForEach;
@@ -289,7 +295,7 @@ public class Parser {
       final var endParen = tokens.pop();
       if (endParen == null) { throw new ParseException("Parser expected a ), but instead got end of stream.", token); }
       if (endParen.isSymbolWithTextEq(")")) {
-        return new Parenthesis(token, expr, endParen);
+        return new Parentheses(token, expr, endParen);
       } else {
         throw new ParseException("Parser expected a ), but instead got an `" + endParen + "`", endParen);
       }
@@ -643,6 +649,8 @@ public class Parser {
   }
 
   public Consumer<TopLevelDocumentHandler> define_message_trailer(final Token messageToken) throws AdamaLangException {
+    PublicPolicy policy = new PublicPolicy(null);
+    policy.ingest(messageToken);
     final var name = id();
     final var storage = new StructureStorage(StorageSpecialization.Message, false, consumeExpectedSymbol("{"));
     var endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
@@ -654,7 +662,7 @@ public class Parser {
       if (equalsToken != null) {
         defaultValueOverride = expression();
       }
-      storage.add(new FieldDefinition(new PublicPolicy(null), null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";")));
+      storage.add(new FieldDefinition(policy, null, type, field, equalsToken, null, defaultValueOverride, consumeExpectedSymbol(";")));
       endBrace = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
     }
     storage.end(endBrace);

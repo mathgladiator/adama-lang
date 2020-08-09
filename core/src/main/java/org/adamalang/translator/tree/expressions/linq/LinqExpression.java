@@ -4,7 +4,7 @@
 package org.adamalang.translator.tree.expressions.linq;
 
 import org.adamalang.translator.tree.expressions.Expression;
-import org.adamalang.translator.tree.expressions.operators.Parenthesis;
+import org.adamalang.translator.tree.expressions.operators.Parentheses;
 
 public abstract class LinqExpression extends Expression {
   protected boolean intermediateExpression;
@@ -18,8 +18,8 @@ public abstract class LinqExpression extends Expression {
 
   protected void indicateIntermediateExpression(final Expression expression) {
     if (expression != null) {
-      if (expression instanceof Parenthesis) {
-        indicateIntermediateExpression(((Parenthesis) expression).expression);
+      if (expression instanceof Parentheses) {
+        indicateIntermediateExpression(((Parentheses) expression).expression);
       } else if (expression instanceof LinqExpression) {
         ((LinqExpression) expression).intermediateExpression = true;
       }

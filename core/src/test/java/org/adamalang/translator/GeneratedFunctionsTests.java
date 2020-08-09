@@ -413,6 +413,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testApplyOnNotAFunctionNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ApplyOnNotAFunction_2());
+  }
+
+  @Test
   public void testApplyOnNotAFunctionExceptionFree() {
     assertExceptionFree(get_ApplyOnNotAFunction_2());
   }
@@ -441,7 +446,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The given type was expected to be a function: 'int'(RuleSetFunctions)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The given type was expected to be a function: 'int' (RuleSetFunctions)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -455,7 +460,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -474,6 +479,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   @Test
   public void testArityMismatchFailure() {
     assertLiveFail(get_ArityMismatch_3());
+  }
+
+  @Test
+  public void testArityMismatchNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ArityMismatch_3());
   }
 
   @Test
@@ -505,7 +515,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function invoked with wrong number of arguments. Expected 1, got 0(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Function invoked with wrong number of arguments. Expected 1, got 0 (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -519,7 +529,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function invoked with wrong number of arguments. Expected 1, got 2(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Function invoked with wrong number of arguments. Expected 1, got 2 (FunctionInvoke)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -871,6 +881,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testBadArgTypeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_BadArgType_5());
+  }
+
+  @Test
   public void testBadArgTypeExceptionFree() {
     assertExceptionFree(get_BadArgType_5());
   }
@@ -899,7 +914,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1240,6 +1255,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testIncompatibleReturnValueNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_IncompatibleReturnValue_7());
+  }
+
+  @Test
   public void testIncompatibleReturnValueExceptionFree() {
     assertExceptionFree(get_IncompatibleReturnValue_7());
   }
@@ -1268,21 +1288,21 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 0,");
     gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function 'square_func' does not return in all cases(FunctionDefine)\"");
+    gold.append("\n  \"message\" : \"The function 'square_func' does not return in all cases (FunctionDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1301,6 +1321,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   @Test
   public void testLookupFailuresFailure() {
     assertLiveFail(get_LookupFailures_8());
+  }
+
+  @Test
+  public void testLookupFailuresNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_LookupFailures_8());
   }
 
   @Test
@@ -1332,7 +1357,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The given type was expected to be a function: 'label'(RuleSetFunctions)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The given type was expected to be a function: 'label' (RuleSetFunctions)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1346,7 +1371,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1360,7 +1385,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'R' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'R' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1374,7 +1399,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1388,7 +1413,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'R' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'R' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1402,7 +1427,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1416,7 +1441,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'channel<M>' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'channel<M>' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1430,7 +1455,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1444,7 +1469,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'client' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'client' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1458,7 +1483,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1472,7 +1497,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'E' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'E' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1486,7 +1511,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1500,7 +1525,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'E[]' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'E[]' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1514,7 +1539,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1528,7 +1553,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'future<M>' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'future<M>' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1542,7 +1567,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1556,7 +1581,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'maybe<int>' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'maybe<int>' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1570,7 +1595,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1584,7 +1609,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'list<M>' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'list<M>' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1598,7 +1623,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1612,7 +1637,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'bool' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'bool' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1626,7 +1651,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1640,7 +1665,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'client' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'client' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1654,7 +1679,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1668,7 +1693,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'double' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'double' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1682,7 +1707,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1696,7 +1721,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'E' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'E' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1710,7 +1735,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1724,7 +1749,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'int' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'int' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1738,7 +1763,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1752,7 +1777,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'double' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'double' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1766,7 +1791,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1780,7 +1805,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'maybe<int>' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'maybe<int>' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1794,7 +1819,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1808,7 +1833,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'R' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'R' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1822,7 +1847,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1836,7 +1861,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'label' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'label' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1850,7 +1875,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1864,7 +1889,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'string' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'string' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1878,7 +1903,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1892,7 +1917,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'table<R>' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'table<R>' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1906,7 +1931,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2877,6 +2902,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMustReturnNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_MustReturn_11());
+  }
+
+  @Test
   public void testMustReturnExceptionFree() {
     assertExceptionFree(get_MustReturn_11());
   }
@@ -2895,31 +2925,31 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 6,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function 'x' does not return in all cases(FunctionDefine)\"");
+    gold.append("\n  \"message\" : \"The procedure 'x' does not return in all cases (FunctionDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 9,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 14,");
+    gold.append("\n      \"character\" : 3");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function 'foo' does not return in all cases(MethodDefine)\"");
+    gold.append("\n  \"message\" : \"Function 'foo' does not return in all cases (MethodDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2933,7 +2963,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Policy 'p' does not return in all cases(PolicyDefine)\"");
+    gold.append("\n  \"message\" : \"Policy 'p' does not return in all cases (PolicyDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -3493,6 +3523,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPureCantInvokeProcedureNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_PureCantInvokeProcedure_13());
+  }
+
+  @Test
   public void testPureCantInvokeProcedureExceptionFree() {
     assertExceptionFree(get_PureCantInvokeProcedure_13());
   }
@@ -3521,7 +3556,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Pure functions can only call other pure functions(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Pure functions can only call other pure functions (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3535,7 +3570,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Pure functions can only call other pure functions(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Pure functions can only call other pure functions (FunctionInvoke)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -3827,6 +3862,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   }
 
   @Test
+  public void testPureMustReturnNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_PureMustReturn_15());
+  }
+
+  @Test
   public void testPureMustReturnExceptionFree() {
     assertExceptionFree(get_PureMustReturn_15());
   }
@@ -3845,31 +3885,31 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 0,");
     gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function 'whoops1' does not return in all cases(FunctionDefine)\"");
+    gold.append("\n  \"message\" : \"The function 'whoops1' does not return in all cases (FunctionDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 3,");
+    gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 8,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function 'whoops2' does not return in all cases(FunctionDefine)\"");
+    gold.append("\n  \"message\" : \"The function 'whoops2' does not return in all cases (FunctionDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -3888,6 +3928,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   @Test
   public void testPureVariablesReadOnlyFailure() {
     assertLiveFail(get_PureVariablesReadOnly_16());
+  }
+
+  @Test
+  public void testPureVariablesReadOnlyNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_PureVariablesReadOnly_16());
   }
 
   @Test
@@ -3919,21 +3964,21 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'x' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'x' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 0,");
     gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function 'whoops1' does not return in all cases(FunctionDefine)\"");
+    gold.append("\n  \"message\" : \"The function 'whoops1' does not return in all cases (FunctionDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3947,7 +3992,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'z' is readonly due to the environment(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'z' is readonly due to the environment (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3961,21 +4006,21 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'z' was not defined(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'z' was not defined (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 15,");
+    gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 17,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function 'cantread' does not return in all cases(FunctionDefine)\"");
+    gold.append("\n  \"message\" : \"The function 'cantread' does not return in all cases (FunctionDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -3994,6 +4039,11 @@ public class GeneratedFunctionsTests extends GeneratedBase {
   @Test
   public void testReactiveCantInvokeProcedureFailure() {
     assertLiveFail(get_ReactiveCantInvokeProcedure_17());
+  }
+
+  @Test
+  public void testReactiveCantInvokeProcedureNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ReactiveCantInvokeProcedure_17());
   }
 
   @Test
@@ -4025,7 +4075,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Reactive expressions can only invoke pure functions(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Reactive expressions can only invoke pure functions (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -4039,7 +4089,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Reactive expressions can only invoke pure functions(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Reactive expressions can only invoke pure functions (FunctionInvoke)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

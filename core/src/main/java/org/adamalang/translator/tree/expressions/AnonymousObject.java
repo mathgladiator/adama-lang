@@ -93,7 +93,7 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
       final var fd = FieldDefinition.invent(type, entry.getKey());
       storage.add(fd);
     }
-    return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("_AnonObjConvert_" + environment.autoVariable()), storage);
+    return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("_AnonObjConvert_" + environment.autoVariable()), storage).withPosition(this);
   }
 
   @Override
@@ -115,7 +115,7 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
 
   @Override
   public void upgradeType(final Environment environment, final TyType newType) {
-    cachedType = newType;
+    cachedType = newType.withPosition(this);
     if (environment.rules.IsNativeMessage(newType, false)) {
       final var other = (TyNativeMessage) newType;
       for (final Map.Entry<String, FieldDefinition> otherField : other.storage().fields.entrySet()) {

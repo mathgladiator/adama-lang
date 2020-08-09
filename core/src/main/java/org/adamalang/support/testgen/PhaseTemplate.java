@@ -4,15 +4,15 @@
 package org.adamalang.support.testgen;
 
 public class PhaseTemplate {
-    public static String inventEmpty() {
-        final var templateBuilder = new StringBuilder();
-        templateBuilder.append("\n");
-        templateBuilder.append("@construct {\n");
-        templateBuilder.append("}\n");
-        templateBuilder.append("\n");
-        templateBuilder.append("test PrimaryTest {\n");
-        templateBuilder.append("  assert false;\n");
-        templateBuilder.append("}\n");
-        return templateBuilder.toString();
-    }
+  public static String inventEmpty() {
+    final var templateBuilder = new StringBuilder();
+    templateBuilder.append("\n");
+    templateBuilder.append("@construct {\n");
+    templateBuilder.append("}\n");
+    templateBuilder.append("\n");
+    templateBuilder.append("test PrimaryTest {\n");
+    templateBuilder.append("  assert false;\n");
+    templateBuilder.append("}\n");
+    return templateBuilder.toString();
+  }
 }

@@ -1638,6 +1638,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   }
 
   @Test
+  public void testWhenCantAddNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_WhenCantAdd_5());
+  }
+
+  @Test
   public void testWhenCantAddExceptionFree() {
     assertExceptionFree(get_WhenCantAdd_5());
   }
@@ -1661,12 +1666,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'bool' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1675,12 +1680,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1689,12 +1694,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 3,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'int' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a numeric type of 'int' which can be added with types: 'int', 'double', or 'string'. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1703,12 +1708,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 4,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'double' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1717,12 +1722,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 5,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'double' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a numeric type of 'double' which can be added with types: 'int, 'double', or 'string'. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1731,12 +1736,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 6,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 25");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'client' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1745,12 +1750,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'client' and '_AnonObjConvert_0' are unable to be added with the + operator.\\n\\tThe left hand side has a type that is unable to the added. (ADD01)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1769,6 +1774,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   @Test
   public void testWhenCantCompareFailure() {
     assertLiveFail(get_WhenCantCompare_6());
+  }
+
+  @Test
+  public void testWhenCantCompareNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_WhenCantCompare_6());
   }
 
   @Test
@@ -1795,12 +1805,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 4,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'int' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'int' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1809,12 +1819,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 5,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'int' and 'bool' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'int' and 'bool' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1823,12 +1833,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 6,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'double' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'double' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1837,12 +1847,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'double' and 'bool' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'double' and 'bool' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1851,12 +1861,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 8,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 26");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'client' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'client' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1865,12 +1875,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 9,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 24");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'client' and '_AnonObjConvert_0' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'client' and '_AnonObjConvert_0' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1879,12 +1889,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 10,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: enum types are incompatible 'X' vs 'T'.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: enum types are incompatible 'X' vs 'T'. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1893,12 +1903,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 15,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'int' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'int' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1907,12 +1917,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 16,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'int' and 'bool' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'int' and 'bool' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1921,12 +1931,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 17,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'double' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'double' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1935,12 +1945,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 18,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'double' and 'bool' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'double' and 'bool' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1949,12 +1959,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 19,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 26");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'client' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'bool' and 'client' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1963,12 +1973,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 20,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 24");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'client' and '_AnonObjConvert_0' for equality.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to compare types 'client' and '_AnonObjConvert_0' for equality. (RuleSetEquality)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1977,12 +1987,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 21,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: enum types are incompatible 'X' vs 'T'.(RuleSetEquality)\"");
+    gold.append("\n  \"message\" : \"Type check failure: enum types are incompatible 'X' vs 'T'. (RuleSetEquality)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2001,6 +2011,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   @Test
   public void testWhenCantDivideFailure() {
     assertLiveFail(get_WhenCantDivide_7());
+  }
+
+  @Test
+  public void testWhenCantDivideNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_WhenCantDivide_7());
   }
 
   @Test
@@ -2027,12 +2042,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'bool' are unable to be divided with the / operator.(Divide)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'bool' are unable to be divided with the / operator. (Divide)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2041,12 +2056,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be divided with the / operator.(Divide)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be divided with the / operator. (Divide)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2055,12 +2070,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 3,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be divided with the / operator.(Divide)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be divided with the / operator. (Divide)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2069,12 +2084,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 4,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be divided with the / operator.(Divide)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be divided with the / operator. (Divide)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2083,12 +2098,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 5,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be divided with the / operator.(Divide)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be divided with the / operator. (Divide)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2097,12 +2112,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 6,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 25");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be divided with the / operator.(Divide)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be divided with the / operator. (Divide)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2111,12 +2126,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be divided with the / operator.(Divide)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be divided with the / operator. (Divide)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2135,6 +2150,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   @Test
   public void testWhenCantLogicFailure() {
     assertLiveFail(get_WhenCantLogic_8());
+  }
+
+  @Test
+  public void testWhenCantLogicNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_WhenCantLogic_8());
   }
 
   @Test
@@ -2166,7 +2186,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2175,12 +2195,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'int' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2194,7 +2214,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2203,12 +2223,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 3,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'int' and 'bool' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2222,7 +2242,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'double'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'double' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2231,12 +2251,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 4,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'double' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2250,7 +2270,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'double'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'double' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2259,12 +2279,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 5,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'double' and 'bool' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2278,7 +2298,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'client'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'client' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2287,12 +2307,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 6,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 26");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'client' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2306,21 +2326,21 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'client'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'client' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 17,");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 17,");
+    gold.append("\n      \"character\" : 24");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually '_AnonObjConvert_0'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually '_AnonObjConvert_0' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2329,12 +2349,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 24");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'client' and '_AnonObjConvert_0' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2348,7 +2368,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2357,12 +2377,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 12,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'int' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2376,7 +2396,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2385,12 +2405,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 13,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'int' and 'bool' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2404,7 +2424,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'double'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'double' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2413,12 +2433,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 14,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'double' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2432,7 +2452,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'double'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'double' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2441,12 +2461,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 15,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'double' and 'bool' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2460,7 +2480,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'client'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'client' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2469,12 +2489,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 16,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 26");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'client' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2488,21 +2508,21 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'client'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'client' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 17,");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 17,");
+    gold.append("\n      \"character\" : 24");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually '_AnonObjConvert_0'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually '_AnonObjConvert_0' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2511,12 +2531,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 17,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 24");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be joined with logical operators (&&, ||).(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"The types 'client' and '_AnonObjConvert_0' are unable to be joined with logical operators (&&, ||).\\n\\tBoth left and right hand side of the operator must be of type 'bool'. (RuleSetLogic)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2535,6 +2555,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   @Test
   public void testWhenCantModFailure() {
     assertLiveFail(get_WhenCantMod_9());
+  }
+
+  @Test
+  public void testWhenCantModNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_WhenCantMod_9());
   }
 
   @Test
@@ -2561,12 +2586,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'bool' are unable to be used with the mod (%) operator/.(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'bool' are unable to be used with the mod (%) operator/. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2575,12 +2600,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be used with the mod (%) operator/.(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be used with the mod (%) operator/. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2589,12 +2614,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 3,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be used with the mod (%) operator/.(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be used with the mod (%) operator/. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2603,12 +2628,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 4,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be used with the mod (%) operator/.(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be used with the mod (%) operator/. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2617,12 +2642,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 5,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be used with the mod (%) operator/.(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be used with the mod (%) operator/. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2631,12 +2656,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 6,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 25");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be used with the mod (%) operator/.(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be used with the mod (%) operator/. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2645,12 +2670,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be used with the mod (%) operator/.(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be used with the mod (%) operator/. (RuleSetLogic)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2669,6 +2694,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   @Test
   public void testWhenCantMultiplyFailure() {
     assertLiveFail(get_WhenCantMultiply_10());
+  }
+
+  @Test
+  public void testWhenCantMultiplyNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_WhenCantMultiply_10());
   }
 
   @Test
@@ -2695,12 +2725,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'bool' are unable to be multiplied with the * operator.(Multiply)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'bool' are unable to be multiplied with the * operator. (Multiply)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2709,12 +2739,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be multiplied with the * operator.(Multiply)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be multiplied with the * operator. (Multiply)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2723,12 +2753,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 3,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be multiplied with the * operator.(Multiply)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be multiplied with the * operator. (Multiply)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2737,12 +2767,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 4,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be multiplied with the * operator.(Multiply)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be multiplied with the * operator. (Multiply)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2751,12 +2781,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 5,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be multiplied with the * operator.(Multiply)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be multiplied with the * operator. (Multiply)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2765,12 +2795,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 6,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 25");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be multiplied with the * operator.(Multiply)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be multiplied with the * operator. (Multiply)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2779,12 +2809,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be multiplied with the * operator.(Multiply)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be multiplied with the * operator. (Multiply)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2803,6 +2833,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   @Test
   public void testWhenCantRelateFailure() {
     assertLiveFail(get_WhenCantRelate_11());
+  }
+
+  @Test
+  public void testWhenCantRelateNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_WhenCantRelate_11());
   }
 
   @Test
@@ -2829,12 +2864,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'bool' is unable to be compared with type 'bool'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'bool' is unable to be compared with type 'bool'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2843,12 +2878,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'bool' is unable to be compared with type 'int'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'bool' is unable to be compared with type 'int'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2857,12 +2892,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 3,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to be compared with type 'bool'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'int' is unable to be compared with type 'bool'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2871,12 +2906,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 4,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'bool' is unable to be compared with type 'double'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'bool' is unable to be compared with type 'double'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2885,12 +2920,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 5,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'double' is unable to be compared with type 'bool'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'double' is unable to be compared with type 'bool'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2899,12 +2934,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 6,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 25");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'bool' is unable to be compared with type 'client'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'bool' is unable to be compared with type 'client'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2913,12 +2948,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'client' is unable to be compared with type '_AnonObjConvert_0'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'client' is unable to be compared with type '_AnonObjConvert_0'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2927,12 +2962,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 11,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'bool' is unable to be compared with type 'bool'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'bool' is unable to be compared with type 'bool'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2941,12 +2976,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 12,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'bool' is unable to be compared with type 'int'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'bool' is unable to be compared with type 'int'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2955,12 +2990,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 13,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to be compared with type 'bool'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'int' is unable to be compared with type 'bool'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2969,12 +3004,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 14,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'bool' is unable to be compared with type 'double'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'bool' is unable to be compared with type 'double'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2983,12 +3018,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 15,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'double' is unable to be compared with type 'bool'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'double' is unable to be compared with type 'bool'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2997,12 +3032,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 16,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 25");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'bool' is unable to be compared with type 'client'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'bool' is unable to be compared with type 'client'. (Compare)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3011,12 +3046,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 17,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'client' is unable to be compared with type '_AnonObjConvert_0'.(Compare)\"");
+    gold.append("\n  \"message\" : \"The type 'client' is unable to be compared with type '_AnonObjConvert_0'. (Compare)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -3035,6 +3070,11 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   @Test
   public void testWhenCantSubtractFailure() {
     assertLiveFail(get_WhenCantSubtract_12());
+  }
+
+  @Test
+  public void testWhenCantSubtractNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_WhenCantSubtract_12());
   }
 
   @Test
@@ -3061,12 +3101,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'bool' are unable to be subtracted with the - operator.(Subtracted)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'bool' are unable to be subtracted with the - operator. (Subtracted)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3075,12 +3115,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be subtracted with the - operator.(Subtracted)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'int' are unable to be subtracted with the - operator. (Subtracted)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3089,12 +3129,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 3,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be subtracted with the - operator.(Subtracted)\"");
+    gold.append("\n  \"message\" : \"The types 'int' and 'bool' are unable to be subtracted with the - operator. (Subtracted)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3103,12 +3143,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 4,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'double' are unable to be subtracted with the - operator.(Subtracted)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'double' are unable to be subtracted with the - operator. (Subtracted)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3117,12 +3157,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 5,");
-    gold.append("\n      \"character\" : 14");
+    gold.append("\n      \"character\" : 21");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'double' and 'bool' are unable to be subtracted with the - operator.(Subtracted)\"");
+    gold.append("\n  \"message\" : \"The types 'double' and 'bool' are unable to be subtracted with the - operator. (Subtracted)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3131,12 +3171,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 6,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 25");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'client' are unable to be subtracted with the - operator.(Subtracted)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'client' are unable to be subtracted with the - operator. (Subtracted)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -3145,12 +3185,12 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 23");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'client' and '_AnonObjConvert_0' are unable to be subtracted with the - operator.(Subtracted)\"");
+    gold.append("\n  \"message\" : \"The types 'client' and '_AnonObjConvert_0' are unable to be subtracted with the - operator. (Subtracted)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

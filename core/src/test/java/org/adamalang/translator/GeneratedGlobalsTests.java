@@ -21,6 +21,11 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   }
 
   @Test
+  public void testFunctionOverloadingIncorrectNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_FunctionOverloadingIncorrect_1());
+  }
+
+  @Test
   public void testFunctionOverloadingIncorrectExceptionFree() {
     assertExceptionFree(get_FunctionOverloadingIncorrect_1());
   }
@@ -39,17 +44,17 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 0,");
     gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Overloaded Functioned has many identical calls(FunctionOverlap)\"");
+    gold.append("\n  \"message\" : \"Overloaded function has many identical calls (FunctionOverlap)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -715,6 +720,11 @@ public class GeneratedGlobalsTests extends GeneratedBase {
   }
 
   @Test
+  public void testNotFoundNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NotFound_4());
+  }
+
+  @Test
   public void testNotFoundExceptionFree() {
     assertExceptionFree(get_NotFound_4());
   }
@@ -743,7 +753,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Global 'String' lacks 'foo'(GlobaLookup)\"");
+    gold.append("\n  \"message\" : \"Global 'String' lacks 'foo' (GlobaLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -757,7 +767,7 @@ public class GeneratedGlobalsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

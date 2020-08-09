@@ -16,15 +16,15 @@ bool found_impossible_thing;
   tbl <- {x:5, y:2};
   tbl <- {x:1, y:2};
 
-  if ((select tbl order by x desc, y desc)[0] as thing) {
+  if ((iterate tbl order by x desc, y desc)[0] as thing) {
     sum = thing.x + thing.y;
   }
 
   found_impossible_thing = false;
-  if ((select tbl order by x desc, y desc)[100] as thing) {
+  if ((iterate tbl order by x desc, y desc)[100] as thing) {
     found_impossible_thing = true;
   }
-  if ((select tbl order by x desc, y desc)[-100] as thing) {
+  if ((iterate tbl order by x desc, y desc)[-100] as thing) {
     found_impossible_thing = true;
   }
 }

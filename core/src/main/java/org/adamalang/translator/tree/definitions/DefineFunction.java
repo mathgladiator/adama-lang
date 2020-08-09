@@ -46,6 +46,11 @@ public class DefineFunction extends Definition {
     this.code = code;
     uniqueFunctionId = 0;
     beenGivenId = false;
+    ingest(functionTypeToken);
+    ingest(nameToken);
+    ingest(openParen);
+    ingest(closeParen);
+    ingest(code);
   }
 
   @Override
@@ -104,7 +109,9 @@ public class DefineFunction extends Definition {
     for (final FunctionArg arg : args) {
       argTypes.add(arg.type);
     }
-    return new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure);
+    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure);
+    foi.ingest(this);
+    return foi;
   }
 
   @Override
@@ -116,7 +123,7 @@ public class DefineFunction extends Definition {
     }
     final var flow = code.typing(prepareEnvironment(environment));
     if (returnType != null && flow == ControlFlow.Open) {
-      environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text), "FunctionDefine");
+      environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text), "FunctionDefine");
     }
   }
 

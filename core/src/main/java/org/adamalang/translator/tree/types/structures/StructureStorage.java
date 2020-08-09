@@ -83,6 +83,7 @@ public class StructureStorage extends DocumentPosition {
   }
 
   public void add(final DefineMethod dm, final ArrayList<Consumer<Environment>> order) {
+    ingest(dm);
     methods.add(dm);
     order.add(env -> {
       final var foi = dm.typing(env);
@@ -176,7 +177,8 @@ public class StructureStorage extends DocumentPosition {
 
   public void finalizeRecord() {
     if (!fields.containsKey("id")) {
-      final var fakeId = FieldDefinition.invent(new TyReactiveInteger(null), "id");
+      final var fakeId = FieldDefinition.invent(new TyReactiveInteger(null).withPosition(this), "id");
+      fakeId.ingest(this);
       fields.put("id", fakeId);
       fieldsByOrder.add(fakeId);
     }
@@ -201,10 +203,13 @@ public class StructureStorage extends DocumentPosition {
       yielder.accept(semicolon);
     });
     final var policyToCheck = policyToCheckToken.text;
-    final var dp = new DocumentPosition();
+
     policiesForVisibility.add(policyToCheck);
     typeCheckOrder.add(env -> {
       if (!policies.containsKey(policyToCheck)) {
+        final var dp = new DocumentPosition();
+        dp.ingest(requireToken);
+        dp.ingest(semicolon);
         env.document.createError(dp, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
       }
     });

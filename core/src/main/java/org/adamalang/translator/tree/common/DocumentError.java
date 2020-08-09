@@ -41,6 +41,6 @@ public class DocumentError {
     position.writeAsLanguageServerDiagnostic(range);
     diagnostic.put("severity", 1);
     diagnostic.put("source", "error");
-    diagnostic.put("message", tutorial == null ? message : message + "(" + tutorial + ")");
+    diagnostic.put("message", tutorial == null ? message : message + " (" + tutorial + ")");
   }
 }

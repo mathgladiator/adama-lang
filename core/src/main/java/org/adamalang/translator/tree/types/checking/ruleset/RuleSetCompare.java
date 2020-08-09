@@ -4,6 +4,7 @@
 package org.adamalang.translator.tree.types.checking.ruleset;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 
 public class RuleSetCompare {
@@ -22,7 +23,7 @@ public class RuleSetCompare {
       final var bString = RuleSetCommon.IsString(environment, typeB, true);
       if (aString && bString) { return true; }
       if (!silent) {
-        environment.document.createError(typeA, String.format("Type check failure: the type '%s' is unable to be compared with type '%s'.", typeA.getAdamaType(), typeB.getAdamaType()), "Compare");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("The type '%s' is unable to be compared with type '%s'.", typeA.getAdamaType(), typeB.getAdamaType()), "Compare");
       }
     }
     return false;

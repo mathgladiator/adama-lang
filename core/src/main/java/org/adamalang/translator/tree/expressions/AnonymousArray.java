@@ -80,7 +80,7 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
       proposal = environment.rules.GetMaxType(proposal, candidate, false);
     }
     if (proposal != null) {
-      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, proposal, null).withPosition(this);
+      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, proposal.withPosition(this), null).withPosition(this);
     } else {
       return null;
     }
@@ -111,7 +111,7 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
 
   @Override
   public void upgradeType(final Environment environment, final TyType proposalArray) {
-    cachedType = proposalArray;
+    cachedType = proposalArray.withPosition(this);
     if (proposalArray != null && proposalArray instanceof TyNativeArray) {
       final var proposalElement = ((TyNativeArray) proposalArray).getEmbeddedType(environment);
       for (final TokenizedItem<Expression> elementExpr : elements) {

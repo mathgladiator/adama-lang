@@ -21,6 +21,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testErrorsFindingTablesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ErrorsFindingTables_1());
+  }
+
+  @Test
   public void testErrorsFindingTablesExceptionFree() {
     assertExceptionFree(get_ErrorsFindingTables_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: the type 'Z' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: the type 'Z' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -63,7 +68,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to(Environment)\"");
+    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to (Environment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -77,7 +82,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'table<?>', but got a type of 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'table<?>', but got a type of 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -91,7 +96,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'table<?>', but got a type of 'X'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'table<?>', but got a type of 'X'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -110,6 +115,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   @Test
   public void testFieldNotFoundFailure() {
     assertLiveFail(get_FieldNotFound_2());
+  }
+
+  @Test
+  public void testFieldNotFoundNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_FieldNotFound_2());
   }
 
   @Test
@@ -136,12 +146,12 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 23");
+    gold.append("\n      \"character\" : 24");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'list<Y>' lacks field 'z'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'list<Y>' lacks field 'z' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -155,7 +165,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'Y' lacks field 'z'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'Y' lacks field 'z' (FieldLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -174,6 +184,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   @Test
   public void testIndexingCantFailure() {
     assertLiveFail(get_IndexingCant_3());
+  }
+
+  @Test
+  public void testIndexingCantNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_IndexingCant_3());
   }
 
   @Test
@@ -205,7 +220,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: the type 'E' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: the type 'E' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -219,49 +234,49 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Variable 'y' has no backing type(EnvironmentDefine)\"");
+    gold.append("\n  \"message\" : \"Variable 'y' has no backing type (EnvironmentDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 5,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 5,");
+    gold.append("\n      \"character\" : 16");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Index could not find field 'nofound'(StructureDefine)\"");
+    gold.append("\n  \"message\" : \"Index could not find field 'nofound' (StructureDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 6,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 6,");
+    gold.append("\n      \"character\" : 10");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Index for field 'z' is not possible due to type(StructureDefine)\"");
+    gold.append("\n  \"message\" : \"Index for field 'z' is not possible due to type (StructureDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 8,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 8,");
+    gold.append("\n      \"character\" : 10");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Index was already defined: 'x'(StructureDefine)\"");
+    gold.append("\n  \"message\" : \"Index was already defined: 'x' (StructureDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1285,6 +1300,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testIterateNonTableNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_IterateNonTable_5());
+  }
+
+  @Test
   public void testIterateNonTableExceptionFree() {
     assertExceptionFree(get_IterateNonTable_5());
   }
@@ -1313,7 +1333,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to(Environment)\"");
+    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to (Environment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1327,7 +1347,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'table<?>', but got a type of 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'table<?>', but got a type of 'int'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2803,6 +2823,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   }
 
   @Test
+  public void testNonOrderableNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NonOrderable_8());
+  }
+
+  @Test
   public void testNonOrderableExceptionFree() {
     assertExceptionFree(get_NonOrderable_8());
   }
@@ -2822,30 +2847,30 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
     gold.append("\n      \"line\" : 10,");
-    gold.append("\n      \"character\" : 30");
+    gold.append("\n      \"character\" : 31");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 10,");
-    gold.append("\n      \"character\" : 31");
+    gold.append("\n      \"character\" : 32");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Typing issue: the structure 'Y' has field 'x' but it is not orderable..(RuleSetStructures)\"");
+    gold.append("\n  \"message\" : \"Typing issue: the structure 'Y' has field 'x' but it is not orderable.. (RuleSetStructures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
     gold.append("\n      \"line\" : 11,");
-    gold.append("\n      \"character\" : 30");
+    gold.append("\n      \"character\" : 31");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 11,");
-    gold.append("\n      \"character\" : 31");
+    gold.append("\n      \"character\" : 32");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Field not found: the structure 'Y' does not contain the field 'z'.(RuleSetStructures)\"");
+    gold.append("\n  \"message\" : \"Field not found: the structure 'Y' does not contain the field 'z'. (RuleSetStructures)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2864,6 +2889,11 @@ public class GeneratedLinqTests extends GeneratedBase {
   @Test
   public void testNotApplicableToNonListsFailure() {
     assertLiveFail(get_NotApplicableToNonLists_9());
+  }
+
+  @Test
+  public void testNotApplicableToNonListsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NotApplicableToNonLists_9());
   }
 
   @Test
@@ -2895,7 +2925,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: expected an list, but was actually type 'int'.(RuleSetArray)\"");
+    gold.append("\n  \"message\" : \"Type check failure: expected an list, but was actually type 'int'. (RuleSetArray)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2909,7 +2939,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: expected an list, but was actually type 'int'.(RuleSetArray)\"");
+    gold.append("\n  \"message\" : \"Type check failure: expected an list, but was actually type 'int'. (RuleSetArray)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2923,7 +2953,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: expected an list, but was actually type 'int'.(RuleSetArray)\"");
+    gold.append("\n  \"message\" : \"Type check failure: expected an list, but was actually type 'int'. (RuleSetArray)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2937,7 +2967,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: expected an list, but was actually type 'int'.(RuleSetArray)\"");
+    gold.append("\n  \"message\" : \"Type check failure: expected an list, but was actually type 'int'. (RuleSetArray)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

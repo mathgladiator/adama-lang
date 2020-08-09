@@ -54,8 +54,8 @@ record Z {
 viewer_is<owner> X x;
 viewer_is<owner> double owners_money;
 table<X> tbl;
-viewer_is<owner> auto listz = select tbl where x == 1;
-viewer_is<owner> auto listz2 = select tbl;
+viewer_is<owner> auto listz = iterate tbl where x == 1;
+viewer_is<owner> auto listz2 = iterate tbl;
 public Y y;
 public Z z;
 

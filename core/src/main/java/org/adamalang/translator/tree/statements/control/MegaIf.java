@@ -41,6 +41,8 @@ public class MegaIf extends Statement {
         name = null;
       }
       this.closeParen = closeParen;
+      ingest(openParen);
+      ingest(closeParen);
     }
 
     public void emit(final Consumer<Token> yielder) {
@@ -53,7 +55,7 @@ public class MegaIf extends Statement {
       yielder.accept(closeParen);
     }
   }
-  public static class If {
+  public static class If extends DocumentPosition {
     public final Block code;
     public final Condition condition;
     public final Token elseToken;
@@ -64,6 +66,13 @@ public class MegaIf extends Statement {
       this.ifToken = ifToken;
       this.condition = condition;
       this.code = code;
+      if (elseToken != null) {
+        ingest(elseToken);
+      }
+      if (ifToken != null) {
+        ingest(ifToken);
+      }
+      ingest(code);
     }
 
     public void emit(final Consumer<Token> yielder) {

@@ -4,6 +4,7 @@
 package org.adamalang.translator.tree.types.checking.ruleset;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanTestEqualityResult;
 import org.adamalang.translator.tree.types.traits.IsEnum;
@@ -41,12 +42,12 @@ public class RuleSetEquality {
         if (((IsEnum) typeA).name().equals(((IsEnum) typeB).name())) {
           return CanTestEqualityResult.Yes;
         } else if (!silent) {
-          environment.document.createError(typeA, String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetEquality");
+          environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetEquality");
         }
         return CanTestEqualityResult.No;
       }
       if (!silent) {
-        environment.document.createError(typeA, String.format("Type check failure: unable to compare types '%s' and '%s' for equality.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetEquality");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: unable to compare types '%s' and '%s' for equality.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetEquality");
       }
     }
     return CanTestEqualityResult.No;

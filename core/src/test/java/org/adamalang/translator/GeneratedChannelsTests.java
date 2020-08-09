@@ -467,6 +467,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testDuplicateHandlersNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DuplicateHandlers_2());
+  }
+
+  @Test
   public void testDuplicateHandlersExceptionFree() {
     assertExceptionFree(get_DuplicateHandlers_2());
   }
@@ -495,7 +500,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Channel 'goo' is already handled(MessageHandlers)\"");
+    gold.append("\n  \"message\" : \"Channel 'goo' is already handled (MessageHandlers)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -509,7 +514,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Channel 'goo' is already handled(MessageHandlers)\"");
+    gold.append("\n  \"message\" : \"Channel 'goo' is already handled (MessageHandlers)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\nimport com.fasterxml.jackson.databind.JsonNode;");
@@ -2098,6 +2103,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   }
 
   @Test
+  public void testMessageTypeWasRecordNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_MessageTypeWasRecord_6());
+  }
+
+  @Test
   public void testMessageTypeWasRecordExceptionFree() {
     assertExceptionFree(get_MessageTypeWasRecord_6());
   }
@@ -2126,7 +2136,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2140,7 +2150,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type incorrect: expecting 'X' to be a message type; instead, found a type of 'X'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2159,6 +2169,11 @@ public class GeneratedChannelsTests extends GeneratedBase {
   @Test
   public void testUndefinedMessageFailure() {
     assertLiveFail(get_UndefinedMessage_7());
+  }
+
+  @Test
+  public void testUndefinedMessageNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_UndefinedMessage_7());
   }
 
   @Test
@@ -2190,7 +2205,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: a message named 'X' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2204,7 +2219,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: a message named 'X' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: a message named 'X' was not found. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

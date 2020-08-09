@@ -32,15 +32,7 @@ import org.adamalang.translator.tree.common.DocumentError;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
-import org.adamalang.translator.tree.definitions.DefineConstructor;
-import org.adamalang.translator.tree.definitions.DefineDispatcher;
-import org.adamalang.translator.tree.definitions.DefineDocumentEvent;
-import org.adamalang.translator.tree.definitions.DefineFunction;
-import org.adamalang.translator.tree.definitions.DefineHandler;
-import org.adamalang.translator.tree.definitions.DefineStateTransition;
-import org.adamalang.translator.tree.definitions.DefineTest;
-import org.adamalang.translator.tree.definitions.ImportDocument;
-import org.adamalang.translator.tree.definitions.MessageHandlerBehavior;
+import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
@@ -162,7 +154,7 @@ public class Document implements TopLevelDocumentHandler {
     functionsDefines.add(func.name);
     if (channelsThatAreFutures.contains(func.name)) {
       typeCheckOrder.add(env -> {
-        env.document.createError(func, String.format("Function/procedure '%s' was already defined as a channel.", func.name), "DocumentDefine");
+        env.document.createError(func, String.format("The %s '%s' was already defined as a channel.",func.specialization == FunctionSpecialization.Pure ? "function" : "procedure", func.name), "DocumentDefine");
       });
     }
     functionDefinitions.add(func);
@@ -224,8 +216,10 @@ public class Document implements TopLevelDocumentHandler {
   public void add(final IsEnum storage) {
     if (storage instanceof TyType) {
       if (types.containsKey(storage.name())) {
+        TyType prior = types.get(storage.name());
         typeCheckOrder.add(env -> {
-          env.document.createError((TyType) storage, String.format("Enum '%s' was already defined", storage.name()), "DocumentDefine");
+          env.document.createError((TyType) storage, String.format("The enumeration '%s' was already defined.", storage.name()), "DocumentDefine");
+          env.document.createError(prior, String.format("The enumeration '%s' was defined here.", storage.name()), "DocumentDefine");
         });
         return;
       }
@@ -234,7 +228,7 @@ public class Document implements TopLevelDocumentHandler {
       });
       typeCheckOrder.add(env -> {
         for (final String s : storage.storage().duplicates) {
-          env.document.createError((TyType) storage, String.format("Enum '%s' was has duplicates for %s defined", storage.name(), s), "DocumentDefine");
+          env.document.createError((TyType) storage, String.format("The enumeration '%s' has duplicates for '%s' defined.", storage.name(), s), "DocumentDefine");
         }
       });
       types.put(storage.name(), (TyType) storage);
@@ -245,8 +239,10 @@ public class Document implements TopLevelDocumentHandler {
   public void add(final IsStructure storage) {
     if (storage instanceof TyType) {
       if (types.containsKey(storage.name())) {
+        TyType prior = types.get(storage.name());
         typeCheckOrder.add(env -> {
-          env.document.createError((TyType) storage, String.format("Record '%s' was already", storage.name()), "DocumentDefine");
+          env.document.createError((TyType) storage, String.format("The %s '%s' was already defined.", storage instanceof TyNativeMessage ? "message" : "record", storage.name()), "DocumentDefine");
+          env.document.createError(prior, String.format("The %s '%s' was defined here.", prior instanceof TyNativeMessage ? "message" : "record", storage.name()), "DocumentDefine");
         });
       }
       types.put(storage.name(), (TyType) storage);

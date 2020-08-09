@@ -17,7 +17,7 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.FieldLookup;
 import org.adamalang.translator.tree.expressions.Lookup;
 import org.adamalang.translator.tree.expressions.operators.BinaryExpression;
-import org.adamalang.translator.tree.expressions.operators.Parenthesis;
+import org.adamalang.translator.tree.expressions.operators.Parentheses;
 import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
@@ -33,7 +33,7 @@ import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresG
 /** performs a filter on an sql statemeent ($sql) where (expr) */
 public class Where extends LinqExpression implements LatentCodeSnippet {
   public static Expression findIndex(final Expression root, final String aliasName, final String indexName) {
-    if (root instanceof Parenthesis) { return findIndex(((Parenthesis) root).expression, aliasName, indexName); }
+    if (root instanceof Parentheses) { return findIndex(((Parentheses) root).expression, aliasName, indexName); }
     if (root instanceof BinaryExpression) {
       // if it is an &&, then search both branches
       if (((BinaryExpression) root).op == BinaryOp.LogicalAnd) {
@@ -51,7 +51,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
   }
 
   public static boolean isExpressionIndexedVariable(final Expression root, final String aliasName, final String variableCheck) {
-    if (root instanceof Parenthesis) { return isExpressionIndexedVariable(((Parenthesis) root).expression, aliasName, variableCheck); }
+    if (root instanceof Parentheses) { return isExpressionIndexedVariable(((Parentheses) root).expression, aliasName, variableCheck); }
     if (aliasName == null && root instanceof Lookup) {
       return variableCheck.equals(((Lookup) root).variableToken.text);
     } else if (aliasName != null && root instanceof FieldLookup) {

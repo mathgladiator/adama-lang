@@ -21,6 +21,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   }
 
   @Test
+  public void testFutureResultReadOnlyNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_FutureResultReadOnly_1());
+  }
+
+  @Test
   public void testFutureResultReadOnlyExceptionFree() {
     assertExceptionFree(get_FutureResultReadOnly_1());
   }
@@ -49,21 +54,21 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The field 'x' is on a readonly message(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"The field 'x' is on a readonly message (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 12,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 12,");
+    gold.append("\n      \"character\" : 6");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Unable to assign a readonly type(Readonly)\"");
+    gold.append("\n  \"message\" : \"Unable to assign a readonly type (Readonly)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -82,6 +87,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   @Test
   public void testProcedureArgsFailure() {
     assertLiveFail(get_ProcedureArgs_2());
+  }
+
+  @Test
+  public void testProcedureArgsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ProcedureArgs_2());
   }
 
   @Test
@@ -113,7 +123,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'x' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'x' is readonly (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -132,6 +142,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   @Test
   public void testSimpleBoolFailure() {
     assertLiveFail(get_SimpleBool_3());
+  }
+
+  @Test
+  public void testSimpleBoolNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_SimpleBool_3());
   }
 
   @Test
@@ -163,7 +178,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -177,7 +192,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'z' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'z' is readonly (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -196,6 +211,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   @Test
   public void testSimpleClientFailure() {
     assertLiveFail(get_SimpleClient_4());
+  }
+
+  @Test
+  public void testSimpleClientNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_SimpleClient_4());
   }
 
   @Test
@@ -227,7 +247,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -241,7 +261,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'z' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'z' is readonly (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -260,6 +280,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   @Test
   public void testSimpleDoubleFailure() {
     assertLiveFail(get_SimpleDouble_5());
+  }
+
+  @Test
+  public void testSimpleDoubleNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_SimpleDouble_5());
   }
 
   @Test
@@ -291,7 +316,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -305,7 +330,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'z' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'z' is readonly (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -324,6 +349,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   @Test
   public void testSimpleEnumFailure() {
     assertLiveFail(get_SimpleEnum_6());
+  }
+
+  @Test
+  public void testSimpleEnumNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_SimpleEnum_6());
   }
 
   @Test
@@ -355,7 +385,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -369,7 +399,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'z' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'z' is readonly (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -388,6 +418,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   @Test
   public void testSimpleIntegerFailure() {
     assertLiveFail(get_SimpleInteger_7());
+  }
+
+  @Test
+  public void testSimpleIntegerNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_SimpleInteger_7());
   }
 
   @Test
@@ -419,7 +454,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -433,7 +468,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'z' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'z' is readonly (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -452,6 +487,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   @Test
   public void testSimpleLongFailure() {
     assertLiveFail(get_SimpleLong_8());
+  }
+
+  @Test
+  public void testSimpleLongNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_SimpleLong_8());
   }
 
   @Test
@@ -483,7 +523,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -497,7 +537,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'z' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'z' is readonly (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -516,6 +556,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   @Test
   public void testSimpleMaybeFailure() {
     assertLiveFail(get_SimpleMaybe_9());
+  }
+
+  @Test
+  public void testSimpleMaybeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_SimpleMaybe_9());
   }
 
   @Test
@@ -547,7 +592,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'x' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'x' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -561,7 +606,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' is readonly (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -580,6 +625,11 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   @Test
   public void testSimpleStringFailure() {
     assertLiveFail(get_SimpleString_10());
+  }
+
+  @Test
+  public void testSimpleStringNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_SimpleString_10());
   }
 
   @Test
@@ -611,7 +661,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -625,7 +675,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'z' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'z' is readonly (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

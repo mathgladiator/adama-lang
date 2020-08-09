@@ -8,6 +8,6 @@ record Y {
 table<Y> t;
 
 test PrimaryTest {
-  let z1 = (select t order by x);
-  let z2 = (select t order by z);
+  let z1 = (iterate t order by x);
+  let z2 = (iterate t order by z);
 }

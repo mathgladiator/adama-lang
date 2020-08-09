@@ -17,7 +17,6 @@ import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
-import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.IndexDefinition;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
@@ -43,6 +42,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
     name = nameToken.text;
     this.storage = storage;
     ingest(recordToken);
+    ingest(nameToken);
     ingest(storage);
     typedAlready = false;
   }
@@ -180,7 +180,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
   @Override
   public void typing(final Environment environment) {
     if (typedAlready) { return; }
-    FieldDefinition fdId = storage.fields.get("id");
+    final var fdId = storage.fields.get("id");
     if (fdId == null || !(fdId.type instanceof TyReactiveInteger)) {
       environment.document.createError(this, String.format("id must be type int"), "Record");
     }

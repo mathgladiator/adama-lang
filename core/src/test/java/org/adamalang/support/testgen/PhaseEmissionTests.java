@@ -6,9 +6,9 @@ package org.adamalang.support.testgen;
 import org.junit.Test;
 
 public class PhaseEmissionTests {
-    @Test
-    public void coverage() {
-        StringBuilder output = new StringBuilder();
-        PhaseEmission.report("X", "Y", output);
-    }
+  @Test
+  public void coverage() {
+    final var output = new StringBuilder();
+    PhaseEmission.report("X", "Y", output);
+  }
 }

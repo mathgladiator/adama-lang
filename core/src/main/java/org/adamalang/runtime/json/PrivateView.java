@@ -9,7 +9,7 @@ import org.adamalang.runtime.natives.NtClient;
 public abstract class PrivateView {
   public boolean alive;
   private final Consumer<String> updates;
-  private final NtClient who;
+  public final NtClient who;
 
   public PrivateView(final NtClient who, final Consumer<String> updates) {
     alive = true;

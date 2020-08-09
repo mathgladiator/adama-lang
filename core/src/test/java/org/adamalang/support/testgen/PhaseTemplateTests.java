@@ -6,8 +6,8 @@ package org.adamalang.support.testgen;
 import org.junit.Test;
 
 public class PhaseTemplateTests {
-    @Test
-    public void coverage() {
-        PhaseTemplate.inventEmpty();
-    }
+  @Test
+  public void coverage() {
+    PhaseTemplate.inventEmpty();
+  }
 }

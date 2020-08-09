@@ -1182,6 +1182,11 @@ public class GeneratedArrayTests extends GeneratedBase {
   }
 
   @Test
+  public void testParenthesisInvalidTypeDuringTwoPassTypeConstructionNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4());
+  }
+
+  @Test
   public void testParenthesisInvalidTypeDuringTwoPassTypeConstructionExceptionFree() {
     assertExceptionFree(get_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4());
   }
@@ -1210,7 +1215,7 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The types 'AutoMaxRecord2' and 'bool' are not compatible for type unification(TypeCompatabilities)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The types 'AutoMaxRecord2' and 'bool' are not compatible for type unification (TypeCompatabilities)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

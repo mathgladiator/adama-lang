@@ -417,6 +417,11 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   }
 
   @Test
+  public void testBothSidesFailNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_BothSidesFail_2());
+  }
+
+  @Test
   public void testBothSidesFailExceptionFree() {
     assertExceptionFree(get_BothSidesFail_2());
   }
@@ -440,12 +445,12 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 22");
+    gold.append("\n      \"character\" : 26");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -454,12 +459,12 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 32");
+    gold.append("\n      \"character\" : 40");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'int' and 'bool' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'int' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a numeric type of 'int' which can be added with types: 'int', 'double', or 'string'. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -468,12 +473,12 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 3,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -883,6 +888,11 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   }
 
   @Test
+  public void testMaxTypeFailuresNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_MaxTypeFailures_4());
+  }
+
+  @Test
   public void testMaxTypeFailuresExceptionFree() {
     assertExceptionFree(get_MaxTypeFailures_4());
   }
@@ -911,7 +921,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The types 'string' and 'int' are not compatible for type unification(TypeCompatabilities)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The types 'string' and 'int' are not compatible for type unification (TypeCompatabilities)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -925,7 +935,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The types 'string' and 'maybe<int>' are not compatible for type unification(TypeCompatabilities)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The types 'string' and 'maybe<int>' are not compatible for type unification (TypeCompatabilities)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -939,7 +949,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The types 'int' and 'string' are not compatible for type unification(TypeCompatabilities)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The types 'int' and 'string' are not compatible for type unification (TypeCompatabilities)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -953,35 +963,35 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The types 'maybe<int>' and 'string' are not compatible for type unification(TypeCompatabilities)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The types 'maybe<int>' and 'string' are not compatible for type unification (TypeCompatabilities)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 9,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 9,");
+    gold.append("\n      \"character\" : 6");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The message types `A` and `B` can not be joined.(MaxUnionType)\"");
+    gold.append("\n  \"message\" : \"The message types `A` and `B` can not be joined. (MaxUnionType)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 10,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 10,");
+    gold.append("\n      \"character\" : 6");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The types 'A' and 'B' are not compatible for type unification(TypeCompatabilities)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The types 'A' and 'B' are not compatible for type unification (TypeCompatabilities)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1615,6 +1625,11 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
   }
 
   @Test
+  public void testRecordsMismatchNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_RecordsMismatch_7());
+  }
+
+  @Test
   public void testRecordsMismatchExceptionFree() {
     assertExceptionFree(get_RecordsMismatch_7());
   }
@@ -1633,31 +1648,31 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 9,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 20,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 10,");
-    gold.append("\n      \"character\" : 1");
+    gold.append("\n      \"line\" : 20,");
+    gold.append("\n      \"character\" : 6");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The message types `U` and `V` can not be joined.(MaxUnionType)\"");
+    gold.append("\n  \"message\" : \"The message types `U` and `V` can not be joined. (MaxUnionType)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 12,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 13,");
-    gold.append("\n      \"character\" : 1");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 6");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The types 'U' and 'V' are not compatible for type unification(TypeCompatabilities)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The types 'U' and 'V' are not compatible for type unification (TypeCompatabilities)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1671,7 +1686,7 @@ public class GeneratedInlineConditionalTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The types 'X' and 'Y' are not compatible for type unification(TypeCompatabilities)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The types 'X' and 'Y' are not compatible for type unification (TypeCompatabilities)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

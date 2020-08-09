@@ -55,7 +55,7 @@ table<X> tbl2;
   tbl2 <- {x:1, y:2};
 
   out = 0;
-  foreach(vv in select tbl2) {
+  foreach(vv in iterate tbl2) {
     out += vv.x + vv.y;
   }
 }

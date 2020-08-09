@@ -112,7 +112,7 @@ public class DefineVariable extends Statement {
     }
     if (type != null) {
       type.typing(environment);
-      environment.define(name, type, isReadonly, type);
+      environment.define(name, type.makeCopyWithNewPosition(this, type.behavior), isReadonly, type);
     }
     return ControlFlow.Open;
   }

@@ -21,6 +21,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testBadEnumConstantsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_BadEnumConstants_1());
+  }
+
+  @Test
   public void testBadEnumConstantsExceptionFree() {
     assertExceptionFree(get_BadEnumConstants_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type incorrect: expecting 'M' to be an enumeration; instead, found a type of 'M'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type incorrect: expecting 'M' to be an enumeration; instead, found a type of 'M'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -63,7 +68,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type incorrect: expecting 'R' to be an enumeration; instead, found a type of 'R'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type incorrect: expecting 'R' to be an enumeration; instead, found a type of 'R'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -77,7 +82,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Nope' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Nope' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -91,7 +96,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type incorrect: expecting 'M' to be an enumeration; instead, found a type of 'M'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type incorrect: expecting 'M' to be an enumeration; instead, found a type of 'M'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -105,7 +110,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type incorrect: expecting 'R' to be an enumeration; instead, found a type of 'R'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type incorrect: expecting 'R' to be an enumeration; instead, found a type of 'R'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -119,7 +124,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Nope' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Nope' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -133,7 +138,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type incorrect: expecting 'M' to be an enumeration; instead, found a type of 'M'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type incorrect: expecting 'M' to be an enumeration; instead, found a type of 'M'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -147,7 +152,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type incorrect: expecting 'R' to be an enumeration; instead, found a type of 'R'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type incorrect: expecting 'R' to be an enumeration; instead, found a type of 'R'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -161,7 +166,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Nope' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: an enumeration named 'Nope' was not found. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2652,6 +2657,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testLabelNotFoundNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_LabelNotFound_9());
+  }
+
+  @Test
   public void testLabelNotFoundExceptionFree() {
     assertExceptionFree(get_LabelNotFound_9());
   }
@@ -2680,7 +2690,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"State machine transition not found: a state machine label 'nope' was not found.(StateMachineLabels)\"");
+    gold.append("\n  \"message\" : \"State machine transition not found: a state machine label 'nope' was not found. (StateMachineLabels)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -6836,6 +6846,11 @@ public class GeneratedTypesTests extends GeneratedBase {
   }
 
   @Test
+  public void testReactiveAssignmentMismatchesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ReactiveAssignmentMismatches_22());
+  }
+
+  @Test
   public void testReactiveAssignmentMismatchesExceptionFree() {
     assertExceptionFree(get_ReactiveAssignmentMismatches_22());
   }
@@ -6864,7 +6879,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'maybe<int>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'maybe<int>'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6878,7 +6893,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'label' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'label' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -6892,7 +6907,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Variable 'z' was already defined(EnvironmentDefine)\"");
+    gold.append("\n  \"message\" : \"Variable 'z' was already defined (EnvironmentDefine)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

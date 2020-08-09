@@ -10,27 +10,27 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.traits.SupportsTwoPhaseTyping;
 
-/** wrap an expression within paranthesis */
-public class Parenthesis extends Expression implements SupportsTwoPhaseTyping {
+/** wrap an expression within parentheses */
+public class Parentheses extends Expression implements SupportsTwoPhaseTyping {
   public final Expression expression;
-  public final Token leftParenthesis;
-  public final Token rightParenthesis;
+  public final Token leftParentheses;
+  public final Token rightParentheses;
 
   /** @param expression the expression to wrap */
-  public Parenthesis(final Token leftParenthesis, final Expression expression, final Token rightParenthesis) {
-    this.leftParenthesis = leftParenthesis;
+  public Parentheses(final Token leftParentheses, final Expression expression, final Token rightParentheses) {
+    this.leftParentheses = leftParentheses;
     this.expression = expression;
-    this.rightParenthesis = rightParenthesis;
-    ingest(leftParenthesis);
+    this.rightParentheses = rightParentheses;
+    ingest(leftParentheses);
     ingest(expression);
-    ingest(rightParenthesis);
+    ingest(rightParentheses);
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
-    yielder.accept(leftParenthesis);
+    yielder.accept(leftParentheses);
     expression.emit(yielder);
-    yielder.accept(rightParenthesis);
+    yielder.accept(rightParentheses);
   }
 
   @Override
@@ -57,7 +57,7 @@ public class Parenthesis extends Expression implements SupportsTwoPhaseTyping {
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    final var skip = expression instanceof Parenthesis || expression instanceof InlineConditional;
+    final var skip = expression instanceof Parentheses || expression instanceof InlineConditional;
     if (skip) {
       expression.writeJava(sb, environment);
     } else {

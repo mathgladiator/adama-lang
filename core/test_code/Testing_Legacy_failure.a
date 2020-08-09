@@ -10,9 +10,9 @@ table<X> zzz;
 @construct {
   x = "Hello World";
   zzz <- {z:2};
-  (select zzz).z ++;
-  (select zzz).z += 100;
-  (select zzz).z *= 3;
+  (iterate zzz).z ++;
+  (iterate zzz).z += 100;
+  (iterate zzz).z *= 3;
   transition #next;
 }
 

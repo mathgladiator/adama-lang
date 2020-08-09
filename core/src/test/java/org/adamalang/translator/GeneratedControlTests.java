@@ -21,6 +21,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testCantAbortOutsideOfMessageHandlerNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantAbortOutsideOfMessageHandler_1());
+  }
+
+  @Test
   public void testCantAbortOutsideOfMessageHandlerExceptionFree() {
     assertExceptionFree(get_CantAbortOutsideOfMessageHandler_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Can only 'abort' from a message handler(EvaluationContext)\"");
+    gold.append("\n  \"message\" : \"Can only 'abort' from a message handler (EvaluationContext)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -68,6 +73,11 @@ public class GeneratedControlTests extends GeneratedBase {
   @Test
   public void testCantBlockOutsideOfStateTransitionFailure() {
     assertLiveFail(get_CantBlockOutsideOfStateTransition_2());
+  }
+
+  @Test
+  public void testCantBlockOutsideOfStateTransitionNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantBlockOutsideOfStateTransition_2());
   }
 
   @Test
@@ -99,7 +109,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Can only 'block' from a state machine transition(EvaluationContext)\"");
+    gold.append("\n  \"message\" : \"Can only 'block' from a state machine transition (EvaluationContext)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2893,6 +2903,11 @@ public class GeneratedControlTests extends GeneratedBase {
   }
 
   @Test
+  public void testNotMaybeInIfNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NotMaybeInIf_9());
+  }
+
+  @Test
   public void testNotMaybeInIfExceptionFree() {
     assertExceptionFree(get_NotMaybeInIf_9());
   }
@@ -2921,7 +2936,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' was expected to be a maybe<?>(RuleSetMaybe)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' was expected to be a maybe<?> (RuleSetMaybe)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

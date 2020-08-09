@@ -15,6 +15,8 @@ public class IndexDefinition extends StructureComponent {
     this.indexToken = indexToken;
     this.nameToken = nameToken;
     this.semicolonToken = semicolonToken;
+    ingest(indexToken);
+    ingest(semicolonToken);
   }
 
   @Override

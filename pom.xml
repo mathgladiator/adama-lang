@@ -19,6 +19,7 @@
     <modules>
         <module>core</module>
         <module>devkit</module>
+        <module>lsp</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

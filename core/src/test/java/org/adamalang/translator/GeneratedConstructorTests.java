@@ -21,6 +21,11 @@ public class GeneratedConstructorTests extends GeneratedBase {
   }
 
   @Test
+  public void testCantUnionTypesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantUnionTypes_1());
+  }
+
+  @Test
   public void testCantUnionTypesExceptionFree() {
     assertExceptionFree(get_CantUnionTypes_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedConstructorTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The types 'MB' and 'bool' are not compatible for type unification(TypeCompatabilities)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The types 'MB' and 'bool' are not compatible for type unification (TypeCompatabilities)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

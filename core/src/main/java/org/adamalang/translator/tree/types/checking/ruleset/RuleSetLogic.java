@@ -4,6 +4,7 @@
 package org.adamalang.translator.tree.types.checking.ruleset;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 
 public class RuleSetLogic {
@@ -14,7 +15,7 @@ public class RuleSetLogic {
       if (aBoolean && bBoolean) {
         return true;
       } else if (!silent) {
-        environment.document.createError(typeA, String.format("Type check failure: the types '%s' and '%s' are unable to be joined with logical operators (&&, ||).", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetLogic");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("The types '%s' and '%s' are unable to be joined with logical operators (&&, ||).\n\tBoth left and right hand side of the operator must be of type 'bool'.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetLogic");
       }
     }
     return false;

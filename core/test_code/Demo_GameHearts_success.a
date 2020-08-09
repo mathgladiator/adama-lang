@@ -63,10 +63,10 @@ record Card {
 table<Card> deck;
 
 // show the player hand (and let the privacy policy filter out by person)
-public auto hand = select deck where place == Place::Hand;
+public auto hand = iterate deck where place == Place::Hand;
 
 // show all cards in the pot (this would be a different way of defining hand)
-bubble<who> my_take = select deck where place == Place::Taken && owner == who;
+bubble<who> my_take = iterate deck where place == Place::Taken && owner == who;
 
 // no real constructor
 message Empty {}
@@ -81,7 +81,7 @@ record Player {
   viewer_is<link> bool leader;
   viewer_is<link> int play_order;
   // sort out why this doesn't work
-  // viewer_is<link> auto hand = select deck where owner == link;
+  // viewer_is<link> auto hand = iterate deck where owner == link;
 }
 
 table<Player> players;
@@ -106,7 +106,7 @@ table<Player> players;
   }
 
   // add the player if they are not already in the game
-  if ( (select players where link==cv).size() == 0) {
+  if ( (iterate players where link==cv).size() == 0) {
     players <- {
       link:cv,
       playing:false,
@@ -121,20 +121,20 @@ table<Player> players;
 
 @disconnected(cv) {
   // remove the player if they are not playing
-  (select players where link==cv && !playing).delete();
+  (iterate players where link==cv && !playing).delete();
 }
 
 // how many people are connected
-public auto players_connected = (select players where playing).size();
+public auto players_connected = (iterate players where playing).size();
 
 // how many observers
-public auto observers_connected = (select players where !playing).size();
+public auto observers_connected = (iterate players where !playing).size();
 
 // everyone in the game
-public auto people = select players order by play_order;
+public auto people = iterate players order by play_order;
 
 // the players by their ordering
-public auto players_ordered = select players where playing order by play_order;
+public auto players_ordered = iterate players where playing order by play_order;
 
 // TODO: the client logic for who is what is going to be... interesting
 
@@ -175,16 +175,16 @@ channel<LeaderActionMessage> leader;
   LeaderActionMessage decision = leader.fetch(owner).await();
   if (decision.action == LeaderAction::PromoteObserver && !ready) {
      // leader promoted an observer to
-    (select players where id==decision.id).playing = true;
+    (iterate players where id==decision.id).playing = true;
   } else if (decision.action == LeaderAction::DemotePlayer) {
     // leader demotes a player to an observer
-    (select players where id==decision.id).playing = false;
+    (iterate players where id==decision.id).playing = false;
   } else if (decision.action == LeaderAction::ShufflePlayers) {
-    (select players where playing).play_order = Random.genInt();
+    (iterate players where playing).play_order = Random.genInt();
   } else if (decision.action == LeaderAction::Begin) {
     // leader has selected people, and will now begin the game
     playing = true;
-    if ( (select players where playing).size() == 4) {
+    if ( (iterate players where playing).size() == 4) {
       transition #setup;
     }
   }
@@ -201,11 +201,11 @@ channel<LeaderActionMessage> leader;
   }
 
   // normalize observers to no play order
-  (select players where !playing).play_order = 100;
+  (iterate players where !playing).play_order = 100;
 
   // normalize the players from 0 to 3
   int normativeOrder = 0;
-  (select players where playing order by play_order asc).play_order = normativeOrder++;
+  (iterate players where playing order by play_order asc).play_order = normativeOrder++;
 
   // shuffle and distribute the cards
   transition #shuffle_and_distribute;
@@ -217,15 +217,15 @@ public PassingMode passing_mode;
 
 #shuffle_and_distribute {
   // it may be useful to allow methods on a record, fuck
-  (select deck).ordering = Random.genInt();
-  (select deck).owner = @no_one;
-  (select deck).place = Place::Hand;
+  (iterate deck).ordering = Random.genInt();
+  (iterate deck).owner = @no_one;
+  (iterate deck).place = Place::Hand;
 
   // distribute cards to players
-  Player[] op = (select players where playing order by play_order).toArray();
+  Player[] op = (iterate players where playing order by play_order).toArray();
   for (int k = 0; k < 4; k++) {
     if (op[k] as player) {
-      (select deck where owner == @no_one order by ordering limit 13).owner = player.link;
+      (iterate deck where owner == @no_one order by ordering limit 13).owner = player.link;
     }
   }
   transition #pass;
@@ -253,7 +253,7 @@ client current;
   // this is wanky as fuck, and I don't like it. We have this fundamental problem of what if there are not enough players, then how does this fail...
   // we should consider a @fatal keyword to signal that a game is just fucked
 
-  Player[] op = (select players where playing order by play_order).toArray();
+  Player[] op = (iterate players where playing order by play_order).toArray();
   if (op[0] as player) {
     player1 = player.link;
   }
@@ -269,10 +269,10 @@ client current;
   // what does an await on no_one mean, it means the whole thing is fucked
 
   // we really need a future array since this has some awkward stuff
-  future<maybe<CardDecision[]>> pass1 = pass_channel.choose(player1, @convert<CardDecision>(select deck where owner==player1), 3);
-  future<maybe<CardDecision[]>> pass2 = pass_channel.choose(player2, @convert<CardDecision>(select deck where owner==player2), 3);
-  future<maybe<CardDecision[]>> pass3 = pass_channel.choose(player3, @convert<CardDecision>(select deck where owner==player3), 3);
-  future<maybe<CardDecision[]>> pass4 = pass_channel.choose(player4, @convert<CardDecision>(select deck where owner==player4), 3);
+  future<maybe<CardDecision[]>> pass1 = pass_channel.choose(player1, @convert<CardDecision>(iterate deck where owner==player1), 3);
+  future<maybe<CardDecision[]>> pass2 = pass_channel.choose(player2, @convert<CardDecision>(iterate deck where owner==player2), 3);
+  future<maybe<CardDecision[]>> pass3 = pass_channel.choose(player3, @convert<CardDecision>(iterate deck where owner==player3), 3);
+  future<maybe<CardDecision[]>> pass4 = pass_channel.choose(player4, @convert<CardDecision>(iterate deck where owner==player4), 3);
 
   // the reason we do the futures above and then await them below like this is so all players can pass at the same time.
   // the problem at hand is that the await will consume, so non-awaited futures will cause the client to sit dumbly... this can be fixed easily I think
@@ -285,42 +285,42 @@ client current;
 
   if (passing_mode == PassingMode::ToRight) {
     foreach (dec in decision1) {
-      (select deck where id == dec.id).owner = player2;
+      (iterate deck where id == dec.id).owner = player2;
     }
     foreach (dec in decision2) {
-      (select deck where id == dec.id).owner = player3;
+      (iterate deck where id == dec.id).owner = player3;
     }
     foreach (dec in decision3) {
-      (select deck where id == dec.id).owner = player4;
+      (iterate deck where id == dec.id).owner = player4;
     }
     foreach (dec in decision4) {
-      (select deck where id == dec.id).owner = player1;
+      (iterate deck where id == dec.id).owner = player1;
     }
   } else if (passing_mode == PassingMode::ToLeft) {
     foreach (dec in decision1) {
-      (select deck where id == dec.id).owner = player4;
+      (iterate deck where id == dec.id).owner = player4;
     }
     foreach (dec in decision2) {
-      (select deck where id == dec.id).owner = player1;
+      (iterate deck where id == dec.id).owner = player1;
     }
     foreach (dec in decision3) {
-      (select deck where id == dec.id).owner = player2;
+      (iterate deck where id == dec.id).owner = player2;
     }
     foreach (dec in decision4) {
-      (select deck where id == dec.id).owner = player3;
+      (iterate deck where id == dec.id).owner = player3;
     }
   } else if (passing_mode == PassingMode::Across) {
     foreach (dec in decision1) {
-      (select deck where id == dec.id).owner = player3;
+      (iterate deck where id == dec.id).owner = player3;
     }
     foreach (dec in decision2) {
-      (select deck where id == dec.id).owner = player4;
+      (iterate deck where id == dec.id).owner = player4;
     }
     foreach (dec in decision3) {
-      (select deck where id == dec.id).owner = player1;
+      (iterate deck where id == dec.id).owner = player1;
     }
     foreach (dec in decision4) {
-      (select deck where id == dec.id).owner = player2;
+      (iterate deck where id == dec.id).owner = player2;
     }
   }
 
@@ -336,7 +336,7 @@ public int played = 0;
 
   // assign a player to current
   current = player1;
-  if ( (select deck where rank == Rank::Two && suit == Suit::Clubs)[0] as two_clubs) {
+  if ( (iterate deck where rank == Rank::Two && suit == Suit::Clubs)[0] as two_clubs) {
     current = two_clubs.owner;
   } // otherwise, @fatal
 
@@ -347,13 +347,13 @@ channel<CardDecision[]> single_play;
 
 public Suit suit_in_play;
 public bool points_played = false;
-public auto in_play = select deck where place == Place::InPlay order by rank desc;
+public auto in_play = iterate deck where place == Place::InPlay order by rank desc;
 // how to attribute this to a person
 
 public client last_winner;
 
 #play {
-  list<Card> choices = select deck where
+  list<Card> choices = iterate deck where
     owner==current &&
     place == Place::Hand &&
     (
@@ -361,15 +361,15 @@ public client last_winner;
        played > 0 && suit_in_play == suit
     );
   if (choices.size() == 0) {
-    choices = select deck where owner==current && place == Place::Hand;
+    choices = iterate deck where owner==current && place == Place::Hand;
   }
   future<maybe<CardDecision[]>> playX = single_play.choose(current, @convert<CardDecision>(choices), 1);
   if (playX.await() as thePlay) {
   // TODO: don't think hearts can be played, there are some rules here
   foreach (dec in thePlay) {
 
-    (select deck where id == dec.id).place = Place::InPlay;
-    if ( (select deck where id == dec.id)[0] as cardPlayed) {
+    (iterate deck where id == dec.id).place = Place::InPlay;
+    if ( (iterate deck where id == dec.id)[0] as cardPlayed) {
 // TODO
 //   cardPlayed.place = Place::InPlay;
 // this doesn't work
@@ -400,15 +400,15 @@ public client last_winner;
 
   if (played == 3) {
     // TODO: figure this out (why can't I limit and then)
-    if ( (select deck where place == Place::InPlay && suit == suit_in_play order by rank desc)[0] as winner) {
-      (select deck where place == Place::InPlay).owner = winner.owner;
+    if ( (iterate deck where place == Place::InPlay && suit == suit_in_play order by rank desc)[0] as winner) {
+      (iterate deck where place == Place::InPlay).owner = winner.owner;
       last_winner = winner.owner;
     }
-    (select deck where place == Place::InPlay).place = Place::Taken;
+    (iterate deck where place == Place::InPlay).place = Place::Taken;
     played = 0;
     current = last_winner;
 
-    if( (select deck where owner == current && place == Place::Hand).size() == 0) {
+    if( (iterate deck where owner == current && place == Place::Hand).size() == 0) {
       transition #score;
     }
   } else {
@@ -420,13 +420,13 @@ public int points_awarded = 0;
 
 #score {
   // award points
-  foreach(p in select players where playing) {
+  foreach(p in iterate players where playing) {
     int local_points = 0;
-    foreach(c in select deck where owner == p.link && place == Place::Taken) {
+    foreach(c in iterate deck where owner == p.link && place == Place::Taken) {
       local_points += c.points;
     }
     if (local_points == 26) {
-      foreach(p2 in select players where playing && link != p.link) {
+      foreach(p2 in iterate players where playing && link != p.link) {
         p2.points += 26;
         points_awarded += 26;
       }

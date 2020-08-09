@@ -1,0 +1,77 @@
+{
+    "name": "adama-language-support",
+    "displayName": "Adama Language Support",
+    "description": "Adama Language Extension",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.47.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "main": "./out/extension",
+    "activationEvents": [
+        "onLanguage:adama"
+    ],
+    "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "Adama Language Configuration",
+            "properties": {
+                "adama.remotePort": {
+                    "type": "number",
+                    "default": 2423,
+                    "description": "Remote Port."
+                },
+                "adama.trace.server": {
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Traces the communication between VSCode and the Adama DevKit service."
+                }
+            }
+        },
+        "languages": [
+            {
+                "id": "adama",
+                "aliases": [
+                    "Adama",
+                    "adama"
+                ],
+                "extensions": [
+                    ".a"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "adama",
+                "scopeName": "source.adama",
+                "path": "./syntaxes/adama.tmLanguage.json"
+            }
+        ]
+    },
+    "dependencies": {
+        "vscode-languageclient": "^6.1.3"
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -b",
+        "watch": "tsc -b -w"
+    },
+    "devDependencies": {
+        "@types/mocha": "^7.0.2",
+        "@types/node": "^12.12.53",
+        "@types/vscode": "1.43.0",
+        "@typescript-eslint/parser": "^2.3.0",
+        "eslint": "^6.4.0",
+        "mocha": "^8.0.1",
+        "typescript": "^3.9.4",
+        "vscode-test": "^1.3.0"
+    }
+}

@@ -72,7 +72,7 @@ public class TyNativeFunctional extends TyType {
     }
     for (var k = 0; k < overloads.size(); k++) {
       for (var j = k + 1; j < overloads.size(); j++) {
-        overloads.get(k).testOverlap(overloads.get(j), environment, this);
+        overloads.get(k).testOverlap(overloads.get(j), environment);
       }
     }
   }

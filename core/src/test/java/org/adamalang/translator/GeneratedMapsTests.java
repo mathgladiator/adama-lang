@@ -393,6 +393,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testInvalidAssignmentsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_InvalidAssignments_2());
+  }
+
+  @Test
   public void testInvalidAssignmentsExceptionFree() {
     assertExceptionFree(get_InvalidAssignments_2());
   }
@@ -421,7 +426,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The domain type 'double' is not an appropriate.(TyNativeMap)\"");
+    gold.append("\n  \"message\" : \"The domain type 'double' is not an appropriate. (TyNativeMap)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -430,12 +435,12 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,int>' is unable to store type 'map<double,int>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,int>' is unable to store type 'map<double,int>'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -444,12 +449,12 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 19");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,int>' is unable to store type 'map<int,double>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,int>' is unable to store type 'map<int,double>'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -458,12 +463,12 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 8,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'map<double,int>' is unable to store type 'map<int,int>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'map<double,int>' is unable to store type 'map<int,int>'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -472,12 +477,12 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 8,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'map<double,int>' is unable to store type 'map<int,double>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'map<double,int>' is unable to store type 'map<int,double>'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -486,12 +491,12 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 9,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,double>' is unable to store type 'map<int,int>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,double>' is unable to store type 'map<int,int>'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -500,12 +505,12 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 9,");
-    gold.append("\n      \"character\" : 18");
+    gold.append("\n      \"character\" : 22");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,double>' is unable to store type 'map<double,int>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,double>' is unable to store type 'map<double,int>'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -514,12 +519,12 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,int>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,int>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -528,12 +533,12 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 15");
+    gold.append("\n      \"character\" : 20");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,int>' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'map<int,int>' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -552,6 +557,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   @Test
   public void testInvalidDomainsFailure() {
     assertLiveFail(get_InvalidDomains_3());
+  }
+
+  @Test
+  public void testInvalidDomainsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_InvalidDomains_3());
   }
 
   @Test
@@ -583,7 +593,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The domain type 'client' is not an appropriate.(TyNativeMap)\"");
+    gold.append("\n  \"message\" : \"The domain type 'client' is not an appropriate. (TyNativeMap)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -597,7 +607,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The domain type 'M' is not an appropriate.(TyNativeMap)\"");
+    gold.append("\n  \"message\" : \"The domain type 'M' is not an appropriate. (TyNativeMap)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -611,7 +621,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: the type 'K' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: the type 'K' was not found. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -625,7 +635,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'map<int,int>' lacks field 'notFound'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'map<int,int>' lacks field 'notFound' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -639,7 +649,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1235,6 +1245,11 @@ public class GeneratedMapsTests extends GeneratedBase {
   }
 
   @Test
+  public void testReduceSadNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ReduceSad_5());
+  }
+
+  @Test
   public void testReduceSadExceptionFree() {
     assertExceptionFree(get_ReduceSad_5());
   }
@@ -1253,59 +1268,59 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 10,");
+    gold.append("\n      \"character\" : 0");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 11,");
+    gold.append("\n      \"character\" : 1");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function 'goo' does not return in all cases(FunctionDefine)\"");
+    gold.append("\n  \"message\" : \"The function 'goo' does not return in all cases (FunctionDefine)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 39");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function '$<foo>' must be a pure function a value(Reduce)\"");
+    gold.append("\n  \"message\" : \"Function '$<foo>' must be a pure function a value (Reduce)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 21,");
+    gold.append("\n      \"character\" : 39");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function '$<foo>' must return value(Reduce)\"");
+    gold.append("\n  \"message\" : \"Function '$<foo>' must return value (Reduce)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 22,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 22,");
+    gold.append("\n      \"character\" : 39");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function invoked with wrong number of arguments. Expected 2, got 1(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Function invoked with wrong number of arguments. Expected 2, got 1 (FunctionInvoke)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1319,49 +1334,49 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'zoo' was not defined(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'zoo' was not defined (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 24,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 24,");
+    gold.append("\n      \"character\" : 42");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function '$<foo>' must be a pure function a value(Reduce)\"");
+    gold.append("\n  \"message\" : \"Function '$<foo>' must be a pure function a value (Reduce)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 24,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 24,");
+    gold.append("\n      \"character\" : 42");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Function '$<foo>' must return value(Reduce)\"");
+    gold.append("\n  \"message\" : \"Function '$<foo>' must return value (Reduce)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2147483647,");
-    gold.append("\n      \"character\" : 2147483647");
+    gold.append("\n      \"line\" : 24,");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 0,");
-    gold.append("\n      \"character\" : 0");
+    gold.append("\n      \"line\" : 24,");
+    gold.append("\n      \"character\" : 42");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Field 'z' was not found for reduction(Reduce)\"");
+    gold.append("\n  \"message\" : \"Field 'z' was not found for reduction (Reduce)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

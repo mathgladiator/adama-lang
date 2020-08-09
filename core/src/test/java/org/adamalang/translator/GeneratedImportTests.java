@@ -21,6 +21,11 @@ public class GeneratedImportTests extends GeneratedBase {
   }
 
   @Test
+  public void testEmptyStringBadNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_EmptyStringBad_1());
+  }
+
+  @Test
   public void testEmptyStringBadExceptionFree() {
     assertExceptionFree(get_EmptyStringBad_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedImportTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File '' failed to import due(ImportIssue)\"");
+    gold.append("\n  \"message\" : \"File '' failed to import due (ImportIssue)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -63,7 +68,7 @@ public class GeneratedImportTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Import failed (Unknown)(ImportIssue)\"");
+    gold.append("\n  \"message\" : \"Import failed (Unknown) (ImportIssue)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -82,6 +87,11 @@ public class GeneratedImportTests extends GeneratedBase {
   @Test
   public void testNotFoundFileFailure() {
     assertLiveFail(get_NotFoundFile_2());
+  }
+
+  @Test
+  public void testNotFoundFileNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NotFoundFile_2());
   }
 
   @Test
@@ -113,7 +123,7 @@ public class GeneratedImportTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"File 'WHATNOTFOUND.a' was not found(ImportIssue)\"");
+    gold.append("\n  \"message\" : \"File 'WHATNOTFOUND.a' was not found (ImportIssue)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

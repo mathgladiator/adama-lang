@@ -15,7 +15,7 @@ X src;
   bool b;
   string s;
   Lang l = Lang::En;
-  list<X> lx = select tbl;
+  list<X> lx = iterate tbl;
   X ref = src;
   auto v = b ? d : i;
   maybe<bool> mb;

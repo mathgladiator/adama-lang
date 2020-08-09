@@ -22,7 +22,6 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 public class EnumStorage extends DocumentPosition {
   private String defaultLabel;
   public final LinkedHashMap<String, HashMap<String, ArrayList<DefineDispatcher>>> dispatchersByNameThenSignature;
-  private final LinkedHashMap<String, TyNativeFunctional> dispatcherTypesByName;
   public final HashSet<String> duplicates;
   private final ArrayList<Consumer<Consumer<Token>>> emissions;
   private final String name;
@@ -38,13 +37,13 @@ public class EnumStorage extends DocumentPosition {
     emissions = new ArrayList<>();
     seenDefaultYet = false;
     dispatchersByNameThenSignature = new LinkedHashMap<>();
-    dispatcherTypesByName = new LinkedHashMap<>();
     signatureIdSource = 0;
     signatureToNameAndId = new HashMap<>();
     duplicates = new HashSet<>();
   }
 
   public void add(final Token isDefault, final Token optionToken, final Token colonToken, final Token valueToken, final int value) {
+    ingest(isDefault);
     emissions.add(yielder -> {
       if (isDefault != null) {
         yielder.accept(isDefault);

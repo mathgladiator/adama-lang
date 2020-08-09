@@ -56,7 +56,8 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
     this.endBrace = endBrace;
     ingest(enumToken);
     ingest(nameToken);
-    ingest(storage);
+    ingest(endBrace);
+    storage.ingest(this);
   }
 
   @Override
@@ -118,6 +119,6 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
 
   @Override
   public TyType typeAfterReactiveRefResolve(final Environment environment) {
-    return new TyReactiveEnum(nameToken, storage);
+    return new TyReactiveEnum(nameToken, storage).withPosition(this);
   }
 }

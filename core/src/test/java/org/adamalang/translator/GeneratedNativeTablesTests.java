@@ -21,6 +21,11 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   }
 
   @Test
+  public void testBadMethodNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_BadMethod_1());
+  }
+
+  @Test
   public void testBadMethodExceptionFree() {
     assertExceptionFree(get_BadMethod_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Record 'table<M>' lacks field 'nope'(FieldLookup)\"");
+    gold.append("\n  \"message\" : \"Record 'table<M>' lacks field 'nope' (FieldLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -63,7 +68,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression is not a function(FunctionInvoke)\"");
+    gold.append("\n  \"message\" : \"Expression is not a function (FunctionInvoke)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1014,6 +1019,11 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
   }
 
   @Test
+  public void testNoMessageNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NoMessage_4());
+  }
+
+  @Test
   public void testNoMessageExceptionFree() {
     assertExceptionFree(get_NoMessage_4());
   }
@@ -1042,7 +1052,7 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type not found: the type 'M' was not found.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type not found: the type 'M' was not found. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

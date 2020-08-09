@@ -478,6 +478,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testCantIngestIntegersNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantIngestIntegers_2());
+  }
+
+  @Test
   public void testCantIngestIntegersExceptionFree() {
     assertExceptionFree(get_CantIngestIntegers_2());
   }
@@ -506,7 +511,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to(Environment)\"");
+    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to (Environment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -520,7 +525,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to ingest into this type 'int'.(RuleSetIngestion)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to ingest into this type 'int'. (RuleSetIngestion)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -534,7 +539,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: 'int' unable to produce data to ingest into 'table<X>'.(RuleSetIngestion)\"");
+    gold.append("\n  \"message\" : \"Type check failure: 'int' unable to produce data to ingest into 'table<X>'. (RuleSetIngestion)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -553,6 +558,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   @Test
   public void testCantIngestStringsFailure() {
     assertLiveFail(get_CantIngestStrings_3());
+  }
+
+  @Test
+  public void testCantIngestStringsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantIngestStrings_3());
   }
 
   @Test
@@ -584,7 +594,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to(Environment)\"");
+    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to (Environment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -598,7 +608,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: unable to ingest into this type 'string'.(RuleSetIngestion)\"");
+    gold.append("\n  \"message\" : \"Type check failure: unable to ingest into this type 'string'. (RuleSetIngestion)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -612,7 +622,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: 'string' unable to produce data to ingest into 'table<X>'.(RuleSetIngestion)\"");
+    gold.append("\n  \"message\" : \"Type check failure: 'string' unable to produce data to ingest into 'table<X>'. (RuleSetIngestion)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1096,6 +1106,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testDataLossNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_DataLoss_5());
+  }
+
+  @Test
   public void testDataLossExceptionFree() {
     assertExceptionFree(get_DataLoss_5());
   }
@@ -1115,16 +1130,16 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 10");
+    gold.append("\n      \"character\" : 7");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 13");
+    gold.append("\n      \"character\" : 14");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: The field 'y' was lost during ingestion(RuleSetIngestion)\"");
+    gold.append("\n  \"message\" : \"Type check failure: The field 'y' was lost during ingestion (RuleSetIngestion)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1143,6 +1158,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   @Test
   public void testFailurePassthroughFailure() {
     assertLiveFail(get_FailurePassthrough_6());
+  }
+
+  @Test
+  public void testFailurePassthroughNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_FailurePassthrough_6());
   }
 
   @Test
@@ -1174,7 +1194,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to(Environment)\"");
+    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to (Environment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1188,7 +1208,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to(Environment)\"");
+    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to (Environment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1202,7 +1222,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to(Environment)\"");
+    gold.append("\n  \"message\" : \"Expression expected to be computed, rather than assigned to (Environment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1211,12 +1231,12 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 7,");
-    gold.append("\n      \"character\" : 7");
+    gold.append("\n      \"character\" : 11");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1225,12 +1245,12 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 8,");
-    gold.append("\n      \"character\" : 12");
+    gold.append("\n      \"character\" : 16");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'bool' and 'int' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1249,6 +1269,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   @Test
   public void testIncompatibleFieldFailure() {
     assertLiveFail(get_IncompatibleField_7());
+  }
+
+  @Test
+  public void testIncompatibleFieldNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_IncompatibleField_7());
   }
 
   @Test
@@ -1280,7 +1305,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1294,7 +1319,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1814,6 +1839,11 @@ public class GeneratedIngestionTests extends GeneratedBase {
   }
 
   @Test
+  public void testRecursiveBreakageNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_RecursiveBreakage_9());
+  }
+
+  @Test
   public void testRecursiveBreakageExceptionFree() {
     assertExceptionFree(get_RecursiveBreakage_9());
   }
@@ -1842,7 +1872,7 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: 'int' unable to produce data to ingest into 'table<Z>'.(RuleSetIngestion)\"");
+    gold.append("\n  \"message\" : \"Type check failure: 'int' unable to produce data to ingest into 'table<Z>'. (RuleSetIngestion)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

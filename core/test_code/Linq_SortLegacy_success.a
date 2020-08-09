@@ -10,13 +10,13 @@ record X {
 
 table<X> tbl;
 
-auto l1 = select tbl order by i;
-auto l2 = select tbl order by s;
-auto l3 = select tbl order by b;
-auto l4 = select tbl order by d;
-auto l5 = select tbl order by mi;
-auto l6 = select tbl order by i1;
-auto l7 = select tbl order by i2;
+auto l1 = iterate tbl order by i;
+auto l2 = iterate tbl order by s;
+auto l3 = iterate tbl order by b;
+auto l4 = iterate tbl order by d;
+auto l5 = iterate tbl order by mi;
+auto l6 = iterate tbl order by i1;
+auto l7 = iterate tbl order by i2;
 
 @construct {
   tbl <- {i:4};

@@ -21,6 +21,11 @@ public class GeneratedLookupTests extends GeneratedBase {
   }
 
   @Test
+  public void testByIndexNotIntegerNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ByIndexNotInteger_1());
+  }
+
+  @Test
   public void testByIndexNotIntegerExceptionFree() {
     assertExceptionFree(get_ByIndexNotInteger_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'int', but the type is actually 'string'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'int', but the type is actually 'string' (TypeCheckFailures)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -68,6 +73,11 @@ public class GeneratedLookupTests extends GeneratedBase {
   @Test
   public void testByIndexNotIterableFailure() {
     assertLiveFail(get_ByIndexNotIterable_2());
+  }
+
+  @Test
+  public void testByIndexNotIterableNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ByIndexNotIterable_2());
   }
 
   @Test
@@ -94,12 +104,12 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 5");
+    gold.append("\n      \"character\" : 12");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must be either an array or list to use index lookup[]; instead got 'int'.(RuleSetIterable)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must be either an array or list to use index lookup[]; instead got 'int'. (RuleSetIterable)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -574,6 +584,11 @@ public class GeneratedLookupTests extends GeneratedBase {
   }
 
   @Test
+  public void testNotFoundNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NotFound_4());
+  }
+
+  @Test
   public void testNotFoundExceptionFree() {
     assertExceptionFree(get_NotFound_4());
   }
@@ -602,7 +617,7 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'y' was not defined(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'y' was not defined (VariableLookup)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

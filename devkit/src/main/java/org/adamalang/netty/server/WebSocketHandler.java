@@ -20,7 +20,6 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
-  private ChannelHandlerContext context;
   private boolean ended;
   private final ServerNexus nexus;
   private AdamaSession session;
@@ -114,7 +113,6 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   public void userEventTriggered(final ChannelHandlerContext ctx, final Object evt) {
     try {
       if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
-        context = ctx;
         final var complete = (WebSocketServerProtocolHandler.HandshakeComplete) evt;
         final var cookieHeader = complete.requestHeaders().get(HttpHeaderNames.COOKIE);
         new QueryStringDecoder(complete.requestUri());

@@ -21,6 +21,11 @@ public class GeneratedDefineTests extends GeneratedBase {
   }
 
   @Test
+  public void testAssignTableOdditiesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_AssignTableOddities_1());
+  }
+
+  @Test
   public void testAssignTableOdditiesExceptionFree() {
     assertExceptionFree(get_AssignTableOddities_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for assignment (=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for assignment (=) (Assignment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -63,7 +68,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -77,7 +82,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for add based assignment (+=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for add based assignment (+=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 5,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"The types 'table<X>' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type that is unable to the added. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -91,7 +110,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<X>' and 'int' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -105,7 +124,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for multiplication based assignment (*=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 6,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'table<X>' and 'int' are unable to be multiplied with the * operator. (Multiply)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -119,7 +152,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for multiplication based assignment (*=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -133,7 +166,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<X>' and 'int' are unable to be multiplied with the * operator.(Multiply)\"");
+    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for subtract based assignment (-=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 7,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"The types 'table<X>' and 'int' are unable to be subtracted with the - operator. (Subtracted)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -147,7 +194,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -161,7 +208,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for subtract based assignment (-=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for division based assignment (/=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 8,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'table<X>' and 'int' are unable to be divided with the / operator. (Divide)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -175,7 +236,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<X>' and 'int' are unable to be subtracted with the - operator.(Subtracted)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -189,7 +250,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for division based assignment (%=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 1,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 9,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'table<X>' and 'int' are unable to be used with the mod (%) operator/. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -203,7 +278,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for division based assignment (/=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -217,7 +292,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<X>' and 'int' are unable to be divided with the / operator.(Divide)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'table<X>' (CanBumpNumeric)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -231,7 +306,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'table<X>' (CanBumpNumeric)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -245,77 +320,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for division based assignment (%=)(Assignment)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<X>' and 'int' are unable to be used with the mod (%) operator/.(RuleSetLogic)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'int'.(TypeCheckReferences)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'table<X>'(CanBumpNumeric)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'table<X>'(CanBumpNumeric)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'table<X>'(CanBumpNumeric)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'table<X>' (CanBumpNumeric)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -329,7 +334,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for assignment (=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for assignment (=) (Assignment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -343,7 +348,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'table<X>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'table<X>'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -357,7 +362,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'table<X>'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'table<X>' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -371,7 +376,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for assignment (=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'table<X>' is not applicable for assignment (=) (Assignment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -385,7 +390,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'table<X>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<X>' is unable to store type 'table<X>'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -404,6 +409,11 @@ public class GeneratedDefineTests extends GeneratedBase {
   @Test
   public void testBetweenNonArrayToArrayFailure() {
     assertLiveFail(get_BetweenNonArrayToArray_2());
+  }
+
+  @Test
+  public void testBetweenNonArrayToArrayNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_BetweenNonArrayToArray_2());
   }
 
   @Test
@@ -435,7 +445,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'M[]' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'M[]' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -449,7 +459,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type `int` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message.(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type `int` is unable to be converted. Only list<S>, S[], maybe<S> can be converted where S is either a record or a message. (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -463,7 +473,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: expected an array, but was actually type 'M'.(RuleSetArray)\"");
+    gold.append("\n  \"message\" : \"Type check failure: expected an array, but was actually type 'M'. (RuleSetArray)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1176,6 +1186,11 @@ public class GeneratedDefineTests extends GeneratedBase {
   }
 
   @Test
+  public void testBumpWrongTypeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_BumpWrongType_5());
+  }
+
+  @Test
   public void testBumpWrongTypeExceptionFree() {
     assertExceptionFree(get_BumpWrongType_5());
   }
@@ -1204,7 +1219,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'int' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1218,7 +1233,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'string'(TypeCheckFailures)\"");
+    gold.append("\n  \"message\" : \"Type check failure: must have a type of 'bool', but the type is actually 'string' (TypeCheckFailures)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1232,7 +1247,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<string>'(CanBumpNumeric)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<string>' (CanBumpNumeric)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1246,7 +1261,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<string>'(CanBumpNumeric)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'list<string>' (CanBumpNumeric)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1265,6 +1280,11 @@ public class GeneratedDefineTests extends GeneratedBase {
   @Test
   public void testCantBumpStringFailure() {
     assertLiveFail(get_CantBumpString_6());
+  }
+
+  @Test
+  public void testCantBumpStringNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantBumpString_6());
   }
 
   @Test
@@ -1296,21 +1316,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The variable 'x' is readonly(VariableLookup)\"");
+    gold.append("\n  \"message\" : \"The variable 'x' is readonly (VariableLookup)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 10");
+    gold.append("\n      \"character\" : 2");
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 13");
+    gold.append("\n      \"character\" : 14");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'string'(CanBumpNumeric)\"");
+    gold.append("\n  \"message\" : \"Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got 'string' (CanBumpNumeric)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -1329,6 +1349,11 @@ public class GeneratedDefineTests extends GeneratedBase {
   @Test
   public void testCantSetLazyFailure() {
     assertLiveFail(get_CantSetLazy_7());
+  }
+
+  @Test
+  public void testCantSetLazyNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CantSetLazy_7());
   }
 
   @Test
@@ -1360,7 +1385,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'auto:int' is not applicable for assignment (=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'auto:int' is not applicable for assignment (=) (Assignment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -1374,7 +1399,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'auto:int' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'auto:int' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2202,6 +2227,11 @@ public class GeneratedDefineTests extends GeneratedBase {
   }
 
   @Test
+  public void testFailingAssignmentsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_FailingAssignments_10());
+  }
+
+  @Test
   public void testFailingAssignmentsExceptionFree() {
     assertExceptionFree(get_FailingAssignments_10());
   }
@@ -2230,7 +2260,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for assignment (=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for assignment (=) (Assignment)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2244,7 +2274,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2258,7 +2288,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for add based assignment (+=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for add based assignment (+=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 6,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"The types 'table<R>' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type that is unable to the added. (ADD01)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2272,7 +2316,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<R>' and 'int' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2286,7 +2330,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for multiplication based assignment (*=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 7,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'table<R>' and 'int' are unable to be multiplied with the * operator. (Multiply)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2300,7 +2358,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for multiplication based assignment (*=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2314,7 +2372,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<R>' and 'int' are unable to be multiplied with the * operator.(Multiply)\"");
+    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for division based assignment (%=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 8,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'table<R>' and 'int' are unable to be used with the mod (%) operator/. (RuleSetLogic)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2328,7 +2400,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2342,7 +2414,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for division based assignment (%=)(Assignment)\"");
+    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for division based assignment (/=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 9,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"Type check failure: the types 'table<R>' and 'int' are unable to be divided with the / operator. (Divide)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2356,7 +2442,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<R>' and 'int' are unable to be used with the mod (%) operator/.(RuleSetLogic)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2370,7 +2456,21 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for subtract based assignment (-=) (Assignment)\"");
+    gold.append("\n}, {");
+    gold.append("\n  \"range\" : {");
+    gold.append("\n    \"start\" : {");
+    gold.append("\n      \"line\" : 2,");
+    gold.append("\n      \"character\" : 0");
+    gold.append("\n    },");
+    gold.append("\n    \"end\" : {");
+    gold.append("\n      \"line\" : 10,");
+    gold.append("\n      \"character\" : 8");
+    gold.append("\n    }");
+    gold.append("\n  },");
+    gold.append("\n  \"severity\" : 1,");
+    gold.append("\n  \"source\" : \"error\",");
+    gold.append("\n  \"message\" : \"The types 'table<R>' and 'int' are unable to be subtracted with the - operator. (Subtracted)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -2384,77 +2484,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for division based assignment (/=)(Assignment)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<R>' and 'int' are unable to be divided with the / operator.(Divide)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'.(TypeCheckReferences)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The type 'table<R>' is not applicable for subtract based assignment (-=)(Assignment)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'table<R>' and 'int' are unable to be subtracted with the - operator.(Subtracted)\"");
-    gold.append("\n}, {");
-    gold.append("\n  \"range\" : {");
-    gold.append("\n    \"start\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 0");
-    gold.append("\n    },");
-    gold.append("\n    \"end\" : {");
-    gold.append("\n      \"line\" : 2,");
-    gold.append("\n      \"character\" : 7");
-    gold.append("\n    }");
-    gold.append("\n  },");
-    gold.append("\n  \"severity\" : 1,");
-    gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'table<R>' is unable to store type 'int'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -2473,6 +2503,11 @@ public class GeneratedDefineTests extends GeneratedBase {
   @Test
   public void testInappropriateTypeFailure() {
     assertLiveFail(get_InappropriateType_11());
+  }
+
+  @Test
+  public void testInappropriateTypeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_InappropriateType_11());
   }
 
   @Test
@@ -2504,7 +2539,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'string'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -4018,6 +4053,11 @@ public class GeneratedDefineTests extends GeneratedBase {
   }
 
   @Test
+  public void testRightSideFailTypingNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_RightSideFailTyping_16());
+  }
+
+  @Test
   public void testRightSideFailTypingExceptionFree() {
     assertExceptionFree(get_RightSideFailTyping_16());
   }
@@ -4041,12 +4081,12 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n    },");
     gold.append("\n    \"end\" : {");
     gold.append("\n      \"line\" : 1,");
-    gold.append("\n      \"character\" : 13");
+    gold.append("\n      \"character\" : 18");
     gold.append("\n    }");
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the types 'string' and '_AnonObjConvert_0' are unable to be added with the + operator.(Addition)\"");
+    gold.append("\n  \"message\" : \"The types 'string' and '_AnonObjConvert_0' are unable to be added with the + operator.\\n\\tThe left hand side is a string which may be added with types: bool, int, double  (ADD01)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -4065,6 +4105,11 @@ public class GeneratedDefineTests extends GeneratedBase {
   @Test
   public void testValueDoesntAssignFailure() {
     assertLiveFail(get_ValueDoesntAssign_17());
+  }
+
+  @Test
+  public void testValueDoesntAssignNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ValueDoesntAssign_17());
   }
 
   @Test
@@ -4096,7 +4141,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'table<R>'.(TypeCheckReferences)\"");
+    gold.append("\n  \"message\" : \"Type check failure: the type 'int' is unable to store type 'table<R>'. (TypeCheckReferences)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

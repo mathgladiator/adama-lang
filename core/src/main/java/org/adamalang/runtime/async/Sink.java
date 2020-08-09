@@ -12,20 +12,10 @@ import org.adamalang.runtime.natives.NtMaybe;
 public class Sink<T> {
   /** a queue for a particular user */
   private class ClientChannelQueue {
-    private final ArrayList<QueueItemWrapper> queue;
+    private final ArrayList<T> queue;
 
     private ClientChannelQueue() {
       this.queue = new ArrayList<>();
-    }
-  }
-  /** a wrapper around an item with the associated task */
-  private class QueueItemWrapper {
-    private final T item;
-    private final AsyncTask task;
-
-    public QueueItemWrapper(final AsyncTask task, final T item) {
-      this.item = item;
-      this.task = task;
     }
   }
 
@@ -50,7 +40,7 @@ public class Sink<T> {
     final var queue = queueFor(who);
     T value = null;
     if (queue.queue.size() > 0) {
-      value = queue.queue.remove(0).item;
+      value = queue.queue.remove(0);
     }
     return new SimpleFuture<>(channel, who, value);
   }
@@ -60,14 +50,14 @@ public class Sink<T> {
     final var queue = queueFor(who);
     NtMaybe<T> value = null;
     if (queue.queue.size() > 0) {
-      value = new NtMaybe<>(queue.queue.remove(0).item);
+      value = new NtMaybe<>(queue.queue.remove(0));
     }
     return new SimpleFuture<>(channel, who, value);
   }
 
   /** enqueue the given task and message; the task has the user in it */
   public void enqueue(final AsyncTask task, final T message) {
-    queueFor(task.who).queue.add(new QueueItemWrapper(task, message));
+    queueFor(task.who).queue.add(message);
   }
 
   /** get the queue for the particular user */

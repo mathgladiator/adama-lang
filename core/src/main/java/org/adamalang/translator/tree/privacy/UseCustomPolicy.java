@@ -22,7 +22,7 @@ public class UseCustomPolicy extends Policy {
 
   public UseCustomPolicy(final Token customToken, final TokenizedItem<Token>[] policyToCheckTokens) {
     this.customToken = customToken;
-    policyToChecks = new ArrayList();
+    policyToChecks = new ArrayList<>();
     ingest(customToken);
     for (final TokenizedItem<Token> token : policyToCheckTokens) {
       policyToChecks.add(token.item.text);

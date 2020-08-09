@@ -4,6 +4,7 @@
 package org.adamalang.translator.tree.types.checking.ruleset;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanMathResult;
 
@@ -29,7 +30,7 @@ public class RuleSetMultiply {
         }
       }
       if (!silent) {
-        environment.document.createError(typeA, String.format("Type check failure: the types '%s' and '%s' are unable to be multiplied with the * operator.", typeA.getAdamaType(), typeB.getAdamaType()), "Multiply");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: the types '%s' and '%s' are unable to be multiplied with the * operator.", typeA.getAdamaType(), typeB.getAdamaType()), "Multiply");
       }
     }
     return CanMathResult.No;

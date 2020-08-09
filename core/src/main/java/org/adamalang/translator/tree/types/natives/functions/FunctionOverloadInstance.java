@@ -11,7 +11,7 @@ import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 
 /** a function overload instance is set of arguments bound to the same name such
  * that the types of parameters decide which function to use. */
-public class FunctionOverloadInstance {
+public class FunctionOverloadInstance extends DocumentPosition {
   public static ArrayList<FunctionOverloadInstance> WRAP(final FunctionOverloadInstance foi) {
     final var list = new ArrayList<FunctionOverloadInstance>();
     list.add(foi);
@@ -57,7 +57,7 @@ public class FunctionOverloadInstance {
     }
   }
 
-  public void testOverlap(final FunctionOverloadInstance other, final Environment environment, final DocumentPosition position) {
+  public void testOverlap(final FunctionOverloadInstance other, final Environment environment) {
     if (types.size() != other.types.size()) { return; }
     var sameCount = 0;
     for (var iter = 0; iter < types.size(); iter++) {
@@ -68,7 +68,7 @@ public class FunctionOverloadInstance {
       }
     }
     if (sameCount == types.size()) {
-      environment.document.createError(position, String.format("Overloaded Functioned has many identical calls"), "FunctionOverlap");
+      environment.document.createError(this, String.format("Overloaded function has many identical calls"), "FunctionOverlap");
     }
   }
 

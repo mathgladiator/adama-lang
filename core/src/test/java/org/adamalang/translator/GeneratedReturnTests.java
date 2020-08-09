@@ -21,6 +21,11 @@ public class GeneratedReturnTests extends GeneratedBase {
   }
 
   @Test
+  public void testShouldReturnButDoesntNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ShouldReturnButDoesnt_1());
+  }
+
+  @Test
   public void testShouldReturnButDoesntExceptionFree() {
     assertExceptionFree(get_ShouldReturnButDoesnt_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedReturnTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The return statement expected an expression of type `int`(ReturnFlow)\"");
+    gold.append("\n  \"message\" : \"The return statement expected an expression of type `int` (ReturnFlow)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
@@ -68,6 +73,11 @@ public class GeneratedReturnTests extends GeneratedBase {
   @Test
   public void testShouldntReturnButDoesFailure() {
     assertLiveFail(get_ShouldntReturnButDoes_2());
+  }
+
+  @Test
+  public void testShouldntReturnButDoesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ShouldntReturnButDoes_2());
   }
 
   @Test
@@ -99,7 +109,7 @@ public class GeneratedReturnTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"The return statement expects no expression(ReturnFlow)\"");
+    gold.append("\n  \"message\" : \"The return statement expects no expression (ReturnFlow)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");

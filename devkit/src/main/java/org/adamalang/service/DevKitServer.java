@@ -49,19 +49,19 @@ public class DevKitServer {
   public static ServerNexus prepare(final String[] args) throws Exception {
     final var serverOptions = new CliServerOptions(args);
     final var compilerOptions = CompilerOptions.start().args(0, args).make();
-    String data = "./data";
-    String html = "./html";
-    String source = "./source";
-    for (int k = 0; k + 1 < args.length; k += 2) {
+    var data = "./data";
+    var html = "./html";
+    var source = "./source";
+    for (var k = 0; k + 1 < args.length; k += 2) {
       switch (args[k]) {
         case "--data":
-          data = args[k+1];
+          data = args[k + 1];
           break;
         case "--html":
-          html = args[k+1];
+          html = args[k + 1];
           break;
         case "--source":
-          source = args[k+1];
+          source = args[k + 1];
           break;
       }
     }

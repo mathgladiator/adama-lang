@@ -17,12 +17,10 @@ import org.adamalang.runtime.natives.NtMaybe;
 public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxChild {
   private final Function<RxParent, Ty> maker;
   private Ty priorValue;
-  private final ArrayList<RxChild> subscribers;
   private Ty value;
 
   public RxMaybe(final RxParent owner, final Function<RxParent, Ty> maker) {
     super(owner);
-    this.subscribers = null;
     this.value = null;
     this.maker = maker;
     this.priorValue = null;

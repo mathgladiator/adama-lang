@@ -51,4 +51,10 @@ public class GeneratedBase {
   public void assertStable(String live, StringBuilder gold) {
     Assert.assertEquals(gold.toString(), live);
   }
+  public void assertNotTerribleLineNumbers(String live) {
+    if (live.contains("2147483647")) {
+      System.err.println(live);
+    }
+    Assert.assertFalse(live.contains("2147483647"));
+  }
 }

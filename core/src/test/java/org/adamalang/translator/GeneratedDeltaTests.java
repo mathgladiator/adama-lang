@@ -21,6 +21,11 @@ public class GeneratedDeltaTests extends GeneratedBase {
   }
 
   @Test
+  public void testBadThingsOnLazyNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_BadThingsOnLazy_1());
+  }
+
+  @Test
   public void testBadThingsOnLazyExceptionFree() {
     assertExceptionFree(get_BadThingsOnLazy_1());
   }
@@ -49,7 +54,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Lazy type has inappropriate type `channel<M>`(Lazy)\"");
+    gold.append("\n  \"message\" : \"Lazy type has inappropriate type `channel<M>` (Lazy)\"");
     gold.append("\n}, {");
     gold.append("\n  \"range\" : {");
     gold.append("\n    \"start\" : {");
@@ -63,7 +68,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n  },");
     gold.append("\n  \"severity\" : 1,");
     gold.append("\n  \"source\" : \"error\",");
-    gold.append("\n  \"message\" : \"Lazy type has inappropriate type `maybe<channel<M>>`(Lazy)\"");
+    gold.append("\n  \"message\" : \"Lazy type has inappropriate type `maybe<channel<M>>` (Lazy)\"");
     gold.append("\n} ]");
     gold.append("\n--JAVA---------------------------------------------");
     gold.append("\n");
