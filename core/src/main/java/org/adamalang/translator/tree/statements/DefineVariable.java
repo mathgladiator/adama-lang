@@ -104,10 +104,8 @@ public class DefineVariable extends Statement {
       if (!canStore || result == CanAssignResult.No) {
         type = null;
       }
-      if (type instanceof TyNativeMessage && valueType instanceof TyNativeMessage) {
-        if (((TyNativeMessage) valueType).isReadonly()) {
-          type = ((TyNativeMessage) type).makeReadonlyCopy();
-        }
+      if (type instanceof TyNativeMessage && type != null && valueType != null && valueType.behavior == TypeBehavior.ReadOnlyNativeValue) {
+        type = type.makeCopyWithNewPosition(type, valueType.behavior);
       }
     }
     if (type != null) {

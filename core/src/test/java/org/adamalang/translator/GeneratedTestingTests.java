@@ -1322,7 +1322,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    __track(1);");
     gold.append("\n    SimpleFuture<RTxX> fut = chan.fetch(NtClient.NO_ONE);");
     gold.append("\n    __track(2);");
-    gold.append("\n    RTxX val = fut.await();");
+    gold.append("\n    final RTxX val = fut.await();");
     gold.append("\n    __track(3);");
     gold.append("\n    status.set(\"Value:\" + val.x + \"/\" + val.y);");
     gold.append("\n  }");

@@ -10,7 +10,7 @@ tags: [adama, ui]
 
 August is upon us, and I feel good about how July went down. While I'm not making concrete steps towards the idealized milestone of launching a game, I am having fun polishing things. It is worth noting that the polishing found game-ending bugs, so this has been a worthwhile process. August is go-time, and I need to start telling more and more people about this project. So, with that, I'll enumerate concrete goals for August. Note, this blog post will update with changes.
 
-- [ ] Finish migrating all code from private repo.
+- [x] Finish migrating all code from private repo.
 - [ ] Write a better README.md
 - [x] README: Photo of Adama
 - [ ] README: Tighten the introduction and make it clear and cheeky

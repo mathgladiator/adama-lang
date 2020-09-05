@@ -68,9 +68,7 @@ public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedTy
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("await".equals(name)) {
       var returnType = environment.rules.Resolve(resultType, false);
-      if (returnType instanceof TyNativeMessage) {
-        returnType = ((TyNativeMessage) returnType).makeReadonlyCopy();
-      }
+      returnType = returnType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
       return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", returnType, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;

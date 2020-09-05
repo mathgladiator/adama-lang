@@ -786,7 +786,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    __track(4);");
     gold.append("\n    RTxY[] y2 = Utility.convertMultiple((tbl.iterate(true)).toArray((Integer __n) -> (Object) (new RTxZ[__n])), (__n) -> new RTxY[__n], (__obj) -> new RTxY(__obj.a.get(), __obj.b.get()));");
     gold.append("\n    __track(5);");
-    gold.append("\n    RTxY y = Utility.convertSingle(cake, (__obj) -> new RTxY(__obj.a.get(), __obj.b.get()));");
+    gold.append("\n    final RTxY y = Utility.convertSingle(cake, (__obj) -> new RTxY(__obj.a.get(), __obj.b.get()));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {");
@@ -1335,13 +1335,13 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      _CreateRef2.x.set(_AutoExpr3.x);");
     gold.append("\n    }");
     gold.append("\n    __track(1);");
-    gold.append("\n    RTxM m = Utility.convertSingle(x, (__obj) -> new RTxM(__obj.x.get()));");
+    gold.append("\n    final RTxM m = Utility.convertSingle(x, (__obj) -> new RTxM(__obj.x.get()));");
     gold.append("\n    __track(2);");
     gold.append("\n    RTxM[] arr = Utility.convertMultiple(t.iterate(true), (__n) -> new RTxM[__n], (__obj) -> new RTxM(__obj.x.get()));");
     gold.append("\n    __track(3);");
     gold.append("\n    NtMaybe<RTxM> mm = new NtMaybe<RTxM>(Utility.convertMaybe(new NtMaybe<RTxR>(x), (__obj) -> new RTxM(__obj.x.get())));");
     gold.append("\n    __track(4);");
-    gold.append("\n    RTxM2 m2 = Utility.convertSingle(x, (__obj) -> new RTxM2(__obj.x.get(), __obj.y.get()));");
+    gold.append("\n    final RTxM2 m2 = Utility.convertSingle(x, (__obj) -> new RTxM2(__obj.x.get(), __obj.y.get()));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");

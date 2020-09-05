@@ -37,7 +37,6 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   public Token messageToken;
   public String name;
   public Token nameToken;
-  private boolean readonly;
   public StructureStorage storage;
 
   public TyNativeMessage(final TypeBehavior behavior, final Token messageToken, final Token nameToken, final StructureStorage storage) {
@@ -48,7 +47,6 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     this.storage = storage;
     ingest(messageToken);
     ingest(storage);
-    readonly = false;
   }
 
   @Override
@@ -158,27 +156,13 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     };
   }
 
-  public boolean isReadonly() {
-    return readonly;
-  }
-
   public TyNativeMessage makeAnonymousCopy() {
     return (TyNativeMessage) (new TyNativeMessage(behavior, messageToken, nameToken, storage.makeAnonymousCopy()).withPosition(this));
   }
 
   @Override
   public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    final var copy = new TyNativeMessage(newBehavior, messageToken, nameToken, storage);
-    if (readonly) {
-      copy.readonly = true;
-    }
-    return copy.withPosition(position);
-  }
-
-  public TyNativeMessage makeReadonlyCopy() {
-    final var copy = new TyNativeMessage(behavior, messageToken, nameToken, storage);
-    copy.readonly = true;
-    return (TyNativeMessage) (copy.withPosition(this));
+    return new TyNativeMessage(newBehavior, messageToken, nameToken, storage).withPosition(position);
   }
 
   @Override

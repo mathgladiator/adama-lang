@@ -1933,7 +1933,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void __step_lobby() {");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(5);");
-    gold.append("\n    RTxLeaderActionMessage decision = leader.fetch(owner.get()).await();");
+    gold.append("\n    final RTxLeaderActionMessage decision = leader.fetch(owner.get()).await();");
     gold.append("\n    __track(6);");
     gold.append("\n    if (decision.action == 1 && !ready.get()) {");
     gold.append("\n      __code_cost += 2;");

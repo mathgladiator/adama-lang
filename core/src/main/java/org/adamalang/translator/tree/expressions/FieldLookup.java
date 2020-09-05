@@ -97,7 +97,7 @@ public class FieldLookup extends Expression {
         }
       }
       if (eType instanceof IsStructure) {
-        if (!environment.state.isContextComputation() && eType instanceof TyNativeMessage && ((TyNativeMessage) eType).isReadonly()) {
+        if (!environment.state.isContextComputation() && eType.behavior == TypeBehavior.ReadOnlyNativeValue) {
           environment.document.createError(this, String.format("The field '%s' is on a readonly message", fieldName), "FieldLookup");
         }
         final var hrs = (IsStructure) eType;

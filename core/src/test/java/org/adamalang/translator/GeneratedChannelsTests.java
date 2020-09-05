@@ -331,9 +331,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __track(2);");
     gold.append("\n    SimpleFuture<RTxX> fut2 = chan.fetch(NtClient.NO_ONE);");
     gold.append("\n    __track(3);");
-    gold.append("\n    RTxX val1 = fut1.await();");
+    gold.append("\n    final RTxX val1 = fut1.await();");
     gold.append("\n    __track(4);");
-    gold.append("\n    RTxX val2 = fut2.await();");
+    gold.append("\n    final RTxX val2 = fut2.await();");
     gold.append("\n    __track(5);");
     gold.append("\n    status.set(\"Value:\" + val1.x + \"/\" + val1.y + \":\" + val2.x + \"/\" + val2.y);");
     gold.append("\n  }");

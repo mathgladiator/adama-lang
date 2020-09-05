@@ -34,6 +34,7 @@ public class StructureStorage extends DocumentPosition {
   public final ArrayList<String> policiesForVisibility;
   public final StorageSpecialization specialization;
   public final ArrayList<Consumer<Environment>> typeCheckOrder;
+  public final HashSet<String> fieldsWithDefaults;
 
   public StructureStorage(final StorageSpecialization specialization, final boolean anonymous, final Token openBraceToken) {
     this.specialization = specialization;
@@ -51,6 +52,7 @@ public class StructureStorage extends DocumentPosition {
     indices = new ArrayList<>();
     indexSet = new HashSet<>();
     methodTypes = new HashMap<>();
+    fieldsWithDefaults = new HashSet<>();
     ingest(openBraceToken);
   }
 
@@ -111,6 +113,9 @@ public class StructureStorage extends DocumentPosition {
         env.document.createError(fd, String.format("Field '%s' was already defined", fd.nameToken.text), "StructureDefine");
       });
       return;
+    }
+    if (fd.defaultValueOverride != null) {
+      fieldsWithDefaults.add(fd.name);
     }
     order.add(env -> {
       fd.typing(env.watch(name -> {
@@ -219,6 +224,7 @@ public class StructureStorage extends DocumentPosition {
   public boolean match(final StructureStorage other, final Environment environment) {
     if (specialization != other.specialization) { return false; }
     if (fields.size() != other.fields.size()) { return false; }
+    if (fieldsWithDefaults.size() > 0 || other.fieldsWithDefaults.size() > 0) { return false; }
     final var thisIt = fields.values().iterator();
     final var thisOther = other.fields.values().iterator();
     while (thisIt.hasNext() && thisOther.hasNext()) {
