@@ -25,7 +25,7 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
   }
 
   @Override

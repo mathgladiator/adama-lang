@@ -64,7 +64,7 @@ public class AsyncTask {
       } catch (final AbortMessageException aborted) {
         // this did not go so well
         this.aborted = true;
-        throw new RetryProgressException(messageId);
+        throw new RetryProgressException(this);
       }
     }
   }

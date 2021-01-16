@@ -35,11 +35,15 @@ public class RxInt32Tests {
     i.set(60);
     parent.assertDirtyCount(2);
     final var writer = new JsonStreamWriter();
-    i.__commit("v", writer);
+    final var reverse = new JsonStreamWriter();
+    i.__commit("v", writer, reverse);
     Assert.assertEquals("\"v\":60", writer.toString());
+    Assert.assertEquals("\"v\":42", reverse.toString());
     final var writerAgain = new JsonStreamWriter();
-    i.__commit("v2", writerAgain);
+    final var reverseAgain = new JsonStreamWriter();
+    i.__commit("v2", writerAgain, reverseAgain);
     Assert.assertEquals("", writerAgain.toString());
+    Assert.assertEquals("", reverseAgain.toString());
   }
 
   @Test

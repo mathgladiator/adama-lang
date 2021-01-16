@@ -27,16 +27,27 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
-      priorValue = value;
       if (value != null) {
-        value.__commit(name, writer);
+        if (priorValue == null) {
+          value.__commit(name, forwardDelta, new JsonStreamWriter());
+          reverseDelta.writeObjectFieldIntro(name);
+          reverseDelta.writeNull();
+        } else {
+          value.__commit(name, forwardDelta, reverseDelta);
+        }
       } else { // value is null
-        writer.writeObjectFieldIntro(name);
-        writer.writeNull();
+        forwardDelta.writeObjectFieldIntro(name);
+        forwardDelta.writeNull();
+        if (priorValue != null) {
+          reverseDelta.writeObjectFieldIntro(name);
+          priorValue.__dump(reverseDelta);
+        }
         __cancelAllSubscriptions();
       }
+
+      priorValue = value;
       __lowerDirtyCommit();
     }
   }

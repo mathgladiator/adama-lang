@@ -39,7 +39,7 @@ public class GeneratedImportTests extends GeneratedBase {
   public void stable_EmptyStringBad_1() {
     String live = get_EmptyStringBad_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Import_EmptyStringBad_failure.a");
+    gold.append("Path:Import_EmptyStringBad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -108,7 +108,7 @@ public class GeneratedImportTests extends GeneratedBase {
   public void stable_NotFoundFile_2() {
     String live = get_NotFoundFile_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Import_NotFoundFile_failure.a");
+    gold.append("Path:Import_NotFoundFile_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

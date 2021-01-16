@@ -39,7 +39,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_CantMixChannelAndFunctions_1() {
     String live = get_CantMixChannelAndFunctions_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Document_CantMixChannelAndFunctions_failure.a");
+    gold.append("Path:Document_CantMixChannelAndFunctions_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -108,7 +108,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateComputeFields_2() {
     String live = get_DuplicateComputeFields_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Document_DuplicateComputeFields_failure.a");
+    gold.append("Path:Document_DuplicateComputeFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -177,7 +177,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateEnums_3() {
     String live = get_DuplicateEnums_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Document_DuplicateEnums_failure.a");
+    gold.append("Path:Document_DuplicateEnums_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -246,7 +246,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateFields_4() {
     String live = get_DuplicateFields_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Document_DuplicateFields_failure.a");
+    gold.append("Path:Document_DuplicateFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -301,7 +301,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateMessages_5() {
     String live = get_DuplicateMessages_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Document_DuplicateMessages_failure.a");
+    gold.append("Path:Document_DuplicateMessages_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -370,7 +370,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicatePolicies_6() {
     String live = get_DuplicatePolicies_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Document_DuplicatePolicies_failure.a");
+    gold.append("Path:Document_DuplicatePolicies_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -425,7 +425,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_DuplicateRecords_7() {
     String live = get_DuplicateRecords_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Document_DuplicateRecords_failure.a");
+    gold.append("Path:Document_DuplicateRecords_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -499,7 +499,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_GlobalPolicy_8() {
     String live = get_GlobalPolicy_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Document_GlobalPolicy_success.a");
+    gold.append("Path:Document_GlobalPolicy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -619,18 +619,18 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __commit(String __name, JsonStreamWriter __writer) {");
-    gold.append("\n    __state.__commit(\"__state\", __writer);");
-    gold.append("\n    __constructed.__commit(\"__constructed\", __writer);");
-    gold.append("\n    __next_time.__commit(\"__next_time\", __writer);");
-    gold.append("\n    __blocked.__commit(\"__blocked\", __writer);");
-    gold.append("\n    __seq.__commit(\"__seq\", __writer);");
-    gold.append("\n    __entropy.__commit(\"__entropy\", __writer);");
-    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __writer);");
-    gold.append("\n    __connection_id.__commit(\"__connection_id\", __writer);");
-    gold.append("\n    __message_id.__commit(\"__message_id\", __writer);");
-    gold.append("\n    __time.__commit(\"__time\", __writer);");
-    gold.append("\n    r.__commit(\"r\", __writer);");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    r.__commit(\"r\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -728,13 +728,16 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __commit(String __name, JsonStreamWriter __writer) {");
+    gold.append("\n    public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
     gold.append("\n      if (__isDirty()) {");
-    gold.append("\n        __writer.writeObjectFieldIntro(__name);");
-    gold.append("\n        __writer.beginObject();");
-    gold.append("\n        x.__commit(\"x\", __writer);");
-    gold.append("\n        id.__commit(\"id\", __writer);");
-    gold.append("\n        __writer.endObject();");
+    gold.append("\n        __forward.writeObjectFieldIntro(__name);");
+    gold.append("\n        __forward.beginObject();");
+    gold.append("\n        __reverse.writeObjectFieldIntro(__name);");
+    gold.append("\n        __reverse.beginObject();");
+    gold.append("\n        x.__commit(\"x\", __forward, __reverse);");
+    gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
+    gold.append("\n        __forward.endObject();");
+    gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -906,15 +909,15 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n");
     gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"r\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1}}}} need:true in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"r\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1,\"id\":0}}}} need:true in:0");
     gold.append("\n{\"command\":\"connect\",\"timestamp\":\"25\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"}}-->{\"__seq\":1,\"__connection_id\":1,\"__time\":\"25\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}} need:true in:0");
     gold.append("\n{\"command\":\"connect\",\"timestamp\":\"50\",\"who\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}-->{\"__seq\":2,\"__connection_id\":2,\"__time\":\"50\",\"__clients\":{\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}} need:true in:0");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seedUsed\":\"0\",\"__seq\":3,\"__entropy\":\"-4962768465676381896\",\"__time\":\"75\"} need:false in:-75");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-4962768465676381896\",\"__time\":\"75\"} need:false in:-75");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"100\"}-->{\"__goodwill_used\":0,\"__cost\":7,\"__billing_seq\":3} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"r\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1}}},\"__seq\":3,\"__connection_id\":2,\"__time\":\"75\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}},\"__seedUsed\":\"0\",\"__goodwill_used\":0,\"__cost\":7,\"__billing_seq\":3}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"r\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1,\"id\":0}}},\"__seq\":3,\"__connection_id\":2,\"__time\":\"75\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}},\"__goodwill_used\":0,\"__cost\":7,\"__billing_seq\":3}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"r\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1,\"id\":0}}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":3,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"100\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}}");
     gold.append("\n{\"r\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1,\"id\":0}}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":3,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":2,\"__message_id\":0,\"__time\":\"100\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"},\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}}");
@@ -956,7 +959,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
   public void stable_UnknownType_9() {
     String live = get_UnknownType_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Document_UnknownType_failure.a");
+    gold.append("Path:Document_UnknownType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

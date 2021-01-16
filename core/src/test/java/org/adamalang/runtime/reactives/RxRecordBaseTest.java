@@ -36,7 +36,7 @@ public class RxRecordBaseTest {
     mr.__name();
     mr.__reindex();
     mr.__deindex();
-    mr.__commit(null, new JsonStreamWriter());
+    mr.__commit(null, new JsonStreamWriter(), new JsonStreamWriter());
     mr.__revert();
     mr.setCachedObjectNode(Utility.createObjectNode());
     Assert.assertNotNull(mr.getCachedObjectNode());

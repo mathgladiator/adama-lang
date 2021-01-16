@@ -21,7 +21,7 @@ public class RxGuard extends RxBase implements RxChild {
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     __revert();
   }
 

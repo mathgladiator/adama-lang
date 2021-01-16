@@ -37,11 +37,15 @@ public class RxStringTests {
     parent.assertDirtyCount(2);
     Assert.assertEquals("cake", s.get());
     final var writer = new JsonStreamWriter();
-    s.__commit("v", writer);
+    final var reverse = new JsonStreamWriter();
+    s.__commit("v", writer, reverse);
     Assert.assertEquals("\"v\":\"cake\"", writer.toString());
+    Assert.assertEquals("\"v\":\"xxx\"", reverse.toString());
     final var writerAgain = new JsonStreamWriter();
-    s.__commit("v2", writerAgain);
+    final var reverseAgain = new JsonStreamWriter();
+    s.__commit("v2", writerAgain, reverseAgain);
     Assert.assertEquals("", writerAgain.toString());
+    Assert.assertEquals("", reverseAgain.toString());
   }
 
   @Test

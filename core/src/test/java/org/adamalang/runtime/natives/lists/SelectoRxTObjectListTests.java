@@ -44,8 +44,10 @@ public class SelectoRxTObjectListTests {
     table.__insert(new JsonStreamReader("{\"auto_key\":7,\"rows\":{\"4\":{\"index\":13},\"5\":{\"index\":13},\"6\":{\"index\":13}}}"));
     table.iterate(true).__delete();
     final var writer = new JsonStreamWriter();
-    table.__commit("t", writer);
+    final var reverse = new JsonStreamWriter();
+    table.__commit("t", writer, reverse);
     Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":null,\"5\":null,\"6\":null}}", writer.toString());
+    Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":{\"data\":\"\",\"index\":13},\"5\":{\"data\":\"\",\"index\":13},\"6\":{\"data\":\"\",\"index\":13}}}", reverse.toString());
   }
 
   @Test
@@ -74,8 +76,10 @@ public class SelectoRxTObjectListTests {
     table.__insert(new JsonStreamReader("{\"auto_key\":7,\"rows\":{\"4\":{\"index\":13},\"5\":{\"index\":13},\"6\":{\"index\":13}}}"));
     table.iterate(true).map(mr -> mr.data.set("cake"));
     final var writer = new JsonStreamWriter();
-    table.__commit("t", writer);
+    final var reverse = new JsonStreamWriter();
+    table.__commit("t", writer, reverse);
     Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":{\"data\":\"cake\"},\"5\":{\"data\":\"cake\"},\"6\":{\"data\":\"cake\"}}}", writer.toString());
+    Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":{\"data\":\"\"},\"5\":{\"data\":\"\"},\"6\":{\"data\":\"\"}}}", reverse.toString());
   }
 
   @Test
@@ -126,8 +130,10 @@ public class SelectoRxTObjectListTests {
     table.__insert(new JsonStreamReader("{\"auto_key\":7,\"rows\":{\"4\":{\"index\":13},\"5\":{\"index\":13},\"6\":{\"index\":13}}}"));
     table.iterate(true).transform(mr -> mr.index.bumpUpPost());
     final var writer = new JsonStreamWriter();
-    table.__commit("t", writer);
+    final var reverse = new JsonStreamWriter();
+    table.__commit("t", writer, reverse);
     Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":{\"index\":14},\"5\":{\"index\":14},\"6\":{\"index\":14}}}", writer.toString());
+    Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":{\"index\":13},\"5\":{\"index\":13},\"6\":{\"index\":13}}}", reverse.toString());
   }
 
   @Test

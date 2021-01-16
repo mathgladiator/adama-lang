@@ -55,7 +55,19 @@ public class NewlineJsonTransactionDiskRecordTests {
 
   @Test
   public void no_delta_2() throws Exception {
-    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"), JsonHelper.encode("request", "data"));
+    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"));
+    final var reader = readerOf(lines);
+    NewlineJsonTransactionDiskRecord record = null;
+    try {
+      record = new NewlineJsonTransactionDiskRecord(reader);
+      Assert.fail();
+    } catch (final IOException ioe) {}
+    Assert.assertNull(record);
+  }
+
+  @Test
+  public void no_delta_3() throws Exception {
+    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"), JsonHelper.encode("request", "data"));
     final var reader = readerOf(lines);
     NewlineJsonTransactionDiskRecord record = null;
     try {
@@ -93,7 +105,7 @@ public class NewlineJsonTransactionDiskRecordTests {
 
   @Test
   public void single() throws Exception {
-    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"));
+    final var lines = lines(JsonHelper.encode("request", "after"), JsonHelper.encode("request", "before"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"));
     final var reader = readerOf(lines);
     var record = new NewlineJsonTransactionDiskRecord(reader);
     Assert.assertTrue(record.valid());
@@ -103,7 +115,7 @@ public class NewlineJsonTransactionDiskRecordTests {
 
   @Test
   public void single_convert() throws Exception {
-    final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"));
+    final var lines = lines(JsonHelper.encode("request", "after"), JsonHelper.encode("request", "before"), JsonHelper.encode("delta", "data"), JsonHelper.encode("x"));
     final var reader = readerOf(lines);
     final var record = new NewlineJsonTransactionDiskRecord(reader);
     Assert.assertTrue(record.valid());
@@ -113,6 +125,6 @@ public class NewlineJsonTransactionDiskRecordTests {
     NewlineJsonTransactionDiskRecord.writeTo(t, writer);
     writer.flush();
     final var str = new String(memory.toByteArray());
-    Assert.assertEquals("{\"request\":\"data\"}\n" + "{\"delta\":\"data\"}\n" + "{\"needsInvalidation\":false,\"whenToInvalidMilliseconds\":0,\"seq\":0}", str.trim().replaceAll(Pattern.quote("\r"), ""));
+    Assert.assertEquals("{\"request\":\"after\"}\n" + "{\"request\":\"before\"}\n" + "{\"delta\":\"data\"}\n" + "{\"needsInvalidation\":false,\"whenToInvalidMilliseconds\":0,\"seq\":0}", str.trim().replaceAll(Pattern.quote("\r"), ""));
   }
 }

@@ -55,32 +55,52 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
-      writer.writeObjectFieldIntro(name);
-      writer.beginObject();
-      writer.writeObjectFieldIntro("auto_key");
-      writer.writeInteger(this.autoKey);
-      writer.writeObjectFieldIntro("rows");
-      writer.beginObject();
+      forwardDelta.writeObjectFieldIntro(name);
+      forwardDelta.beginObject();
+      forwardDelta.writeObjectFieldIntro("auto_key");
+      forwardDelta.writeInteger(this.autoKey);
+      forwardDelta.writeObjectFieldIntro("rows");
+      forwardDelta.beginObject();
+      reverseDelta.writeObjectFieldIntro(name);
+      reverseDelta.beginObject();
+      reverseDelta.writeObjectFieldIntro("auto_key");
+      reverseDelta.writeInteger(this.autoKeyBackup);
+      reverseDelta.writeObjectFieldIntro("rows");
+      reverseDelta.beginObject();
       this.autoKeyBackup = this.autoKey;
+
       final var keysToKill = new ArrayList<Integer>();
       for (final Map.Entry<Integer, Ty> entry : itemsByKey.entrySet()) {
         final int key = entry.getKey();
         final var row = entry.getValue();
         if (row.__isDying()) {
           if (!createdObjects.containsKey(key)) {
-            writer.writeObjectFieldIntro(key);
-            writer.writeNull();
+            forwardDelta.writeObjectFieldIntro(key);
+            forwardDelta.writeNull();
+            reverseDelta.writeObjectFieldIntro(key);
+            row.__dump(reverseDelta);
           }
           row.__kill();
           keysToKill.add(key);
         } else if (row.__isDirty()) {
-          row.__commit(key + "", writer);
+          if (createdObjects.containsKey(key)) {
+            forwardDelta.writeObjectFieldIntro(key);
+            row.__dump(forwardDelta);
+            reverseDelta.writeObjectFieldIntro(key);
+            reverseDelta.writeNull();
+            // lower the change flag; TODO: make this an explicit thing to save heap churn?
+            row.__commit(key + "", new JsonStreamWriter(), new JsonStreamWriter());
+          } else {
+            row.__commit(key + "", forwardDelta, reverseDelta);
+          }
         }
       }
-      writer.endObject();
-      writer.endObject();
+      forwardDelta.endObject();
+      forwardDelta.endObject();
+      reverseDelta.endObject();
+      reverseDelta.endObject();
       createdObjects.clear();
       // murder the keys
       for (final Integer keyToKill : keysToKill) {

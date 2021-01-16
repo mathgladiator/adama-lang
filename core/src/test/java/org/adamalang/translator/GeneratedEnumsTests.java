@@ -39,7 +39,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_CantCrossTypes_1() {
     String live = get_CantCrossTypes_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_CantCrossTypes_failure.a");
+    gold.append("Path:Enums_CantCrossTypes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -108,7 +108,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_CantDefineDuplicates_2() {
     String live = get_CantDefineDuplicates_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_CantDefineDuplicates_failure.a");
+    gold.append("Path:Enums_CantDefineDuplicates_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -177,7 +177,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_CantFindEnumName_3() {
     String live = get_CantFindEnumName_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_CantFindEnumName_failure.a");
+    gold.append("Path:Enums_CantFindEnumName_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -260,7 +260,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_CantFindEnumValue_4() {
     String live = get_CantFindEnumValue_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_CantFindEnumValue_failure.a");
+    gold.append("Path:Enums_CantFindEnumValue_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -315,7 +315,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchDisagreeReturnType1_5() {
     String live = get_DispatchDisagreeReturnType1_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatchDisagreeReturnType1_failure.a");
+    gold.append("Path:Enums_DispatchDisagreeReturnType1_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -384,7 +384,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchDisagreeReturnType2_6() {
     String live = get_DispatchDisagreeReturnType2_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatchDisagreeReturnType2_failure.a");
+    gold.append("Path:Enums_DispatchDisagreeReturnType2_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -458,7 +458,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchInvoke_7() {
     String live = get_DispatchInvoke_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatchInvoke_success.a");
+    gold.append("Path:Enums_DispatchInvoke_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -581,19 +581,19 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __commit(String __name, JsonStreamWriter __writer) {");
-    gold.append("\n    __state.__commit(\"__state\", __writer);");
-    gold.append("\n    __constructed.__commit(\"__constructed\", __writer);");
-    gold.append("\n    __next_time.__commit(\"__next_time\", __writer);");
-    gold.append("\n    __blocked.__commit(\"__blocked\", __writer);");
-    gold.append("\n    __seq.__commit(\"__seq\", __writer);");
-    gold.append("\n    __entropy.__commit(\"__entropy\", __writer);");
-    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __writer);");
-    gold.append("\n    __connection_id.__commit(\"__connection_id\", __writer);");
-    gold.append("\n    __message_id.__commit(\"__message_id\", __writer);");
-    gold.append("\n    __time.__commit(\"__time\", __writer);");
-    gold.append("\n    x.__commit(\"x\", __writer);");
-    gold.append("\n    y.__commit(\"y\", __writer);");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
+    gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -728,10 +728,10 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\nRANDO was DENIED:5011");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"x\":13,\"y\":42},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
     gold.append("\n+ RANDO DELTA:{\"data\":{\"x\":13,\"y\":42},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seedUsed\":\"0\",\"__seq\":2,\"__entropy\":\"-4962768465676381896\",\"__time\":\"50\"} need:false in:-50");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"-4962768465676381896\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"75\"}-->{\"__goodwill_used\":0,\"__cost\":15,\"__billing_seq\":2} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"x\":13,\"y\":42,\"__seq\":2,\"__connection_id\":1,\"__time\":\"50\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__seedUsed\":\"0\",\"__goodwill_used\":0,\"__cost\":15,\"__billing_seq\":2}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"x\":13,\"y\":42,\"__seq\":2,\"__connection_id\":1,\"__time\":\"50\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__goodwill_used\":0,\"__cost\":15,\"__billing_seq\":2}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"x\":13,\"y\":42,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":2,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"75\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
     gold.append("\n{\"x\":13,\"y\":42,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":2,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":1,\"__message_id\":0,\"__time\":\"75\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}");
@@ -773,7 +773,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchManyMissing_8() {
     String live = get_DispatchManyMissing_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatchManyMissing_failure.a");
+    gold.append("Path:Enums_DispatchManyMissing_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -833,7 +833,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatchOverloading_9() {
     String live = get_DispatchOverloading_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatchOverloading_success.a");
+    gold.append("Path:Enums_DispatchOverloading_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -970,21 +970,21 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __commit(String __name, JsonStreamWriter __writer) {");
-    gold.append("\n    __state.__commit(\"__state\", __writer);");
-    gold.append("\n    __constructed.__commit(\"__constructed\", __writer);");
-    gold.append("\n    __next_time.__commit(\"__next_time\", __writer);");
-    gold.append("\n    __blocked.__commit(\"__blocked\", __writer);");
-    gold.append("\n    __seq.__commit(\"__seq\", __writer);");
-    gold.append("\n    __entropy.__commit(\"__entropy\", __writer);");
-    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __writer);");
-    gold.append("\n    __connection_id.__commit(\"__connection_id\", __writer);");
-    gold.append("\n    __message_id.__commit(\"__message_id\", __writer);");
-    gold.append("\n    __time.__commit(\"__time\", __writer);");
-    gold.append("\n    x.__commit(\"x\", __writer);");
-    gold.append("\n    y.__commit(\"y\", __writer);");
-    gold.append("\n    u.__commit(\"u\", __writer);");
-    gold.append("\n    v.__commit(\"v\", __writer);");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
+    gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
+    gold.append("\n    u.__commit(\"u\", __forward, __reverse);");
+    gold.append("\n    v.__commit(\"v\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1131,10 +1131,10 @@ public class GeneratedEnumsTests extends GeneratedBase {
     gold.append("\nRANDO was DENIED:5011");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seedUsed\":\"0\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":13,\"__billing_seq\":1} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"x\":13,\"y\":42,\"u\":15.0,\"v\":44.0,\"__seedUsed\":\"0\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":13,\"__billing_seq\":1}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"x\":13,\"y\":42,\"u\":15.0,\"v\":44.0,\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":13,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"x\":13,\"y\":42,\"u\":15.0,\"v\":44.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
     gold.append("\n{\"x\":13,\"y\":42,\"u\":15.0,\"v\":44.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
@@ -1176,7 +1176,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherForNoEnum_10() {
     String live = get_DispatcherForNoEnum_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatcherForNoEnum_failure.a");
+    gold.append("Path:Enums_DispatcherForNoEnum_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1231,7 +1231,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherForWrongType_11() {
     String live = get_DispatcherForWrongType_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatcherForWrongType_failure.a");
+    gold.append("Path:Enums_DispatcherForWrongType_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1286,7 +1286,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherFoundNoValues_12() {
     String live = get_DispatcherFoundNoValues_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatcherFoundNoValues_failure.a");
+    gold.append("Path:Enums_DispatcherFoundNoValues_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1369,7 +1369,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherLacksCoverage_13() {
     String live = get_DispatcherLacksCoverage_13();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatcherLacksCoverage_failure.a");
+    gold.append("Path:Enums_DispatcherLacksCoverage_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1438,7 +1438,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherMustHaveNoOverlapWhenReturnValue_14() {
     String live = get_DispatcherMustHaveNoOverlapWhenReturnValue_14();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatcherMustHaveNoOverlapWhenReturnValue_failure.a");
+    gold.append("Path:Enums_DispatcherMustHaveNoOverlapWhenReturnValue_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1493,7 +1493,7 @@ public class GeneratedEnumsTests extends GeneratedBase {
   public void stable_DispatcherWithShouldReturn_15() {
     String live = get_DispatcherWithShouldReturn_15();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Enums_DispatcherWithShouldReturn_failure.a");
+    gold.append("Path:Enums_DispatcherWithShouldReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

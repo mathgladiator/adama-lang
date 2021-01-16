@@ -13,10 +13,12 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class RxMaybeTests {
-  private static String commit(final RxMaybe<RxInt32> mi) {
+  private static void commitCheck(final RxMaybe<RxInt32> mi, String expectedForward, String expectedReverse) {
     final var writer = new JsonStreamWriter();
-    mi.__commit("v", writer);
-    return writer.toString();
+    final var reverse = new JsonStreamWriter();
+    mi.__commit("v", writer, reverse);
+    Assert.assertEquals(expectedForward, writer.toString());
+    Assert.assertEquals(expectedReverse, reverse.toString());
   }
 
   @Test
@@ -24,22 +26,22 @@ public class RxMaybeTests {
     final var parent = new MockRxParent();
     final var mi = new RxMaybe<>(parent, p -> new RxInt32(p, 42));
     Assert.assertFalse(mi.has());
-    Assert.assertEquals("", commit(mi));
+    commitCheck(mi, "", "");
     parent.assertDirtyCount(0);
     mi.make();
     parent.assertDirtyCount(1);
-    Assert.assertEquals("\"v\":42", commit(mi));
+    commitCheck(mi, "\"v\":42", "\"v\":null");
     mi.delete();
     parent.assertDirtyCount(2);
-    Assert.assertEquals("\"v\":null", commit(mi));
-    Assert.assertEquals("", commit(mi));
+    commitCheck(mi, "\"v\":null", "\"v\":42");
+    commitCheck(mi, "", "");
     mi.make().set(50);
     mi.delete();
     parent.assertDirtyCount(5);
-    Assert.assertEquals("\"v\":null", commit(mi));
+    commitCheck(mi, "\"v\":null", "");
     mi.make().set(50);
     parent.assertDirtyCount(7);
-    Assert.assertEquals("\"v\":50", commit(mi));
+    commitCheck(mi, "\"v\":50", "\"v\":null");
     mi.make().set(5000);
   }
 
@@ -157,7 +159,7 @@ public class RxMaybeTests {
     mi.make().set(50);
     mi.__revert();
     child.assertInvalidateCount(4);
-    Assert.assertEquals("", commit(mi));
+    commitCheck(mi, "", "");
   }
 
   @Test
@@ -166,16 +168,16 @@ public class RxMaybeTests {
     final var child = new MockRxChild();
     mi.__subscribe(child);
     Assert.assertFalse(mi.has());
-    Assert.assertEquals("", commit(mi));
+    commitCheck(mi, "", "");
     mi.make();
     child.assertInvalidateCount(2);
-    Assert.assertEquals("\"v\":42", commit(mi));
+    commitCheck(mi, "\"v\":42", "\"v\":null");
     mi.make().set(5000);
     child.assertInvalidateCount(4);
     Assert.assertTrue(mi.has());
     mi.__revert();
     child.assertInvalidateCount(6);
-    Assert.assertEquals("", commit(mi));
+    commitCheck(mi, "", "");
   }
 
   @Test
@@ -184,16 +186,16 @@ public class RxMaybeTests {
     final var child = new MockRxChild();
     mi.__subscribe(child);
     Assert.assertFalse(mi.has());
-    Assert.assertEquals("", commit(mi));
+    commitCheck(mi, "", "");
     mi.make();
     child.assertInvalidateCount(2);
-    Assert.assertEquals("\"v\":42", commit(mi));
+    commitCheck(mi, "\"v\":42", "\"v\":null");
     mi.delete();
     child.assertInvalidateCount(3);
     Assert.assertFalse(mi.has());
     mi.__revert();
     Assert.assertTrue(mi.has());
-    Assert.assertEquals("", commit(mi));
+    commitCheck(mi, "", "");
     child.assertInvalidateCount(4);
   }
 

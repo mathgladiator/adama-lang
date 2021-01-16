@@ -38,11 +38,15 @@ public class RxBooleanTests {
     rx.set(true);
     parent.assertDirtyCount(3);
     final var writer = new JsonStreamWriter();
-    rx.__commit("v", writer);
+    final var reverse = new JsonStreamWriter();
+    rx.__commit("v", writer, reverse);
     Assert.assertEquals("\"v\":true", writer.toString());
+    Assert.assertEquals("\"v\":false", reverse.toString());
     final var writerAgain = new JsonStreamWriter();
-    rx.__commit("v2", writerAgain);
+    final var reverseAgain = new JsonStreamWriter();
+    rx.__commit("v2", writerAgain, reverseAgain);
     Assert.assertEquals("", writerAgain.toString());
+    Assert.assertEquals("", reverseAgain.toString());
   }
 
   @Test

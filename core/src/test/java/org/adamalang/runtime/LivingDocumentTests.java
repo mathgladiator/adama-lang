@@ -57,11 +57,11 @@ public class LivingDocumentTests {
     final var setup = new RealDocumentSetup(
         "@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-    Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__seedUsed\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
+    Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
     setup.drive(setup.transactor.connect(NtClient.NO_ONE));
     setup.drive(setup.transactor.send(NtClient.NO_ONE, "chan", "[{\"v\":1000},{\"v\":100000},{\"v\":1}]"));
     Assert.assertEquals(
-        "{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__seedUsed\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":false,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":1,\"__auto_future_id\":1,\"t\":101001}",
+        "{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__blocked_on\":\"chan\",\"__blocked\":false,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":1,\"__auto_future_id\":1,\"t\":101001}",
         setup.logger.node.toString());
   }
 
@@ -118,18 +118,18 @@ public class LivingDocumentTests {
   public void futures_blocked() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-    Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__seedUsed\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
+    Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
   }
 
   @Test
   public void futures_blocked_still_blocked_wrong_user() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-    Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__seedUsed\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
+    Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
     setup.drive(setup.transactor.connect(A));
     setup.drive(setup.transactor.send(A, "chan", "{\"v\":74}"));
     Assert.assertEquals(
-        "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__seedUsed\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"A\",\"authority\":\"TEST\"}},\"__messages\":{\"0\":{\"who\":{\"agent\":\"A\",\"authority\":\"TEST\"},\"channel\":\"chan\",\"timestamp\":\"0\",\"message\":{\"v\":74}}},\"__message_id\":1}",
+        "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"A\",\"authority\":\"TEST\"}},\"__messages\":{\"0\":{\"who\":{\"agent\":\"A\",\"authority\":\"TEST\"},\"channel\":\"chan\",\"timestamp\":\"0\",\"message\":{\"v\":74}}},\"__message_id\":1}",
         setup.logger.node.toString());
     setup.assertCompare();
   }
@@ -138,11 +138,11 @@ public class LivingDocumentTests {
   public void futures_blocked_then_unblocked() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-    Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__seedUsed\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
+    Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
     setup.drive(setup.transactor.connect(NtClient.NO_ONE));
     setup.drive(setup.transactor.send(NtClient.NO_ONE, "chan", "{\"v\":74}"));
     Assert.assertEquals(
-        "{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__seedUsed\":\"123\",\"__blocked_on\":\"chan\",\"__blocked\":false,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":1,\"__auto_future_id\":1,\"t\":74}",
+        "{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__blocked_on\":\"chan\",\"__blocked\":false,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":1,\"__auto_future_id\":1,\"t\":74}",
         setup.logger.node.toString());
     setup.assertCompare();
   }
@@ -153,10 +153,10 @@ public class LivingDocumentTests {
         "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }");
     setup.transactor.create();
     setup.transactor.insert(
-        "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__seedUsed\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"nope\":true,\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"message\":{\"v\":50}}},\"__message_id\":1}");
-    setup.mirror.insert("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__seedUsed\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"nope\":true,\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"message\":{\"v\":50}}},\"__message_id\":1}");
+        "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"nope\":true,\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"message\":{\"v\":50}}},\"__message_id\":1}");
+    setup.mirror.insert("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"nope\":true,\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"message\":{\"v\":50}}},\"__message_id\":1}");
     setup.drive(setup.transactor.send(NtClient.NO_ONE, "cha", "{\"v\":25}"));
-    Assert.assertEquals("{\"__seq\":7,\"__message_id\":2,\"__seedUsed\":\"123\",\"__state\":\"\",\"__blocked\":false,\"__entropy\":\"-5106534569952410475\",\"__auto_future_id\":2,\"t\":75}", setup.logger.node.toString());
+    Assert.assertEquals("{\"__seq\":7,\"__message_id\":2,\"__state\":\"\",\"__blocked\":false,\"__entropy\":\"-5106534569952410475\",\"__auto_future_id\":2,\"t\":75}", setup.logger.node.toString());
     setup.assertCompare();
   }
 
@@ -167,11 +167,11 @@ public class LivingDocumentTests {
       final var setup = new RealDocumentSetup(
           "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }");
       setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-      Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__seedUsed\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
+      Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
       setup.drive(setup.transactor.connect(NtClient.NO_ONE));
       setup.drive(setup.transactor.send(NtClient.NO_ONE, "chb", "{\"v\":50}"));
       Assert.assertEquals(
-          "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__seedUsed\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"timestamp\":\"0\",\"message\":{\"v\":50}}},\"__message_id\":1}",
+          "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"timestamp\":\"0\",\"message\":{\"v\":50}}},\"__message_id\":1}",
           setup.logger.node.toString());
       node = setup.logger.node.deepCopy();
       setup.assertCompare();
@@ -182,7 +182,7 @@ public class LivingDocumentTests {
     setup.transactor.insert(node.toString());
     setup.drive(setup.transactor.send(NtClient.NO_ONE, "cha", "{\"v\":25}"));
     Assert.assertEquals(
-        "{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__seedUsed\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":false,\"__seq\":7,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":2,\"__auto_future_id\":2,\"t\":75}",
+        "{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__blocked_on\":\"cha\",\"__blocked\":false,\"__seq\":7,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":2,\"__auto_future_id\":2,\"t\":75}",
         setup.logger.node.toString());
     setup.assertCompare();
   }
@@ -240,7 +240,7 @@ public class LivingDocumentTests {
     final var setup = new RealDocumentSetup(
         "double d1; double d2; int i1; int i2; long l; int z; @construct { d1 = Random.genDouble(); d2 = Random.getDoubleGaussian() * 6; i1 = Random.genInt(); i2 = Random.genBoundInt(50); l = Random.genLong(); z = Random.genBoundInt(-1); }");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"d1\":0.7231742029971469,\"d2\":2.6429286547789945,\"i1\":-535098017,\"i2\":26,\"l\":\"-5237980416576129062\",\"__seedUsed\":\"123\",\"__seq\":1}",
+    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"d1\":0.7231742029971469,\"d2\":2.6429286547789945,\"i1\":-535098017,\"i2\":26,\"l\":\"-5237980416576129062\",\"__seq\":1}",
         setup.logger.node.toString());
   }
 
@@ -249,7 +249,7 @@ public class LivingDocumentTests {
     final var setup = new RealDocumentSetup("long x; @construct { x = Time.now(); }");
     setup.time.time = 450;
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__time\":\"450\",\"x\":\"450\",\"__seedUsed\":\"123\",\"__seq\":1}", setup.logger.node.toString());
+    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__time\":\"450\",\"x\":\"450\",\"__seq\":1}", setup.logger.node.toString());
   }
 
   @Test
@@ -257,10 +257,10 @@ public class LivingDocumentTests {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } message M {} channel foo(M x) { abort; }");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
     setup.drive(setup.transactor.connect(NtClient.NO_ONE));
-    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"786253046697430328\",\"__seedUsed\":\"-5106534569952410475\",\"__seq\":3,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}",
+    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"786253046697430328\",\"__seq\":3,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}",
         setup.logger.node.toString());
     setup.drive(setup.transactor.send(NtClient.NO_ONE, "foo", "{}"));
-    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"8270396388693936851\",\"__seedUsed\":\"786253046697430328\",\"__seq\":6,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":1}",
+    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"8270396388693936851\",\"__seq\":6,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":1}",
         setup.logger.node.toString());
   }
 
@@ -397,14 +397,14 @@ public class LivingDocumentTests {
   public void state_machine_progress() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-    Assert.assertEquals("{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-3139549461559497096\",\"__seedUsed\":\"865209291055887116\",\"__seq\":11,\"t\":10}", setup.logger.node.toString());
+    Assert.assertEquals("{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-3139549461559497096\",\"__seq\":11,\"t\":10}", setup.logger.node.toString());
   }
 
   @Test
   public void state_machine_progress_over_time() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-    Assert.assertEquals("{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-3139549461559497096\",\"__seedUsed\":\"865209291055887116\",\"__next_time\":\"2250\",\"__seq\":11,\"t\":10,\"__time\":\"2250\"}",
+    Assert.assertEquals("{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-3139549461559497096\",\"__next_time\":\"2250\",\"__seq\":11,\"t\":10,\"__time\":\"2250\"}",
         setup.logger.node.toString());
   }
 

@@ -3,12 +3,14 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.exceptions;
 
+import org.adamalang.runtime.async.AsyncTask;
+
 /** when we abort, we need to restart the loop. A retry indicates what do the
  * document's state */
 public class RetryProgressException extends Exception {
-  public final int messageIdToDelete;
+  public final AsyncTask failedTask;
 
-  public RetryProgressException(final int messageIdToDelete) {
-    this.messageIdToDelete = messageIdToDelete;
+  public RetryProgressException(final AsyncTask failedTask) {
+    this.failedTask = failedTask;
   }
 }

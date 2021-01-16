@@ -22,10 +22,12 @@ public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndS
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
-      writer.writeObjectFieldIntro(name);
-      writer.writeNtClient(value);
+      forwardDelta.writeObjectFieldIntro(name);
+      forwardDelta.writeNtClient(value);
+      reverseDelta.writeObjectFieldIntro(name);
+      reverseDelta.writeNtClient(backup);
       backup = value;
       __lowerDirtyCommit();
     }

@@ -39,7 +39,7 @@ public class GeneratedLookupTests extends GeneratedBase {
   public void stable_ByIndexNotInteger_1() {
     String live = get_ByIndexNotInteger_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Lookup_ByIndexNotInteger_failure.a");
+    gold.append("Path:Lookup_ByIndexNotInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -94,7 +94,7 @@ public class GeneratedLookupTests extends GeneratedBase {
   public void stable_ByIndexNotIterable_2() {
     String live = get_ByIndexNotIterable_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Lookup_ByIndexNotIterable_failure.a");
+    gold.append("Path:Lookup_ByIndexNotIterable_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -154,7 +154,7 @@ public class GeneratedLookupTests extends GeneratedBase {
   public void stable_Happy_3() {
     String live = get_Happy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Lookup_Happy_success.a");
+    gold.append("Path:Lookup_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -270,18 +270,18 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __commit(String __name, JsonStreamWriter __writer) {");
-    gold.append("\n    __state.__commit(\"__state\", __writer);");
-    gold.append("\n    __constructed.__commit(\"__constructed\", __writer);");
-    gold.append("\n    __next_time.__commit(\"__next_time\", __writer);");
-    gold.append("\n    __blocked.__commit(\"__blocked\", __writer);");
-    gold.append("\n    __seq.__commit(\"__seq\", __writer);");
-    gold.append("\n    __entropy.__commit(\"__entropy\", __writer);");
-    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __writer);");
-    gold.append("\n    __connection_id.__commit(\"__connection_id\", __writer);");
-    gold.append("\n    __message_id.__commit(\"__message_id\", __writer);");
-    gold.append("\n    __time.__commit(\"__time\", __writer);");
-    gold.append("\n    t.__commit(\"t\", __writer);");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    t.__commit(\"t\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -429,13 +429,16 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __commit(String __name, JsonStreamWriter __writer) {");
+    gold.append("\n    public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
     gold.append("\n      if (__isDirty()) {");
-    gold.append("\n        __writer.writeObjectFieldIntro(__name);");
-    gold.append("\n        __writer.beginObject();");
-    gold.append("\n        y.__commit(\"y\", __writer);");
-    gold.append("\n        id.__commit(\"id\", __writer);");
-    gold.append("\n        __writer.endObject();");
+    gold.append("\n        __forward.writeObjectFieldIntro(__name);");
+    gold.append("\n        __forward.beginObject();");
+    gold.append("\n        __reverse.writeObjectFieldIntro(__name);");
+    gold.append("\n        __reverse.beginObject();");
+    gold.append("\n        y.__commit(\"y\", __forward, __reverse);");
+    gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
+    gold.append("\n        __forward.endObject();");
+    gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -557,10 +560,10 @@ public class GeneratedLookupTests extends GeneratedBase {
     gold.append("\nRANDO was DENIED:5011");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seedUsed\":\"0\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":6,\"__billing_seq\":1} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seedUsed\":\"0\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":6,\"__billing_seq\":1}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":6,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"t\":{\"auto_key\":0,\"rows\":{}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
     gold.append("\n{\"t\":{\"auto_key\":0,\"rows\":{}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
@@ -602,7 +605,7 @@ public class GeneratedLookupTests extends GeneratedBase {
   public void stable_NotFound_4() {
     String live = get_NotFound_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/Lookup_NotFound_failure.a");
+    gold.append("Path:Lookup_NotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

@@ -44,7 +44,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_AggregateMath_1() {
     String live = get_AggregateMath_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_AggregateMath_success.a");
+    gold.append("Path:BinaryExpression_AggregateMath_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -160,18 +160,18 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __commit(String __name, JsonStreamWriter __writer) {");
-    gold.append("\n    __state.__commit(\"__state\", __writer);");
-    gold.append("\n    __constructed.__commit(\"__constructed\", __writer);");
-    gold.append("\n    __next_time.__commit(\"__next_time\", __writer);");
-    gold.append("\n    __blocked.__commit(\"__blocked\", __writer);");
-    gold.append("\n    __seq.__commit(\"__seq\", __writer);");
-    gold.append("\n    __entropy.__commit(\"__entropy\", __writer);");
-    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __writer);");
-    gold.append("\n    __connection_id.__commit(\"__connection_id\", __writer);");
-    gold.append("\n    __message_id.__commit(\"__message_id\", __writer);");
-    gold.append("\n    __time.__commit(\"__time\", __writer);");
-    gold.append("\n    t.__commit(\"t\", __writer);");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    t.__commit(\"t\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -283,15 +283,18 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n      __writer.endObject();");
     gold.append("\n    }");
     gold.append("\n    @Override");
-    gold.append("\n    public void __commit(String __name, JsonStreamWriter __writer) {");
+    gold.append("\n    public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
     gold.append("\n      if (__isDirty()) {");
-    gold.append("\n        __writer.writeObjectFieldIntro(__name);");
-    gold.append("\n        __writer.beginObject();");
-    gold.append("\n        i.__commit(\"i\", __writer);");
-    gold.append("\n        d.__commit(\"d\", __writer);");
-    gold.append("\n        s.__commit(\"s\", __writer);");
-    gold.append("\n        id.__commit(\"id\", __writer);");
-    gold.append("\n        __writer.endObject();");
+    gold.append("\n        __forward.writeObjectFieldIntro(__name);");
+    gold.append("\n        __forward.beginObject();");
+    gold.append("\n        __reverse.writeObjectFieldIntro(__name);");
+    gold.append("\n        __reverse.beginObject();");
+    gold.append("\n        i.__commit(\"i\", __forward, __reverse);");
+    gold.append("\n        d.__commit(\"d\", __forward, __reverse);");
+    gold.append("\n        s.__commit(\"s\", __forward, __reverse);");
+    gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
+    gold.append("\n        __forward.endObject();");
+    gold.append("\n        __reverse.endObject();");
     gold.append("\n        __lowerDirtyCommit();");
     gold.append("\n      }");
     gold.append("\n    }");
@@ -525,15 +528,15 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n");
     gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"i\":2,\"d\":14.666666666666666,\"s\":\"xyz\"}}}} need:true in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"i\":2,\"d\":14.666666666666666,\"s\":\"xyz\",\"id\":0}}}} need:true in:0");
     gold.append("\nNO_ONE was DENIED:5011");
     gold.append("\nRANDO was DENIED:5011");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seedUsed\":\"0\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":13,\"__billing_seq\":1} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"i\":2,\"d\":14.666666666666666,\"s\":\"xyz\"}}},\"__seedUsed\":\"0\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":13,\"__billing_seq\":1}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"i\":2,\"d\":14.666666666666666,\"s\":\"xyz\",\"id\":0}}},\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":13,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"i\":2,\"d\":14.666666666666666,\"s\":\"xyz\",\"id\":0}}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
     gold.append("\n{\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"i\":2,\"d\":14.666666666666666,\"s\":\"xyz\",\"id\":0}}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
@@ -580,7 +583,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_NumberCompare_2() {
     String live = get_NumberCompare_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_NumberCompare_success.a");
+    gold.append("Path:BinaryExpression_NumberCompare_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -689,17 +692,17 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __commit(String __name, JsonStreamWriter __writer) {");
-    gold.append("\n    __state.__commit(\"__state\", __writer);");
-    gold.append("\n    __constructed.__commit(\"__constructed\", __writer);");
-    gold.append("\n    __next_time.__commit(\"__next_time\", __writer);");
-    gold.append("\n    __blocked.__commit(\"__blocked\", __writer);");
-    gold.append("\n    __seq.__commit(\"__seq\", __writer);");
-    gold.append("\n    __entropy.__commit(\"__entropy\", __writer);");
-    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __writer);");
-    gold.append("\n    __connection_id.__commit(\"__connection_id\", __writer);");
-    gold.append("\n    __message_id.__commit(\"__message_id\", __writer);");
-    gold.append("\n    __time.__commit(\"__time\", __writer);");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -857,10 +860,10 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nRANDO was DENIED:5011");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seedUsed\":\"0\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":0,\"__billing_seq\":1} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seedUsed\":\"0\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":0,\"__billing_seq\":1}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":0,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
@@ -908,7 +911,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_OperationsHappy_3() {
     String live = get_OperationsHappy_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_OperationsHappy_success.a");
+    gold.append("Path:BinaryExpression_OperationsHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1031,19 +1034,19 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __commit(String __name, JsonStreamWriter __writer) {");
-    gold.append("\n    __state.__commit(\"__state\", __writer);");
-    gold.append("\n    __constructed.__commit(\"__constructed\", __writer);");
-    gold.append("\n    __next_time.__commit(\"__next_time\", __writer);");
-    gold.append("\n    __blocked.__commit(\"__blocked\", __writer);");
-    gold.append("\n    __seq.__commit(\"__seq\", __writer);");
-    gold.append("\n    __entropy.__commit(\"__entropy\", __writer);");
-    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __writer);");
-    gold.append("\n    __connection_id.__commit(\"__connection_id\", __writer);");
-    gold.append("\n    __message_id.__commit(\"__message_id\", __writer);");
-    gold.append("\n    __time.__commit(\"__time\", __writer);");
-    gold.append("\n    other.__commit(\"other\", __writer);");
-    gold.append("\n    s.__commit(\"s\", __writer);");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    other.__commit(\"other\", __forward, __reverse);");
+    gold.append("\n    s.__commit(\"s\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1307,10 +1310,10 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nRANDO was DENIED:5011");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seedUsed\":\"0\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":0,\"__billing_seq\":1} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seedUsed\":\"0\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":0,\"__billing_seq\":1}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":0,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"other\":{\"agent\":\"?\",\"authority\":\"?\"},\"s\":\"\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
     gold.append("\n{\"other\":{\"agent\":\"?\",\"authority\":\"?\"},\"s\":\"\",\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
@@ -1365,7 +1368,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_StringCompare_4() {
     String live = get_StringCompare_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_StringCompare_success.a");
+    gold.append("Path:BinaryExpression_StringCompare_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -1474,17 +1477,17 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __commit(String __name, JsonStreamWriter __writer) {");
-    gold.append("\n    __state.__commit(\"__state\", __writer);");
-    gold.append("\n    __constructed.__commit(\"__constructed\", __writer);");
-    gold.append("\n    __next_time.__commit(\"__next_time\", __writer);");
-    gold.append("\n    __blocked.__commit(\"__blocked\", __writer);");
-    gold.append("\n    __seq.__commit(\"__seq\", __writer);");
-    gold.append("\n    __entropy.__commit(\"__entropy\", __writer);");
-    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __writer);");
-    gold.append("\n    __connection_id.__commit(\"__connection_id\", __writer);");
-    gold.append("\n    __message_id.__commit(\"__message_id\", __writer);");
-    gold.append("\n    __time.__commit(\"__time\", __writer);");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1610,10 +1613,10 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nRANDO was DENIED:5011");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seedUsed\":\"0\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":0,\"__billing_seq\":1} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seedUsed\":\"0\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":0,\"__billing_seq\":1}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":0,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
@@ -1656,7 +1659,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantAdd_5() {
     String live = get_WhenCantAdd_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_WhenCantAdd_failure.a");
+    gold.append("Path:BinaryExpression_WhenCantAdd_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -1795,7 +1798,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantCompare_6() {
     String live = get_WhenCantCompare_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_WhenCantCompare_failure.a");
+    gold.append("Path:BinaryExpression_WhenCantCompare_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2032,7 +2035,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantDivide_7() {
     String live = get_WhenCantDivide_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_WhenCantDivide_failure.a");
+    gold.append("Path:BinaryExpression_WhenCantDivide_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2171,7 +2174,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantLogic_8() {
     String live = get_WhenCantLogic_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_WhenCantLogic_failure.a");
+    gold.append("Path:BinaryExpression_WhenCantLogic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2576,7 +2579,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantMod_9() {
     String live = get_WhenCantMod_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_WhenCantMod_failure.a");
+    gold.append("Path:BinaryExpression_WhenCantMod_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2715,7 +2718,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantMultiply_10() {
     String live = get_WhenCantMultiply_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_WhenCantMultiply_failure.a");
+    gold.append("Path:BinaryExpression_WhenCantMultiply_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -2854,7 +2857,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantRelate_11() {
     String live = get_WhenCantRelate_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_WhenCantRelate_failure.a");
+    gold.append("Path:BinaryExpression_WhenCantRelate_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -3091,7 +3094,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
   public void stable_WhenCantSubtract_12() {
     String live = get_WhenCantSubtract_12();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/BinaryExpression_WhenCantSubtract_failure.a");
+    gold.append("Path:BinaryExpression_WhenCantSubtract_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");

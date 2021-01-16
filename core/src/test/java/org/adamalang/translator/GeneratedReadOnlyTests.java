@@ -39,7 +39,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_FutureResultReadOnly_1() {
     String live = get_FutureResultReadOnly_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_FutureResultReadOnly_failure.a");
+    gold.append("Path:ReadOnly_FutureResultReadOnly_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -108,7 +108,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_ProcedureArgs_2() {
     String live = get_ProcedureArgs_2();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_ProcedureArgs_failure.a");
+    gold.append("Path:ReadOnly_ProcedureArgs_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -163,7 +163,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleBool_3() {
     String live = get_SimpleBool_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_SimpleBool_failure.a");
+    gold.append("Path:ReadOnly_SimpleBool_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -232,7 +232,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleClient_4() {
     String live = get_SimpleClient_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_SimpleClient_failure.a");
+    gold.append("Path:ReadOnly_SimpleClient_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -301,7 +301,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleDouble_5() {
     String live = get_SimpleDouble_5();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_SimpleDouble_failure.a");
+    gold.append("Path:ReadOnly_SimpleDouble_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -370,7 +370,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleEnum_6() {
     String live = get_SimpleEnum_6();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_SimpleEnum_failure.a");
+    gold.append("Path:ReadOnly_SimpleEnum_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -439,7 +439,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleInteger_7() {
     String live = get_SimpleInteger_7();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_SimpleInteger_failure.a");
+    gold.append("Path:ReadOnly_SimpleInteger_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -508,7 +508,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleLong_8() {
     String live = get_SimpleLong_8();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_SimpleLong_failure.a");
+    gold.append("Path:ReadOnly_SimpleLong_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -577,7 +577,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleMaybe_9() {
     String live = get_SimpleMaybe_9();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_SimpleMaybe_failure.a");
+    gold.append("Path:ReadOnly_SimpleMaybe_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -646,7 +646,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_SimpleString_10() {
     String live = get_SimpleString_10();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_SimpleString_failure.a");
+    gold.append("Path:ReadOnly_SimpleString_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[ {");
     gold.append("\n  \"range\" : {");
@@ -720,7 +720,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
   public void stable_Simples_11() {
     String live = get_Simples_11();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:./test_code/ReadOnly_Simples_success.a");
+    gold.append("Path:ReadOnly_Simples_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -829,17 +829,17 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n    __writer.endObject();");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __commit(String __name, JsonStreamWriter __writer) {");
-    gold.append("\n    __state.__commit(\"__state\", __writer);");
-    gold.append("\n    __constructed.__commit(\"__constructed\", __writer);");
-    gold.append("\n    __next_time.__commit(\"__next_time\", __writer);");
-    gold.append("\n    __blocked.__commit(\"__blocked\", __writer);");
-    gold.append("\n    __seq.__commit(\"__seq\", __writer);");
-    gold.append("\n    __entropy.__commit(\"__entropy\", __writer);");
-    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __writer);");
-    gold.append("\n    __connection_id.__commit(\"__connection_id\", __writer);");
-    gold.append("\n    __message_id.__commit(\"__message_id\", __writer);");
-    gold.append("\n    __time.__commit(\"__time\", __writer);");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1036,10 +1036,10 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\nRANDO was DENIED:5011");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seedUsed\":\"0\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":14,\"__billing_seq\":1} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seedUsed\":\"0\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":14,\"__billing_seq\":1}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":14,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");

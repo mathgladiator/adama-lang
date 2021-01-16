@@ -43,15 +43,28 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(final String name, final JsonStreamWriter writer, final JsonStreamWriter reverse) {
     if (__isDirty()) {
       writer.writeObjectFieldIntro(name);
       writer.beginObject();
-      data.__commit("data", writer);
-      index.__commit("index", writer);
+      reverse.writeObjectFieldIntro(name);
+      reverse.beginObject();
+      data.__commit("data", writer, reverse);
+      index.__commit("index", writer, reverse);
       writer.endObject();
+      reverse.endObject();
       __lowerDirtyCommit();
     }
+  }
+
+  @Override
+  public void __dump(final JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("data");
+    data.__dump(writer);
+    writer.writeObjectFieldIntro("index");
+    index.__dump(writer);
+    writer.endObject();
   }
 
   @Override
@@ -59,12 +72,6 @@ public class MockRecord extends RxRecordBase<MockRecord> {
     if (inv != null) {
       inv.deindex();
     }
-  }
-
-  @Override
-  public void __dump(final JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.endObject();
   }
 
   @Override

@@ -5,15 +5,17 @@ package org.adamalang.runtime.logger;
 
 /** a single transaction of a request producing a delta */
 public class Transaction {
-  public final String delta;
+  public final String forwardDelta;
+  public final String reverseDelta;
   public final String request;
   public final int seq;
   public final TransactionResult transactionResult;
 
-  public Transaction(final int seq, final String request, final String delta, final TransactionResult transactionResult) {
+  public Transaction(final int seq, final String request, final String forwardDelta, final String reverseDelta,  final TransactionResult transactionResult) {
     this.seq = seq;
     this.request = request;
-    this.delta = delta;
+    this.forwardDelta = forwardDelta;
+    this.reverseDelta = reverseDelta;
     this.transactionResult = transactionResult;
   }
 }

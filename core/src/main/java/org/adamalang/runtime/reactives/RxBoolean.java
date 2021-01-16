@@ -20,10 +20,12 @@ public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAn
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
-      writer.writeObjectFieldIntro(name);
-      writer.writeBoolean(value);
+      forwardDelta.writeObjectFieldIntro(name);
+      forwardDelta.writeBoolean(value);
+      reverseDelta.writeObjectFieldIntro(name);
+      reverseDelta.writeBoolean(backup);
       backup = value;
       __lowerDirtyCommit();
     }

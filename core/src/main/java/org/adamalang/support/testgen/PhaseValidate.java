@@ -32,7 +32,7 @@ public class PhaseValidate {
     document.importFile(path.toString(), DocumentPosition.ZERO);
     document.setClassName(className);
     document.check(state);
-    outputFile.append("Path:").append(path.toString().replaceAll(Pattern.quote("\\"), "/")).append("\n");
+    outputFile.append("Path:").append(path.getFileName().toString().replaceAll(Pattern.quote("\\"), "/")).append("\n");
     if (emission) {
       PhaseEmission.go(path.toString(), path, outputFile);
     }

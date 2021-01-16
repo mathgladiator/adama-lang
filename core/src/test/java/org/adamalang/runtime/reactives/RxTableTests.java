@@ -21,7 +21,7 @@ public class RxTableTests {
     table.__insert(new JsonStreamReader("{\"auto_key\":7,\"rows\":{\"4\":{\"index\":13},\"5\":{\"index\":12},\"6\":{\"index\":13}}}"));
     final var writer = new JsonStreamWriter();
     table.__dump(writer);
-    Assert.assertEquals("{\"auto_key\":7,\"rows\":{\"4\":{},\"5\":{},\"6\":{}}}", writer.toString());
+    Assert.assertEquals("{\"auto_key\":7,\"rows\":{\"4\":{\"data\":\"\",\"index\":13},\"5\":{\"data\":\"\",\"index\":12},\"6\":{\"data\":\"\",\"index\":13}}}", writer.toString());
   }
 
   @Test
@@ -29,34 +29,42 @@ public class RxTableTests {
     final var document = new MockLivingDocument();
     final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
     table.__insert(new JsonStreamReader("{\"auto_key\":7,\"rows\":{\"4\":{\"index\":13},\"5\":{\"index\":12},\"6\":{\"index\":13}}}"));
-    final var a = table.make();
-    table.make().__delete();
-    final var b = table.make();
+    final var a = table.make(); // 7
+    table.make().__delete(); // 8
+    final var b = table.make(); // 9
     {
       final var writer = new JsonStreamWriter();
-      table.__commit("t", writer);
-      Assert.assertEquals("\"t\":{\"auto_key\":10,\"rows\":{\"7\":{},\"9\":{}}}", writer.toString());
+      final var reverse = new JsonStreamWriter();
+      table.__commit("t", writer, reverse);
+      Assert.assertEquals("\"t\":{\"auto_key\":10,\"rows\":{\"7\":{\"data\":\"\",\"index\":0},\"9\":{\"data\":\"\",\"index\":0}}}", writer.toString());
+      Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"7\":null,\"9\":null}}", reverse.toString());
     }
     {
       final var writer = new JsonStreamWriter();
-      table.__commit("t", writer);
+      final var reverse = new JsonStreamWriter();
+      table.__commit("t", writer, reverse);
       Assert.assertEquals("", writer.toString());
+      Assert.assertEquals("", reverse.toString());
     }
     {
       Assert.assertEquals(5, table.size());
       a.__delete();
       Assert.assertEquals(4, table.size());
       final var writer = new JsonStreamWriter();
-      table.__commit("t", writer);
+      final var reverse = new JsonStreamWriter();
+      table.__commit("t", writer, reverse);
       Assert.assertEquals("\"t\":{\"auto_key\":10,\"rows\":{\"7\":null}}", writer.toString());
+      Assert.assertEquals("\"t\":{\"auto_key\":10,\"rows\":{\"7\":{\"data\":\"\",\"index\":0}}}", reverse.toString());
     }
     {
       Assert.assertEquals(4, table.size());
       b.__delete();
       Assert.assertEquals(3, table.size());
       final var writer = new JsonStreamWriter();
-      table.__commit("t", writer);
+      final var reverse = new JsonStreamWriter();
+      table.__commit("t", writer, reverse);
       Assert.assertEquals("\"t\":{\"auto_key\":10,\"rows\":{\"9\":null}}", writer.toString());
+      Assert.assertEquals("\"t\":{\"auto_key\":10,\"rows\":{\"9\":{\"data\":\"\",\"index\":0}}}", reverse.toString());
     }
   }
 
@@ -102,8 +110,10 @@ public class RxTableTests {
     b.index.set(13);
     c.index.set(13);
     final var writer = new JsonStreamWriter();
-    table.__commit("t", writer);
-    Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":{\"index\":13},\"5\":{\"index\":13},\"6\":{\"index\":13}}}", writer.toString());
+    final var reverse = new JsonStreamWriter();
+    table.__commit("t", writer, reverse);
+    Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":{\"data\":\"\",\"index\":13},\"5\":{\"data\":\"\",\"index\":13},\"6\":{\"data\":\"\",\"index\":13}}}", writer.toString());
+    Assert.assertEquals("\"t\":{\"auto_key\":4,\"rows\":{\"4\":null,\"5\":null,\"6\":null}}", reverse.toString());
     Assert.assertEquals(4, table.getById(4).__id());
     Assert.assertNull(table.getById(500));
     Assert.assertEquals(3, table.getIndex((short) 0).of(13).size());
@@ -360,8 +370,10 @@ public class RxTableTests {
     common.__raiseInvalid();
     Assert.assertEquals(3, common.__getSubscriberCount());
     final var writer = new JsonStreamWriter();
-    table.__commit("t", writer);
+    final var reverse = new JsonStreamWriter();
+    table.__commit("t", writer, reverse);
     Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":null,\"5\":null,\"6\":null}}", writer.toString());
+    Assert.assertEquals("\"t\":{\"auto_key\":7,\"rows\":{\"4\":{\"data\":\"\",\"index\":13},\"5\":{\"data\":\"\",\"index\":12},\"6\":{\"data\":\"\",\"index\":13}}}", reverse.toString());
     Assert.assertEquals(3, common.__getSubscriberCount());
     common.__raiseInvalid();
     Assert.assertEquals(0, common.__getSubscriberCount());

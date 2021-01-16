@@ -11,7 +11,7 @@ public class ObjectNodeLoggerTests {
   @Test
   public void flow1() {
     final var log = ObjectNodeLogger.fresh();
-    log.ingest(new Transaction(-1, "{}", "{\"x\":1}", new TransactionResult(true, 0, 0)));
+    log.ingest(new Transaction(-1, "{}", "{\"x\":1}", "{\"x\":42}", new TransactionResult(true, 0, 0)));
     Assert.assertEquals("{\"x\":1}", log.node.toString());
     log.close();
   }
@@ -20,7 +20,7 @@ public class ObjectNodeLoggerTests {
   public void flow2() {
     final var log = ObjectNodeLogger.recover(Utility.parseJsonObject("{\"x\":1}"));
     Assert.assertEquals("{\"x\":1}", log.node.toString());
-    log.ingest(new Transaction(-1, "{}", "{\"x\":5}", new TransactionResult(true, 0, 0)));
+    log.ingest(new Transaction(-1, "{}", "{\"x\":5}", "{\"x\":42}", new TransactionResult(true, 0, 0)));
     Assert.assertEquals("{\"x\":5}", log.node.toString());
   }
 }

@@ -30,6 +30,6 @@ public class ObjectNodeLogger implements TransactionLogger {
 
   @Override
   public void ingest(final Transaction transaction) {
-    node = (ObjectNode) JsonAlgebra.patch(node, Utility.parseJsonObject(transaction.delta));
+    node = (ObjectNode) JsonAlgebra.patch(node, Utility.parseJsonObject(transaction.forwardDelta));
   }
 }

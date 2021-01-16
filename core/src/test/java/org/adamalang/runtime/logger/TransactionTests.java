@@ -8,7 +8,7 @@ import org.junit.Test;
 public class TransactionTests {
   @Test
   public void flow() {
-    new Transaction(-1, "{}", "{\"x\":1}", new TransactionResult(true, 0, 0)).toString();
-    new Transaction(-1, "{}", "{\"x\":1}", new TransactionResult(false, 0, 0)).toString();
+    new Transaction(-1, "{}", "{\"x\":1}", "{\"x\":0}", new TransactionResult(true, 0, 0)).toString();
+    new Transaction(-1, "{}", "{\"x\":1}", "{\"x\":0}", new TransactionResult(false, 0, 0)).toString();
   }
 }

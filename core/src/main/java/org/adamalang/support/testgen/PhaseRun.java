@@ -30,7 +30,7 @@ public class PhaseRun {
 
       @Override
       public void ingest(final Transaction t) throws ErrorCodeException {
-        outputFile.append(t.request.toString() + "-->" + t.delta.toString() + " need:" + t.transactionResult.needsInvalidation + " in:" + t.transactionResult.whenToInvalidMilliseconds + "\n");
+        outputFile.append(t.request.toString() + "-->" + t.forwardDelta.toString() + " need:" + t.transactionResult.needsInvalidation + " in:" + t.transactionResult.whenToInvalidMilliseconds + "\n");
         objectNodeLog.ingest(t);
         testTime.addAndGet(Math.max(t.transactionResult.whenToInvalidMilliseconds / 2, 25));
       }

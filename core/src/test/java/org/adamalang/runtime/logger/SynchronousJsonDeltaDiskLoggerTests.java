@@ -52,10 +52,10 @@ public class SynchronousJsonDeltaDiskLoggerTests {
         final var logger = SynchronousJsonDeltaDiskLogger.openFillAndAppend(dump, target);
         logger.getFile();
         Assert.assertEquals(0, logger.getRecordsReadAtStart());
-        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "1").toString(), JsonHelper.encodeObject("delta", "data").toString(), new TransactionResult(true, 0, 1)));
-        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "2").toString(), JsonHelper.encodeObject("delta", "data_overwrite").toString(), new TransactionResult(true, 0, 2)));
-        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "3").toString(), JsonHelper.encodeObject("delta1", "d1").toString(), new TransactionResult(true, 0, 3)));
-        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "4").toString(), JsonHelper.encodeObject("delta2", "d2").toString(), new TransactionResult(true, 0, 4)));
+        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "1").toString(), JsonHelper.encodeObject("delta", "data").toString(), JsonHelper.encodeObject("delta", "old").toString(), new TransactionResult(true, 0, 1)));
+        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "2").toString(), JsonHelper.encodeObject("delta", "data_overwrite").toString(), JsonHelper.encodeObject("delta", "old").toString(), new TransactionResult(true, 0, 2)));
+        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "3").toString(), JsonHelper.encodeObject("delta1", "d1").toString(), JsonHelper.encodeObject("delta", "old").toString(), new TransactionResult(true, 0, 3)));
+        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "4").toString(), JsonHelper.encodeObject("delta2", "d2").toString(), JsonHelper.encodeObject("delta", "old").toString(), new TransactionResult(true, 0, 4)));
         logger.close();
         Assert.assertEquals("{\"delta\":\"data_overwrite\",\"delta1\":\"d1\",\"delta2\":\"d2\"}", target.node.toString());
       }
@@ -82,10 +82,10 @@ public class SynchronousJsonDeltaDiskLoggerTests {
         final var logger = SynchronousJsonDeltaDiskLogger.openFillAndAppend(dumpDoesNotExist, target);
         logger.getFile();
         Assert.assertEquals(-1, logger.getRecordsReadAtStart());
-        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "1").toString(), JsonHelper.encodeObject("delta", "data").toString(), new TransactionResult(true, 0, 1)));
-        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "2").toString(), JsonHelper.encodeObject("delta", "data_overwrite").toString(), new TransactionResult(true, 0, 2)));
-        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "3").toString(), JsonHelper.encodeObject("delta1", "d1").toString(), new TransactionResult(true, 0, 3)));
-        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "4").toString(), JsonHelper.encodeObject("delta2", "d2").toString(), new TransactionResult(true, 0, 4)));
+        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "1").toString(), JsonHelper.encodeObject("delta", "data").toString(), JsonHelper.encodeObject("delta", "old").toString(), new TransactionResult(true, 0, 1)));
+        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "2").toString(), JsonHelper.encodeObject("delta", "data_overwrite").toString(), JsonHelper.encodeObject("delta", "old").toString(), new TransactionResult(true, 0, 2)));
+        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "3").toString(), JsonHelper.encodeObject("delta1", "d1").toString(), JsonHelper.encodeObject("delta", "old").toString(), new TransactionResult(true, 0, 3)));
+        logger.ingest(new Transaction(-1, JsonHelper.encodeObject("x", "4").toString(), JsonHelper.encodeObject("delta2", "d2").toString(), JsonHelper.encodeObject("delta", "old").toString(), new TransactionResult(true, 0, 4)));
         logger.close();
         Assert.assertEquals("{\"delta\":\"data_overwrite\",\"delta1\":\"d1\",\"delta2\":\"d2\"}", target.node.toString());
       }

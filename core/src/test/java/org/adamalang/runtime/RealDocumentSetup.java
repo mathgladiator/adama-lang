@@ -43,10 +43,11 @@ public class RealDocumentSetup {
 
       @Override
       public void ingest(final Transaction t) throws ErrorCodeException {
-        mirror.insert(t.delta);
+        mirror.insert(t.forwardDelta);
         if (stdout) {
-          System.out.println(" REQ :" + t.request.toString());
-          System.out.println("DELTA:" + t.delta.toString());
+          System.out.println(" REQ :" + t.request);
+          System.out.println("FORWARD:" + t.forwardDelta);
+          System.out.println("REVERSE:" + t.reverseDelta);
         }
         logger.ingest(t);
       }
@@ -59,7 +60,7 @@ public class RealDocumentSetup {
   }
 
   public void assertInitial() {
-    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__seedUsed\":\"123\",\"__seq\":1}", logger.node.toString());
+    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__seq\":1}", logger.node.toString());
   }
 
   public void drive(final TransactionResult initial) throws Exception {

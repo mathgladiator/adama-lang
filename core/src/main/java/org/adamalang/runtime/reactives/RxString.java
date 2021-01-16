@@ -20,10 +20,12 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
-      writer.writeObjectFieldIntro(name);
-      writer.writeString(value);
+      forwardDelta.writeObjectFieldIntro(name);
+      forwardDelta.writeString(value);
+      reverseDelta.writeObjectFieldIntro(name);
+      reverseDelta.writeString(backup);
       backup = value;
       __lowerDirtyCommit();
     }

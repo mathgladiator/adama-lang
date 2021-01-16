@@ -38,24 +38,27 @@ public class CodeGenRecords {
     writeInsert(storage, sb, environment, isRoot, others);
     writerDump(storage, sb, environment, isRoot, others);
     sb.append("@Override").writeNewline();
-    sb.append("public void __commit(String __name, JsonStreamWriter __writer) {").tabUp().writeNewline();
+    sb.append("public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {").tabUp().writeNewline();
     if (!isRoot) {
       sb.append("if (__isDirty()) {").tabUp().writeNewline();
-      sb.append("__writer.writeObjectFieldIntro(__name);").writeNewline();
-      sb.append("__writer.beginObject();").writeNewline();
+      sb.append("__forward.writeObjectFieldIntro(__name);").writeNewline();
+      sb.append("__forward.beginObject();").writeNewline();
+      sb.append("__reverse.writeObjectFieldIntro(__name);").writeNewline();
+      sb.append("__reverse.beginObject();").writeNewline();
     }
     for (final String other : others) {
-      sb.append(other).append(".__commit(\"").append(other).append("\", __writer);").writeNewline();
+      sb.append(other).append(".__commit(\"").append(other).append("\", __forward, __reverse);").writeNewline();
     }
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
       if (isCommitRevertable(fieldType)) {
-        sb.append(fieldName).append(".__commit(\"").append(fieldName).append("\", __writer);").writeNewline();
+        sb.append(fieldName).append(".__commit(\"").append(fieldName).append("\", __forward, __reverse);").writeNewline();
       }
     }
     if (!isRoot) {
-      sb.append("__writer.endObject();").writeNewline();
+      sb.append("__forward.endObject();").writeNewline();
+      sb.append("__reverse.endObject();").writeNewline();
       sb.append("__lowerDirtyCommit();").tabDown().writeNewline();
       sb.append("}").tabDown().writeNewline();
     } else {

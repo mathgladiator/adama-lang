@@ -29,11 +29,15 @@ public class RxDoubleTests {
     d.set(6.28);
     parent.assertDirtyCount(2);
     final var writer = new JsonStreamWriter();
-    d.__commit("v", writer);
+    final var reverse = new JsonStreamWriter();
+    d.__commit("v", writer, reverse);
     Assert.assertEquals("\"v\":6.28", writer.toString());
+    Assert.assertEquals("\"v\":42.0", reverse.toString());
     final var writerAgain = new JsonStreamWriter();
-    d.__commit("v2", writerAgain);
+    final var reverseAgain = new JsonStreamWriter();
+    d.__commit("v2", writerAgain, reverseAgain);
     Assert.assertEquals("", writerAgain.toString());
+    Assert.assertEquals("", reverseAgain.toString());
   }
 
   @Test

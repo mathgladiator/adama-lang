@@ -39,11 +39,15 @@ public class RxClientTests {
     c.set(A);
     parent.assertDirtyCount(1);
     final var writer = new JsonStreamWriter();
-    c.__commit("v", writer);
+    final var reverse = new JsonStreamWriter();
+    c.__commit("v", writer, reverse);
     Assert.assertEquals("\"v\":{\"agent\":\"a\",\"authority\":\"d\"}", writer.toString());
+    Assert.assertEquals("\"v\":{\"agent\":\"?\",\"authority\":\"?\"}", reverse.toString());
     final var writerAgain = new JsonStreamWriter();
-    c.__commit("v2", writerAgain);
+    final var reverseAgain = new JsonStreamWriter();
+    c.__commit("v2", writerAgain, reverseAgain);
     Assert.assertEquals("", writerAgain.toString());
+    Assert.assertEquals("", reverseAgain.toString());
   }
 
   @Test

@@ -13,7 +13,7 @@ public class ExceptionTests {
     final var gwee = new GoodwillExhaustedException(0, 1, 2, 3);
     Assert.assertEquals("Good will exhausted:0,1 --> 2,3", gwee.getMessage());
     new AbortMessageException();
-    new RetryProgressException(52);
+    new RetryProgressException(null);
     new ComputeBlockedException(NtClient.NO_ONE, "foo");
   }
 }

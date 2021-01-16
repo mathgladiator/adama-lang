@@ -21,10 +21,12 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
     if (__isDirty()) {
-      writer.writeObjectFieldIntro(name);
-      writer.writeInteger(value);
+      forwardDelta.writeObjectFieldIntro(name);
+      forwardDelta.writeInteger(value);
+      reverseDelta.writeObjectFieldIntro(name);
+      reverseDelta.writeInteger(backup);
       backup = value;
       __lowerDirtyCommit();
     }

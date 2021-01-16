@@ -37,7 +37,7 @@ public class RxLazyTests {
   public void trivial() {
     final var val = new RxInt32(null, 42);
     final var lz = new RxLazy<>(null, () -> val.get());
-    lz.__commit(null, null);
+    lz.__commit(null, null, null);
     lz.__revert();
   }
 }

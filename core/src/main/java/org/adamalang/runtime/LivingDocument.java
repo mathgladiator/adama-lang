@@ -97,25 +97,31 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** code generated: commit the tree, and push data into the given delta */
-  public abstract void __commit(String name, JsonStreamWriter writer);
+  public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
 
-  private Transaction __commit_trailer(final long seedUsed, final String request) {
+  private Transaction __commit_trailer(final String request) {
+
+    final var forward = new JsonStreamWriter();
+    final var reverse = new JsonStreamWriter();
+    forward.beginObject();
+    forward.writeObjectFieldIntro("__messages");
+    forward.writeNull();
+
+    reverse.beginObject();
+    __dumpMessages(reverse);
+
     __blocked.set(false);
     __seq.bumpUpPre();
     __entropy.set(Long.toString(__random.nextLong()));
     __futures.commit();
     __queue.clear();
     __reset_future_queues();
-    final var writer = new JsonStreamWriter();
-    writer.beginObject();
-    writer.writeObjectFieldIntro("__messages");
-    writer.writeNull();
-    writer.writeObjectFieldIntro("__seedUsed");
-    writer.writeLong(seedUsed);
-    __commit(null, writer);
-    writer.endObject();
+
+    __commit(null, forward,reverse);
+    forward.endObject();
+    reverse.endObject();
     __distributeClientViews();
-    return new Transaction(__seq.get(), request, writer.toString(), new TransactionResult(__state.has(), (int) (__next_time.get() - __time.get()), __seq.get()));
+    return new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(__state.has(), (int) (__next_time.get() - __time.get()), __seq.get()));
   }
 
   /** code generated: what happens when the document is constructed */
@@ -390,7 +396,7 @@ public abstract class LivingDocument implements RxParent {
     __test(report, testName);
     final var writer = new JsonStreamWriter();
     writer.beginObject();
-    __commit(null, writer);
+    __commit(null, writer, new JsonStreamWriter());
     writer.endObject();
     return writer.toString();
   }
@@ -419,7 +425,7 @@ public abstract class LivingDocument implements RxParent {
       __futures.commit();
       __queue.clear();
       __reset_future_queues();
-      __commit(null, new JsonStreamWriter());
+      __commit(null, new JsonStreamWriter(), new JsonStreamWriter());
     } catch (final ComputeBlockedException cbe) {
       __revert();
       __futures.restore();
@@ -529,7 +535,8 @@ public abstract class LivingDocument implements RxParent {
     writer.writeObjectFieldIntro("__billing_seq");
     writer.writeInteger(__seq.get());
     writer.endObject();
-    return new Transaction(__seq.get(), request, writer.toString(), new TransactionResult(true, 0, __seq.get()));
+
+    return new Transaction(__seq.get(), request, writer.toString(), "{}", new TransactionResult(true, 0, __seq.get()));
   }
 
   /** transaction: a person connects to document */
@@ -550,16 +557,25 @@ public abstract class LivingDocument implements RxParent {
         __clients.put(who, cId);
         // commit the tree to the delta
         __seq.bumpUpPre();
-        final var writer = new JsonStreamWriter();
-        writer.beginObject();
-        __commit(null, writer);
-        writer.writeObjectFieldIntro("__clients");
-        writer.beginObject();
-        writer.writeObjectFieldIntro(cId);
-        writer.writeNtClient(who);
-        writer.endObject();
-        writer.endObject();
-        final var result = new Transaction(__seq.get(), request, writer.toString(), new TransactionResult(true, 0, __seq.get()));
+        final var forward = new JsonStreamWriter();
+        final var reverse = new JsonStreamWriter();
+        forward.beginObject();
+        reverse.beginObject();
+        __commit(null, forward, reverse);
+        forward.writeObjectFieldIntro("__clients");
+        forward.beginObject();
+        forward.writeObjectFieldIntro(cId);
+        forward.writeNtClient(who);
+        forward.endObject();
+        forward.endObject();
+
+        reverse.writeObjectFieldIntro("__clients");
+        reverse.beginObject();
+        reverse.writeObjectFieldIntro(cId);
+        reverse.writeNull();
+        reverse.endObject();
+        reverse.endObject();
+        final var result = new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
         exception = false;
         return result;
       } else {
@@ -589,11 +605,14 @@ public abstract class LivingDocument implements RxParent {
       if (__constructed.get()) { throw new ErrorCodeException(ErrorCodeException.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED); }
       __construct_intern(who, arg);
       __constructed.set(true);
-      final var writer = new JsonStreamWriter();
-      writer.beginObject();
-      __commit(null, writer);
-      writer.endObject();
-      final var result = new Transaction(__seq.get(), request, writer.toString(), new TransactionResult(true, 0, __seq.get()));
+      final var forward = new JsonStreamWriter();
+      final var reverse = new JsonStreamWriter();
+      forward.beginObject();
+      reverse.beginObject();
+      __commit(null, forward, reverse);
+      forward.endObject();
+      reverse.endObject();
+      final var result = new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
       exception = false;
       return result;
     } finally {
@@ -618,16 +637,24 @@ public abstract class LivingDocument implements RxParent {
       // stop tracking them
       final int id = __clients.remove(who);
       __seq.bumpUpPre();
-      final var writer = new JsonStreamWriter();
-      writer.beginObject();
-      __commit(null, writer);
-      writer.writeObjectFieldIntro("__clients");
-      writer.beginObject();
-      writer.writeObjectFieldIntro(id);
-      writer.writeNull();
-      writer.endObject();
-      writer.endObject();
-      final var result = new Transaction(__seq.get(), request, writer.toString(), new TransactionResult(true, 0, __seq.get()));
+      final var forward = new JsonStreamWriter();
+      final var reverse = new JsonStreamWriter();
+      forward.beginObject();
+      reverse.beginObject();
+      __commit(null, forward, reverse);
+      forward.writeObjectFieldIntro("__clients");
+      forward.beginObject();
+      forward.writeObjectFieldIntro(id);
+      forward.writeNull();
+      forward.endObject();
+      forward.endObject();
+      reverse.writeObjectFieldIntro("__clients");
+      reverse.beginObject();
+      reverse.writeObjectFieldIntro(id);
+      reverse.writeNtClient(who);
+      reverse.endObject();
+      reverse.endObject();
+      final var result = new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
       exception = false;
       return result;
     } finally {
@@ -659,47 +686,58 @@ public abstract class LivingDocument implements RxParent {
         __state.set("");
         __invoke_label(stateToExecute);
       }
-      return __commit_trailer(seedUsed, request);
+      return __commit_trailer(request);
     } catch (final ComputeBlockedException cbe) {
       if (__preemptedStateOnNextComputeBlocked != null) {
         __state.set(__preemptedStateOnNextComputeBlocked);
         __next_time.set(__time.get());
         __preemptedStateOnNextComputeBlocked = null;
-        return __commit_trailer(seedUsed, request);
+        return __commit_trailer(request);
       } else {
         __distributeClientViews();
         __revert();
+
         __futures.restore();
         __reset_future_queues();
         __blocked.set(true);
         __seq.bumpUpPre();
-        final var writer = new JsonStreamWriter();
-        writer.beginObject();
-        writer.writeObjectFieldIntro("__seedUsed");
-        writer.writeLong(seedUsed);
+        final var forward = new JsonStreamWriter();
+        final var reverse = new JsonStreamWriter();
+        forward.beginObject();
+        reverse.beginObject();
         if (cbe.channel != null) {
-          writer.writeObjectFieldIntro("__blocked_on");
-          writer.writeFastString(cbe.channel);
+          forward.writeObjectFieldIntro("__blocked_on");
+          forward.writeFastString(cbe.channel);
         }
-        __commit(null, writer);
-        writer.endObject();
-        return new Transaction(__seq.get(), request, writer.toString(), new TransactionResult(false, 0, __seq.get()));
+        __commit(null, forward, reverse);
+        forward.endObject();
+        reverse.endObject();
+        return new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(false, 0, __seq.get()));
       }
     } catch (final RetryProgressException rpe) {
       __futures.restore();
       __reset_future_queues();
       __revert();
-      final var writer = new JsonStreamWriter();
-      writer.beginObject();
-      writer.writeObjectFieldIntro("__messages");
-      writer.beginObject();
-      writer.writeObjectFieldIntro(rpe.messageIdToDelete);
-      writer.writeNull();
-      writer.endObject();
+      final var forward = new JsonStreamWriter();
+      final var reverse = new JsonStreamWriter();
+
+      forward.beginObject();
+      forward.writeObjectFieldIntro("__messages");
+      forward.beginObject();
+      forward.writeObjectFieldIntro(rpe.failedTask.messageId);
+      forward.writeNull();
+      forward.endObject();
+      reverse.beginObject();
+      reverse.writeObjectFieldIntro("__messages");
+      reverse.beginObject();
+      reverse.writeObjectFieldIntro(rpe.failedTask.messageId);
+      rpe.failedTask.dump(reverse);
+      reverse.endObject();
       __seq.bumpUpPre();
-      __commit(null, writer);
-      writer.endObject();
-      return new Transaction(__seq.get(), request, writer.toString(), new TransactionResult(true, 0, __seq.get()));
+      __commit(null, forward, reverse);
+      forward.endObject();
+      reverse.endObject();
+      return new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
     }
   }
 
@@ -730,24 +768,32 @@ public abstract class LivingDocument implements RxParent {
       // they must be connected
       if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodeException.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED); }
       // create the delta
-      final var delta = new JsonStreamWriter();
+      final var forward = new JsonStreamWriter();
+      final var reverse = new JsonStreamWriter();
       // allocate a message id
       final var msgId = __message_id.bumpUpPost();
       // inject into the __messages object under the message id
       // annotate the message with WHO
-      delta.beginObject();
-      delta.writeObjectFieldIntro("__messages");
-      delta.beginObject();
-      delta.writeObjectFieldIntro(msgId);
+      forward.beginObject();
+      forward.writeObjectFieldIntro("__messages");
+      forward.beginObject();
+      forward.writeObjectFieldIntro(msgId);
       final var task = new AsyncTask(msgId, who, channel, timestamp, message);
-      task.dump(delta);
-      delta.endObject();
+      task.dump(forward);
+      forward.endObject();
+      reverse.beginObject();
+      reverse.writeObjectFieldIntro("__messages");
+      reverse.beginObject();
+      reverse.writeObjectFieldIntro(msgId);
+      reverse.writeNull();
+      reverse.endObject();
       __queue.add(task);
       // commit changes (i.e. the message id)
       __seq.bumpUpPre();
-      __commit(null, delta);
-      delta.endObject();
-      final var result = new Transaction(__seq.get(), request, delta.toString(), new TransactionResult(true, 0, __seq.get()));
+      __commit(null, forward, reverse);
+      forward.endObject();
+      reverse.endObject();
+      final var result = new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
       exception = false;
       return result;
     } finally {

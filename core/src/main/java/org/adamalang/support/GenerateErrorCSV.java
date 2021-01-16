@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.util.regex.Pattern;
 
 public class GenerateErrorCSV {
     public static void main(String[] args) throws Exception {
@@ -38,7 +39,7 @@ public class GenerateErrorCSV {
                 final var issues = Utility.createArrayNode();
                 document.writeErrorsAsLanguageServerDiagnosticArray(issues);
                 for (int j = 0; j < issues.size(); j++) {
-                    writer.print(testFile.toString());
+                    writer.print(testFile.toString().replaceAll(Pattern.quote("\\"), "/"));
                     JsonNode node = issues.get(j);
                     writer.print(",");
                     writer.print(node.get("range").get("start").get("line").toString());

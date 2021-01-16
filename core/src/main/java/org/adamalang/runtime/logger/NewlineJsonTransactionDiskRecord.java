@@ -14,13 +14,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 class NewlineJsonTransactionDiskRecord {
   public static void writeTo(final Transaction transaction, final PrintWriter writer) {
     writer.println(transaction.request);
-    writer.println(transaction.delta);
+    writer.println(transaction.forwardDelta);
+    writer.println(transaction.reverseDelta);
     final var next = Utility.createObjectNode();
     transaction.transactionResult.dumpInto(next);
     writer.println(next.toString());
   }
 
-  public final String delta;
+  public final String forwardDelta;
+  public final String reverseDelta;
   public final String metadata;
   public final ObjectNode metaObject;
   public final String request;
@@ -28,12 +30,15 @@ class NewlineJsonTransactionDiskRecord {
   public NewlineJsonTransactionDiskRecord(final BufferedReader buffered) throws IOException {
     request = buffered.readLine();
     if (request == null) {
-      delta = null;
+      forwardDelta = null;
+      reverseDelta = null;
       metadata = null;
       metaObject = null;
     } else {
-      delta = buffered.readLine();
-      if (delta == null) { throw new IOException("incomplete record, missing delta"); }
+      forwardDelta = buffered.readLine();
+      if (forwardDelta == null) { throw new IOException("incomplete record, missing forward delta"); }
+      reverseDelta = buffered.readLine();
+      if (reverseDelta == null) { throw new IOException("incomplete record, missing reverse delta"); }
       metadata = buffered.readLine();
       if (metadata == null) { throw new IOException("incomplete record, missing metadata"); }
       try {
@@ -45,7 +50,7 @@ class NewlineJsonTransactionDiskRecord {
   }
 
   public Transaction toTransaction() {
-    return new Transaction(-1, request, delta, TransactionResult.from(metaObject));
+    return new Transaction(-1, request, forwardDelta, reverseDelta, TransactionResult.from(metaObject));
   }
 
   public boolean valid() {

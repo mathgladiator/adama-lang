@@ -29,15 +29,21 @@ public class RxInt64Tests {
     l.set(60);
     parent.assertDirtyCount(2);
     final var writer = new JsonStreamWriter();
-    l.__commit("v", writer);
+    final var reverse = new JsonStreamWriter();
+    l.__commit("v", writer, reverse);
     Assert.assertEquals("\"v\":\"60\"", writer.toString());
+    Assert.assertEquals("\"v\":\"42\"", reverse.toString());
     final var writerAgain = new JsonStreamWriter();
-    l.__commit("v2", writerAgain);
+    final var reverseAgain = new JsonStreamWriter();
+    l.__commit("v2", writerAgain, reverseAgain);
     Assert.assertEquals("", writerAgain.toString());
+    Assert.assertEquals("", reverseAgain.toString());
     l.set(12354124314124L);
     final var writerThird = new JsonStreamWriter();
-    l.__commit("v", writerThird);
+    final var reverseThird = new JsonStreamWriter();
+    l.__commit("v", writerThird, reverseThird);
     Assert.assertEquals("\"v\":\"12354124314124\"", writerThird.toString());
+    Assert.assertEquals("\"v\":\"60\"", reverseThird.toString());
   }
 
   @Test

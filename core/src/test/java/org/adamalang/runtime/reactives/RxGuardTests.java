@@ -22,7 +22,7 @@ public class RxGuardTests {
     final var guard = new RxGuard();
     Assert.assertEquals(1, guard.getGeneration());
     Assert.assertEquals(true, guard.invalid);
-    guard.__commit(null, null);
+    guard.__commit(null, null, null);
     Assert.assertEquals(2, guard.getGeneration());
     Assert.assertEquals(false, guard.invalid);
     final var child = new MockRxChild();

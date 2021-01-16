@@ -32,7 +32,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer) {
+  public void __commit(final String name, final JsonStreamWriter writer, final JsonStreamWriter reverse) {
   }
 
   @Override
