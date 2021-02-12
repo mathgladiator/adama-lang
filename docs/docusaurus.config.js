@@ -60,8 +60,12 @@ module.exports = {
               to: 'blog',
             },
             {
-              label: 'Discord',
-              href: 'https://discord.gg/9Ngzr8v',
+              label: 'RSS',
+              to: 'http://www.adama-lang.org/blog/rss.xml',
+            },
+            {
+              label: 'Atom',
+              to: 'http://www.adama-lang.org/blog/atom.xml',
             },
             {
               label: 'GitHub',
@@ -83,7 +87,13 @@ module.exports = {
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
-      },
+        blog: {
+          feedOptions: {
+            type: 'all',
+            copyright: `Copyright © ${new Date().getFullYear()} Jeffrey M. Barber, Inc.`,
+          },
+        },
+      },      
     ],
   ],
 };
