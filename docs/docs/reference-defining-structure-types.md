@@ -56,7 +56,7 @@ The types that are allowed in records is limited to:
 The best mental model for a record is a row within a table. As a convention, every record has a hidden field called **id** with type ```int``` which can be revealed by defining it (without changing type).
 
 Records also have:
-* [index definitions to make tables go faster](/docs/reference-tables)
+* [index definitions to make tables go faster](/docs/reference-tables-linq)
 * [bubbles for viewer-dependent computation/view and privacy policies](/docs/reference-privacy-and-bubbles)
 
 ## Diving Into Details: Messages

@@ -1,5 +1,5 @@
 ---
-id: ok-august-came-and-went
+slug: ok-august-came-and-went
 title: OK, August came and went.
 author: Jeffrey M. Barber
 author_title: Dark Lord

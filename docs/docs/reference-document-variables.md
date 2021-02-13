@@ -71,9 +71,9 @@ The above built-in types are building blocks for richer types, and the below tab
 | [messages](/docs/reference-defining-structure-types) | A **message** is a collection of variables grouped under one name used for communication.  | no |
 | [records](/docs/reference-defining-structure-types) | A **record** is a collection of variables grouped under one name used for persistence.  | yes |
 | [maybe](/docs/reference-maybe-types) | Sometimes things didn't or can't happen, and we use **maybe** to express that absence rather than null. Monads for the win! | yes (only of applicable types) |
-| [table](/docs/reference-tables) | A **table** form the ultimate collection enabling maps, lists, sets, and more. Tables use **record**s to persist information in a structured way. | yes |
+| [table](/docs/reference-tables-linq) | A **table** form the ultimate collection enabling maps, lists, sets, and more. Tables use **record**s to persist information in a structured way. | yes |
 | [channel](/docs/reference-channels-handlers-futures) | Channels enable communication between the document and people via handlers and **future**s. | only root document |
 | [future](/docs/reference-channels-handlers-futures) | A future is a result that will arrive in the **future**. | no |
 | [maps](/docs/reference-maps-and-reduce) | **map**s enable associating keys to values, but they can also be the result of a reduction. | not yet |
-| [lists](/docs/reference-linq) | A **list** is created by using language integrated query on a table | only via a formula |
+| [lists](/docs/reference-tables-linq) | A **list** is created by using language integrated query on a table | only via a formula |
 | arrays | An array is a finite collection of a adjacent items| no |

@@ -1,5 +1,5 @@
 ---
-id: a-new-year-what-is-up-2021
+slug: a-new-year-what-is-up-2021
 title: A New Year, What is Up for 2021?
 author: Jeffrey M. Barber
 author_title: Dark Lord

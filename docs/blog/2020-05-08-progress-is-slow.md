@@ -1,5 +1,5 @@
 ---
-id: progress-2020-05
+slug: progress-2020-05
 title: Progress is Slow, May 2020 Update
 author: Jeffrey M. Barber
 author_title: Dark Lord

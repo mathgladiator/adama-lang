@@ -1,5 +1,5 @@
 ---
-id: june-went-fast
+slug: june-went-fast
 title: June went by fast! Woah!
 author: Jeffrey M. Barber
 author_title: Dark Lord

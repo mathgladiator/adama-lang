@@ -1,5 +1,5 @@
 ---
-id: it-started-with-a-new-browser
+slug: it-started-with-a-new-browser
 title: How this all started from building a custom browser
 author: Jeffrey M. Barber
 author_title: Dark Lord

@@ -4,7 +4,7 @@ title: Local Variables & Assignment
 ---
 
 ## Fast Intro
-While [document variables](/doc/reference-document-variables) are persisted, variables can be defined locally within code blocks (like [constructors](/docs/reference-constructor), TODO complete listing of where code is defined).
+While [document variables](/docs/reference-document-variables) are persisted, variables can be defined locally within code blocks (like [constructors](/docs/reference-constructor), TODO complete listing of where code is defined).
 
 ```adama
 private int score;

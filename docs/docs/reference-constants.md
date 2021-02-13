@@ -26,7 +26,7 @@ There are a variety of ways to conjure up constants. The following table illustr
 | bool | (true | false) | false, true |
 | int | [0-9]+ | 42, 123, 0 |
 | int | 0x[0-9a-fA-F]+ | 0xff, 0xdeadbeef |
-| double | [0-9]*.?[0-9]*([eE](0-9)+)? | 3.14, 10e19, 2.72e10 |
+| double | [0-9]*.?[0-9]*(\[eE\](0-9)+)? | 3.14, 10e19, 2.72e10 |
 | string | "(^"|escape)*" | "", "hello world", "\" |
 | label | #[a-z]+ | #foo, #start |
 | client | @no_one | @no_one |

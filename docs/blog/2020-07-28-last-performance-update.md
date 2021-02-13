@@ -1,5 +1,5 @@
 ---
-id: last-performance-update-for-july
+slug: last-performance-update-for-july
 title: Last Performance Update (for July?)
 author: Jeffrey M. Barber
 author_title: Dark Lord

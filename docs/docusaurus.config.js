@@ -13,7 +13,7 @@ module.exports = {
         alt: 'The Goat Adama',
         src: 'img/adama-height-196.jpg',
       },
-      links: [
+      items: [
         {
           to: 'docs/why-the-origin-story',
           activeBasePath: 'docs',
@@ -45,10 +45,6 @@ module.exports = {
             {
               label: 'How',
               to: 'docs/how-devkit-install',
-            },
-            {
-              label: 'Details',
-              to: 'docs/details-types',
             },
           ],
         },

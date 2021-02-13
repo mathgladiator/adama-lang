@@ -1,5 +1,5 @@
 ---
-id: performance-funday
+slug: performance-funday
 title: Performance Funday
 author: Jeffrey M. Barber
 author_title: Dark Lord
@@ -33,7 +33,7 @@ That is approximate 1ms per game decision. This actually feels super slow, and a
 Exploit Primary Key
 -------------------
 
-Every record has a primary key called ```id``` which is unique and an integer, and it is fairly common to leverage this to find items by primary key. Since the only way to get access to data within a table is via a [language integrated query](/docs/reference-linq), we must contend with the query syntax. The first task was to analyze ```where``` expressions to extract associations mapping the primary key to an expression. The initial algorithm for this is simple, and I'll write with pseudo-ish-code here (I'm actually using Java, but it is too verbose):
+Every record has a primary key called ```id``` which is unique and an integer, and it is fairly common to leverage this to find items by primary key. Since the only way to get access to data within a table is via a [language integrated query](/docs/reference-tables-linq), we must contend with the query syntax. The first task was to analyze ```where``` expressions to extract associations mapping the primary key to an expression. The initial algorithm for this is simple, and I'll write with pseudo-ish-code here (I'm actually using Java, but it is too verbose):
 
 ```python
 function extract(expr):

@@ -1,5 +1,5 @@
 ---
-id: going-ham-on-parser
+slug: going-ham-on-parser
 title: Going HAM on the parser with next level testing
 author: Jeffrey M. Barber
 author_title: Dark Lord

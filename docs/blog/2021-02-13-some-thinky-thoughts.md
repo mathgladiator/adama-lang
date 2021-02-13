@@ -1,5 +1,5 @@
 ---
-id: some-thinky-thoughts-2021
+slug: some-thinky-thoughts-2021
 title: Some Thinky Thoughts for 2021
 author: Jeffrey M. Barber
 author_title: Dark Lord

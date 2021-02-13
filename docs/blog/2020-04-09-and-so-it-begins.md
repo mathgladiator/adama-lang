@@ -1,5 +1,5 @@
 ---
-id: it-begins
+slug: it-begins
 title: First Announcement
 author: Jeffrey M. Barber
 author_title: Dark Lord

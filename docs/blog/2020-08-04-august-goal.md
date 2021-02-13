@@ -1,5 +1,5 @@
 ---
-id: august-goal
+slug: august-goal
 title: August Goal
 author: Jeffrey M. Barber
 author_title: Dark Lord

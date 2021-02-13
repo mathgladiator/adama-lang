@@ -1,5 +1,5 @@
 ---
-id: performance-updates-and-good-enough
+slug: performance-updates-and-good-enough
 title: Performance Updates & Good-Enough?!?
 author: Jeffrey M. Barber
 author_title: Dark Lord

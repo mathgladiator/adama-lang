@@ -1,5 +1,5 @@
 ---
-id: first-case-study-and-thoughts
+slug: first-case-study-and-thoughts
 title: First Case Study (Chat) & Open Thoughts
 author: Jeffrey M. Barber
 author_title: Dark Lord
