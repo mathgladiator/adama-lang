@@ -51,7 +51,7 @@ public class DevKitServer {
     final var compilerOptions = CompilerOptions.start().args(0, args).make();
     var data = "./data";
     var html = "./html";
-    var source = "./source";
+    var schema = "./schema";
     for (var k = 0; k + 1 < args.length; k += 2) {
       switch (args[k]) {
         case "--data":
@@ -60,12 +60,12 @@ public class DevKitServer {
         case "--html":
           html = args[k + 1];
           break;
-        case "--source":
-          source = args[k + 1];
+        case "--schema":
+          schema = args[k + 1];
           break;
       }
     }
-    final var db = new GameSpaceDB(new File(source), new File(data), compilerOptions, TimeSource.REAL_TIME);
+    final var db = new GameSpaceDB(new File(schema), new File(data), compilerOptions, TimeSource.REAL_TIME);
     final var authenticator = new Authenticator() {
       @Override
       public void authenticate(final String token, final AuthCallback callback) {

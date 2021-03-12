@@ -4,4 +4,6 @@
   y = "2";
   let z = "3";
   z = "2";
+  readonly string k = y;
+  k = y;
 }

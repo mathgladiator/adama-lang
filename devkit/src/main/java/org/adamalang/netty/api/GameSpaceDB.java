@@ -23,13 +23,13 @@ public class GameSpaceDB {
   private final File dataRoot;
   private final HashMap<String, GameSpace> map;
   private final CompilerOptions options;
-  private final File sourceRoot;
+  private final File schemaRoot;
   private final TimeSource time;
 
-  public GameSpaceDB(final File sourceRoot, final File dataRoot, final CompilerOptions options, final TimeSource time) throws Exception {
-    this.sourceRoot = sourceRoot;
+  public GameSpaceDB(final File schemaRoot, final File dataRoot, final CompilerOptions options, final TimeSource time) throws Exception {
+    this.schemaRoot = schemaRoot;
     this.options = options;
-    if (!sourceRoot.exists()) { throw new Exception("Source root: `" + dataRoot.getName() + "` does not exist"); }
+    if (!schemaRoot.exists()) { throw new Exception("Schema root: `" + dataRoot.getName() + "` does not exist"); }
     sanityCheckDataDirectory(dataRoot);
     this.dataRoot = dataRoot;
     this.time = time;
@@ -48,11 +48,11 @@ public class GameSpaceDB {
   public synchronized GameSpace getOrCreate(final String game) throws ErrorCodeException {
     var gs = map.get(game);
     if (gs != null) { return gs; }
-    final var gameSource = new File(sourceRoot, game);
+    final var gameSource = new File(schemaRoot, game);
     if (!gameSource.exists()) { throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_FIND_GAMESPACE); }
     final var gameData = new File(dataRoot, game);
     sanityCheckDataDirectory(gameData);
-    final var factory = GameSpace.buildLivingDocumentFactory(sourceRoot, options, game, "Game" + classId++);
+    final var factory = GameSpace.buildLivingDocumentFactory(schemaRoot, options, game, "Game" + classId++);
     gs = new GameSpace(factory, time, gameData);
     map.put(game, gs);
     return gs;

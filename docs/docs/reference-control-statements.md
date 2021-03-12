@@ -39,7 +39,6 @@ public int x;
 ### if-as
 
 Unlike most languages, there is a special extension to the if statement which is used for [maybe](/docs/reference-maybe-types). This allows safely extracting values out from the *maybe*.
-public int x;
 
 ```adama
 int x;
@@ -52,6 +51,8 @@ int x;
 ```
 
 ### while
+
+**while** statements are a straightforward way to iterate while a condition is true.
 
 ### do-while
 

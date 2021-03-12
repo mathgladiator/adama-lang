@@ -7,3 +7,14 @@
   let b5 = true + @no_one;
   let b6 = @no_one + {};
 }
+
+record X {
+  int z;
+}
+
+table<X> zzz;
+
+#more {
+  let two = 2L + true;
+  let wtf = (iterate zzz).z + true;
+}

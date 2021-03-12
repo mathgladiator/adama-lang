@@ -5805,7 +5805,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
     gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
-    gold.append("\n    __code_cost += 5;");
+    gold.append("\n    __code_cost += 6;");
     gold.append("\n    __track(0);");
     gold.append("\n    x.set(123L);");
     gold.append("\n    __track(1);");
@@ -5822,6 +5822,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      _auto_3.opAddTo(90L);");
     gold.append("\n    }");
     gold.append("\n");
+    gold.append("\n    __track(4);");
+    gold.append("\n    long x = 42;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -5843,9 +5845,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":5,\"__billing_seq\":1} need:true in:0");
+    gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":6,\"__billing_seq\":1} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"x\":\"123\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":5,\"__billing_seq\":1}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"x\":\"123\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":6,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
     gold.append("\n{\"x\":\"123\",\"t\":{\"auto_key\":0,\"rows\":{}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
     gold.append("\n{\"x\":\"123\",\"t\":{\"auto_key\":0,\"rows\":{}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");

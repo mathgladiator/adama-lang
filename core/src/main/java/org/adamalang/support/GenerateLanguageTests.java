@@ -9,10 +9,15 @@ import org.adamalang.support.testgen.TestClass;
 import org.adamalang.support.testgen.TestForge;
 
 public class GenerateLanguageTests {
-  public static void main(final String[] args) throws Exception {
+
+  public static void main(String[] args) throws Exception {
+    generate(0, args);
+  }
+
+  public static void generate(int argOffset, final String[] args) throws Exception {
     var inputRootPath = "./test_code";
     var outputJavaPath = "./src/test/java/org/adamalang/translator";
-    for (var k = 0; k + 1 < args.length; k += 2) {
+    for (var k = argOffset; k + 1 < args.length; k += 2) {
       switch (args[k]) {
         case "--input":
           inputRootPath = args[k + 1];

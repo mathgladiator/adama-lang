@@ -88,19 +88,7 @@ public class CompilerOptions {
     }
   }
 
-  public static void help(final PrintStream output) {
-    output.println("Translator Flags");
-    output.println("--------------");
-    output.println("  --package $string          | set the java package");
-    output.println("  --class $string            | set the class name");
-    output.println("  --input $file              | add the file to the generation");
-    output.println("  --output $file             | set the output file name");
-    output.println("  --code-coverage true/false | enable/disable code tracing and coverage");
-    output.println("                             | turning code coverage off saves memory ");
-    output.println("  --silent true/false        | enable/disable stderr logging for translator");
-    output.println("  --goodwill-budget $int     | set how long the file can run until it terminates");
-    output.println();
-  }
+
 
   public static Builder start() {
     return new Builder();

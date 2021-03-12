@@ -10,4 +10,5 @@ table<R> t;
   (iterate t).y = 42;
   (iterate t).y ++;
   (iterate t).y += 90L;
+  long x = 42;
 }

@@ -49,8 +49,6 @@ public class RuleSetAddition {
           error.append("\n\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'.");
         } else if (aString) {
           error.append("\n\tThe left hand side is a string which may be added with types: bool, int, double ");
-        } else if (aReactiveList) {
-          error.append("\n\tThe left hand side is a reactive list, see the above error.");
         } else {
           error.append("\n\tThe left hand side has a type that is unable to the added.");
         }

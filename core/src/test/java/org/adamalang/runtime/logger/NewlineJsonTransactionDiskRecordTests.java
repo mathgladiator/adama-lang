@@ -42,6 +42,16 @@ public class NewlineJsonTransactionDiskRecordTests {
   }
 
   @Test
+  public void bad4() throws Exception {
+    try {
+      final var lines = lines(JsonHelper.encode("request", "data"), JsonHelper.encode("delta", "data"), JsonHelper.encode("delta", "data"), "x");
+      final var reader = readerOf(lines);
+      new NewlineJsonTransactionDiskRecord(reader);
+      Assert.fail();
+    } catch (final IOException ioe) {}
+  }
+
+  @Test
   public void no_delta_1() throws Exception {
     final var lines = lines(JsonHelper.encode("request", "data"));
     final var reader = readerOf(lines);

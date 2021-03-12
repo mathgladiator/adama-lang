@@ -49,11 +49,6 @@ public class CompilerOptionsTests {
   }
 
   @Test
-  public void help() {
-    CompilerOptions.help(System.out);
-  }
-
-  @Test
   public void offset() {
     final var options = CompilerOptions.start().args(1, "compile", "--billing", "yes", "--code-coverage", "yes", "--remove-tests", "yes", "--silent", "yes", "--goodwill-budget", "5000", "--package", "org.foo2", "--class", "ClassName2")
         .make();
