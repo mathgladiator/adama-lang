@@ -3,9 +3,12 @@ id: reference-comments
 title: Comments
 ---
 
+We humans need to "enhance" our logic with prose and explanation for others humans (and future versions of ourselves).
+
 ## Fast Intro
 
 Since code should be manageable and understandable over time via different people, Adama supports C style comments.
+
 ```adama
 // This is a comment with a single line which terminates at the ->\n
 

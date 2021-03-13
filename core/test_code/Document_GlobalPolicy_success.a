@@ -12,6 +12,8 @@ record R {
 
 table<R> r;
 
+use_policy<foo> int z2;
+
 @construct {
   r <- {x:1};
 }

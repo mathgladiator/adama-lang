@@ -792,6 +792,7 @@ public class Parser {
     Expression base;
     final var selectToken = tokens.popIf(t -> t.isIdentifier("iterate", "select"));
     if (selectToken != null) {
+      // TODO: check for { and then introduce a View which must look a LOT like a record
       base = new Iterate(selectToken, ternary());
     } else {
       base = ternary();

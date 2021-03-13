@@ -17,7 +17,7 @@ These three fields will establish a persistent document in JSON:
 {"output":"","balance":0.0,"count":0}
 ```
 
-The *public* and *private* control what people will see, and the omission of either results in *private* by default. In this case, people will see
+The [*public* and *private*](/docs/reference-privacy-and-bubbles) control what people will see, and the omission of either results in *private* by default. In this case, people will see
 ```js
 {"output":""}
 ````
