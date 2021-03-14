@@ -63,7 +63,7 @@ public class GameSpaceDBTests {
       new GameSpaceDB(new File("./test_code/nope"), new File("./test_data/bad"), CompilerOptions.start().make(), TimeSource.REAL_TIME);
       Assert.fail();
     } catch (final Exception e) {
-      Assert.assertEquals("Source root: `bad` does not exist", e.getMessage());
+      Assert.assertEquals("Schema root: `bad` does not exist", e.getMessage());
     }
   }
 

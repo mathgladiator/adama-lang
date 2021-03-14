@@ -6,6 +6,8 @@ package org.adamalang.netty.api;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.logger.ObjectNodeLogger;
@@ -52,30 +54,46 @@ public class GameSpace {
     return factory;
   }
 
+  public final String name;
   public final LivingDocumentFactory factory;
-  public final HashMap<String, Transactor> map;
+  public final HashMap<Long, Transactor> map;
   public final File root;
   public final TimeSource time;
+  private final Random rng;
 
-  public GameSpace(final LivingDocumentFactory factory, final TimeSource time, final File root) {
+  public GameSpace(final String name, final LivingDocumentFactory factory, final TimeSource time, final File root) {
+    this.name = name;
     this.factory = factory;
     this.time = time;
     this.root = root;
     map = new HashMap<>();
     // TODO: consider scanning for existing files, and then LOAD THEM UP
+    // TODO: sync the key generation up
+    rng = new Random();
   }
 
   /** close the gamespace, will close all documents */
   public synchronized void close() throws Exception {
-    for (final Map.Entry<String, Transactor> entry : map.entrySet()) {
+    for (final Map.Entry<Long, Transactor> entry : map.entrySet()) {
       entry.getValue().close();
     }
     map.clear();
   }
 
+  /** generate an id to use for create (TODO: make unique and less dumb) */
+  public synchronized long generate() {
+    boolean tryAgain = true;
+    long id = 0L;
+    while (tryAgain) {
+      id = Math.abs(rng.nextLong() + System.nanoTime());
+      tryAgain = map.containsKey(id);
+    }
+    return id;
+  }
+
   /** create a living document with the the given ID for the given person with the
    * given constructor argument and entropy */
-  public synchronized Transactor create(final String id, final NtClient who, final ObjectNode cons, final String entropy) throws ErrorCodeException {
+  public synchronized Transactor create(final long id, final NtClient who, final ObjectNode cons, final String entropy) throws ErrorCodeException {
     final var file = new File(root, id + ".jsonlog");
     if (file.exists()) { throw new ErrorCodeException(ErrorCodeException.USERLAND_GAME_ALREADY_EXISTS); }
     final var state = ObjectNodeLogger.fresh();
@@ -87,7 +105,7 @@ public class GameSpace {
   }
 
   /** get the living document by id if it exists */
-  public synchronized Transactor get(final String id) throws ErrorCodeException {
+  public synchronized Transactor get(final long id) throws ErrorCodeException {
     final var sm = map.get(id);
     if (sm != null) { return sm; }
     final var file = new File(root, id + ".jsonlog");

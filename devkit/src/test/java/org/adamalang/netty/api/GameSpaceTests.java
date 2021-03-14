@@ -56,26 +56,26 @@ public class GameSpaceTests {
   @Test
   public void build_happy() throws Exception {
     final var factory = GameSpace.buildLivingDocumentFactory(new File("./test_code/"), CompilerOptions.start().make(), "Demo_Bomb_success.a", "Demo");
-    final var gs = new GameSpace(factory, ZERO_TIME, new File("./test_data"));
+    final var gs = new GameSpace("name", factory, ZERO_TIME, new File("./test_data"));
     gs.close();
   }
 
   @Test
   public void create_works() throws Exception {
-    setup_da_bomb("foo");
+    setup_da_bomb(561);
   }
 
   @Test
   public void failure_modes() throws Exception {
     final var factory = GameSpace.buildLivingDocumentFactory(new File("./test_code/"), CompilerOptions.start().make(), "Demo_Bomb_success.a", "Demo");
-    final var gs = new GameSpace(factory, ZERO_TIME, new File("./test_data"));
+    final var gs = new GameSpace("name", factory, ZERO_TIME, new File("./test_data"));
     var passes = 0;
-    var sm = gs.get("foo3");
+    var sm = gs.get(123L);
     Assert.assertNull(sm);
-    sm = gs.create("foo3", NtClient.NO_ONE, Utility.createObjectNode(), "123");
-    Assert.assertTrue(sm == gs.get("foo3"));
+    sm = gs.create(123L, NtClient.NO_ONE, Utility.createObjectNode(), "123");
+    Assert.assertTrue(sm == gs.get(123L));
     try {
-      sm = gs.create("foo3", NtClient.NO_ONE, Utility.createObjectNode(), "123");
+      sm = gs.create(123L, NtClient.NO_ONE, Utility.createObjectNode(), "123");
       passes++;
       Assert.fail();
     } catch (final ErrorCodeException e) {
@@ -86,22 +86,18 @@ public class GameSpaceTests {
 
   @Test
   public void reload_after_create() throws Exception {
-    setup_da_bomb("foo2");
+    setup_da_bomb(42L);
     final var factory = GameSpace.buildLivingDocumentFactory(new File("./test_code/"), CompilerOptions.start().make(), "Demo_Bomb_success.a", "Demo");
-    final var gs = new GameSpace(factory, ZERO_TIME, new File("./test_data"));
-    gs.get("foo2");
+    final var gs = new GameSpace("name", factory, ZERO_TIME, new File("./test_data"));
+    gs.get(42L);
   }
 
-  private void setup_da_bomb(final String id) throws Exception {
+  private void setup_da_bomb(final long id) throws Exception {
     final var factory = GameSpace.buildLivingDocumentFactory(new File("./test_code/"), CompilerOptions.start().make(), "Demo_Bomb_success.a", "Demo");
-    final var gs = new GameSpace(factory, ZERO_TIME, new File("./test_data"));
+    final var gs = new GameSpace("name", factory, ZERO_TIME, new File("./test_data"));
     gs.create(id, NtClient.NO_ONE, Utility.createObjectNode(), "123");
-    /* MockApiResponder responder = new MockApiResponder(); sm.get(NtClient.NO_ONE,
-     * responder); gs.close(); responder.assertDone(); responder.assertSize(1);
-     * Assert.
-     * assertEquals("{\"data\":{\"x\":\"Initializing Device\"},\"outstanding\":[],\"blockers\":[]}"
-     * , responder.get(0).toString()); */
-    final var data = new File("./test_data/" + id + ".jsonlog");
+    String pathname = "./test_data/" + id + ".jsonlog";
+    final var data = new File(pathname);
     Assert.assertTrue(data.exists());
     gs.close();
   }

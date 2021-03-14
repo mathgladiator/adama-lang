@@ -98,7 +98,8 @@
     })();
 
     document.getElementById("create_new_room").onclick = async function() {
-        document.getElementById("chat_id").value = (await connection.generate("chat.a", {})).game;
+        let id = (await connection.generate("chat.a", {})).game;
+        document.getElementById("chat_id").value = (await connection.create("chat.a", id, {})).game;
     };
     document.getElementById("connect_to_room").onclick = function() {
         connection.connectTree("chat.a", document.getElementById("chat_id").value, tree);

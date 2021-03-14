@@ -45,16 +45,16 @@ public class GameSpaceDB {
   }
 
   /** get a gamespace (via filename) */
-  public synchronized GameSpace getOrCreate(final String game) throws ErrorCodeException {
-    var gs = map.get(game);
+  public synchronized GameSpace getOrCreate(final String gamespace) throws ErrorCodeException {
+    var gs = map.get(gamespace);
     if (gs != null) { return gs; }
-    final var gameSource = new File(schemaRoot, game);
+    final var gameSource = new File(schemaRoot, gamespace);
     if (!gameSource.exists()) { throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_FIND_GAMESPACE); }
-    final var gameData = new File(dataRoot, game);
+    final var gameData = new File(dataRoot, gamespace);
     sanityCheckDataDirectory(gameData);
-    final var factory = GameSpace.buildLivingDocumentFactory(schemaRoot, options, game, "Game" + classId++);
-    gs = new GameSpace(factory, time, gameData);
-    map.put(game, gs);
+    final var factory = GameSpace.buildLivingDocumentFactory(schemaRoot, options, gamespace, "Game" + classId++);
+    gs = new GameSpace(gamespace, factory, time, gameData);
+    map.put(gamespace, gs);
     return gs;
   }
 }

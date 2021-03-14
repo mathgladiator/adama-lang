@@ -29,6 +29,7 @@ public class ErrorCodeException extends Exception {
   public static final int TRANSACTOR_CANT_CREATE_BECAUSE_ALREADY_CREATED = 5001;
   public static final int USERLAND_CANT_COMPILE_ADAMA_SCRIPT = 4002;
   public static final int USERLAND_CANT_FIND_GAME = 4011;
+  public static final int USERLAND_CANT_CONNECT_AGAIN = 4020;
   public static final int USERLAND_CANT_FIND_GAMESPACE = 4001;
   public static final int USERLAND_GAME_ALREADY_EXISTS = 4008;
   public static final int USERLAND_INVALID_METHOD_PROPERTY = 4007;

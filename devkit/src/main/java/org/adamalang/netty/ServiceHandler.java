@@ -3,7 +3,6 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.netty;
 
-import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +36,21 @@ public class ServiceHandler implements JsonHandler {
     return fieldNode.textValue();
   }
 
+  private static long lng(final ObjectNode request, final String field, final int errorIfDoesnt) throws ErrorCodeException {
+    final var fieldNode = request.get(field);
+    if (fieldNode == null || fieldNode.isNull() || !(fieldNode.isNumber() && fieldNode.isIntegralNumber() || fieldNode.isTextual())) {
+      throw new ErrorCodeException(errorIfDoesnt);
+    }
+    if (fieldNode.isTextual()) {
+      try {
+        return Long.parseLong(fieldNode.textValue());
+      } catch (NumberFormatException nfe) {
+        throw new ErrorCodeException(errorIfDoesnt);
+      }
+    }
+    return fieldNode.longValue();
+  }
+
   private final GameSpaceDB db;
   private final ScheduledExecutorService executorDEMO;
 
@@ -66,19 +80,30 @@ public class ServiceHandler implements JsonHandler {
   public void handleInThread(final ScheduledExecutorService executor, final AdamaSession session, final ObjectNode request, final JsonResponder responder) throws ErrorCodeException {
     final var method = str(request, "method", true, ErrorCodeException.USERLAND_NO_METHOD_PROPERTY);
     switch (method) {
+      case "generate": {
+        final var gs = findGamespace(request);
+        final var result = Utility.createObjectNode();
+        result.put("game", String.valueOf(gs.generate()));
+        responder.respond(result, true, null);
+        return;
+      }
       case "create": {
         final var gs = findGamespace(request);
-        final var id = str(request, "game", true, ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
+        final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
         final var transactor = gs.create(id, session.who, (ObjectNode) node(request, "payload", false, 0), str(request, "entropy", false, 0));
         final var result = Utility.createObjectNode();
-        result.put("game", id);
+        result.put("game", String.valueOf(id));
         witness(executor, transactor, responder);
         responder.respond(result, true, null);
-      }
         return;
+      }
       case "connect": {
         final var gs = findGamespace(request);
-        final var id = str(request, "game", true, ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
+        final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
+        final var key = gs.name + ":" + id;
+        if (session.checkNotUnique(key)) {
+          throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_CONNECT_AGAIN);
+        }
         final var transactor = gs.get(id);
         if (transactor == null) { throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_FIND_GAME); }
         final var alreadyConnected = transactor.isConnected(session.who);
@@ -89,7 +114,7 @@ public class ServiceHandler implements JsonHandler {
           responder.respond(Utility.parseJsonObject(str), false, null);
         });
         witness(executor, transactor, responder);
-        session.subscribeToSessionDeath(() -> {
+        session.subscribeToSessionDeath(key, () -> {
           // session death happens in HTTP land, so let's return to the executor to talk
           // to transactor
           executor.execute(() -> {
@@ -98,12 +123,24 @@ public class ServiceHandler implements JsonHandler {
               transactor.disconnect(session.who);
             }
           });
+          // TODO: this does not indicate whether or not the responder failed... need to think about errors? maybe
+          responder.respond(Utility.parseJsonObject("{}"), true, null);
         });
-      }
         return;
+      }
+      case "disconnect": {
+        final var gs = findGamespace(request);
+        final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
+        final var key = gs.name + ":" + id;
+        final var result = Utility.createObjectNode();
+        result.put("game", String.valueOf(id));
+        result.put("success", session.unbind(key));
+        responder.respond(result, true, null);
+        return;
+      }
       case "send": {
         final var gs = findGamespace(request);
-        final var id = str(request, "game", true, ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
+        final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
         final var channel = str(request, "channel", true, ErrorCodeException.USERLAND_NO_CHANNEL_PROPERTY);
         final var msg = node(request, "message", true, ErrorCodeException.USERLAND_NO_MESSAGE_PROPERTY);
         final var transactor = gs.get(id);
@@ -111,23 +148,19 @@ public class ServiceHandler implements JsonHandler {
         final var result = transactor.send(session.who, channel, msg.toString());
         responder.respond(Utility.parseJsonObject("{\"success\":" + result.seq + "}"), true, null);
         witness(executor, transactor, responder);
-      }
         return;
+      }
       default:
         throw new ErrorCodeException(ErrorCodeException.USERLAND_INVALID_METHOD_PROPERTY);
     }
   }
 
   private ScheduledExecutorService pinAndFixRequest(final ObjectNode request) throws ErrorCodeException {
+    // get the gamespace
     str(request, "gamespace", true, ErrorCodeException.USERLAND_NO_GAMESPACE_PROPERTY);
-    final var method = str(request, "method", true, ErrorCodeException.USERLAND_NO_METHOD_PROPERTY);
-    final var isGenerate = "generate".equals(method);
-    final var id = str(request, "game", !isGenerate, ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
-    if (id == null && isGenerate) {
-      request.put("method", "create");
-      request.put("game", UUID.randomUUID().toString());
-    }
-    // hash this and pick an executor
+    // final var method = str(request, "method", true, ErrorCodeException.USERLAND_NO_METHOD_PROPERTY);
+    // based on the method, extract the game or use 0
+    // hash (gamepsace, game) and pick an executor
     return executorDEMO;
   }
 

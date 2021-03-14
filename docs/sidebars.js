@@ -23,7 +23,7 @@ module.exports = {
       'how-devkit-install',
       'how-hello-adama',
     ],
-    'Guide & Reference': [
+    'Language Guide & Reference': [
       'reference-document-variables',
       'reference-comments',
       'reference-defining-structure-types',
@@ -47,6 +47,9 @@ module.exports = {
       'reference-built-in-testing',
       'reference-anonymous-messages-and-arrays',
       'reference-errors',
+    ],
+    'Platform API': [
+      'api-intro',
     ],
     Who: [
       'who-jeff',

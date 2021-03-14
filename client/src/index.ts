@@ -197,8 +197,8 @@ export class Connection {
   }
 
   /** api: generate a new game */
-  async generate(gs: string, arg: object) {
-    var request = { method: "generate", gamespace: gs, arg: arg };
+  async generate(gs: string) {
+    var request = { method: "generate", gamespace: gs };
     var self = this;
     return new Promise(function (good, bad) {
       self._send(request, function (response: { [k: string]: any }) {
