@@ -5,7 +5,7 @@ title: Constants
 
 ## Fast Intro
 
-You want numbers? we got numbers. You want strings? We got strings. Constants are a fast way to bring data into a document. For instance, the following code outlines some basic constants:
+You want numbers? We got numbers. You want strings? We got strings. Constants are a fast way to place data into a document. For instance, the following code outlines some basic constants:
 
 ```adama
 #we_got_constants {
@@ -33,7 +33,7 @@ There are a variety of ways to conjure up constants. The following table illustr
  
 ## String escaping
 
-A character following a backslash (\\) is an escape sequence within a string, and it is an escape for the parser to inject special characters. For instance, if you are parsing a string initiated by the double quotes, then how does one get a double quote into the string? Well, that's what the escape is for. Adama's strings support the following escape sequences:
+A character following a backslash (\\) is an escape sequence within a string, and it is an escape for the parser to inject special characters. For instance, if you are parsing a string initiated by double quotes, then how does one get a double quote into the string? Well, that's what the escape is for. Adama's strings support the following escape sequences:
 
 | escape code | behavior |
 | --- | --- |
