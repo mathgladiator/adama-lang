@@ -6,7 +6,7 @@ title: Actors are for Acting!
 The Actor Model
 ---------------
 
-The [actor model](https://en.wikipedia.org/wiki/Actor_model) is worth considering as it expresses many ideas core to computing. The **living** document which Adama defines is a limited actor of sorts. Namely, it can only receive messages from people (or devices) and make local decisions and updates based on those messages. Currently, it is unable to create more actors or send messages to other actors. However, this basic and reduced actor model enables the **living** document to be useful.
+The [actor model](https://en.wikipedia.org/wiki/Actor_model) is worth considering as it expresses many ideas core to computing. The **living** document that Adama defines is a limited actor of sorts. Namely, it can only receive messages from users (or devices) and make local decisions and updates based on those messages. Currently, it is unable to create more actors or send messages to other actors. However, this basic and reduced actor model enables the **living** document to be useful.
 
 Adama allows developers to define messages:
 
@@ -16,7 +16,7 @@ message MyName {
 }
 ```
 
-This Adama code outlines a structure with just a name field. Messages are used exclusively for messaging between the people and the living document. The next step is then to ingest a single message on a named channel:
+This Adama code outlines a structure with just a name field. Messages are used exclusively for messaging between the users and the living document. The next step is then to ingest a single message on a named channel:
 
 ```adama
 public string name;
@@ -26,11 +26,11 @@ channel my_channel(client who, MyName msg) {
 }
 ```
 
-This Adama cost defines:
+This Adama code defines:
 * a publicly visible string field called **name** (a singleton value scoped to the document).
-* a channel named **my_channel** which outlines a function
-* a variable within the function called **who** which represents a connection a human (via the **client** type)
-* a variable containing the message (**msg**) sent by the human
+* a channel named **my_channel** that outlines a function
+* a variable within the function called **who** which represents a connection with a user (via the **client** type)
+* a variable containing the message (**msg**) sent by the user
 * a block of code to execute when the message arrives, and this code will associate the singleton name field **name** with the value coming from the human **msg.name**
 
 This is the primary way for the **living** document to learn about the outside world. Internally, the following JSON represents the message sent on a persistent connection from a device:
@@ -73,4 +73,4 @@ The mental model for the document is a receiver of messages from clients connect
 }
 ```
 
-These signals enable the document to reason about who is connected and provide the features found in classical old school chat rooms: "Jeff has entered the conversation" and "Jeff has left the conversation".
+These signals enable the document to identify who is connected and provide the features found in classical old school chat rooms: "Jeff has entered the conversation" and "Jeff has left the conversation".
