@@ -5,7 +5,7 @@ title: Tables & Language Integrated Query
 
 ## Intro
 
-Given a record like;
+Given a record such as:
 
 ```adama
 record Rec {
@@ -16,13 +16,13 @@ record Rec {
 }
 ```
 
-This record can be used with a table thusly:
+This record can be used with the table:
 
 ```adama
 table<Rec> _records;
 ```
 
-This table is a way of organizing information per given record type. In general, the table is an exceptionally useful construct which enables many common operations found in data structures. The above record would create a table like
+This table is a way of organizing information per given record type. In general, the table is a useful construct which enables many common operations found in data structures. The above record would create a table like
 
 | id | name | age | score |
 | --- | --- | --- | --- |
@@ -74,7 +74,7 @@ public formula random_young_people = iterate _records where age < 18 shuffle;
 
 ### order
 
-Since the canonical ordering by id is the insertion/creation ordering, ordering allows you to reorder any list;
+Since the canonical ordering by id is the insertion/creation ordering, **order** allows you to reorder any list;
 ```adama
 public formula people_by_age = iterate _records order by age asc;
 ```
