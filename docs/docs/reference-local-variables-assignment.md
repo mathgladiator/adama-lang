@@ -52,7 +52,7 @@ Instead of leading with the type, you can simply say "let" and allow the transla
 
 ### readonly keyword
 
-A local variable can be annotated as readonly meaning it can not be assigned.
+A local variable can be annotated as readonly, meaning it can not be assigned.
 
 ```adama
 #transition {
