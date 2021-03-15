@@ -5,7 +5,7 @@ title: Privacy & Bubbles
 
 ## Fast Intro
 
-The document and records contain fields and formulas which are privacy checked before viewed by people. This section outlines how data is exposed to people. At core, each field is prefixed with a privacy modifier.
+The document and records contain fields and formulas that are privacy checked before they can be viewed by users. This section outlines how data is exposed to users. At the core, each field is prefixed with a privacy modifier.
 
 | Modifier | Effect |
 | --- | --- |
@@ -14,7 +14,7 @@ The document and records contain fields and formulas which are privacy checked b
 | viewer_is&lt;field&gt; | Only the viewer indicated by the given field is able to see it |
 | use_policy&lt;policy&gt; | Validate the viewer can witness the value via code; policies are defined within documents and records via the ```policy``` keyword. |
 
-These modifiers are great for revealing simple data which is common between all viewers of the document. Viewer-dependent data is achivable via a privacy bubble which uses the ```bubble``` keyword.
+These modifiers are great for revealing simple data common between all viewers of the document. Viewer-dependent data is achievable via a privacy bubble using the ```bubble``` keyword.
 
 ```adama
 record Row {
@@ -50,7 +50,7 @@ bubble<me> mine = iterate tbl where who == me;
 ## Diving Into Details
 
 ### public/private
-These modifiers are the easy ones where either everyone (i.e. public) can see the value while private means no one can.
+The **private** modifier hides data from users. The **public** modifier discloses data to users. If no modifier is specified, the default is **private**.
 
 ### client_is&lt;&gt;
 
@@ -61,11 +61,11 @@ client owner;
 viewer_is<owner> int data_only_for_owner;
 ```
 
-Here, the field owner is referenced via the privacy modifer for data_only_for_owner such that only the device/client that is authenticated is able to see that data.
+Here, the field owner is referenced via the privacy modifer for data_only_for_owner such that only the device/client authenticated can see that data.
 
 ### use_policy&lt;&gt; &amp; policy
 
-As visibility may depend on some intrinic logic or internal state, ```use_policy``` will leverage code outlined via a policy. This code is then run when the client wishes to see the data.
+As visibility may depend on some intrinsic logic or internal state, ```use_policy``` will leverage code outlined via a policy. This code is then run when the client wishes to see the data.
 
 ```adama
 record Card {
