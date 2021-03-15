@@ -2,12 +2,12 @@
 id: api-intro
 title: Platform API Introduction
 ---
-Browsers and mobile devices will use WebSockets to connect to the dev-kit (and future platform).
+Browsers and mobile devices will use WebSockets to connect to the dev-kit (and any future platform).
 
 ## Meta
-- [ ] find great simple API example
-- [ ] define schema for API pages
-- [ ] make more examples beyond chat
+- [ ] Find a simple API example
+- [ ] Define a schema for API pages
+- [ ] Make more examples beyond chat
 
 ## The WebSocket Connection
 
@@ -25,14 +25,14 @@ Browsers and mobile devices will use WebSockets to connect to the dev-kit (and f
 
 ## JSON Merge
 
-- [ ] talk about JSON merge.
+- [ ] Talk about JSON merge.
 
 ## The Reactive Tree Model
 
-- [ ] outline the current API
-- [ ] talk about ordering of events
-- [ ] synchronizing browser DOM
-- [ ] maximizing stability of the tree
+- [ ] Outline the current API
+- [ ] Talk about ordering of events
+- [ ] Synchronize browser DOM
+- [ ] Maximize stability of the tree
 
 ## Plan
 - [ ] Design: Reflect
