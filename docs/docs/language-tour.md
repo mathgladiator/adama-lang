@@ -3,18 +3,18 @@ id: language-tour
 title: A Language Tour
 ---
 
-This document is a light-weight tour of the core features and ideas which make Adama a some-what novel [data-centric programming language](https://en.wikipedia.org/wiki/Data-centric_programming_language). It is important to remember that Adama is not a general purpose language, it’s just for board games (and maybe more... much more).
+This document is a lightweight tour of the core features and ideas that make Adama a somewhat novel [data-centric programming language](https://en.wikipedia.org/wiki/Data-centric_programming_language). It is important to remember that Adama is not a general purpose language. It’s for board games (and maybe more... much more).
 
 ## Defining State Layout
 
-We start by outlining some global fields with default values using minimal ceremony. Laying out and structuring data is arguably the most important activity in building software, so it must be simple. Here, we will define a document with just a name and score field:
+We start by defining global fields with default values. Laying out and structuring data is arguably the most important activity in building software, so it must be simple and convenient for developers to define their data. Here, we will define a document with just a name and score field:
 
 ```adama
 public string name = "You";
 private int score = 100;
 ```
 
-This fairly minimal Adama is all one needs to define a document. The data backing this script is a document represented via the following JSON:
+This fairly minimal Adama code defines a document. The backend data for this script is a document represented via the following JSON:
 
 ```json
 {"name":"You", "score":100}
@@ -26,13 +26,19 @@ However, a human viewer (such as yourself or myself) of the document will only s
 {"name":"You"}
 ```
 
-This is because the **score** field is marked private. Only the code within the document can operate on the **score** field. Now, a key theme within board games is the need for secrets (i.e. the contents of your hand) or unrevealed state (such as the ordering of cards within a deck).
+This is because the **score** field is defined with the private modifier. By modifying a field with **private**, only the code within the document can operate on the **score** field. This is useful, for example, to define secrects in a game. A key function in board games is the need for secrets (i.e. the contents of your hand) or an unrevealed state of objects such as the ordering of cards within a deck.
 
-This intuitively defines the environment with which Adama code operates, so we will show the architecture diagram here because this language requires an environment.
+The following diagram visualizes the Adama environment and architecture:
 
 ![Architecture diagram showing you, the data you see, how it connects to a store which runs the Adama code](/img/20200613_diagram_entire_thing_story.png)
 
-We start this diagram with you. You will (via a client) connect to the Adama Document Store with a persisent connection. The store will then vend to you a private version of the document. This private version is tailored just for you as dictated from the rules within the Adama code provided to the store. Adama is not only a data-centric programming language, but a privacy focused language such that secrets between players (i.e. individual hands) and the universe (i.e. decks) are not leaked. This is important for games to have a level playing field such that no one has an advantage based on their hacking ability.
+Here is a brief overview of the Adama working environment:
+
+- Connect (via a client) Adama Document Store with a persisent connection. 
+- The store will then send to you a private version of the document. 
+- This private version is tailored for you based on directives from the Adama code provided to the store (e.g., the **private** modifier sets the **sore** variable as private in the above example). 
+
+Adama is not only a data-centric programming language, but a privacy-focused language such that secrets between players (i.e. individual hands) and the universe (i.e. decks) are not disclosed. This environment is essential for games requiring secrets so that other gamers do not gain an unfair advantage from "hacking" environment variables. 
 
 ## Organizing the Chaos Induced by Globals
 
@@ -48,7 +54,7 @@ public Card a;
 public Card b;
 ```
 
-A record is a structure which collects named typed fields under a single type name. In the above example, the type **Card** is the combination of **suit** and **rank** integer fields. These types can then be used to create instances within the document of that type. The above document would then be backed by the following JSON:
+A record is a structure that defines one or more named typed fields under a single type name. In the above example, the structure **Card** is the combination of **suit** and **rank** integer fields. These structures can then be used to create instances within the document of that type. The above code  backend would have the following JSON:
 
 ```json
 {
@@ -57,15 +63,15 @@ A record is a structure which collects named typed fields under a single type na
 }
 ```
 
-This is great for cleaning up patterns within the global document, but this is insufficient for non-trivial games. The next step is to introduce a collection of records. Adama provides the notion of a table, and the above record can be used to create a table named **deck**.
+The above example is great for cleaning up patterns within the global document, but this is insufficient for non-trivial games. The next step is to introduce a collection of records. Adama provides the notion of a table, and the above record can be used to create a table named **deck**.
 
 ```adama
 table<Card> deck;
 ```
 
-But this begs a question: how do records flow into the deck? Adama has a notion of events which can be associated with imperative code which is evaluated on events occurring. This code can then manipulate the document.
+But this begs the question: how do records flow into the deck? Adama uses events that can be associated with developer code which is evaluated when event trigger. This code can then manipulate the document.
 
-One unique event within the lifetime of a document is the creation of the document, and this is done via a constructor (using the **@construct** keyword). This constructor can be used with an "ingestion" operator (**<-**) and some C style **for** loops.
+One example of an event is the creation of the document. The event is created via a constructor (using the **@construct** identifier). This constructor can be used with an "ingestion" operator (**<-**) and some C style **for** loops. The following Adama code builds a table of Card records based on the JSON document structure:
 
 ```adama
 @construct {
@@ -77,17 +83,17 @@ One unique event within the lifetime of a document is the creation of the docume
 }
 ```
 
-The above code will construct the state of the document which represents a typical 52 playing card deck. It is important to note that viewers of the document will not see anything as tables are permanently private. Instead, queries against the table must open up the data to people (such as you or me). As an example. the following code will let everyone know the size of the deck.
+The above code will construct the state of the document representing a typical deck of cards containing 52 cards, 4 suits and 13 cards per suit. Tables are always private in Adama, so viewers of the document will not see table structures. However, the dta contained within the table will be viewable. Queries against the table expose selected data to people such as players. As an example, the following code will let everyone know the size of the deck.
 
 ```adama
 public formula deck_size = deck.size();
 ```
 
-This notion of a **formula** is where the influence of Excel comes into play as Adama is also a [reactive programming language](https://en.wikipedia.org/wiki/Reactive_programming). As the deck undergoes changes, the formulas which depend on that deck will be recomputed and updates are sent to viewers such as you as me.
+The above **formula** variable represents Adama's [reactive programming language](https://en.wikipedia.org/wiki/Reactive_programming). As the deck undergoes changes during gameplay, the formula variables depending on that deck will be recomputed and updates are sent to viewers such as players in the game.
 
-This is why the connection from your device to the Adama Document Store uses a socket. The socket provides a way for the server to know the state of the client, and then minimize the compute overhead on the server. This enables small data changes to manifest in small compute changes which translate to less network usage. Less network usages translates to less client device compute to integrate, and this manifests less battery consumption. Board games can last for hours, so being mindful of client batteries is important.
+Because Adama continually updates the state of document, the connection from your device to the Adama Document Store uses a socket. The socket provides a way for the server to know the state of the client, and then minimize the compute overhead on the server. This enables small data changes to manifest in small compute changes that translate to less network usage. Less network usages translates to less client device compute overhead, and this manifests into less battery consumption for the end-user. Board games can last for hours when they leverage Adama's reduction in battery power consumption.
 
-A table is an exceptionally powerful tool, and having the table be a first class citizen within the language enables [language integrated query](https://en.wikipedia.org/wiki/Language_Integrated_Query). We can extend the **Card** **record** with a **client** type to indicate possession of the card.
+A table is an exceptionally powerful tool, and Adama uses [language integrated query](https://en.wikipedia.org/wiki/Language_Integrated_Query) (LINQ) to query data. Using the Card structure, the following example adds a **client** type to the Card record to indicate possession of the card:
 
 ```adama
 record Card {
@@ -97,13 +103,13 @@ record Card {
 }
 ```
 
-This allows us to share how many cards are unassigned in the deck via a **formula**.
+The above Card record allows us to share how many cards are unassigned in the deck via a **formula**. The code to do this is below:
 
 ```adama
 public formula deck_remaining = (iterate deck where owner == @no_one).size()
 ```
 
-Here **@no_one** is a special value for the **client** type which indicates unassigned and is the default value. We can leverage a **bubble** to share a viewer's hand (if they are a player and not a random observer).
+Here **@no_one** is a special default value for the **client** type which indicates that cards are unassigned. We can leverage a **bubble** to share a viewer's hand (if they are a player and not a random observer).
 
 ```adama
 bubble<who> hand = iterate deck where owner == who;
@@ -111,11 +117,11 @@ bubble<who> hand = iterate deck where owner == who;
 
 The bubble is special type of **formula** which allows data to be computed based on who is viewing the document. This allows people to have a personalized view of the document such as being able to see their hand. As the **deck** and rows within the **deck** experience change, the formulas update automatically based on precise static analysis. These changes propagate to all viewers in a predictable way.
 
-This all begs the question: how do changes manifest?
+## Messages from Devices to the Document
 
-## Messages from you to document
+Change events on documents trigger using messages.
 
-Adama acts as a limited form of actor which can receive messages from clients. We can model a **message** similar to a **record**. For instance, we want to model a message to mean "I wish to draw $count cards" which we can model thusly:
+Adama acts as a message receiver of messages sent by the client. We can model a **message** similar to a **record**. For instance, we can design a message that says "I wish to draw $count cards" demonstrated below:
 
 ```adama
 message Draw {
@@ -131,17 +137,17 @@ channel draw_cards(client who, Draw d) {
 }
 ```
 
-This channel will allow messages of type **Draw** to flow from the client to the code outlined above. In this case, the code will simply leverage an integrated query to find at most **$d.count** available random cards to associate to the sender.
+This channel will allow messages of type **Draw** to flow from the client to the code outlined above. In this case, the code uses a LINQ query to find at most **$d.count** available random cards to associate to the Draw message sender.
 
 Messages alone create a nice theoretical framework, but they may not be practical for games. This messaging works great for things like chat, but it offloads a great deal of burden to both the message handler and the client. For instance, in a game, when can someone draw cards? Can they draw cards at any time? Or during a specific game phase?
 
-## Let the server take control!
+## Let the Server Take Control!
 
-This is where an incomplete **channel** comes into play. An incomplete channel is like a [promise](https://en.wikipedia.org/wiki/Futures_and_promises) which indicates that clients may provide a message of a specific type, but only when the document asks for them.
+To control message flow, Adama uses an incomplete **channel** identfier. An incomplete channel is like a [promise](https://en.wikipedia.org/wiki/Futures_and_promises) that indicates clients may provide a message of a specific type, but only when the document asks for it.
 
-This is where we need to take a detour because we need a third party to broker the play between these players. That is, who is going to be asking the players for messages? This is where the document's [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine) comes into play. The document can be in exactly one state at any time, and states are represented via hashtags. For instance, ```#mylabel``` is a state machine label used to denote a potential state of the document.
+Adama uses a third party to broker the communicate between players. That is, it determines who is asking players for messages? This is where the document's [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine) comes into play. The document can be in exactly one state at any time, and states are represented via hashtags. For instance, ```#mylabel``` is a state machine label used to denote a potential state of the document.
 
-We can associate code to a state machine label directly and set the document into that state via the **transition** keyword.
+We can associate code to a state machine label directly and set the document to that state via the **transition** keyword.
 
 ```adama
 @construct { // this could also be a message sent after all players are ready
@@ -153,9 +159,9 @@ We can associate code to a state machine label directly and set the document int
 }
 ```
 
-In this example, the associated code attached to ```#round``` will run after the constructor has run and the document has been persisted. An important property of the state machines is that it defines an atomic boundary for both persisting to a durable store and when to share changes to the document.
+In this example, the associated code attached to ```#round``` will run after the constructor has run and the document has been persisted. An important property of the state machine is that it defines an atomic boundary for both persisting to a durable store and when to share changes to the document.
 
-Only the **transition** keyword can set the document's next state label to run. For instance, the following is an infinite state machine.
+Only the **transition** keyword can set the document's next state label to run. For instance, the following is an infinite state machine:
 
 ```adama
 public int turn;
@@ -173,13 +179,13 @@ private client player1;
 private client player2;
 ```
 
-Now, we can define an incomplete for the document to ask these players for cards.
+Now, we can define an incomplete for the document to ask players for cards.
 
 ```adama
 channel<Draw> how_many_cards;
 ```
 
-This incomplete channel will accept message only from code via a **fetch** method on the channel. We can leverage the state machine code to ask players for the number of cards they wish to draw thusly:
+This incomplete channel will accept message only from code via a **fetch** method on the channel. We can leverage the state machine code to ask players for the number of cards they wish to draw using the following Adama code:
 
 ```adama
 #round {
