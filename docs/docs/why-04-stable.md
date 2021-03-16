@@ -17,13 +17,13 @@ Machines are, more or less, stable enough. Fortunately, machines can be emulated
 
 Run-times require great care to build to remain stable. This means when something is added to the run-time, then it should remain functional for a very long time. With Performance a non-goal, the goal is for the run-time to only expose deterministic and simple features.
 
-Achieving a stable run-time is a serious burden. Every API in Adama is getting a serious amount of formal and rigorous scrutiny. As an example, there is no plans to add any "get the current time" function. The core reason is that function doesn't exist in a mathematical sense, and it is not deterministic and stable. For productivity, Adama will import some libraries, but only a minimal number of them are high quality and able to adapt standards into the minimal interfaces that Adama supports (i.e. Netty for the server). Adama's code base will mostly be a monolith.
+Achieving a stable run-time is a serious burden. Every API in Adama gets a serious amount of formal and rigorous scrutiny. As an example, there are no plans to add any "get the current time" function. The core reason is that function doesn't exist in a mathematical sense, and it is not deterministic and stable. For productivity, Adama will import some libraries, but only a minimal number of them are high quality and can adapt standards into the minimal interfaces that Adama supports (i.e. Netty for the server). Adama's code base will mostly be a monolith.
 
-Third, stability requires a closed ecosystem. Adama will not support direct networking nor disk access. This is why many games from the 90s can be emulated with great success, and this is why some MMOs are gone forever.
+Third, stability requires a closed ecosystem. Adama will not support direct networking or disk access. This is why many games from the 90s can be emulated with great success, and this is why some MMOs are gone forever.
 
 Fourth, stability requires a lack of growth. Adama and the run-time is limited such that no more than 1,000 people can play a single game at a time. There, growth solved!
 
-The reality of this desire to achieve stabiliy is a disciplined approach. This project is not going to be done in a week-end, but a decade.
+The reality of this desire to achieve stabiliy is a disciplined approach. This project is not going to be done in a weekend, but a decade.
 
 > Slow is smooth smooth is fast.
 
