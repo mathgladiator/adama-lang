@@ -3,7 +3,7 @@ id: what-mixed-compute-with-storage
 title: Mixed Compute and Storage Engine
 ---
 
-Doing stuff based on [time](what-the-living-document), reacting to [messages](what-actors-are-actings), and [coordinating human behavior](what-workflow-dungeon-master-as-a-service) brings compute to the table in a fun and almost complete way. Previously, we have hinted at the ability to have global fields within the **living document**, but we need more. We need containers of data, and the best container of data ever is: the table.
+Doing stuff based on [time](what-the-living-document), reacting to [messages](what-actors-are-actings), and [coordinating human behavior](what-workflow-dungeon-master-as-a-service) brings compute to the table in a fun and almost complete way. Previously, we've mentioned global fields within the **living document**, but we need more. We need containers of data, and the best container of data ever is: the table.
 
 In Praise of Databases
 ----------------------
