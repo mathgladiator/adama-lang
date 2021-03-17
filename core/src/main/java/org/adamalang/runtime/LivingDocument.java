@@ -57,7 +57,6 @@ public abstract class LivingDocument implements RxParent {
   public final LivingDocument __self;
   protected final RxInt32 __seq;
   protected final RxString __state;
-  public ObjectNode __STORE; // TO KILL
   protected final RxInt64 __time;
   protected ArrayList<Integer> __trace;
   private final HashMap<NtClient, ArrayList<PrivateView>> __trackedViews = new HashMap<>();
