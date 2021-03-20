@@ -17,4 +17,4 @@ This project is a stake in the ground.
 
 About the name
 --------------
-Adama was a special Lamancha goat that my wife and I raised until he passed due calcium stones that blocked his urethra. He was an adorable goat that would love to cuddle, and I named this project after him.
+Adama was a special Lamancha goat that my wife and I raised until he passed due to calcium stones that blocked his urethra. He was an adorable goat that would love to cuddle, and I named this project after him.
