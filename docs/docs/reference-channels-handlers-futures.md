@@ -17,6 +17,7 @@ message ChangeOutput {
 
 This establishes the shape of the communication, and we leverage a channel to open a pathway for messages to execute code. One option is to add a message handler:
 
+
 ```adama
 channel change_output(client sender, ChangeOutput change) {
   output = change.new_output;
@@ -36,7 +37,7 @@ channel set_output(client sender, ChangeOutput change) {
 
 ## Fast Intro: Futures and letting people make decisions
 
-While accepting messages is great and all for chat, the hard task is how to combine multiple messages in an orderly fashion. Remember, Adama was design for board games, and a good pattern to use is [async/await pattern within code](https://en.wikipedia.org/wiki/Async/await). Here, we define a message and an incomplete channel.
+While accepting messages indiscriminately is great for applications such as chat functions, you need a way to combine multiple messages in an orderly fashion. Remember, Adama was designed for board games, and a good pattern to use is [async/await pattern within code](https://en.wikipedia.org/wiki/Async/await). Here, we define a message and an incomplete channel.
 
 ```adama
 message SomeDecision {
@@ -67,7 +68,7 @@ Note, these two users can come up with the message independently and this decoup
 
 ### channel&lt;T&gt;.fetch(who)
 
-channels have a fetch method will result in a single message but has the semantics that the document can block forever. There is a mechanism called ```preempt``` which can unblock the state machine, but this is an experimental feature.
+channels have a fetch method that will result in a single message but has the semantics that the document can block forever. There is a mechanism called ```preempt``` which can unblock the state machine, but this is an experimental feature.
 
 ### channel&lt;T&gt;.decide(who, T[])
 
