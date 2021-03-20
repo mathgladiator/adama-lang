@@ -3,7 +3,7 @@ id: reference-methods-on-records
 title: Methods on Records
 ---
 
-[Records](/docs/reference-defining-structure-types) can have methods which allow code to run within the context of a record.
+[Records](/docs/reference-defining-structure-types) can have methods that allow code to run within the context of a record.
 
 ```adama
 record Point {

@@ -5,7 +5,7 @@ title: Tables & Language Integrated Query
 
 ## Intro
 
-Given a record like;
+Given a record lsuch as:
 
 ```adama
 record Rec {
@@ -16,13 +16,13 @@ record Rec {
 }
 ```
 
-This record can be used with a table thusly:
+This record can then be used with a table:
 
 ```adama
 table<Rec> _records;
 ```
 
-This table is a way of organizing information per given record type. In general, the table is an exceptionally useful construct which enables many common operations found in data structures. The above record would create a table like
+This table is a way of organizing information per given record type. In general, the table is an exceptionally useful construct which enables many common operations found in data structures. The above record would create a table such as:
 
 | id | name | age | score |
 | --- | --- | --- | --- |
@@ -33,14 +33,14 @@ This table is a way of organizing information per given record type. In general,
 
 ## Diving Into Details
 
-A table in and of itself requires a toolkit to handle it, and we introduce a variant of SQL in the form a language integrated query. It is a variant in many ways, and we will introduce the mechanics.
+A table in and of itself requires a toolkit to handle it, and we introduce a variant of SQL in the form a language integrated query (LINQ). It is a variant in many ways, and we will introduce the mechanics.
 
 ### Reactive lists
-Lists of records can be filtered, order, sequenced, limited via language integrated query.
+Lists of records can be filtered, ordered, sequenced, and limited via language integrated query (LINQ).
 
 ### iterate
 
-First, the ```iterate``` keyword will lazily convert the table&lt;Rec&gt; into a list&lt;Rec&gt;.
+First, the ```iterate``` keyword will convert the table&lt;Rec&gt; into a list&lt;Rec&gt;.
 
 ```adama
 public formula all_records = iterate _records;
@@ -66,7 +66,7 @@ public formula lucky_people = iterate _records where age == 42;
 This will accelerate the performance of ```where``` expressions when expressions like ```age == 42``` are detected via analysis.
 
 ### shuffle
-The canonical ordering by id is not great for card games, and we can randomize the order of the list. Now, this will materialize the list.
+The canonical ordering by id is not great for card games, so we can randomize the order of the list. Now, this will materialize the list.
 ```adama
 public formula random_people = iterate _records shuffle;
 public formula random_young_people = iterate _records where age < 18 shuffle;
@@ -74,7 +74,7 @@ public formula random_young_people = iterate _records where age < 18 shuffle;
 
 ### order
 
-Since the canonical ordering by id is the insertion/creation ordering, ordering allows you to reorder any list;
+Since the canonical ordering by id is the insertion/creation ordering, **order** allows you to define your own order:
 ```adama
 public formula people_by_age = iterate _records order by age asc;
 ```
@@ -87,7 +87,7 @@ public formula youngest_person = iterate _records order by age asc limit;
 
 ### Bulk Assignments
 
-A novel aspect of a reactive list is bulk field assignment, and this allows us to do some nice things. Take the following definition of a card brought within a table representing a deck of cards.
+A novel aspect of a reactive list is bulk field assignment, and this allows us to do some nice things. Take the following definition of a Card table representing a deck of cards.
 
 ```adama
 record Card {
