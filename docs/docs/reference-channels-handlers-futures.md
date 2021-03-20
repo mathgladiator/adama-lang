@@ -15,8 +15,8 @@ message ChangeOutput {
 }
 ```
 
-This establishes the shape of the communication, and we leverage a channel to open a pathway for messages to execute code. One option is to add a message handler:
 
+This establishes the shape of the communication, and we leverage a channel to open a pathway for messages to execute code. One option is to add a message handler:
 
 ```adama
 channel change_output(client sender, ChangeOutput change) {
