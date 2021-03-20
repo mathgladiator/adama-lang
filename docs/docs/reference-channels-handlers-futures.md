@@ -5,7 +5,7 @@ title: Channels, Channel Handling, and Futures
 
 ## Fast Intro: Any time messages
 
-When [people connect](/docs/reference-connection-events), the only way they can interact with the document is to send messages to the document. This requires a message like:
+When [users connect](/docs/reference-connection-events), the only way they can interact with the document is to send messages to the document. This requires a message like:
 
 ```adama
 public string output = "Hello World";
@@ -15,7 +15,7 @@ message ChangeOutput {
 }
 ```
 
-this establishes the shape of the communication, and we leverage a channel to open a pathway for messages to execute code. One option is to add a message handler:
+This establishes the shape of the communication, and we leverage a channel to open a pathway for messages to execute code. One option is to add a message handler:
 
 ```adama
 channel change_output(client sender, ChangeOutput change) {
@@ -23,7 +23,7 @@ channel change_output(client sender, ChangeOutput change) {
 }
 ```
 
-This enables people to send messages via the change_output channel which will execute the associated code. In this example, 'change_output' is the name of the channel which clients will annotate their messager with to execute the associated code. Nothing stops from introducing multiple channels with the same type.
+This enables users to send messages via the change_output channel which will execute the associated code. In this example, 'change_output' is the name of the channel which clients will annotate their messager with to execute the associated code. Nothing stops from introducing multiple channels with the same type.
 
 ```adama
 channel change_output(client sender, ChangeOutput change) {
@@ -71,4 +71,4 @@ channels have a fetch method will result in a single message but has the semanti
 
 ### channel&lt;T&gt;.decide(who, T[])
 
-Similar to fetch, decide enables something very cool and is the recommended approach for board games. Decide will ask the user to pick exactly one item from the given array of options. This is exciting as this enables AI to auto play games, but this is outside of the topic of the documentation... for now.
+Similar to fetch, the decide function enables something very cool and is the recommended approach for board games. Decide will ask the user to pick exactly one item from the given array of options. This is exciting as this enables AI to auto play games, but this is outside of the topic of the documentation... for now.
