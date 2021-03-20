@@ -5,10 +5,11 @@ title: Defining Functions & Procedures
 
 ## Fast Intro
 
-Adama has two forms of colliqual function.
+Adama has two forms of colloquial functions.
 
 
 Functions in Adama are pure in that they have no side-effects and also are context-free.
+
 ```adama
 function square(int x) -> int {
   return x * x;
