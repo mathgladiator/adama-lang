@@ -3,7 +3,7 @@ id: reference-connection-events
 title: Handling Connection Events
 ---
 
-The primary mechanism for people to get access to the document is via a persistent connection (vis-à-vis [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)) and then [send messages to the document](/docs/reference-channels-handlers-futures). Before messages can be sent, the connection must be authorized by the document and this is done via the @connected keyword.
+The primary mechanism for users to get access to the document is via a persistent connection (vis-à-vis [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)) and then [send messages to the document](/docs/reference-channels-handlers-futures). Before messages can be sent, the connection must be authorized by the document and this is done via the @connected keyword.
 
 ```adama
 @connected(who) {
@@ -18,4 +18,4 @@ This code is run when a person connects to the document, and if the return value
 }
 ```
 
-In both of these events, the who has a type of ```client``` which is the person.
+In both of these events, the **who** variable has a type of ```client``` which is the user.
