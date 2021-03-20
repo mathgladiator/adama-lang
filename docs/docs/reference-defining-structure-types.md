@@ -3,7 +3,7 @@ id: reference-defining-structure-types
 title: Defining Record & Message Types
 ---
 
-A data structure is a collection of data elements grouped under one name. These data elements, also known as member fields or just fields, can have different types. Adama has two types of data structures: **record**s and **message**s. 
+A data structure is a collection of data elements grouped under one name. These data elements, also known as member fields or just fields, can have different types. Adama has two types of data structures: **record** and **message**. 
 
 ## Fast Intro: Record
 
@@ -32,7 +32,8 @@ Beyond fields, it is worth nothing that records can have [methods](/docs/referen
 
 ## Fast Intro: Message
 
-A message is similar to a record except without any privacy awareness or privacy concerns. All fields within a message are public, and the expectation is that messages come from people. The following defines a reasonable message.
+A message is similar to a record except without any privacy awareness or privacy concerns. All fields within a message are public, and the expectation is that messages come from users. The following defines real-world message.
+
 ```adama
 message JoinGroup {
   string name;
@@ -53,7 +54,7 @@ The types that are allowed in records is limited to:
 * maybe&lt;t&gt; for any type in this list (except maybe and maybe)
 * table&lt;r&gt; where r is a record 
 
-The best mental model for a record is a row within a table. As a convention, every record has a hidden field called **id** with type ```int``` which can be revealed by defining it (without changing type).
+The best mental model for a record is a row within a table. As a convention, every record has a hidden field called **id** with type ```int``` which can be revealed by defining it (without changing its type).
 
 Records also have:
 * [index definitions to make tables go faster](/docs/reference-tables-linq)
@@ -61,7 +62,7 @@ Records also have:
 
 ## Diving Into Details: Messages
 
-Most types that can be defined within code can be defined within a messages; the exceptions are channels and futures.
+Most types that can be defined within code can be defined within a messages. The exceptions are channels and futures.
 
 Messages can also be constructed anonymously on the fly.
 ```adama
