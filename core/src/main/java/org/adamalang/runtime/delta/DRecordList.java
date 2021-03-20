@@ -58,8 +58,8 @@ public class DRecordList<dRecordTy> {
             } else {
               final var rangeObj = array.planObject();
               final var rangeArr = rangeObj.planField("@r").planArray();
-              rangeArr.writeInt(k);
-              rangeArr.writeInt(top);
+              rangeArr.writeInt(oldPosition);
+              rangeArr.writeInt(oldPosition + (top - k));
               rangeArr.end();
               rangeObj.end();
               k = top;

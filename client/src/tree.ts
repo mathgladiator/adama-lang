@@ -56,6 +56,7 @@ export class Tree {
         resize = diff[key];
       } else {
         if (diff[key] == null) {
+          // FIRE_DELETE_ELEMENT
           delete tree[key];
         } else {
           if (!(tree != null && key in tree)) {
@@ -126,6 +127,7 @@ export class Tree {
         if (Array.isArray(tree[key])) {
           delete tree["#" + key];
         }
+        // figure out what dispatch means here
         delete tree[key];
         continue;
       }
@@ -152,7 +154,7 @@ export class Tree {
           // NOTE: this will fire events
         }
       } else {
-        var change = { before: tree[key], after: child };
+        var change = { before: tree[key], after: child, parent: tree};
         tree[key] = child;
         if (dispatch != null && key in dispatch) {
           this.__fire(dispatch[key], change);
