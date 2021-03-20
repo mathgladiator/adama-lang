@@ -9,7 +9,7 @@ Adama lets you do math, and that's awesome! It has the typical operations that y
 
 ### Parentheses: ( *expr* )
 
-You can wrap any expression with parentheses, and all parentheses will do alter the precedence of evaluation. See [operator precedence section](#operator-precedence) for details about operator precedence.
+You can wrap any expression with parentheses, and parentheses will alter the precedence of evaluation. See [operator precedence section](#operator-precedence) for details about operator precedence.
 
 **Sample Code**
 ```adama
@@ -49,7 +49,7 @@ public formula neg_z = -z;
 
 ### Unary boolean [negation / not / logical compliment](https://en.wikipedia.org/wiki/Negation): ! *expr*
 
-Turn false into true, and true into false. This is the power of unary Not operator using the exclamation point! Money back if it doesn't invert those boolean values!
+Turn false into true, and true into false. This is the power of the unary **Not** operator using the exclamation point **!**. Money back if it doesn't invert those boolean values!
 
 **Sample Code**
 ```adama
@@ -137,7 +137,9 @@ public formula c = b - 100;
 {"a":1000,"b":990,"c":890}
 ```
 
-**Typing:**  The subtraction operator commonly is used to subtract a number from another number, but it can also be used with lists. The following table summarizes the typing and behavior.
+**Typing:**  
+
+The subtraction operator commonly is used to subtract a number from another number, but it can also be used with lists. The following table summarizes the typing and behavior.
 
 | left type | right type | result type | behavior |
 | --- | --- | --- | --- |
@@ -365,7 +367,7 @@ public formula eq2 = a + 1 == b;
 {"a":1,"b":2,"eq1":false,"eq2":true}
 ```
 
-**Typing:** If an left and right type are comparable (see table under  &lt), then the types can be tested for equality. The resulting type is a bool. Beyond comparable left and right types, the following table
+**Typing:** If a left and right type are comparable (see table under  &lt), then the types can be tested for equality. The resulting type is a bool. Beyond comparable left and right types, the following table
 
 ### Inequality: *expr* != *expr*
 TODO: something pithy
