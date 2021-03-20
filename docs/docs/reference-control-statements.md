@@ -7,7 +7,7 @@ title: Control Statements
 
 ## Fast Intro
 
-Adama has many control and loop structures found within other C-like languages like:
+Adama has many control and loop structures similar to C-like languages like:
 
 * [if](#if)
 * [while](#while)
@@ -38,7 +38,7 @@ public int x;
 
 ### if-as
 
-Unlike most languages, there is a special extension to the if statement which is used for [maybe](/docs/reference-maybe-types). This allows safely extracting values out from the *maybe*.
+Unlike most languages, Adama has a special extension to the if statement which is used for [maybe](/docs/reference-maybe-types). This allows safely extracting values out from the *maybe*.
 
 ```adama
 int x;
