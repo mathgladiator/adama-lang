@@ -5,7 +5,7 @@ title: Tables & Language Integrated Query
 
 ## Intro
 
-Given a record lsuch as:
+Given a record such as:
 
 ```adama
 record Rec {
@@ -16,13 +16,13 @@ record Rec {
 }
 ```
 
-This record can then be used with a table:
+This record can be used with the table:
 
 ```adama
 table<Rec> _records;
 ```
 
-This table is a way of organizing information per given record type. In general, the table is an exceptionally useful construct which enables many common operations found in data structures. The above record would create a table such as:
+This table is a way of organizing information per given record type. In general, the table is a useful construct which enables many common operations found in data structures. The above record would create a table like
 
 | id | name | age | score |
 | --- | --- | --- | --- |
@@ -74,7 +74,9 @@ public formula random_young_people = iterate _records where age < 18 shuffle;
 
 ### order
 
-Since the canonical ordering by id is the insertion/creation ordering, **order** allows you to define your own order:
+Since the canonical ordering by id is the insertion/creation ordering, **order** allows you to reorder any list;
+
+>>>>>>> master
 ```adama
 public formula people_by_age = iterate _records order by age asc;
 ```
@@ -113,10 +115,10 @@ This assignment of ordering will memorize the results from shuffling. With a sin
 ```adama
 procedure deal_cards(client who, int count) {
   (iterate deck             // look at the deck
-  	where owner == @no_one  // for each card that isn't own
-  	order by ordering asc   // follow the memoized ordering
-  	limit count             // deal only $count cards
-  	).owner = who;          // for each card, assign an owner to the card
+    where owner == @no_one  // for each card that isn't own
+    order by ordering asc   // follow the memoized ordering
+    limit count             // deal only $count cards
+    ).owner = who;          // for each card, assign an owner to the card
 }
 ```
 
