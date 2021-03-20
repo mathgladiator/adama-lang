@@ -42,7 +42,7 @@ maybe<int> key;
 
 ```
 
-The real interesting part is how to get data out, and there is a safe way using an ```if ... as``` statement.
+To safely retrieve data, the safe way is using an ```if ... as``` statement.
 
 ```adama
 maybe<int> key;
