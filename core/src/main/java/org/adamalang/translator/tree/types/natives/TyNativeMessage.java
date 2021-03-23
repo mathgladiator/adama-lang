@@ -6,6 +6,8 @@ package org.adamalang.translator.tree.types.natives;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenDeltaClass;
 import org.adamalang.translator.codegen.CodeGenMessage;
 import org.adamalang.translator.env.ComputeContext;
@@ -182,5 +184,17 @@ public class TyNativeMessage extends TyType implements IsStructure, //
       e.getValue().typing(newEnv, storage);
       newEnv.rules.Resolve(e.getValue().type, false);
     }
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_message");
+    writer.writeObjectFieldIntro("name");
+    writer.writeString(name);
+    writer.writeObjectFieldIntro("fields");
+    storage.writeTypeReflectionJson(writer);
+    writer.endObject();
   }
 }

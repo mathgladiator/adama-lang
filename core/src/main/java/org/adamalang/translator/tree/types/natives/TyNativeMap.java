@@ -5,6 +5,8 @@ package org.adamalang.translator.tree.types.natives;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -124,5 +126,17 @@ public class TyNativeMap extends TyType implements //
     if (resolvedDomainType != null && !(resolvedDomainType instanceof CanBeMapDomain)) {
       environment.document.createError(this, String.format("The domain type '%s' is not an appropriate.", resolvedDomainType.getAdamaType()), "TyNativeMap");
     }
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_map");
+    writer.writeObjectFieldIntro("domain");
+    domainType.writeTypeReflectionJson(writer);
+    writer.writeObjectFieldIntro("range");
+    rangeType.writeTypeReflectionJson(writer);
+    writer.endObject();
   }
 }

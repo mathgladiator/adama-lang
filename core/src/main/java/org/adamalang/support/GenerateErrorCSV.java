@@ -19,7 +19,7 @@ import java.nio.file.Files;
 import java.util.regex.Pattern;
 
 public class GenerateErrorCSV {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] _args) throws Exception {
         ByteArrayOutputStream memory = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(memory);
         final var options = CompilerOptions.start().make();

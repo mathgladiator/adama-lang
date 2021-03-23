@@ -4,6 +4,8 @@
 package org.adamalang.translator.tree.types.natives;
 
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -62,5 +64,15 @@ public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
   @Override
   public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeLong(newBehavior, readonlyToken, token).withPosition(position);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_value");
+    writer.writeObjectFieldIntro("type");
+    writer.writeString("long");
+    writer.endObject();
   }
 }

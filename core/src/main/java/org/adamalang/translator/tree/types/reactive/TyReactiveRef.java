@@ -4,6 +4,8 @@
 package org.adamalang.translator.tree.types.reactive;
 
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -58,5 +60,15 @@ public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
   @Override
   public void typing(final Environment environment) {
     // handled by environment.rules.Revolve
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("reactive_ref");
+    writer.writeObjectFieldIntro("ref");
+    writer.writeString(ref);
+    writer.endObject();
   }
 }

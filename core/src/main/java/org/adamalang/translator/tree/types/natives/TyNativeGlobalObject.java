@@ -5,6 +5,8 @@ package org.adamalang.translator.tree.types.natives;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -58,5 +60,13 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
 
   @Override
   public void typing(final Environment environment) {
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("global");
+    writer.endObject();
   }
 }

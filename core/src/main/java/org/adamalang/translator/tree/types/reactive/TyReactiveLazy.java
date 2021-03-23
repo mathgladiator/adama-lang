@@ -4,6 +4,8 @@
 package org.adamalang.translator.tree.types.reactive;
 
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -72,5 +74,10 @@ public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedTy
         return;
       }
     }
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    computedType.writeTypeReflectionJson(writer);
   }
 }

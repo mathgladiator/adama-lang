@@ -4,6 +4,8 @@
 package org.adamalang.translator.tree.types.natives;
 
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -66,5 +68,15 @@ public class TyNativeRef extends TyType implements //
   @Override
   public void typing(final Environment environment) {
     // handled by environment.rules.Revolve
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_ref");
+    writer.writeObjectFieldIntro("ref");
+    writer.writeString(ref);
+    writer.endObject();
   }
 }

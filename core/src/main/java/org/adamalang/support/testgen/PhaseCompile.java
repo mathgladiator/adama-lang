@@ -16,7 +16,7 @@ public class PhaseCompile {
     LivingDocumentFactory factory = null;
     try {
       outputFile.append("--JAVA COMPILE RESULTS-----------------------------").append("\n");
-      factory = new LivingDocumentFactory(className, java);
+      factory = new LivingDocumentFactory(className, java, "{}");
     } finally {
       ps.flush();
       System.setErr(oldErr);

@@ -4,6 +4,8 @@
 package org.adamalang.translator.tree.types;
 
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -21,6 +23,7 @@ public abstract class TyType extends DocumentPosition {
   public abstract String getJavaConcreteType(Environment environment);
   public abstract TyType makeCopyWithNewPosition(DocumentPosition position, TypeBehavior newBehavior);
   public abstract void typing(Environment environment);
+  public abstract void writeTypeReflectionJson(JsonStreamWriter writer);
 
   public TyType withPosition(final DocumentPosition position) {
     reset();

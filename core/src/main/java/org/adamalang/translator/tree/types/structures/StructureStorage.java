@@ -8,10 +8,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.TreeMap;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
+import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
@@ -54,6 +57,28 @@ public class StructureStorage extends DocumentPosition {
     methodTypes = new HashMap<>();
     fieldsWithDefaults = new HashSet<>();
     ingest(openBraceToken);
+  }
+
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    for(FieldDefinition fd : fieldsByOrder) {
+      if (specialization == StorageSpecialization.Record && (fd.policy == null || fd.policy instanceof PrivatePolicy)) {
+        continue;
+      }
+
+      writer.writeObjectFieldIntro(fd.name);
+      writer.beginObject();
+      if (fd.type != null) {
+        writer.writeObjectFieldIntro("type");
+        fd.type.writeTypeReflectionJson(writer);
+      }
+      if (fd.policy != null) {
+        writer.writeObjectFieldIntro("privacy");
+        fd.policy.writeTypeReflectionJson(writer);
+      }
+      writer.endObject();
+    }
+    writer.endObject();
   }
 
   public void add(final BubbleDefinition bd) {

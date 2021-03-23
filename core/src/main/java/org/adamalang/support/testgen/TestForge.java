@@ -36,6 +36,7 @@ public class TestForge {
             passedTests.set(false);
           }
         };
+        PhaseReflect.go(results, outputFile);
         PhaseRun.go(factory, monitor, passedTests, outputFile);
         PhaseTest.go(factory, monitor, passedTests, outputFile);
       }

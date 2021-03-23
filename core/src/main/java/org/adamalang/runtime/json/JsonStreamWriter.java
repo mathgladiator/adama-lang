@@ -141,6 +141,10 @@ public class JsonStreamWriter {
 
   public void writeString(final String s) {
     maybe_comma();
+    if (s == null) {
+      writeNull();
+      return;
+    }
     sb.append("\"");
     for (var k = 0; k < s.length(); k++) {
       final var ch = s.charAt(k);

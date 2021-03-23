@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenEnums;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -120,5 +122,17 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
   @Override
   public TyType typeAfterReactiveRefResolve(final Environment environment) {
     return new TyReactiveEnum(nameToken, storage).withPosition(this);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_value");
+    writer.writeObjectFieldIntro("enum");
+    writer.writeString(name);
+    writer.writeObjectFieldIntro("options");
+    storage.writeTypeReflectionJson(writer);
+    writer.endObject();
   }
 }

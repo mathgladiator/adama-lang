@@ -5,6 +5,8 @@ package org.adamalang.translator.tree.types.natives;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -106,5 +108,15 @@ public class TyNativeChannel extends TyType implements DetailTypeHasMethods, Det
   @Override
   public void typing(final Environment environment) {
     tokenizedType.item.typing(environment);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("channel");
+    writer.writeObjectFieldIntro("type");
+    tokenizedType.item.writeTypeReflectionJson(writer);
+    writer.endObject();
   }
 }

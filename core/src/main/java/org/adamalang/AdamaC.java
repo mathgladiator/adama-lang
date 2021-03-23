@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.nio.file.Files;
 
+import org.adamalang.support.GenerateErrorCSV;
 import org.adamalang.support.GenerateLanguageTests;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
@@ -64,6 +65,7 @@ public class AdamaC {
     }
     if ("generate-tests".equals(args[0])) {
       GenerateLanguageTests.generate(1, args);
+      GenerateErrorCSV.main(null);
     }
   }
 }

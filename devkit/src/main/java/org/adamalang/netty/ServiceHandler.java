@@ -87,6 +87,13 @@ public class ServiceHandler implements JsonHandler {
         responder.respond(result, true, null);
         return;
       }
+      case "reflect": {
+        final var gs = findGamespace(request);
+        final var result = Utility.createObjectNode();
+        result.set("result", Utility.parseJsonObject(gs.reflect()));
+        responder.respond(result, true, null);
+        return;
+      }
       case "create": {
         final var gs = findGamespace(request);
         final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);

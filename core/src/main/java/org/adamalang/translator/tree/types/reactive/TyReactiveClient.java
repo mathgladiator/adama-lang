@@ -3,6 +3,7 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator.tree.types.reactive;
 
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -37,5 +38,15 @@ public class TyReactiveClient extends TySimpleReactive implements IsOrderable {
   @Override
   public TyType typeAfterGet(final Environment environment) {
     return new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, token);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("reactive_value");
+    writer.writeObjectFieldIntro("type");
+    writer.writeString("client");
+    writer.endObject();
   }
 }

@@ -46,7 +46,7 @@ public class LivingDocumentTests {
     final var java = document.compileJava(state);
     var cached = compilerCache.get(java);
     if (cached == null) {
-      cached = new LivingDocumentFactory("MeCode", java);
+      cached = new LivingDocumentFactory("MeCode", java, "{}");
       compilerCache.put(java, cached);
     }
     return cached;

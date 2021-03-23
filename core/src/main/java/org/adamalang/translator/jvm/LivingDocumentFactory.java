@@ -18,8 +18,9 @@ import org.adamalang.runtime.stdlib.Utility;
 /** responsible for compiling java code into a LivingDocumentFactory */
 public class LivingDocumentFactory {
   private final Constructor<?> constructor;
+  public final String reflection;
 
-  public LivingDocumentFactory(final String className, final String javaSource) throws ErrorCodeException {
+  public LivingDocumentFactory(final String className, final String javaSource, String reflection) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
     final var diagnostics = new DiagnosticCollector<JavaFileObject>();
     final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
@@ -36,6 +37,7 @@ public class LivingDocumentFactory {
       final var loader = new ByteArrayClassLoader(classBytes);
       final Class<?> clazz = Class.forName(className, true, loader);
       constructor = clazz.getConstructor(DocumentMonitor.class);
+      this.reflection = reflection;
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodeException.FACTORY_CANT_BIND_JAVA_CODE, ex);
     }

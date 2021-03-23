@@ -211,6 +211,21 @@ export class Connection {
     });
   }
 
+  /** api: get the schema for the gamepsace */
+  async reflect(gs: string) {
+    var request = { method: "reflect", gamespace: gs };
+    var self = this;
+    return new Promise(function (good, bad) {
+      self._send(request, function (response: { [k: string]: any }) {
+        if ('failure' in response) {
+          bad(response.reason)
+        } else {
+          good(response);
+        }
+      });
+    });
+  }
+
   /** api: generate a new game */
   async create(gs: string, id: string, arg: object) {
     var request = { method: "create", gamespace: gs, game: id, arg: arg };

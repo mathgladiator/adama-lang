@@ -12,6 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenConstructor;
 import org.adamalang.translator.codegen.CodeGenDocument;
 import org.adamalang.translator.codegen.CodeGenEventHandlers;
@@ -93,6 +95,31 @@ public class Document implements TopLevelDocumentHandler {
     functionDefinitions = new ArrayList<>();
     functionTypes = new HashMap<>();
     functionsDefines = new HashSet<>();
+  }
+
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+
+    // types
+    writer.writeObjectFieldIntro("types");
+    writer.beginObject();
+    writer.writeObjectFieldIntro("#root");
+    root.writeTypeReflectionJson(writer);
+    for (Map.Entry<String, TyType> type : types.entrySet()) {
+      // don't reflect anonymous types
+      if (type.getValue() instanceof TyNativeMessage && ((TyNativeMessage) type.getValue()).storage.anonymous) {
+        continue;
+      }
+      writer.writeObjectFieldIntro(type.getKey());
+      type.getValue().writeTypeReflectionJson(writer);
+    }
+    writer.endObject();
+
+    // TODO: channels
+    // TODO: rpc (once I sort them out)
+    // TODO: state machine labels
+
+    writer.endObject();
   }
 
   @Override

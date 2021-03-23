@@ -274,6 +274,16 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n}");
     gold.append("\n");
     gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
+    gold.append("\n--REFLECTION RESULTS-------------------------------------");
+    gold.append("\n{");
+    gold.append("\n  \"types\" : {");
+    gold.append("\n    \"#root\" : {");
+    gold.append("\n      \"nature\" : \"reactive_record\",");
+    gold.append("\n      \"name\" : \"Root\",");
+    gold.append("\n      \"fields\" : { }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__entropy\":\"0\"} need:true in:0");
     gold.append("\nNO_ONE was DENIED:5011");

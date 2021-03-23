@@ -3,6 +3,7 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator.tree;
 
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
@@ -10,24 +11,9 @@ import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeChannel;
-import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
-import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
-import org.adamalang.translator.tree.types.natives.TyNativeInteger;
-import org.adamalang.translator.tree.types.natives.TyNativeLong;
-import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
-import org.adamalang.translator.tree.types.natives.TyNativeRef;
-import org.adamalang.translator.tree.types.natives.TyNativeTable;
-import org.adamalang.translator.tree.types.natives.TyNativeVoid;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
-import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
-import org.adamalang.translator.tree.types.reactive.TyReactiveDouble;
-import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
-import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
-import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
-import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
-import org.adamalang.translator.tree.types.reactive.TyReactiveRef;
-import org.adamalang.translator.tree.types.reactive.TyReactiveStateMachineRef;
+import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
@@ -45,6 +31,7 @@ public class SillyTypeIssues {
   public void functional() {
     final var functional = new TyNativeFunctional("x", null, FunctionStyleJava.InjectNameThenArgs);
     functional.getAdamaType();
+    functional.writeTypeReflectionJson(new JsonStreamWriter());
     try {
       functional.getJavaConcreteType(null);
       Assert.fail();
@@ -64,6 +51,7 @@ public class SillyTypeIssues {
   public void glob() {
     new TyNativeGlobalObject(null, null).typing(null);
     new TyNativeGlobalObject(null, null).makeCopyWithNewPosition(new TyNativeGlobalObject(null, null), TypeBehavior.ReadOnlyNativeValue);
+    new TyNativeGlobalObject(null, null).writeTypeReflectionJson(new JsonStreamWriter());
   }
 
   @Test
@@ -99,6 +87,7 @@ public class SillyTypeIssues {
     lazy.getAdamaType();
     lazy.getJavaBoxType(null);
     lazy.makeCopyWithNewPosition(lazy, TypeBehavior.ReadOnlyNativeValue);
+    lazy.writeTypeReflectionJson(new JsonStreamWriter());
   }
 
   @Test
@@ -116,6 +105,13 @@ public class SillyTypeIssues {
     final var tnt = new TyNativeTable(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(Token.WRAP("FOO")));
     tnt.makeCopyWithNewPosition(tnt, TypeBehavior.ReadOnlyNativeValue);
     Assert.assertEquals(tnt.getAdamaType(), "table<FOO>");
+    tnt.writeTypeReflectionJson(new JsonStreamWriter());
+  }
+
+  @Test
+  public void rxtable() {
+    final var rxt = new TyReactiveTable(null, new TokenizedItem<>(Token.WRAP("FOO")));
+    rxt.writeTypeReflectionJson(new JsonStreamWriter());
   }
 
   @Test
@@ -133,6 +129,7 @@ public class SillyTypeIssues {
     ptr.typing(env);
     ptr.getEmbeddedType(env);
     ptr.lookupMethod("foo", env);
+    ptr.writeTypeReflectionJson(new JsonStreamWriter());
   }
 
   @Test
@@ -149,6 +146,7 @@ public class SillyTypeIssues {
     final var reactiveStateMachineRef = new TyReactiveStateMachineRef(Token.WRAP("X"));
     reactiveStateMachineRef.getAdamaType();
     reactiveStateMachineRef.makeCopyWithNewPosition(reactiveStateMachineRef, TypeBehavior.ReadOnlyNativeValue);
+    reactiveStateMachineRef.writeTypeReflectionJson(new JsonStreamWriter());
   }
 
   @Test
@@ -176,6 +174,7 @@ public class SillyTypeIssues {
       Assert.fail();
     } catch (final UnsupportedOperationException uoe) {}
     ref.makeCopyWithNewPosition(ref, TypeBehavior.ReadOnlyNativeValue);
+    ref.writeTypeReflectionJson(new JsonStreamWriter());
   }
 
   @Test
@@ -187,5 +186,12 @@ public class SillyTypeIssues {
     Assert.assertEquals("void", v.getJavaConcreteType(null));
     v.makeCopyWithNewPosition(null, TypeBehavior.ReadOnlyNativeValue);
     v.typing(null);
+    v.writeTypeReflectionJson(new JsonStreamWriter());
+  }
+
+  @Test
+  public void ntclient() {
+    new TyNativeClient(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
+    new TyNativeFuture(null, null, null, new TokenizedItem<>(new TyNativeVoid())).writeTypeReflectionJson(new JsonStreamWriter());
   }
 }

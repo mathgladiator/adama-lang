@@ -5,6 +5,8 @@ package org.adamalang.translator.tree.types.natives;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -103,5 +105,15 @@ public class TyNativeTable extends TyType implements //
   @Override
   public void typing(final Environment environment) {
     environment.rules.Resolve(new TyNativeRef(behavior, null, messageNameToken.item), false);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_table");
+    writer.writeObjectFieldIntro("record_name");
+    writer.writeString(messageName);
+    writer.endObject();
   }
 }

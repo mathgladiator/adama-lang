@@ -67,10 +67,16 @@ export class Tree {
         }
       }
     }
-    var change = { before: prior, after: prior };
+    var change = { before: prior, after: prior, parent: tree };
     if (resize !== null) {
-      // reforge the prior
-      // TODO: sort this out
+      // See DList, but the idea is that I need to trim the list because the above tool care of nulls
+      // this is for list of values where we synchronize a list of constants
+      change.before = [];
+      for (var k = 0; k < prior.length; k++) {
+        change.before.push(prior[k]);
+      }
+      prior.length = resize;
+      // TODO: validate this
     }
     if (ordering !== null) {
       var after = [];

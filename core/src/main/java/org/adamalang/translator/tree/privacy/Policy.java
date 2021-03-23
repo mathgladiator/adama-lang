@@ -4,6 +4,8 @@
 package org.adamalang.translator.tree.privacy;
 
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -16,4 +18,5 @@ public abstract class Policy extends DocumentPosition {
   public abstract void emit(Consumer<Token> yielder);
   public abstract void typing(Environment environment, StructureStorage owningStructureStorage);
   public abstract boolean writePrivacyCheckGuard(StringBuilderWithTabs sb, FieldDefinition field, Environment environment);
+  public abstract void writeTypeReflectionJson(JsonStreamWriter writer);
 }

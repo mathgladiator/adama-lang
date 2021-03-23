@@ -10,6 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -40,6 +42,22 @@ public class EnumStorage extends DocumentPosition {
     signatureIdSource = 0;
     signatureToNameAndId = new HashMap<>();
     duplicates = new HashSet<>();
+  }
+
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+
+    writer.writeObjectFieldIntro("options");
+    writer.beginObject();
+    for (Map.Entry<String, Integer> option : options.entrySet()) {
+      writer.writeObjectFieldIntro(option.getKey());
+      writer.writeInteger(option.getValue());
+    }
+    writer.endObject();
+
+    writer.writeObjectFieldIntro("default");
+    writer.writeString(defaultLabel);
+    writer.endObject();
   }
 
   public void add(final Token isDefault, final Token optionToken, final Token colonToken, final Token valueToken, final int value) {

@@ -4,6 +4,8 @@
 package org.adamalang.translator.tree.types.reactive;
 
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -78,5 +80,16 @@ public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedT
   public void typing(final Environment environment) {
     environment.rules.Resolve(tokenizedElementType.item, false);
     tokenizedElementType.item.typing(environment);
+  }
+
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("reactive_maybe");
+    writer.writeObjectFieldIntro("type");
+    tokenizedElementType.item.writeTypeReflectionJson(writer);
+    writer.endObject();
   }
 }

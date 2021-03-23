@@ -10,6 +10,7 @@ import java.util.Random;
 
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.logger.ObjectNodeLogger;
 import org.adamalang.runtime.logger.SynchronousJsonDeltaDiskLogger;
 import org.adamalang.runtime.logger.Transactor;
@@ -42,11 +43,13 @@ public class GameSpace {
       throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_COMPILE_ADAMA_SCRIPT);
     }
     final var java = document.compileJava(state);
+    JsonStreamWriter reflection = new JsonStreamWriter();
+    document.writeTypeReflectionJson(reflection);
     final var time2 = System.currentTimeMillis();
     if (options.stderrLoggingCompiler) {
       System.err.println("PRODUCED JAVA:" + file + " [" + (time2 - time1) + " ms]");
     }
-    final var factory = new LivingDocumentFactory(className, java);
+    final var factory = new LivingDocumentFactory(className, java, reflection.toString());
     final var time3 = System.currentTimeMillis();
     if (options.stderrLoggingCompiler) {
       System.err.println("COMPILED JAVA:" + file + " [" + (time3 - time2) + " ms]");
@@ -70,6 +73,11 @@ public class GameSpace {
     // TODO: consider scanning for existing files, and then LOAD THEM UP
     // TODO: sync the key generation up
     rng = new Random();
+  }
+
+  /** return the reflected schema for the document */
+  public String reflect() {
+    return factory.reflection;
   }
 
   /** close the gamespace, will close all documents */

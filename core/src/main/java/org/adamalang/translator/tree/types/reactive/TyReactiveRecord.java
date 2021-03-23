@@ -5,6 +5,8 @@ package org.adamalang.translator.tree.types.reactive;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenDeltaClass;
 import org.adamalang.translator.codegen.CodeGenRecords;
 import org.adamalang.translator.env.Environment;
@@ -192,5 +194,17 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
     for (final TyNativeFunctional functional : storage.methodTypes.values()) {
       functional.typing(environment);
     }
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("reactive_record");
+    writer.writeObjectFieldIntro("name");
+    writer.writeString(name);
+    writer.writeObjectFieldIntro("fields");
+    storage.writeTypeReflectionJson(writer);
+    writer.endObject();
   }
 }
