@@ -2130,11 +2130,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n        },");
     gold.append("\n        \"sum\" : {");
     gold.append("\n          \"type\" : {");
-    gold.append("\n            \"nature\" : \"formula\",");
-    gold.append("\n            \"type\" : {");
-    gold.append("\n              \"nature\" : \"native_value\",");
-    gold.append("\n              \"type\" : \"double\"");
-    gold.append("\n            }");
+    gold.append("\n            \"nature\" : \"native_value\",");
+    gold.append("\n            \"type\" : \"double\"");
     gold.append("\n          },");
     gold.append("\n          \"privacy\" : \"public\"");
     gold.append("\n        }");
@@ -4978,8 +4975,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n        \"md\" : {");
     gold.append("\n          \"type\" : {");
     gold.append("\n            \"nature\" : \"reactive_maybe\",");
-    gold.append("\n            \"type\" : \"maybe\",");
-    gold.append("\n            \"internal_type\" : {");
+    gold.append("\n            \"type\" : {");
     gold.append("\n              \"nature\" : \"reactive_value\",");
     gold.append("\n              \"type\" : \"double\"");
     gold.append("\n            }");
@@ -4989,8 +4985,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n        \"mi\" : {");
     gold.append("\n          \"type\" : {");
     gold.append("\n            \"nature\" : \"reactive_maybe\",");
-    gold.append("\n            \"type\" : \"maybe\",");
-    gold.append("\n            \"internal_type\" : {");
+    gold.append("\n            \"type\" : {");
     gold.append("\n              \"nature\" : \"reactive_value\",");
     gold.append("\n              \"type\" : \"int\"");
     gold.append("\n            }");
@@ -5000,8 +4995,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n        \"ms\" : {");
     gold.append("\n          \"type\" : {");
     gold.append("\n            \"nature\" : \"reactive_maybe\",");
-    gold.append("\n            \"type\" : \"maybe\",");
-    gold.append("\n            \"internal_type\" : {");
+    gold.append("\n            \"type\" : {");
     gold.append("\n              \"nature\" : \"reactive_value\",");
     gold.append("\n              \"type\" : \"string\"");
     gold.append("\n            }");
@@ -8040,11 +8034,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n        },");
     gold.append("\n        \"sum\" : {");
     gold.append("\n          \"type\" : {");
-    gold.append("\n            \"nature\" : \"formula\",");
-    gold.append("\n            \"type\" : {");
-    gold.append("\n              \"nature\" : \"native_value\",");
-    gold.append("\n              \"type\" : \"string\"");
-    gold.append("\n            }");
+    gold.append("\n            \"nature\" : \"native_value\",");
+    gold.append("\n            \"type\" : \"string\"");
     gold.append("\n          },");
     gold.append("\n          \"privacy\" : \"public\"");
     gold.append("\n        }");

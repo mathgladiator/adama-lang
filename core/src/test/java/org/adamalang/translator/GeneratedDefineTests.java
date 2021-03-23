@@ -4239,8 +4239,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n        \"md\" : {");
     gold.append("\n          \"type\" : {");
     gold.append("\n            \"nature\" : \"reactive_maybe\",");
-    gold.append("\n            \"type\" : \"maybe\",");
-    gold.append("\n            \"internal_type\" : {");
+    gold.append("\n            \"type\" : {");
     gold.append("\n              \"nature\" : \"reactive_value\",");
     gold.append("\n              \"type\" : \"double\"");
     gold.append("\n            }");
@@ -4250,8 +4249,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     gold.append("\n        \"mi\" : {");
     gold.append("\n          \"type\" : {");
     gold.append("\n            \"nature\" : \"reactive_maybe\",");
-    gold.append("\n            \"type\" : \"maybe\",");
-    gold.append("\n            \"internal_type\" : {");
+    gold.append("\n            \"type\" : {");
     gold.append("\n              \"nature\" : \"reactive_value\",");
     gold.append("\n              \"type\" : \"int\"");
     gold.append("\n            }");

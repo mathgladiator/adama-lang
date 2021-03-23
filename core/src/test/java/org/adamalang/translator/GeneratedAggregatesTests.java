@@ -2030,13 +2030,10 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n      \"fields\" : {");
     gold.append("\n        \"x\" : {");
     gold.append("\n          \"type\" : {");
-    gold.append("\n            \"nature\" : \"formula\",");
+    gold.append("\n            \"nature\" : \"native_list\",");
     gold.append("\n            \"type\" : {");
-    gold.append("\n              \"nature\" : \"native_list\",");
-    gold.append("\n              \"type\" : {");
-    gold.append("\n                \"nature\" : \"native_value\",");
-    gold.append("\n                \"type\" : \"int\"");
-    gold.append("\n              }");
+    gold.append("\n              \"nature\" : \"native_value\",");
+    gold.append("\n              \"type\" : \"int\"");
     gold.append("\n            }");
     gold.append("\n          },");
     gold.append("\n          \"privacy\" : \"public\"");
