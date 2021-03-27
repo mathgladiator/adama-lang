@@ -323,7 +323,7 @@ public class CodeGenRecords {
     sb.append("__goodwillBudget = ").append(environment.state.options.goodwillBudget + ";").writeNewline();
     sb.append("__goodwillLimitOfBudget = ").append(environment.state.options.goodwillBudget + ";").tabDown().writeNewline();
     sb.append("}").writeNewline();
-    writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time");
+    writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time", "__auto_table_row_id");
     CodeGenDeltaClass.writeRecordDeltaClass(storage, sb, environment, environment.document.getClassName(), true);
     sb.append("@Override").writeNewline();
     sb.append("public PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates) {").tabUp().writeNewline();

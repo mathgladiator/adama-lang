@@ -22,8 +22,6 @@ import org.adamalang.runtime.natives.lists.SelectorRxObjectList;
 
 /** a reactive table */
 public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iterable<Ty>, RxParent, RxChild {
-  private int autoKey;
-  private int autoKeyBackup;
   private final LinkedHashMap<Integer, Ty> createdObjects;
   public final LivingDocument document;
   private final ReactiveIndex<Ty>[] indices;
@@ -49,8 +47,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     }
     // check if we have rows; make sure we link into the JSON tree
     this.itemsByKey = new LinkedHashMap<>();
-    this.autoKey = 0;
-    this.autoKeyBackup = this.autoKey;
     this.createdObjects = new LinkedHashMap<>();
   }
 
@@ -59,18 +55,8 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     if (__isDirty()) {
       forwardDelta.writeObjectFieldIntro(name);
       forwardDelta.beginObject();
-      forwardDelta.writeObjectFieldIntro("auto_key");
-      forwardDelta.writeInteger(this.autoKey);
-      forwardDelta.writeObjectFieldIntro("rows");
-      forwardDelta.beginObject();
       reverseDelta.writeObjectFieldIntro(name);
       reverseDelta.beginObject();
-      reverseDelta.writeObjectFieldIntro("auto_key");
-      reverseDelta.writeInteger(this.autoKeyBackup);
-      reverseDelta.writeObjectFieldIntro("rows");
-      reverseDelta.beginObject();
-      this.autoKeyBackup = this.autoKey;
-
       final var keysToKill = new ArrayList<Integer>();
       for (final Map.Entry<Integer, Ty> entry : itemsByKey.entrySet()) {
         final int key = entry.getKey();
@@ -98,8 +84,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
         }
       }
       forwardDelta.endObject();
-      forwardDelta.endObject();
-      reverseDelta.endObject();
       reverseDelta.endObject();
       createdObjects.clear();
       // murder the keys
@@ -119,68 +103,48 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   @Override
   public void __dump(final JsonStreamWriter writer) {
     writer.beginObject();
-    writer.writeObjectFieldIntro("auto_key");
-    writer.writeInteger(autoKey);
-    writer.writeObjectFieldIntro("rows");
-    writer.beginObject();
     for (final Map.Entry<Integer, Ty> entry : itemsByKey.entrySet()) {
       writer.writeObjectFieldIntro(entry.getKey());
       entry.getValue().__dump(writer);
     }
     writer.endObject();
-    writer.endObject();
   }
 
   @Override
   public void __insert(final JsonStreamReader reader) {
-    if (reader.startObject()) {
-      while (reader.notEndOfObject()) {
-        final var f1 = reader.fieldName();
-        switch (f1) {
-          case "auto_key":
-            this.autoKey = reader.readInteger();
-            this.autoKeyBackup = this.autoKey;
-            break;
-          case "rows":
-            if (reader.startObject()) {
-              while (reader.notEndOfObject()) {
-                final var f2 = reader.fieldName();
-                if (reader.testLackOfNull()) {
-                  final var key = Integer.parseInt(f2);
-                  final var tyPrior = itemsByKey.get(key);
-                  if (tyPrior == null) {
-                    final var tyObj = maker.apply(this);
-                    tyObj.__setId(key, true);
-                    tyObj.__insert(reader);
-                    itemsByKey.put(key, tyObj);
-                    if (unknowns != null) {
-                      tyObj.__reindex();
-                    }
-                    tyObj.__subscribe(this);
-                  } else {
-                    // it exists, so it is already subscribed
-                    tyPrior.__insert(reader);
-                    if (unknowns != null && !unknowns.contains(tyPrior)) {
-                      tyPrior.__deindex();
-                      unknowns.add(tyPrior);
-                    }
-                  }
-                } else {
-                  final var key = Integer.parseInt(f2);
-                  final var tyObject = itemsByKey.remove(key);
-                  if (tyObject != null) {
-                    tyObject.__delete();
-                    tyObject.__deindex();
-                  }
-                }
+      if (reader.startObject()) {
+        while (reader.notEndOfObject()) {
+          final var f2 = reader.fieldName();
+          if (reader.testLackOfNull()) {
+            final var key = Integer.parseInt(f2);
+            final var tyPrior = itemsByKey.get(key);
+            if (tyPrior == null) {
+              final var tyObj = maker.apply(this);
+              tyObj.__setId(key, true);
+              tyObj.__insert(reader);
+              itemsByKey.put(key, tyObj);
+              if (unknowns != null) {
+                tyObj.__reindex();
+              }
+              tyObj.__subscribe(this);
+            } else {
+              // it exists, so it is already subscribed
+              tyPrior.__insert(reader);
+              if (unknowns != null && !unknowns.contains(tyPrior)) {
+                tyPrior.__deindex();
+                unknowns.add(tyPrior);
               }
             }
-            break;
-          default:
-            reader.skipValue();
+          } else {
+            final var key = Integer.parseInt(f2);
+            final var tyObject = itemsByKey.remove(key);
+            if (tyObject != null) {
+              tyObject.__delete();
+              tyObject.__deindex();
+            }
+          }
         }
       }
-    }
   }
 
   @Override
@@ -193,7 +157,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   public void __revert() {
     if (__isDirty()) {
       // if we are commiting
-      this.autoKey = this.autoKeyBackup;
       for (final Integer killKey : createdObjects.keySet()) {
         final var item = itemsByKey.remove(killKey);
         if (item != null) {
@@ -229,8 +192,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   public Ty make() {
-    final var key = autoKey;
-    autoKey++;
+    final var key = document.genNextAutoKey();
     final var result = maker.apply(this);
     result.__setId(key, false);
     result.__subscribe(this);

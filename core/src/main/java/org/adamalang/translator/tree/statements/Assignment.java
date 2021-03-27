@@ -11,8 +11,11 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.operands.AssignmentOp;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.LocalTypeAssignmentResult;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
+import org.adamalang.translator.tree.types.natives.TyNativeArray;
+import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 
 /** left {=,+=,*=,/=,%=,-=,<-} right */
@@ -26,7 +29,11 @@ public class Assignment extends Statement {
   private LocalTypeAssignmentResult result;
   public final Token trailingToken;
 
-  public Assignment(final Expression ref, final Token opToken, final Expression expression, final Token trailingToken, final boolean inForLoop) {
+  public final Token asToken;
+  public final Token ingestionDefine;
+
+
+  public Assignment(final Expression ref, final Token opToken, final Expression expression, Token asToken, Token ingestionDefine, final Token trailingToken, final boolean inForLoop) {
     this.ref = ref;
     this.expression = expression;
     this.opToken = opToken;
@@ -39,6 +46,11 @@ public class Assignment extends Statement {
       ingest(trailingToken);
     }
     altExpression = null;
+    this.asToken = asToken;
+    this.ingestionDefine = ingestionDefine;
+    if (this.ingestionDefine != null) {
+      ingest(ingestionDefine);
+    }
   }
 
   @Override
@@ -46,6 +58,10 @@ public class Assignment extends Statement {
     ref.emit(yielder);
     yielder.accept(opToken);
     expression.emit(yielder);
+    if (asToken != null) {
+      yielder.accept(asToken);
+      yielder.accept(ingestionDefine);
+    }
     if (trailingToken != null) {
       yielder.accept(trailingToken);
     }
@@ -57,6 +73,17 @@ public class Assignment extends Statement {
     switch (op) {
       case IngestFrom:
         result.ingest();
+        if (ingestionDefine != null) {
+          final var refType = ref.getCachedType();
+          final var exprType = expression.getCachedType();
+          boolean isArray = environment.rules.IngestionRightSideRequiresIteration(exprType);
+          environment.rules.IsTable(refType, false);
+          if (isArray) {
+            environment.define(ingestionDefine.text, new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine), ingestionDefine), true, this);
+          } else {
+            environment.define(ingestionDefine.text, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine), true, this);
+          }
+        }
         break;
       case Set:
         result.set();
@@ -120,7 +147,7 @@ public class Assignment extends Statement {
         sb.append("}").writeNewline();
       }
     } else if (result.assignResult == CanAssignResult.YesWithIngestionCodeGen) {
-      CodeGenIngestion.writeJava(sb, environment, this);
+      CodeGenIngestion.writeJava(sb, environment, this, ingestionDefine);
     }
   }
 }

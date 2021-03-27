@@ -27,34 +27,39 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class GameSpace {
   /** build the LivingDocumentFactory (i.e. the VM factory) from a file on disk */
   public static LivingDocumentFactory buildLivingDocumentFactory(final File root, final CompilerOptions options, final String file, final String className) throws ErrorCodeException {
-    final var globals = GlobalObjectPool.createPoolWithStdLib();
-    final var state = new EnvironmentState(globals, options);
-    final var time1 = System.currentTimeMillis();
-    final var document = new Document();
-    document.addSearchPath(root);
-    document.importFile(file, DocumentPosition.ZERO);
-    document.setClassName(className);
-    if (!document.check(state)) {
-      final var issues = Utility.createArrayNode();
-      document.writeErrorsAsLanguageServerDiagnosticArray(issues);
-      if (options.stderrLoggingCompiler) {
-        System.err.println(issues.toPrettyString());
+    try {
+      final var globals = GlobalObjectPool.createPoolWithStdLib();
+      final var state = new EnvironmentState(globals, options);
+      final var time1 = System.currentTimeMillis();
+      final var document = new Document();
+      document.addSearchPath(root);
+      document.importFile(file, DocumentPosition.ZERO);
+      document.setClassName(className);
+      if (!document.check(state)) {
+        final var issues = Utility.createArrayNode();
+        document.writeErrorsAsLanguageServerDiagnosticArray(issues);
+        if (options.stderrLoggingCompiler) {
+          System.err.println(issues.toPrettyString());
+        }
+        throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_COMPILE_ADAMA_SCRIPT);
       }
-      throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_COMPILE_ADAMA_SCRIPT);
+      final var java = document.compileJava(state);
+      JsonStreamWriter reflection = new JsonStreamWriter();
+      document.writeTypeReflectionJson(reflection);
+      final var time2 = System.currentTimeMillis();
+      if (options.stderrLoggingCompiler) {
+        System.err.println("PRODUCED JAVA:" + file + " [" + (time2 - time1) + " ms]");
+      }
+      final var factory = new LivingDocumentFactory(className, java, reflection.toString());
+      final var time3 = System.currentTimeMillis();
+      if (options.stderrLoggingCompiler) {
+        System.err.println("COMPILED JAVA:" + file + " [" + (time3 - time2) + " ms]");
+      }
+      return factory;
+    } catch (Throwable t) {
+      t.printStackTrace();
+      throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_COMPILE_ADAMA_SCRIPT, t);
     }
-    final var java = document.compileJava(state);
-    JsonStreamWriter reflection = new JsonStreamWriter();
-    document.writeTypeReflectionJson(reflection);
-    final var time2 = System.currentTimeMillis();
-    if (options.stderrLoggingCompiler) {
-      System.err.println("PRODUCED JAVA:" + file + " [" + (time2 - time1) + " ms]");
-    }
-    final var factory = new LivingDocumentFactory(className, java, reflection.toString());
-    final var time3 = System.currentTimeMillis();
-    if (options.stderrLoggingCompiler) {
-      System.err.println("COMPILED JAVA:" + file + " [" + (time3 - time2) + " ms]");
-    }
-    return factory;
   }
 
   public final String name;

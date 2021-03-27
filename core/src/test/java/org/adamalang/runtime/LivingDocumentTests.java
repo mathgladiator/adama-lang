@@ -78,7 +78,7 @@ public class LivingDocumentTests {
     final var setup = new RealDocumentSetup("public int v; @construct { v = 1; transition #foo; } #foo { v = 2; preempt #zoo; block; } #zoo { v = 3; } ");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "42"));
     setup.drive(setup.transactor.invalidate());
-    Assert.assertEquals("{\"v\":3,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":3,\"__entropy\":\"-2768345660179580053\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\"}", setup.transactor.json());
+    Assert.assertEquals("{\"v\":3,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":3,\"__entropy\":\"-2768345660179580053\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__auto_table_row_id\":0}", setup.transactor.json());
   }
 
   @Test

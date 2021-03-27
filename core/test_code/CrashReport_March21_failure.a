@@ -1,0 +1,5 @@
+
+// this produced a null pointer exception in the service
+message Msg {
+  maybe<String> bound_type;
+}

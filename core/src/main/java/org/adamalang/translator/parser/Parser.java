@@ -394,8 +394,19 @@ public class Parser {
     }
     if (hasAssignment != null) {
       final var value = expression();
+      Token asToken = null;
+      Token ingestionToken = null;
+      if (hasAssignment.isSymbolWithTextEq("<-")) {
+        asToken = tokens.popIf((t) -> t.isIdentifier("as"));
+        if (asToken != null) {
+          ingestionToken = tokens.pop();
+          if (ingestionToken == null) {
+            throw new ParseException("Parser tried to read a identifier, but got end of stream", tokens.getLastTokenIfAvailable());
+          }
+        }
+      }
       final var trailingToken = !secondPartOfForLoop ? consumeExpectedSymbol(";") : null;
-      return new Assignment(leftSide, hasAssignment, value, trailingToken, secondPartOfForLoop);
+      return new Assignment(leftSide, hasAssignment, value, asToken, ingestionToken, trailingToken, secondPartOfForLoop);
     }
     return new Evaluate(leftSide, secondPartOfForLoop, !secondPartOfForLoop ? consumeExpectedSymbol(";") : null);
   }

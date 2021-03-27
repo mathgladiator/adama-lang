@@ -1,0 +1,21 @@
+record X {
+  int x;
+  int y;
+}
+
+table<X> tbl;
+int last_id1;
+int last_id2;
+int last_id3;
+
+@construct {
+  tbl <- {x:1, y:2} as z1;
+  tbl <- {x:3, y:4} as z2;
+  last_id1 = z1;
+  last_id2 = z2;
+  tbl <- [{x:5, y:6}, {x:7, y:8}] as l;
+  last_id3 = 0;
+  foreach(i in l) {
+    last_id3 += i;
+  }
+}

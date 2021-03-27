@@ -39,6 +39,7 @@ public abstract class LivingDocument implements RxParent {
   protected int __assertionFailures = 0;
   protected int __assertionTotal = 0;
   protected final RxInt32 __auto_future_id;
+  protected final RxInt32 __auto_table_row_id;
   protected final RxBoolean __blocked;
   private final TreeMap<NtClient, Integer> __clients;
   protected int __code_cost;
@@ -70,6 +71,7 @@ public abstract class LivingDocument implements RxParent {
     __blocked = new RxBoolean(this, false);
     __seq = new RxInt32(this, 0);
     __entropy = new RxString(this, Long.toString(__random.nextLong()));
+    __auto_table_row_id = new RxInt32(this, 0);
     __auto_future_id = new RxInt32(this, 0);
     __connection_id = new RxInt32(this, 0);
     __message_id = new RxInt32(this, 0);
@@ -82,6 +84,11 @@ public abstract class LivingDocument implements RxParent {
     __clients = new TreeMap<>();
     __goodwillBudget = 100000;
     __goodwillLimitOfBudget = 100000;
+  }
+
+  /** generate a new auto key for a table; all tables share the space id space */
+  public int genNextAutoKey() {
+    return __auto_table_row_id.bumpUpPre();
   }
 
   /** exposed: assert something as truth */

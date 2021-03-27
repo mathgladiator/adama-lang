@@ -357,6 +357,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__auto_table_row_id\":");
+    gold.append("\n            __auto_table_row_id.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__clients\":");
     gold.append("\n            __hydrateClients(__reader);");
     gold.append("\n            break;");
@@ -396,6 +399,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
+    gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
     gold.append("\n    __writer.endObject();");
@@ -412,6 +417,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    tbl.__commit(\"tbl\", __forward, __reverse);");
     gold.append("\n    cake.__commit(\"cake\", __forward, __reverse);");
     gold.append("\n    /* root */");
@@ -428,6 +434,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    tbl.__revert();");
     gold.append("\n    cake.__revert();");
     gold.append("\n    /* root */");
@@ -841,6 +848,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    \"X\" : {");
     gold.append("\n      \"nature\" : \"native_message\",");
     gold.append("\n      \"name\" : \"X\",");
+    gold.append("\n      \"anonymous\" : false,");
     gold.append("\n      \"fields\" : {");
     gold.append("\n        \"a\" : {");
     gold.append("\n          \"type\" : {");
@@ -854,6 +862,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    \"Y\" : {");
     gold.append("\n      \"nature\" : \"native_message\",");
     gold.append("\n      \"name\" : \"Y\",");
+    gold.append("\n      \"anonymous\" : false,");
     gold.append("\n      \"fields\" : {");
     gold.append("\n        \"a\" : {");
     gold.append("\n          \"type\" : {");
@@ -875,8 +884,17 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n      \"nature\" : \"reactive_record\",");
     gold.append("\n      \"name\" : \"Z\",");
     gold.append("\n      \"fields\" : { }");
+    gold.append("\n    },");
+    gold.append("\n    \"AutoMaxRecord2\" : {");
+    gold.append("\n      \"nature\" : \"native_message\",");
+    gold.append("\n      \"name\" : \"AutoMaxRecord2\",");
+    gold.append("\n      \"anonymous\" : true,");
+    gold.append("\n      \"fields\" : { }");
     gold.append("\n    }");
-    gold.append("\n  }");
+    gold.append("\n  },");
+    gold.append("\n  \"channels\" : { },");
+    gold.append("\n  \"constructors\" : [ ],");
+    gold.append("\n  \"labels\" : [ \"setup\" ]");
     gold.append("\n}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"setup\",\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
@@ -889,8 +907,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":9,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"tbl\":{\"auto_key\":0,\"rows\":{}},\"cake\":{\"a\":0,\"b\":0,\"c\":0,\"id\":0},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
-    gold.append("\n{\"tbl\":{\"auto_key\":0,\"rows\":{}},\"cake\":{\"a\":0,\"b\":0,\"c\":0,\"id\":0},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
+    gold.append("\n{\"tbl\":{},\"cake\":{\"a\":0,\"b\":0,\"c\":0,\"id\":0},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"tbl\":{},\"cake\":{\"a\":0,\"b\":0,\"c\":0,\"id\":0},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\",\"__auto_table_row_id\":0}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
@@ -1013,6 +1031,9 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n          case \"__time\":");
     gold.append("\n            __time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__auto_table_row_id\":");
+    gold.append("\n            __auto_table_row_id.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__clients\":");
     gold.append("\n            __hydrateClients(__reader);");
     gold.append("\n            break;");
@@ -1052,6 +1073,8 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    __message_id.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
     gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
+    gold.append("\n    __auto_table_row_id.__dump(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
     gold.append("\n    __writer.endObject();");
@@ -1068,6 +1091,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
     gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
     gold.append("\n    t.__commit(\"t\", __forward, __reverse);");
     gold.append("\n    /* root */");
@@ -1084,6 +1108,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    __connection_id.__revert();");
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
+    gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    x.__revert();");
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
@@ -1426,6 +1451,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    \"M\" : {");
     gold.append("\n      \"nature\" : \"native_message\",");
     gold.append("\n      \"name\" : \"M\",");
+    gold.append("\n      \"anonymous\" : false,");
     gold.append("\n      \"fields\" : {");
     gold.append("\n        \"x\" : {");
     gold.append("\n          \"type\" : {");
@@ -1439,6 +1465,7 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n    \"M2\" : {");
     gold.append("\n      \"nature\" : \"native_message\",");
     gold.append("\n      \"name\" : \"M2\",");
+    gold.append("\n      \"anonymous\" : false,");
     gold.append("\n      \"fields\" : {");
     gold.append("\n        \"x\" : {");
     gold.append("\n          \"type\" : {");
@@ -1456,10 +1483,13 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n        }");
     gold.append("\n      }");
     gold.append("\n    }");
-    gold.append("\n  }");
+    gold.append("\n  },");
+    gold.append("\n  \"channels\" : { },");
+    gold.append("\n  \"constructors\" : [ ],");
+    gold.append("\n  \"labels\" : [ ]");
     gold.append("\n}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1,\"y\":0,\"id\":0}}}} need:true in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"x\":1,\"y\":0,\"id\":1}}} need:true in:0");
     gold.append("\nNO_ONE was DENIED:5011");
     gold.append("\nRANDO was DENIED:5011");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":1}");
@@ -1467,10 +1497,10 @@ public class GeneratedConversionTests extends GeneratedBase {
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":7,\"__billing_seq\":1} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1,\"y\":0,\"id\":0}}},\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":7,\"__billing_seq\":1}");
+    gold.append("\n{\"__constructed\":true,\"__entropy\":\"-4962768465676381896\",\"__auto_table_row_id\":1,\"t\":{\"1\":{\"x\":1,\"y\":0,\"id\":1}},\"__seq\":1,\"__time\":\"25\",\"__goodwill_used\":0,\"__cost\":7,\"__billing_seq\":1}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"x\":{\"x\":0,\"y\":0,\"id\":0},\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1,\"y\":0,\"id\":0}}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
-    gold.append("\n{\"x\":{\"x\":0,\"y\":0,\"id\":0},\"t\":{\"auto_key\":1,\"rows\":{\"0\":{\"x\":1,\"y\":0,\"id\":0}}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\"}");
+    gold.append("\n{\"x\":{\"x\":0,\"y\":0,\"id\":0},\"t\":{\"1\":{\"x\":1,\"y\":0,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\",\"__auto_table_row_id\":1}");
+    gold.append("\n{\"x\":{\"x\":0,\"y\":0,\"id\":0},\"t\":{\"1\":{\"x\":1,\"y\":0,\"id\":1}},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"50\",\"__auto_table_row_id\":1}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");

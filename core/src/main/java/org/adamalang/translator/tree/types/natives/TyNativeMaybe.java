@@ -119,6 +119,7 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
   @Override
   public void typing(final Environment environment) {
     tokenElementType.item.typing(environment);
+    environment.rules.Resolve(tokenElementType.item, false);
   }
 
 

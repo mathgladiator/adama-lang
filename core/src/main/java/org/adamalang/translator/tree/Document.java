@@ -55,7 +55,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 public class Document implements TopLevelDocumentHandler {
   private int autoClassId;
   public final HashSet<String> channelsThatAreFutures;
-  public final HashSet<String> channelsThatAreQueries;
   public final HashMap<String, String> channelToMessageType;
   private String className;
   public final ArrayList<DefineDocumentEvent> connectionEvents;
@@ -86,7 +85,6 @@ public class Document implements TopLevelDocumentHandler {
     connectionEvents = new ArrayList<>();
     channelToMessageType = new HashMap<>();
     channelsThatAreFutures = new HashSet<>();
-    channelsThatAreQueries = new HashSet<>();
     searchPaths = new ArrayList<>();
     constructors = new ArrayList<>();
     latentCodeSnippets = new ArrayList<>();
@@ -106,19 +104,45 @@ public class Document implements TopLevelDocumentHandler {
     writer.writeObjectFieldIntro("#root");
     root.writeTypeReflectionJson(writer);
     for (Map.Entry<String, TyType> type : types.entrySet()) {
-      // don't reflect anonymous types
-      if (type.getValue() instanceof TyNativeMessage && ((TyNativeMessage) type.getValue()).storage.anonymous) {
-        continue;
-      }
       writer.writeObjectFieldIntro(type.getKey());
       type.getValue().writeTypeReflectionJson(writer);
     }
     writer.endObject();
 
-    // TODO: channels
-    // TODO: rpc (once I sort them out)
-    // TODO: state machine labels
+    writer.writeObjectFieldIntro("channels");
+    writer.beginObject();
+    for (Map.Entry<String, String> mapping : channelToMessageType.entrySet()) {
+      writer.writeObjectFieldIntro(mapping.getKey());
+      writer.writeString(mapping.getValue());
+    }
+    writer.endObject();
 
+    String unified_constructor = null;
+    writer.writeObjectFieldIntro("constructors");
+    writer.beginArray();
+    for (DefineConstructor dc : constructors) {
+      if (dc.messageNameToken != null) {
+        writer.writeString(dc.messageNameToken.text);
+      }
+      if (dc.unifiedMessageTypeNameToUse != null) {
+        unified_constructor = dc.unifiedMessageTypeNameToUse;
+      }
+    }
+    writer.endArray();
+
+    if (unified_constructor != null) {
+      writer.writeObjectFieldIntro("constructor");
+      writer.writeString(unified_constructor);
+    }
+
+    writer.writeObjectFieldIntro("labels");
+    writer.beginArray();
+    for (String label : transitions.keySet()) {
+      writer.writeString(label);
+    }
+    writer.endArray();
+
+    // TODO: rpc (once I sort them out)
     writer.endObject();
   }
 

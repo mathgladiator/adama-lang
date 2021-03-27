@@ -14,12 +14,24 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Utility {
   public static final JsonMapper MAPPER = new JsonMapper();
 
+  /** convert the maybe of one type into the maybe of another */
   public static <TyIn, TyOut> NtMaybe<TyOut> convertMaybe(final NtMaybe<TyIn> in, final Function<TyIn, TyOut> conv) {
     if (in.has()) {
       return new NtMaybe<>(conv.apply(in.get()));
     } else {
       return new NtMaybe<>();
     }
+  }
+
+  /** convert a list of Integers into an array of ints */
+  public static int[] convertIntegerArrayList(ArrayList<Integer> in) {
+    int[] output = new int[in.size()];
+    int at = 0;
+    for(Integer v : in) {
+      output[at] = v;
+      at++;
+    }
+    return output;
   }
 
   public static <TyIn, TyOut> TyOut[] convertMultiple(final Iterable<TyIn> source, final Function<Integer, TyOut[]> makeArray, final Function<TyIn, TyOut> conv) {

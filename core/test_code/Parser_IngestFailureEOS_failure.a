@@ -1,0 +1,12 @@
+record X {
+  int x;
+  int y;
+}
+
+table<X> tbl;
+int last_id1;
+int last_id2;
+int last_id3;
+
+@construct {
+  tbl <- {x:1, y:2} as

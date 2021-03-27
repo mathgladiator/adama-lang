@@ -1,0 +1,12 @@
+record X {
+  public int x;
+}
+
+table<X> v;
+
+@construct {
+  int z;
+  int[] z2;
+  v <- {x:1} as z;
+  v <- [{x:2},{x:3}] as z2;
+}

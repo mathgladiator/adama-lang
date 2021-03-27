@@ -193,6 +193,8 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     writer.writeString("native_message");
     writer.writeObjectFieldIntro("name");
     writer.writeString(name);
+    writer.writeObjectFieldIntro("anonymous");
+    writer.writeBoolean(storage.anonymous);
     writer.writeObjectFieldIntro("fields");
     storage.writeTypeReflectionJson(writer);
     writer.endObject();
