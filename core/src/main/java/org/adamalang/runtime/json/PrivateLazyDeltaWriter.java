@@ -74,6 +74,14 @@ public class PrivateLazyDeltaWriter {
     writer.writeFastString(str);
   }
 
+  public void writeIndex(int index) {
+    if (index < Integer.MAX_VALUE / 2) {
+      writeInt(index);
+    } else {
+      writeFastString("" + index);
+    }
+  }
+
   public void writeInt(final int x) {
     manifest();
     writer.writeInteger(x);

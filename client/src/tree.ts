@@ -62,6 +62,7 @@ export class Tree {
           if (!(tree != null && key in tree)) {
             tree[key] = {};
           }
+          // TODO: does it make sense to track individual keys?
           this.__recMergeAndDispatch(tree[key], (dispatch != null && key in dispatch) ? dispatch[key] : null, diff[key]);
           // this will fire an update for the key
         }
@@ -86,16 +87,15 @@ export class Tree {
       }
       for (var k = 0; k < ordering.length; k++) {
         var instr = ordering[k];
-        if (typeof (instr) == "string") {
+        var type_instr = typeof (instr);
+        if (type_instr == "string" || type_instr == "number") {
           after.push(tree[instr]);
-        } else if (typeof (instr) == "object") {
-          if ("@r" in instr) {
-            var start = instr["@r"][0];
-            var end = instr["@r"][1];
+        } else {
+            var start = instr[0];
+            var end = instr[1];
             for (var j = start; j <= end; j++) {
               after.push(prior[j]);
             }
-          }
         }
       }
       prior.length = after.length;

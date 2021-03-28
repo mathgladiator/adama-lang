@@ -2100,8 +2100,8 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"__auto_table_row_id\":3,\"tbl\":{\"1\":{\"x\":1,\"y\":3,\"id\":1},\"2\":{\"x\":2,\"y\":2,\"id\":2},\"3\":{\"x\":3,\"y\":1,\"id\":3}}} need:true in:0");
     gold.append("\n{\"command\":\"connect\",\"timestamp\":\"25\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"}}-->{\"__seq\":1,\"__connection_id\":1,\"__time\":\"25\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}} need:true in:0");
     gold.append("\nRANDO was DENIED:5011");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"list_1\":{\"@o\":[\"3\",\"2\",\"1\"]},\"list_2\":{\"@o\":[\"1\",\"3\",\"2\"]}},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
-    gold.append("\n+ RANDO DELTA:{\"data\":{\"list_1\":{\"@o\":[\"3\",\"2\",\"1\"]},\"list_2\":{\"@o\":[\"1\",\"3\",\"2\"]}},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"list_1\":{\"@o\":[3,2,1]},\"list_2\":{\"@o\":[1,3,2]}},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"list_1\":{\"@o\":[3,2,1]},\"list_2\":{\"@o\":[1,3,2]}},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"-4962768465676381896\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"75\"}-->{\"__goodwill_used\":0,\"__cost\":18,\"__billing_seq\":2} need:true in:0");
     gold.append("\n--JAVA RESULTS-------------------------------------");

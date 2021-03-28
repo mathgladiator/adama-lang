@@ -54,18 +54,16 @@ public class DRecordList<dRecordTy> {
               }
             }
             if (top - k < 2) {
-              array.writeFastString("" + newOrderKey);
+              array.writeInt(newOrderKey);
             } else {
-              final var rangeObj = array.planObject();
-              final var rangeArr = rangeObj.planField("@r").planArray();
+              final var rangeArr = array.planArray();
               rangeArr.writeInt(oldPosition);
               rangeArr.writeInt(oldPosition + (top - k));
               rangeArr.end();
-              rangeObj.end();
               k = top;
             }
           } else {
-            array.writeFastString("" + newOrderKey);
+            array.writeInt(newOrderKey);
           }
         }
         array.end();
