@@ -9,12 +9,16 @@ import org.adamalang.netty.contracts.JsonHandler;
 import org.adamalang.netty.contracts.ServerOptions;
 import org.adamalang.netty.contracts.StaticSite;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 public class ServerNexus {
   public final Authenticator authenticator;
   public final GameSpaceDB db;
   public final JsonHandler handler;
   public final ServerOptions options;
   public final StaticSite site;
+  public final ScheduledExecutorService heartbeat;
 
   public ServerNexus(final ServerOptions options, final GameSpaceDB db, final JsonHandler handler, final Authenticator authenticator, final StaticSite site) {
     this.options = options;
@@ -22,10 +26,12 @@ public class ServerNexus {
     this.handler = handler;
     this.authenticator = authenticator;
     this.site = site;
+    this.heartbeat = Executors.newSingleThreadScheduledExecutor();
   }
 
   public void shutdown() throws Exception {
     handler.shutdown();
     db.close();
+    heartbeat.shutdown();
   }
 }

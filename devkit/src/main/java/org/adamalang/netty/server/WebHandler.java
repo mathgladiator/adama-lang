@@ -30,6 +30,15 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private static void sendWithKeepAlive(final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
     final var responseStatus = res.status();
+    String host = req.headers().get("host");
+    // if localhost, then... enable all of them
+    if (host != null && (host.startsWith("localhost") || host.startsWith("127.0.0.1"))) {
+      String origin = req.headers().get("origin");
+      if (origin != null) {
+        res.headers().set("Access-Control-Allow-Origin", origin);
+        res.headers().set("Access-Control-Allow-Credentials", true);
+      }
+    }
     final var keepAlive = HttpUtil.isKeepAlive(req) && responseStatus.code() == 200;
     HttpUtil.setKeepAlive(res, keepAlive);
     final var future = ctx.writeAndFlush(res);

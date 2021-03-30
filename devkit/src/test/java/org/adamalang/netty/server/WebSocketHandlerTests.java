@@ -61,7 +61,7 @@ public class WebSocketHandlerTests {
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
     Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
-    Assert.assertEquals("Exception:null", output.get(1));
+    Assert.assertEquals("Closed", output.get(1));
   }
 
   @Test
@@ -165,6 +165,27 @@ public class WebSocketHandlerTests {
     Assert.assertEquals(2, output.size());
     Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
     Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"ok\":\"go\"}}", output.get(1));
+  }
+
+  @Test
+  public void injectPong() throws Exception {
+    final var options = new CliServerOptions("--port", "9920");
+    final var runnable = new ServerRunnable(ServerRunnableTests.nexus(options));
+    final var thread = new Thread(runnable);
+    thread.start();
+    Assert.assertTrue(runnable.waitForReady(10000));
+    Assert.assertTrue(runnable.isAccepting());
+    final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
+    final var callback = new MockClientCallback(1);
+    final var first = callback.latchAt(1);
+    final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", 9920).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
+    b.execute(callback);
+    first.await(2000, TimeUnit.MILLISECONDS);
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"ping\":100,\"pong\":40}"));
+    callback.ping.await(5000, TimeUnit.MILLISECONDS);
+    final var output = callback.output();
+    Assert.assertEquals(1, output.size());
+    Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
   }
 
   @Test

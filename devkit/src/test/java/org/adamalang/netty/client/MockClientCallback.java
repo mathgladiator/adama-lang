@@ -7,18 +7,21 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.adamalang.netty.contracts.ClientCallback;
+import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 
 public class MockClientCallback implements ClientCallback {
   private final CountDownLatch doneLatch;
   private final ArrayList<CountDownLatch> latches;
   private final ArrayList<String> output;
+  public final CountDownLatch ping;
 
   public MockClientCallback(final int responsesExpected) {
     doneLatch = new CountDownLatch(responsesExpected);
     output = new ArrayList<>();
     latches = new ArrayList<>();
     latches.add(doneLatch);
+    ping = new CountDownLatch(1);
   }
 
   public void awaitDone() {
@@ -27,6 +30,11 @@ public class MockClientCallback implements ClientCallback {
     } catch (final InterruptedException ie) {
       Assert.fail();
     }
+  }
+
+  @Override
+  public void closed() {
+    write("Closed");
   }
 
   @Override
@@ -56,6 +64,10 @@ public class MockClientCallback implements ClientCallback {
   }
 
   private synchronized void write(final String out) {
+    if (out != null && out.contains("\"ping\"")) {
+      ping.countDown();
+      return;
+    }
     output.add(out);
     for (final CountDownLatch latch : latches) {
       latch.countDown();

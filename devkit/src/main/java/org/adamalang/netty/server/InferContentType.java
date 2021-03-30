@@ -14,6 +14,8 @@ public class InferContentType {
         return "text/html; charset=UTF-8";
       case "js":
         return "text/javascript";
+      case "webp":
+        return "image/webp";
       case "css":
         return "text/css";
       case "png":
@@ -21,6 +23,8 @@ public class InferContentType {
       case "jpeg":
       case "jpg":
         return "image/jpeg";
+      case "wasm":
+        return "application/wasm";
     }
     return null;
   }

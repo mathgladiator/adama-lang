@@ -13,6 +13,7 @@ import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 /** Encode & Decode the cookies, nom nom nom */
 public class AdamaCookieCodec {
   public static final String ADAMA_AUTH_COOKIE_NAME = "adama_token";
+  public static final String ADAMA_AUTH_COOKIE_QUERY_STRING_OVERRIDE_NAME = "adama_token_override";
 
   public static String client(final String name, final String value) {
     return new DefaultCookie(name, value).toString();
@@ -30,7 +31,7 @@ public class AdamaCookieCodec {
 
   public static String server(final ServerOptions options, final String name, final String value) {
     final var cookie = new DefaultCookie(name, value);
-    // cookie.setDomain(); /
+    cookie.setPath("/~socket");
     cookie.setHttpOnly(true); // only the browser can use it, JS is forbiden
     cookie.setSameSite(CookieHeaderNames.SameSite.Strict);
     cookie.setMaxAge(60 * 60 * 24 * 7 * 52); // A whole year

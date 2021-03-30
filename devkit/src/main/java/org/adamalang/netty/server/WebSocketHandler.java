@@ -4,6 +4,11 @@
 package org.adamalang.netty.server;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.adamalang.netty.api.AdamaSession;
 import org.adamalang.netty.client.AdamaCookieCodec;
 import org.adamalang.netty.contracts.AuthCallback;
@@ -23,21 +28,50 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   private boolean ended;
   private final ServerNexus nexus;
   private AdamaSession session;
+  private boolean alive;
+  private ScheduledFuture<?> future;
+  private long created;
+  private AtomicLong latency;
 
   public WebSocketHandler(final ServerNexus nexus) {
     this.nexus = nexus;
     ended = false;
+    this.alive = true;
+    this.future = null;
+    this.created = System.currentTimeMillis();
+    this.latency = new AtomicLong();
   }
 
   @Override
   public void channelInactive(final ChannelHandlerContext ctx) {
-    end();
+    heartbeatEnd();
+  }
+
+  private synchronized void heartbeatEnd() {
+    alive = false;
+    if (future != null) {
+      future.cancel(false);
+      future = null;
+    }
+  }
+
+  private synchronized void heartbeatStart(ScheduledFuture<?> future) {
+    if (alive) {
+      this.future = future;
+    } else {
+      future.cancel(false);
+      this.future = null;
+    }
   }
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final WebSocketFrame frame) throws Exception {
     if (frame instanceof TextWebSocketFrame) {
       final var request = Utility.parseJsonObject(((TextWebSocketFrame) frame).text());
+      if (request.has("pong")) {
+        latency.set(System.currentTimeMillis() - created - request.get("ping").asLong());
+        return;
+      }
       // extract and validate the ID
       final var idNode = request.get("id");
       if (idNode == null || idNode.isNull() || !(idNode.isTextual() || idNode.isIntegralNumber())) {
@@ -65,6 +99,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
           ctx.writeAndFlush(new TextWebSocketFrame(frame.toString()));
         }
       };
+
       try {
         nexus.handler.handle(session(), request, responder);
       } catch (final ErrorCodeException ece) {
@@ -75,7 +110,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
         end();
       }
     } else {
-      throw new UnsupportedOperationException("unsupported frame type: " + frame.getClass().getName());
+      ctx.channel().close();
+      end();
     }
   }
 
@@ -109,13 +145,21 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     return session;
   }
 
+  private static String getAuthToken(WebSocketServerProtocolHandler.HandshakeComplete complete) {
+    final var cookieHeader = complete.requestHeaders().get(HttpHeaderNames.COOKIE);
+    QueryStringDecoder qsd = new QueryStringDecoder(complete.requestUri());
+    List<String> tokens = qsd.parameters().get(AdamaCookieCodec.ADAMA_AUTH_COOKIE_QUERY_STRING_OVERRIDE_NAME);
+    if (tokens != null && tokens.size() == 1) {
+      return tokens.get(0);
+    }
+    return AdamaCookieCodec.extractCookieValue(cookieHeader, AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME);
+  }
+
   @Override
   public void userEventTriggered(final ChannelHandlerContext ctx, final Object evt) {
     try {
       if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
         final var complete = (WebSocketServerProtocolHandler.HandshakeComplete) evt;
-        final var cookieHeader = complete.requestHeaders().get(HttpHeaderNames.COOKIE);
-        new QueryStringDecoder(complete.requestUri());
         final AuthCallback authCallback = new AuthCallback() {
           @Override
           public void failure() {
@@ -132,9 +176,16 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
             setup.put("signal", "setup");
             setup.put("status", "connected");
             ctx.writeAndFlush(new TextWebSocketFrame(setup.toString()));
+            Runnable heartbeatLoop = () -> {
+              final var ping = Utility.createObjectNode();
+              ping.put("ping", (System.currentTimeMillis() - created));
+              ping.put("latency", latency.get());
+              ctx.writeAndFlush(new TextWebSocketFrame(ping.toString()));
+            };
+            heartbeatStart(nexus.heartbeat.scheduleAtFixedRate(heartbeatLoop, 1000, 1000, TimeUnit.MILLISECONDS));
           }
         };
-        final var authToken = AdamaCookieCodec.extractCookieValue(cookieHeader, AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME);
+        final var authToken = getAuthToken(complete);
         if (authToken != null) {
           nexus.authenticator.authenticate(authToken, authCallback);
         } else {

@@ -35,8 +35,15 @@ export class Connection {
   // event: the status of connection has changed. true => connected & auth, false => not connected
   onstatuschange: (status: boolean) => void;
 
+  // event: a ping from the client
+  onping: (seconds: number, latency: number) => void;
+
   // event: we can connect, but we need auth credentials to make progress
   onauthneeded: (tryagain: () => void) => void;
+
+  connectId: number;
+
+  onreconnect: Map<number, object>;
 
   constructor(url: string) {
     var self = this;
@@ -46,10 +53,17 @@ export class Connection {
     this.dead = false;
     this.maximum_backoff = 2500;
     this.socket = null;
-    this.onstatuschange = function (status: boolean) { };
-    this.onauthneeded = function (tryagain: () => void) { };
+    this.onstatuschange = function (status: boolean) {
+    };
+    this.onping = function (seconds: number, latency: number) {
+    };
+    this.onauthneeded = function (tryagain: () => void) {
+    };
     this.scheduled = false;
     this.callbacks = new Map<number, (result: object) => void>();
+    this.connectId = 1;
+    this.onreconnect = new Map<number, object>();
+
     this.rpcid = 1;
   }
 
@@ -113,6 +127,12 @@ export class Connection {
     this.socket.onmessage = function (event: WebSocket.MessageEvent) {
       var result = JSON.parse(event.data);
       // a message arrived, is it a connection signal
+      if ('ping' in result) {
+        self.onping(result.ping, result.latency);
+        result.pong = new Date().getTime() / 1000.0;
+        self.socket.send(JSON.stringify(result));
+        return;
+      }
       if ('signal' in result) {
         // hey, are we connected?
         if (result.status != 'connected') {
@@ -130,6 +150,7 @@ export class Connection {
         self.backoff = 1;
         self.connected = true;
         self.onstatuschange(true);
+        self._reconnect();
         return;
       }
       // the result was a failure..
@@ -265,8 +286,12 @@ export class Connection {
 
   /** api: send a message */
   async send(gs: string, id: string, channel: string, msg: any) {
-    var request = { method: "send", gamespace: gs, game: id, channel: channel, message: msg };
+    var request = {method: "send", gamespace: gs, game: id, channel: channel, message: msg};
     var self = this;
+
+    // TODO: queue this up? with retry?
+    // TODO: generate a marker
+
     return new Promise(function (good, bad) {
       self._send(request, function (response: { [k: string]: any }) {
         if ('failure' in response) {
@@ -280,21 +305,40 @@ export class Connection {
 
   /** api: connect tree */
   async connectTree(gs: string, id: string, tree: Tree) {
-    var request = { method: "connect", gamespace: gs, game: id };
+    var keyId = this.connectId;
+    this.connectId++;
+    let sm = {
+      request: {method: "connect", gamespace: gs, game: id},
+      first: true,
+      handler: function (r: any) {
+        tree.mergeUpdate(r);
+      }
+    };
+    this.onreconnect.set(keyId, sm);
+    return this._execute(sm);
+  }
+
+  _reconnect() {
     var self = this;
-    var first = true;
+    this.onreconnect.forEach(function (sm: object, id: number) {
+      self._execute(sm);
+    });
+  }
+
+  async _execute(sm: any) {
+    var self = this;
     return new Promise(function (good, bad) {
-      self._send(request, function (response: { [k: string]: any }) {
-        if (first) {
-          first = false;
+      self._send(sm.request, function (response: { [k: string]: any }) {
+        if (sm.first) {
+          sm.first = false;
           if ('failure' in response) {
             bad(response.reason)
           } else {
-            tree.mergeUpdate(response);
+            sm.handler(response);
             good(true);
           }
         } else {
-          tree.mergeUpdate(response);
+          sm.handler(response);
         }
       });
     });

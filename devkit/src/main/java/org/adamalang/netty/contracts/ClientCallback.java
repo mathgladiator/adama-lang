@@ -4,6 +4,7 @@
 package org.adamalang.netty.contracts;
 
 public interface ClientCallback {
+  public void closed();
   public void failed(Throwable exception);
   public void failedToConnect();
   public void successfulResponse(String data);

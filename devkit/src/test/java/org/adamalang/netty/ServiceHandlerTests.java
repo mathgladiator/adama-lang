@@ -72,7 +72,7 @@ public class ServiceHandlerTests {
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
     final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
-    final var callback = new MockClientCallback(5);
+    final var callback = new MockClientCallback(6);
     final var first = callback.latchAt(1);
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
@@ -80,13 +80,15 @@ public class ServiceHandlerTests {
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_ServiceHandler_success.a\",\"game\":\"3\",\"data\":{}}"));
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"gamespace\":\"Demo_ServiceHandler_success.a\",\"method\":\"connect\",\"game\":\"3\"}"));
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"gamespace\":\"Demo_ServiceHandler_success.a\",\"method\":\"send\",\"channel\":\"change\",\"message\":{\"dx\":7},\"game\":\"3\"}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":4,\"gamespace\":\"Demo_ServiceHandler_success.a\",\"method\":\"reflect\"}"));
     callback.awaitDone();
     final var output = callback.output();
-    Assert.assertEquals(5, output.size());
+    Assert.assertEquals(6, output.size());
     Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"3\"}}", output.get(1));
     Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":123},\"outstanding\":[],\"blockers\":[],\"seq\":3}}", output.get(2));
     Assert.assertEquals("DATA:{\"deliver\":3,\"done\":true,\"response\":{\"success\":4}}", output.get(3));
     Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":130},\"outstanding\":[],\"blockers\":[],\"seq\":5}}", output.get(4));
+    Assert.assertEquals("DATA:{\"deliver\":4,\"done\":true,\"response\":{\"result\":{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"dx\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{\"change\":\"M\"},\"constructors\":[],\"labels\":[]}}}", output.get(5));
     cleanup();
   }
 

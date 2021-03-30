@@ -55,7 +55,7 @@ public class ClientRequestBuilder {
     uri = "/";
     method = HttpMethod.GET;
     maxContentLength = 1048576;
-    timeoutSeconds = 1;
+    timeoutSeconds = 2;
     postBody = null;
     headers = new DefaultHttpHeaders();
   }
@@ -92,6 +92,11 @@ public class ClientRequestBuilder {
             }
 
             @Override
+            public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+              callback.closed();
+            }
+
+            @Override
             public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
               callback.failed(cause);
             }
@@ -119,6 +124,8 @@ public class ClientRequestBuilder {
           HttpRequest request;
           if (method == HttpMethod.POST) {
             request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.POST, uri, postContent, headers, new DefaultHttpHeaders(true));
+            request.headers().set("host", "localhost");
+            request.headers().set("origin", "localhost");
             request.headers().set("Content-Length", postContent.readableBytes());
           } else {
             request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, uri);
