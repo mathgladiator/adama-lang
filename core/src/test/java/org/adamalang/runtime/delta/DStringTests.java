@@ -14,7 +14,7 @@ public class DStringTests {
   public void flow() {
     final var db = new DString();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream);
+    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
     db.show("a", writer);
     db.show("a", writer);
     db.show("b", writer);

@@ -14,7 +14,7 @@ public class DClientTests {
   public void flow() {
     final var db = new DClient();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream);
+    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
     final var A = new NtClient("a", "local");
     db.show(NtClient.NO_ONE, writer);
     db.show(NtClient.NO_ONE, writer);

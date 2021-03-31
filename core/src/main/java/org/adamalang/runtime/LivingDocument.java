@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.contracts.DocumentMonitor;
+import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.exceptions.ComputeBlockedException;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -132,11 +133,12 @@ public abstract class LivingDocument implements RxParent {
 
   /** code generated: what happens when the document is constructed */
   protected abstract void __construct_intern(NtClient who, NtMessageBase message);
-  /** code generated: create a private view for the given person */
-  public abstract PrivateView __createPrivateView(NtClient __who, Consumer<String> __updates);
 
-  public PrivateView __createView(final NtClient __who, final Consumer<String> updates) {
-    final var view = __createPrivateView(__who, updates);
+  /** code generated: create a private view for the given person */
+  public abstract PrivateView __createPrivateView(NtClient __who, Perspective __perspective);
+
+  public PrivateView __createView(final NtClient __who, final Perspective perspective) {
+    final var view = __createPrivateView(__who, perspective);
     var viewsForWho = __trackedViews.get(__who);
     if (viewsForWho == null) {
       viewsForWho = new ArrayList<>();

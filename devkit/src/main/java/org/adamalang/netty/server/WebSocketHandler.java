@@ -43,6 +43,11 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   }
 
   @Override
+  public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    super.channelActive(ctx);
+  }
+
+  @Override
   public void channelInactive(final ChannelHandlerContext ctx) {
     heartbeatEnd();
   }

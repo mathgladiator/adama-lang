@@ -6,8 +6,8 @@ package org.adamalang.runtime.json;
 import org.adamalang.runtime.natives.NtClient;
 
 public class PrivateLazyDeltaWriter {
-  public static PrivateLazyDeltaWriter bind(final NtClient who, final JsonStreamWriter writer) {
-    return new PrivateLazyDeltaWriter(who, writer, null, () -> {}, () -> {});
+  public static PrivateLazyDeltaWriter bind(final NtClient who, final JsonStreamWriter writer, Object viewerState) {
+    return new PrivateLazyDeltaWriter(who, writer, null, () -> {}, () -> {}, viewerState);
   }
 
   private boolean manifested;
@@ -16,13 +16,15 @@ public class PrivateLazyDeltaWriter {
   private final PrivateLazyDeltaWriter parent;
   public final NtClient who;
   private final JsonStreamWriter writer;
+  public final Object viewerState;
 
-  private PrivateLazyDeltaWriter(final NtClient who, final JsonStreamWriter writer, final PrivateLazyDeltaWriter parent, final Runnable onManifest, final Runnable onEndWithManifest) {
+  private PrivateLazyDeltaWriter(final NtClient who, final JsonStreamWriter writer, final PrivateLazyDeltaWriter parent, final Runnable onManifest, final Runnable onEndWithManifest, final Object viewerState) {
     this.who = who;
     this.writer = writer;
     this.parent = parent;
     this.onManifest = onManifest;
     this.onEndWithManifest = onEndWithManifest;
+    this.viewerState = viewerState;
     manifested = false;
   }
 
@@ -44,19 +46,19 @@ public class PrivateLazyDeltaWriter {
   }
 
   public PrivateLazyDeltaWriter planArray() {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.beginArray(), () -> writer.endArray());
+    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.beginArray(), () -> writer.endArray(), viewerState);
   }
 
   public PrivateLazyDeltaWriter planField(final int fieldId) {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro("" + fieldId), () -> {});
+    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro("" + fieldId), () -> {}, viewerState);
   }
 
   public PrivateLazyDeltaWriter planField(final String fieldName) {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro(fieldName), () -> {});
+    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.writeObjectFieldIntro(fieldName), () -> {}, viewerState);
   }
 
   public PrivateLazyDeltaWriter planObject() {
-    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.beginObject(), () -> writer.endObject());
+    return new PrivateLazyDeltaWriter(who, writer, this, () -> writer.beginObject(), () -> writer.endObject(), viewerState);
   }
 
   public void writeBool(final boolean b) {
@@ -72,14 +74,6 @@ public class PrivateLazyDeltaWriter {
   public void writeFastString(final String str) {
     manifest();
     writer.writeFastString(str);
-  }
-
-  public void writeIndex(int index) {
-    if (index < Integer.MAX_VALUE / 2) {
-      writeInt(index);
-    } else {
-      writeFastString("" + index);
-    }
   }
 
   public void writeInt(final int x) {

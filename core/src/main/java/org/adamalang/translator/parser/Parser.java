@@ -12,17 +12,7 @@ import org.adamalang.translator.parser.token.MinorTokenType;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.common.TokenizedItem;
-import org.adamalang.translator.tree.definitions.DefineConstructor;
-import org.adamalang.translator.tree.definitions.DefineDispatcher;
-import org.adamalang.translator.tree.definitions.DefineDocumentEvent;
-import org.adamalang.translator.tree.definitions.DefineFunction;
-import org.adamalang.translator.tree.definitions.DefineHandler;
-import org.adamalang.translator.tree.definitions.DefineStateTransition;
-import org.adamalang.translator.tree.definitions.DefineTest;
-import org.adamalang.translator.tree.definitions.DocumentEvent;
-import org.adamalang.translator.tree.definitions.FunctionArg;
-import org.adamalang.translator.tree.definitions.FunctionSpecialization;
-import org.adamalang.translator.tree.definitions.ImportDocument;
+import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.expressions.AnonymousArray;
 import org.adamalang.translator.tree.expressions.AnonymousObject;
 import org.adamalang.translator.tree.expressions.ApplyArguments;
@@ -420,7 +410,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "function", "procedure", "test", "import", "viewer_compute", "policy", "bubble", "dispatch"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch"));
     }
     if (op != null) {
       switch (op.text) {
@@ -455,6 +445,13 @@ public class Parser {
           final var importDocument = new ImportDocument(op, importName, semicolon);
           return doc -> doc.add(importDocument);
         }
+        case "view": {
+          final var ntype = native_type();
+          final var name = id();
+          final var semicolon = consumeExpectedSymbol(";");
+          AugmentViewerState avs = new AugmentViewerState(op, ntype, name, semicolon);
+          return doc -> doc.add(avs);
+        }
         case "bubble":
           final var bubble = define_bubble(op);
           return doc -> doc.add(bubble);
@@ -470,12 +467,18 @@ public class Parser {
   public BubbleDefinition define_bubble(final Token bubbleToken) throws AdamaLangException {
     final var openClient = consumeExpectedSymbol("<");
     final var clientVar = id();
+
+    final var comma = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
+    // TODO: get viewerVariable
+    final var viewerStateName = comma != null ? id() : null;
+
+
     final var closeClient = consumeExpectedSymbol(">");
     final var nameToken = id();
     final var equalsToken = consumeExpectedSymbol("=");
     final var expression = expression();
     final var semicolonToken = consumeExpectedSymbol(";");
-    return new BubbleDefinition(bubbleToken, openClient, clientVar, closeClient, nameToken, equalsToken, expression, semicolonToken);
+    return new BubbleDefinition(bubbleToken, openClient, clientVar, comma, viewerStateName, closeClient, nameToken, equalsToken, expression, semicolonToken);
   }
 
   public Consumer<TopLevelDocumentHandler> define_connection_event_trailer(final Token eventToken, final DocumentEvent which) throws AdamaLangException {
@@ -724,7 +727,7 @@ public class Parser {
     final var name = id();
     final var storage = new StructureStorage(StorageSpecialization.Record, false, consumeExpectedSymbol("{"));
     while (true) {
-      var op = tokens.popIf(t -> t.isIdentifier("require", "viewer_compute", "policy", "method", "bubble", "index"));
+      var op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index"));
       while (op != null) {
         switch (op.text) {
           case "require": {
@@ -745,7 +748,7 @@ public class Parser {
             storage.add(define_method_trailer(op));
             break;
         }
-        op = tokens.popIf(t -> t.isIdentifier("require", "viewer_compute", "policy", "method", "bubble", "index"));
+        op = tokens.popIf(t -> t.isIdentifier("require", "policy", "method", "bubble", "index"));
       }
       op = tokens.popIf(t -> t.isSymbolWithTextEq("}"));
       if (op != null) {

@@ -37,6 +37,7 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
@@ -72,6 +73,7 @@ public class Document implements TopLevelDocumentHandler {
   public final LinkedHashMap<String, DefineStateTransition> transitions;
   private final ArrayList<Consumer<Environment>> typeCheckOrder;
   public final LinkedHashMap<String, TyType> types;
+  public final TyNativeMessage viewerType;
 
   public Document() {
     autoClassId = 0;
@@ -93,6 +95,14 @@ public class Document implements TopLevelDocumentHandler {
     functionDefinitions = new ArrayList<>();
     functionTypes = new HashMap<>();
     functionsDefines = new HashSet<>();
+    viewerType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__ViewerType"), new StructureStorage(StorageSpecialization.Message, true, null));
+    types.put("__ViewerType", viewerType);
+  }
+
+  @Override
+  public void add(AugmentViewerState avs) {
+    viewerType.storage.add(new FieldDefinition(null, null, avs.type, avs.name, null, null, null, avs.semicolon));
+    typeCheckOrder.add((env) -> avs.typing(env));
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {

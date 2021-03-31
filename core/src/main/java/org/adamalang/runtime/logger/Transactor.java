@@ -6,6 +6,7 @@ package org.adamalang.runtime.logger;
 import java.util.function.Consumer;
 import org.adamalang.runtime.LivingDocument;
 import org.adamalang.runtime.contracts.DocumentMonitor;
+import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.contracts.TransactionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -77,8 +78,8 @@ public class Transactor {
   }
 
   /** construct a private view */
-  public PrivateView createView(final NtClient who, final Consumer<String> updates) {
-    return document.__createView(who, updates);
+  public PrivateView createView(final NtClient who, final Perspective perspective) {
+    return document.__createView(who, perspective);
   }
 
   /** disconnect the client */

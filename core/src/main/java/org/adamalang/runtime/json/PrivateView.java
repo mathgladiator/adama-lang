@@ -3,22 +3,26 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.json;
 
-import java.util.function.Consumer;
+import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.natives.NtClient;
 
 public abstract class PrivateView {
   public boolean alive;
-  private final Consumer<String> updates;
+  private final Perspective perspective;
   public final NtClient who;
 
-  public PrivateView(final NtClient who, final Consumer<String> updates) {
+  public PrivateView(final NtClient who, final Perspective perspective) {
     alive = true;
     this.who = who;
-    this.updates = updates;
+    this.perspective = perspective;
   }
 
+  public abstract void ingest(JsonStreamReader reader);
+
+  public abstract void dumpViewer(JsonStreamWriter writer);
+
   public void deliver(final String delivery) {
-    updates.accept(delivery);
+    perspective.data(delivery);
   }
 
   public synchronized boolean isAlive() {

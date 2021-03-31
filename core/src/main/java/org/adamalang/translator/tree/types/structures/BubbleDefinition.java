@@ -18,6 +18,8 @@ public class BubbleDefinition extends StructureComponent {
   public final Token bubbleToken;
   public final TyType clientType;
   public final Token clientVar;
+  public final Token comma;
+  public final Token viewerStateName;
   public final Token closeClient;
   public final Token equalsToken;
   public final Expression expression;
@@ -27,10 +29,12 @@ public class BubbleDefinition extends StructureComponent {
   public final Token semicolonToken;
   public final LinkedHashSet<String> variablesToWatch;
 
-  public BubbleDefinition(final Token bubbleToken, final Token openClient, final Token clientVar, final Token closeClient, final Token nameToken, final Token equalsToken, final Expression expression, final Token semicolonToken) {
+  public BubbleDefinition(final Token bubbleToken, final Token openClient, final Token clientVar, final Token comma, final Token viewerStateName, final Token closeClient, final Token nameToken, final Token equalsToken, final Expression expression, final Token semicolonToken) {
     this.bubbleToken = bubbleToken;
     this.openClient = openClient;
     this.clientVar = clientVar;
+    this.comma = comma;
+    this.viewerStateName = viewerStateName;
     this.closeClient = closeClient;
     this.nameToken = nameToken;
     this.equalsToken = equalsToken;
@@ -47,6 +51,10 @@ public class BubbleDefinition extends StructureComponent {
     yielder.accept(bubbleToken);
     yielder.accept(openClient);
     yielder.accept(clientVar);
+    if (comma != null) {
+      yielder.accept(comma);
+      yielder.accept(viewerStateName);
+    }
     yielder.accept(closeClient);
     yielder.accept(nameToken);
     yielder.accept(equalsToken);
@@ -54,16 +62,23 @@ public class BubbleDefinition extends StructureComponent {
     yielder.accept(semicolonToken);
   }
 
-  public void typing(final Environment environment) {
+  private Environment next(Environment environment) {
     final var next = environment.scopeWithComputeContext(ComputeContext.Computation).scopeReactiveExpression();
     next.define(clientVar.text, clientType, true, clientType);
-    expressionType = environment.rules.Resolve(expression.typing(next, null), false);
+    if (viewerStateName != null) {
+      next.define(viewerStateName.text, environment.document.viewerType, true, this);
+    }
+    return next;
+  }
+
+  public void typing(final Environment environment) {
+    expressionType = environment.rules.Resolve(expression.typing(next(environment), null), false);
   }
 
   public void writeSetup(final StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("public ").append(expressionType.getJavaConcreteType(environment)).append(" __COMPUTE_").append(nameToken.text).append("(NtClient ").append(clientVar.text).append(") {").tabUp().writeNewline();
+    sb.append("public ").append(expressionType.getJavaConcreteType(environment)).append(" __COMPUTE_").append(nameToken.text).append("(NtClient ").append(clientVar.text).append(", RTx__ViewerType ").append(viewerStateName != null ? viewerStateName.text : "__viewerState").append(") {").tabUp().writeNewline();
     sb.append("return ");
-    expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation).define(clientVar.text, clientType, true, clientType));
+    expression.writeJava(sb, next(environment));
     sb.append(";").tabDown().writeNewline().append("}").writeNewline();
   }
 }

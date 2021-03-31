@@ -27,9 +27,19 @@ public class CodeGenMessage {
     final var localVar = new AtomicInteger();
     { // READ FROM STREAM
       sb.append("private RTx" + name + "(JsonStreamReader __reader) {").tabUp().writeNewline(); // UP
+      sb.append("__ingest(__reader);").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+      boolean isViewerType = name.equals("__ViewerType");
+      if (isViewerType) {
+        sb.append("public int __DATA_GENERATION = 1;").writeNewline();
+      }
+      sb.append("private void __ingest(JsonStreamReader __reader) {").tabUp().writeNewline(); // UP
       if (storage.fields.size() == 0) {
         sb.append("__reader.skipValue();").tabDown().writeNewline();
       } else {
+        if (isViewerType) {
+          sb.append("this.__DATA_GENERATION += 2;").writeNewline();
+        }
         sb.append("if (__reader.startObject()) {").tabUp().writeNewline(); // UP
         sb.append("while (__reader.notEndOfObject()) {").tabUp().writeNewline(); // UP
         sb.append("String __fieldName = __reader.fieldName();").writeNewline();

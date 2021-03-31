@@ -12,7 +12,7 @@ public class PrivateLazyDeltaWriterTests {
     @Test
     public void bunchAdoAboutNothing() {
         JsonStreamWriter writer = new JsonStreamWriter();
-        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer);
+        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer, null);
         lazy.planObject().planField("x").planArray();
         Assert.assertEquals("", writer.toString());
     }
@@ -20,7 +20,7 @@ public class PrivateLazyDeltaWriterTests {
     @Test
     public void manifestAbove() {
         JsonStreamWriter writer = new JsonStreamWriter();
-        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer);
+        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer, null);
         lazy.planObject().planField("x").planArray().manifest();
         Assert.assertEquals("{\"x\":[", writer.toString());
     }
@@ -28,7 +28,7 @@ public class PrivateLazyDeltaWriterTests {
     @Test
     public void manifestX() {
         JsonStreamWriter writer = new JsonStreamWriter();
-        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer);
+        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer, null);
         lazy.planObject().planField("x").planArray().writeFastString("x");
         Assert.assertEquals("{\"x\":[\"x\"", writer.toString());
     }
@@ -36,7 +36,7 @@ public class PrivateLazyDeltaWriterTests {
     @Test
     public void simpleObject() {
         JsonStreamWriter writer = new JsonStreamWriter();
-        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer);
+        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer, null);
         PrivateLazyDeltaWriter obj = lazy.planObject();
         obj.planField("x").writeInt(123);
         obj.planField("y").writeNull();;
@@ -50,7 +50,7 @@ public class PrivateLazyDeltaWriterTests {
     @Test
     public void simpleArray() {
         JsonStreamWriter writer = new JsonStreamWriter();
-        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer);
+        PrivateLazyDeltaWriter lazy = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, writer, null);
         PrivateLazyDeltaWriter obj = lazy.planArray();
         obj.writeInt(123);
         obj.writeNull();;

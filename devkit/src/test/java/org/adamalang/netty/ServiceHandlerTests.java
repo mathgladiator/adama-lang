@@ -88,7 +88,7 @@ public class ServiceHandlerTests {
     Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":123},\"outstanding\":[],\"blockers\":[],\"seq\":3}}", output.get(2));
     Assert.assertEquals("DATA:{\"deliver\":3,\"done\":true,\"response\":{\"success\":4}}", output.get(3));
     Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":130},\"outstanding\":[],\"blockers\":[],\"seq\":5}}", output.get(4));
-    Assert.assertEquals("DATA:{\"deliver\":4,\"done\":true,\"response\":{\"result\":{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"dx\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{\"change\":\"M\"},\"constructors\":[],\"labels\":[]}}}", output.get(5));
+    Assert.assertEquals("DATA:{\"deliver\":4,\"done\":true,\"response\":{\"result\":{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"dx\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{\"change\":\"M\"},\"constructors\":[],\"labels\":[]}}}", output.get(5));
     cleanup();
   }
 
@@ -509,6 +509,58 @@ public class ServiceHandlerTests {
     Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4004}", output.get(1));
     Assert.assertEquals("DATA:{\"failure\":2,\"reason\":4004}", output.get(2));
     Assert.assertEquals("DATA:{\"failure\":3,\"reason\":4004}", output.get(3));
+    cleanup();
+  }
+
+  @Test
+  public void doubleConnectViaDevKitWho() throws Exception {
+    final var options = new CliServerOptions("--port", "9820");
+    final var runnable = new ServerRunnable(ServiceHandlerTests.nexus(options));
+    final var thread = new Thread(runnable);
+    thread.start();
+    Assert.assertTrue(runnable.waitForReady(10000));
+    Assert.assertTrue(runnable.isAccepting());
+    final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
+    final var callback = new MockClientCallback(4);
+    final var first = callback.latchAt(1);
+    final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
+    b.execute(callback);
+    first.await(2000, TimeUnit.MILLISECONDS);
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Simple_success.a\",\"game\":\"8\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Simple_success.a\",\"game\":8,\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"devkit_who\":{\"agent\":\"boss\",\"authority\":\"devkit\"},\"gamespace\":\"Demo_Simple_success.a\",\"game\":\"8\",\"data\":{}}"));
+    callback.awaitDone();
+    final var output = callback.output();
+    Assert.assertEquals(4, output.size());
+    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"8\"}}", output.get(1));
+    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"k\":1},\"outstanding\":[],\"blockers\":[],\"seq\":3}}", output.get(2));
+    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"k\":2},\"outstanding\":[],\"blockers\":[],\"seq\":5}}", output.get(3));
+    cleanup();
+  }
+
+  @Test
+  public void devkitWhoWorks() throws Exception {
+    final var options = new CliServerOptions("--port", "9521");
+    final var runnable = new ServerRunnable(ServiceHandlerTests.nexus(options));
+    final var thread = new Thread(runnable);
+    thread.start();
+    Assert.assertTrue(runnable.waitForReady(10000));
+    Assert.assertTrue(runnable.isAccepting());
+    final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
+    final var callback = new MockClientCallback(4);
+    final var first = callback.latchAt(1);
+    final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
+    b.execute(callback);
+    first.await(2000, TimeUnit.MILLISECONDS);
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"80\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":80,\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"devkit_who\":{\"agent\":\"boss\",\"authority\":\"devkit\"},\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"80\",\"data\":{}}"));
+    callback.awaitDone();
+    final var output = callback.output();
+    Assert.assertEquals(4, output.size());
+    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"80\"}}", output.get(1));
+    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":4}}", output.get(2));
+    Assert.assertEquals("DATA:{\"failure\":3,\"reason\":5011}", output.get(3));
     cleanup();
   }
 }

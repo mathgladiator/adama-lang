@@ -6,6 +6,14 @@ export function MakeTree(): Tree {
   return new Tree();
 }
 
+/*
+export class TreeStream {
+  cancel() {
+
+  }
+};
+*/
+
 export class Connection {
   // how long between retries
   backoff: number;
@@ -285,9 +293,12 @@ export class Connection {
   }
 
   /** api: send a message */
-  async send(gs: string, id: string, channel: string, msg: any) {
+  async send(gs: string, id: string, channel: string, msg: any, hack: (request: any) => void) {
     var request = {method: "send", gamespace: gs, game: id, channel: channel, message: msg};
     var self = this;
+    if (hack) {
+      hack(request);
+    }
 
     // TODO: queue this up? with retry?
     // TODO: generate a marker
@@ -304,7 +315,7 @@ export class Connection {
   }
 
   /** api: connect tree */
-  async connectTree(gs: string, id: string, tree: Tree) {
+  async connectTree(gs: string, id: string, tree: Tree, hack: (request: any) => void) {
     var keyId = this.connectId;
     this.connectId++;
     let sm = {
@@ -314,6 +325,9 @@ export class Connection {
         tree.mergeUpdate(r);
       }
     };
+    if (hack) {
+      hack(sm.request);
+    }
     this.onreconnect.set(keyId, sm);
     return this._execute(sm);
   }

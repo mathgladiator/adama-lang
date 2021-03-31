@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import org.adamalang.runtime.LivingDocument;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.contracts.DocumentMonitor;
+import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
@@ -40,7 +41,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  public PrivateView __createPrivateView(final NtClient __who, final Consumer<String> updates) {
+  public PrivateView __createPrivateView(final NtClient __who, final Perspective __perspective) {
     return null;
   }
 

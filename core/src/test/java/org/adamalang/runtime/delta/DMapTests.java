@@ -15,7 +15,7 @@ public class DMapTests {
     final var map = new DMap<Integer, DBoolean>();
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream);
+      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
       final var delta = writer.planObject();
       final DMap<Integer, DBoolean>.Walk walk = map.begin();
       walk.next(42, DBoolean::new).show(true, delta.planField("" + 42));
@@ -26,7 +26,7 @@ public class DMapTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream);
+      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
       final var delta = writer.planObject();
       delta.manifest();
       final DMap<Integer, DBoolean>.Walk walk = map.begin();
@@ -38,7 +38,7 @@ public class DMapTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream);
+      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
       final var delta = writer.planObject();
       delta.manifest();
       final DMap<Integer, DBoolean>.Walk walk = map.begin();
@@ -49,7 +49,7 @@ public class DMapTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream);
+      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
       map.hide(writer);
       map.hide(writer);
       Assert.assertEquals("null", stream.toString());

@@ -5,7 +5,10 @@ package org.adamalang.support.testgen;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+
 import org.adamalang.runtime.contracts.DocumentMonitor;
+import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.contracts.TransactionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -18,6 +21,20 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 public class PhaseRun {
+  public static Perspective wrap(Consumer<String> consumer) {
+    return new Perspective() {
+      @Override
+      public void data(String data) {
+        consumer.accept(data);
+      }
+
+      @Override
+      public void disconnect() {
+
+      }
+    };
+  }
+
   public static void go(final LivingDocumentFactory factory, final DocumentMonitor monitor, final AtomicBoolean passedTests, final StringBuilder outputFile) throws Exception {
     final var testTime = new AtomicLong(0);
     final var time = (TimeSource) () -> testTime.get();
@@ -39,18 +56,18 @@ public class PhaseRun {
     final var transactor = new Transactor(factory, monitor, time, testTransactionLogger);
     transactor.construct(NtClient.NO_ONE, "{}", "0");
     try {
-      transactor.createView(NtClient.NO_ONE, str -> {
+      transactor.createView(NtClient.NO_ONE, wrap(str -> {
         outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
-      });
+      }));
       try {
         transactor.connect(NtClient.NO_ONE);
       } catch (final ErrorCodeException e) {
         outputFile.append("NO_ONE was DENIED:" + e.code + "\n");
       }
       final var rando = new NtClient("rando", "random-place");
-      transactor.createView(rando, str -> {
+      transactor.createView(rando, wrap(str -> {
         outputFile.append("+ RANDO DELTA:").append(str).append("\n");
-      });
+      }));
       try {
         transactor.connect(rando);
       } catch (final ErrorCodeException e) {

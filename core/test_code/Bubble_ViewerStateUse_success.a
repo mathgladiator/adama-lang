@@ -1,0 +1,3 @@
+view int scroll_x;
+view string name;
+view int[] offsets_z;

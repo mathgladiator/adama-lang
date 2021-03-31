@@ -5,14 +5,7 @@ package org.adamalang.translator.parser;
 
 import java.util.function.Consumer;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.definitions.DefineConstructor;
-import org.adamalang.translator.tree.definitions.DefineDispatcher;
-import org.adamalang.translator.tree.definitions.DefineDocumentEvent;
-import org.adamalang.translator.tree.definitions.DefineFunction;
-import org.adamalang.translator.tree.definitions.DefineHandler;
-import org.adamalang.translator.tree.definitions.DefineStateTransition;
-import org.adamalang.translator.tree.definitions.DefineTest;
-import org.adamalang.translator.tree.definitions.ImportDocument;
+import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.natives.TyNativeEnum;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
@@ -108,5 +101,10 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   @Override
   public void add(final Token token) {
     accept(token);
+  }
+
+  @Override
+  public void add(AugmentViewerState avs) {
+    avs.emit(this);
   }
 }

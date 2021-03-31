@@ -14,7 +14,7 @@ public class DBooleanTests {
   public void flow() {
     final var db = new DBoolean();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream);
+    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
     db.show(true, writer);
     db.show(true, writer);
     db.show(false, writer);

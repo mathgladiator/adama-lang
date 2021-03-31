@@ -53,7 +53,7 @@ public class WebSocketHandlerTests {
     final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
     final var callback = new MockClientCallback(2);
     final var first = callback.latchAt(1);
-    final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", 9956).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
+    final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", 9956).get(options.websocketPath() + "?" + AdamaCookieCodec.ADAMA_AUTH_COOKIE_QUERY_STRING_OVERRIDE_NAME + "=XOK").withWebSocket();
     b.execute(callback);
     first.await(1000, TimeUnit.MILLISECONDS);
     b.channel().writeAndFlush(new BinaryWebSocketFrame());

@@ -11,8 +11,10 @@ import org.adamalang.netty.api.GameSpace;
 import org.adamalang.netty.api.GameSpaceDB;
 import org.adamalang.netty.contracts.JsonHandler;
 import org.adamalang.netty.contracts.JsonResponder;
+import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.logger.Transactor;
+import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.stdlib.Utility;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -79,6 +81,7 @@ public class ServiceHandler implements JsonHandler {
 
   public void handleInThread(final ScheduledExecutorService executor, final AdamaSession session, final ObjectNode request, final JsonResponder responder) throws ErrorCodeException {
     final var method = str(request, "method", true, ErrorCodeException.USERLAND_NO_METHOD_PROPERTY);
+    final var who = request.has("devkit_who") ? NtClient.from(request.get("devkit_who")) : session.who;
     switch (method) {
       case "generate": {
         final var gs = findGamespace(request);
@@ -97,7 +100,7 @@ public class ServiceHandler implements JsonHandler {
       case "create": {
         final var gs = findGamespace(request);
         final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
-        final var transactor = gs.create(id, session.who, (ObjectNode) node(request, "payload", false, 0), str(request, "entropy", false, 0));
+        final var transactor = gs.create(id, who, (ObjectNode) node(request, "payload", false, 0), str(request, "entropy", false, 0));
         final var result = Utility.createObjectNode();
         result.put("game", String.valueOf(id));
         witness(executor, transactor, responder);
@@ -107,27 +110,36 @@ public class ServiceHandler implements JsonHandler {
       case "connect": {
         final var gs = findGamespace(request);
         final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
-        final var key = gs.name + ":" + id;
+        final var key = gs.name + ":" + id + ":" + who.agent;
         if (session.checkNotUnique(key)) {
           throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_CONNECT_AGAIN);
         }
         final var transactor = gs.get(id);
         if (transactor == null) { throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_FIND_GAME); }
-        final var alreadyConnected = transactor.isConnected(session.who);
+        final var alreadyConnected = transactor.isConnected(who);
         if (!alreadyConnected) {
-          transactor.connect(session.who);
+          transactor.connect(who);
         }
-        final var pv = transactor.createView(session.who, str -> {
-          responder.respond(Utility.parseJsonObject(str), false, null);
-        });
+        Perspective perspective = new Perspective() {
+          @Override
+          public void data(String data) {
+            responder.respond(Utility.parseJsonObject(data), false, null);
+          }
+
+          @Override
+          public void disconnect() {
+            // Now, this is a fun task...
+          }
+        };
+        final var pv = transactor.createView(who, perspective);
         witness(executor, transactor, responder);
         session.subscribeToSessionDeath(key, () -> {
           // session death happens in HTTP land, so let's return to the executor to talk
           // to transactor
           executor.execute(() -> {
             pv.kill();
-            if (transactor.gcViewsFor(session.who) == 0) {
-              transactor.disconnect(session.who);
+            if (transactor.gcViewsFor(who) == 0) {
+              transactor.disconnect(who);
             }
           });
           // TODO: this does not indicate whether or not the responder failed... need to think about errors? maybe
@@ -138,7 +150,7 @@ public class ServiceHandler implements JsonHandler {
       case "disconnect": {
         final var gs = findGamespace(request);
         final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
-        final var key = gs.name + ":" + id;
+        final var key = gs.name + ":" + id + ":" + who.agent;
         final var result = Utility.createObjectNode();
         result.put("game", String.valueOf(id));
         result.put("success", session.unbind(key));
@@ -152,7 +164,7 @@ public class ServiceHandler implements JsonHandler {
         final var msg = node(request, "message", true, ErrorCodeException.USERLAND_NO_MESSAGE_PROPERTY);
         final var transactor = gs.get(id);
         if (transactor == null) { throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_FIND_GAME); }
-        final var result = transactor.send(session.who, channel, msg.toString());
+        final var result = transactor.send(who, channel, msg.toString());
         responder.respond(Utility.parseJsonObject("{\"success\":" + result.seq + "}"), true, null);
         witness(executor, transactor, responder);
         return;

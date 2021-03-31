@@ -14,7 +14,7 @@ public class DMaybeTests {
   public void flow() {
     final var db = new DMaybe<DBoolean>();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream);
+    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
     final var a = db.get(DBoolean::new);
     final var b = db.get(DBoolean::new);
     Assert.assertTrue(a == b);

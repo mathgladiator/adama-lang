@@ -5,6 +5,9 @@ package org.adamalang.runtime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
+
+import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -224,7 +227,17 @@ public class LivingDocumentTests {
     final var setup = new RealDocumentSetup("@connected(who) { return true; } function inf() -> int { int z = 0; while (z < 1000000) { z++; } return z; } bubble<who> x = inf();");
     try {
       setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-      setup.transactor.createView(A, str -> {});
+      setup.transactor.createView(A, new Perspective() {
+        @Override
+        public void data(String data) {
+
+        }
+
+        @Override
+        public void disconnect() {
+
+        }
+      });
       setup.drive(setup.transactor.connect(A));
       Assert.fail();
     } catch (final GoodwillExhaustedException yay) {
@@ -264,32 +277,46 @@ public class LivingDocumentTests {
         setup.logger.node.toString());
   }
 
+  private Perspective wrap(Consumer<String> consumer) {
+    return new Perspective() {
+      @Override
+      public void data(String data) {
+        consumer.accept(data);
+      }
+
+      @Override
+      public void disconnect() {
+
+      }
+    };
+  }
+
   @Test
   public void multi_views() throws Exception {
     final var setup = new RealDocumentSetup("public int x; @construct { x = 123; } @connected (who) { x++; return true; }");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
     Assert.assertFalse(setup.transactor.isConnected(NtClient.NO_ONE));
     final var viewOneData = new ArrayList<ObjectNode>();
-    final var viewOne = setup.transactor.createView(NtClient.NO_ONE, str -> {
+    final var viewOne = setup.transactor.createView(NtClient.NO_ONE, wrap(str -> {
       viewOneData.add(Utility.parseJsonObject(str));
-    });
+    }));
     setup.drive(setup.transactor.connect(NtClient.NO_ONE));
     Assert.assertEquals(1, viewOneData.size());
     Assert.assertEquals("{\"data\":{\"x\":124},\"outstanding\":[],\"blockers\":[],\"seq\":3}", viewOneData.get(0).toString());
     Assert.assertTrue(setup.transactor.isConnected(NtClient.NO_ONE));
     final var viewTwoData = new ArrayList<ObjectNode>();
-    final var viewTwo = setup.transactor.createView(NtClient.NO_ONE, str -> {
+    final var viewTwo = setup.transactor.createView(NtClient.NO_ONE, wrap(str -> {
       viewTwoData.add(Utility.parseJsonObject(str));
-    });
+    }));
     setup.transactor.drive();
     Assert.assertEquals(2, viewOneData.size());
     Assert.assertEquals(1, viewTwoData.size());
     Assert.assertEquals("{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":4}", viewOneData.get(1).toString());
     Assert.assertEquals("{\"data\":{\"x\":124},\"outstanding\":[],\"blockers\":[],\"seq\":4}", viewTwoData.get(0).toString());
     final var viewThreeData = new ArrayList<ObjectNode>();
-    final var viewThree = setup.transactor.createView(NtClient.NO_ONE, str -> {
+    final var viewThree = setup.transactor.createView(NtClient.NO_ONE, wrap(str -> {
       viewThreeData.add(Utility.parseJsonObject(str));
-    });
+    }));
     setup.transactor.drive();
     Assert.assertEquals(3, viewOneData.size());
     Assert.assertEquals(2, viewTwoData.size());
@@ -602,18 +629,18 @@ public class LivingDocumentTests {
     final var setup = new RealDocumentSetup("public int x; @construct { x = 123; } @connected (who) { x++; return true; }");
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
     final var deNO_ONE = new ArrayList<ObjectNode>();
-    setup.transactor.createView(NtClient.NO_ONE, str -> {
+    setup.transactor.createView(NtClient.NO_ONE, wrap(str -> {
       deNO_ONE.add(Utility.parseJsonObject(str));
-    });
+    }));
     setup.drive(setup.transactor.connect(NtClient.NO_ONE));
     Assert.assertEquals(1, deNO_ONE.size());
     Assert.assertEquals("{\"data\":{\"x\":124},\"outstanding\":[],\"blockers\":[],\"seq\":3}", deNO_ONE.get(0).toString());
     final var deA = new ArrayList<ObjectNode>();
     final var deB = new ArrayList<ObjectNode>();
-    setup.transactor.createView(A, str -> deA.add(Utility.parseJsonObject(str)));
+    setup.transactor.createView(A, wrap(str -> deA.add(Utility.parseJsonObject(str))));
     setup.drive(setup.transactor.connect(A));
     Assert.assertEquals("{\"data\":{\"x\":125},\"outstanding\":[],\"blockers\":[],\"seq\":5}", deA.get(0).toString());
-    setup.transactor.createView(B, str -> deB.add(Utility.parseJsonObject(str)));
+    setup.transactor.createView(B, wrap(str -> deB.add(Utility.parseJsonObject(str))));
     setup.drive(setup.transactor.connect(B));
     Assert.assertEquals("{\"data\":{\"x\":126},\"outstanding\":[],\"blockers\":[],\"seq\":7}", deB.get(0).toString());
     setup.assertCompare();
@@ -624,18 +651,18 @@ public class LivingDocumentTests {
     final var setup = new RealDocumentSetup("public int x; @construct { x = 123; } @connected (who) { x++; return true; }", null, false);
     setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
     final var deNO_ONE = new ArrayList<ObjectNode>();
-    setup.transactor.createView(NtClient.NO_ONE, str -> {
+    setup.transactor.createView(NtClient.NO_ONE, wrap(str -> {
       deNO_ONE.add(Utility.parseJsonObject(str));
-    });
+    }));
     setup.drive(setup.transactor.connect(NtClient.NO_ONE));
     Assert.assertEquals(1, deNO_ONE.size());
     Assert.assertEquals("{\"data\":{\"x\":124},\"outstanding\":[],\"blockers\":[],\"seq\":3}", deNO_ONE.get(0).toString());
     final var deA = new ArrayList<ObjectNode>();
     final var deB = new ArrayList<ObjectNode>();
-    setup.transactor.createView(A, str -> deA.add(Utility.parseJsonObject(str)));
+    setup.transactor.createView(A, wrap(str -> deA.add(Utility.parseJsonObject(str))));
     setup.drive(setup.transactor.connect(A));
     Assert.assertEquals("{\"data\":{\"x\":125},\"outstanding\":[],\"blockers\":[],\"seq\":5}", deA.get(0).toString());
-    setup.transactor.createView(B, str -> deB.add(Utility.parseJsonObject(str)));
+    setup.transactor.createView(B, wrap(str -> deB.add(Utility.parseJsonObject(str))));
     setup.drive(setup.transactor.connect(B));
     Assert.assertEquals("{\"data\":{\"x\":126},\"outstanding\":[],\"blockers\":[],\"seq\":7}", deB.get(0).toString());
     setup.assertCompare();

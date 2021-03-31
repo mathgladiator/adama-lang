@@ -113,7 +113,7 @@ public class CodeGenDeltaClass {
     }
     for (final BubbleDefinition bd : storage.bubbles.values()) {
       final var bubbleType = environment.rules.Resolve(bd.expressionType, false);
-      sb.append("private int __g").append(bd.nameToken.text).append(";").writeNewline();
+      sb.append("private long __g").append(bd.nameToken.text).append(";").writeNewline();
       sb.append("private ").append(((DetailHasDeltaType) bubbleType).getDeltaType(environment)).append(" __d").append(bd.nameToken.text).append(";").writeNewline();
       bubbles.add(FieldDefinition.invent(bd.expressionType, bd.nameToken.text));
     }
@@ -156,13 +156,18 @@ public class CodeGenDeltaClass {
         }
       }
     }
-    for (final BubbleDefinition bd : storage.bubbles.values()) {
-      sb.append("if (__g").append(bd.nameToken.text).append(" != __item.___").append(bd.nameToken.text).append(".getGeneration()) {").tabUp().writeNewline();
-      final var bubbleType = environment.rules.Resolve(bd.expressionType, false);
-      sb.append(bubbleType.getJavaBoxType(environment)).append(" __local_").append(bd.nameToken.text).append(" = __item.__COMPUTE_").append(bd.nameToken.text).append("(__writer.who);").writeNewline();
-      writeShowData(sb, "__d" + bd.nameToken.text, "__local_" + bd.nameToken.text, bubbleType, "__obj.planField(\"" + bd.nameToken.text + "\")", environment, false);
-      sb.append("__g").append(bd.nameToken.text).append(" = __item.___").append(bd.nameToken.text).append(".getGeneration();").tabDown().writeNewline();
-      sb.append("}").writeNewline();
+    if (storage.bubbles.size() > 0) {
+      sb.append("RTx__ViewerType __VIEWER = (RTx__ViewerType) __writer.viewerState;").writeNewline();
+      sb.append("long __CHECK = 0;").writeNewline();
+      for (final BubbleDefinition bd : storage.bubbles.values()) {
+        sb.append("__CHECK = __item.___").append(bd.nameToken.text).append(".getGeneration() * 1662803L + __VIEWER.__DATA_GENERATION;").writeNewline();
+        sb.append("if (__g").append(bd.nameToken.text).append(" != __CHECK)  {").tabUp().writeNewline();
+        final var bubbleType = environment.rules.Resolve(bd.expressionType, false);
+        sb.append(bubbleType.getJavaBoxType(environment)).append(" __local_").append(bd.nameToken.text).append(" = __item.__COMPUTE_").append(bd.nameToken.text).append("(__writer.who, __VIEWER);").writeNewline();
+        writeShowData(sb, "__d" + bd.nameToken.text, "__local_" + bd.nameToken.text, bubbleType, "__obj.planField(\"" + bd.nameToken.text + "\")", environment, false);
+        sb.append("__g").append(bd.nameToken.text).append(" = __CHECK;").tabDown().writeNewline();
+        sb.append("}").writeNewline();
+      }
     }
     writeCommonTrailer(sb);
   }

@@ -45,6 +45,16 @@ public class InferContentTypeTests {
   }
 
   @Test
+  public void webp() {
+    Assert.assertEquals("image/webp", InferContentType.fromFilename("file.webp"));
+  }
+
+  @Test
+  public void wasm() {
+    Assert.assertEquals("application/wasm", InferContentType.fromFilename("file.wasm"));
+  }
+
+  @Test
   public void unknown() {
     Assert.assertNull(InferContentType.fromFilename("what.zzzzzzzzzzzzzzzzz"));
   }

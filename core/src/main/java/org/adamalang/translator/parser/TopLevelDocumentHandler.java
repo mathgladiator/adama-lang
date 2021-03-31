@@ -4,15 +4,9 @@
 package org.adamalang.translator.parser;
 
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.definitions.DefineConstructor;
-import org.adamalang.translator.tree.definitions.DefineDispatcher;
-import org.adamalang.translator.tree.definitions.DefineDocumentEvent;
-import org.adamalang.translator.tree.definitions.DefineFunction;
-import org.adamalang.translator.tree.definitions.DefineHandler;
-import org.adamalang.translator.tree.definitions.DefineStateTransition;
-import org.adamalang.translator.tree.definitions.DefineTest;
-import org.adamalang.translator.tree.definitions.ImportDocument;
+import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
+import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsEnum;
@@ -34,4 +28,5 @@ public interface TopLevelDocumentHandler {
   public void add(IsEnum storage);
   public void add(IsStructure storage);
   public void add(Token token);
+  public void add(AugmentViewerState avs);
 }

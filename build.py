@@ -46,9 +46,7 @@ if jar:
 if generate:
     cwd = os.getcwd()
     os.chdir("core")
-    args = ["mvn", "package", "-DskipTests"]
-    if os.system(" ".join(args)) == 0:
-        os.system("java -jar ./target/core-0.1-jar-with-dependencies.jar generate-tests")
+    os.system("java -jar ./target/core-0.1-jar-with-dependencies.jar generate-tests")
     os.chdir(cwd)
 
 if made_jar:
