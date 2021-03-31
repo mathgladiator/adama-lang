@@ -77,7 +77,7 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_ServiceHandler_success.a\",\"game\":\"3\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_ServiceHandler_success.a\",\"game\":\"3\",\"arg\":{}}"));
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"gamespace\":\"Demo_ServiceHandler_success.a\",\"method\":\"connect\",\"game\":\"3\"}"));
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"gamespace\":\"Demo_ServiceHandler_success.a\",\"method\":\"send\",\"channel\":\"change\",\"message\":{\"dx\":7},\"game\":\"3\"}"));
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":4,\"gamespace\":\"Demo_ServiceHandler_success.a\",\"method\":\"reflect\"}"));
@@ -127,7 +127,7 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"1\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"1\",\"arg\":{}}"));
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"gamespace\":\"Demo_Bomb_success.a\",\"method\":\"connect\",\"game\":\"1\"}"));
     callback.awaitDone();
     final var output = callback.output();
@@ -150,7 +150,7 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Operational_Goodwill_failure.a\",\"game\":\"5\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Operational_Goodwill_failure.a\",\"game\":\"5\",\"arg\":{}}"));
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(3, output.size());
@@ -341,7 +341,7 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"4\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"4\",\"arg\":{}}"));
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"gamespace\":\"Demo_Bomb_success.a\",\"method\":\"send\",\"channel\":\"ch\",\"message\":{},\"game\":\"4\"}"));
     callback.awaitDone();
     final var output = callback.output();
@@ -365,7 +365,7 @@ public class ServiceHandlerTests {
       final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
       b.execute(callback);
       first.await(2000, TimeUnit.MILLISECONDS);
-      b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"42\",\"data\":{}}"));
+      b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"42\",\"arg\":{}}"));
       callback.awaitDone();
       final var output = callback.output();
       Assert.assertEquals(2, output.size());
@@ -379,7 +379,7 @@ public class ServiceHandlerTests {
       final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
       b.execute(callback);
       first.await(2000, TimeUnit.MILLISECONDS);
-      b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"42\",\"data\":{}}"));
+      b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"42\",\"arg\":{}}"));
       callback.awaitDone();
       final var output = callback.output();
       Assert.assertEquals(2, output.size());
@@ -402,7 +402,7 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"generate\",\"gamespace\":\"Demo_Bomb_success.a\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"generate\",\"gamespace\":\"Demo_Bomb_success.a\"}"));
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
@@ -425,7 +425,7 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"2\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"2\",\"arg\":{}}"));
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
@@ -447,9 +447,9 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\",\"data\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\",\"data\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"disconnect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\",\"arg\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\"}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"disconnect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\"}"));
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(5, output.size());
@@ -474,9 +474,9 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"8\",\"data\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":8,\"data\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"8\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"8\",\"arg\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":8}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"8\"}"));
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(4, output.size());
@@ -526,9 +526,9 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Simple_success.a\",\"game\":\"8\",\"data\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Simple_success.a\",\"game\":8,\"data\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"devkit_who\":{\"agent\":\"boss\",\"authority\":\"devkit\"},\"gamespace\":\"Demo_Simple_success.a\",\"game\":\"8\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Simple_success.a\",\"game\":\"8\",\"arg\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Simple_success.a\",\"game\":8}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"devkit_who\":{\"agent\":\"boss\",\"authority\":\"devkit\"},\"gamespace\":\"Demo_Simple_success.a\",\"game\":\"8\"}"));
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(4, output.size());
@@ -552,9 +552,9 @@ public class ServiceHandlerTests {
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"80\",\"data\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":80,\"data\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"devkit_who\":{\"agent\":\"boss\",\"authority\":\"devkit\"},\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"80\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"80\",\"arg\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":80}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"devkit_who\":{\"agent\":\"boss\",\"authority\":\"devkit\"},\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"80\"}"));
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(4, output.size());
