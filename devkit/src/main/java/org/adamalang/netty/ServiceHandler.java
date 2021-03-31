@@ -20,11 +20,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class ServiceHandler implements JsonHandler {
-  private static JsonNode node(final ObjectNode request, final String field, final boolean mustExist, final int errorIfDoesnt) throws ErrorCodeException {
+  private static JsonNode node(final ObjectNode request, final String field,  final int errorIfDoesnt) throws ErrorCodeException {
     final var fieldNode = request.get(field);
-    if (fieldNode == null || fieldNode.isNull()) {
-      if (mustExist) { throw new ErrorCodeException(errorIfDoesnt); }
-      return Utility.createObjectNode();
+    if (fieldNode == null || fieldNode.isNull() || !fieldNode.isObject()) {
+      throw new ErrorCodeException(errorIfDoesnt);
     }
     return fieldNode;
   }
@@ -73,8 +72,12 @@ public class ServiceHandler implements JsonHandler {
     executor.execute(() -> {
       try {
         handleInThread(executor, session, request, responder);
-      } catch (final ErrorCodeException ece) {
-        responder.failure(ece.code, ece);
+      } catch (final ErrorCodeException e) {
+        e.printStackTrace();
+        responder.failure(e.code, e);
+      } catch (Exception e) {
+        e.printStackTrace();
+        responder.failure(ErrorCodeException.LIVING_DOCUMENT_TRANSACTION_SUPER_FAILURE, e);
       }
     });
   }
@@ -100,7 +103,7 @@ public class ServiceHandler implements JsonHandler {
       case "create": {
         final var gs = findGamespace(request);
         final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
-        final var transactor = gs.create(id, who, (ObjectNode) node(request, "payload", false, 0), str(request, "entropy", false, 0));
+        final var transactor = gs.create(id, who, (ObjectNode) node(request, "arg", ErrorCodeException.USERLAND_NO_CONSTRUCTOR_ARG), str(request, "entropy", false, 0));
         final var result = Utility.createObjectNode();
         result.put("game", String.valueOf(id));
         witness(executor, transactor, responder);
@@ -161,7 +164,7 @@ public class ServiceHandler implements JsonHandler {
         final var gs = findGamespace(request);
         final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
         final var channel = str(request, "channel", true, ErrorCodeException.USERLAND_NO_CHANNEL_PROPERTY);
-        final var msg = node(request, "message", true, ErrorCodeException.USERLAND_NO_MESSAGE_PROPERTY);
+        final var msg = node(request, "message", ErrorCodeException.USERLAND_NO_MESSAGE_PROPERTY);
         final var transactor = gs.get(id);
         if (transactor == null) { throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_FIND_GAME); }
         final var result = transactor.send(who, channel, msg.toString());
@@ -196,8 +199,9 @@ public class ServiceHandler implements JsonHandler {
           witness(executor, transactor, responder);
         }, result.whenToInvalidMilliseconds, TimeUnit.MILLISECONDS);
       }
-    } catch (final Exception ex) {
-      responder.failure(ErrorCodeException.LIVING_DOCUMENT_CRASHED, ex);
+    } catch (final Exception e) {
+      e.printStackTrace();
+      responder.failure(ErrorCodeException.LIVING_DOCUMENT_CRASHED, e);
     }
   }
 }

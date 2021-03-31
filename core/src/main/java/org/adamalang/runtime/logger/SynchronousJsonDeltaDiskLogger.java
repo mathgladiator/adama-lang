@@ -39,6 +39,7 @@ public class SynchronousJsonDeltaDiskLogger implements TransactionLogger {
       }
       return -1;
     } catch (final Exception ex) {
+      ex.printStackTrace();
       throw new ErrorCodeException(ErrorCodeException.SYNC_DISK_LOGGER_CANT_PUMP, ex);
     }
   }
@@ -55,6 +56,7 @@ public class SynchronousJsonDeltaDiskLogger implements TransactionLogger {
       this.target = target;
       writer = new PrintWriter(new FileOutputStream(file, true), false, StandardCharsets.UTF_8);
     } catch (final IOException ioe) {
+      ioe.printStackTrace();
       throw new ErrorCodeException(ErrorCodeException.SYNC_DISK_LOGGER_CANT_OPEN_APPEND, ioe);
     }
   }

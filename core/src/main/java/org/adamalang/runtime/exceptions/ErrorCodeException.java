@@ -11,6 +11,7 @@ public class ErrorCodeException extends Exception {
   public static final int FACTORY_CANT_COMPILE_JAVA_CODE = 5004;
   public static final int FACTORY_CANT_CREATE_OBJECT_DUE_TO_EXCEPTION = 5002;
   public static final int LIVING_DOCUMENT_CRASHED = 5018;
+  public static final int LIVING_DOCUMENT_TRANSACTION_SUPER_FAILURE = 5021;
   public static final int LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED = 5010;
   public static final int LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED = 5012;
   public static final int LIVING_DOCUMENT_TRANSACTION_CANT_DISCONNECT_DUE_TO_NOT_CONNECTED = 5014;
@@ -39,6 +40,7 @@ public class ErrorCodeException extends Exception {
   public static final int USERLAND_NO_MESSAGE_PROPERTY = 4010;
   public static final int USERLAND_NO_METHOD_PROPERTY = 4006;
   public static final int USERLAND_NO_SESSION = 4005;
+  public static final int USERLAND_NO_CONSTRUCTOR_ARG = 4100;
   public final int code;
 
   public ErrorCodeException(final int code) {
