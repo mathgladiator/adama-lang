@@ -410,7 +410,7 @@ public class Parser {
     }
     op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch"));
+      op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch"));
     }
     if (op != null) {
       switch (op.text) {
@@ -424,6 +424,8 @@ public class Parser {
           return define_message_trailer(op);
         case "channel":
           return define_handler_trailer(op);
+        case "rpc":
+          return define_rpc(op);
         case "function":
           return define_function_trailer(op);
         case "procedure":
@@ -654,6 +656,22 @@ public class Parser {
       handler.setMessageOnlyHandler(openParen, messageType, arrayToken, messageVarToken, endParen, block());
     }
     return doc -> doc.add(handler);
+  }
+
+  public Consumer<TopLevelDocumentHandler> define_rpc(final Token rpcToken) throws AdamaLangException {
+    final var name = id();
+    final var openParen = consumeExpectedSymbol("(");
+    final var clientVar = id();
+    Token comma;
+    ArrayList<FunctionArg> args = new ArrayList<>();
+    while ((comma = tokens.popIf((t) -> t.isSymbolWithTextEq(","))) != null) {
+      final var paramTyType = native_type();
+      args.add(new FunctionArg(comma, paramTyType, id()));
+    }
+    final var closeParen = consumeExpectedSymbol(")");
+    final var code = block();
+    DefineRPC rpc = new DefineRPC(rpcToken, name, openParen, clientVar, args, closeParen, code);
+    return (doc) -> { doc.add(rpc); };
   }
 
   public IndexDefinition define_indexing(final Token indexToken) throws AdamaLangException {

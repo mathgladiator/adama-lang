@@ -29,4 +29,5 @@ public interface TopLevelDocumentHandler {
   public void add(IsStructure storage);
   public void add(Token token);
   public void add(AugmentViewerState avs);
+  public void add(DefineRPC rpc);
 }

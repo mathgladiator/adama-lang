@@ -105,6 +105,21 @@ public class Document implements TopLevelDocumentHandler {
     typeCheckOrder.add((env) -> avs.typing(env));
   }
 
+  public void add(DefineRPC rpc) {
+    TyNativeMessage nativeMessageType = rpc.genTyNativeMessage();
+    DefineHandler handler = rpc.genHandler();
+    types.put(rpc.genMessageTypeName(), nativeMessageType);
+    channelToMessageType.put(rpc.name.text, rpc.genMessageTypeName());
+    handlers.add(handler);
+    typeCheckOrder.add(env -> {
+      rpc.typing(env);
+      if (env.document.errorLists.size() == 0) {
+        nativeMessageType.typing(env);
+        handler.typing(env);
+      }
+    });
+  }
+
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.beginObject();
 

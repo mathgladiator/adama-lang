@@ -107,4 +107,9 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   public void add(AugmentViewerState avs) {
     avs.emit(this);
   }
+
+  @Override
+  public void add(DefineRPC rpc) {
+    rpc.emit(this);
+  }
 }

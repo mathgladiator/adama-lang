@@ -1,0 +1,91 @@
+/* The Adama Programming Language For Board Games!
+ *    See http://www.adama-lang.org/ for more information.
+ * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
+package org.adamalang.translator.tree.definitions;
+
+import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.expressions.FieldLookup;
+import org.adamalang.translator.tree.expressions.Lookup;
+import org.adamalang.translator.tree.privacy.PublicPolicy;
+import org.adamalang.translator.tree.statements.Block;
+import org.adamalang.translator.tree.statements.DefineVariable;
+import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.TyNativeMessage;
+import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.StorageSpecialization;
+import org.adamalang.translator.tree.types.structures.StructureStorage;
+
+import java.util.List;
+import java.util.function.Consumer;
+
+public class DefineRPC extends Definition {
+  public final Token rpcToken;
+  public final Token name;
+  public final Token openParen;
+  public final Token clientVar;
+  public final List<FunctionArg> args;
+  public final Token closeParen;
+  public final Block code;
+
+  public DefineRPC(Token rpcToken, Token name, Token openParen, Token clientVar, List<FunctionArg> args, Token closeParen, Block code) {
+    this.rpcToken = rpcToken;
+    this.name = name;
+    this.openParen = openParen;
+    this.clientVar = clientVar;
+    this.args = args;
+    this.closeParen = closeParen;
+    this.code = code;
+  }
+
+  @Override
+  public void emit(Consumer<Token> yielder) {
+    yielder.accept(rpcToken);
+    yielder.accept(name);
+    yielder.accept(openParen);
+    yielder.accept(clientVar);
+    for (FunctionArg arg : args) {
+      yielder.accept(arg.commaToken);
+      arg.type.emit(yielder);
+      yielder.accept(arg.argNameToken);
+    }
+    yielder.accept(closeParen);
+    code.emit(yielder);
+  }
+
+  public String genMessageTypeName() {
+    return "__Gen" + name.text.toUpperCase();
+  }
+
+  public TyNativeMessage genTyNativeMessage() {
+    StructureStorage storage = new StructureStorage(StorageSpecialization.Message, false, openParen);
+    PublicPolicy policy = new PublicPolicy(null);
+    policy.ingest(rpcToken);
+    for (FunctionArg arg : args) {
+      storage.add(new FieldDefinition(policy, null, arg.type, arg.argNameToken, null, null, null, null));
+    }
+    return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, rpcToken, name.cloneWithNewText(genMessageTypeName()), storage);
+  }
+
+  public DefineHandler genHandler() {
+    DefineHandler handler = new DefineHandler(rpcToken, name);
+    Block codePrefix = new Block(openParen);
+    for (FunctionArg arg : args) {
+      codePrefix.add(new DefineVariable(rpcToken, arg.argNameToken, arg.type, null, new FieldLookup(new Lookup(name.cloneWithNewText("__message")), null, arg.argNameToken), null));
+    }
+    codePrefix.add(code);
+    handler.setFullHandler(openParen, clientVar, clientVar, clientVar, name.cloneWithNewText(genMessageTypeName()), null, name.cloneWithNewText("__message"), closeParen, codePrefix);
+    return handler;
+  }
+
+  @Override
+  public void typing(Environment environment) {
+    final var next = environment.scopeAsMessageHandler();
+    next.define(clientVar.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVar).withPosition(this), true, this);
+    for (final FunctionArg arg : args) {
+      next.define(arg.argName, arg.type, true, arg.type);
+    }
+    code.typing(next);
+  }
+}

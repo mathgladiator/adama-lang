@@ -57,6 +57,11 @@ public class Token implements Comparable<Token> {
     nonSemanticTokensAfter = null;
   }
 
+  /** clone the token with new text */
+  public Token cloneWithNewText(String newText) {
+    return new Token(sourceName, newText, majorType, minorType, lineStart, charStart, lineEnd, charEnd);
+  }
+
   /** internal: adds a hidden token after this token */
   protected void addHiddenTokenAfter(final Token token) {
     if (nonSemanticTokensAfter == null) {

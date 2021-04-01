@@ -1,0 +1,5 @@
+rpc foo1(who, int x, int y) {    
+}
+
+rpc foo2(who) {    
+}
