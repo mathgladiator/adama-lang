@@ -1562,7 +1562,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    __track(0);");
     gold.append("\n    status.set(\"Blocked\");");
     gold.append("\n    __track(1);");
-    gold.append("\n    SimpleFuture<RTxX> fut = chan.fetch(NtClient.NO_ONE);");
+    gold.append("\n    SimpleFuture<RTxX> fut = chan.fetchItem(NtClient.NO_ONE);");
     gold.append("\n    __track(2);");
     gold.append("\n    final RTxX val = fut.await();");
     gold.append("\n    __track(3);");
@@ -1690,7 +1690,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"setup\",\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
     gold.append("\nNO_ONE was DENIED:5011");
     gold.append("\nRANDO was DENIED:5011");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[{\"id\":1,\"channel\":\"chan\"}],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":0}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[{\"id\":1,\"channel\":\"chan\",\"array\":false}],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":0}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":0}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":7,\"__billing_seq\":1} need:true in:0");

@@ -4,16 +4,14 @@ export class Tree {
   dispatch: object;
   dispatch_count: number;
   queue: Array<any>;
-  onfetch: (channel: string) => void;
-  ondecide: (channel: string, options: Array<object>) => void;
+  ondecide: (outstanding: any) => void;
 
   constructor() {
     this.tree = {};
     this.dispatch = {};
     this.dispatch_count = 0;
     this.queue = [];
-    this.onfetch = function (channel: string) { };
-    this.ondecide = function (channel: string, options: Array<object>) { };
+    this.ondecide = function (outstanding: any) { };
   }
 
   // recursively append a change
@@ -52,8 +50,9 @@ export class Tree {
       // we merge the tree with the data within dispatch
       this.__recMergeAndDispatch(this.tree, this.dispatch, diff.data)
     }
-    // TODO: dispatch decisions
-    // TODO: update blockers
+    if ('outstanding' in diff) {
+      this.ondecide(diff.outstanding);
+    }
     this.__drain();
   }
 

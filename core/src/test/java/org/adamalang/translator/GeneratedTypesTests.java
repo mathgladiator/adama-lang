@@ -1508,7 +1508,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  private void __FUNC_0_wacky(NtChannel<RTxX> ch) {");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(0);");
-    gold.append("\n    ch.fetch(NtClient.NO_ONE);");
+    gold.append("\n    ch.fetchItem(NtClient.NO_ONE);");
     gold.append("\n    __track(1);");
     gold.append("\n    ch.decide(NtClient.NO_ONE, new RTxX[] {new RTxX(12), new RTxX(152)});");
     gold.append("\n    __track(2);");

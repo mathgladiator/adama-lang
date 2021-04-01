@@ -379,9 +379,9 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n    __track(0);");
     gold.append("\n    status.set(\"Blocked\");");
     gold.append("\n    __track(1);");
-    gold.append("\n    SimpleFuture<RTxX> fut1 = chan.fetch(NtClient.NO_ONE);");
+    gold.append("\n    SimpleFuture<RTxX> fut1 = chan.fetchItem(NtClient.NO_ONE);");
     gold.append("\n    __track(2);");
-    gold.append("\n    SimpleFuture<RTxX> fut2 = chan.fetch(NtClient.NO_ONE);");
+    gold.append("\n    SimpleFuture<RTxX> fut2 = chan.fetchItem(NtClient.NO_ONE);");
     gold.append("\n    __track(3);");
     gold.append("\n    final RTxX val1 = fut1.await();");
     gold.append("\n    __track(4);");
@@ -392,7 +392,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  private void __step_wut() {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(6);");
-    gold.append("\n    SimpleFuture<RTxX[]> f = bigchan.fetch(NtClient.NO_ONE);");
+    gold.append("\n    SimpleFuture<RTxX[]> f = bigchan.fetchArray(NtClient.NO_ONE);");
     gold.append("\n    __track(7);");
     gold.append("\n    RTxX[] x = f.await();");
     gold.append("\n  }");
@@ -534,7 +534,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"begin\",\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
     gold.append("\nNO_ONE was DENIED:5011");
     gold.append("\nRANDO was DENIED:5011");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[{\"id\":1,\"channel\":\"chan\"},{\"id\":2,\"channel\":\"chan\"}],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":0}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[{\"id\":1,\"channel\":\"chan\",\"array\":false},{\"id\":2,\"channel\":\"chan\",\"array\":false}],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":0}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[{\"agent\":\"?\",\"authority\":\"?\"}],\"seq\":0}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__blocked_on\":\"chan\",\"__blocked\":true,\"__seq\":1} need:false in:0");
     gold.append("\n{\"command\":\"bill\",\"timestamp\":\"50\"}-->{\"__goodwill_used\":0,\"__cost\":9,\"__billing_seq\":1} need:true in:0");

@@ -16,18 +16,27 @@ public class NtChannelTests {
   public static final NtMessageBase DEMO = writer -> {
     writer.beginObject();
     writer.endObject();
-  }
-  /* @Override public ObjectNode convertToObjectNode() { return
-   * Utility.createObjectNode(); } */;
+  };
 
   @Test
-  public void flow() {
+  public void flow1() {
     final var key = new RxInt32(null, 42);
     final var futures = new OutstandingFutureTracker(key);
     final var sink = new Sink<String>("channel");
     sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "X");
     final var channel = new NtChannel<>(futures, sink);
-    final var future = channel.fetch(NtClient.NO_ONE);
+    final var future = channel.fetchItem(NtClient.NO_ONE);
+    Assert.assertTrue(future.exists());
+  }
+
+  @Test
+  public void flow2() {
+    final var key = new RxInt32(null, 42);
+    final var futures = new OutstandingFutureTracker(key);
+    final var sink = new Sink<String>("channel");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "X");
+    final var channel = new NtChannel<>(futures, sink);
+    final var future = channel.fetchArray(NtClient.NO_ONE);
     Assert.assertTrue(future.exists());
   }
 
@@ -103,7 +112,7 @@ public class NtChannelTests {
     final var futures = new OutstandingFutureTracker(key);
     final var sink = new Sink<String>("channel");
     final var channel = new NtChannel<>(futures, sink);
-    final var future = channel.fetch(NtClient.NO_ONE);
+    final var future = channel.fetchItem(NtClient.NO_ONE);
     Assert.assertFalse(future.exists());
     try {
       future.await();

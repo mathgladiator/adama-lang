@@ -29,6 +29,8 @@ public class NtChannel<T> {
     writer.writeInteger(oldFuture.id);
     writer.writeObjectFieldIntro("channel");
     writer.writeFastString(oldFuture.channel);
+    writer.writeObjectFieldIntro("array");
+    writer.writeBoolean(true);
     writer.writeObjectFieldIntro("min");
     writer.writeInteger(limit);
     writer.writeObjectFieldIntro("max");
@@ -60,6 +62,8 @@ public class NtChannel<T> {
     writer.writeInteger(oldFuture.id);
     writer.writeObjectFieldIntro("channel");
     writer.writeFastString(oldFuture.channel);
+    writer.writeObjectFieldIntro("array");
+    writer.writeBoolean(false);
     writer.writeObjectFieldIntro("min");
     writer.writeInteger(1);
     writer.writeObjectFieldIntro("max");
@@ -81,8 +85,8 @@ public class NtChannel<T> {
     return future;
   }
 
-  /** ask the user for one item, blocks entire universe */
-  public SimpleFuture<T> fetch(final NtClient who) {
+  /** ask the user for item/items */
+  public SimpleFuture<T> fetch(final NtClient who, boolean array) {
     final var oldFuture = tracker.make(sink.channel, who);
     final var writer = new JsonStreamWriter();
     writer.beginObject();
@@ -90,6 +94,8 @@ public class NtChannel<T> {
     writer.writeInteger(oldFuture.id);
     writer.writeObjectFieldIntro("channel");
     writer.writeFastString(oldFuture.channel);
+    writer.writeObjectFieldIntro("array");
+    writer.writeBoolean(array);
     writer.endObject();
     oldFuture.json = writer.toString();
     final var future = sink.dequeue(who);
@@ -97,5 +103,15 @@ public class NtChannel<T> {
       oldFuture.take();
     }
     return future;
+  }
+
+  /** ask the user for one array of items, blocks entire universe */
+  public SimpleFuture<T> fetchArray(final NtClient who) {
+    return fetch(who, true);
+  }
+
+  /** ask the user for one item, blocks entire universe */
+  public SimpleFuture<T> fetchItem(final NtClient who) {
+    return fetch(who, false);
   }
 }

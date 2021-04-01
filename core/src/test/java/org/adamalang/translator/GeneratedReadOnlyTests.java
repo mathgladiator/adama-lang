@@ -1031,7 +1031,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  private void __step_fooz() {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    final SimpleFuture<RTxM> fut = foo.fetch(NtClient.NO_ONE);");
+    gold.append("\n    final SimpleFuture<RTxM> fut = foo.fetchItem(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {");
