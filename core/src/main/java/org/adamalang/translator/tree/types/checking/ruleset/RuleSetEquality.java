@@ -24,6 +24,9 @@ public class RuleSetEquality {
         // a mix of int/double
         return CanTestEqualityResult.YesButViaNear;
       }
+      final var aDynamic = RuleSetCommon.IsDynamic(environment, typeA, true);
+      final var bDynamic = RuleSetCommon.IsDynamic(environment, typeB, true);
+      if (aDynamic && bDynamic) { return CanTestEqualityResult.Yes; }
       final var aString = RuleSetCommon.IsString(environment, typeA, true);
       final var bString = RuleSetCommon.IsString(environment, typeB, true);
       if (aString && bString) { return CanTestEqualityResult.Yes; }

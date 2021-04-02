@@ -9,6 +9,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
@@ -147,6 +148,15 @@ public class SillyTypeIssues {
     reactiveStateMachineRef.getAdamaType();
     reactiveStateMachineRef.makeCopyWithNewPosition(reactiveStateMachineRef, TypeBehavior.ReadOnlyNativeValue);
     reactiveStateMachineRef.writeTypeReflectionJson(new JsonStreamWriter());
+    final var reactiveMap = new TyReactiveMap(Token.WRAP("X"), Token.WRAP("X"), reactiveStateMachineRef, Token.WRAP("X"), reactiveStateMachineRef, Token.WRAP("X"));
+    reactiveMap.getAdamaType();
+    reactiveMap.makeCopyWithNewPosition(reactiveClient, TypeBehavior.ReadWriteNative);
+  }
+
+  @Test
+  public void native_enum() {
+    TyNativeEnum e = new TyNativeEnum(TypeBehavior.ReadWriteWithSetGet, null, Token.WRAP("E"), null, new EnumStorage("E"), null);
+    e.getRxStringCodexName();
   }
 
   @Test
@@ -193,5 +203,14 @@ public class SillyTypeIssues {
   public void ntclient() {
     new TyNativeClient(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
     new TyNativeFuture(null, null, null, new TokenizedItem<>(new TyNativeVoid())).writeTypeReflectionJson(new JsonStreamWriter());
+  }
+
+  @Test
+  public void dynamics() {
+    TyReactiveDynamic rdyn = new TyReactiveDynamic(Token.WRAP("dynamic"));
+    rdyn.makeCopyWithNewPosition(rdyn, TypeBehavior.ReadWriteNative);
+    rdyn.getAdamaType();
+    TyNativeDynamic ndyn = new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("dynamic"));
+    ndyn.getAdamaType();
   }
 }

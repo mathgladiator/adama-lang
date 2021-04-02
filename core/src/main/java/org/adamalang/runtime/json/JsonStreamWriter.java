@@ -5,6 +5,7 @@ package org.adamalang.runtime.json;
 
 import java.util.Stack;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtDynamic;
 
 /** Very fast Json stream writer. */
 public class JsonStreamWriter {
@@ -57,6 +58,10 @@ public class JsonStreamWriter {
   public void injectJson(final String x) {
     maybe_comma();
     sb.append(x);
+  }
+
+  public void writeNtDynamic(NtDynamic value) {
+    injectJson(value.json);
   }
 
   private void maybe_comma() {

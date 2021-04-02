@@ -3,4 +3,6 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator.tree.types.traits;
 
-public interface CanBeMapDomain {}
+public interface CanBeMapDomain {
+  public String getRxStringCodexName();
+}

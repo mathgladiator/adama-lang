@@ -10,7 +10,7 @@ import org.adamalang.runtime.reactives.RxMaybe;
 /** a maybe for a boxed java type (i.e. Integer) */
 public class NtMaybe<T> {
   private Consumer<T> assignChain;
-  private RxMaybe<?> deleteChain;
+  private Runnable deleteChain;
   private T value;
 
   /** construct without a value */
@@ -48,7 +48,7 @@ public class NtMaybe<T> {
   public void delete() {
     this.value = null;
     if (deleteChain != null) {
-      deleteChain.delete();
+      deleteChain.run();
     }
     if (assignChain != null) {
       assignChain.accept(this.value);
@@ -89,7 +89,7 @@ public class NtMaybe<T> {
     return this;
   }
 
-  public NtMaybe<T> withDeleteChain(final RxMaybe deleteChain) {
+  public NtMaybe<T> withDeleteChain(final Runnable deleteChain) {
     this.deleteChain = deleteChain;
     return this;
   }

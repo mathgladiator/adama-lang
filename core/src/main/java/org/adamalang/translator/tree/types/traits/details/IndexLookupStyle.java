@@ -4,7 +4,8 @@
 package org.adamalang.translator.tree.types.traits.details;
 
 public enum IndexLookupStyle {
-  Method, //
+  ExpressionLookupMethod, //
+  ExpressionGetOrCreateMethod, //
   Unknown, //
   UtilityFunction
 }

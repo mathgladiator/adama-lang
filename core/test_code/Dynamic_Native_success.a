@@ -1,0 +1,10 @@
+bool t;
+bool t2;
+@construct {
+  readonly dynamic cake1;
+  dynamic cake2;
+  dynamic cake3 = cake1;
+  t = cake1 == cake2;
+  cake3 = @null;
+  t2 = cake1 == @null;
+}

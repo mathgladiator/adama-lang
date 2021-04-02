@@ -10,6 +10,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
@@ -104,8 +105,9 @@ public class TyNativeMap extends TyType implements //
     if ("insert".equals(name)) {
       final var args = new ArrayList<TyType>();
       args.add(this);
-      return new TyNativeFunctional("insert", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("insert", this, new ArrayList<>(args), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("insert", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("insert", this, new ArrayList<>(args), false)), FunctionStyleJava.ExpressionThenArgs);
     }
+
     if ("size".equals(name)) {
       return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true)),
           FunctionStyleJava.ExpressionThenArgs);

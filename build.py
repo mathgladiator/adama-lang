@@ -46,9 +46,9 @@ if jar:
 if generate:
     cwd = os.getcwd()
     os.chdir("core")
-    os.system("java -jar ./target/core-0.1-jar-with-dependencies.jar generate-tests")
+    os.system("java -jar ./target/core-0.2-jar-with-dependencies.jar generate-tests")
     os.chdir(cwd)
 
 if made_jar:
-    args = ["cp", "./devkit/target/devkit-0.1-jar-with-dependencies.jar", "./demo/devkit.jar"]
+    args = ["cp", "./devkit/target/devkit-0.2-jar-with-dependencies.jar", "./demo/devkit.jar"]
     os.system(" ".join(args))

@@ -90,4 +90,9 @@ public class PrivateLazyDeltaWriter {
     manifest();
     writer.writeString(str);
   }
+
+  public void injectJson(final String json) {
+    manifest();
+    writer.injectJson(json);
+  }
 }

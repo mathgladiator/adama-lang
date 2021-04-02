@@ -18,6 +18,7 @@ public class RxInt32Tests {
     Assert.assertEquals(-1, i1.compareTo(i2));
     Assert.assertEquals(1, i2.compareTo(i1));
   }
+
   @Test
   public void dump() {
     final var d = new RxInt32(null, 42);
@@ -25,6 +26,7 @@ public class RxInt32Tests {
     d.__dump(writer);
     Assert.assertEquals("42", writer.toString());
   }
+
   @Test
   public void dirty_and_commit() {
     final var parent = new MockRxParent();

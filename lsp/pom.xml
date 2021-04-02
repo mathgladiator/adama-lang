@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.adamalang</groupId>
     <artifactId>lsp</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
     <parent>
         <groupId>org.adamalang</groupId>
         <artifactId>base</artifactId>
-        <version>0.1</version>
+        <version>0.2</version>
         <relativePath>../</relativePath>
     </parent>
     <dependencies>

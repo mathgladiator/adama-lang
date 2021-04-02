@@ -24,15 +24,7 @@ import org.adamalang.translator.tree.expressions.FieldLookup;
 import org.adamalang.translator.tree.expressions.IndexLookup;
 import org.adamalang.translator.tree.expressions.Lookup;
 import org.adamalang.translator.tree.expressions.MaybeLift;
-import org.adamalang.translator.tree.expressions.constants.BooleanConstant;
-import org.adamalang.translator.tree.expressions.constants.DoubleConstant;
-import org.adamalang.translator.tree.expressions.constants.EnumConstant;
-import org.adamalang.translator.tree.expressions.constants.EnumValuesArray;
-import org.adamalang.translator.tree.expressions.constants.IntegerConstant;
-import org.adamalang.translator.tree.expressions.constants.LongConstant;
-import org.adamalang.translator.tree.expressions.constants.NoOneClientConstant;
-import org.adamalang.translator.tree.expressions.constants.StateMachineConstant;
-import org.adamalang.translator.tree.expressions.constants.StringConstant;
+import org.adamalang.translator.tree.expressions.constants.*;
 import org.adamalang.translator.tree.expressions.linq.Iterate;
 import org.adamalang.translator.tree.expressions.linq.Limit;
 import org.adamalang.translator.tree.expressions.linq.OrderBy;
@@ -73,34 +65,8 @@ import org.adamalang.translator.tree.statements.testing.Force;
 import org.adamalang.translator.tree.statements.testing.PumpMessage;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeArray;
-import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.natives.TyNativeChannel;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
-import org.adamalang.translator.tree.types.natives.TyNativeDouble;
-import org.adamalang.translator.tree.types.natives.TyNativeEnum;
-import org.adamalang.translator.tree.types.natives.TyNativeFuture;
-import org.adamalang.translator.tree.types.natives.TyNativeInteger;
-import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.natives.TyNativeLong;
-import org.adamalang.translator.tree.types.natives.TyNativeMap;
-import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
-import org.adamalang.translator.tree.types.natives.TyNativeMessage;
-import org.adamalang.translator.tree.types.natives.TyNativeRef;
-import org.adamalang.translator.tree.types.natives.TyNativeStateMachineRef;
-import org.adamalang.translator.tree.types.natives.TyNativeString;
-import org.adamalang.translator.tree.types.natives.TyNativeTable;
-import org.adamalang.translator.tree.types.reactive.TyReactiveBoolean;
-import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
-import org.adamalang.translator.tree.types.reactive.TyReactiveDouble;
-import org.adamalang.translator.tree.types.reactive.TyReactiveInteger;
-import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
-import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
-import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
-import org.adamalang.translator.tree.types.reactive.TyReactiveRef;
-import org.adamalang.translator.tree.types.reactive.TyReactiveStateMachineRef;
-import org.adamalang.translator.tree.types.reactive.TyReactiveString;
-import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
+import org.adamalang.translator.tree.types.natives.*;
+import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.DefineMethod;
@@ -165,6 +131,8 @@ public class Parser {
           return new BooleanConstant(token, false);
         case "@no_one":
           return new NoOneClientConstant(token);
+        case "@null":
+          return new DynamicNullConstant(token);
         case "@stable":
           return new EnvStatus(token, EnvLookupName.Stable);
         case "@maybe":
@@ -1036,6 +1004,8 @@ public class Parser {
         return new TyNativeBoolean(behavior, readonlyToken, token);
       case "client":
         return new TyNativeClient(behavior, readonlyToken, token);
+      case "dynamic":
+        return new TyNativeDynamic(behavior, readonlyToken, token);
       case "double":
         return new TyNativeDouble(behavior, readonlyToken, token);
       case "int":
@@ -1159,6 +1129,15 @@ public class Parser {
     return token;
   }
 
+  public TyReactiveMap reactive_map(final Token mapToken) throws AdamaLangException {
+    final var openThing = consumeExpectedSymbol("<");
+    final var domainType = native_type();
+    final var commaToken = consumeExpectedSymbol(",");
+    final var rangeType = reactive_type();
+    final var closeThing = consumeExpectedSymbol(">");
+    return new TyReactiveMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing);
+  }
+
   public TyType reactive_type() throws AdamaLangException {
     final var token = tokens.pop();
     if (token == null) { throw new ParseException("Parser was expecting a reactive type, but got an end of stream instead.", tokens.getLastTokenIfAvailable()); }
@@ -1167,6 +1146,8 @@ public class Parser {
         return new TyReactiveBoolean(token);
       case "client":
         return new TyReactiveClient(token);
+      case "dynamic":
+        return new TyReactiveDynamic(token);
       case "double":
         return new TyReactiveDouble(token);
       case "int":
@@ -1181,6 +1162,8 @@ public class Parser {
         final var typeParameter = type_parameter();
         return new TyReactiveTable(token, typeParameter);
       }
+      case "map":
+        return reactive_map(token);
       case "maybe":
         return new TyReactiveMaybe(token, reactive_parameter_type());
       default:
@@ -1292,6 +1275,7 @@ public class Parser {
     switch (token.text) {
       case "bool":
       case "client":
+      case "dynamic":
       case "double":
       case "int":
       case "string":

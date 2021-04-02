@@ -81,7 +81,7 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
           }
           if (columns != null) {
             for (var candidate = 0; candidate < effectiveness.length; candidate++) {
-              table.document.__monitor.registerTableColumnIndexEffectiveness(table.name, columns[clause[2 * candidate]], TOTAL, effectiveness[candidate]);
+              table.document.__monitor.registerTableColumnIndexEffectiveness(table.className, columns[clause[2 * candidate]], TOTAL, effectiveness[candidate]);
             }
           }
         } else {

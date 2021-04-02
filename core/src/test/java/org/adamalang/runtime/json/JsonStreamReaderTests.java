@@ -20,7 +20,7 @@ public class JsonStreamReaderTests {
     public void skipValue() {
         {
             JsonStreamReader reader = new JsonStreamReader("42");
-            reader.skipValue();
+            Assert.assertEquals("42", reader.readNtDynamic().json);
             Assert.assertTrue(reader.end());
         }
         {
@@ -36,6 +36,11 @@ public class JsonStreamReaderTests {
         {
             JsonStreamReader reader = new JsonStreamReader("{\"x\":42}");
             reader.skipValue();
+            Assert.assertTrue(reader.end());
+        }
+        {
+            JsonStreamReader reader = new JsonStreamReader("{\"x\":42}");
+            Assert.assertEquals("{\"x\":42}", reader.readNtDynamic().json);
             Assert.assertTrue(reader.end());
         }
     }

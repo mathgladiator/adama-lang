@@ -11,24 +11,8 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.CanTestEqualityResult;
 import org.adamalang.translator.tree.types.checking.properties.WrapInstruction;
-import org.adamalang.translator.tree.types.natives.TyNativeArray;
-import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.natives.TyNativeChannel;
-import org.adamalang.translator.tree.types.natives.TyNativeDouble;
-import org.adamalang.translator.tree.types.natives.TyNativeInteger;
-import org.adamalang.translator.tree.types.natives.TyNativeLong;
-import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
-import org.adamalang.translator.tree.types.natives.TyNativeMessage;
-import org.adamalang.translator.tree.types.natives.TyNativeString;
-import org.adamalang.translator.tree.types.reactive.TyReactiveBoolean;
-import org.adamalang.translator.tree.types.reactive.TyReactiveDouble;
-import org.adamalang.translator.tree.types.reactive.TyReactiveInteger;
-import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
-import org.adamalang.translator.tree.types.reactive.TyReactiveLong;
-import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
-import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
-import org.adamalang.translator.tree.types.reactive.TyReactiveString;
-import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
+import org.adamalang.translator.tree.types.natives.*;
+import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
@@ -226,6 +210,15 @@ public class RuleSetCommon {
     if (tyType != null) {
       if (tyType instanceof TyNativeString || tyType instanceof TyReactiveString) { return true; }
       SignalTypeFailure(environment, new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
+  static boolean IsDynamic(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativeDynamic || tyType instanceof TyReactiveDynamic) { return true; }
+      SignalTypeFailure(environment, new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }

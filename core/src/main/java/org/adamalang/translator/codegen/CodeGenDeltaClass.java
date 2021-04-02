@@ -15,6 +15,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeMap;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
+import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
@@ -190,6 +191,15 @@ public class CodeGenDeltaClass {
       writeShowDMaybe(sb, deltaObject, sourceData, ((TyNativeMaybe) sourceType).getEmbeddedType(environment), targetObjectWriter, environment, tabDown);
     } else if (sourceType instanceof TyNativeMap) {
       writeShowDMap(sb, deltaObject, sourceData, ((TyNativeMap) sourceType).domainType, environment.rules.Resolve(((TyNativeMap) sourceType).rangeType, false), targetObjectWriter, environment, tabDown);
+    } else if (sourceType instanceof TyReactiveMap) {
+      boolean addGet = false;
+      var walkRangeType = ((TyReactiveMap) sourceType).getRangeType(environment);
+      var rangeType = walkRangeType;
+      if (walkRangeType instanceof DetailComputeRequiresGet) {
+        addGet = true;
+        rangeType = ((DetailComputeRequiresGet) walkRangeType).typeAfterGet(environment);
+      }
+      writeShowDMapRx(sb, deltaObject, sourceData, ((TyReactiveMap) sourceType).getDomainType(environment), walkRangeType, rangeType, addGet, targetObjectWriter, environment, tabDown);
     }
   }
 
@@ -248,7 +258,7 @@ public class CodeGenDeltaClass {
   }
 
   private static void writeShowDMap(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType domainType, final TyType rangeType, final String targetObjectWriter, final Environment environment,
-      final boolean tabDown) {
+                                    final boolean tabDown) {
     final var domainBoxType = domainType.getJavaBoxType(environment);
     final var rangeDeltaType = ((DetailHasDeltaType) rangeType).getDeltaType(environment);
     sb.append("{").tabUp().writeNewline();
@@ -264,6 +274,32 @@ public class CodeGenDeltaClass {
     sb.append("for (").append(entryType).append(" ").append(mapEntry).append(" : ").append(sourceData).append(") {").tabUp().writeNewline();
     sb.append(rangeDeltaType).append(" ").append(childDeltaVar).append(" = ").append(dMapCacheWalker).append(".next(").append(mapEntry).append(".getKey(), () -> new ").append(rangeDeltaType).append("()").append(");").writeNewline();
     writeShowData(sb, childDeltaVar, mapEntry + ".getValue()", rangeType, listWriterVar + ".planField(\"\" + " + mapEntry + ".getKey())", environment, true);
+    sb.append("}").writeNewline();
+    sb.append(dMapCacheWalker).append(".end(").append(listWriterVar).append(");").writeNewline();
+    sb.append(listWriterVar).append(".end();").tabDown().writeNewline();
+    sb.append("}");
+    if (tabDown) {
+      sb.tabDown();
+    }
+    sb.writeNewline();
+  }
+
+  private static void writeShowDMapRx(final StringBuilderWithTabs sb, final String deltaObject, final String sourceData, final TyType domainType, final TyType walkRangeType, final TyType getRangeType, boolean addGet, final String targetObjectWriter, final Environment environment, final boolean tabDown) {
+    final var domainBoxType = domainType.getJavaBoxType(environment);
+    final var rangeDeltaTypeGet = ((DetailHasDeltaType) getRangeType).getDeltaType(environment);
+    sb.append("{").tabUp().writeNewline();
+    final var listWriterVar = "__map" + environment.autoVariable();
+    final var dMapCache = "__deltaMap" + environment.autoVariable();
+    final var dMapCacheWalker = "__deltaMapWalker" + environment.autoVariable();
+    final var entryTypeWalk = "Map.Entry<" + domainType.getJavaBoxType(environment) + "," + walkRangeType.getJavaBoxType(environment) + ">";
+    final var mapEntryWalk = "__mapEntry" + environment.autoVariable();
+    final var childDeltaVar = "__deltaElement" + environment.autoVariable();
+    sb.append("PrivateLazyDeltaWriter ").append(listWriterVar).append(" = ").append(targetObjectWriter).append(".planObject();").writeNewline();
+    sb.append("DMap<").append(domainBoxType).append(",").append(rangeDeltaTypeGet).append("> ").append(dMapCache).append(" = ").append(deltaObject).append(";").writeNewline();
+    sb.append("DMap<").append(domainBoxType).append(",").append(rangeDeltaTypeGet).append(">.Walk ").append(dMapCacheWalker).append(" = ").append(dMapCache).append(".begin();").writeNewline();
+    sb.append("for (").append(entryTypeWalk).append(" ").append(mapEntryWalk).append(" : ").append(sourceData).append(") {").tabUp().writeNewline();
+    sb.append(rangeDeltaTypeGet).append(" ").append(childDeltaVar).append(" = ").append(dMapCacheWalker).append(".next(").append(mapEntryWalk).append(".getKey(), () -> new ").append(rangeDeltaTypeGet).append("()").append(");").writeNewline();
+    writeShowData(sb, childDeltaVar, mapEntryWalk + ".getValue()" + (addGet ? ".get()" : ""), getRangeType, listWriterVar + ".planField(\"\" + " + mapEntryWalk + ".getKey())", environment, true);
     sb.append("}").writeNewline();
     sb.append(dMapCacheWalker).append(".end(").append(listWriterVar).append(");").writeNewline();
     sb.append(listWriterVar).append(".end();").tabDown().writeNewline();

@@ -4,6 +4,7 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtDynamic;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,6 +47,16 @@ public class JsonStreamWriterTests {
         w.beginObject();
         w.writeObjectFieldIntro(42);
         w.injectJson("[1,2,3]");
+        w.endObject();
+        Assert.assertEquals("{\"42\":[1,2,3]}", w.toString());
+    }
+
+    @Test
+    public void injectDynamic() {
+        JsonStreamWriter w = new JsonStreamWriter();
+        w.beginObject();
+        w.writeObjectFieldIntro(42);
+        w.writeNtDynamic(new NtDynamic("[1,2,3]"));
         w.endObject();
         Assert.assertEquals("{\"42\":[1,2,3]}", w.toString());
     }

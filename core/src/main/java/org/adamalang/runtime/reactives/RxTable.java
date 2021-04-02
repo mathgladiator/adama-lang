@@ -27,13 +27,13 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   private final ReactiveIndex<Ty>[] indices;
   private final LinkedHashMap<Integer, Ty> itemsByKey;
   public final Function<RxParent, Ty> maker;
-  public final String name;
+  public final String className;
   private final TreeSet<Ty> unknowns;
 
-  public RxTable(final LivingDocument document, final RxParent owner, final String name, final Function<RxParent, Ty> maker, final int indicies) {
+  public RxTable(final LivingDocument document, final RxParent owner, final String className, final Function<RxParent, Ty> maker, final int indicies) {
     super(owner);
     this.document = document;
-    this.name = name;
+    this.className = className;
     this.maker = maker;
     if (indicies == 0) {
       this.indices = null;

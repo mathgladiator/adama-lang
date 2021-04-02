@@ -7,6 +7,7 @@ import java.util.ArrayDeque;
 import org.adamalang.runtime.json.token.JsonToken;
 import org.adamalang.runtime.json.token.JsonTokenType;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtDynamic;
 
 public class JsonStreamReader {
   private int index;
@@ -251,6 +252,16 @@ public class JsonStreamReader {
       ensureQueueHappy(1);
       tokens.removeFirst();
     }
+  }
+
+  public String skipValueIntoJson() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    skipValue(writer);
+    return writer.toString();
+  }
+
+  public NtDynamic readNtDynamic() {
+    return new NtDynamic(skipValueIntoJson());
   }
 
   public void skipValue(final JsonStreamWriter writer) {

@@ -4,26 +4,22 @@
 package org.adamalang.translator.codegen;
 
 import java.util.Map;
+
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
-import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
-import org.adamalang.translator.tree.types.reactive.TyReactiveInteger;
-import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
-import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
-import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
-import org.adamalang.translator.tree.types.reactive.TyReactiveRef;
-import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
+import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.DefineMethod;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
+import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
@@ -31,7 +27,7 @@ import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultVal
 /** responsible for writing the code for records */
 public class CodeGenRecords {
   private static boolean isCommitRevertable(final TyType fieldType) {
-    return fieldType instanceof TySimpleReactive || fieldType instanceof TyReactiveMaybe || fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveRef || fieldType instanceof TyReactiveRecord;
+    return fieldType instanceof TySimpleReactive || fieldType instanceof TyReactiveMaybe || fieldType instanceof TyReactiveTable || fieldType instanceof TyReactiveRef || fieldType instanceof TyReactiveRecord || fieldType instanceof TyReactiveMap;
   }
 
   public static void writeCommitAndRevert(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {
@@ -90,10 +86,48 @@ public class CodeGenRecords {
     sb.append("}").writeNewline();
   }
 
+  public static String make(String parent, String className, TyType fieldType, Expression valueOverride, Environment environment) {
+    StringBuilder result = new StringBuilder();
+    if (fieldType instanceof TyReactiveTable) {
+      final var numberIndicies = ((TyReactiveRecord) ((TyReactiveTable) fieldType).getEmbeddedType(environment)).storage.indices.size();
+      result.append("new RxTable<>(__self, ").append(parent).append(", \"").append(className);
+      result.append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName);
+      result.append("(__parent), ").append("" + numberIndicies).append(")");
+    } else if (fieldType instanceof TyReactiveRecord) {
+      result.append("new ").append(fieldType.getJavaConcreteType(environment)).append("(").append(parent).append(")");
+    } else if (fieldType instanceof TyReactiveMap) {
+      String codec = ((CanBeMapDomain) ((TyReactiveMap) fieldType).domainType).getRxStringCodexName();
+      var rangeType =  ((TyReactiveMap) fieldType).getRangeType(environment);
+      String range = rangeType.getJavaBoxType(environment);
+      result.append("new ").append(fieldType.getJavaConcreteType(environment)).append("(").append(parent).append(", new ").append(codec).append("<").append(range).append(">() { @Override public ");
+      result.append(range).append(" make(RxParent __parent) { return ");
+      result.append(make("__parent", range, rangeType, null, environment));
+      result.append(";}").append(" })");
+    } else if (fieldType instanceof IsReactiveValue) {
+      final var javaConcreteType = fieldType.getJavaConcreteType(environment);
+      if (fieldType instanceof DetailInventDefaultValueExpression) {
+        var defaultValue = ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(fieldType);
+        if (valueOverride != null) {
+          defaultValue = valueOverride;
+        }
+        if (defaultValue != null) {
+          defaultValue.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+        }
+        result.append("new ").append(javaConcreteType).append("(").append(parent).append(", ");
+        defaultValue.writeJava(result, environment.scopeWithComputeContext(ComputeContext.Computation));
+        result.append(")");
+      }
+    } else if (fieldType instanceof TyReactiveMaybe) {
+
+    }
+    return result.toString();
+  }
+
   public static void writeCommonBetweenRecordAndRoot(final StructureStorage storage, final StringBuilderWithTabs classConstructorX, final StringBuilderWithTabs classFields, final Environment environment, final boolean injectRootObject) {
     if (injectRootObject) {
       classConstructorX.append("super(__owner);").writeNewline();
     }
+    // classConstructorX.append("RxParent __this_parent = this;").writeNewline();
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
@@ -117,24 +151,13 @@ public class CodeGenRecords {
       final var javaConcreteType = fieldType.getJavaConcreteType(environment);
       classFields.append("private final " + javaConcreteType + " " + fieldName + ";").writeNewline();
       if (fieldType instanceof TyReactiveTable) {
-        final var numberIndicies = ((TyReactiveRecord) ((TyReactiveTable) fieldType).getEmbeddedType(environment)).storage.indices.size();
-        classConstructorX.append(fieldName).append(" = new RxTable<>(__self, this, \"").append(fieldName).append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName).append("(__parent), ")
-            .append("" + numberIndicies).append(");").writeNewline();
+        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment)).append(";").writeNewline();
+      } else if (fieldType instanceof TyReactiveMap) {
+        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment)).append(";").writeNewline();
       } else if (fieldType instanceof TyReactiveRecord) {
-        classConstructorX.append(fieldName).append(" = new ").append(fieldType.getJavaConcreteType(environment)).append("(this);").writeNewline();
+        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment)).append(";").writeNewline();
       } else if (fieldType instanceof IsReactiveValue) {
-        if (fieldType instanceof DetailInventDefaultValueExpression) {
-          var defaultValue = ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(fieldType);
-          if (fdInOrder.defaultValueOverride != null) {
-            defaultValue = fdInOrder.defaultValueOverride;
-          }
-          if (defaultValue != null) {
-            defaultValue.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
-          }
-          classConstructorX.append(fieldName).append(" = new ").append(javaConcreteType).append("(this, ");
-          defaultValue.writeJava(classConstructorX, environment.scopeWithComputeContext(ComputeContext.Computation));
-          classConstructorX.append(");").writeNewline();
-        }
+        classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, fdInOrder.defaultValueOverride, environment)).append(";").writeNewline();
       } else if (fieldType instanceof TyReactiveMaybe) {
         var doImmediateGet = false;
         final var elementType = ((DetailContainsAnEmbeddedType) fieldType).getEmbeddedType(environment);
@@ -161,6 +184,7 @@ public class CodeGenRecords {
       }
       environment.define(fieldName, fieldType, false, fieldType);
     }
+
     for (final BubbleDefinition bubble : storage.bubbles.values()) {
       classFields.append("private final RxGuard ___" + bubble.nameToken.text + ";").writeNewline();
       classConstructorX.append("___").append(bubble.nameToken.text).append(" =  new RxGuard();").writeNewline();

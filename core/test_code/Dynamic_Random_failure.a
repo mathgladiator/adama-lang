@@ -1,0 +1,4 @@
+@construct {
+  dynamic cake3 = true;
+  // this fails now, but should we consider how we can inject and read data out of dynamic, or is it a pure container for customers
+}

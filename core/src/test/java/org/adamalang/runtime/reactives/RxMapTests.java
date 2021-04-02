@@ -1,0 +1,236 @@
+/* The Adama Programming Language For Board Games!
+ *    See http://www.adama-lang.org/ for more information.
+ * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
+package org.adamalang.runtime.reactives;
+
+import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.mocks.MockRxChild;
+import org.adamalang.runtime.mocks.MockRxParent;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class RxMapTests {
+
+  private RxMap<Integer, RxInt32> map() {
+    return new RxMap<Integer, RxInt32>(new MockRxParent(), new RxMap.IntegerCodec<RxInt32>() {
+      @Override
+      public RxInt32 make(RxParent maker) {
+        return new RxInt32(maker, 0);
+      }
+    });
+  }
+
+  @Test
+  public void dump_empty() {
+    final var m = map();
+    JsonStreamWriter writer = new JsonStreamWriter();
+    m.__dump(writer);
+    Assert.assertEquals("{}", writer.toString());
+  }
+
+  @Test
+  public void dump_singular() {
+    final var m = map();
+    m.getOrCreate(42).set(52);
+    JsonStreamWriter writer = new JsonStreamWriter();
+    m.__dump(writer);
+    Assert.assertEquals("{\"42\":52}", writer.toString());
+  }
+
+  @Test
+  public void dump_after_revert() {
+    final var m = map();
+    m.getOrCreate(42).set(52);
+    m.__revert();
+    JsonStreamWriter writer = new JsonStreamWriter();
+    m.__dump(writer);
+    Assert.assertEquals("{}", writer.toString());
+  }
+
+  @Test
+  public void dump_after_create_then_remove() {
+    final var m = map();
+    m.getOrCreate(42).set(52);
+    m.remove(42);
+    JsonStreamWriter writer = new JsonStreamWriter();
+    m.__dump(writer);
+    Assert.assertEquals("{}", writer.toString());
+  }
+
+  @Test
+  public void commit_seq() {
+    final var m = map();
+    m.getOrCreate(42).set(52);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{\"42\":52}", forward.toString());
+      Assert.assertEquals("\"map\":{\"42\":null}", reverse.toString());
+    }
+    m.getOrCreate(50).set(100);
+    m.remove(42);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{\"42\":null,\"50\":100}", forward.toString());
+      Assert.assertEquals("\"map\":{\"42\":52,\"50\":null}", reverse.toString());
+    }
+    m.getOrCreate(50).set(17);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{\"50\":17}", forward.toString());
+      Assert.assertEquals("\"map\":{\"50\":100}", reverse.toString());
+    }
+  }
+
+  @Test
+  public void revert_seq() {
+    final var m = map();
+    JsonStreamReader reader = new JsonStreamReader("{\"42\":123,\"50\":100,\"100\":null}");
+    m.__insert(reader);
+    { // revert insertion
+      Assert.assertEquals(2, m.size());
+      m.getOrCreate(1000).set(24);
+      Assert.assertEquals(3, m.size());
+      Assert.assertTrue(m.lookup(1000).has());
+      m.__revert();
+      Assert.assertFalse(m.lookup(1000).has());
+    }
+    { // revert change
+      m.getOrCreate(42).set(24);
+      Assert.assertEquals(24, (int) m.lookup(42).get().get());
+      m.__revert();
+      Assert.assertEquals(123, (int) m.lookup(42).get().get());
+    }
+    { // revert delete
+      Assert.assertEquals(2, m.size());
+      m.remove(42);
+      Assert.assertEquals(1, m.size());
+      Assert.assertFalse(m.lookup(42).has());
+      m.__revert();
+      Assert.assertTrue(m.lookup(42).has());
+      Assert.assertEquals(2, m.size());
+    }
+  }
+
+  @Test
+  public void seq() {
+    final var m = map();
+    MockRxChild child = new MockRxChild();
+    m.__subscribe(child);
+    m.getOrCreate(42).set(52);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{\"42\":52}", forward.toString());
+      Assert.assertEquals("\"map\":{\"42\":null}", reverse.toString());
+    }
+    child.assertInvalidateCount(3);
+  }
+
+  @Test
+  public void insert() {
+    final var m = map();
+    m.getOrCreate(100).set(50);
+    JsonStreamReader reader = new JsonStreamReader("{\"42\":123,\"50\":100,\"100\":null}");
+    m.__insert(reader);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{}", forward.toString());
+      Assert.assertEquals("\"map\":{}", reverse.toString());
+    }
+    JsonStreamWriter dump = new JsonStreamWriter();
+    m.__dump(dump);
+    Assert.assertEquals("{\"42\":123,\"50\":100}", dump.toString());
+    Assert.assertTrue(m.lookup(42).has());
+    Assert.assertFalse(m.lookup(1000).has());
+  }
+
+  @Test
+  public void lookup() {
+    final var m = map();
+    m.getOrCreate(100).set(50);
+    JsonStreamReader reader = new JsonStreamReader("{\"42\":123,\"50\":100,\"100\":null}");
+    m.__insert(reader);
+    Assert.assertTrue(m.lookup(42).has());
+    Assert.assertTrue(m.lookup(50).has());
+    Assert.assertFalse(m.lookup(1000).has());
+    Assert.assertFalse(m.lookup(100).has());
+    m.iterator();
+  }
+
+  @Test
+  public void resurrect() {
+    final var m = map();
+    MockRxChild child = new MockRxChild();
+    m.__subscribe(child);
+    m.getOrCreate(42).set(52);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{\"42\":52}", forward.toString());
+      Assert.assertEquals("\"map\":{\"42\":null}", reverse.toString());
+    }
+    m.remove(42);
+    Assert.assertEquals(52, (int) m.getOrCreate(42).get());
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{}", forward.toString());
+      Assert.assertEquals("\"map\":{}", reverse.toString());
+    }
+    child.assertInvalidateCount(5);
+    m.iterator();
+  }
+
+  @Test
+  public void codec() {
+    Assert.assertEquals(123,  (int) new RxMap.IntegerCodec<RxInt32>() {
+      @Override
+      public RxInt32 make(RxParent maker) {
+        return null;
+      }
+    }.fromStr("123"));
+    Assert.assertEquals("123", new RxMap.IntegerCodec<RxInt32>() {
+      @Override
+      public RxInt32 make(RxParent maker) {
+        return null;
+      }
+    }.toStr(123));
+    Assert.assertEquals(123L,  (long) new RxMap.LongCodec<RxInt32>() {
+      @Override
+      public RxInt32 make(RxParent maker) {
+        return null;
+      }
+    }.fromStr("123"));
+    Assert.assertEquals("123", new RxMap.LongCodec<RxInt32>() {
+      @Override
+      public RxInt32 make(RxParent maker) {
+        return null;
+      }
+    }.toStr(123L));
+    Assert.assertEquals("123",  new RxMap.StringCodec<RxInt32>() {
+      @Override
+      public RxInt32 make(RxParent maker) {
+        return null;
+      }
+    }.fromStr("123"));
+    Assert.assertEquals("123", new RxMap.StringCodec<RxInt32>() {
+      @Override
+      public RxInt32 make(RxParent maker) {
+        return null;
+      }
+    }.toStr("123"));
+  }
+}

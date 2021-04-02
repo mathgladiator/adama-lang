@@ -3,7 +3,6 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.reactives;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.function.Function;
 import org.adamalang.runtime.contracts.CanGetAndSet;
@@ -123,9 +122,9 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
       return new NtMaybe();
     } else {
       if (value instanceof CanGetAndSet) {
-        return new NtMaybe(((CanGetAndSet) value).get()).withDeleteChain(this);
+        return new NtMaybe(((CanGetAndSet) value).get()).withDeleteChain(() -> delete());
       } else {
-        return new NtMaybe(value).withDeleteChain(this);
+        return new NtMaybe(value).withDeleteChain(() -> delete());
       }
     }
   }

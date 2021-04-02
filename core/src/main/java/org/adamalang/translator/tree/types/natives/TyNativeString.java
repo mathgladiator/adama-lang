@@ -111,4 +111,10 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
     writer.writeString("string");
     writer.endObject();
   }
+
+  @Override
+  public String getRxStringCodexName() {
+    return "RxMap.StringCodec";
+  }
+
 }

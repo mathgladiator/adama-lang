@@ -93,7 +93,7 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
 
   @Override
   public IndexLookupStyle getLookupStyle(final Environment environment) {
-    return IndexLookupStyle.Method;
+    return IndexLookupStyle.ExpressionLookupMethod;
   }
 
   @Override

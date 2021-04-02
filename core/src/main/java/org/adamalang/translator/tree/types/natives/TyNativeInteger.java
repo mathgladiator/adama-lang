@@ -75,4 +75,9 @@ public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
     writer.writeString("int");
     writer.endObject();
   }
+
+  @Override
+  public String getRxStringCodexName() {
+    return "RxMap.IntegerCodec";
+  }
 }

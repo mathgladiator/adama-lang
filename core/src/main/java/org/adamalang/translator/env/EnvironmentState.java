@@ -55,6 +55,10 @@ public class EnvironmentState {
     return computationContext == ComputeContext.Computation;
   }
 
+  public boolean isContextAssignment() {
+    return computationContext == ComputeContext.Assignment;
+  }
+
   /** is the current environment operating inside a message handler */
   public boolean isMessageHandler() {
     return isMessageHandler;

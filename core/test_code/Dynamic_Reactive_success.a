@@ -1,0 +1,18 @@
+public dynamic food;
+message X {
+  dynamic ninja;
+}
+
+channel assoc(client who, X x) {
+  food = x.ninja;
+}
+
+rpc assoc2(who, dynamic v) {
+  food = v;
+  dynamic z = food;
+}
+
+@construct {
+  dynamic d;
+  food = d;
+}

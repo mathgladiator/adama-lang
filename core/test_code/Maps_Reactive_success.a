@@ -1,0 +1,47 @@
+public map<int, int> my_map1;
+
+@connected (who) {
+  return true;
+}
+
+record X {
+  public int u;
+  public int v;
+}
+
+public map<string, X> my_map2;
+int v;
+int w;
+int sz;
+
+enum E { A, B };
+
+public map<long, E> my_map3;
+
+public map<long, map<int, int>> crazy;
+
+@construct {
+  // write two values
+  my_map1[42] = 24;
+  my_map1[500] = 100500;
+  crazy[100][100] = 42;
+
+  // test a non-exist values
+  if (my_map1[4] as x) {
+    my_map1[5000] = 123;
+  } else {
+    my_map1[1000] = 9999;
+  }
+
+  // overwrite an existing value (super neat)
+  if (my_map1[500] as x) {
+    v = x;
+    x = 424242;
+  }
+
+  my_map2["hi"] <- {u:42, v:50};
+  if (my_map2["hi"] as uv) {
+    w = uv.u + uv.v;
+  }
+  sz = my_map1.size();
+}

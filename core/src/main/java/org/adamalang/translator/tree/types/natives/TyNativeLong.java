@@ -75,4 +75,10 @@ public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
     writer.writeString("long");
     writer.endObject();
   }
+
+  @Override
+  public String getRxStringCodexName() {
+    return "RxMap.LongCodec";
+  }
+
 }

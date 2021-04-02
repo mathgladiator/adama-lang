@@ -129,6 +129,9 @@ public class RuleSetAssignment {
     final var aClient = RuleSetAsync.IsClient(environment, typeA, true);
     final var bClient = RuleSetAsync.IsClient(environment, typeB, true);
     if (aClient && bClient) { return true; }
+    final var aDynamic = RuleSetCommon.IsDynamic(environment, typeA, true);
+    final var bDynamic = RuleSetCommon.IsDynamic(environment, typeB, true);
+    if (aDynamic && bDynamic) { return true; }
     final var aLabel = RuleSetStateMachine.IsStateMachineRef(environment, typeA, true);
     final var bLabel = RuleSetStateMachine.IsStateMachineRef(environment, typeB, true);
     if (aLabel && bLabel) { return true; }
@@ -149,8 +152,8 @@ public class RuleSetAssignment {
       final var childB = RuleSetCommon.ExtractEmbeddedType(environment, typeB, silent);
       if (CanTypeAStoreTypeB(environment, childA, childB, tweak, true) && CanTypeAStoreTypeB(environment, childB, childA, tweak, true)) { return true; }
     }
-    final var aMap = RuleSetMap.IsMap(environment, typeA);
-    final var bMap = RuleSetMap.IsMap(environment, typeB);
+    final var aMap = RuleSetMap.IsNativeMap(environment, typeA);
+    final var bMap = RuleSetMap.IsNativeMap(environment, typeB);
     if (aMap && bMap) {
       final var mapA = (IsMap) typeA;
       final var mapB = (IsMap) typeB;

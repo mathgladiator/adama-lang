@@ -11,7 +11,9 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMap;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
+import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
@@ -26,6 +28,7 @@ public class IndexLookup extends Expression {
   public final Token bracketOpenToken;
   public final Expression expression;
   private IndexLookupStyle lookupStyle;
+  private String castArg;
 
   public IndexLookup(final Expression expression, final Token bracketOpenToken, final Expression arg, final Token bracketCloseToken) {
     this.expression = expression;
@@ -36,6 +39,7 @@ public class IndexLookup extends Expression {
     this.ingest(arg);
     this.ingest(bracketCloseToken);
     lookupStyle = IndexLookupStyle.Unknown;
+    this.castArg = null;
   }
 
   @Override
@@ -53,10 +57,21 @@ public class IndexLookup extends Expression {
     TyType resultType = null;
     if (environment.rules.IsMap(typeExpr)) {
       final var mapType = (IsMap) typeExpr;
-      lookupStyle = IndexLookupStyle.Method;
       final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), mapType.getDomainType(environment));
-      if (environment.rules.CanTypeAStoreTypeB(mapType.getDomainType(environment), typeArg, StorageTweak.None, false)) {
-        resultType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(mapType.getRangeType(environment))).withPosition(this);
+      if (environment.state.isContextAssignment() && RuleSetMap.IsReactiveMap(environment, typeExpr)) {
+        TyType domainType = mapType.getDomainType(environment);
+        if (domainType instanceof TyNativeLong && typeArg instanceof TyNativeInteger) {
+          castArg = "long";
+        }
+        lookupStyle = IndexLookupStyle.ExpressionGetOrCreateMethod;
+        if (environment.rules.CanTypeAStoreTypeB(mapType.getDomainType(environment), typeArg, StorageTweak.None, false)) {
+          resultType = mapType.getRangeType(environment);
+        }
+      } else {
+        lookupStyle = IndexLookupStyle.ExpressionLookupMethod;
+        if (environment.rules.CanTypeAStoreTypeB(mapType.getDomainType(environment), typeArg, StorageTweak.None, false)) {
+          resultType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(mapType.getRangeType(environment))).withPosition(this);
+        }
       }
     } else {
       environment.rules.IsIterable(typeExpr, false);
@@ -77,9 +92,17 @@ public class IndexLookup extends Expression {
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    if (lookupStyle == IndexLookupStyle.Method) {
+    if (lookupStyle == IndexLookupStyle.ExpressionLookupMethod) {
       expression.writeJava(sb, environment);
       sb.append(".lookup(");
+      arg.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+      sb.append(")");
+    } else if (lookupStyle == IndexLookupStyle.ExpressionGetOrCreateMethod) {
+      expression.writeJava(sb, environment);
+      sb.append(".getOrCreate(");
+      if (castArg != null) {
+        sb.append("(").append(castArg).append(") ");
+      }
       arg.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
       sb.append(")");
     } else if (lookupStyle == IndexLookupStyle.UtilityFunction) {

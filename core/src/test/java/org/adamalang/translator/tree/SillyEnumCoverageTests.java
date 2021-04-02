@@ -4,11 +4,13 @@
 package org.adamalang.translator.tree;
 
 import org.adamalang.translator.env.ComputeContext;
+import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.DocumentEvent;
 import org.adamalang.translator.tree.definitions.FunctionSpecialization;
 import org.adamalang.translator.tree.definitions.MessageHandlerBehavior;
 import org.adamalang.translator.tree.expressions.EnvLookupName;
 import org.adamalang.translator.tree.expressions.MessageConversionStyle;
+import org.adamalang.translator.tree.expressions.constants.DynamicNullConstant;
 import org.adamalang.translator.tree.operands.AssignmentOp;
 import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.operands.PostfixMutateOp;
@@ -51,6 +53,11 @@ public class SillyEnumCoverageTests {
   }
 
   @Test
+  public void dyn_null() {
+    new DynamicNullConstant(Token.WRAP("null")).emit((t) -> {});
+  }
+
+  @Test
   public void coverageSimple() {
     AssignableEmbedType.None.toString();
     CanAssignResult.No.toString();
@@ -62,7 +69,8 @@ public class SillyEnumCoverageTests {
     StorageSpecialization.Message.toString();
     ComputeContext.Assignment.toString();
     EnvLookupName.Blocked.toString();
-    IndexLookupStyle.Method.toString();
+    IndexLookupStyle.ExpressionLookupMethod.toString();
+    IndexLookupStyle.ExpressionGetOrCreateMethod.toString();
     ComputeContext.Computation.toString();
   }
 }

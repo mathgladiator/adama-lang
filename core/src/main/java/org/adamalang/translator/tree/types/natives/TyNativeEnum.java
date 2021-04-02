@@ -135,4 +135,9 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
     storage.writeTypeReflectionJson(writer);
     writer.endObject();
   }
+
+  @Override
+  public String getRxStringCodexName() {
+    return "RxMap.IntegerCodec";
+  }
 }
