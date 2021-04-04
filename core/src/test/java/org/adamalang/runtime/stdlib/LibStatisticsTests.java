@@ -55,4 +55,14 @@ public class LibStatisticsTests {
     final var list = new ArrayNtList<>(ints);
     Assert.assertEquals(321, LibStatistics.sumInts(list));
   }
+
+  @Test
+  public void sumLongs() {
+    final var longs = new ArrayList<Long>();
+    longs.add(1L);
+    longs.add(200000L);
+    longs.add(30000000000l);
+    final var list = new ArrayNtList<>(longs);
+    Assert.assertEquals(30000200001L, LibStatistics.sumLongs(list));
+  }
 }

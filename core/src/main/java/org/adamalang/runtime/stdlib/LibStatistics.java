@@ -46,4 +46,13 @@ public class LibStatistics {
     }
     return sum;
   }
+
+  @UseName(name = "sum")
+  public static long sumLongs(@HiddenType(clazz = Long.class) final NtList<Long> list) {
+    var sum = 0L;
+    for (final Long x : list) {
+      sum += x;
+    }
+    return sum;
+  }
 }

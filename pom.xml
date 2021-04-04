@@ -18,6 +18,7 @@
     <url>http://www.adama-lang.org/</url>
     <modules>
         <module>core</module>
+        <module>data</module>
         <module>devkit</module>
         <module>lsp</module>
     </modules>
