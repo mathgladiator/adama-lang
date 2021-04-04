@@ -6,6 +6,7 @@ package org.adamalang.runtime.logger;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** the result of a transaction */
+@Deprecated
 public class TransactionResult {
   public static TransactionResult from(final ObjectNode node) {
     final var needsInvalidationNode = node.get("needsInvalidation");

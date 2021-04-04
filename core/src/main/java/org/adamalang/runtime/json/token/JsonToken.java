@@ -11,4 +11,12 @@ public class JsonToken {
     this.type = type;
     this.data = data;
   }
+
+  @Override
+  public String toString() {
+    return "JsonToken{" +
+            "data='" + data + '\'' +
+            ", type=" + type +
+            '}';
+  }
 }

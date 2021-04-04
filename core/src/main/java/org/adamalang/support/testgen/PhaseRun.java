@@ -3,14 +3,14 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.support.testgen;
 
+import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-import org.adamalang.runtime.contracts.DocumentMonitor;
-import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.runtime.contracts.TimeSource;
-import org.adamalang.runtime.contracts.TransactionLogger;
+import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.logger.NoOpLogger;
@@ -53,44 +53,61 @@ public class PhaseRun {
       }
     };
     testTransactionLogger.close(); // stupid coverage
-    final var transactor = new Transactor(factory, monitor, time, testTransactionLogger);
-    transactor.construct(NtClient.NO_ONE, "{}", "0");
+    DumbDataService dds = new DumbDataService((patch) -> {
+      outputFile.append(patch.request.toString() + "-->" + patch.redo.toString() + " need:" + patch.requiresFutureInvalidation + " in:" + patch.whenToInvalidateMilliseconds + "\n");
+      testTime.addAndGet(Math.max(patch.whenToInvalidateMilliseconds / 2, 25));
+    });
+
+    DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
+
     try {
-      transactor.createView(NtClient.NO_ONE, wrap(str -> {
+      DurableLivingDocument.fresh(0, factory, NtClient.NO_ONE, "{}", "0", monitor, time, dds, acquire);
+      DurableLivingDocument doc = acquire.get();
+
+      doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
         outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
       }));
       try {
-        transactor.connect(NtClient.NO_ONE);
-      } catch (final ErrorCodeException e) {
-        outputFile.append("NO_ONE was DENIED:" + e.code + "\n");
+        doc.connect(NtClient.NO_ONE, DumbDataService.NOOPINT);
+      } catch (final RuntimeException e) {
+        outputFile.append("NO_ONE was DENIED\n");
       }
       final var rando = new NtClient("rando", "random-place");
-      transactor.createView(rando, wrap(str -> {
+      doc.createPrivateView(rando, wrap(str -> {
         outputFile.append("+ RANDO DELTA:").append(str).append("\n");
       }));
       try {
-        transactor.connect(rando);
-      } catch (final ErrorCodeException e) {
-        outputFile.append("RANDO was DENIED:" + e.code + "\n");
+        doc.connect(rando, DumbDataService.NOOPINT);
+      } catch (final RuntimeException e) {
+        outputFile.append("RANDO was DENIED:\n");
       }
-      var transactionResult = transactor.invalidate();
-      while (transactionResult.needsInvalidation) {
-        transactionResult = transactor.invalidate();
+      doc.invalidate(DumbDataService.NOOPINT);
+
+      doc.bill(DumbDataService.NOOPINT);
+      outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
+      outputFile.append(objectNodeLog.node.toString()).append("\n");
+      outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");
+      final var json = doc.json();
+      dds.setData(json);
+      outputFile.append(json).append("\n");
+      DumbDataService.DumbDurableLivingDocumentAcquire acquire2 = new DumbDataService.DumbDurableLivingDocumentAcquire();
+      DurableLivingDocument.load(0, factory, monitor, time, dds, acquire2);
+      DurableLivingDocument doc2 = acquire2.get();
+      outputFile.append(doc2.json()).append("\n");
+      if (!doc2.json().equals(json)) {
+        throw new RuntimeException("Json were not equal");
       }
-    } catch (final GoodwillExhaustedException gee) {
+    } catch (final RuntimeException gee) {
       passedTests.set(false);
-      outputFile.append("GOODWILL EXHAUSTED:" + gee.getMessage()).append("!!!\n!!!\n");
+      Throwable search = gee;
+      while (search.getCause() != null) {
+        search = search.getCause();
+        if (search instanceof GoodwillExhaustedException) {
+          outputFile.append("GOODWILL EXHAUSTED:" + gee.getMessage()).append("!!!\n!!!\n");
+          return;
+        }
+      }
+      throw gee;
     }
-    transactor.bill();
-    outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
-    outputFile.append(objectNodeLog.node.toString()).append("\n");
-    outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");
-    final var json = transactor.json();
-    outputFile.append(json).append("\n");
-    final var __t = new Transactor(factory, monitor, time, new NoOpLogger());
-    __t.create();
-    __t.insert(json);
-    outputFile.append(__t.json()).append("\n");
-    if (!__t.json().equals(json)) { throw new RuntimeException("Json were not equal"); }
   }
 }

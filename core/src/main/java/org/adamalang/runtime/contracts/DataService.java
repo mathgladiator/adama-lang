@@ -3,15 +3,17 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.contracts;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.logger.TransactionResult;
-
 /** the contract for the data service */
 public interface DataService {
   /** the local copy of the document should be changed by incorporating the given patch */
   public static class LocalDocumentChange {
-    public ObjectNode patch;
-    public long seq;
+    public final String patch;
+    public final int seq;
+
+    public LocalDocumentChange(String patch, int seq) {
+      this.patch = patch;
+      this.seq = seq;
+    }
   }
 
   /** the remote copy should change */
@@ -48,7 +50,7 @@ public interface DataService {
   public void create(DataCallback<Long> callback);
 
   /** Download the entire object and return the entire json */
-  void get(String gameSpace, long documentId, DataCallback<LocalDocumentChange> callback);
+  void get(long documentId, DataCallback<LocalDocumentChange> callback);
 
   /** Apply a patch to the document using rfc7396 */
   public void patch(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback);

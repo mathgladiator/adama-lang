@@ -8,7 +8,106 @@ import org.adamalang.runtime.natives.NtDynamic;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 public class JsonStreamWriterTests {
+
+    @Test
+    public void tree_empty_map() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(new HashMap<>());
+        Assert.assertEquals("{}", writer.toString());
+    }
+
+    @Test
+    public void tree_empty_array() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(new ArrayList<>());
+        Assert.assertEquals("[]", writer.toString());
+    }
+
+    @Test
+    public void tree_map1() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("x", 123);
+        writer.writeTree(map);
+        Assert.assertEquals("{\"x\":123}", writer.toString());
+    }
+
+    @Test
+    public void tree_array_1() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        ArrayList<Object> arr = new ArrayList<>();
+        arr.add(123);
+        writer.writeTree(arr);
+        Assert.assertEquals("[123]", writer.toString());
+    }
+
+    @Test
+    public void tree_map2() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        HashMap<String, Object> map = new LinkedHashMap<>();
+        map.put("x", 123);
+        map.put("y", false);
+        writer.writeTree(map);
+        Assert.assertEquals("{\"x\":123,\"y\":false}", writer.toString());
+    }
+
+    @Test
+    public void tree_array_2() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        ArrayList<Object> arr = new ArrayList<>();
+        arr.add(123);
+        arr.add(true);
+        writer.writeTree(arr);
+        Assert.assertEquals("[123,true]", writer.toString());
+    }
+
+    @Test
+    public void tree_double() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(1.5);
+        Assert.assertEquals("1.5", writer.toString());
+    }
+
+    @Test
+    public void tree_int() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(1);
+        Assert.assertEquals("1", writer.toString());
+    }
+
+    @Test
+    public void tree_long() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(1L);
+        Assert.assertEquals("\"1\"", writer.toString());
+    }
+
+    @Test
+    public void tree_bool() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(true);
+        Assert.assertEquals("true", writer.toString());
+    }
+
+    @Test
+    public void tree_string() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree("hi");
+        Assert.assertEquals("\"hi\"", writer.toString());
+    }
+
+    @Test
+    public void tree_string_escape() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree("hi\n");
+        Assert.assertEquals("\"hi\\n\"", writer.toString());
+    }
+
     @Test
     public void emptyObject() {
         JsonStreamWriter w = new JsonStreamWriter();

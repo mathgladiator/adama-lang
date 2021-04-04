@@ -7,6 +7,7 @@ import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.logger.Transaction;
 
 /** the data model uses a log */
+@Deprecated
 public interface TransactionLogger {
   /** the log has been closed */
   public void close() throws Exception;

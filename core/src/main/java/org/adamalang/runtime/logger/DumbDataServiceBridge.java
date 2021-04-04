@@ -5,6 +5,7 @@ import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.TransactionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
+@Deprecated
 public class DumbDataServiceBridge implements DataService {
   private final TransactionLogger logger;
 
@@ -18,7 +19,7 @@ public class DumbDataServiceBridge implements DataService {
   }
 
   @Override
-  public void get(String gameSpace, long documentId, DataCallback<LocalDocumentChange> callback) {
+  public void get(long documentId, DataCallback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** used by SynchronousJsonDeltaDiskLogger to de-serialize a Transaction. This
  * will pull the record off a buffered reader */
+@Deprecated
 class NewlineJsonTransactionDiskRecord {
   public static void writeTo(final Transaction transaction, final PrintWriter writer) {
     writer.println(transaction.request);

@@ -7,6 +7,7 @@ import org.adamalang.runtime.contracts.TransactionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 /** a logger which does no logging */
+@Deprecated
 public class NoOpLogger implements TransactionLogger {
   public static final NoOpLogger INSTANCE = new NoOpLogger();
 

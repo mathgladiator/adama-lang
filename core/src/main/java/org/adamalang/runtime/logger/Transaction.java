@@ -4,6 +4,7 @@
 package org.adamalang.runtime.logger;
 
 /** a single transaction of a request producing a delta */
+@Deprecated
 public class Transaction {
   public final String forwardDelta;
   public final String reverseDelta;

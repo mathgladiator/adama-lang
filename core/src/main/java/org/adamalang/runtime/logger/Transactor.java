@@ -14,6 +14,7 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 /** this an exceptionally low-level class and provides the primitives to build
  * an API. */
+@Deprecated
 public class Transactor {
   public LivingDocument document;
   public final LivingDocumentFactory factory;

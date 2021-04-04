@@ -3,6 +3,10 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.json;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
@@ -124,6 +128,41 @@ public class JsonStreamWriter {
   public void writeNull() {
     maybe_comma();
     sb.append("null");
+  }
+
+  public void writeTree(Object tree) {
+    if (tree == null) {
+      writeNull();
+      return;
+    }
+    if (tree instanceof HashMap) {
+      beginObject();
+      HashMap<String, Object> map = (HashMap<String, Object>) tree;
+      for (Map.Entry<String, Object> entry : map.entrySet()) {
+        writeObjectFieldIntro(entry.getKey());
+        writeTree(entry.getValue());
+      }
+      endObject();
+    } else if (tree instanceof ArrayList) {
+      beginArray();
+      for (Object element : (ArrayList) tree) {
+        writeTree(element);
+      }
+      endArray();
+
+    } else if (tree instanceof Boolean) {
+      writeBoolean((Boolean) tree);
+    } else if (tree instanceof Double) {
+      writeDouble((Double) tree);
+    } else if (tree instanceof Long) {
+      writeLong((Long) tree);
+    } else if (tree instanceof Integer) {
+      writeInteger((Integer) tree);
+    } else if (tree instanceof String) {
+      writeString((String) tree);
+    } else {
+      throw new RuntimeException("unexpected object: " + tree);
+    }
   }
 
   public void writeObjectFieldIntro(final int fieldName) {

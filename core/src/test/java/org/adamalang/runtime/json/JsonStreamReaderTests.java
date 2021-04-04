@@ -7,7 +7,77 @@ import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class JsonStreamReaderTests {
+
+    @Test
+    public void tree_empty_obj() {
+        JsonStreamReader reader = new JsonStreamReader("{}");
+        Object obj = reader.readJavaTree();
+        Assert.assertTrue(obj instanceof HashMap);
+        Assert.assertTrue(reader.end());
+    }
+
+    @Test
+    public void tree_obj() {
+        JsonStreamReader reader = new JsonStreamReader("{\"x\":123}");
+        Object obj = reader.readJavaTree();
+        Assert.assertTrue(obj instanceof HashMap);
+        Assert.assertTrue(123.0 == (double) (((HashMap<?, ?>) obj).get("x")));
+        Assert.assertTrue(reader.end());
+    }
+
+    @Test
+    public void tree_empty_array() {
+        JsonStreamReader reader = new JsonStreamReader("[]");
+        Object obj = reader.readJavaTree();
+        Assert.assertTrue(obj instanceof ArrayList);
+        Assert.assertTrue(reader.end());
+    }
+
+    @Test
+    public void tree_array() {
+        JsonStreamReader reader = new JsonStreamReader("[123]");
+        Object obj = reader.readJavaTree();
+        Assert.assertTrue(obj instanceof ArrayList);
+        Assert.assertTrue(123.0 == (double) (((ArrayList<Object>) obj).get(0)));
+        Assert.assertTrue(reader.end());
+    }
+
+    @Test
+    public void tree_number() {
+        JsonStreamReader reader = new JsonStreamReader("1.4");
+        Object obj = reader.readJavaTree();
+        Assert.assertTrue(1.4 == (Double) obj);
+        Assert.assertTrue(reader.end());
+    }
+
+    @Test
+    public void tree_bool_true() {
+        JsonStreamReader reader = new JsonStreamReader("true");
+        Object obj = reader.readJavaTree();
+        Assert.assertTrue((Boolean) obj);
+        Assert.assertTrue(reader.end());
+    }
+
+    @Test
+    public void tree_bool_false() {
+        JsonStreamReader reader = new JsonStreamReader("false");
+        Object obj = reader.readJavaTree();
+        Assert.assertFalse((Boolean) obj);
+        Assert.assertTrue(reader.end());
+    }
+
+    @Test
+    public void tree_null() {
+        JsonStreamReader reader = new JsonStreamReader("null");
+        Object obj = reader.readJavaTree();
+        Assert.assertNull(obj);
+        Assert.assertTrue(reader.end());
+    }
+
     @Test
     public void scanOver() {
         JsonStreamReader reader = new JsonStreamReader("{}");

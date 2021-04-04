@@ -4,10 +4,14 @@
 package org.adamalang.runtime.json;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+
 import org.adamalang.runtime.json.token.JsonToken;
 import org.adamalang.runtime.json.token.JsonTokenType;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
+import org.adamalang.translator.parser.token.Token;
 
 public class JsonStreamReader {
   private int index;
@@ -103,6 +107,40 @@ public class JsonStreamReader {
   public String readString() {
     ensureQueueHappy(1);
     return tokens.removeFirst().data;
+  }
+
+  public Object readJavaTree() {
+    if (startObject()) {
+      LinkedHashMap<String, Object> obj = new LinkedHashMap<>();
+      while (notEndOfObject()) {
+        String fieldName = fieldName();
+        obj.put(fieldName, readJavaTree());
+      }
+      return obj;
+    } else if (startArray()) {
+      ArrayList<Object> arr = new ArrayList<>();
+      while (notEndOfArray()) {
+        arr.add(readJavaTree());
+      }
+      return arr;
+    } else {
+      ensureQueueHappy(1);
+      JsonToken token = tokens.removeFirst();
+      switch (token.type) {
+        case Null:
+          return null;
+        case False:
+          return false;
+        case True:
+          return true;
+        case NumberLiteral:
+          return Double.parseDouble(token.data);
+        case StringLiteral:
+          return token.data;
+        default:
+          throw new RuntimeException("unexpected token: " + token.toString());
+      }
+    }
   }
 
   private void readToken() {

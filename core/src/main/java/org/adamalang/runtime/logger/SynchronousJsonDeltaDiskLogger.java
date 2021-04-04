@@ -15,6 +15,7 @@ import org.adamalang.runtime.contracts.TransactionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 /** a logger which spools out individual transactions for a single document */
+@Deprecated
 public class SynchronousJsonDeltaDiskLogger implements TransactionLogger {
   public static SynchronousJsonDeltaDiskLogger openFillAndAppend(final File file, final TransactionLogger target) throws ErrorCodeException {
     final var recordsReadAtStart = pump(file, target);

@@ -9,6 +9,7 @@ import org.adamalang.runtime.stdlib.Utility;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** a logger which incorporates the deltas into a giant JSON object */
+@Deprecated
 public class ObjectNodeLogger implements TransactionLogger {
   public static ObjectNodeLogger fresh() {
     return new ObjectNodeLogger(Utility.createObjectNode());

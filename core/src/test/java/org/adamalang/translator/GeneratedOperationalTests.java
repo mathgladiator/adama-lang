@@ -346,16 +346,8 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__entropy\":\"0\"} need:true in:0");
-    gold.append("\nNO_ONE was DENIED:5011");
-    gold.append("\nRANDO was DENIED:5011");
-    gold.append("\nGOODWILL EXHAUSTED:Good will exhausted:8,8 --> 8,12!!!");
+    gold.append("\nGOODWILL EXHAUSTED:java.lang.RuntimeException: java.lang.RuntimeException: java.lang.RuntimeException: org.adamalang.runtime.exceptions.GoodwillExhaustedException: Good will exhausted:8,8 --> 8,12!!!");
     gold.append("\n!!!");
-    gold.append("\n{\"command\":\"bill\",\"timestamp\":\"25\"}-->{\"__goodwill_used\":100000,\"__cost\":200003,\"__billing_seq\":0} need:true in:0");
-    gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__entropy\":\"0\",\"__goodwill_used\":100000,\"__cost\":200003,\"__billing_seq\":0}");
-    gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"z\":99999,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"10\",\"__blocked\":false,\"__seq\":0,\"__entropy\":\"0\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"25\",\"__auto_table_row_id\":0}");
-    gold.append("\n{\"z\":99999,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"10\",\"__blocked\":false,\"__seq\":0,\"__entropy\":\"0\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"25\",\"__auto_table_row_id\":0}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nAlmostTestsNotPassing");
