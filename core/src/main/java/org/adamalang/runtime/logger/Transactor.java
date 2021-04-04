@@ -3,12 +3,8 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.logger;
 
-import java.util.function.Consumer;
 import org.adamalang.runtime.LivingDocument;
-import org.adamalang.runtime.contracts.DocumentMonitor;
-import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.runtime.contracts.TimeSource;
-import org.adamalang.runtime.contracts.TransactionLogger;
+import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -21,9 +17,11 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 public class Transactor {
   public LivingDocument document;
   public final LivingDocumentFactory factory;
-  public final TransactionLogger logger;
+  private final TransactionLogger logger;
   public final DocumentMonitor monitor;
   public final TimeSource time;
+  private final DumbDataServiceBridge bridge;
+  private final long documentId;
 
   public Transactor(final LivingDocumentFactory factory, final DocumentMonitor monitor, final TimeSource time, final TransactionLogger logger) {
     this.factory = factory;
@@ -31,15 +29,36 @@ public class Transactor {
     this.time = time;
     this.logger = logger;
     document = null;
+    this.bridge = new DumbDataServiceBridge(logger);
+    this.documentId = 0L;
+  }
+
+  private TransactionResult ingest(DataService.RemoteDocumentUpdate update) {
+    bridge.patch(documentId, update, new DataCallback<Void>() {
+      @Override
+      public void success(Void value) {
+
+      }
+
+      @Override
+      public void progress(int stage) {
+
+      }
+
+      @Override
+      public void failure(int stage, Exception ex) {
+
+      }
+    });
+    return new TransactionResult(update.requiresFutureInvalidation, update.whenToInvalidateMilliseconds, update.seq);
   }
 
   /** log a bill, reset goodwill and cost */
   public TransactionResult bill() throws ErrorCodeException {
     final var request = forge("bill", null);
     request.endObject();
-    final var transaction = document.__transact(request.toString());
-    logger.ingest(transaction);
-    return transaction.transactionResult;
+    final var update = document.__transact(request.toString());
+    return ingest(update);
   }
 
   public void close() throws Exception {
@@ -50,9 +69,8 @@ public class Transactor {
   public TransactionResult connect(final NtClient who) throws ErrorCodeException {
     final var request = forge("connect", who);
     request.endObject();
-    final var transaction = document.__transact(request.toString());
-    logger.ingest(transaction);
-    return transaction.transactionResult;
+    final var update = document.__transact(request.toString());
+    return ingest(update);
   }
 
   /** construct the document */
@@ -67,9 +85,8 @@ public class Transactor {
       writer.writeFastString(entropy);
     }
     writer.endObject();
-    final var transaction = document.__transact(writer.toString());
-    logger.ingest(transaction);
-    return transaction.transactionResult;
+    final var update = document.__transact(writer.toString());
+    return ingest(update);
   }
 
   /** this suggests that the document should not do anything on setup */
@@ -87,8 +104,8 @@ public class Transactor {
     try {
       final var request = forge("disconnect", who);
       request.endObject();
-      final var transaction = document.__transact(request.toString());
-      logger.ingest(transaction);
+      final var update = document.__transact(request.toString());
+      ingest(update);
     } catch (final ErrorCodeException ece) {
       // ignored because the failure mode is primarily they were not connected, and
       // this is not useful to consumers
@@ -137,9 +154,8 @@ public class Transactor {
   public TransactionResult invalidate() throws ErrorCodeException {
     final var request = forge("invalidate", null);
     request.endObject();
-    final var transaction = document.__transact(request.toString());
-    logger.ingest(transaction);
-    return transaction.transactionResult;
+    final var update = document.__transact(request.toString());
+    return ingest(update);
   }
 
   /** is the given user connected */
@@ -162,8 +178,7 @@ public class Transactor {
     writer.writeObjectFieldIntro("message");
     writer.injectJson(message);
     writer.endObject();
-    final var transaction = document.__transact(writer.toString());
-    logger.ingest(transaction);
-    return transaction.transactionResult;
+    final var update = document.__transact(writer.toString());
+    return ingest(update);
   }
 }

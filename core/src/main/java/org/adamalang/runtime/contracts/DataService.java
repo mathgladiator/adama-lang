@@ -4,31 +4,63 @@
 package org.adamalang.runtime.contracts;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.runtime.logger.TransactionResult;
 
 /** the contract for the data service */
 public interface DataService {
-  public static class DocumentChange {
-    public ObjectNode node;
+  /** the local copy of the document should be changed by incorporating the given patch */
+  public static class LocalDocumentChange {
+    public ObjectNode patch;
     public long seq;
+  }
+
+  /** the remote copy should change */
+  public static class RemoteDocumentUpdate {
+    /** the request that is changing the document */
+    public final String request;
+
+    /** the request as as redo patch */
+    public final String redo;
+
+    /** the undo patch to revert this change */
+    public final String undo;
+
+    /** the sequencer of this change */
+    public final int seq;
+
+    /** this update is incomplete with respect to time, and this will ensure we schedule an invalidation in the future */
+    public final boolean requiresFutureInvalidation;
+
+    /** if requiresFutureInvalidation, then how many milliseconds should the system wait to invoke invalidation */
+    public final int whenToInvalidateMilliseconds;
+
+    public RemoteDocumentUpdate(final int seq, final String request, final String redo, final String undo, final boolean requiresFutureInvalidation, int whenToInvalidateMilliseconds) {
+      this.seq = seq;
+      this.request = request;
+      this.redo = redo;
+      this.undo = undo;
+      this.requiresFutureInvalidation = requiresFutureInvalidation;
+      this.whenToInvalidateMilliseconds = whenToInvalidateMilliseconds;
+    }
   }
 
   /** create a new empty document */
   public void create(DataCallback<Long> callback);
 
   /** Download the entire object and return the entire json */
-  void get(String gameSpace, long documentId, DataCallback<DocumentChange> callback);
+  void get(String gameSpace, long documentId, DataCallback<LocalDocumentChange> callback);
 
   /** Apply a patch to the document using rfc7396 */
-  void patch(long documentId, long seq, ObjectNode redo, ObjectNode undo, boolean requiresFutureInvalidation, int whenToInvalideMilliseconds, DataCallback<Long> callback);
+  public void patch(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback);
 
   /** Create a copy of the document from the beginning of time up to indicated sequencer */
-  long fork(long documentId, long seqEnd, DataCallback<DocumentChange> callback);
+  long fork(long documentId, long seqEnd, DataCallback<LocalDocumentChange> callback);
 
   /** Rewind the state of the document to the indicated sequencer */
-  void rewind(long documentId, long seqEnd, DataCallback<DocumentChange> callback);
+  void rewind(long documentId, long seqEnd, DataCallback<LocalDocumentChange> callback);
 
   /** Unsend the message(s) inclusively between the indicated sequencers */
-  void unsend(long documentId, long seqBegin, long seqEnd, DataCallback<DocumentChange> callback);
+  void unsend(long documentId, long seqBegin, long seqEnd, DataCallback<LocalDocumentChange> callback);
 
   /** Delete the document given by the ID */
   void delete(long documentId, DataCallback<Long> callback);

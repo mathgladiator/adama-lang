@@ -9,9 +9,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
-import java.util.function.Consumer;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
+import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.RxParent;
@@ -22,8 +22,6 @@ import org.adamalang.runtime.exceptions.RetryProgressException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
-import org.adamalang.runtime.logger.Transaction;
-import org.adamalang.runtime.logger.TransactionResult;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.AssertionStats;
@@ -33,7 +31,6 @@ import org.adamalang.runtime.reactives.RxFastString;
 import org.adamalang.runtime.reactives.RxInt32;
 import org.adamalang.runtime.reactives.RxInt64;
 import org.adamalang.runtime.reactives.RxString;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** The central class for a living document (i.e. a tiny VM) */
 public abstract class LivingDocument implements RxParent {
@@ -106,7 +103,7 @@ public abstract class LivingDocument implements RxParent {
   /** code generated: commit the tree, and push data into the given delta */
   public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
 
-  private Transaction __commit_trailer(final String request) {
+  private DataService.RemoteDocumentUpdate __commit_trailer(final String request) {
 
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
@@ -128,7 +125,7 @@ public abstract class LivingDocument implements RxParent {
     forward.endObject();
     reverse.endObject();
     __distributeClientViews();
-    return new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(__state.has(), (int) (__next_time.get() - __time.get()), __seq.get()));
+    return new DataService.RemoteDocumentUpdate(__seq.get(), request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()));
   }
 
   /** code generated: what happens when the document is constructed */
@@ -459,7 +456,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: core API (New Version in Draft) */
-  public Transaction __transact(final String requestJson) throws ErrorCodeException {
+  public DataService.RemoteDocumentUpdate __transact(final String requestJson) throws ErrorCodeException {
     final var reader = new JsonStreamReader(requestJson);
     String command = null;
     Long timestamp = null;
@@ -529,7 +526,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: bill */
-  private Transaction __transaction_bill(final String request) {
+  private DataService.RemoteDocumentUpdate __transaction_bill(final String request) {
     final var ticks = __goodwillLimitOfBudget - __goodwillBudget;
     final var cost = __code_cost;
     __goodwillBudget = __goodwillLimitOfBudget;
@@ -543,12 +540,11 @@ public abstract class LivingDocument implements RxParent {
     writer.writeObjectFieldIntro("__billing_seq");
     writer.writeInteger(__seq.get());
     writer.endObject();
-
-    return new Transaction(__seq.get(), request, writer.toString(), "{}", new TransactionResult(true, 0, __seq.get()));
+    return new DataService.RemoteDocumentUpdate(__seq.get(), request, writer.toString(), "{}", true, 0);
   }
 
   /** transaction: a person connects to document */
-  private Transaction __transaction_connect(final String request, final NtClient who) throws ErrorCodeException {
+  private DataService.RemoteDocumentUpdate __transaction_connect(final String request, final NtClient who) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -583,7 +579,7 @@ public abstract class LivingDocument implements RxParent {
         reverse.writeNull();
         reverse.endObject();
         reverse.endObject();
-        final var result = new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
+        final var result = new DataService.RemoteDocumentUpdate(__seq.get(), request, forward.toString(), reverse.toString(), true, 0);
         exception = false;
         return result;
       } else {
@@ -599,7 +595,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: construct the document */
-  private Transaction __transaction_construct(final String request, final NtClient who, final NtMessageBase arg, final String entropy) throws ErrorCodeException {
+  private DataService.RemoteDocumentUpdate __transaction_construct(final String request, final NtClient who, final NtMessageBase arg, final String entropy) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -620,7 +616,7 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      final var result = new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
+      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), request, forward.toString(), reverse.toString(), true, 0);;
       exception = false;
       return result;
     } finally {
@@ -631,7 +627,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: a person disconnects from the document */
-  private Transaction __transaction_disconnect(final String request, final NtClient who) throws ErrorCodeException {
+  private DataService.RemoteDocumentUpdate __transaction_disconnect(final String request, final NtClient who) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -662,7 +658,7 @@ public abstract class LivingDocument implements RxParent {
       reverse.writeNtClient(who);
       reverse.endObject();
       reverse.endObject();
-      final var result = new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
+      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), request, forward.toString(), reverse.toString(), true, 0);;
       exception = false;
       return result;
     } finally {
@@ -673,7 +669,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: an invalidation is happening on the document (no monitor) */
-  private Transaction __transaction_invalidate_body(final String request) {
+  private DataService.RemoteDocumentUpdate __transaction_invalidate_body(final String request) {
     __preemptedStateOnNextComputeBlocked = null;
     final var seedUsed = Long.parseLong(__entropy.get());
     try {
@@ -720,7 +716,7 @@ public abstract class LivingDocument implements RxParent {
         __commit(null, forward, reverse);
         forward.endObject();
         reverse.endObject();
-        return new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(false, 0, __seq.get()));
+        return new DataService.RemoteDocumentUpdate(__seq.get(), request, forward.toString(), reverse.toString(), false, 0);
       }
     } catch (final RetryProgressException rpe) {
       __futures.restore();
@@ -745,12 +741,12 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      return new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
+      return new DataService.RemoteDocumentUpdate(__seq.get(), request, forward.toString(), reverse.toString(), true, 0);
     }
   }
 
   /** transaction: an invalidation is happening on the document (use monitor) */
-  private Transaction __transaction_invalidate_monitored(final String request) {
+  private DataService.RemoteDocumentUpdate __transaction_invalidate_monitored(final String request) {
     var exception = true;
     final var startedTime = System.nanoTime();
     __monitor.push("TransactionInvalidate");
@@ -765,7 +761,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: a person is sending the document a message */
-  private Transaction __transaction_send(final String request, final NtClient who, final String channel, final long timestamp, final Object message) throws ErrorCodeException {
+  private DataService.RemoteDocumentUpdate __transaction_send(final String request, final NtClient who, final String channel, final long timestamp, final Object message) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -801,7 +797,7 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      final var result = new Transaction(__seq.get(), request, forward.toString(), reverse.toString(), new TransactionResult(true, 0, __seq.get()));
+      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), request, forward.toString(), reverse.toString(), true, 0);;
       exception = false;
       return result;
     } finally {
