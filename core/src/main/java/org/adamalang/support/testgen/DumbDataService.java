@@ -5,6 +5,7 @@ import org.adamalang.runtime.contracts.DataCallback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.PrivateView;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -36,6 +37,23 @@ public class DumbDataService implements DataService {
       callback.failure(0, new UnsupportedOperationException());
     }
   }
+
+  public static final DataCallback<PrivateView> NOOPPrivateView = new DataCallback<PrivateView>() {
+
+    @Override
+    public void success(PrivateView value) {
+    }
+
+    @Override
+    public void progress(int stage) {
+    }
+
+    @Override
+    public void failure(int stage, Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  };
+
 
   public static final DataCallback<Integer> NOOPINT = new DataCallback<Integer>() {
 

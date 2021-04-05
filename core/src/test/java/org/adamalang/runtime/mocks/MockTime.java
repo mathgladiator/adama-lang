@@ -12,6 +12,10 @@ public class MockTime implements TimeSource {
     time = 0;
   }
 
+  public MockTime(long t) {
+    time = t;
+  }
+
   @Override
   public long nowMilliseconds() {
     return time;

@@ -21,11 +21,13 @@ public class ServerRunnableTests {
 
   @Test
   public void test_interrupt() throws Exception {
+    System.err.println("CONS:9993");
     final var options = new CliServerOptions("--port", "9993");
     final var runnable = new ServerRunnable(nexus(options));
     final var thread = new Thread(runnable);
+    System.err.println("Start:9993");
     thread.start();
-    Assert.assertTrue(runnable.waitForReady(10000));
+    Assert.assertTrue(runnable.waitForReady(2500));
     Assert.assertTrue(runnable.isAccepting());
     System.err.println("Interrupt:9993");
     thread.interrupt();
@@ -37,9 +39,11 @@ public class ServerRunnableTests {
 
   @Test
   public void test_shutdown() throws Exception {
+    System.err.println("CONS:9995");
     final var options = new CliServerOptions("--port", "9995");
     final var runnable = new ServerRunnable(nexus(options));
     final var thread = new Thread(runnable);
+    System.err.println("Start:9995");
     thread.start();
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
@@ -51,10 +55,12 @@ public class ServerRunnableTests {
 
   @Test
   public void test_tight_shutdown() throws Exception {
+    System.err.println("CONS:9994");
     final var options = new CliServerOptions("--port", "9994");
     final var runnable = new ServerRunnable(nexus(options));
     runnable.shutdown();
     final var thread = new Thread(runnable);
+    System.err.println("Start:9994");
     thread.start();
     System.err.println("Wait:9994");
     thread.join();

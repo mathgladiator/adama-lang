@@ -3,71 +3,140 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime;
 
-import org.adamalang.runtime.contracts.TransactionLogger;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.runtime.logger.*;
+import org.adamalang.runtime.contracts.*;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
+import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.util.ArrayList;
 
 public class RealDocumentSetup {
   public final LivingDocumentFactory factory;
-  public final ObjectNodeLogger logger;
   public final MockTime time;
-  public final Transactor transactor;
-  public final Transactor mirror;
+  public final DurableLivingDocument document;
+  private DurableLivingDocument mirror;
+
+  public static class GotView implements DataCallback<PrivateView> {
+
+    public PrivateView view = null;
+
+    @Override
+    public void success(PrivateView value) {
+      view = value;
+    }
+
+    @Override
+    public void progress(int stage) {
+
+    }
+
+    @Override
+    public void failure(int stage, Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  public static class AssertInt implements DataCallback<Integer> {
+    public final int expected;
+
+    public AssertInt(int value) {
+      this.expected = value;
+    }
+
+    @Override
+    public void success(Integer actual) {
+      Assert.assertEquals(expected, (int) actual);
+    }
+
+    @Override
+    public void progress(int stage) {
+    }
+
+    @Override
+    public void failure(int stage, Exception ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  public static class AssertFailure implements DataCallback<Integer> {
+    @Override
+    public void success(Integer actual) {
+      throw new RuntimeException("should have failed");
+    }
+
+    @Override
+    public void progress(int stage) {
+    }
+
+    @Override
+    public void failure(int stage, Exception ex) {
+    }
+  }
+
+  public static class ArrayPerspective implements Perspective {
+    public final ArrayList<String> datum;
+
+    public ArrayPerspective() {
+      this.datum = new ArrayList<>();
+    }
+
+    @Override
+    public void data(String data) {
+      this.datum.add(data);
+    }
+
+    @Override
+    public void disconnect() {
+
+    }
+  }
 
   public RealDocumentSetup(final String code) throws Exception {
     this(code, null);
   }
 
-  public RealDocumentSetup(final String code, final ObjectNode node) throws Exception {
-    this(code, node, true);
+  public RealDocumentSetup(final String code, final String json) throws Exception {
+    this(code, json, true);
   }
 
-  public RealDocumentSetup(final String code, final ObjectNode node, final boolean stdout) throws Exception {
-    time = new MockTime();
-    logger = node == null ? ObjectNodeLogger.fresh() : ObjectNodeLogger.recover(node);
-    factory = LivingDocumentTests.compile(code);
-    mirror = new Transactor(factory, null, null, NoOpLogger.INSTANCE);
-    mirror.create();
-    if (node != null) {
-      mirror.insert(node.toString());
-    }
-    final TransactionLogger transactionLogger = new TransactionLogger() {
-      @Override
-      public void close() throws Exception {
-      }
+  public RealDocumentSetup(final String code, final String json, final boolean stdout) throws Exception {
+    this(code, json, true, new MockTime());
+  }
 
-      @Override
-      public void ingest(final Transaction t) throws ErrorCodeException {
-        mirror.insert(t.forwardDelta);
-        if (stdout) {
-          System.out.println(" REQ :" + t.request);
-          System.out.println("FORWARD:" + t.forwardDelta);
-          System.out.println("REVERSE:" + t.reverseDelta);
-        }
-        logger.ingest(t);
+  public RealDocumentSetup(final String code, final String json, final boolean stdout, MockTime time) throws Exception {
+    this.time = time;
+    DumbDataService dds = new DumbDataService((update) -> {
+      if (stdout) {
+        System.out.println(" REQ :" + update.request);
+        System.out.println("FORWARD:" + update.redo);
+        System.out.println("REVERSE:" + update.undo);
       }
-    };
-    transactor = new Transactor(factory, stdout ? new StdOutDocumentMonitor() : null, time, transactionLogger);
+      if (mirror != null) {
+        mirror.document.__insert(new JsonStreamReader(update.redo));
+      }
+    });
+    dds.setData(json);
+    factory = LivingDocumentTests.compile(code);
+    DumbDataService.DumbDurableLivingDocumentAcquire acquireReal = new DumbDataService.DumbDurableLivingDocumentAcquire();
+    DumbDataService.DumbDurableLivingDocumentAcquire acquireMirror = new DumbDataService.DumbDurableLivingDocumentAcquire();
+    DocumentMonitor monitor = stdout ? new StdOutDocumentMonitor() : null;
+    if (json == null) {
+      DurableLivingDocument.fresh(0, factory, NtClient.NO_ONE, "{}", "123", monitor, time, dds, acquireReal);
+      DurableLivingDocument.fresh(0, factory, NtClient.NO_ONE, "{}", "123", monitor, time, dds, acquireMirror);
+    } else {
+      DurableLivingDocument.load(0, factory, monitor, time, dds, acquireReal);
+      DurableLivingDocument.load(0, factory, monitor, time, dds, acquireMirror);
+    }
+    document = acquireReal.get();
+    mirror = acquireMirror.get();
   }
 
   public void assertCompare() {
-    Assert.assertEquals(mirror.json(), transactor.json());
-  }
-
-  public void assertInitial() {
-    Assert.assertEquals("{\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__seq\":1}", logger.node.toString());
-  }
-
-  public void drive(final TransactionResult initial) throws Exception {
-    var transactionResult = initial;
-    while (transactionResult.needsInvalidation) {
-      time.time += transactionResult.whenToInvalidMilliseconds;
-      transactionResult = transactor.drive();
-    }
+    Assert.assertEquals(mirror.json(), document.json());
   }
 }

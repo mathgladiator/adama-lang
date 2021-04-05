@@ -7,6 +7,7 @@ import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
+/** A LivingDocument tied to a document id and DataService */
 public class DurableLivingDocument {
   private final static int DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE = 1000;
   private final static int DURABLE_LIVING_DOCUMENT_STAGE_FRESH_TRANSFORM = 1001;
@@ -15,13 +16,14 @@ public class DurableLivingDocument {
   private final static int DURABLE_LIVING_DOCUMENT_STAGE_INGEST_DONE = 1012;
   private final static int DURABLE_LIVING_DOCUMENT_STAGE_LOAD = 1020;
   private final static int DURABLE_LIVING_DOCUMENT_STAGE_PARSE = 1021;
+  private final static int DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW = 1030;
 
   public final long documentId;
   public final LivingDocument document;
   public final TimeSource time;
   private final DataService service;
 
-  public DurableLivingDocument(final long documentId, final LivingDocument document, final TimeSource time, final DataService service) {
+  private DurableLivingDocument(final long documentId, final LivingDocument document, final TimeSource time, final DataService service) {
     this.documentId = documentId;
     this.document = document;
     this.time = time;
@@ -83,9 +85,8 @@ public class DurableLivingDocument {
     try {
       final var update = document.__transact(request.toString());
       if (update.requiresFutureInvalidation && update.whenToInvalidateMilliseconds == 0) {
-        service.patch(documentId, update, DataCallback.transform(callback, DURABLE_LIVING_DOCUMENT_STAGE_INGEST_PARTIAL, (v) -> {
+        service.patch(documentId, update, DataCallback.handoff(callback, DURABLE_LIVING_DOCUMENT_STAGE_INGEST_PARTIAL, () -> {
           invalidate(callback);
-          return null;
         }));
       } else {
         service.patch(documentId, update, DataCallback.transform(callback, DURABLE_LIVING_DOCUMENT_STAGE_INGEST_DONE, (v) -> update.seq));
@@ -133,8 +134,9 @@ public class DurableLivingDocument {
     return document.__isConnected(who);
   }
 
-  public PrivateView createPrivateView(final NtClient who, final Perspective perspective) {
-    return document.__createView(who, perspective);
+  public void createPrivateView(final NtClient who, final Perspective perspective, DataCallback<PrivateView> callback) {
+    PrivateView result = document.__createView(who, perspective);
+    invalidate(DataCallback.transform(callback, DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
   }
 
   public int garbageCollectPrivateViewsFor(final NtClient who) {

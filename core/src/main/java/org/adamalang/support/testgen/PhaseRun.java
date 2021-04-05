@@ -3,20 +3,13 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.support.testgen;
 
-import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import org.adamalang.runtime.DurableLivingDocument;
 import org.adamalang.runtime.contracts.*;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
-import org.adamalang.runtime.logger.NoOpLogger;
-import org.adamalang.runtime.logger.ObjectNodeLogger;
-import org.adamalang.runtime.logger.Transaction;
-import org.adamalang.runtime.logger.Transactor;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
@@ -39,20 +32,6 @@ public class PhaseRun {
     final var testTime = new AtomicLong(0);
     final var time = (TimeSource) () -> testTime.get();
     outputFile.append("--JAVA RUNNING-------------------------------------").append("\n");
-    final var objectNodeLog = ObjectNodeLogger.fresh();
-    final TransactionLogger testTransactionLogger = new TransactionLogger() {
-      @Override
-      public void close() throws Exception {
-      }
-
-      @Override
-      public void ingest(final Transaction t) throws ErrorCodeException {
-        outputFile.append(t.request.toString() + "-->" + t.forwardDelta.toString() + " need:" + t.transactionResult.needsInvalidation + " in:" + t.transactionResult.whenToInvalidMilliseconds + "\n");
-        objectNodeLog.ingest(t);
-        testTime.addAndGet(Math.max(t.transactionResult.whenToInvalidMilliseconds / 2, 25));
-      }
-    };
-    testTransactionLogger.close(); // stupid coverage
     DumbDataService dds = new DumbDataService((patch) -> {
       outputFile.append(patch.request.toString() + "-->" + patch.redo.toString() + " need:" + patch.requiresFutureInvalidation + " in:" + patch.whenToInvalidateMilliseconds + "\n");
       testTime.addAndGet(Math.max(patch.whenToInvalidateMilliseconds / 2, 25));
@@ -66,7 +45,7 @@ public class PhaseRun {
 
       doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
         outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
-      }));
+      }), DumbDataService.NOOPPrivateView);
       try {
         doc.connect(NtClient.NO_ONE, DumbDataService.NOOPINT);
       } catch (final RuntimeException e) {
@@ -75,17 +54,16 @@ public class PhaseRun {
       final var rando = new NtClient("rando", "random-place");
       doc.createPrivateView(rando, wrap(str -> {
         outputFile.append("+ RANDO DELTA:").append(str).append("\n");
-      }));
+      }), DumbDataService.NOOPPrivateView);
       try {
         doc.connect(rando, DumbDataService.NOOPINT);
       } catch (final RuntimeException e) {
         outputFile.append("RANDO was DENIED:\n");
       }
       doc.invalidate(DumbDataService.NOOPINT);
-
       doc.bill(DumbDataService.NOOPINT);
       outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
-      outputFile.append(objectNodeLog.node.toString()).append("\n");
+      outputFile.append(doc.json()).append("\n");
       outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");
       final var json = doc.json();
       dds.setData(json);
@@ -107,7 +85,6 @@ public class PhaseRun {
           return;
         }
       }
-      throw gee;
     }
   }
 }

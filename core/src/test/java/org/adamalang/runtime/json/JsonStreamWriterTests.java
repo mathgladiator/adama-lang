@@ -74,6 +74,13 @@ public class JsonStreamWriterTests {
     }
 
     @Test
+    public void tree_null() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(null);
+        Assert.assertEquals("null", writer.toString());
+    }
+
+    @Test
     public void tree_int() {
         JsonStreamWriter writer = new JsonStreamWriter();
         writer.writeTree(1);

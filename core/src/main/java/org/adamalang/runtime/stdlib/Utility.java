@@ -54,10 +54,12 @@ public class Utility {
     return conv.apply(in);
   }
 
+  @Deprecated
   public static ArrayNode createArrayNode() {
     return MAPPER.createArrayNode();
   }
 
+  @Deprecated
   public static ObjectNode createObjectNode() {
     return MAPPER.createObjectNode();
   }
@@ -74,6 +76,7 @@ public class Utility {
     return maybe;
   }
 
+  @Deprecated
   public static ObjectNode parseJsonObject(final String json) {
     try {
       return parseJsonObjectThrows(json);
@@ -82,6 +85,7 @@ public class Utility {
     }
   }
 
+  @Deprecated
   public static ObjectNode parseJsonObjectThrows(final String json) throws Exception {
     final var node = MAPPER.readTree(json);
     if (node instanceof ObjectNode) { return (ObjectNode) node; }

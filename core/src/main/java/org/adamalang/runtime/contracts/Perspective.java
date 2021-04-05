@@ -8,4 +8,15 @@ public interface Perspective {
     public void data(String data);
 
     public void disconnect();
+
+    /** a dead perspective, not useful except for people that don't care about the data */
+    public static final Perspective DEAD = new Perspective() {
+        @Override
+        public void data(String data) {
+        }
+
+        @Override
+        public void disconnect() {
+        }
+    };
 }

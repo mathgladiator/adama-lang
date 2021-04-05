@@ -3,7 +3,6 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.contracts;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /** This callback interface is used by DataService such that actions not only succeed/fail, but provide
@@ -40,6 +39,29 @@ public interface DataCallback<T> {
       @Override
       public void failure(int stage, Exception ex) {
         output.failure(stage, ex);
+      }
+    };
+  }
+
+  public static <T> DataCallback<Void> handoff(DataCallback<T> next, int stage, Runnable success) {
+    return new DataCallback<>() {
+      @Override
+      public void success(Void value) {
+        try {
+          success.run();
+        } catch (Exception ex) {
+          failure(stage, ex);
+        }
+      }
+
+      @Override
+      public void progress(int stage) {
+        next.progress(stage);
+      }
+
+      @Override
+      public void failure(int stage, Exception ex) {
+        next.failure(stage, ex);
       }
     };
   }
