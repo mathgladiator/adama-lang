@@ -27,7 +27,7 @@ public class ErrorCodes {
 
   public static final int USERLAND_REQUEST_HAS_NO_SESSION = 40000;
   public static final int USERLAND_RESOURCE_CANT_FIND_GAMESPACE = 40001;
-  public static final int USERLAND_SESSION_CANT_CONNECT_AGAIN = 40102;
+  public static final int USERLAND_SESSION_CANT_CONNECT_AGAIN = 40002;
 
   public static final int USERLAND_REQUEST_NO_GAMESPACE_PROPERTY = 40100;
   public static final int USERLAND_REQUEST_NO_GAME_PROPERTY = 40101;
