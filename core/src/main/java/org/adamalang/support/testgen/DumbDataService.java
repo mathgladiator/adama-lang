@@ -101,6 +101,11 @@ public class DumbDataService implements DataService {
   }
 
   @Override
+  public void initialize(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback) {
+    patch(documentId, patch, callback);
+  }
+
+  @Override
   public void patch(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback) {
     updates.accept(patch);
     JsonStreamReader reader = new JsonStreamReader(patch.redo);
@@ -109,7 +114,7 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public long fork(long documentId, long seqEnd, DataCallback<LocalDocumentChange> callback) {
+  public long fork(long oldDocumentId, long newDocumentId, long seqEnd, DataCallback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 

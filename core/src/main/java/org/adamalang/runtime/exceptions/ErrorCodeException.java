@@ -10,6 +10,8 @@ public class ErrorCodeException extends Exception {
   public static final int FACTORY_CANT_BIND_JAVA_CODE = 5005;
   public static final int FACTORY_CANT_COMPILE_JAVA_CODE = 5004;
   public static final int FACTORY_CANT_CREATE_OBJECT_DUE_TO_EXCEPTION = 5002;
+
+
   public static final int LIVING_DOCUMENT_CRASHED = 5018;
   public static final int LIVING_DOCUMENT_TRANSACTION_SUPER_FAILURE = 5021;
   public static final int LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED = 5010;
@@ -24,10 +26,9 @@ public class ErrorCodeException extends Exception {
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG = 5013;
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP = 5007;
   public static final int LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND = 5009;
+
+
   public static final int SERVICE_UNKNOWN_FAILURE = 5500;
-  public static final int SYNC_DISK_LOGGER_CANT_OPEN_APPEND = 5201;
-  public static final int SYNC_DISK_LOGGER_CANT_PUMP = 5200;
-  public static final int TRANSACTOR_CANT_CREATE_BECAUSE_ALREADY_CREATED = 5001;
   public static final int USERLAND_CANT_COMPILE_ADAMA_SCRIPT = 4002;
   public static final int USERLAND_CANT_FIND_GAME = 4011;
   public static final int USERLAND_CANT_CONNECT_AGAIN = 4020;

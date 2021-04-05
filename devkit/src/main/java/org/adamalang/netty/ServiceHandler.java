@@ -11,9 +11,11 @@ import org.adamalang.netty.api.GameSpace;
 import org.adamalang.netty.api.GameSpaceDB;
 import org.adamalang.netty.contracts.JsonHandler;
 import org.adamalang.netty.contracts.JsonResponder;
+import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.contracts.DataCallback;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.runtime.logger.Transactor;
+import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.stdlib.Utility;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -88,9 +90,25 @@ public class ServiceHandler implements JsonHandler {
     switch (method) {
       case "generate": {
         final var gs = findGamespace(request);
-        final var result = Utility.createObjectNode();
-        result.put("game", String.valueOf(gs.generate()));
-        responder.respond(result, true, null);
+
+        gs.generate(new DataCallback<>() {
+          @Override
+          public void success(Long value) {
+            final var result = Utility.createObjectNode();
+            result.put("game", String.valueOf(value));
+            responder.respond(result, true, null);
+          }
+
+          @Override
+          public void progress(int stage) {
+            // TODO: partial updates
+          }
+
+          @Override
+          public void failure(int stage, Exception ex) {
+            responder.failure(-1, ex);
+          }
+        });
         return;
       }
       case "reflect": {
@@ -103,11 +121,26 @@ public class ServiceHandler implements JsonHandler {
       case "create": {
         final var gs = findGamespace(request);
         final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
-        final var transactor = gs.create(id, who, (ObjectNode) node(request, "arg", ErrorCodeException.USERLAND_NO_CONSTRUCTOR_ARG), str(request, "entropy", false, 0));
-        final var result = Utility.createObjectNode();
-        result.put("game", String.valueOf(id));
-        witness(executor, transactor, responder);
-        responder.respond(result, true, null);
+        gs.create(id, who, (ObjectNode) node(request, "arg", ErrorCodeException.USERLAND_NO_CONSTRUCTOR_ARG), str(request, "entropy", false, 0), new DataCallback<DurableLivingDocument>() {
+          @Override
+          public void success(DurableLivingDocument value) {
+            final var result = Utility.createObjectNode();
+            result.put("game", String.valueOf(value.documentId));
+            // witness(executor, transactor, responder);
+            // TODO: figure out if an invalidate needs to be scahduled
+            responder.respond(result, true, null);
+          }
+
+          @Override
+          public void progress(int stage) {
+
+          }
+
+          @Override
+          public void failure(int stage, Exception ex) {
+
+          }
+        });
         return;
       }
       case "connect": {
@@ -117,36 +150,98 @@ public class ServiceHandler implements JsonHandler {
         if (session.checkNotUnique(key)) {
           throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_CONNECT_AGAIN);
         }
-        final var transactor = gs.get(id);
-        if (transactor == null) { throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_FIND_GAME); }
-        final var alreadyConnected = transactor.isConnected(who);
-        if (!alreadyConnected) {
-          transactor.connect(who);
-        }
-        Perspective perspective = new Perspective() {
+        gs.get(id, new DataCallback<DurableLivingDocument>() {
           @Override
-          public void data(String data) {
-            responder.respond(Utility.parseJsonObject(data), false, null);
+          public void success(DurableLivingDocument doc) {
+            DataCallback<PrivateView> postPrivateView = DataCallback.bind(executor, new DataCallback<PrivateView>() {
+              @Override
+              public void success(PrivateView pv) {
+                session.subscribeToSessionDeath(key, () -> {
+                  // session death happens in HTTP land, so let's return to the executor to talk
+                  // to transactor
+                  executor.execute(() -> {
+                    pv.kill();
+                    if (doc.garbageCollectPrivateViewsFor(who) == 0) {
+                      doc.disconnect(who, new DataCallback<Integer>() {
+                        @Override
+                        public void success(Integer value) {
+
+                        }
+
+                        @Override
+                        public void progress(int stage) {
+
+                        }
+
+                        @Override
+                        public void failure(int stage, Exception ex) {
+
+                        }
+                      });
+                    }
+                  });
+                  // TODO: this does not indicate whether or not the responder failed... need to think about errors? maybe
+                  responder.respond(Utility.parseJsonObject("{}"), true, null);
+                });
+              }
+
+              @Override
+              public void progress(int stage) {
+
+              }
+
+              @Override
+              public void failure(int reason, Exception ex) {
+                responder.failure(reason, ex);
+              }
+            });
+
+            DataCallback<Void> postConnect = new DataCallback<Void>() {
+              @Override
+              public void success(Void value) {
+                Perspective perspective = new Perspective() {
+                  @Override
+                  public void data(String data) {
+                    responder.respond(Utility.parseJsonObject(data), false, null);
+                  }
+
+                  @Override
+                  public void disconnect() {
+                    // Now, this is a fun task...
+                  }
+                };
+                doc.createPrivateView(who, perspective, postPrivateView);
+              }
+
+              @Override
+              public void progress(int stage) {
+
+              }
+
+              @Override
+              public void failure(int reason, Exception ex) {
+                responder.failure(reason, ex);
+              }
+            };
+
+            final var alreadyConnected = doc.isConnected(who);
+            if (!alreadyConnected) {
+              doc.connect(who, DataCallback.transform(postConnect, 0, (x) -> null));
+            } else {
+              postConnect.success(null);
+            }
           }
 
           @Override
-          public void disconnect() {
-            // Now, this is a fun task...
+          public void progress(int stage) {
+
           }
-        };
-        final var pv = transactor.createView(who, perspective);
-        witness(executor, transactor, responder);
-        session.subscribeToSessionDeath(key, () -> {
-          // session death happens in HTTP land, so let's return to the executor to talk
-          // to transactor
-          executor.execute(() -> {
-            pv.kill();
-            if (transactor.gcViewsFor(who) == 0) {
-              transactor.disconnect(who);
-            }
-          });
-          // TODO: this does not indicate whether or not the responder failed... need to think about errors? maybe
-          responder.respond(Utility.parseJsonObject("{}"), true, null);
+
+          @Override
+          public void failure(int stage, Exception ex) {
+            ex.printStackTrace();
+            responder.failure(stage, ex);
+          }
         });
         return;
       }
@@ -165,11 +260,37 @@ public class ServiceHandler implements JsonHandler {
         final var id = lng(request, "game", ErrorCodeException.USERLAND_NO_GAME_PROPERTY);
         final var channel = str(request, "channel", true, ErrorCodeException.USERLAND_NO_CHANNEL_PROPERTY);
         final var msg = node(request, "message", ErrorCodeException.USERLAND_NO_MESSAGE_PROPERTY);
-        final var transactor = gs.get(id);
-        if (transactor == null) { throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_FIND_GAME); }
-        final var result = transactor.send(who, channel, msg.toString());
-        responder.respond(Utility.parseJsonObject("{\"success\":" + result.seq + "}"), true, null);
-        witness(executor, transactor, responder);
+        gs.get(id, new DataCallback<DurableLivingDocument>() {
+          @Override
+          public void success(DurableLivingDocument value) {
+
+            value.send(who, channel, msg.toString(), new DataCallback<Integer>() {
+              @Override
+              public void success(Integer value) {
+                responder.respond(Utility.parseJsonObject("{\"success\":" + value + "}"), true, null);
+              }
+
+              @Override
+              public void progress(int stage) {
+              }
+
+              @Override
+              public void failure(int reason, Exception ex) {
+                responder.failure(reason, ex);
+              }
+            });
+          }
+
+          @Override
+          public void progress(int stage) {
+
+          }
+
+          @Override
+          public void failure(int reason, Exception ex) {
+            responder.failure(reason, ex);
+          }
+        });
         return;
       }
       default:
@@ -189,19 +310,5 @@ public class ServiceHandler implements JsonHandler {
   @Override
   public void shutdown() {
     executorDEMO.shutdown();
-  }
-
-  private void witness(final ScheduledExecutorService executor, final Transactor transactor, final JsonResponder responder) {
-    try {
-      final var result = transactor.drive();
-      if (result.needsInvalidation && result.whenToInvalidMilliseconds > 0) {
-        executor.schedule(() -> {
-          witness(executor, transactor, responder);
-        }, result.whenToInvalidMilliseconds, TimeUnit.MILLISECONDS);
-      }
-    } catch (final Exception e) {
-      e.printStackTrace();
-      responder.failure(ErrorCodeException.LIVING_DOCUMENT_CRASHED, e);
-    }
   }
 }

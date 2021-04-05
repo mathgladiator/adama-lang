@@ -3,6 +3,7 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.contracts;
 
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;
 
 /** This callback interface is used by DataService such that actions not only succeed/fail, but provide
@@ -15,20 +16,19 @@ public interface DataCallback<T> {
   public void progress(int stage);
 
   /** the action failed outright, and the reason is the exception */
-  public void failure(int stage, Exception ex);
+  public void failure(int reason, Exception ex);
 
   public static <In, Out> DataCallback<In> transform(DataCallback<Out> output, int stage, Function<In, Out> f) {
     return new DataCallback<>() {
       @Override
       public void success(In value) {
-        Out result;
         try {
-          result = f.apply(value);
+          output.success(f.apply(value));
         } catch (Exception ex) {
+          ex.printStackTrace();
+          System.err.println("WTF!!!");
           output.failure(stage, ex);
-          return;
         }
-        output.success(result);
       }
 
       @Override
@@ -37,8 +37,33 @@ public interface DataCallback<T> {
       }
 
       @Override
-      public void failure(int stage, Exception ex) {
-        output.failure(stage, ex);
+      public void failure(int code, Exception ex) {
+        output.failure(code, ex);
+      }
+    };
+  }
+
+  public static <T> DataCallback<T> bind(ScheduledExecutorService service, DataCallback<T> next) {
+    return new DataCallback<T>() {
+      @Override
+      public void success(T value) {
+        service.execute(() -> {
+          next.success(value);
+        });
+      }
+
+      @Override
+      public void progress(int stage) {
+        service.execute(() -> {
+          next.progress(stage);
+        });
+      }
+
+      @Override
+      public void failure(int code, Exception ex) {
+        service.execute(() -> {
+          next.failure(code, ex);
+        });
       }
     };
   }
@@ -60,8 +85,8 @@ public interface DataCallback<T> {
       }
 
       @Override
-      public void failure(int stage, Exception ex) {
-        next.failure(stage, ex);
+      public void failure(int code, Exception ex) {
+        next.failure(code, ex);
       }
     };
   }

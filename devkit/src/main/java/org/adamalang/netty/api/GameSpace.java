@@ -5,17 +5,15 @@ package org.adamalang.netty.api;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.LinkedHashMap;
 
+import org.adamalang.data.disk.FileSystemDataService;
+import org.adamalang.runtime.DurableLivingDocument;
 import org.adamalang.runtime.contracts.DataCallback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.logger.ObjectNodeLogger;
-import org.adamalang.runtime.logger.SynchronousJsonDeltaDiskLogger;
-import org.adamalang.runtime.logger.Transactor;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.stdlib.Utility;
 import org.adamalang.translator.env.CompilerOptions;
@@ -66,20 +64,21 @@ public class GameSpace {
 
   public final String name;
   public final LivingDocumentFactory factory;
-  public final HashMap<Long, Transactor> map;
   public final File root;
   public final TimeSource time;
-  private final Random rng;
+
+  public final HashMap<Long, DurableLivingDocument> documents;
+  public final DataService service;
 
   public GameSpace(final String name, final LivingDocumentFactory factory, final TimeSource time, final File root) {
     this.name = name;
     this.factory = factory;
     this.time = time;
     this.root = root;
-    map = new HashMap<>();
     // TODO: consider scanning for existing files, and then LOAD THEM UP
     // TODO: sync the key generation up
-    rng = new Random();
+    this.documents = new LinkedHashMap<>();
+    this.service = new FileSystemDataService(root);
   }
 
   /** return the reflected schema for the document */
@@ -89,48 +88,51 @@ public class GameSpace {
 
   /** close the gamespace, will close all documents */
   public synchronized void close() throws Exception {
-    for (final Map.Entry<Long, Transactor> entry : map.entrySet()) {
-      entry.getValue().close();
-    }
-    map.clear();
+    documents.clear();
   }
 
-  /** generate an id to use for create (TODO: make unique and less dumb) */
-  public synchronized long generate() {
-    boolean tryAgain = true;
-    long id = 0L;
-    while (tryAgain) {
-      id = Math.abs(rng.nextLong() + System.nanoTime());
-      tryAgain = map.containsKey(id);
-    }
-    return id;
+  /** generate and reserve an id to use for create */
+  public synchronized void generate(DataCallback<Long> callback) {
+    service.create(callback);
   }
 
-  /** create a living document with the the given ID for the given person with the
-   * given constructor argument and entropy */
-  public synchronized Transactor create(final long id, final NtClient who, final ObjectNode cons, final String entropy) throws ErrorCodeException {
-    final var file = new File(root, id + ".jsonlog");
-    if (file.exists()) { throw new ErrorCodeException(ErrorCodeException.USERLAND_GAME_ALREADY_EXISTS); }
-    final var state = ObjectNodeLogger.fresh();
-    final var disk = SynchronousJsonDeltaDiskLogger.openFillAndAppend(file, state);
-    final var transactor = new Transactor(factory, null, time, disk);
-    transactor.construct(who, cons.toString(), entropy);
-    map.put(id, transactor);
-    return transactor;
+  private synchronized boolean put(long id, DurableLivingDocument doc) {
+    if (documents.containsKey(id)) {
+      return false;
+    }
+    // TODO: recall how putIfAbsent works
+    documents.put(id, doc);
+    return true;
+  }
+
+  private synchronized DurableLivingDocument get(long id) {
+    return documents.get(id);
+  }
+
+  /** create a living document with the the given id for the given person with the given argument and entropy */
+  public void create(final long id, final NtClient who, final ObjectNode cons, final String entropy, DataCallback<DurableLivingDocument> callback) throws ErrorCodeException {
+    DurableLivingDocument.fresh(id, factory, who, cons.toString(), entropy, null, time, service, DataCallback.transform(callback, 0, (doc) -> {
+      if (put(id, doc)) {
+        return doc;
+      } else {
+        throw new RuntimeException("document already exists");
+      }
+    }));
   }
 
   /** get the living document by id if it exists */
-  public synchronized Transactor get(final long id) throws ErrorCodeException {
-    final var sm = map.get(id);
-    if (sm != null) { return sm; }
-    final var file = new File(root, id + ".jsonlog");
-    if (!file.exists()) { return null; }
-    final var state = ObjectNodeLogger.fresh();
-    final var disk = SynchronousJsonDeltaDiskLogger.openFillAndAppend(file, state);
-    final var transactor = new Transactor(factory, null, time, disk);
-    transactor.create();
-    transactor.insert(state.node.toString());
-    map.put(id, transactor);
-    return transactor;
+  public void get(final long id, DataCallback<DurableLivingDocument> callback) throws ErrorCodeException {
+    {
+      DurableLivingDocument doc = get(id);
+      if (doc != null) {
+        callback.success(doc);
+        return;
+      }
+    }
+
+    DurableLivingDocument.load(id, factory, null, time, service, DataCallback.transform(callback, 0, (doc) -> {
+      put(id, doc);
+      return doc;
+    }));
   }
 }

@@ -78,7 +78,12 @@ public class JsonStreamReader {
 
   public int readInteger() {
     ensureQueueHappy(1);
-    return Integer.parseInt(tokens.removeFirst().data);
+    String toParse = tokens.removeFirst().data;
+    try {
+      return Integer.parseInt(toParse);
+    } catch (NumberFormatException nfe) {
+      return (int) Double.parseDouble(toParse);
+    }
   }
 
   public long readLong() {
@@ -134,7 +139,11 @@ public class JsonStreamReader {
         case True:
           return true;
         case NumberLiteral:
-          return Double.parseDouble(token.data);
+          try { // MAYBE, I should encode the subtype to avoid this... MAYBE
+            return Integer.parseInt(token.data);
+          } catch (NumberFormatException nfe) {
+            return Double.parseDouble(token.data);
+          }
         case StringLiteral:
           return token.data;
         default:

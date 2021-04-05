@@ -59,9 +59,10 @@ public class DurableLivingDocument {
       LivingDocument doc = factory.create(monitor);
       service.get(documentId, DataCallback.transform(callback, DURABLE_LIVING_DOCUMENT_STAGE_PARSE, (data) -> {
           doc.__insert(new JsonStreamReader(data.patch));
-          DurableLivingDocument result = new DurableLivingDocument(documentId, doc, time, service);
-          return result;
-        }));
+          JsonStreamWriter writer = new JsonStreamWriter();
+          doc.__dump(writer);
+          return new DurableLivingDocument(documentId, doc, time, service);
+      }));
     } catch (Exception exception) {
       callback.failure(DURABLE_LIVING_DOCUMENT_STAGE_LOAD, exception);
     }
@@ -105,7 +106,18 @@ public class DurableLivingDocument {
       writer.writeFastString(entropy);
     }
     writer.endObject();
-    ingest(writer.toString(), callback);
+    try {
+      final var update = document.__transact(writer.toString());
+      if (update.requiresFutureInvalidation && update.whenToInvalidateMilliseconds == 0) {
+        service.initialize(documentId, update, DataCallback.handoff(callback, DURABLE_LIVING_DOCUMENT_STAGE_INGEST_PARTIAL, () -> {
+          invalidate(callback);
+        }));
+      } else {
+        service.initialize(documentId, update, DataCallback.transform(callback, DURABLE_LIVING_DOCUMENT_STAGE_INGEST_DONE, (v) -> update.seq));
+      }
+    } catch (Exception ex) {
+      callback.failure(DURABLE_LIVING_DOCUMENT_STAGE_INGEST_DRIVE, ex);
+    }
   }
 
   public void invalidate(DataCallback<Integer> callback) {

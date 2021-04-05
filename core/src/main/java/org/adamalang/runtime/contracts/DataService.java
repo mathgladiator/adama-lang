@@ -52,11 +52,14 @@ public interface DataService {
   /** Download the entire object and return the entire json */
   void get(long documentId, DataCallback<LocalDocumentChange> callback);
 
+  /** write the first entry for the document */
+  public void initialize(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback);
+
   /** Apply a patch to the document using rfc7396 */
   public void patch(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback);
 
   /** Create a copy of the document from the beginning of time up to indicated sequencer */
-  long fork(long documentId, long seqEnd, DataCallback<LocalDocumentChange> callback);
+  long fork(long oldDocumentId, long newDocumentId, long seqEnd, DataCallback<LocalDocumentChange> callback);
 
   /** Rewind the state of the document to the indicated sequencer */
   void rewind(long documentId, long seqEnd, DataCallback<LocalDocumentChange> callback);

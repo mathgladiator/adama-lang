@@ -34,7 +34,7 @@ public class DumbDataServiceTests {
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {
-      dds.fork(1, 1, null);
+      dds.fork(1, 1, 1, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {

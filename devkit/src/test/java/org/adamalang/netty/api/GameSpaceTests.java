@@ -52,6 +52,7 @@ public class GameSpaceTests {
     } catch (final Exception ee) {}
     Assert.assertFalse(built);
   }
+  /*
 
   @Test
   public void build_happy() throws Exception {
@@ -101,4 +102,6 @@ public class GameSpaceTests {
     Assert.assertTrue(data.exists());
     gs.close();
   }
+
+   */
 }
