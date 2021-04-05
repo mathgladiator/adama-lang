@@ -9,11 +9,12 @@ public class ErrorCodeException extends Exception {
   public final int code;
 
   public ErrorCodeException(final int code) {
+    super("code:" + code);
     this.code = code;
   }
 
   public ErrorCodeException(final int code, final Throwable cause) {
-    super(cause);
+    super("code:" + code + ":" + cause.getMessage(), cause);
     this.code = code;
   }
 
