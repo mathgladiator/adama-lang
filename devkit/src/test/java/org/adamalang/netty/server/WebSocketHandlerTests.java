@@ -118,7 +118,7 @@ public class WebSocketHandlerTests {
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
     Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":5500}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":5501}", output.get(1));
   }
 
   @Test

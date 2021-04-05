@@ -9,6 +9,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.adamalang.netty.ErrorCodes;
 import org.adamalang.netty.api.AdamaSession;
 import org.adamalang.netty.client.AdamaCookieCodec;
 import org.adamalang.netty.contracts.AuthCallback;
@@ -88,10 +89,10 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       // the id allows us to respond, create the responder
       final JsonResponder responder = new JsonResponder() {
         @Override
-        public void failure(final int reason, final Exception e) {
+        public void failure(ErrorCodeException ex) {
           final var setup = Utility.createObjectNode();
           setup.put("failure", id);
-          setup.put("reason", reason);
+          setup.put("reason", ex.code);
           ctx.writeAndFlush(new TextWebSocketFrame(setup.toString()));
         }
 
@@ -107,10 +108,10 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
 
       try {
         nexus.handler.handle(session(), request, responder);
-      } catch (final ErrorCodeException ece) {
-        responder.failure(ece.code, ece);
-      } catch (final Exception ex) {
-        responder.failure(ErrorCodeException.SERVICE_UNKNOWN_FAILURE, ex);
+      } catch (final ErrorCodeException ex) {
+        responder.failure(ex);
+      } catch (final Throwable ex) {
+        responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E5_UNCAUGHT_EXCEPTION_WEB_SOCKET, ex));
         ctx.channel().close();
         end();
       }

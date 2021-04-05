@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.adamalang.data.disk.FileSystemDataService;
+import org.adamalang.netty.ErrorCodes;
 import org.adamalang.runtime.DurableLivingDocument;
 import org.adamalang.runtime.contracts.DataCallback;
 import org.adamalang.runtime.contracts.DataService;
@@ -41,7 +42,7 @@ public class GameSpace {
         if (options.stderrLoggingCompiler) {
           System.err.println(issues.toPrettyString());
         }
-        throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_COMPILE_ADAMA_SCRIPT);
+        throw new ErrorCodeException(ErrorCodes.USERLAND_CANT_COMPILE_ADAMA_SCRIPT);
       }
       final var java = document.compileJava(state);
       JsonStreamWriter reflection = new JsonStreamWriter();
@@ -58,7 +59,7 @@ public class GameSpace {
       return factory;
     } catch (Throwable t) {
       t.printStackTrace();
-      throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_COMPILE_ADAMA_SCRIPT, t);
+      throw new ErrorCodeException(ErrorCodes.USERLAND_CANT_COMPILE_ADAMA_SCRIPT, t);
     }
   }
 

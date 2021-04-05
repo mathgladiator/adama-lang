@@ -4,7 +4,11 @@
 package org.adamalang.service;
 
 import java.io.File;
+import java.security.AccessControlException;
 import java.util.HashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import org.adamalang.netty.ServiceHandler;
 import org.adamalang.netty.api.AdamaSession;
 import org.adamalang.netty.api.GameSpaceDB;
@@ -17,6 +21,8 @@ import org.adamalang.netty.server.CliServerOptions;
 import org.adamalang.netty.server.ServerNexus;
 import org.adamalang.netty.server.ServerRunnable;
 import org.adamalang.netty.server.UncachedDiskStaticSite;
+import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.contracts.DataCallback;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.natives.NtClient;
@@ -94,7 +100,7 @@ public class DevKitServer {
               responder.respond(Utility.parseJsonObject("{\"retry_connection\":true}"), true, headers);
               return;
             }
-            responder.failure(403, null);
+            responder.failure(new ErrorCodeException(403, new AccessControlException("denied")));
           }
         } else {
           serviceHandler.handle(session, request, responder);

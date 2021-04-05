@@ -32,7 +32,7 @@ public class GameSpaceDBTests {
       db.getOrCreate("Demo_Bomb_success.a");
       Assert.fail();
     } catch (final ErrorCodeException e) {
-      Assert.assertEquals(5003, e.code);
+      Assert.assertEquals(5001, e.code);
     }
   }
 
@@ -52,7 +52,7 @@ public class GameSpaceDBTests {
       db.getOrCreate("xyz.a");
       Assert.fail();
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(4001, drre.code);
+      Assert.assertEquals(40001, drre.code);
     }
   }
 

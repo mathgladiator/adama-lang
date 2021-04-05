@@ -4,6 +4,7 @@
 package org.adamalang.runtime;
 
 import org.adamalang.runtime.contracts.*;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.mocks.MockTime;
@@ -31,12 +32,7 @@ public class RealDocumentSetup {
     }
 
     @Override
-    public void progress(int stage) {
-
-    }
-
-    @Override
-    public void failure(int stage, Exception ex) {
+    public void failure(ErrorCodeException ex) {
       throw new RuntimeException(ex);
     }
   }
@@ -54,13 +50,10 @@ public class RealDocumentSetup {
     }
 
     @Override
-    public void progress(int stage) {
-    }
-
-    @Override
-    public void failure(int stage, Exception ex) {
+    public void failure(ErrorCodeException ex) {
       throw new RuntimeException(ex);
     }
+
   }
 
   public static class AssertFailure implements DataCallback<Integer> {
@@ -70,11 +63,7 @@ public class RealDocumentSetup {
     }
 
     @Override
-    public void progress(int stage) {
-    }
-
-    @Override
-    public void failure(int stage, Exception ex) {
+    public void failure(ErrorCodeException ex) {
     }
   }
 

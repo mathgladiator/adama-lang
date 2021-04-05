@@ -6,6 +6,8 @@ package org.adamalang.netty.server;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.adamalang.netty.ErrorCodes;
 import org.adamalang.netty.api.AdamaSession;
 import org.adamalang.netty.client.AdamaCookieCodec;
 import org.adamalang.netty.contracts.AuthCallback;
@@ -76,8 +78,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             public void success(final AdamaSession session) {
               final JsonResponder responder = new JsonResponder() {
                 @Override
-                public void failure(final int reason, final Exception e) {
-                  final var content = ("{\"error\":" + reason + "}").getBytes(StandardCharsets.UTF_8);
+                public void failure(ErrorCodeException ex) {
+                  final var content = ("{\"error\":" + ex.code + "}").getBytes(StandardCharsets.UTF_8);
                   final FullHttpResponse response = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.BAD_REQUEST, Unpooled.copiedBuffer(content));
                   HttpUtil.setContentLength(response, content.length);
                   sendWithKeepAlive(ctx, req, response);
@@ -98,10 +100,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
               };
               try {
                 nexus.handler.handle(session, request, responder);
-              } catch (final ErrorCodeException ece) {
-                responder.failure(ece.code, ece);
-              } catch (final RuntimeException ex) {
-                responder.failure(ErrorCodeException.SERVICE_UNKNOWN_FAILURE, ex);
+              } catch (final ErrorCodeException ex) {
+                responder.failure(ex);
+              } catch (final Throwable ex) {
+                responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E5_UNCAUGHT_EXCEPTION_WEB_HANDLER, ex));
               }
               if (session != null) {
                 session.kill();

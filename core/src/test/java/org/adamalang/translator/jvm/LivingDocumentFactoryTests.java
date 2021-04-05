@@ -16,7 +16,7 @@ public class LivingDocumentFactoryTests {
       compiler.create(null);
       success = true;
     } catch (final ErrorCodeException nsme) {
-      Assert.assertEquals(5002, nsme.code);
+      Assert.assertEquals(3002, nsme.code);
     }
     Assert.assertFalse(success);
   }
@@ -28,7 +28,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory("Foo", "import org.adamalang.runtime.reactives.RxObject;\n class Foo { public Foo(}", "{}");
       failed = false;
     } catch (final ErrorCodeException nsme) {
-      Assert.assertEquals(5004, nsme.code);
+      Assert.assertEquals(3001, nsme.code);
     }
     Assert.assertTrue(failed);
   }
@@ -41,7 +41,7 @@ public class LivingDocumentFactoryTests {
       compiler.create(null);
       success = true;
     } catch (final ErrorCodeException nsme) {
-      Assert.assertEquals(5002, nsme.code);
+      Assert.assertEquals(3002, nsme.code);
     }
     Assert.assertFalse(success);
   }
@@ -52,7 +52,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory("Foo", "class Foo {}", "{}");
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
-      Assert.assertEquals(5005, nsme.code);
+      Assert.assertEquals(3000, nsme.code);
     }
   }
 }

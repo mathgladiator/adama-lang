@@ -25,7 +25,7 @@ public class JsonStreamReaderTests {
         JsonStreamReader reader = new JsonStreamReader("{\"x\":123}");
         Object obj = reader.readJavaTree();
         Assert.assertTrue(obj instanceof HashMap);
-        Assert.assertTrue(123.0 == (double) (((HashMap<?, ?>) obj).get("x")));
+        Assert.assertTrue(123 == (int) (((HashMap<?, ?>) obj).get("x")));
         Assert.assertTrue(reader.end());
     }
 
@@ -42,7 +42,7 @@ public class JsonStreamReaderTests {
         JsonStreamReader reader = new JsonStreamReader("[123]");
         Object obj = reader.readJavaTree();
         Assert.assertTrue(obj instanceof ArrayList);
-        Assert.assertTrue(123.0 == (double) (((ArrayList<Object>) obj).get(0)));
+        Assert.assertTrue(123 == (int) (((ArrayList<Object>) obj).get(0)));
         Assert.assertTrue(reader.end());
     }
 

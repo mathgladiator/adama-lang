@@ -1,5 +1,6 @@
 package org.adamalang.runtime.contracts;
 
+import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,9 +10,7 @@ public class DataCallbackTests {
 
   public class MockCallback<T> implements DataCallback<T> {
     public T result = null;
-    public int progress = 0;
-    public int failure = 0;
-    public Exception exception;
+    public ErrorCodeException exception;
 
     @Override
     public void success(T value) {
@@ -19,13 +18,7 @@ public class DataCallbackTests {
     }
 
     @Override
-    public void progress(int stage) {
-      progress = stage;
-    }
-
-    @Override
-    public void failure(int stage, Exception ex) {
-      failure = stage;
+    public void failure(ErrorCodeException ex) {
       exception = ex;
     }
   }
@@ -45,10 +38,7 @@ public class DataCallbackTests {
     DataCallback<Integer> t = DataCallback.transform(callback, 5, (x) -> x * x);
     t.success(10);
     Assert.assertEquals(100, (int) callback.result);
-    t.failure(10, new RuntimeException());
-    t.progress(500);
-    Assert.assertEquals(10, callback.failure);
-    Assert.assertEquals(500, callback.progress);
+    t.failure(new ErrorCodeException(15, new Exception()));
   }
 
   @Test
@@ -60,7 +50,7 @@ public class DataCallbackTests {
       throw new NullPointerException();
     });
     t.success(10);
-    Assert.assertEquals(5, callback.failure);
+    Assert.assertEquals(5, callback.exception.code);
   }
 
   @Test
@@ -72,10 +62,7 @@ public class DataCallbackTests {
     DataCallback<Void> t = DataCallback.handoff(callback, 5, () -> {
       i.set(42);
     });
-    t.failure(10, new RuntimeException());
-    t.progress(500);
-    Assert.assertEquals(10, callback.failure);
-    Assert.assertEquals(500, callback.progress);
+    t.failure(new ErrorCodeException(15, new RuntimeException()));
     t.success(null);
     Assert.assertEquals(50, (int) callback.result);
     Assert.assertEquals(42, i.get());
@@ -91,6 +78,6 @@ public class DataCallbackTests {
       throw new NullPointerException();
     });
     t.success(null);
-    Assert.assertEquals(5, callback.failure);
+    Assert.assertEquals(5, callback.exception.code);
   }
 }

@@ -2,6 +2,7 @@ package org.adamalang.data.disk;
 
 import org.adamalang.runtime.contracts.DataCallback;
 import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -44,12 +45,7 @@ public class FileSystemDataServiceTests {
     }
 
     @Override
-    public void progress(int stage) {
-      System.err.println("progress; stage=" + stage);
-    }
-
-    @Override
-    public void failure(int stage, Exception ex) {
+    public void failure(ErrorCodeException ex) {
       throw new RuntimeException(ex);
     }
   }
@@ -66,7 +62,7 @@ public class FileSystemDataServiceTests {
       f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, "{}", "{\"x\":123}", "{\"x\":null}", false, 0), written);
       f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, "{}", "{\"x\":42}", "{\"x\":123}", false, 0), written);
       f.get(id.get(), fetch);
-      Assert.assertEquals("{\"x\":42.0}", fetch.get().patch);
+      Assert.assertEquals("{\"x\":42}", fetch.get().patch);
     });
   }
 

@@ -4,8 +4,11 @@
 package org.adamalang.netty.api;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.adamalang.netty.ErrorCodes;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.translator.env.CompilerOptions;
@@ -13,10 +16,16 @@ import org.adamalang.translator.env.CompilerOptions;
 /** a mapping of files to their game spaces */
 public class GameSpaceDB {
   private static void sanityCheckDataDirectory(final File file) throws ErrorCodeException {
-    if (!file.exists()) {
-      file.mkdir();
+    try {
+      if (!file.exists()) {
+        file.mkdir();
+      }
+      if (!(file.exists() && file.isDirectory())) {
+        throw new ErrorCodeException(ErrorCodes.E5_CONFIGURATION_MALFORMED_NO_SOURCE_DIRECTORY, new IOException(file.toString() + " is not a source directory"));
+      }
+    } catch (Throwable ex) {
+      throw ErrorCodeException.detectOrWrap(ErrorCodes.E5_CONFIGURATION_CRASHED, ex);
     }
-    if (!(file.exists() && file.isDirectory())) { throw new ErrorCodeException(ErrorCodeException.CONFIGURATION_MALFORMED_NO_SOURCE_DIRECTORY); }
   }
 
   private int classId;
@@ -46,15 +55,23 @@ public class GameSpaceDB {
 
   /** get a gamespace (via filename) */
   public synchronized GameSpace getOrCreate(final String gamespace) throws ErrorCodeException {
-    var gs = map.get(gamespace);
-    if (gs != null) { return gs; }
-    final var gameSource = new File(schemaRoot, gamespace);
-    if (!gameSource.exists()) { throw new ErrorCodeException(ErrorCodeException.USERLAND_CANT_FIND_GAMESPACE); }
-    final var gameData = new File(dataRoot, gamespace);
-    sanityCheckDataDirectory(gameData);
-    final var factory = GameSpace.buildLivingDocumentFactory(schemaRoot, options, gamespace, "Game" + classId++);
-    gs = new GameSpace(gamespace, factory, time, gameData);
-    map.put(gamespace, gs);
-    return gs;
+    try {
+      var gs = map.get(gamespace);
+      if (gs != null) {
+        return gs;
+      }
+      final var gameSource = new File(schemaRoot, gamespace);
+      if (!gameSource.exists()) {
+        throw new ErrorCodeException(ErrorCodes.USERLAND_RESOURCE_CANT_FIND_GAMESPACE, new RuntimeException("gamespace: " + gamespace));
+      }
+      final var gameData = new File(dataRoot, gamespace);
+      sanityCheckDataDirectory(gameData);
+      final var factory = GameSpace.buildLivingDocumentFactory(schemaRoot, options, gamespace, "Game" + classId++);
+      gs = new GameSpace(gamespace, factory, time, gameData);
+      map.put(gamespace, gs);
+      return gs;
+    } catch (Throwable ex) {
+      throw ErrorCodeException.detectOrWrap(ErrorCodes.E5_GAMESPACE_DB_CRASHED, ex);
+    }
   }
 }

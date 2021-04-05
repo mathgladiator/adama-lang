@@ -2,6 +2,7 @@ package org.adamalang.support.testgen;
 
 import org.adamalang.runtime.contracts.DataCallback;
 import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,14 +21,9 @@ public class DumbDataServiceTests {
       }
 
       @Override
-      public void progress(int stage) {
-        Assert.fail();
+      public void failure(ErrorCodeException ex) {
       }
 
-      @Override
-      public void failure(int stage, Exception ex) {
-
-      }
     });
     try {
       dds.delete(1, null);
@@ -56,27 +52,24 @@ public class DumbDataServiceTests {
     } catch (NullPointerException npe) {
     }
     try {
-      acquire.failure(0, new RuntimeException());
+      acquire.failure(new ErrorCodeException(0, new Exception()));
       Assert.fail();
     } catch (RuntimeException re) {}
-    acquire.progress(1);
   }
 
   @Test
   public void noopint() {
     try {
-      DumbDataService.NOOPINT.failure(0, new RuntimeException());
+      DumbDataService.NOOPINT.failure(new ErrorCodeException(0, new Exception()));
       Assert.fail();
     } catch (RuntimeException re) {}
-    DumbDataService.NOOPINT.progress(1);
   }
 
   @Test
   public void pv() {
     try {
-      DumbDataService.NOOPPrivateView.failure(0, new RuntimeException());
+      DumbDataService.NOOPPrivateView.failure(new ErrorCodeException(0, new Exception()));
       Assert.fail();
     } catch (RuntimeException re) {}
-    DumbDataService.NOOPPrivateView.progress(1);
   }
 }

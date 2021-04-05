@@ -3,6 +3,7 @@ package org.adamalang.support.testgen;
 import org.adamalang.runtime.DurableLivingDocument;
 import org.adamalang.runtime.contracts.DataCallback;
 import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
@@ -34,7 +35,7 @@ public class DumbDataService implements DataService {
     if (data != null) {
       callback.success(new LocalDocumentChange(data, 0));
     } else {
-      callback.failure(0, new UnsupportedOperationException());
+      callback.failure(new ErrorCodeException(0, new UnsupportedOperationException()));
     }
   }
 
@@ -45,11 +46,7 @@ public class DumbDataService implements DataService {
     }
 
     @Override
-    public void progress(int stage) {
-    }
-
-    @Override
-    public void failure(int stage, Exception ex) {
+    public void failure(ErrorCodeException ex) {
       throw new RuntimeException(ex);
     }
   };
@@ -61,12 +58,9 @@ public class DumbDataService implements DataService {
     public void success(Integer value) {
     }
 
-    @Override
-    public void progress(int stage) {
-    }
 
     @Override
-    public void failure(int stage, Exception ex) {
+    public void failure(ErrorCodeException ex) {
       throw new RuntimeException(ex);
     }
   };
@@ -91,11 +85,7 @@ public class DumbDataService implements DataService {
     }
 
     @Override
-    public void progress(int stage) {
-    }
-
-    @Override
-    public void failure(int stage, Exception ex) {
+    public void failure(ErrorCodeException ex) {
       throw new RuntimeException(ex);
     }
   }

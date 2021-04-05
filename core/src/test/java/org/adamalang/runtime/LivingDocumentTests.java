@@ -66,9 +66,9 @@ public class LivingDocumentTests {
   public void accept_array_message() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    Assert.assertEquals(0, (int) ((double)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t")));
+    Assert.assertEquals(0, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t")));
     setup.document.send(NtClient.NO_ONE, "chan", "[{\"v\":1000},{\"v\":100000},{\"v\":1}]", new RealDocumentSetup.AssertInt(5));
-    Assert.assertEquals(101001, (int) ((double)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t")));
+    Assert.assertEquals(101001, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t")));
   }
 
   @Test
@@ -82,7 +82,7 @@ public class LivingDocumentTests {
   @Test
   public void preempt() throws Exception {
     final var setup = new RealDocumentSetup("public int v; @construct { v = 1; transition #foo; } #foo { v = 2; preempt #zoo; block; } #zoo { v = 3; } ");
-    Assert.assertEquals(3, (int) ((double)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("v")));
+    Assert.assertEquals(3, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("v")));
   }
 
 
@@ -271,8 +271,8 @@ public class LivingDocumentTests {
 
     Assert.assertEquals("0.7231742029971469", d1);
     Assert.assertEquals("2.6429286547789945", d2);
-    Assert.assertEquals("-5.35098017E8", i1);
-    Assert.assertEquals("26.0", i2);
+    Assert.assertEquals("-535098017", i1);
+    Assert.assertEquals("26", i2);
     Assert.assertEquals("-5237980416576129062", l);
     setup.assertCompare();
   }
@@ -294,7 +294,7 @@ public class LivingDocumentTests {
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, "foo", "{}", new RealDocumentSetup.AssertInt(6));
     String x = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString();
-    Assert.assertEquals("42.0", x);
+    Assert.assertEquals("42", x);
     setup.assertCompare();
   }
 
@@ -434,7 +434,7 @@ public class LivingDocumentTests {
   public void state_machine_progress() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}");
     String t = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString();
-    Assert.assertEquals("10.0", t);
+    Assert.assertEquals("10", t);
   }
 
   @Test
@@ -451,7 +451,7 @@ public class LivingDocumentTests {
     setup.time.time += 100;
     setup.document.invalidate(new RealDocumentSetup.AssertInt(30));
     String t = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString();
-    Assert.assertEquals("10.0", t);
+    Assert.assertEquals("10", t);
   }
 
   @Test
@@ -549,7 +549,7 @@ public class LivingDocumentTests {
     try {
       document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(5006, drre.code);
+      Assert.assertEquals(2000, drre.code);
     }
     setup.assertCompare();
   }
@@ -626,11 +626,11 @@ public class LivingDocumentTests {
   @Test
   public void cant_connect_twice() throws Exception {
     final var setup = new RealDocumentSetup("public int x; @construct { x = 123; } @connected (who) { x++; return true; }", null, false);
-    Assert.assertEquals(123, (int) ((double)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
+    Assert.assertEquals(123, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    Assert.assertEquals(124, (int) ((double)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
+    Assert.assertEquals(124, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertFailure());
-    Assert.assertEquals(124, (int) ((double) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
+    Assert.assertEquals(124, ((int) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
     setup.assertCompare();
     Assert.assertEquals(0, setup.document.getCodeCost());
   }

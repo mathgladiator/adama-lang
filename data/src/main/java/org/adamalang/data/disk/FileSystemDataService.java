@@ -1,7 +1,12 @@
+/* The Adama Programming Language For Board Games!
+ *    See http://www.adama-lang.org/ for more information.
+ * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.data.disk;
 
+import org.adamalang.data.ErrorCodes;
 import org.adamalang.runtime.contracts.DataCallback;
 import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -12,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Random;
 
+/** a very simple implementation of the data service */
 public class FileSystemDataService implements DataService {
 
   public final File root;
@@ -66,9 +72,9 @@ public class FileSystemDataService implements DataService {
           return;
         }
       }
-      callback.failure(0, new RuntimeException("failed to generate an id"));
-    } catch (Exception e) {
-      callback.failure(0, e);
+      callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_UNABLE_CREATE_LOG, new RuntimeException("failed to create new jsonlog file")));
+    } catch (Throwable ex) {
+      callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_CRASHED_CREATE_LOG, ex));
     }
   }
 
@@ -91,10 +97,10 @@ public class FileSystemDataService implements DataService {
           buffered.close();
         }
       } else {
-        callback.failure(1, new IOException("file not found"));
+        callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_FILE_NOT_FOUND, new RuntimeException("file not found:" + file.toString())));
       }
-    } catch (final Exception ex) {
-      callback.failure(1, ex);
+    } catch (final Throwable ex) {
+      callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_CRASHED_GET_LOG, ex));
     }
   }
 
@@ -122,10 +128,13 @@ public class FileSystemDataService implements DataService {
   public void initialize(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback) {
     try {
       File file = new File(root, documentId + ".jsonlog");
-      // TODO: CHECK IF EMPTY
-      append(file, patch, callback);
-    } catch (final Exception ex) {
-      callback.failure(2, ex);
+      if (file.length() == 0) {
+        append(file, patch, callback);
+      } else {
+        callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_FILE_EXISTS_FOR_INITIALIZE, new RuntimeException(documentId + " was not empty")));
+      }
+    } catch (final Throwable ex) {
+      callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_CRASHED_INITIALIZE, ex));
     }
   }
 
@@ -134,8 +143,8 @@ public class FileSystemDataService implements DataService {
     try {
       File file = new File(root, documentId + ".jsonlog");
       append(file, patch, callback);
-    } catch (final Exception ex) {
-      callback.failure(2, ex);
+    } catch (final Throwable ex) {
+      callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_CRASHED_PATCH, ex));
     }
   }
 

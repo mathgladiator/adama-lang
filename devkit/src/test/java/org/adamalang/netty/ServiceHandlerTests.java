@@ -110,7 +110,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4011}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4005}", output.get(1));
   }
 
   @Test
@@ -133,7 +133,7 @@ public class ServiceHandlerTests {
     final var output = callback.output();
     Assert.assertEquals(3, output.size());
     Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"1\"}}", output.get(1));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":4}}", output.get(2));
+    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":5}}", output.get(2));
   }
 
   @Test
@@ -177,7 +177,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4001}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":40001}", output.get(1));
   }
 
   @Test
@@ -198,7 +198,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4007}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":40103}", output.get(1));
   }
 
   @Test
@@ -219,7 +219,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4003}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":40100}", output.get(1));
   }
 
   @Test
@@ -240,7 +240,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4006}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":40102}", output.get(1));
   }
 
   @Test
@@ -261,7 +261,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4005}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":40000}", output.get(1));
   }
 
   @Test
@@ -282,7 +282,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4011}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4005}", output.get(1));
   }
 
   @Test
@@ -303,7 +303,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4009}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":40104}", output.get(1));
   }
 
   @Test
@@ -324,7 +324,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4010}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":40105}", output.get(1));
   }
 
   @Test
@@ -383,7 +383,7 @@ public class ServiceHandlerTests {
       callback.awaitDone();
       final var output = callback.output();
       Assert.assertEquals(2, output.size());
-      Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4008}", output.get(1));
+      Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4010}", output.get(1));
     }
   }
 
@@ -469,7 +469,7 @@ public class ServiceHandlerTests {
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
     final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
-    final var callback = new MockClientCallback(4);
+    final var callback = new MockClientCallback(5);
     final var first = callback.latchAt(1);
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
@@ -479,10 +479,11 @@ public class ServiceHandlerTests {
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"8\"}"));
     callback.awaitDone();
     final var output = callback.output();
-    Assert.assertEquals(4, output.size());
+    Assert.assertEquals(5, output.size());
     Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"8\"}}", output.get(1));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":4}}", output.get(2));
-    Assert.assertEquals("DATA:{\"failure\":3,\"reason\":4020}", output.get(3));
+    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":5}}", output.get(2));
+    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":6}}", output.get(3));
+    Assert.assertEquals("DATA:{\"failure\":3,\"reason\":4020}", output.get(4));
     cleanup();
   }
 
@@ -506,9 +507,9 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(4, output.size());
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":4004}", output.get(1));
-    Assert.assertEquals("DATA:{\"failure\":2,\"reason\":4004}", output.get(2));
-    Assert.assertEquals("DATA:{\"failure\":3,\"reason\":4004}", output.get(3));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":40101}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":2,\"reason\":40101}", output.get(2));
+    Assert.assertEquals("DATA:{\"failure\":3,\"reason\":40101}", output.get(3));
     cleanup();
   }
 
@@ -533,8 +534,8 @@ public class ServiceHandlerTests {
     final var output = callback.output();
     Assert.assertEquals(4, output.size());
     Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"8\"}}", output.get(1));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"k\":1},\"outstanding\":[],\"blockers\":[],\"seq\":3}}", output.get(2));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"k\":2},\"outstanding\":[],\"blockers\":[],\"seq\":5}}", output.get(3));
+    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"k\":2},\"outstanding\":[],\"blockers\":[],\"seq\":6}}", output.get(2));
+    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":7}}", output.get(3));
     cleanup();
   }
 

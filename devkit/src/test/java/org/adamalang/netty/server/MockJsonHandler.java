@@ -31,9 +31,9 @@ public class MockJsonHandler implements JsonHandler {
       responder.respond(Utility.parseJsonObject("{\"ok\":\"go\"}"), true, null);
     } else {
       if (session == null) {
-        responder.failure(12, null);
+        responder.failure(new ErrorCodeException(12, new RuntimeException("")));
       } else {
-        responder.failure(400, null);
+        responder.failure(new ErrorCodeException(400, new RuntimeException("")));
       }
     }
   }
