@@ -118,6 +118,7 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public Ty[] toArray(final Function<Integer, Object> arrayMaker) {
     return list.toArray((Ty[]) arrayMaker.apply(list.size()));
   }

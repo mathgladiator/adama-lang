@@ -24,6 +24,7 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   public final RxInt32 index;
   public final ReactiveIndexInvalidator<MockRecord> inv;
 
+  @SuppressWarnings("unchecked")
   public MockRecord(final RxParent p) {
     super(p);
     id = 0;

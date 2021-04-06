@@ -14,7 +14,6 @@ import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
-import org.adamalang.runtime.stdlib.Utility;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -40,9 +39,7 @@ public class LivingDocumentTests {
     final var parser = new Parser(tokenEngine);
     parser.document().accept(document);
     if (!document.check(state)) {
-      final var issues = Utility.createArrayNode();
-      document.writeErrorsAsLanguageServerDiagnosticArray(issues);
-      throw new Exception("Failed to check:" + issues.toPrettyString());
+      throw new Exception("Failed to check:" + document.errorsJson());
     }
     final var java = document.compileJava(state);
     var cached = compilerCache.get(java);
@@ -56,13 +53,14 @@ public class LivingDocumentTests {
   @Test
   public void bad_json() throws Exception {
     try {
-      final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }", "");
+      new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }", "");
       Assert.fail();
     } catch (RuntimeException re) {
     }
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void accept_array_message() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
@@ -80,11 +78,11 @@ public class LivingDocumentTests {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void preempt() throws Exception {
     final var setup = new RealDocumentSetup("public int v; @construct { v = 1; transition #foo; } #foo { v = 2; preempt #zoo; block; } #zoo { v = 3; } ");
     Assert.assertEquals(3, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("v")));
   }
-
 
   @Test
   public void command_unknown() throws Exception {
@@ -99,7 +97,7 @@ public class LivingDocumentTests {
     try {
       setup.document.document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(5009, drre.code);
+      Assert.assertEquals(2083, drre.code);
     }
   }
 
@@ -112,17 +110,19 @@ public class LivingDocumentTests {
     try {
       document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(5013, drre.code);
+      Assert.assertEquals(2081, drre.code);
     }
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void futures_blocked() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
     Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void futures_blocked_still_blocked_wrong_user() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
     Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
@@ -133,6 +133,7 @@ public class LivingDocumentTests {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void futures_blocked_then_unblocked() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
     Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
@@ -142,6 +143,7 @@ public class LivingDocumentTests {
     setup.assertCompare();
   }
   @Test
+  @SuppressWarnings("unchecked")
   public void futures_hydrate_missing_data() throws Exception {
     final var setup = new RealDocumentSetup(
             "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }", "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"nope\":true,\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"message\":{\"v\":50}}},\"__message_id\":1}");
@@ -149,38 +151,26 @@ public class LivingDocumentTests {
     Assert.assertFalse((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
     setup.assertCompare();
   }
-    /*
-
-
 
   @Test
+  @SuppressWarnings("unchecked")
   public void futures_out_of_order_rehydrate() throws Exception {
-    ObjectNode node;
+    String persist;
     {
-      final var setup = new RealDocumentSetup(
-          "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }");
-      setup.drive(setup.transactor.construct(NtClient.NO_ONE, "{}", "123"));
-      Assert.assertEquals("{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":1}", setup.logger.node.toString());
-      setup.drive(setup.transactor.connect(NtClient.NO_ONE));
-      setup.drive(setup.transactor.send(NtClient.NO_ONE, "chb", "{\"v\":50}"));
-      Assert.assertEquals(
-          "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"timestamp\":\"0\",\"message\":{\"v\":50}}},\"__message_id\":1}",
-          setup.logger.node.toString());
-      node = setup.logger.node.deepCopy();
+      final var setup = new RealDocumentSetup("@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }");
+      setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
+      setup.document.send(NtClient.NO_ONE, "chb", "{\"v\":50}", new RealDocumentSetup.AssertInt(5));
+      persist = setup.document.json();
       setup.assertCompare();
+      Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
     }
-    final var setup = new RealDocumentSetup(
-        "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }", node);
-    setup.transactor.create();
-    setup.transactor.insert(node.toString());
-    setup.drive(setup.transactor.send(NtClient.NO_ONE, "cha", "{\"v\":25}"));
-    Assert.assertEquals(
-        "{\"__state\":\"\",\"__constructed\":true,\"__entropy\":\"-5106534569952410475\",\"__blocked_on\":\"cha\",\"__blocked\":false,\"__seq\":7,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__message_id\":2,\"__auto_future_id\":2,\"t\":75}",
-        setup.logger.node.toString());
+    final var setup = new RealDocumentSetup("@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }", persist);
+    Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+    setup.document.send(NtClient.NO_ONE, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
+    Assert.assertFalse((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+
     setup.assertCompare();
   }
-
-  */
 
   @Test
   public void infinite_loop_1() throws Exception {
@@ -261,6 +251,7 @@ public class LivingDocumentTests {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void invoke_random() throws Exception {
     final var setup = new RealDocumentSetup("double d1; double d2; int i1; int i2; long l; int z; @construct { d1 = Random.genDouble(); d2 = Random.getDoubleGaussian() * 6; i1 = Random.genInt(); i2 = Random.genBoundInt(50); l = Random.genLong(); z = Random.genBoundInt(-1); }");
     String d1 = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("d1").toString();
@@ -268,7 +259,6 @@ public class LivingDocumentTests {
     String i1 = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("i1").toString();
     String i2 = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("i2").toString();
     String l = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("l").toString();
-
     Assert.assertEquals("0.7231742029971469", d1);
     Assert.assertEquals("2.6429286547789945", d2);
     Assert.assertEquals("-535098017", i1);
@@ -278,6 +268,7 @@ public class LivingDocumentTests {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void invoke_time() throws Exception {
     final var setup = new RealDocumentSetup("long x; @construct { x = Time.now(); }", null, true, new MockTime(450));
     setup.document.invalidate(new RealDocumentSetup.AssertInt(2));
@@ -289,6 +280,7 @@ public class LivingDocumentTests {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void message_abort() throws Exception {
     final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x = 100; abort; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
@@ -404,7 +396,7 @@ public class LivingDocumentTests {
     try {
       setup.document.document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(5016, drre.code);
+      Assert.assertEquals(2040, drre.code);
     }
     setup.assertCompare();
   }
@@ -425,12 +417,13 @@ public class LivingDocumentTests {
     try {
       setup.document.document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(5017, drre.code);
+      Assert.assertEquals(2050, drre.code);
     }
     setup.assertCompare();
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void state_machine_progress() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}");
     String t = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString();
@@ -438,6 +431,16 @@ public class LivingDocumentTests {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
+  public void state_machine_progress_no_monitor() throws Exception {
+    final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}", null, false);
+    String t = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString();
+    setup.document.invalidate(new RealDocumentSetup.AssertInt(12));
+    Assert.assertEquals("10", t);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
   public void state_machine_progress_over_time() throws Exception {
     final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
     for (int k = 0; k < 26; k++) {
@@ -452,6 +455,20 @@ public class LivingDocumentTests {
     setup.document.invalidate(new RealDocumentSetup.AssertInt(30));
     String t = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString();
     Assert.assertEquals("10", t);
+  }
+
+  @Test
+  public void construct_over_time() throws Exception {
+    final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next in 0.25; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
+    Integer bumpTimeMs;
+    int k = 2;
+    while ((bumpTimeMs = setup.document.getAndCleanRequiresInvalidateMilliseconds()) != null) {
+      setup.time.time += bumpTimeMs;
+      setup.document.invalidate(new RealDocumentSetup.AssertInt(k));
+      k++;
+      if (k == 11) k++; // huh, strange
+    }
+    Assert.assertEquals(13, k);
   }
 
   @Test
@@ -518,7 +535,7 @@ public class LivingDocumentTests {
         document.__transact(writer.toString());
         Assert.fail();
       } catch (final ErrorCodeException drre) {
-        Assert.assertEquals(5012, drre.code);
+        Assert.assertEquals(2020, drre.code);
       }
     }
   }
@@ -566,7 +583,7 @@ public class LivingDocumentTests {
     try {
       document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(5007, drre.code);
+      Assert.assertEquals(2082, drre.code);
     }
     setup.assertCompare();
   }
@@ -580,7 +597,7 @@ public class LivingDocumentTests {
     try {
       document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(5008, drre.code);
+      Assert.assertEquals(2080, drre.code);
     }
     setup.assertCompare();
   }
@@ -624,6 +641,7 @@ public class LivingDocumentTests {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void cant_connect_twice() throws Exception {
     final var setup = new RealDocumentSetup("public int x; @construct { x = 123; } @connected (who) { x++; return true; }", null, false);
     Assert.assertEquals(123, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));

@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.adamalang.netty.api.GameSpaceDB;
 import org.adamalang.netty.client.AdamaCookieCodec;
 import org.adamalang.netty.client.ClientRequestBuilder;
+import org.adamalang.netty.client.MockClient;
 import org.adamalang.netty.client.MockClientCallback;
 import org.adamalang.netty.server.CliServerOptions;
 import org.adamalang.netty.server.MockAuthenticator;
@@ -72,23 +73,29 @@ public class ServiceHandlerTests {
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
     final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
-    final var callback = new MockClientCallback(6);
-    final var first = callback.latchAt(1);
+
+    final var callback = new MockClient();
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
-    first.await(2000, TimeUnit.MILLISECONDS);
+    callback.awaitFirst();
+    MockClient.IdAccum id1 = callback.camp(1);
+    MockClient.IdAccum id2 = callback.camp(2);
+    MockClient.IdAccum id3 = callback.camp(3);
+    MockClient.IdAccum id4 = callback.camp(4);
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_ServiceHandler_success.a\",\"game\":\"3\",\"arg\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"gamespace\":\"Demo_ServiceHandler_success.a\",\"method\":\"connect\",\"game\":\"3\"}"));
+    id1.done.await(1000, TimeUnit.MILLISECONDS);
+    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"3\"}}");
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_ServiceHandler_success.a\",\"game\":\"3\"}"));
+    id2.first.await(1000, TimeUnit.MILLISECONDS);
+    id2.assertOnce("{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":123},\"outstanding\":[],\"blockers\":[],\"seq\":4}}");
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"gamespace\":\"Demo_ServiceHandler_success.a\",\"method\":\"send\",\"channel\":\"change\",\"message\":{\"dx\":7},\"game\":\"3\"}"));
+    id3.done.await(1000, TimeUnit.MILLISECONDS);
+    id3.assertOnce("{\"deliver\":3,\"done\":true,\"response\":{\"success\":6}}");
+    id2.done.await(1000, TimeUnit.MILLISECONDS);
+    id2.assertLast(2, "{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":130},\"outstanding\":[],\"blockers\":[],\"seq\":6}}");
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":4,\"gamespace\":\"Demo_ServiceHandler_success.a\",\"method\":\"reflect\"}"));
-    callback.awaitDone();
-    final var output = callback.output();
-    Assert.assertEquals(6, output.size());
-    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"3\"}}", output.get(1));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":123},\"outstanding\":[],\"blockers\":[],\"seq\":3}}", output.get(2));
-    Assert.assertEquals("DATA:{\"deliver\":3,\"done\":true,\"response\":{\"success\":4}}", output.get(3));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":130},\"outstanding\":[],\"blockers\":[],\"seq\":5}}", output.get(4));
-    Assert.assertEquals("DATA:{\"deliver\":4,\"done\":true,\"response\":{\"result\":{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"dx\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{\"change\":\"M\"},\"constructors\":[],\"labels\":[]}}}", output.get(5));
+    id4.done.await(1000, TimeUnit.MILLISECONDS);
+    id4.assertOnce("{\"deliver\":4,\"done\":true,\"response\":{\"result\":{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"dx\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{\"change\":\"M\"},\"constructors\":[],\"labels\":[]}}}");
     cleanup();
   }
 
@@ -145,7 +152,7 @@ public class ServiceHandlerTests {
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
     final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
-    final var callback = new MockClientCallback(3);
+    final var callback = new MockClientCallback(2);
     final var first = callback.latchAt(1);
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
@@ -153,9 +160,8 @@ public class ServiceHandlerTests {
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Operational_Goodwill_failure.a\",\"game\":\"5\",\"arg\":{}}"));
     callback.awaitDone();
     final var output = callback.output();
-    Assert.assertEquals(3, output.size());
+    Assert.assertEquals(2, output.size());
     Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"5\"}}", output.get(1));
-    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":5018}", output.get(2)); // read-timeout (trigger the exceptional case)
     cleanup();
   }
 
@@ -347,7 +353,7 @@ public class ServiceHandlerTests {
     final var output = callback.output();
     Assert.assertEquals(3, output.size());
     Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"4\"}}", output.get(1));
-    Assert.assertEquals("DATA:{\"failure\":2,\"reason\":5015}", output.get(2));
+    Assert.assertEquals("DATA:{\"failure\":2,\"reason\":2060}", output.get(2));
   }
 
   @Test
@@ -442,21 +448,24 @@ public class ServiceHandlerTests {
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
     final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
-    final var callback = new MockClientCallback(5);
-    final var first = callback.latchAt(1);
+    final var callback = new MockClient();
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
-    first.await(2000, TimeUnit.MILLISECONDS);
+    callback.awaitFirst();
+    MockClient.IdAccum id1 = callback.camp(1);
+    MockClient.IdAccum id2 = callback.camp(2);
+    MockClient.IdAccum id3 = callback.camp(3);
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\",\"arg\":{}}"));
+    id1.done.await(1000, TimeUnit.MILLISECONDS);
+    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"7\"}}");
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\"}"));
+    id2.first.await(1000, TimeUnit.MILLISECONDS);
+    id2.assertOnce("{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":5}}");
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"disconnect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\"}"));
-    callback.awaitDone();
-    final var output = callback.output();
-    Assert.assertEquals(5, output.size());
-    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"7\"}}", output.get(1));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":4}}", output.get(2));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":true,\"response\":{}}", output.get(3));
-    Assert.assertEquals("DATA:{\"deliver\":3,\"done\":true,\"response\":{\"game\":\"7\",\"success\":true}}", output.get(4));
+    id3.done.await(1000, TimeUnit.MILLISECONDS);
+    id3.assertOnce("{\"deliver\":3,\"done\":true,\"response\":{\"game\":\"7\",\"success\":true}}");
+    id2.done.await(1000, TimeUnit.MILLISECONDS);
+    id2.assertLast(2, "{\"deliver\":2,\"done\":true,\"response\":{}}");
     cleanup();
   }
 
@@ -469,21 +478,22 @@ public class ServiceHandlerTests {
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
     final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
-    final var callback = new MockClientCallback(5);
-    final var first = callback.latchAt(1);
+    final var callback = new MockClient();
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
-    first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"8\",\"arg\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":8}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"8\"}"));
-    callback.awaitDone();
-    final var output = callback.output();
-    Assert.assertEquals(5, output.size());
-    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"8\"}}", output.get(1));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":5}}", output.get(2));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":6}}", output.get(3));
-    Assert.assertEquals("DATA:{\"failure\":3,\"reason\":4020}", output.get(4));
+    callback.awaitFirst();
+    MockClient.IdAccum id1 = callback.camp(1);
+    MockClient.IdAccum id2 = callback.camp(2);
+    MockClient.IdAccum id3 = callback.camp(3);
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\",\"arg\":{}}"));
+    id1.done.await(1000, TimeUnit.MILLISECONDS);
+    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"7\"}}");
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\"}"));
+    id2.first.await(1000, TimeUnit.MILLISECONDS);
+    id2.assertOnce("{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":5}}");
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"7\"}"));
+    id3.done.await(1000, TimeUnit.MILLISECONDS);
+    id3.assertOnce("{\"failure\":3,\"reason\":40002}");
     cleanup();
   }
 
@@ -548,20 +558,22 @@ public class ServiceHandlerTests {
     Assert.assertTrue(runnable.waitForReady(10000));
     Assert.assertTrue(runnable.isAccepting());
     final EventLoopGroup clientEventLoop = new NioEventLoopGroup();
-    final var callback = new MockClientCallback(4);
-    final var first = callback.latchAt(1);
+    final var callback = new MockClient();
     final var b = ClientRequestBuilder.start(clientEventLoop).server("localhost", options.port()).get(options.websocketPath()).header("cookie", AdamaCookieCodec.client(AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, "XOK")).withWebSocket();
     b.execute(callback);
-    first.await(2000, TimeUnit.MILLISECONDS);
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"80\",\"arg\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Bomb_success.a\",\"game\":80}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"devkit_who\":{\"agent\":\"boss\",\"authority\":\"devkit\"},\"gamespace\":\"Demo_Bomb_success.a\",\"game\":\"80\"}"));
-    callback.awaitDone();
-    final var output = callback.output();
-    Assert.assertEquals(4, output.size());
-    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"80\"}}", output.get(1));
-    Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":4}}", output.get(2));
-    Assert.assertEquals("DATA:{\"failure\":3,\"reason\":5011}", output.get(3));
+    callback.awaitFirst();
+    MockClient.IdAccum id1 = callback.camp(1);
+    MockClient.IdAccum id2 = callback.camp(2);
+    MockClient.IdAccum id3 = callback.camp(3);
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"gamespace\":\"Demo_Simple_success.a\",\"game\":\"70\",\"arg\":{}}"));
+    id1.done.await(1000, TimeUnit.MILLISECONDS);
+    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"game\":\"70\"}}");
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"gamespace\":\"Demo_Simple_success.a\",\"game\":\"70\"}"));
+    id2.first.await(1000, TimeUnit.MILLISECONDS);
+    id2.assertOnce("{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"k\":1},\"outstanding\":[],\"blockers\":[],\"seq\":4}}");
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"devkit_who\":{\"agent\":\"boss\",\"authority\":\"devkit\"},\"gamespace\":\"Demo_Simple_success.a\",\"game\":\"70\"}"));
+    id3.done.await(1000, TimeUnit.MILLISECONDS);
+    id3.assertOnce("{\"deliver\":3,\"done\":false,\"response\":{\"data\":{\"k\":2},\"outstanding\":[],\"blockers\":[],\"seq\":7}}");
     cleanup();
   }
 }

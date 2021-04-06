@@ -162,6 +162,7 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public Ty[] toArray(final Function<Integer, Object> arrayMaker) {
     ensureFinalized();
     return finalized.toArray((Ty[]) arrayMaker.apply(finalized.size()));

@@ -51,7 +51,6 @@ import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class Document implements TopLevelDocumentHandler {
   private int autoClassId;
@@ -506,9 +505,13 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   /** export errors in LSP format */
-  public void writeErrorsAsLanguageServerDiagnosticArray(final ArrayNode diagnostics) {
+  public String errorsJson() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginArray();
     errorLists.forEach(err -> {
-      err.writeAsLanguageServerDiagnostic(diagnostics.addObject());
+      writer.injectJson(err.json());
     });
+    writer.endArray();
+    return writer.toString();
   }
 }

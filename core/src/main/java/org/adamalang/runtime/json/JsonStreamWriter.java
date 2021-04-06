@@ -3,7 +3,6 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.json;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -130,14 +129,15 @@ public class JsonStreamWriter {
     sb.append("null");
   }
 
+  @SuppressWarnings("unchecked")
   public void writeTree(Object tree) {
     if (tree == null) {
       writeNull();
       return;
     }
     if (tree instanceof HashMap) {
-      beginObject();
       HashMap<String, Object> map = (HashMap<String, Object>) tree;
+      beginObject();
       for (Map.Entry<String, Object> entry : map.entrySet()) {
         writeObjectFieldIntro(entry.getKey());
         writeTree(entry.getValue());

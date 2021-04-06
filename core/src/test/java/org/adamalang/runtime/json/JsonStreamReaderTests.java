@@ -11,6 +11,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JsonStreamReaderTests {
+    @Test
+    public void bad_obj() {
+        JsonStreamReader reader = new JsonStreamReader("[}");
+        try {
+            reader.readJavaTree();
+            Assert.fail();
+        } catch (RuntimeException re) {
+            Assert.assertEquals("unexpected token: JsonToken{data='null', type=EndObject}", re.getMessage());
+        }
+    }
 
     @Test
     public void tree_empty_obj() {
@@ -38,6 +48,7 @@ public class JsonStreamReaderTests {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void tree_array() {
         JsonStreamReader reader = new JsonStreamReader("[123]");
         Object obj = reader.readJavaTree();
@@ -109,6 +120,11 @@ public class JsonStreamReaderTests {
             Assert.assertTrue(reader.end());
         }
         {
+            JsonStreamReader reader = new JsonStreamReader("{\"x\":13.13}");
+            reader.skipValue();
+            Assert.assertTrue(reader.end());
+        }
+        {
             JsonStreamReader reader = new JsonStreamReader("{\"x\":42}");
             Assert.assertEquals("{\"x\":42}", reader.readNtDynamic().json);
             Assert.assertTrue(reader.end());
@@ -139,7 +155,7 @@ public class JsonStreamReaderTests {
     }
     @Test
     public void readObject3() {
-        JsonStreamReader reader = new JsonStreamReader("{\"x\":\"z\",\"z\":123.4,\"t\":true,\"f\":false,\"n\":null}");
+        JsonStreamReader reader = new JsonStreamReader("{\"x\":\"z\",\"z\":123.4,\"t\":true,\"f\":false,\"n\":null,\"d\":3.14}");
         Assert.assertTrue(reader.testLackOfNull());;
         Assert.assertTrue(reader.startObject());
         Assert.assertTrue(reader.notEndOfObject());
@@ -160,6 +176,19 @@ public class JsonStreamReaderTests {
         Assert.assertTrue(reader.notEndOfObject());
         Assert.assertEquals("n", reader.fieldName());
         Assert.assertFalse(reader.testLackOfNull());;
+        Assert.assertTrue(reader.notEndOfObject());
+        Assert.assertEquals("d", reader.fieldName());
+        Assert.assertTrue(3.14 == reader.readDouble());
+        Assert.assertFalse(reader.notEndOfObject());
+        Assert.assertTrue(reader.end());
+    }
+    @Test
+    public void readObject4DoubleAsInt() {
+        JsonStreamReader reader = new JsonStreamReader("{\"dasi\":3.14}");
+        Assert.assertTrue(reader.testLackOfNull());;
+        Assert.assertTrue(reader.startObject());
+        Assert.assertEquals("dasi", reader.fieldName());
+        Assert.assertEquals(3, reader.readInteger());
         Assert.assertFalse(reader.notEndOfObject());
         Assert.assertTrue(reader.end());
     }

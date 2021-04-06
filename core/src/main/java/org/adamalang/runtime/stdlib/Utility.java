@@ -6,13 +6,9 @@ package org.adamalang.runtime.stdlib;
 import java.util.ArrayList;
 import java.util.function.Function;
 import org.adamalang.runtime.natives.NtMaybe;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** some runtime exposed to the living document */
 public class Utility {
-  public static final JsonMapper MAPPER = new JsonMapper();
 
   /** convert the maybe of one type into the maybe of another */
   public static <TyIn, TyOut> NtMaybe<TyOut> convertMaybe(final NtMaybe<TyIn> in, final Function<TyIn, TyOut> conv) {
@@ -54,16 +50,6 @@ public class Utility {
     return conv.apply(in);
   }
 
-  @Deprecated
-  public static ArrayNode createArrayNode() {
-    return MAPPER.createArrayNode();
-  }
-
-  @Deprecated
-  public static ObjectNode createObjectNode() {
-    return MAPPER.createObjectNode();
-  }
-
   public static <T> T identity(final T value) {
     return value;
   }
@@ -76,19 +62,5 @@ public class Utility {
     return maybe;
   }
 
-  @Deprecated
-  public static ObjectNode parseJsonObject(final String json) {
-    try {
-      return parseJsonObjectThrows(json);
-    } catch (final Exception jpe) {
-      throw new RuntimeException(jpe);
-    }
-  }
 
-  @Deprecated
-  public static ObjectNode parseJsonObjectThrows(final String json) throws Exception {
-    final var node = MAPPER.readTree(json);
-    if (node instanceof ObjectNode) { return (ObjectNode) node; }
-    throw new Exception("given json is not an ObjectNode at root");
-  }
 }

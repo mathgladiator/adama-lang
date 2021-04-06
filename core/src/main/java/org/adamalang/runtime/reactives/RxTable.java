@@ -30,6 +30,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   public final String className;
   private final TreeSet<Ty> unknowns;
 
+  @SuppressWarnings("unchecked")
   public RxTable(final LivingDocument document, final RxParent owner, final String className, final Function<RxParent, Ty> maker, final int indicies) {
     super(owner);
     this.document = document;

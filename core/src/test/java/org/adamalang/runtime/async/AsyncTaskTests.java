@@ -14,7 +14,7 @@ import org.junit.Test;
 public class AsyncTaskTests {
   @Test
   public void abort_flow() {
-    final var at = new AsyncTask(0, NtClient.NO_ONE, "ch", 0, Utility.createObjectNode());
+    final var at = new AsyncTask(0, NtClient.NO_ONE, "ch", 0, "message");
     at.setAction(() -> {
       throw new AbortMessageException();
     });
@@ -26,7 +26,7 @@ public class AsyncTaskTests {
 
   @Test
   public void ideal_flow() throws Exception {
-    final var at = new AsyncTask(0, NtClient.NO_ONE, "ch", 0, Utility.createObjectNode());
+    final var at = new AsyncTask(0, NtClient.NO_ONE, "ch", 0, "message");
     final var ref = new AtomicInteger(0);
     at.setAction(() -> {
       ref.incrementAndGet();

@@ -8,6 +8,6 @@ import org.junit.Test;
 public class JsonTokenTests {
   @Test
   public void coverage() {
-    new JsonToken(null, null);
+    new JsonToken(null, null).toString();
   }
 }

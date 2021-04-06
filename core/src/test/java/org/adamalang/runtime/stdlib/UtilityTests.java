@@ -8,7 +8,6 @@ import java.util.function.Function;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.junit.Assert;
 import org.junit.Test;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class UtilityTests {
   @Test
@@ -61,35 +60,5 @@ public class UtilityTests {
     Assert.assertEquals(5, (int) Utility.lookup(X, 2).get());
     Assert.assertFalse(Utility.lookup(X, -1).has());
     Assert.assertFalse(Utility.lookup(X, 4).has());
-  }
-
-  @Test
-  public void parsing() {
-    try {
-      Utility.parseJsonObject("[]");
-      Assert.fail();
-    } catch (final RuntimeException re) {
-      Assert.assertEquals("java.lang.Exception: given json is not an ObjectNode at root", re.getMessage());
-    }
-    try {
-      Utility.parseJsonObjectThrows("[]");
-      Assert.fail();
-    } catch (final Exception re) {
-      Assert.assertEquals("given json is not an ObjectNode at root", re.getMessage());
-    }
-    try {
-      Utility.parseJsonObject("[");
-      Assert.fail();
-    } catch (final RuntimeException re) {
-      Assert.assertTrue(re.getCause() instanceof JsonProcessingException);
-    }
-  }
-
-  @Test
-  public void simple() throws Exception {
-    Assert.assertTrue(Utility.parseJsonObject("{}").isObject());
-    Assert.assertTrue(Utility.parseJsonObjectThrows("{}").isObject());
-    Utility.createObjectNode();
-    Utility.createArrayNode();
   }
 }

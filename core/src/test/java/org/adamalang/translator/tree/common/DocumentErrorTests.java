@@ -27,11 +27,6 @@ public class DocumentErrorTests {
   @Test
   public void toLSP() {
     final var error = new DocumentError(new DocumentPosition().ingest(42, 4), "something", null);
-    final var diagnostic = Utility.createObjectNode();
-    error.writeAsLanguageServerDiagnostic(diagnostic);
-    Assert.assertEquals("{\"range\":{\"start\":{\"line\":42,\"character\":4},\"end\":{\"line\":42,\"character\":4}},\"severity\":1,\"source\":\"error\",\"message\":\"something\"}", diagnostic.toString());
-    Assert.assertEquals(
-        "{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"diagnostics\":[{\"range\":{\"start\":{\"line\":42,\"character\":4},\"end\":{\"line\":42,\"character\":4}},\"severity\":1,\"source\":\"error\",\"message\":\"something\"}]}}",
-        error.toPublishableDiagnostic().toString());
+    error.json();
   }
 }

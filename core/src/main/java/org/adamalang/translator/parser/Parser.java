@@ -1040,6 +1040,7 @@ public class Parser {
     return new OrderPair(commaToken, id, followup);
   }
 
+  @SuppressWarnings("unchecked")
   public TokenizedItem<Token>[] policy_list() throws AdamaLangException {
     final var open = consumeExpectedSymbol("<");
     final var list = new ArrayList<TokenizedItem<Token>>();
@@ -1054,7 +1055,7 @@ public class Parser {
         list.add(thing);
       } else {
         thing.after(comma);
-        return list.toArray(new TokenizedItem[list.size()]);
+        return (TokenizedItem<Token>[]) list.toArray(new TokenizedItem[list.size()]);
       }
     }
   }

@@ -23,7 +23,7 @@ public class NtChannelTests {
     final var key = new RxInt32(null, 42);
     final var futures = new OutstandingFutureTracker(key);
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "X");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "X");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.fetchItem(NtClient.NO_ONE);
     Assert.assertTrue(future.exists());
@@ -34,7 +34,7 @@ public class NtChannelTests {
     final var key = new RxInt32(null, 42);
     final var futures = new OutstandingFutureTracker(key);
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "X");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "X");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.fetchArray(NtClient.NO_ONE);
     Assert.assertTrue(future.exists());
@@ -54,7 +54,7 @@ public class NtChannelTests {
     final var key = new RxInt32(null, 42);
     final var futures = new OutstandingFutureTracker(key);
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "X");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "X");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.choose(NtClient.NO_ONE, new NtMessageBase[] { DEMO, DEMO }, 2);
     future.await();
@@ -87,7 +87,7 @@ public class NtChannelTests {
     final var key = new RxInt32(null, 42);
     final var futures = new OutstandingFutureTracker(key);
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "X");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "X");
     final var channel = new NtChannel<>(futures, sink);
     final var future = channel.decide(NtClient.NO_ONE, new NtMessageBase[] { DEMO, DEMO });
     future.await();

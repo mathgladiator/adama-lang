@@ -3,8 +3,8 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator.tree.common;
 
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.parser.token.Token;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** Defines a position within a document. Usually, this is a construct within
  * the document */
@@ -95,13 +95,25 @@ public class DocumentPosition {
     return sb.toString();
   }
 
-  /** write the error out into the given ObjectNode using the LSP format */
-  public void writeAsLanguageServerDiagnostic(final ObjectNode range) {
-    final var start = range.putObject("start");
-    start.put("line", startLineIndex);
-    start.put("character", startLinePosition);
-    final var end = range.putObject("end");
-    end.put("line", endLineIndex);
-    end.put("character", endLinePosition);
+  public void dump(JsonStreamWriter writer) {
+    writer.beginObject();
+
+    writer.writeObjectFieldIntro("start");
+    writer.beginObject();
+    writer.writeObjectFieldIntro("line");
+    writer.writeInteger(startLineIndex);
+    writer.writeObjectFieldIntro("character");
+    writer.writeInteger(startLinePosition);
+    writer.endObject();
+
+    writer.writeObjectFieldIntro("end");
+    writer.beginObject();
+    writer.writeObjectFieldIntro("line");
+    writer.writeInteger(endLineIndex);
+    writer.writeObjectFieldIntro("character");
+    writer.writeInteger(endLinePosition);
+    writer.endObject();
+
+    writer.endObject();
   }
 }

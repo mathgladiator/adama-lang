@@ -97,7 +97,7 @@ public class DevKitServer {
             if (method.equals("auth") && password.equals("pw")) {
               final var headers = new HashMap<String, String>();
               headers.put("set-cookie", AdamaCookieCodec.server(serverOptions, AdamaCookieCodec.ADAMA_AUTH_COOKIE_NAME, username));
-              responder.respond(Utility.parseJsonObject("{\"retry_connection\":true}"), true, headers);
+              responder.respond("{\"retry_connection\":true}", true, headers);
               return;
             }
             responder.failure(new ErrorCodeException(403, new AccessControlException("denied")));

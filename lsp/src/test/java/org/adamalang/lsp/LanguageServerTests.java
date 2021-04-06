@@ -3,7 +3,6 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.lsp;
 
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Test;
 
 import javax.net.SocketFactory;
@@ -56,7 +55,7 @@ public class LanguageServerTests {
         try {
             Socket socket = connect();
             OutputStream output = socket.getOutputStream();
-            output.write(AdamaLanguageServerProtocol.encode(Utility.createObjectNode()));
+            output.write(AdamaLanguageServerProtocol.encode(JsonHelp.createObjectNode()));
             output.flush();
             stopped.await(1000, TimeUnit.MILLISECONDS);
         } finally {

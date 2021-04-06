@@ -20,15 +20,15 @@ public class MockJsonHandler implements JsonHandler {
     if (session == null && request.has("auth")) {
       final var httpHeaders = new HashMap<String, String>();
       httpHeaders.put("Set-Cookie", AdamaCookieCodec.server(new CliServerOptions(), "x", "y"));
-      responder.respond(Utility.parseJsonObject("{\"ok\":\"auth\"}"), true, httpHeaders);
+      responder.respond("{\"ok\":\"auth\"}", true, httpHeaders);
       return;
     }
     if (session != null && request.has("auth")) {
-      responder.respond(Utility.parseJsonObject("{\"ok\":\"authgood\"}"), true, null);
+      responder.respond("{\"ok\":\"authgood\"}", true, null);
       return;
     }
     if (request.has("success")) {
-      responder.respond(Utility.parseJsonObject("{\"ok\":\"go\"}"), true, null);
+      responder.respond("{\"ok\":\"go\"}", true, null);
     } else {
       if (session == null) {
         responder.failure(new ErrorCodeException(12, new RuntimeException("")));

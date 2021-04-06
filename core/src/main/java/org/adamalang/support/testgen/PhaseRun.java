@@ -28,6 +28,12 @@ public class PhaseRun {
     };
   }
 
+  public static void mustBeTrue(boolean v, String ex) {
+    if (!v) {
+      throw new RuntimeException(ex);
+    }
+  }
+
   public static void go(final LivingDocumentFactory factory, final DocumentMonitor monitor, final AtomicBoolean passedTests, final StringBuilder outputFile) throws Exception {
     final var testTime = new AtomicLong(0);
     final var time = (TimeSource) () -> testTime.get();
@@ -72,9 +78,7 @@ public class PhaseRun {
       DurableLivingDocument.load(0, factory, monitor, time, dds, acquire2);
       DurableLivingDocument doc2 = acquire2.get();
       outputFile.append(doc2.json()).append("\n");
-      if (!doc2.json().equals(json)) {
-        throw new RuntimeException("Json were not equal");
-      }
+      mustBeTrue(doc2.json().equals(json), "JSON don't match load, dump cycle");
     } catch (final RuntimeException gee) {
       passedTests.set(false);
       Throwable search = gee;

@@ -45,11 +45,10 @@ public class PhaseValidate {
     }
     outputFile.append("--ISSUES-------------------------------------------").append("\n");
     final var java = document.hasErrors() ? "" : document.compileJava(state);
-    final var issues = Utility.createArrayNode();
-    document.writeErrorsAsLanguageServerDiagnosticArray(issues);
-    outputFile.append(issues.toPrettyString()).append("\n");
+    String issues = document.errorsJson();
+    outputFile.append(issues).append("\"");
     outputFile.append("--JAVA---------------------------------------------").append("\n");
     outputFile.append(java).append("\n");
-    return new ValidationResults(issues.size() == 0 && !document.hasErrors(), java, reflection);
+    return new ValidationResults(issues.equals("[]") && !document.hasErrors(), java, reflection);
   }
 }

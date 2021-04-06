@@ -11,6 +11,7 @@ import org.junit.Test;
 
 public class DMapTests {
   @Test
+  @SuppressWarnings("unchecked")
   public void flow() {
     final var map = new DMap<Integer, DBoolean>();
     {

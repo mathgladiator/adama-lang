@@ -13,6 +13,16 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class JsonStreamWriterTests {
+    @Test
+    public void bad_obj() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        try {
+            writer.writeTree(new JsonStreamReader(""));
+            Assert.fail();
+        } catch (RuntimeException re) {
+            Assert.assertTrue(re.getMessage().startsWith("unexpected object:"));
+        }
+    }
 
     @Test
     public void tree_empty_map() {

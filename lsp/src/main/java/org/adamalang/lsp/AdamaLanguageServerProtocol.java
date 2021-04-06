@@ -4,9 +4,10 @@
 package org.adamalang.lsp;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.stdlib.Utility;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -18,6 +19,7 @@ import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentError;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,7 +31,7 @@ public class AdamaLanguageServerProtocol {
   }
 
   private ObjectNode craftResponse(ObjectNode request, boolean copyId) {
-    ObjectNode response = Utility.createObjectNode();
+    ObjectNode response = new JsonMapper().createObjectNode();
     response.put("jsonrpc", "2.0");
     if (copyId && request.has("id")) {
       response.set("id", request.get("id"));
@@ -145,13 +147,13 @@ public class AdamaLanguageServerProtocol {
         return;
       }
       // forward the errors to the input array
-      document.writeErrorsAsLanguageServerDiagnosticArray(diagnostics);
+      diagnostics.addAll((ArrayNode) new JsonMapper().readTree(document.errorsJson()));
     } catch (ScanException se) {
       DocumentError error = new DocumentError(se.position, se.getMessage(), "Scanner");
-      error.writeAsLanguageServerDiagnostic(diagnostics.addObject());
+      diagnostics.add(new JsonMapper().readTree(error.json()));
     } catch (ParseException pe) {
       DocumentError error = new DocumentError(pe.toDocumentPosition(), pe.rawMessage, "Parser");
-      error.writeAsLanguageServerDiagnostic(diagnostics.addObject());
+      diagnostics.add(new JsonMapper().readTree(error.json()));
     }
   }
 
@@ -182,7 +184,8 @@ public class AdamaLanguageServerProtocol {
         while (readIn < buffer.length) {
           readIn += reader.read(buffer, readIn, buffer.length - readIn);
         }
-        ObjectNode response = handle(Utility.parseJsonObject(new String(buffer)));
+        ObjectNode request = (ObjectNode) new JsonMapper().readTree(new String(buffer));
+        ObjectNode response = handle(request);
         if (response != null) {
           output.write(encode(response));
           output.flush();

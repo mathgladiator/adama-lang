@@ -12,7 +12,7 @@ public class SinkTests {
   @Test
   public void flow_in_and_out() {
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "Cake");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "Cake");
     final var sf = sink.dequeue(NtClient.NO_ONE);
     Assert.assertTrue(sf.exists());
     Assert.assertEquals("Cake", sf.await());
@@ -23,7 +23,7 @@ public class SinkTests {
   @Test
   public void flow_in_clear_out() {
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "Cake");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "Cake");
     sink.clear();
     final var sf2 = sink.dequeue(NtClient.NO_ONE);
     Assert.assertFalse(sf2.exists());
@@ -39,7 +39,7 @@ public class SinkTests {
   @Test
   public void maybe_out_with_data() {
     final var sink = new Sink<String>("channel");
-    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, Utility.createObjectNode()), "Cake");
+    sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "Cake");
     final var sf = sink.dequeueMaybe(NtClient.NO_ONE);
     Assert.assertTrue(sf.exists());
     Assert.assertEquals("Cake", sf.await().get());

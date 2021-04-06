@@ -4,6 +4,7 @@
 package org.adamalang.translator.jvm;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
@@ -13,6 +14,8 @@ import org.adamalang.runtime.ErrorCodes;
 import org.adamalang.runtime.LivingDocument;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.stdlib.Utility;
@@ -53,24 +56,33 @@ public class LivingDocumentFactory {
     }
   }
 
+  @SuppressWarnings("unchecked")
   public void populateTestReport(final TestReportBuilder report, final DocumentMonitor monitor, final String entropy) throws Exception {
     var candidate = prepareTestCandidate(monitor, entropy);
     final var tests = candidate.__getTests();
     for (final String test : tests) {
-      report.annotate(test, Utility.parseJsonObject(candidate.__run_test(report, test)));
+      report.annotate(test, (HashMap<String, Object>) new JsonStreamReader(candidate.__run_test(report, test)).readJavaTree());
       candidate = prepareTestCandidate(monitor, entropy);
     }
   }
 
   private LivingDocument prepareTestCandidate(final DocumentMonitor monitor, final String entropy) throws Exception {
     final var candidate = create(monitor);
-    final var consRequest = Utility.createObjectNode();
-    consRequest.put("command", "construct");
-    consRequest.put("timestamp", "0");
-    consRequest.put("entropy", entropy);
-    NtClient.NO_ONE.dump(consRequest.putObject("who"));
-    consRequest.set("arg", Utility.createObjectNode());
-    candidate.__transact(consRequest.toString());
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("command");
+    writer.writeString("construct");
+    writer.writeObjectFieldIntro("timestamp");
+    writer.writeString("0");
+    writer.writeObjectFieldIntro("entropy");
+    writer.writeString(entropy);
+    writer.writeObjectFieldIntro("who");
+    writer.writeNtClient(NtClient.NO_ONE);
+    writer.writeObjectFieldIntro("arg");
+    writer.beginObject();
+    writer.endObject();
+    writer.endObject();
+    candidate.__transact(writer.toString());
     return candidate;
   }
 }

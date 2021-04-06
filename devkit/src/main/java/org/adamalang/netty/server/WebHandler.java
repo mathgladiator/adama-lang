@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.adamalang.netty.ErrorCodes;
 import org.adamalang.netty.api.AdamaSession;
 import org.adamalang.netty.client.AdamaCookieCodec;
@@ -30,6 +31,25 @@ import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.QueryStringDecoder;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+
+  public static final JsonMapper MAPPER = new JsonMapper();
+
+  @Deprecated
+  public static ObjectNode parseJsonObject(final String json) {
+    try {
+      return parseJsonObjectThrows(json);
+    } catch (final Exception jpe) {
+      throw new RuntimeException(jpe);
+    }
+  }
+
+  @Deprecated
+  public static ObjectNode parseJsonObjectThrows(final String json) throws Exception {
+    final var node = MAPPER.readTree(json);
+    if (node instanceof ObjectNode) { return (ObjectNode) node; }
+    throw new Exception("given json is not an ObjectNode at root");
+  }
+
   private static void sendWithKeepAlive(final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
     final var responseStatus = res.status();
     String host = req.headers().get("host");
@@ -67,7 +87,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           return;
         }
         if (req.method() == HttpMethod.POST) {
-          final var request = Utility.parseJsonObject(req.content().toString(StandardCharsets.UTF_8));
+          final var request = WebHandler.parseJsonObject(req.content().toString(StandardCharsets.UTF_8));
           final AuthCallback afterAuth = new AuthCallback() {
             @Override
             public void failure() {
@@ -86,8 +106,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                 }
 
                 @Override
-                public void respond(final ObjectNode node, final boolean done, final HashMap<String, String> headers) {
-                  final var content = node.toString().getBytes(StandardCharsets.UTF_8);
+                public void respond(final String json, final boolean done, final HashMap<String, String> headers) {
+                  final var content = json.getBytes(StandardCharsets.UTF_8);
                   final FullHttpResponse response = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.copiedBuffer(content));
                   if (headers != null) {
                     for (final Map.Entry<String, String> headerEntry : headers.entrySet()) {

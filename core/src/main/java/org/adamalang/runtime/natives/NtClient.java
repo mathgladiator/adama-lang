@@ -3,22 +3,9 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.natives;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 /** represents who someone is */
 public class NtClient implements Comparable<NtClient> {
   public static NtClient NO_ONE = new NtClient("?", "?");
-
-  public static NtClient from(final JsonNode node) {
-    if (node == null) { return NtClient.NO_ONE; }
-    if (node.isObject()) {
-      final var data = (ObjectNode) node;
-      return new NtClient(data.get("agent").textValue(), data.get("authority").textValue());
-    }
-    return NtClient.NO_ONE;
-  }
-
   public final String agent;
   public final String authority;
 
@@ -34,11 +21,6 @@ public class NtClient implements Comparable<NtClient> {
       result = agent.compareTo(other.agent);
     }
     return result;
-  }
-
-  public void dump(final ObjectNode node) {
-    node.put("agent", agent);
-    node.put("authority", authority);
   }
 
   @Override

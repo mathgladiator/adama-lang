@@ -10,7 +10,7 @@ import org.junit.Test;
 public class LivingDocumentFactoryTests {
   @Test
   public void almostOK() throws Exception {
-    final var compiler = new LivingDocumentFactory("Foo", "import com.fasterxml.jackson.databind.node.ObjectNode;\nimport org.adamalang.runtime.contracts.DocumentMonitor;\n class Foo { public Foo(DocumentMonitor dm) {} }", "{}");
+    final var compiler = new LivingDocumentFactory("Foo", "\nimport org.adamalang.runtime.contracts.DocumentMonitor;\n class Foo { public Foo(DocumentMonitor dm) {} }", "{}");
     var success = false;
     try {
       compiler.create(null);
@@ -35,7 +35,7 @@ public class LivingDocumentFactoryTests {
 
   @Test
   public void castFailure() throws Exception {
-    final var compiler = new LivingDocumentFactory("Foo", "import com.fasterxml.jackson.databind.node.ObjectNode;\nimport org.adamalang.runtime.contracts.DocumentMonitor;\n class Foo { public Foo(DocumentMonitor dm) {} }", "{}");
+    final var compiler = new LivingDocumentFactory("Foo", "\nimport org.adamalang.runtime.contracts.DocumentMonitor;\n class Foo { public Foo(DocumentMonitor dm) {} }", "{}");
     var success = false;
     try {
       compiler.create(null);

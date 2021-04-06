@@ -9,5 +9,5 @@ import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 public interface JsonResponder {
   public void failure(ErrorCodeException ex);
-  public void respond(ObjectNode node, boolean done, HashMap<String, String> headers);
+  public void respond(String json, boolean done, HashMap<String, String> headers);
 }

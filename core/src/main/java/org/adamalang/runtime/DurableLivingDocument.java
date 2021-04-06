@@ -114,16 +114,9 @@ public class DurableLivingDocument {
       }
       writer.endObject();
       final var update = document.__transact(writer.toString());
-      if (update.requiresFutureInvalidation && update.whenToInvalidateMilliseconds == 0) {
-        service.initialize(documentId, update, DataCallback.handoff(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_PARTIAL, () -> {
-          invalidate(callback);
-        }));
-      } else {
-        if (update.requiresFutureInvalidation) {
-          this.requiresInvalidateMilliseconds = update.whenToInvalidateMilliseconds;
-        }
-        service.initialize(documentId, update, DataCallback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DONE, (v) -> update.seq));
-      }
+      service.initialize(documentId, update, DataCallback.handoff(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DONE, () -> {
+        invalidate(callback);
+      }));
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex));
     }

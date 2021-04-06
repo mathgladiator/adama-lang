@@ -12,9 +12,6 @@ public class CodeGenDocument {
     if (environment.state.options.packageName != null) {
       sb.append("package ").append(environment.state.options.packageName).append(";").writeNewline().writeNewline();
     }
-    sb.append("import com.fasterxml.jackson.databind.JsonNode;").writeNewline();
-    sb.append("import com.fasterxml.jackson.databind.node.ArrayNode;").writeNewline();
-    sb.append("import com.fasterxml.jackson.databind.node.ObjectNode;").writeNewline();
     sb.append("import org.adamalang.runtime.*;").writeNewline();
     sb.append("import org.adamalang.runtime.async.*;").writeNewline();
     sb.append("import org.adamalang.runtime.contracts.*;").writeNewline();

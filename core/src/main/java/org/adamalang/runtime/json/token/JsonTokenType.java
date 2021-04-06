@@ -9,7 +9,8 @@ public enum JsonTokenType {
   EndObject(false), // }
   False(false), // false
   Null(false), // null
-  NumberLiteral(false), // see data: parse it
+  NumberLiteralInteger(false), // see data: parse it
+  NumberLiteralDouble(false), // see data: parse it
   StartArray(false), // [
   StartObject(false), // {
   StringLiteral(false), // see data: use it

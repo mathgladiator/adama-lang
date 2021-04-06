@@ -117,6 +117,7 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
     }
   }
 
+  @SuppressWarnings("unchecked")
   public NtMaybe get() {
     if (value == null) {
       return new NtMaybe();
@@ -142,6 +143,7 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
     return value;
   }
 
+  @SuppressWarnings("unchecked")
   public void set(final NtMaybe other) {
     if (other.has()) {
       ((CanGetAndSet) this.make()).set(other.get());

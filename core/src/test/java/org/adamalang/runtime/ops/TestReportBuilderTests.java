@@ -3,16 +3,19 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.ops;
 
-import org.adamalang.runtime.stdlib.Utility;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 public class TestReportBuilderTests {
   @Test
+  @SuppressWarnings("unchecked")
   public void flow() {
     final var trb = new TestReportBuilder();
     trb.begin("xyz");
-    trb.annotate("x", Utility.createObjectNode());
+    trb.annotate("x", (HashMap<String, Object>) new JsonStreamReader("{}").readJavaTree());
     trb.end(new AssertionStats(50, 0));
     Assert.assertEquals(0, trb.getFailures());
     trb.begin("t2");
@@ -22,12 +25,13 @@ public class TestReportBuilderTests {
   }
 
   @Test
+  @SuppressWarnings("unchecked")
   public void flow2() {
     final var trb = new TestReportBuilder();
     trb.begin("xyz");
     trb.end(new AssertionStats(0, 0));
     trb.begin("zx");
-    trb.annotate("dump", Utility.parseJsonObject("{\"x\":true}"));
+    trb.annotate("dump", (HashMap<String, Object>) new JsonStreamReader("{\"x\":true}").readJavaTree());
     trb.end(new AssertionStats(0, 0));
     Assert.assertEquals("TEST[xyz] HAS NO ASSERTS\n" + "TEST[zx]...DUMP:{\"x\":true}\n" + " HAS NO ASSERTS\n", trb.toString());
   }

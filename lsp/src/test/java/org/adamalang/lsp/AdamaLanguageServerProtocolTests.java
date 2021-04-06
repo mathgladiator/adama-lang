@@ -4,7 +4,6 @@
 package org.adamalang.lsp;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +19,7 @@ public class AdamaLanguageServerProtocolTests {
     public void testNoMethod() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{}"));
+            protocol.handle(JsonHelp.parseJsonObject("{}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("request has no method", e.getMessage());
@@ -30,7 +29,7 @@ public class AdamaLanguageServerProtocolTests {
     @Test
     public void testInitialize() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
-        ObjectNode response = protocol.handle(Utility.parseJsonObject("{\"method\":\"initialize\"}"));
+        ObjectNode response = protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"initialize\"}"));
         Assert.assertEquals("{\"jsonrpc\":\"2.0\",\"result\":{\"capabilities\":{\"textDocumentSync\":{\"openClose\":true,\"change\":1}}}}", response.toString());
     }
 
@@ -38,7 +37,7 @@ public class AdamaLanguageServerProtocolTests {
     @Test
     public void testInitialized() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
-        ObjectNode response = protocol.handle(Utility.parseJsonObject("{\"method\":\"initialized\"}"));
+        ObjectNode response = protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"initialized\"}"));
         Assert.assertEquals(null, response);
     }
 
@@ -46,7 +45,7 @@ public class AdamaLanguageServerProtocolTests {
     @Test
     public void testInvalidMethod() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
-        ObjectNode response = protocol.handle(Utility.parseJsonObject("{\"method\":\"dropme\"}"));
+        ObjectNode response = protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"dropme\"}"));
         Assert.assertEquals(null, response);
     }
 
@@ -54,7 +53,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeNoParams() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didOpen\"}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didOpen\"}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("request has no params", e.getMessage());
@@ -65,7 +64,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeNoTextDocumentNotPresent() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("params has no textDocument", e.getMessage());
@@ -76,7 +75,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeNoTextDocumentNull() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":null}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":null}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("params has no textDocument", e.getMessage());
@@ -87,7 +86,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeNoTextDocumentNotObject() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":true}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":true}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("params has no textDocument", e.getMessage());
@@ -98,7 +97,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeNoTextDocumentEmptyObject() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{}}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{}}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("params has no uri", e.getMessage());
@@ -109,7 +108,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeUriIsNull() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":null}}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":null}}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("uri node is not valid", e.getMessage());
@@ -120,7 +119,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeUriIsInt() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":1232}}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":1232}}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("uri node is not valid", e.getMessage());
@@ -131,7 +130,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeNoContent() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"}}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"}}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("no text field and no content changes", e.getMessage());
@@ -143,7 +142,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeInvalidText() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":null}}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":null}}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("has no text field available", e.getMessage());
@@ -154,7 +153,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeInvalidChange1() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":null}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":null}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("handler text change no present 4", e.getMessage());
@@ -165,7 +164,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeInvalidChange2() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":1}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":1}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("handler text change no present 4", e.getMessage());
@@ -176,7 +175,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeInvalidChange3() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":[]}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":[]}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("handler text change no present 3", e.getMessage());
@@ -187,7 +186,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeInvalidChange4() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":[{}]}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":[{}]}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("handler text change no present 2", e.getMessage());
@@ -198,7 +197,7 @@ public class AdamaLanguageServerProtocolTests {
     public void incompleteDidChangeInvalidChange5() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         try {
-            protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":[{\"text\":null}]}}"));
+            protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":[{\"text\":null}]}}"));
             Assert.fail();
         } catch (Exception e) {
             Assert.assertEquals("handler text change no present 1", e.getMessage());
@@ -208,35 +207,28 @@ public class AdamaLanguageServerProtocolTests {
     @Test
     public void validViaChange() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
-        ObjectNode response = protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm{}\"}}}"));
+        ObjectNode response = protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm{}\"}}}"));
         Assert.assertEquals("{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"uri\":\"URI\",\"diagnostics\":[]}}", response.toString());
     }
 
     @Test
     public void validViaContentChange() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
-        ObjectNode response = protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":[{\"text\":\"#sm{}\"}]}}"));
+        ObjectNode response = protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\"},\"contentChanges\":[{\"text\":\"#sm{}\"}]}}"));
         Assert.assertEquals("{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"uri\":\"URI\",\"diagnostics\":[]}}", response.toString());
     }
 
     @Test
     public void parseIssue() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
-        ObjectNode response = protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm\"}}}"));
+        ObjectNode response = protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm\"}}}"));
         Assert.assertEquals("{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"uri\":\"URI\",\"diagnostics\":[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"Parser was expecting an atomic expression, but got end of stream instead. (Parser)\"}]}}", response.toString());
-    }
-
-    @Test
-    public void scanIssue() throws Exception {
-        AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
-        ObjectNode response = protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"\\u0002\"}}}"));
-        Assert.assertEquals("{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"uri\":\"URI\",\"diagnostics\":[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"Failed to understand codepoint:2('\\u0002') (Scanner)\"}]}}", response.toString());
     }
 
     @Test
     public void typeIssue() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
-        ObjectNode response = protocol.handle(Utility.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm { int x = true; }\"}}}"));
+        ObjectNode response = protocol.handle(JsonHelp.parseJsonObject("{\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm { int x = true; }\"}}}"));
         Assert.assertEquals("{\"jsonrpc\":\"2.0\",\"method\":\"textDocument/publishDiagnostics\",\"params\":{\"uri\":\"URI\",\"diagnostics\":[{\"range\":{\"start\":{\"line\":0,\"character\":6},\"end\":{\"line\":0,\"character\":9}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'int' is unable to store type 'bool'. (TypeCheckReferences)\"}]}}", response.toString());
     }
 
@@ -276,7 +268,7 @@ public class AdamaLanguageServerProtocolTests {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         ByteArrayOutputStream memory = new ByteArrayOutputStream();
         try {
-            protocol.drive(sum(Utility.parseJsonObject("{\"id\":42}")), memory);
+            protocol.drive(sum(JsonHelp.parseJsonObject("{\"id\":42}")), memory);
         } catch (Exception err) {
             Assert.assertEquals("request has no method", err.getMessage());
         }
@@ -287,7 +279,7 @@ public class AdamaLanguageServerProtocolTests {
     public void driveSuccess() throws Exception {
         AdamaLanguageServerProtocol protocol = new AdamaLanguageServerProtocol(id);
         ByteArrayOutputStream memory = new ByteArrayOutputStream();
-        protocol.drive(sum(Utility.parseJsonObject("{\"id\":42,\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm { int x = true; }\"}}}")), memory);
+        protocol.drive(sum(JsonHelp.parseJsonObject("{\"id\":42,\"method\":\"textDocument/didChange\",\"params\":{\"textDocument\":{\"uri\":\"URI\",\"text\":\"#sm { int x = true; }\"}}}")), memory);
         String result = new String(memory.toByteArray());
         Assert.assertEquals(337, result.length());
     }

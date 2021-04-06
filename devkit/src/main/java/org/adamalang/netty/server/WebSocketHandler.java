@@ -73,7 +73,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final WebSocketFrame frame) throws Exception {
     if (frame instanceof TextWebSocketFrame) {
-      final var request = Utility.parseJsonObject(((TextWebSocketFrame) frame).text());
+      final var request = WebHandler.parseJsonObject(((TextWebSocketFrame) frame).text());
       if (request.has("pong")) {
         latency.set(System.currentTimeMillis() - created - request.get("ping").asLong());
         return;
@@ -90,19 +90,12 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       final JsonResponder responder = new JsonResponder() {
         @Override
         public void failure(ErrorCodeException ex) {
-          final var setup = Utility.createObjectNode();
-          setup.put("failure", id);
-          setup.put("reason", ex.code);
-          ctx.writeAndFlush(new TextWebSocketFrame(setup.toString()));
+          ctx.writeAndFlush(new TextWebSocketFrame("{\"failure\":" + id + ",\"reason\":" + ex.code + "}"));
         }
 
         @Override
-        public void respond(final ObjectNode response, final boolean done, final HashMap<String, String> httpHeaders) {
-          final var frame = Utility.createObjectNode();
-          frame.put("deliver", id);
-          frame.put("done", done);
-          frame.set("response", response);
-          ctx.writeAndFlush(new TextWebSocketFrame(frame.toString()));
+        public void respond(final String json, final boolean done, final HashMap<String, String> httpHeaders) {
+          ctx.writeAndFlush(new TextWebSocketFrame("{\"deliver\":" + id + ",\"done\":" + (done ? "true":"false") + ",\"response\":"+ json + "}"));
         }
       };
 
@@ -169,24 +162,15 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
         final AuthCallback authCallback = new AuthCallback() {
           @Override
           public void failure() {
-            final var setup = Utility.createObjectNode();
-            setup.put("signal", "setup");
-            setup.put("status", "failed_auth");
-            ctx.writeAndFlush(new TextWebSocketFrame(setup.toString()));
+            ctx.writeAndFlush(new TextWebSocketFrame("{\"signal\":\"setup\",\"status\":\"failed_auth\"}"));
           }
 
           @Override
           public void success(final AdamaSession incomingSession) {
             initWithLock(incomingSession);
-            final var setup = Utility.createObjectNode();
-            setup.put("signal", "setup");
-            setup.put("status", "connected");
-            ctx.writeAndFlush(new TextWebSocketFrame(setup.toString()));
+            ctx.writeAndFlush(new TextWebSocketFrame("{\"signal\":\"setup\",\"status\":\"connected\"}"));
             Runnable heartbeatLoop = () -> {
-              final var ping = Utility.createObjectNode();
-              ping.put("ping", (System.currentTimeMillis() - created));
-              ping.put("latency", latency.get());
-              ctx.writeAndFlush(new TextWebSocketFrame(ping.toString()));
+              ctx.writeAndFlush(new TextWebSocketFrame("{\"ping\":"+(System.currentTimeMillis() - created)+",\"latency\":\""+latency.get()+"\"}"));
             };
             heartbeatStart(nexus.heartbeat.scheduleAtFixedRate(heartbeatLoop, 1000, 1000, TimeUnit.MILLISECONDS));
           }
@@ -195,10 +179,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
         if (authToken != null) {
           nexus.authenticator.authenticate(authToken, authCallback);
         } else {
-          final var setup = Utility.createObjectNode();
-          setup.put("signal", "setup");
-          setup.put("status", "failed_setup_no_cookie");
-          ctx.writeAndFlush(new TextWebSocketFrame(setup.toString()));
+          ctx.writeAndFlush(new TextWebSocketFrame("{\"signal\":\"setup\",\"status\":\"failed_setup_no_cookie\"}"));
         }
       }
     } catch (final Exception ex) {

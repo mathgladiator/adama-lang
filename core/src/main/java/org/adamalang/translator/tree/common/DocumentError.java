@@ -3,8 +3,7 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator.tree.common;
 
-import org.adamalang.runtime.stdlib.Utility;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** Defines an error within the document that can also be tied to a specific
  * position within the document */
@@ -24,23 +23,22 @@ public class DocumentError {
     this.tutorial = tutorial;
   }
 
-  /** create a json notification for this error (in LSP) */
-  public ObjectNode toPublishableDiagnostic() {
-    final var response = Utility.createObjectNode();
-    response.put("jsonrpc", "2.0");
-    response.put("method", "textDocument/publishDiagnostics");
-    final var responseParams = response.putObject("params");
-    final var diagnostics = responseParams.putArray("diagnostics");
-    writeAsLanguageServerDiagnostic(diagnostics.addObject());
-    return response;
-  }
-
   /** write the error out into the given ObjectNode using the LSP format */
-  public void writeAsLanguageServerDiagnostic(final ObjectNode diagnostic) {
-    final var range = diagnostic.putObject("range");
-    position.writeAsLanguageServerDiagnostic(range);
-    diagnostic.put("severity", 1);
-    diagnostic.put("source", "error");
-    diagnostic.put("message", tutorial == null ? message : message + " (" + tutorial + ")");
+  public String json() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("range");
+    position.dump(writer);
+
+    writer.writeObjectFieldIntro("severity");
+    writer.writeInteger(1);
+
+    writer.writeObjectFieldIntro("source");
+    writer.writeString("error");
+
+    writer.writeObjectFieldIntro("message");
+    writer.writeString(tutorial == null ? message : message + " (" + tutorial + ")");
+    writer.endObject();
+    return writer.toString();
   }
 }

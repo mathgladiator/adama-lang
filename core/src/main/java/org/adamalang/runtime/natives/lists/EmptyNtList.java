@@ -77,6 +77,7 @@ public class EmptyNtList<T> implements NtList<T> {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public T[] toArray(final Function<Integer, Object> arrayMaker) {
     return (T[]) arrayMaker.apply(0);
   }

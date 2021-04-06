@@ -3,46 +3,53 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.json;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class JsonAlgebra_PatchTests {
+    private Object of(String json) {
+        return new JsonStreamReader(json).readJavaTree();
+    }
+
+    private void is(String json, Object result) {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(result);
+        Assert.assertEquals(json, writer.toString());
+    }
+    
     @Test
     public void patch_empties() {
-        ObjectNode target = Utility.parseJsonObject("{}");
-        ObjectNode patch = Utility.parseJsonObject("{}");
-        JsonNode result = JsonAlgebra.patch(target, patch);
-        Assert.assertEquals("{}", result.toString());
+        Object target = of("{}");
+        Object patch = of("{}");
+        Object result = JsonAlgebra.merge(target, patch);
+        is("{}", result);
     }
     @Test
     public void patch_unchanged() {
-        ObjectNode target = Utility.parseJsonObject("{\"x\":123}");
-        ObjectNode patch = Utility.parseJsonObject("{}");
-        JsonNode result = JsonAlgebra.patch(target, patch);
-        Assert.assertEquals("{\"x\":123}", result.toString());
+        Object target = of("{\"x\":123}");
+        Object patch = of("{}");
+        Object result = JsonAlgebra.merge(target, patch);
+        is("{\"x\":123}", result);
     }
     @Test
     public void patch_introduce() {
-        ObjectNode target = Utility.parseJsonObject("{}");
-        ObjectNode patch = Utility.parseJsonObject("{\"x\":123}");
-        JsonNode result = JsonAlgebra.patch(target, patch);
-        Assert.assertEquals("{\"x\":123}", result.toString());
+        Object target = of("{}");
+        Object patch = of("{\"x\":123}");
+        Object result = JsonAlgebra.merge(target, patch);
+        is("{\"x\":123}", result);
     }
     @Test
     public void patch_delete() {
-        ObjectNode target = Utility.parseJsonObject("{\"x\":123}");
-        ObjectNode patch = Utility.parseJsonObject("{\"x\":null}");
-        JsonNode result = JsonAlgebra.patch(target, patch);
-        Assert.assertEquals("{}", result.toString());
+        Object target = of("{\"x\":123}");
+        Object patch = of("{\"x\":null}");
+        Object result = JsonAlgebra.merge(target, patch);
+        is("{}", result);
     }
     @Test
     public void patch_obj_overwrite() {
-        ObjectNode target = Utility.parseJsonObject("{\"x\":123}");
-        ObjectNode patch = Utility.parseJsonObject("{\"x\":{}}");
-        JsonNode result = JsonAlgebra.patch(target, patch);
-        Assert.assertEquals("{\"x\":{}}", result.toString());
+        Object target = of("{\"x\":123}");
+        Object patch = of("{\"x\":{}}");
+        Object result = JsonAlgebra.merge(target, patch);
+        is("{\"x\":{}}", result);
     }
 }

@@ -18,7 +18,6 @@ import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.stdlib.Utility;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -81,18 +80,26 @@ public class ServiceHandler implements JsonHandler {
     });
   }
 
+
+  public static NtClient whoFrom(final JsonNode node) {
+    if (node == null) { return NtClient.NO_ONE; }
+    if (node.isObject()) {
+      final var data = (ObjectNode) node;
+      return new NtClient(data.get("agent").textValue(), data.get("authority").textValue());
+    }
+    return NtClient.NO_ONE;
+  }
+
   public void handleInThread(final ScheduledExecutorService executor, final AdamaSession session, final ObjectNode request, final JsonResponder responder) throws ErrorCodeException {
     final var method = str(request, "method", true, ErrorCodes.USERLAND_REQUEST_NO_METHOD_PROPERTY);
-    final var who = request.has("devkit_who") ? NtClient.from(request.get("devkit_who")) : session.who;
+    final var who = request.has("devkit_who") ? whoFrom(request.get("devkit_who")) : session.who;
     switch (method) {
       case "generate": {
         final var gs = findGamespace(request);
         gs.generate(DataCallback.bind(executor, ErrorCodes.E5_REQUEST_GENERATE_CRASHED, new DataCallback<>() {
           @Override
           public void success(Long value) {
-            final var result = Utility.createObjectNode();
-            result.put("game", String.valueOf(value));
-            responder.respond(result, true, null);
+            responder.respond("{\"game\":\"" + value + "\"}", true, null);
           }
 
           @Override
@@ -103,10 +110,7 @@ public class ServiceHandler implements JsonHandler {
         return;
       }
       case "reflect": {
-        final var gs = findGamespace(request);
-        final var result = Utility.createObjectNode();
-        result.set("result", Utility.parseJsonObject(gs.reflect()));
-        responder.respond(result, true, null);
+        responder.respond("{\"result\":" + findGamespace(request).reflect() + "}", true, null);
         return;
       }
       case "create": {
@@ -116,14 +120,13 @@ public class ServiceHandler implements JsonHandler {
         DataCallback<DurableLivingDocument> onCreate = DataCallback.bind(executor, ErrorCodes.E5_REQUEST_CREATE_CRASHED, new DataCallback<>() {
           @Override
           public void success(DurableLivingDocument value) {
-            final var result = Utility.createObjectNode();
-            result.put("game", String.valueOf(value.documentId));
-            responder.respond(result, true, null);
+            responder.respond("{\"game\":\"" + value.documentId + "\"}", true, null);
             witness(value, executor);
           }
 
           @Override
           public void failure(ErrorCodeException ex) {
+            System.err.println("FAILED TO CREATE GAME.. OK, BUT WHAT?");
             responder.failure(ex);
           }
         });
@@ -161,7 +164,7 @@ public class ServiceHandler implements JsonHandler {
                       }));
                     }
                   });
-                  responder.respond(Utility.parseJsonObject("{}"), true, null);
+                  responder.respond("{}", true, null);
                 });
                 witness(doc, executor);
               }
@@ -179,7 +182,7 @@ public class ServiceHandler implements JsonHandler {
                   @Override
                   public void data(String data) {
                     executor.execute(() -> {
-                      responder.respond(Utility.parseJsonObject(data), false, null);
+                      responder.respond(data, false, null);
                     });
                   }
 
@@ -218,11 +221,7 @@ public class ServiceHandler implements JsonHandler {
           final var gs = findGamespace(request);
           final var id = lng(request, "game", ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
           final var key = gs.name + ":" + id + ":" + who.agent;
-          final var result = Utility.createObjectNode();
-          result.put("game", String.valueOf(id));
-          result.put("success", session.unbind(key));
-          responder.respond(result, true, null);
-
+          responder.respond("{\"game\":\"" + id + "\",\"success\":"+(session.unbind(key) ? "true":"false")+"}", true, null);
           // TODO: witness!
         } catch (Throwable ex) {
           responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E5_REQUEST_DISCONNECT_CRASHED, ex));
@@ -240,7 +239,7 @@ public class ServiceHandler implements JsonHandler {
             value.send(who, channel, msg.toString(), DataCallback.bind(executor, ErrorCodes.E5_REQUEST_SEND_CRASHED_ACTUAL, new DataCallback<Integer>() {
               @Override
               public void success(Integer seq) {
-                responder.respond(Utility.parseJsonObject("{\"success\":" + seq + "}"), true, null);
+                responder.respond("{\"success\":" + seq + "}", true, null);
                 witness(value, executor);
               }
 

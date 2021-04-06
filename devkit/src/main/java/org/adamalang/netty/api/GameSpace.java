@@ -37,10 +37,8 @@ public class GameSpace {
       document.importFile(file, DocumentPosition.ZERO);
       document.setClassName(className);
       if (!document.check(state)) {
-        final var issues = Utility.createArrayNode();
-        document.writeErrorsAsLanguageServerDiagnosticArray(issues);
         if (options.stderrLoggingCompiler) {
-          System.err.println(issues.toPrettyString());
+          System.err.println(document.errorsJson());
         }
         throw new ErrorCodeException(ErrorCodes.USERLAND_CANT_COMPILE_ADAMA_SCRIPT);
       }

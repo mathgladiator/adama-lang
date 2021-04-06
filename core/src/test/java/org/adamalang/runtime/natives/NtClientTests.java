@@ -52,19 +52,5 @@ public class NtClientTests {
   @Test
   public void coverage() {
     NtClient.NO_ONE.toString();
-    final var on = Utility.createObjectNode();
-    NtClient.NO_ONE.dump(on);
-    final var got = NtClient.from(on);
-    Assert.assertEquals(got, NtClient.NO_ONE);
-    Assert.assertEquals("{\"agent\":\"?\",\"authority\":\"?\"}", on.toString());
-  }
-
-  @Test
-  public void from() {
-    final var a = NtClient.from(null);
-    Assert.assertEquals(a, NtClient.NO_ONE);
-    final var b = NtClient.from(Utility.createArrayNode());
-    Assert.assertEquals(b, NtClient.NO_ONE);
-    Assert.assertEquals(2016, a.hashCode());
   }
 }

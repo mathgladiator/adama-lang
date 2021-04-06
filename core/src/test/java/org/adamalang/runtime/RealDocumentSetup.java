@@ -94,7 +94,7 @@ public class RealDocumentSetup {
   }
 
   public RealDocumentSetup(final String code, final String json, final boolean stdout) throws Exception {
-    this(code, json, true, new MockTime());
+    this(code, json, stdout, new MockTime());
   }
 
   public RealDocumentSetup(final String code, final String json, final boolean stdout, MockTime time) throws Exception {

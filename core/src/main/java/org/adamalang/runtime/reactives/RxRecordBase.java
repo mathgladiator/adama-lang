@@ -5,13 +5,11 @@ package org.adamalang.runtime.reactives;
 
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** the base object for generated record types */
 public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, RxParent, RxChild {
   private boolean __alive;
   protected boolean __isDying;
-  private ObjectNode cachedObjectNode;
 
   public RxRecordBase(final RxParent __owner) {
     super(__owner);
@@ -43,7 +41,6 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
 
   @Override
   public void __raiseDirty() {
-    cachedObjectNode = null;
     super.__raiseDirty();
   }
 
@@ -68,16 +65,8 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
     return false;
   }
 
-  public ObjectNode getCachedObjectNode() {
-    return cachedObjectNode;
-  }
-
   @Override
   public int hashCode() {
     return __id();
-  }
-
-  public void setCachedObjectNode(final ObjectNode objectNode) {
-    this.cachedObjectNode = objectNode;
   }
 }

@@ -3,65 +3,76 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.json;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 public class JsonAlgebra_RollUndoForward {
+    @SuppressWarnings("unchecked")
+    private HashMap<String, Object> of(String json) {
+        return (HashMap<String, Object>) new JsonStreamReader(json).readJavaTree();
+    }
+
+    private void is(String json, HashMap<String, Object> result) {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(result);
+        Assert.assertEquals(json, writer.toString());
+    }
+    
     @Test
     public void conflictFreeSimple() {
-        ObjectNode undo = Utility.parseJsonObject("{\"x\":42}");
-        ObjectNode redo = Utility.parseJsonObject("{\"y\":69}");
+        HashMap<String, Object> undo = of("{\"x\":42}");
+        HashMap<String, Object> redo = of("{\"y\":69}");
         JsonAlgebra.rollUndoForward(undo, redo);
-        Assert.assertEquals("{\"x\":42}", undo.toString());
+        is("{\"x\":42}", undo);
     }
 
     @Test
     public void simpleOverwriteNegatesUndo1() {
-        ObjectNode undo = Utility.parseJsonObject("{\"x\":42}");
-        ObjectNode redo = Utility.parseJsonObject("{\"x\":69}");
+        HashMap<String, Object> undo = of("{\"x\":42}");
+        HashMap<String, Object> redo = of("{\"x\":69}");
         JsonAlgebra.rollUndoForward(undo, redo);
-        Assert.assertEquals("{}", undo.toString());
+        is("{}", undo);
     }
 
     @Test
     public void simpleOverwriteNegatesUndo2() {
-        ObjectNode undo = Utility.parseJsonObject("{\"x\":42}");
-        ObjectNode redo = Utility.parseJsonObject("{\"x\":null}");
+        HashMap<String, Object> undo = of("{\"x\":42}");
+        HashMap<String, Object> redo = of("{\"x\":null}");
         JsonAlgebra.rollUndoForward(undo, redo);
-        Assert.assertEquals("{}", undo.toString());
+        is("{}", undo);
     }
 
     @Test
     public void simpleOverwriteNegatesUndo3() {
-        ObjectNode undo = Utility.parseJsonObject("{\"x\":null}");
-        ObjectNode redo = Utility.parseJsonObject("{\"x\":42}");
+        HashMap<String, Object> undo = of("{\"x\":null}");
+        HashMap<String, Object> redo = of("{\"x\":42}");
         JsonAlgebra.rollUndoForward(undo, redo);
-        Assert.assertEquals("{}", undo.toString());
+        is("{}", undo);
     }
 
     @Test
     public void recurseNoConflict() {
-        ObjectNode undo = Utility.parseJsonObject("{\"z\":{\"x\":42}}");
-        ObjectNode redo = Utility.parseJsonObject("{\"z\":{\"y\":69}}");
+        HashMap<String, Object> undo = of("{\"z\":{\"x\":42}}");
+        HashMap<String, Object> redo = of("{\"z\":{\"y\":69}}");
         JsonAlgebra.rollUndoForward(undo, redo);
-        Assert.assertEquals("{\"z\":{\"x\":42}}", undo.toString());
+        is("{\"z\":{\"x\":42}}", undo);
     }
 
     @Test
     public void recurseConflict1() {
-        ObjectNode undo = Utility.parseJsonObject("{\"z\":{\"x\":42}}");
-        ObjectNode redo = Utility.parseJsonObject("{\"z\":{\"x\":69}}");
+        HashMap<String, Object> undo = of("{\"z\":{\"x\":42}}");
+        HashMap<String, Object> redo = of("{\"z\":{\"x\":69}}");
         JsonAlgebra.rollUndoForward(undo, redo);
-        Assert.assertEquals("{}", undo.toString());
+        is("{}", undo);
     }
 
     @Test
     public void recurseConflict2() {
-        ObjectNode undo = Utility.parseJsonObject("{\"z\":{\"x\":42, \"y\": 50}}");
-        ObjectNode redo = Utility.parseJsonObject("{\"z\":{\"x\":69}}");
+        HashMap<String, Object> undo = of("{\"z\":{\"x\":42,\"y\":50}}");
+        HashMap<String, Object> redo = of("{\"z\":{\"x\":69}}");
         JsonAlgebra.rollUndoForward(undo, redo);
-        Assert.assertEquals("{\"z\":{\"y\":50}}", undo.toString());
+        is("{\"z\":{\"y\":50}}", undo);
     }
 }

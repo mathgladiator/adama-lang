@@ -3,8 +3,8 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.support;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.adamalang.runtime.stdlib.Utility;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.support.testgen.TestFile;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
@@ -16,9 +16,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 public class GenerateErrorCSV {
+    @SuppressWarnings("unchecked")
     public static void main(String[] _args) throws Exception {
         ByteArrayOutputStream memory = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(memory);
@@ -36,21 +39,23 @@ public class GenerateErrorCSV {
                 document.importFile(testFile.toString(), DocumentPosition.ZERO);
                 document.setClassName("XClass");
                 document.check(state);
-                final var issues = Utility.createArrayNode();
-                document.writeErrorsAsLanguageServerDiagnosticArray(issues);
+                final var issues = (ArrayList<HashMap<String, Object>>) new JsonStreamReader(document.errorsJson()).readJavaTree();
                 for (int j = 0; j < issues.size(); j++) {
                     writer.print(testFile.toString().replaceAll(Pattern.quote("\\"), "/"));
-                    JsonNode node = issues.get(j);
+                    HashMap<String, Object> node = issues.get(j);
+                    HashMap<String, HashMap<String, Object>> range = (HashMap<String, HashMap<String, Object>>) node.get("range");
                     writer.print(",");
-                    writer.print(node.get("range").get("start").get("line").toString());
+                    writer.print(range.get("start").get("line").toString());
                     writer.print(",");
-                    writer.print(node.get("range").get("start").get("character").toString());
+                    writer.print(range.get("start").get("character").toString());
                     writer.print(",");
-                    writer.print(node.get("range").get("end").get("line").toString());
+                    writer.print(range.get("end").get("line").toString());
                     writer.print(",");
-                    writer.print(node.get("range").get("end").get("character").toString());
+                    writer.print(range.get("end").get("character").toString());
                     writer.print(",");
-                    writer.print(node.get("message").toString());
+                    JsonStreamWriter escaped = new JsonStreamWriter();
+                    escaped.writeString(node.get("message").toString());
+                    writer.print(escaped.toString());
                     writer.println();
                 }
             }

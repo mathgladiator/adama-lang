@@ -138,12 +138,10 @@ public class JsonStreamReader {
           return false;
         case True:
           return true;
-        case NumberLiteral:
-          try { // MAYBE, I should encode the subtype to avoid this... MAYBE
-            return Integer.parseInt(token.data);
-          } catch (NumberFormatException nfe) {
-            return Double.parseDouble(token.data);
-          }
+        case NumberLiteralDouble:
+          return Double.parseDouble(token.data);
+        case NumberLiteralInteger:
+          return Integer.parseInt(token.data);
         case StringLiteral:
           return token.data;
         default:
@@ -239,10 +237,17 @@ public class JsonStreamReader {
       case '8':
       case '9':
       case '-':
-      case '+':
+      case '+': {
+        boolean isDouble = false;
         for (var j = index + 1; j < n; j++) {
           final var ch2 = json.charAt(j);
           switch (ch2) {
+            case 'E':
+            case 'e':
+            case '.':
+            case '-':
+            case '+':
+              isDouble = true;
             case '0':
             case '1':
             case '2':
@@ -253,21 +258,17 @@ public class JsonStreamReader {
             case '7':
             case '8':
             case '9':
-            case '-':
-            case '+':
-            case 'E':
-            case 'e':
-            case '.':
               break;
             default:
-              tokens.addLast(new JsonToken(JsonTokenType.NumberLiteral, json.substring(index, j)));
+              tokens.addLast(new JsonToken(isDouble ? JsonTokenType.NumberLiteralDouble : JsonTokenType.NumberLiteralInteger, json.substring(index, j)));
               index = j;
               return;
           }
         }
-        tokens.addLast(new JsonToken(JsonTokenType.NumberLiteral, json.substring(index)));
+        tokens.addLast(new JsonToken(isDouble ? JsonTokenType.NumberLiteralDouble : JsonTokenType.NumberLiteralInteger, json.substring(index)));
         index = n;
         return;
+      }
       case 'n':
         index += 4;
         tokens.addLast(new JsonToken(JsonTokenType.Null, null));
@@ -328,7 +329,7 @@ public class JsonStreamReader {
     } else {
       ensureQueueHappy(1);
       final var token = tokens.removeFirst();
-      if (token.type == JsonTokenType.NumberLiteral) {
+      if (token.type == JsonTokenType.NumberLiteralInteger || token.type == JsonTokenType.NumberLiteralDouble) {
         writer.injectJson(token.data);
       } else if (token.type == JsonTokenType.StringLiteral) {
         writer.writeString(token.data);

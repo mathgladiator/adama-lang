@@ -4,27 +4,27 @@
 package org.adamalang.runtime.ops;
 
 import java.util.HashMap;
-import org.adamalang.runtime.stdlib.Utility;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a fun way to build test reports */
 public class TestReportBuilder {
-  private final HashMap<String, ObjectNode> dumps;
+  private final HashMap<String, Object> dumps;
   private int failures;
-  private final ObjectNode node;
   private final StringBuilder report;
   private final long started;
 
   public TestReportBuilder() {
     report = new StringBuilder();
     started = System.currentTimeMillis();
-    node = Utility.createObjectNode();
     dumps = new HashMap<>();
   }
 
-  public void annotate(final String name, final ObjectNode dump) {
+  public void annotate(final String name, final HashMap<String, Object> dump) {
     if (dump.size() > 0) {
-      report.append("...DUMP:").append(dump.toString()).append("\n");
+      JsonStreamWriter writer = new JsonStreamWriter();
+      writer.writeTree(dump);
+      report.append("...DUMP:").append(writer.toString()).append("\n");
     }
     dumps.put(name, dump);
   }
