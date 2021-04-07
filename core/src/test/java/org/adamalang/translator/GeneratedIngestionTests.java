@@ -1895,43 +1895,736 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_RecursiveTable_11 = null;
-  private String get_RecursiveTable_11() {
-    if (cached_RecursiveTable_11 != null) {
-      return cached_RecursiveTable_11;
+  private String cached_RecursiveMapErrors_11 = null;
+  private String get_RecursiveMapErrors_11() {
+    if (cached_RecursiveMapErrors_11 != null) {
+      return cached_RecursiveMapErrors_11;
     }
-    cached_RecursiveTable_11 = generateTestOutput(true, "RecursiveTable_11", "./test_code/Ingestion_RecursiveTable_success.a");
-    return cached_RecursiveTable_11;
+    cached_RecursiveMapErrors_11 = generateTestOutput(false, "RecursiveMapErrors_11", "./test_code/Ingestion_RecursiveMapErrors_failure.a");
+    return cached_RecursiveMapErrors_11;
+  }
+
+  @Test
+  public void testRecursiveMapErrorsFailure() {
+    assertLiveFail(get_RecursiveMapErrors_11());
+  }
+
+  @Test
+  public void testRecursiveMapErrorsNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_RecursiveMapErrors_11());
+  }
+
+  @Test
+  public void testRecursiveMapErrorsExceptionFree() {
+    assertExceptionFree(get_RecursiveMapErrors_11());
+  }
+
+  @Test
+  public void testRecursiveMapErrorsTODOFree() {
+    assertTODOFree(get_RecursiveMapErrors_11());
+  }
+
+  @Test
+  public void stable_RecursiveMapErrors_11() {
+    String live = get_RecursiveMapErrors_11();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Ingestion_RecursiveMapErrors_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":12,\"character\":0},\"end\":{\"line\":14,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The field 'x' was lost during ingestion (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: ranges are incompatble for ingestion. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":24,\"character\":14},\"end\":{\"line\":24,\"character\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: 'int' unable to produce data to ingest into 'Z'. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: ranges are incompatble for ingestion. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":16,\"character\":0},\"end\":{\"line\":18,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The field 'x' was lost during ingestion (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: ranges are incompatble for ingestion. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":17}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'string' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: domains are incompatble for ingestion string <- int. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":5,\"character\":7},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to ingest into this type 'map<string,Z>'. (RuleSetIngestion)\"},{\"range\":{\"start\":{\"line\":28,\"character\":2},\"end\":{\"line\":28,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: 'map<int,int>' unable to produce data to ingest into 'map<string,Z>'. (RuleSetIngestion)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_RecursiveMap_12 = null;
+  private String get_RecursiveMap_12() {
+    if (cached_RecursiveMap_12 != null) {
+      return cached_RecursiveMap_12;
+    }
+    cached_RecursiveMap_12 = generateTestOutput(true, "RecursiveMap_12", "./test_code/Ingestion_RecursiveMap_success.a");
+    return cached_RecursiveMap_12;
+  }
+
+  @Test
+  public void testRecursiveMapEmission() {
+    assertEmissionGood(get_RecursiveMap_12());
+  }
+
+  @Test
+  public void testRecursiveMapSuccess() {
+    assertLivePass(get_RecursiveMap_12());
+  }
+
+  @Test
+  public void testRecursiveMapGoodWillHappy() {
+    assertGoodWillHappy(get_RecursiveMap_12());
+  }
+
+  @Test
+  public void testRecursiveMapExceptionFree() {
+    assertExceptionFree(get_RecursiveMap_12());
+  }
+
+  @Test
+  public void testRecursiveMapTODOFree() {
+    assertTODOFree(get_RecursiveMap_12());
+  }
+
+  @Test
+  public void stable_RecursiveMap_12() {
+    String live = get_RecursiveMap_12();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Ingestion_RecursiveMap_success.a");
+    gold.append("\n--EMISSION-----------------------------------------");
+    gold.append("\nEmission Success, Yay");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[]\"--JAVA---------------------------------------------");
+    gold.append("\nimport org.adamalang.runtime.*;");
+    gold.append("\nimport org.adamalang.runtime.async.*;");
+    gold.append("\nimport org.adamalang.runtime.contracts.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.exceptions.*;");
+    gold.append("\nimport org.adamalang.runtime.index.*;");
+    gold.append("\nimport org.adamalang.runtime.json.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
+    gold.append("\nimport org.adamalang.runtime.ops.*;");
+    gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.stdlib.*;");
+    gold.append("\nimport java.util.function.Consumer;");
+    gold.append("\nimport java.util.function.Function;");
+    gold.append("\nimport java.util.ArrayList;");
+    gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.Map;");
+    gold.append("\nimport java.lang.Math;");
+    gold.append("\npublic class RecursiveMap_12 extends LivingDocument {");
+    gold.append("\n  private final RxMap<String,RTxZ> maaaap;");
+    gold.append("\n  public RecursiveMap_12(DocumentMonitor __monitor) {");
+    gold.append("\n    super(__monitor);");
+    gold.append("\n    maaaap = new RxMap<String,RTxZ>(this, new RxMap.StringCodec<RTxZ>() { @Override public RTxZ make(RxParent __parent) { return new RTxZ(__parent);} });");
+    gold.append("\n    __goodwillBudget = 100000;");
+    gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __insert(JsonStreamReader __reader) {");
+    gold.append("\n    if (__reader.startObject()) {");
+    gold.append("\n      while(__reader.notEndOfObject()) {");
+    gold.append("\n        String __fieldName = __reader.fieldName();");
+    gold.append("\n        switch (__fieldName) {");
+    gold.append("\n          case \"maaaap\":");
+    gold.append("\n            maaaap.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__state\":");
+    gold.append("\n            __state.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__constructed\":");
+    gold.append("\n            __constructed.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__next_time\":");
+    gold.append("\n            __next_time.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__blocked\":");
+    gold.append("\n            __blocked.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__seq\":");
+    gold.append("\n            __seq.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__entropy\":");
+    gold.append("\n            __entropy.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_future_id\":");
+    gold.append("\n            __auto_future_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__connection_id\":");
+    gold.append("\n            __connection_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__message_id\":");
+    gold.append("\n            __message_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__time\":");
+    gold.append("\n            __time.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_table_row_id\":");
+    gold.append("\n            __auto_table_row_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__clients\":");
+    gold.append("\n            __hydrateClients(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__messages\":");
+    gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          default:");
+    gold.append("\n            __reader.skipValue();");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"maaaap\");");
+    gold.append("\n    maaaap.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
+    gold.append("\n    __state.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
+    gold.append("\n    __constructed.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__next_time\");");
+    gold.append("\n    __next_time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__blocked\");");
+    gold.append("\n    __blocked.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__seq\");");
+    gold.append("\n    __seq.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__entropy\");");
+    gold.append("\n    __entropy.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_future_id\");");
+    gold.append("\n    __auto_future_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__connection_id\");");
+    gold.append("\n    __connection_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__message_id\");");
+    gold.append("\n    __message_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
+    gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
+    gold.append("\n    __auto_table_row_id.__dump(__writer);");
+    gold.append("\n    __dumpClients(__writer);");
+    gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
+    gold.append("\n    maaaap.__commit(\"maaaap\", __forward, __reverse);");
+    gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __revert() {");
+    gold.append("\n    __state.__revert();");
+    gold.append("\n    __constructed.__revert();");
+    gold.append("\n    __next_time.__revert();");
+    gold.append("\n    __blocked.__revert();");
+    gold.append("\n    __seq.__revert();");
+    gold.append("\n    __entropy.__revert();");
+    gold.append("\n    __auto_future_id.__revert();");
+    gold.append("\n    __connection_id.__revert();");
+    gold.append("\n    __message_id.__revert();");
+    gold.append("\n    __time.__revert();");
+    gold.append("\n    __auto_table_row_id.__revert();");
+    gold.append("\n    maaaap.__revert();");
+    gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  private class DeltaRecursiveMap_12 {");
+    gold.append("\n    private DMap<String,DeltaRTxZ> __dmaaaap;");
+    gold.append("\n    private boolean __emitted;");
+    gold.append("\n    private DeltaRecursiveMap_12() {");
+    gold.append("\n      __dmaaaap = new DMap<String,DeltaRTxZ>();");
+    gold.append("\n      __emitted = false;");
+    gold.append("\n    }");
+    gold.append("\n    public void show(RecursiveMap_12 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      __code_cost += 1;");
+    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      __obj.manifest();");
+    gold.append("\n      {");
+    gold.append("\n        PrivateLazyDeltaWriter __map0 = __obj.planField(\"maaaap\").planObject();");
+    gold.append("\n        DMap<String,DeltaRTxZ> __deltaMap1 = __dmaaaap;");
+    gold.append("\n        DMap<String,DeltaRTxZ>.Walk __deltaMapWalker2 = __deltaMap1.begin();");
+    gold.append("\n        for (Map.Entry<String,RTxZ> __mapEntry3 : __item.maaaap) {");
+    gold.append("\n          DeltaRTxZ __deltaElement4 = __deltaMapWalker2.next(__mapEntry3.getKey(), () -> new DeltaRTxZ());");
+    gold.append("\n          __deltaElement4.show(__mapEntry3.getValue(), __map0.planField(\"\" + __mapEntry3.getKey()));");
+    gold.append("\n        }");
+    gold.append("\n        __deltaMapWalker2.end(__map0);");
+    gold.append("\n        __map0.end();");
+    gold.append("\n      }");
+    gold.append("\n      if (__obj.end()) {");
+    gold.append("\n        __emitted = true;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      if (__emitted) {");
+    gold.append("\n        __emitted = false;");
+    gold.append("\n        __writer.writeNull();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n    RecursiveMap_12 __self = this;");
+    gold.append("\n    DeltaRecursiveMap_12 __state = new DeltaRecursiveMap_12();");
+    gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
+    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n      @Override");
+    gold.append("\n      public void dumpViewer(JsonStreamWriter __writer) {");
+    gold.append("\n        __viewerState.__writeOut(__writer);");
+    gold.append("\n      }");
+    gold.append("\n      @Override");
+    gold.append("\n      public void ingest(JsonStreamReader __reader) {");
+    gold.append("\n        __viewerState.__ingest(__reader);");
+    gold.append("\n      }");
+    gold.append("\n      @Override");
+    gold.append("\n      public void update(JsonStreamWriter __writer) {");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n      }");
+    gold.append("\n    };");
+    gold.append("\n  }");
+    gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __ingest(__reader);");
+    gold.append("\n    }");
+    gold.append("\n    public int __DATA_GENERATION = 1;");
+    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n      __reader.skipValue();");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
+    gold.append("\n      __writer.beginObject();");
+    gold.append("\n      __writer.endObject();");
+    gold.append("\n    }");
+    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n  }");
+    gold.append("\n  private class DeltaRTx__ViewerType {");
+    gold.append("\n    private boolean __emitted;");
+    gold.append("\n    private DeltaRTx__ViewerType() {");
+    gold.append("\n      __emitted = false;");
+    gold.append("\n    }");
+    gold.append("\n    public void show(RTx__ViewerType __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      if (__obj.end()) {");
+    gold.append("\n        __emitted = true;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      if (__emitted) {");
+    gold.append("\n        __emitted = false;");
+    gold.append("\n        __writer.writeNull();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  private class RTxZ extends RxRecordBase<RTxZ> {");
+    gold.append("\n    private final RxInt32 z;");
+    gold.append("\n    private final RxMap<Integer,RxInt32> properties;");
+    gold.append("\n    private final RxMap<String,RxDynamic> properties2;");
+    gold.append("\n    private final RxInt32 id;");
+    gold.append("\n    private RTxZ(RxParent __owner) {");
+    gold.append("\n      super(__owner);");
+    gold.append("\n      z = new RxInt32(this, 0);");
+    gold.append("\n      properties = new RxMap<Integer,RxInt32>(this, new RxMap.IntegerCodec<RxInt32>() { @Override public RxInt32 make(RxParent __parent) { return new RxInt32(__parent, 0);} });");
+    gold.append("\n      properties2 = new RxMap<String,RxDynamic>(this, new RxMap.StringCodec<RxDynamic>() { @Override public RxDynamic make(RxParent __parent) { return new RxDynamic(__parent, NtDynamic.NULL);} });");
+    gold.append("\n      id = new RxInt32(this, 0);");
+    gold.append("\n      if (__owner instanceof RxTable) {");
+    gold.append("\n        /* ok */");
+    gold.append("\n      } else {");
+    gold.append("\n        /* ok */");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    String[] __INDEX_COLUMNS = new String[] {\"z\"};");
+    gold.append("\n    @Override");
+    gold.append("\n    public String[] __getIndexColumns() {");
+    gold.append("\n      return __INDEX_COLUMNS;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int[] __getIndexValues() {");
+    gold.append("\n      return new int[] {z.getIndexValue()};");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __insert(JsonStreamReader __reader) {");
+    gold.append("\n      if (__reader.startObject()) {");
+    gold.append("\n        while(__reader.notEndOfObject()) {");
+    gold.append("\n          String __fieldName = __reader.fieldName();");
+    gold.append("\n          switch (__fieldName) {");
+    gold.append("\n            case \"z\":");
+    gold.append("\n              z.__insert(__reader);");
+    gold.append("\n              break;");
+    gold.append("\n            case \"properties\":");
+    gold.append("\n              properties.__insert(__reader);");
+    gold.append("\n              break;");
+    gold.append("\n            case \"properties2\":");
+    gold.append("\n              properties2.__insert(__reader);");
+    gold.append("\n              break;");
+    gold.append("\n            case \"id\":");
+    gold.append("\n              id.__insert(__reader);");
+    gold.append("\n              break;");
+    gold.append("\n            default:");
+    gold.append("\n              __reader.skipValue();");
+    gold.append("\n          }");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __dump(JsonStreamWriter __writer) {");
+    gold.append("\n      __writer.beginObject();");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"z\");");
+    gold.append("\n      z.__dump(__writer);");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"properties\");");
+    gold.append("\n      properties.__dump(__writer);");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"properties2\");");
+    gold.append("\n      properties2.__dump(__writer);");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"id\");");
+    gold.append("\n      id.__dump(__writer);");
+    gold.append("\n      __writer.endObject();");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n      if (__isDirty()) {");
+    gold.append("\n        __forward.writeObjectFieldIntro(__name);");
+    gold.append("\n        __forward.beginObject();");
+    gold.append("\n        __reverse.writeObjectFieldIntro(__name);");
+    gold.append("\n        __reverse.beginObject();");
+    gold.append("\n        z.__commit(\"z\", __forward, __reverse);");
+    gold.append("\n        properties.__commit(\"properties\", __forward, __reverse);");
+    gold.append("\n        properties2.__commit(\"properties2\", __forward, __reverse);");
+    gold.append("\n        id.__commit(\"id\", __forward, __reverse);");
+    gold.append("\n        __forward.endObject();");
+    gold.append("\n        __reverse.endObject();");
+    gold.append("\n        __lowerDirtyCommit();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __revert() {");
+    gold.append("\n      if (__isDirty()) {");
+    gold.append("\n        __isDying = false;");
+    gold.append("\n        z.__revert();");
+    gold.append("\n        properties.__revert();");
+    gold.append("\n        properties2.__revert();");
+    gold.append("\n        id.__revert();");
+    gold.append("\n        __lowerDirtyRevert();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public String __name() {");
+    gold.append("\n      return \"Z\";");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __deindex() {");
+    gold.append("\n      /* ok */");
+    gold.append("\n    }");
+    gold.append("\n    public void __reindex() {");
+    gold.append("\n      /* ok */");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public int __id() {");
+    gold.append("\n      return id.get();");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __setId(int __id, boolean __force) {");
+    gold.append("\n      if (__force) {");
+    gold.append("\n        id.forceSet(__id);");
+    gold.append("\n      } else {");
+    gold.append("\n        id.set(__id);");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  private class DeltaRTxZ {");
+    gold.append("\n    private DInt32 __dz;");
+    gold.append("\n    private DMap<Integer,DInt32> __dproperties;");
+    gold.append("\n    private DMap<String,DDynamic> __dproperties2;");
+    gold.append("\n    private boolean __emitted;");
+    gold.append("\n    private DeltaRTxZ() {");
+    gold.append("\n      __dz = new DInt32();");
+    gold.append("\n      __dproperties = new DMap<Integer,DInt32>();");
+    gold.append("\n      __dproperties2 = new DMap<String,DDynamic>();");
+    gold.append("\n      __emitted = false;");
+    gold.append("\n    }");
+    gold.append("\n    public void show(RTxZ __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      __code_cost += 3;");
+    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      __dz.show(__item.z.get(), __obj.planField(\"z\"));");
+    gold.append("\n      {");
+    gold.append("\n        PrivateLazyDeltaWriter __map5 = __obj.planField(\"properties\").planObject();");
+    gold.append("\n        DMap<Integer,DInt32> __deltaMap6 = __dproperties;");
+    gold.append("\n        DMap<Integer,DInt32>.Walk __deltaMapWalker7 = __deltaMap6.begin();");
+    gold.append("\n        for (Map.Entry<Integer,RxInt32> __mapEntry8 : __item.properties) {");
+    gold.append("\n          DInt32 __deltaElement9 = __deltaMapWalker7.next(__mapEntry8.getKey(), () -> new DInt32());");
+    gold.append("\n          __deltaElement9.show(__mapEntry8.getValue().get(), __map5.planField(\"\" + __mapEntry8.getKey()));");
+    gold.append("\n        }");
+    gold.append("\n        __deltaMapWalker7.end(__map5);");
+    gold.append("\n        __map5.end();");
+    gold.append("\n      }");
+    gold.append("\n      {");
+    gold.append("\n        PrivateLazyDeltaWriter __map10 = __obj.planField(\"properties2\").planObject();");
+    gold.append("\n        DMap<String,DDynamic> __deltaMap11 = __dproperties2;");
+    gold.append("\n        DMap<String,DDynamic>.Walk __deltaMapWalker12 = __deltaMap11.begin();");
+    gold.append("\n        for (Map.Entry<String,RxDynamic> __mapEntry13 : __item.properties2) {");
+    gold.append("\n          DDynamic __deltaElement14 = __deltaMapWalker12.next(__mapEntry13.getKey(), () -> new DDynamic());");
+    gold.append("\n          __deltaElement14.show(__mapEntry13.getValue().get(), __map10.planField(\"\" + __mapEntry13.getKey()));");
+    gold.append("\n        }");
+    gold.append("\n        __deltaMapWalker12.end(__map10);");
+    gold.append("\n        __map10.end();");
+    gold.append("\n      }");
+    gold.append("\n      if (__obj.end()) {");
+    gold.append("\n        __emitted = true;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      if (__emitted) {");
+    gold.append("\n        __emitted = false;");
+    gold.append("\n        __writer.writeNull();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  private static class RTxM implements NtMessageBase {");
+    gold.append("\n    private NtMap<Integer,Integer> properties = new NtMap<Integer,Integer>();");
+    gold.append("\n    private NtMap<String,NtDynamic> properties2 = new NtMap<String,NtDynamic>();");
+    gold.append("\n    private int z = 0;");
+    gold.append("\n    private RTxM(JsonStreamReader __reader) {");
+    gold.append("\n      __ingest(__reader);");
+    gold.append("\n    }");
+    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n      if (__reader.startObject()) {");
+    gold.append("\n        while (__reader.notEndOfObject()) {");
+    gold.append("\n          String __fieldName = __reader.fieldName();");
+    gold.append("\n          switch (__fieldName) {");
+    gold.append("\n            case \"properties\":");
+    gold.append("\n              if (__reader.startObject()) {");
+    gold.append("\n                while (__reader.notEndOfObject()) {");
+    gold.append("\n                  int __keyRaw0 = Integer.parseInt(__reader.fieldName());");
+    gold.append("\n                  int __localValue_1;");
+    gold.append("\n                  __localValue_1 = __reader.readInteger();");
+    gold.append("\n                  this.properties.put(__keyRaw0, __localValue_1);");
+    gold.append("\n                }");
+    gold.append("\n              }");
+    gold.append("\n              break;");
+    gold.append("\n            case \"properties2\":");
+    gold.append("\n              if (__reader.startObject()) {");
+    gold.append("\n                while (__reader.notEndOfObject()) {");
+    gold.append("\n                  String __keyRaw2 = __reader.fieldName();");
+    gold.append("\n                  NtDynamic __localValue_3;");
+    gold.append("\n                  __localValue_3 = __reader.readNtDynamic();");
+    gold.append("\n                  this.properties2.put(__keyRaw2, __localValue_3);");
+    gold.append("\n                }");
+    gold.append("\n              }");
+    gold.append("\n              break;");
+    gold.append("\n            case \"z\":");
+    gold.append("\n              this.z = __reader.readInteger();");
+    gold.append("\n              break;");
+    gold.append("\n            default:");
+    gold.append("\n              __reader.skipValue();");
+    gold.append("\n          }");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
+    gold.append("\n      __writer.beginObject();");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"properties\");");
+    gold.append("\n      __writer.beginObject();");
+    gold.append("\n      for (Map.Entry<Integer, Integer> __localEntry_4 : properties) {");
+    gold.append("\n        __writer.writeObjectFieldIntro(__localEntry_4.getKey());");
+    gold.append("\n        __writer.writeInteger(__localEntry_4.getValue());");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endObject();");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"properties2\");");
+    gold.append("\n      __writer.beginObject();");
+    gold.append("\n      for (Map.Entry<String, NtDynamic> __localEntry_5 : properties2) {");
+    gold.append("\n        __writer.writeObjectFieldIntro(__localEntry_5.getKey());");
+    gold.append("\n        __writer.writeNtDynamic(__localEntry_5.getValue());");
+    gold.append("\n      }");
+    gold.append("\n      __writer.endObject();");
+    gold.append("\n      __writer.writeObjectFieldIntro(\"z\");");
+    gold.append("\n      __writer.writeInteger(z);");
+    gold.append("\n      __writer.endObject();");
+    gold.append("\n    }");
+    gold.append("\n    private RTxM() {}");
+    gold.append("\n    private RTxM(NtMap<Integer,Integer> properties, NtMap<String,NtDynamic> properties2, int z) {");
+    gold.append("\n      this.properties = properties;");
+    gold.append("\n      this.properties2 = properties2;");
+    gold.append("\n      this.z = z;");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  private class DeltaRTxM {");
+    gold.append("\n    private DInt32 __dz;");
+    gold.append("\n    private DMap<Integer,DInt32> __dproperties;");
+    gold.append("\n    private DMap<String,DDynamic> __dproperties2;");
+    gold.append("\n    private boolean __emitted;");
+    gold.append("\n    private DeltaRTxM() {");
+    gold.append("\n      __dz = new DInt32();");
+    gold.append("\n      __dproperties = new DMap<Integer,DInt32>();");
+    gold.append("\n      __dproperties2 = new DMap<String,DDynamic>();");
+    gold.append("\n      __emitted = false;");
+    gold.append("\n    }");
+    gold.append("\n    public void show(RTxM __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      __code_cost += 3;");
+    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      __dz.show(__item.z, __obj.planField(\"z\"));");
+    gold.append("\n      {");
+    gold.append("\n        PrivateLazyDeltaWriter __map15 = __obj.planField(\"properties\").planObject();");
+    gold.append("\n        DMap<Integer,DInt32> __deltaMap16 = __dproperties;");
+    gold.append("\n        DMap<Integer,DInt32>.Walk __deltaMapWalker17 = __deltaMap16.begin();");
+    gold.append("\n        for (Map.Entry<Integer,Integer> __mapEntry18 : __item.properties) {");
+    gold.append("\n          DInt32 __deltaElement19 = __deltaMapWalker17.next(__mapEntry18.getKey(), () -> new DInt32());");
+    gold.append("\n          __deltaElement19.show(__mapEntry18.getValue(), __map15.planField(\"\" + __mapEntry18.getKey()));");
+    gold.append("\n        }");
+    gold.append("\n        __deltaMapWalker17.end(__map15);");
+    gold.append("\n        __map15.end();");
+    gold.append("\n      }");
+    gold.append("\n      {");
+    gold.append("\n        PrivateLazyDeltaWriter __map20 = __obj.planField(\"properties2\").planObject();");
+    gold.append("\n        DMap<String,DDynamic> __deltaMap21 = __dproperties2;");
+    gold.append("\n        DMap<String,DDynamic>.Walk __deltaMapWalker22 = __deltaMap21.begin();");
+    gold.append("\n        for (Map.Entry<String,NtDynamic> __mapEntry23 : __item.properties2) {");
+    gold.append("\n          DDynamic __deltaElement24 = __deltaMapWalker22.next(__mapEntry23.getKey(), () -> new DDynamic());");
+    gold.append("\n          __deltaElement24.show(__mapEntry23.getValue(), __map20.planField(\"\" + __mapEntry23.getKey()));");
+    gold.append("\n        }");
+    gold.append("\n        __deltaMapWalker22.end(__map20);");
+    gold.append("\n        __map20.end();");
+    gold.append("\n      }");
+    gold.append("\n      if (__obj.end()) {");
+    gold.append("\n        __emitted = true;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      if (__emitted) {");
+    gold.append("\n        __emitted = false;");
+    gold.append("\n        __writer.writeNull();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __route(AsyncTask task) {");
+    gold.append("\n    return;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected Object __parse_message2(String channel, JsonStreamReader __reader) {");
+    gold.append("\n    __reader.skipValue();");
+    gold.append("\n    return NtMessageBase.NULL;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __reset_future_queues() {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __invoke_label(String __new_state) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
+    gold.append("\n    boolean __result = false;");
+    gold.append("\n    return __result;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public String[] __getTests() {");
+    gold.append("\n    return new String[] {};");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
+    gold.append("\n    __code_cost += 3;");
+    gold.append("\n    __track(0);");
+    gold.append("\n    NtMap<String,RTxM> here = new NtMap<String,RTxM>();");
+    gold.append("\n    __track(1);");
+    gold.append("\n    {");
+    gold.append("\n      RxMap<String,RTxZ> _AutoRef25 = maaaap;");
+    gold.append("\n      for (Map.Entry<String,RTxM> _AutoEntry26 : (here).entries()) {");
+    gold.append("\n        RTxM _AutoExpr26 = _AutoEntry26.getValue();");
+    gold.append("\n        RTxZ _AutoRefElement26 = _AutoRef25.getOrCreate(_AutoEntry26.getKey());");
+    gold.append("\n        __code_cost += 3;");
+    gold.append("\n        {");
+    gold.append("\n          RxMap<Integer,RxInt32> _AutoRef27 = _AutoRefElement26.properties;");
+    gold.append("\n          for (Map.Entry<Integer,Integer> _AutoEntry28 : (_AutoExpr26.properties).entries()) {");
+    gold.append("\n            int _AutoExpr28 = _AutoEntry28.getValue();");
+    gold.append("\n            RxInt32 _AutoRefElement28 = _AutoRef27.getOrCreate(_AutoEntry28.getKey());");
+    gold.append("\n            _AutoRefElement28.set(_AutoExpr28);");
+    gold.append("\n          }");
+    gold.append("\n        }");
+    gold.append("\n        {");
+    gold.append("\n          RxMap<String,RxDynamic> _AutoRef29 = _AutoRefElement26.properties2;");
+    gold.append("\n          for (Map.Entry<String,NtDynamic> _AutoEntry30 : (_AutoExpr26.properties2).entries()) {");
+    gold.append("\n            NtDynamic _AutoExpr30 = _AutoEntry30.getValue();");
+    gold.append("\n            RxDynamic _AutoRefElement30 = _AutoRef29.getOrCreate(_AutoEntry30.getKey());");
+    gold.append("\n            _AutoRefElement30.set(_AutoExpr30);");
+    gold.append("\n          }");
+    gold.append("\n        }");
+    gold.append("\n        _AutoRefElement26.z.set(_AutoExpr26.z);");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
+    gold.append("\n    __reader.skipValue();");
+    gold.append("\n    return NtMessageBase.NULL;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __construct_intern(NtClient __who, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  }");
+    gold.append("\n  /* end of file */");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
+    gold.append("\nBegin");
+    gold.append("\nEnd");
+    gold.append("\n--REFLECTION RESULTS-------------------------------------");
+    gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"maaaap\":{\"type\":{\"nature\":\"reactive_map\",\"domain\":{\"nature\":\"native_value\",\"type\":\"string\"},\"range\":{\"nature\":\"reactive_ref\",\"ref\":\"Z\"}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"Z\":{\"nature\":\"reactive_record\",\"name\":\"Z\",\"fields\":{\"z\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"properties\":{\"type\":{\"nature\":\"reactive_map\",\"domain\":{\"nature\":\"native_value\",\"type\":\"int\"},\"range\":{\"nature\":\"reactive_value\",\"type\":\"int\"}},\"privacy\":\"public\"},\"properties2\":{\"type\":{\"nature\":\"reactive_map\",\"domain\":{\"nature\":\"native_value\",\"type\":\"string\"},\"range\":{\"nature\":\"reactive_value\",\"type\":\"dynamic\"}},\"privacy\":\"public\"}}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"z\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"},\"properties\":{\"type\":{\"nature\":\"native_map\",\"domain\":{\"nature\":\"native_value\",\"type\":\"int\"},\"range\":{\"nature\":\"native_value\",\"type\":\"int\"}},\"privacy\":\"public\"},\"properties2\":{\"type\":{\"nature\":\"native_map\",\"domain\":{\"nature\":\"native_value\",\"type\":\"string\"},\"range\":{\"nature\":\"native_value\",\"type\":\"dynamic\"}},\"privacy\":\"public\"}}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n--JAVA RUNNING-------------------------------------");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\"} need:false in:-50");
+    gold.append("\nNO_ONE was DENIED");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"75\"} need:false in:-75");
+    gold.append("\nRANDO was DENIED:");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":4}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":4}");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"100\"} need:false in:-100");
+    gold.append("\n{\"command\":\"bill\",\"timestamp\":\"125\"}-->{\"__goodwill_used\":0,\"__cost\":8,\"__billing_seq\":4} need:true in:0");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":5}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":5}");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"150\"}-->{\"__messages\":null,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__time\":\"150\"} need:false in:-150");
+    gold.append("\n--JAVA RESULTS-------------------------------------");
+    gold.append("\n{\"maaaap\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0}");
+    gold.append("\n--DUMP RESULTS-------------------------------------");
+    gold.append("\n{\"maaaap\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"maaaap\":{},\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0}");
+    gold.append("\n--JAVA TEST RESULTS--------------------------------");
+    gold.append("\n");
+    gold.append("\nSuccess");
+    assertStable(live, gold);
+  }
+  private String cached_RecursiveTable_13 = null;
+  private String get_RecursiveTable_13() {
+    if (cached_RecursiveTable_13 != null) {
+      return cached_RecursiveTable_13;
+    }
+    cached_RecursiveTable_13 = generateTestOutput(true, "RecursiveTable_13", "./test_code/Ingestion_RecursiveTable_success.a");
+    return cached_RecursiveTable_13;
   }
 
   @Test
   public void testRecursiveTableEmission() {
-    assertEmissionGood(get_RecursiveTable_11());
+    assertEmissionGood(get_RecursiveTable_13());
   }
 
   @Test
   public void testRecursiveTableSuccess() {
-    assertLivePass(get_RecursiveTable_11());
+    assertLivePass(get_RecursiveTable_13());
   }
 
   @Test
   public void testRecursiveTableGoodWillHappy() {
-    assertGoodWillHappy(get_RecursiveTable_11());
+    assertGoodWillHappy(get_RecursiveTable_13());
   }
 
   @Test
   public void testRecursiveTableExceptionFree() {
-    assertExceptionFree(get_RecursiveTable_11());
+    assertExceptionFree(get_RecursiveTable_13());
   }
 
   @Test
   public void testRecursiveTableTODOFree() {
-    assertTODOFree(get_RecursiveTable_11());
+    assertTODOFree(get_RecursiveTable_13());
   }
 
   @Test
-  public void stable_RecursiveTable_11() {
-    String live = get_RecursiveTable_11();
+  public void stable_RecursiveTable_13() {
+    String live = get_RecursiveTable_13();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Ingestion_RecursiveTable_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1956,10 +2649,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class RecursiveTable_11 extends LivingDocument {");
+    gold.append("\npublic class RecursiveTable_13 extends LivingDocument {");
     gold.append("\n  private final RTxX v;");
     gold.append("\n  private final RxTable<RTxX> tbl;");
-    gold.append("\n  public RecursiveTable_11(DocumentMonitor __monitor) {");
+    gold.append("\n  public RecursiveTable_13(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    v = new RTxX(this);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
@@ -2090,12 +2783,12 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaRecursiveTable_11 {");
+    gold.append("\n  private class DeltaRecursiveTable_13 {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaRecursiveTable_11() {");
+    gold.append("\n    private DeltaRecursiveTable_13() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(RecursiveTable_11 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(RecursiveTable_13 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -2111,8 +2804,8 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    RecursiveTable_11 __self = this;");
-    gold.append("\n    DeltaRecursiveTable_11 __state = new DeltaRecursiveTable_11();");
+    gold.append("\n    RecursiveTable_13 __self = this;");
+    gold.append("\n    DeltaRecursiveTable_13 __state = new DeltaRecursiveTable_13();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -2662,43 +3355,43 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_SimpleAs_12 = null;
-  private String get_SimpleAs_12() {
-    if (cached_SimpleAs_12 != null) {
-      return cached_SimpleAs_12;
+  private String cached_SimpleAs_14 = null;
+  private String get_SimpleAs_14() {
+    if (cached_SimpleAs_14 != null) {
+      return cached_SimpleAs_14;
     }
-    cached_SimpleAs_12 = generateTestOutput(true, "SimpleAs_12", "./test_code/Ingestion_SimpleAs_success.a");
-    return cached_SimpleAs_12;
+    cached_SimpleAs_14 = generateTestOutput(true, "SimpleAs_14", "./test_code/Ingestion_SimpleAs_success.a");
+    return cached_SimpleAs_14;
   }
 
   @Test
   public void testSimpleAsEmission() {
-    assertEmissionGood(get_SimpleAs_12());
+    assertEmissionGood(get_SimpleAs_14());
   }
 
   @Test
   public void testSimpleAsSuccess() {
-    assertLivePass(get_SimpleAs_12());
+    assertLivePass(get_SimpleAs_14());
   }
 
   @Test
   public void testSimpleAsGoodWillHappy() {
-    assertGoodWillHappy(get_SimpleAs_12());
+    assertGoodWillHappy(get_SimpleAs_14());
   }
 
   @Test
   public void testSimpleAsExceptionFree() {
-    assertExceptionFree(get_SimpleAs_12());
+    assertExceptionFree(get_SimpleAs_14());
   }
 
   @Test
   public void testSimpleAsTODOFree() {
-    assertTODOFree(get_SimpleAs_12());
+    assertTODOFree(get_SimpleAs_14());
   }
 
   @Test
-  public void stable_SimpleAs_12() {
-    String live = get_SimpleAs_12();
+  public void stable_SimpleAs_14() {
+    String live = get_SimpleAs_14();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Ingestion_SimpleAs_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2723,12 +3416,12 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class SimpleAs_12 extends LivingDocument {");
+    gold.append("\npublic class SimpleAs_14 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxX> tbl;");
     gold.append("\n  private final RxInt32 last_id1;");
     gold.append("\n  private final RxInt32 last_id2;");
     gold.append("\n  private final RxInt32 last_id3;");
-    gold.append("\n  public SimpleAs_12(DocumentMonitor __monitor) {");
+    gold.append("\n  public SimpleAs_14(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
     gold.append("\n    last_id1 = new RxInt32(this, 0);");
@@ -2875,12 +3568,12 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    last_id3.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSimpleAs_12 {");
+    gold.append("\n  private class DeltaSimpleAs_14 {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSimpleAs_12() {");
+    gold.append("\n    private DeltaSimpleAs_14() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(SimpleAs_12 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(SimpleAs_14 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -2896,8 +3589,8 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    SimpleAs_12 __self = this;");
-    gold.append("\n    DeltaSimpleAs_12 __state = new DeltaSimpleAs_12();");
+    gold.append("\n    SimpleAs_14 __self = this;");
+    gold.append("\n    DeltaSimpleAs_14 __state = new DeltaSimpleAs_14();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -3257,43 +3950,43 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Simple_13 = null;
-  private String get_Simple_13() {
-    if (cached_Simple_13 != null) {
-      return cached_Simple_13;
+  private String cached_Simple_15 = null;
+  private String get_Simple_15() {
+    if (cached_Simple_15 != null) {
+      return cached_Simple_15;
     }
-    cached_Simple_13 = generateTestOutput(true, "Simple_13", "./test_code/Ingestion_Simple_success.a");
-    return cached_Simple_13;
+    cached_Simple_15 = generateTestOutput(true, "Simple_15", "./test_code/Ingestion_Simple_success.a");
+    return cached_Simple_15;
   }
 
   @Test
   public void testSimpleEmission() {
-    assertEmissionGood(get_Simple_13());
+    assertEmissionGood(get_Simple_15());
   }
 
   @Test
   public void testSimpleSuccess() {
-    assertLivePass(get_Simple_13());
+    assertLivePass(get_Simple_15());
   }
 
   @Test
   public void testSimpleGoodWillHappy() {
-    assertGoodWillHappy(get_Simple_13());
+    assertGoodWillHappy(get_Simple_15());
   }
 
   @Test
   public void testSimpleExceptionFree() {
-    assertExceptionFree(get_Simple_13());
+    assertExceptionFree(get_Simple_15());
   }
 
   @Test
   public void testSimpleTODOFree() {
-    assertTODOFree(get_Simple_13());
+    assertTODOFree(get_Simple_15());
   }
 
   @Test
-  public void stable_Simple_13() {
-    String live = get_Simple_13();
+  public void stable_Simple_15() {
+    String live = get_Simple_15();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Ingestion_Simple_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -3318,10 +4011,10 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Simple_13 extends LivingDocument {");
+    gold.append("\npublic class Simple_15 extends LivingDocument {");
     gold.append("\n  private final RTxX v;");
     gold.append("\n  private final RxTable<RTxX> tbl;");
-    gold.append("\n  public Simple_13(DocumentMonitor __monitor) {");
+    gold.append("\n  public Simple_15(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    v = new RTxX(this);");
     gold.append("\n    tbl = new RxTable<>(__self, this, \"tbl\", (RxParent __parent) -> new RTxX(__parent), 0);");
@@ -3452,12 +4145,12 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n    tbl.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSimple_13 {");
+    gold.append("\n  private class DeltaSimple_15 {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSimple_13() {");
+    gold.append("\n    private DeltaSimple_15() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Simple_13 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Simple_15 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -3473,8 +4166,8 @@ public class GeneratedIngestionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    Simple_13 __self = this;");
-    gold.append("\n    DeltaSimple_13 __state = new DeltaSimple_13();");
+    gold.append("\n    Simple_15 __self = this;");
+    gold.append("\n    DeltaSimple_15 __state = new DeltaSimple_15();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");

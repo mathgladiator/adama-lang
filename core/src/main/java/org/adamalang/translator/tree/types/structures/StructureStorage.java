@@ -3,10 +3,7 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.translator.tree.types.structures;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Consumer;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -78,6 +75,17 @@ public class StructureStorage extends DocumentPosition {
       }
       writer.endObject();
     }
+
+    for (Map.Entry<String, BubbleDefinition> bd : bubbles.entrySet()) {
+      writer.writeObjectFieldIntro(bd.getKey());
+      writer.beginObject();
+      writer.writeObjectFieldIntro("type");
+      bd.getValue().expressionType.writeTypeReflectionJson(writer);
+      writer.writeObjectFieldIntro("privacy");
+      writer.writeString("bubble");
+      writer.endObject();
+    }
+
     writer.endObject();
   }
 

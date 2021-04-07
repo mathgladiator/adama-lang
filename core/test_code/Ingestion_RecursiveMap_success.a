@@ -1,0 +1,18 @@
+record Z {
+  public int z;
+  public map<int, int> properties;
+  public map<string, dynamic> properties2;
+}
+
+public map<string, Z> maaaap;
+
+message M {
+  int z;
+  map<int, int> properties;
+  map<string, dynamic> properties2;
+}
+
+@construct {
+  map<string, M> here;
+  maaaap <- here;
+}

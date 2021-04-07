@@ -258,6 +258,10 @@ public class Rules {
     return RuleSetCommon.Resolve(environment, tyType, silent);
   }
 
+  public TyType ResolvePtr(final TyType tyType, final boolean silent) {
+    return RuleSetCommon.ResolvePtr(environment, tyType, silent);
+  }
+
   /** FROM: RuleSetConversion */
   public void SignalConversionIssue(final TyType tyType, final boolean silent) {
     RuleSetConversion.SignalConversionIssue(environment, tyType, silent);

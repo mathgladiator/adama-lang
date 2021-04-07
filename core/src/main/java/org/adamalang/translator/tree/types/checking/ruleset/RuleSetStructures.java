@@ -7,6 +7,7 @@ import java.util.Map;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
+import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 
@@ -38,7 +39,7 @@ public class RuleSetStructures {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);
-      if (tyType != null && tyType instanceof IsStructure) {
+      if (tyType != null && (tyType instanceof IsStructure || tyType instanceof TyNativeReactiveRecordPtr)) {
         return true;
       } else if (!silent) {
         environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'record' or 'message', but got a type of '%s'.", tyTypeOriginal.getAdamaType()), "RuleSetStructures");

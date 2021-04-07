@@ -40,6 +40,10 @@ public class NtMap<TIn, TOut> implements Iterable<Map.Entry<TIn, TOut>> {
     });
   }
 
+  public Iterable<Map.Entry<TIn, TOut>> entries() {
+    return storage.entrySet();
+  }
+
   public TOut put(final TIn key, final TOut value) {
     return storage.put(key, value);
   }

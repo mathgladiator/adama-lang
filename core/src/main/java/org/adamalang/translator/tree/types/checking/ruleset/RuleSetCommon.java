@@ -271,6 +271,15 @@ public class RuleSetCommon {
     return tyType;
   }
 
+
+  public static TyType ResolvePtr(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType instanceof TyNativeReactiveRecordPtr) {
+      return ((TyNativeReactiveRecordPtr) tyType).source;
+    }
+    return tyType;
+  }
+
   static void SignalTypeCompatibility(final Environment environment, final TyType expected, final TyType given, final boolean silent) {
     if (!silent && given != null) {
       environment.document.createError(given, String.format("Type check failure: The types '%s' and '%s' are not compatible for type unification", expected.getAdamaType(), given.getAdamaType()), "TypeCompatabilities");

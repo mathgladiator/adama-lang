@@ -8,14 +8,32 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
+import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 
 public class RuleSetIngestion {
   public static boolean CanAIngestB(final Environment environment, final TyType originalTypeA, final TyType originalTypeB, final boolean silent) {
-    final var typeLeft = environment.rules.Resolve(originalTypeA, silent);
-    final var typeRight = environment.rules.Resolve(originalTypeB, silent);
+    final var typeLeft = environment.rules.ResolvePtr(originalTypeA, silent);
+    final var typeRight = environment.rules.ResolvePtr(originalTypeB, silent);
     if (typeLeft == null || typeRight == null) { return false; }
+    if (RuleSetMap.IsMap(environment, typeLeft) && RuleSetMap.IsMap(environment, typeRight)) {
+      if (RuleSetAssignment.CanTypeAStoreTypeB(environment, ((IsMap) typeLeft).getDomainType(environment), ((IsMap) typeRight).getDomainType(environment), StorageTweak.None, silent)) {
+        if (RuleSetIngestion.IngestionLeftSidePossible(environment, ((IsMap) typeLeft).getRangeType(environment))) {
+          if (CanAIngestB(environment, ((IsMap) typeLeft).getRangeType(environment), ((IsMap) typeRight).getRangeType(environment), silent)) {
+            return true;
+          } else if (!silent) {
+            environment.document.createError(originalTypeA, String.format("Type check failure: ranges are incompatble for ingestion.", typeLeft.getAdamaType()), "RuleSetIngestion");
+          }
+        } else {
+          return RuleSetAssignment.CanTypeAStoreTypeB(environment,  ((IsMap) typeLeft).getRangeType(environment), ((IsMap) typeRight).getRangeType(environment), StorageTweak.None, silent);
+        }
+        return false;
+      } else if (!silent) {
+        environment.document.createError(originalTypeA, String.format("Type check failure: domains are incompatble for ingestion %s <- %s.", ((IsMap) typeLeft).getDomainType(environment).getAdamaType(), ((IsMap) typeRight).getDomainType(environment).getAdamaType()), "RuleSetIngestion");
+      }
+    }
     TyType leftStructureType = null;
     TyType rightStructureType = null;
     if (environment.rules.IsStructure(typeLeft, true)) {
@@ -66,13 +84,13 @@ public class RuleSetIngestion {
   public static boolean IngestionLeftElementRequiresRecursion(final Environment environment, final TyType originalTypeA) {
     final var typeLeft = environment.rules.Resolve(originalTypeA, true);
     if (environment.rules.IsMaybe(typeLeft, true)) { return IngestionLeftElementRequiresRecursion(environment, environment.rules.ExtractEmbeddedType(typeLeft, true)); }
-    return environment.rules.IsTable(typeLeft, true) || environment.rules.IsStructure(typeLeft, true) || typeLeft instanceof TyNativeReactiveRecordPtr;
+    return environment.rules.IsTable(typeLeft, true) || environment.rules.IsStructure(typeLeft, true) || typeLeft instanceof TyReactiveMap || typeLeft instanceof TyNativeReactiveRecordPtr;
   }
 
   static boolean IngestionLeftSidePossible(final Environment environment, final TyType originalTypeA) {
     final var typeLeft = environment.rules.Resolve(originalTypeA, true);
     if (environment.rules.IsMaybe(typeLeft, true)) { return IngestionLeftSidePossible(environment, environment.rules.ExtractEmbeddedType(typeLeft, true)); }
-    return environment.rules.IsStructure(typeLeft, true) || environment.rules.IsTable(typeLeft, true) || typeLeft instanceof TyNativeReactiveRecordPtr;
+    return environment.rules.IsStructure(typeLeft, true) || environment.rules.IsTable(typeLeft, true) || typeLeft instanceof TyReactiveMap || typeLeft instanceof TyNativeReactiveRecordPtr;
   }
 
   public static boolean IngestionLeftSideRequiresBridgeCreate(final Environment environment, final TyType originalTypeA) {

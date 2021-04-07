@@ -1,0 +1,31 @@
+record Z {
+  public int z;
+  public map<int, int> properties;
+}
+
+public map<string, Z> maaaap;
+
+message M {
+  int z;
+  map<int, int> properties;
+}
+
+message N {
+  int x;
+}
+
+message NN {
+  string x;
+}
+
+@construct {
+  map<string, M> hereM;
+  map<string, N> hereN;
+  map<string, NN> hereNN;
+  map<string, int> hereINT;
+  maaaap <- hereN;
+  maaaap <- hereINT;
+  maaaap <- hereNN;
+  map<int, int> boom;
+  maaaap <- boom;
+}
