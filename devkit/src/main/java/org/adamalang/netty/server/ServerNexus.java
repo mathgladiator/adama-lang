@@ -8,6 +8,7 @@ import org.adamalang.netty.contracts.Authenticator;
 import org.adamalang.netty.contracts.JsonHandler;
 import org.adamalang.netty.contracts.ServerOptions;
 import org.adamalang.netty.contracts.StaticSite;
+import org.adamalang.runtime.contracts.AssetService;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -18,14 +19,16 @@ public class ServerNexus {
   public final JsonHandler handler;
   public final ServerOptions options;
   public final StaticSite site;
+  public final AssetService assetService;
   public final ScheduledExecutorService heartbeat;
 
-  public ServerNexus(final ServerOptions options, final GameSpaceDB db, final JsonHandler handler, final Authenticator authenticator, final StaticSite site) {
+  public ServerNexus(final ServerOptions options, final GameSpaceDB db, final JsonHandler handler, final Authenticator authenticator, final StaticSite site, final AssetService assetService) {
     this.options = options;
     this.db = db;
     this.handler = handler;
     this.authenticator = authenticator;
     this.site = site;
+    this.assetService = assetService;
     this.heartbeat = Executors.newSingleThreadScheduledExecutor();
   }
 

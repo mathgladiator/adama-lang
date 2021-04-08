@@ -3,7 +3,6 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.contracts;
 
-import org.adamalang.runtime.ErrorCodes;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,15 +10,15 @@ import java.util.function.Function;
 
 /** This callback interface is used by DataService such that actions not only succeed/fail, but provide
  * progress notifications which could relate to a state diagram. */
-public interface DataCallback<T> {
+public interface Callback<T> {
   /** the action happened successfully, and the result is value */
   public void success(T value);
 
   /** the action failed outright, and the reason is the exception */
   public void failure(ErrorCodeException ex);
 
-  public static <In, Out> DataCallback<In> transform(DataCallback<Out> output, int exceptionErrorCode, Function<In, Out> f) {
-    return new DataCallback<>() {
+  public static <In, Out> Callback<In> transform(Callback<Out> output, int exceptionErrorCode, Function<In, Out> f) {
+    return new Callback<>() {
       @Override
       public void success(In value) {
         try {
@@ -35,8 +34,8 @@ public interface DataCallback<T> {
     };
   }
 
-  public static <T> DataCallback<T> bind(ScheduledExecutorService service, int exceptionErrorCode, DataCallback<T> next) {
-    return new DataCallback<T>() {
+  public static <T> Callback<T> bind(ScheduledExecutorService service, int exceptionErrorCode, Callback<T> next) {
+    return new Callback<T>() {
       @Override
       public void success(T value) {
         service.execute(() -> {
@@ -57,8 +56,8 @@ public interface DataCallback<T> {
     };
   }
 
-  public static <T> DataCallback<Void> handoff(DataCallback<T> next, int exceptionErrorCode, Runnable success) {
-    return new DataCallback<>() {
+  public static <T> Callback<Void> handoff(Callback<T> next, int exceptionErrorCode, Runnable success) {
+    return new Callback<>() {
       @Override
       public void success(Void value) {
         try {

@@ -13,7 +13,7 @@ import org.adamalang.netty.api.GameSpaceDB;
 import org.adamalang.netty.contracts.JsonHandler;
 import org.adamalang.netty.contracts.JsonResponder;
 import org.adamalang.runtime.DurableLivingDocument;
-import org.adamalang.runtime.contracts.DataCallback;
+import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.PrivateView;
@@ -96,7 +96,7 @@ public class ServiceHandler implements JsonHandler {
     switch (method) {
       case "generate": {
         final var gs = findGamespace(request);
-        gs.generate(DataCallback.bind(executor, ErrorCodes.E5_REQUEST_GENERATE_CRASHED, new DataCallback<>() {
+        gs.generate(Callback.bind(executor, ErrorCodes.E5_REQUEST_GENERATE_CRASHED, new Callback<>() {
           @Override
           public void success(Long value) {
             responder.respond("{\"game\":\"" + value + "\"}", true, null);
@@ -117,7 +117,7 @@ public class ServiceHandler implements JsonHandler {
         final var gs = findGamespace(request);
         final var id = lng(request, "game", ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
         ObjectNode arg = (ObjectNode) node(request, "arg", ErrorCodes.USERLAND_REQUEST_NO_CONSTRUCTOR_ARG);
-        DataCallback<DurableLivingDocument> onCreate = DataCallback.bind(executor, ErrorCodes.E5_REQUEST_CREATE_CRASHED, new DataCallback<>() {
+        Callback<DurableLivingDocument> onCreate = Callback.bind(executor, ErrorCodes.E5_REQUEST_CREATE_CRASHED, new Callback<>() {
           @Override
           public void success(DurableLivingDocument value) {
             responder.respond("{\"game\":\"" + value.documentId + "\"}", true, null);
@@ -140,10 +140,10 @@ public class ServiceHandler implements JsonHandler {
         if (session.checkNotUnique(key)) {
           throw new ErrorCodeException(ErrorCodes.USERLAND_SESSION_CANT_CONNECT_AGAIN);
         }
-        DataCallback<DurableLivingDocument> onGet = DataCallback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_GET, new DataCallback<DurableLivingDocument>() {
+        Callback<DurableLivingDocument> onGet = Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_GET, new Callback<DurableLivingDocument>() {
           @Override
           public void success(DurableLivingDocument doc) {
-            DataCallback<PrivateView> postPrivateView = DataCallback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_PV, new DataCallback<PrivateView>() {
+            Callback<PrivateView> postPrivateView = Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_PV, new Callback<PrivateView>() {
               @Override
               public void success(PrivateView pv) {
                 session.subscribeToSessionDeath(key, () -> {
@@ -152,7 +152,7 @@ public class ServiceHandler implements JsonHandler {
                   executor.execute(() -> {
                     pv.kill();
                     if (doc.garbageCollectPrivateViewsFor(who) == 0) {
-                      doc.disconnect(who, DataCallback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_GC, new DataCallback<Integer>() {
+                      doc.disconnect(who, Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_GC, new Callback<Integer>() {
                         @Override
                         public void success(Integer value) {
                         }
@@ -175,7 +175,7 @@ public class ServiceHandler implements JsonHandler {
               }
             });
 
-            DataCallback<Void> postConnect = DataCallback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_POST_CONNECT, new DataCallback<Void>() {
+            Callback<Void> postConnect = Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_POST_CONNECT, new Callback<Void>() {
               @Override
               public void success(Void value) {
                 Perspective perspective = new Perspective() {
@@ -202,7 +202,7 @@ public class ServiceHandler implements JsonHandler {
 
             final var alreadyConnected = doc.isConnected(who);
             if (!alreadyConnected) {
-              doc.connect(who, DataCallback.transform(postConnect, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_CONNECT, (x) -> null));
+              doc.connect(who, Callback.transform(postConnect, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_CONNECT, (x) -> null));
             } else {
               postConnect.success(null);
             }
@@ -233,10 +233,10 @@ public class ServiceHandler implements JsonHandler {
         final var id = lng(request, "game", ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
         final var channel = str(request, "channel", true, ErrorCodes.USERLAND_REQUEST_NO_CHANNEL_PROPERTY);
         final var msg = node(request, "message", ErrorCodes.USERLAND_REQUEST_NO_MESSAGE_PROPERTY);
-        DataCallback<DurableLivingDocument> onGet = DataCallback.bind(executor, ErrorCodes.E5_REQUEST_SEND_CRASHED, new DataCallback<DurableLivingDocument>() {
+        Callback<DurableLivingDocument> onGet = Callback.bind(executor, ErrorCodes.E5_REQUEST_SEND_CRASHED, new Callback<DurableLivingDocument>() {
           @Override
           public void success(DurableLivingDocument value) {
-            value.send(who, channel, msg.toString(), DataCallback.bind(executor, ErrorCodes.E5_REQUEST_SEND_CRASHED_ACTUAL, new DataCallback<Integer>() {
+            value.send(who, channel, msg.toString(), Callback.bind(executor, ErrorCodes.E5_REQUEST_SEND_CRASHED_ACTUAL, new Callback<Integer>() {
               @Override
               public void success(Integer seq) {
                 responder.respond("{\"success\":" + seq + "}", true, null);
@@ -281,7 +281,7 @@ public class ServiceHandler implements JsonHandler {
     Integer ms = document.getAndCleanRequiresInvalidateMilliseconds();
     if (ms != null) {
       exector.schedule(() -> {
-        document.invalidate(new DataCallback<Integer>() {
+        document.invalidate(new Callback<Integer>() {
           @Override
           public void success(Integer value) {
           }

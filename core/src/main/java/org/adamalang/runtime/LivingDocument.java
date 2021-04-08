@@ -22,6 +22,7 @@ import org.adamalang.runtime.exceptions.RetryProgressException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.AssertionStats;
@@ -347,6 +348,8 @@ public abstract class LivingDocument implements RxParent {
   public abstract boolean __onConnected(NtClient clientValue);
   /** code generated: let the document know of a disconnected client */
   public abstract void __onDisconnected(NtClient clientValue);
+  /** code generate: let the document know an asset was uploaded */
+  public abstract void __onAssetAttached(NtClient __cvalue, NtAsset __asset);
   /** code generated: convert the reader into a constructor arg */
   protected abstract NtMessageBase __parse_construct_arg(JsonStreamReader reader);
   /** parse the message for the channel, and cache the result */
@@ -465,6 +468,7 @@ public abstract class LivingDocument implements RxParent {
     NtMessageBase arg = null;
     String channel = null;
     String entropy = null;
+    NtAsset asset = null;
     if (reader.startObject()) {
       while (reader.notEndOfObject()) {
         final var fieldName = reader.fieldName();
@@ -487,9 +491,14 @@ public abstract class LivingDocument implements RxParent {
           case "message":
             message = __parse_message2(channel, reader);
             break;
+          case "asset":
+            asset = reader.readNtAsset();
+            break;
           case "arg": // for constructor
             arg = __parse_construct_arg(reader);
             break;
+          default:
+            throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
         }
       }
     }
@@ -516,6 +525,10 @@ public abstract class LivingDocument implements RxParent {
       case "disconnect":
         if (who == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
         return __transaction_disconnect(requestJson, who);
+      case "attach":
+        if (who == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
+        if (asset == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_ASSET); }
+        return __transaction_attach(requestJson, who, asset);
       case "send":
         if (who == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
         if (channel == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL); }
@@ -541,6 +554,41 @@ public abstract class LivingDocument implements RxParent {
     writer.writeInteger(__seq.get());
     writer.endObject();
     return new DataService.RemoteDocumentUpdate(__seq.get(), request, writer.toString(), "{}", true, 0);
+  }
+
+  /** transaction: a person connects to document */
+  private DataService.RemoteDocumentUpdate __transaction_attach(final String request, final NtClient who, final NtAsset asset) throws ErrorCodeException {
+    final var startedTime = System.nanoTime();
+    var exception = true;
+    if (__monitor != null) {
+      __monitor.push("TransactionAttach");
+    }
+    try {
+      __random = new Random(Long.parseLong(__entropy.get()));
+      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED); }
+
+      // execute the attachment
+      __onAssetAttached(who, asset);
+      __seq.bumpUpPre();
+
+      // this has no undo as assets will be stored until a future garbage collector comes in and audits the state of the document
+      final var reverse = new JsonStreamWriter();
+      reverse.beginObject();
+      reverse.endObject();
+
+      final var forward = new JsonStreamWriter();
+      forward.beginObject();
+      __commit(null, forward, reverse);
+      forward.endObject();
+
+      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), request, forward.toString(), reverse.toString(), true, 0);
+      exception = false;
+      return result;
+    } finally {
+      if (__monitor != null) {
+        __monitor.pop(System.nanoTime() - startedTime, exception);
+      }
+    }
   }
 
   /** transaction: a person connects to document */

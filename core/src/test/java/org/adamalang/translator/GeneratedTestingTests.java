@@ -554,6 +554,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  public void __test_Test1(TestReportBuilder report) {");
     gold.append("\n    report.begin(\"Test1\");");
     gold.append("\n    {");
@@ -1041,6 +1043,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  public void __test_pumping(TestReportBuilder report) {");
     gold.append("\n    report.begin(\"pumping\");");
     gold.append("\n    {");
@@ -1484,6 +1488,8 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  public void __test_drive_it(TestReportBuilder report) {");
     gold.append("\n    report.begin(\"drive_it\");");
     gold.append("\n    {");

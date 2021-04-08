@@ -16,7 +16,7 @@ import org.junit.Test;
 public class ServerRunnableTests {
   public static ServerNexus nexus(final CliServerOptions options) throws Exception {
     final var db = new GameSpaceDB(new File("./test_code"), new File("./test_data"), CompilerOptions.start().make(), TimeSource.REAL_TIME);
-    return new ServerNexus(options, db, new MockJsonHandler(), new MockAuthenticator(), new MockStaticSite());
+    return new ServerNexus(options, db, new MockJsonHandler(), new MockAuthenticator(), new MockStaticSite(), null);
   }
 
   @Test

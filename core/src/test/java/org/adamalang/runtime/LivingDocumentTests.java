@@ -11,6 +11,7 @@ import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
@@ -339,7 +340,7 @@ public class LivingDocumentTests {
   @Test
   public void send_must_be_connected() throws Exception {
     final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; } message M {} channel<M> foo;");
-    setup.document.send(NtClient.NO_ONE, "foo", "{}", new RealDocumentSetup.AssertFailure());
+    setup.document.send(NtClient.NO_ONE, "foo", "{}", new RealDocumentSetup.AssertFailure(2060));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, "foo", "{}", new RealDocumentSetup.AssertInt(5));
     setup.assertCompare();
@@ -489,8 +490,8 @@ public class LivingDocumentTests {
   public void transact_add_client_cant_connect_again_but_only_after_disconnect() throws Exception {
     final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
     setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
-    setup.document.connect(A, new RealDocumentSetup.AssertFailure());
-    setup.document.disconnect(A, new RealDocumentSetup.AssertFailure());
+    setup.document.connect(A, new RealDocumentSetup.AssertFailure(2010));
+    setup.document.disconnect(A, new RealDocumentSetup.AssertFailure(1011));
     setup.document.connect(A, new RealDocumentSetup.AssertInt(7));
     setup.assertCompare();
   }
@@ -498,14 +499,64 @@ public class LivingDocumentTests {
   @Test
   public void transact_add_client_not_allowed() throws Exception {
     final var setup = new RealDocumentSetup("@construct {}");
-    setup.document.connect(A, new RealDocumentSetup.AssertFailure());
+    setup.document.connect(A, new RealDocumentSetup.AssertFailure(2070));
     setup.assertCompare();
+  }
+
+  private static final NtAsset EXAMPLE = new NtAsset(42, "file.png", "image/png", 1024, "some hash", "a better hash");
+
+  @Test
+  public void attach_requires_connection() throws Exception {
+    final var setup = new RealDocumentSetup("@construct {}");
+    setup.document.attach(NtClient.NO_ONE, EXAMPLE, new RealDocumentSetup.AssertFailure(2061));
+  }
+
+  @Test
+  public void attach_default() throws Exception {
+    final var setup = new RealDocumentSetup(" public int x = 0; public asset f; @connected(who) { x++; return true; } @construct {} @attached (who, a) { x++; f = a; }");
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
+    final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
+    setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new RealDocumentSetup.GotView());
+    Assert.assertEquals(1, deNO_ONE.datum.size());
+    Assert.assertEquals("{\"data\":{\"x\":1,\"f\":{\"id\":\"0\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"},\"outstanding\":[],\"blockers\":[],\"seq\":4}", deNO_ONE.datum.get(0).toString());
+    setup.document.attach(NtClient.NO_ONE, EXAMPLE, new RealDocumentSetup.AssertInt(6));
+    Assert.assertEquals(2, deNO_ONE.datum.size());
+    Assert.assertEquals("{\"data\":{\"x\":2,\"f\":{\"id\":\"42\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"},\"outstanding\":[],\"blockers\":[],\"seq\":6}", deNO_ONE.datum.get(1).toString());
+    setup.assertCompare();
+  }
+
+  @Test
+  public void attach_no_asset() throws Exception {
+    final var setup = new RealDocumentSetup("@construct {}");
+    final var writer = setup.document.forge("attach", A);
+    writer.endObject();
+    try {
+      setup.document.document.__transact(writer.toString());
+      Assert.fail();
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(2084, drre.code);
+    }
+  }
+
+  @Test
+  public void invalid_arg() throws Exception {
+    final var setup = new RealDocumentSetup("@construct {}");
+    final var writer = setup.document.forge("nope", A);
+    writer.writeObjectFieldIntro("nOPP");
+    writer.writeInteger(112);
+    writer.endObject();
+    try {
+      setup.document.document.__transact(writer.toString());
+      Assert.fail();
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(2001, drre.code);
+    }
   }
 
   @Test
   public void transact_disconnect_without_connection() throws Exception {
     final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
-    setup.document.disconnect(A, new RealDocumentSetup.AssertFailure());
+    setup.document.disconnect(A, new RealDocumentSetup.AssertFailure(2030));
     setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
     setup.document.disconnect(A, new RealDocumentSetup.AssertInt(5));
     setup.document.connect(A, new RealDocumentSetup.AssertInt(7));
@@ -551,7 +602,7 @@ public class LivingDocumentTests {
     }
     {
       final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }", prior);
-      setup.document.connect(A, new RealDocumentSetup.AssertFailure());
+      setup.document.connect(A, new RealDocumentSetup.AssertFailure(2010));
       setup.document.connect(B, new RealDocumentSetup.AssertInt(5));
     }
   }
@@ -647,7 +698,7 @@ public class LivingDocumentTests {
     Assert.assertEquals(123, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     Assert.assertEquals(124, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
-    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertFailure());
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertFailure(2010));
     Assert.assertEquals(124, ((int) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
     setup.assertCompare();
     Assert.assertEquals(0, setup.document.getCodeCost());

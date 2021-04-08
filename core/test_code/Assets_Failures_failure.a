@@ -1,0 +1,7 @@
+public int count;
+
+@construct {
+  asset y;
+  y.food();
+  asset x = 123;
+}

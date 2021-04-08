@@ -10,13 +10,12 @@ import java.util.LinkedHashMap;
 import org.adamalang.data.disk.FileSystemDataService;
 import org.adamalang.netty.ErrorCodes;
 import org.adamalang.runtime.DurableLivingDocument;
-import org.adamalang.runtime.contracts.DataCallback;
+import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.stdlib.Utility;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -91,7 +90,7 @@ public class GameSpace {
   }
 
   /** generate and reserve an id to use for create */
-  public synchronized void generate(DataCallback<Long> callback) {
+  public synchronized void generate(Callback<Long> callback) {
     service.create(callback);
   }
 
@@ -109,8 +108,8 @@ public class GameSpace {
   }
 
   /** create a living document with the the given id for the given person with the given argument and entropy */
-  public void create(final long id, final NtClient who, final ObjectNode cons, final String entropy, DataCallback<DurableLivingDocument> callback) throws ErrorCodeException {
-    DurableLivingDocument.fresh(id, factory, who, cons.toString(), entropy, null, time, service, DataCallback.transform(callback, 0, (doc) -> {
+  public void create(final long id, final NtClient who, final ObjectNode cons, final String entropy, Callback<DurableLivingDocument> callback) throws ErrorCodeException {
+    DurableLivingDocument.fresh(id, factory, who, cons.toString(), entropy, null, time, service, Callback.transform(callback, 0, (doc) -> {
       if (put(id, doc)) {
         return doc;
       } else {
@@ -120,7 +119,7 @@ public class GameSpace {
   }
 
   /** get the living document by id if it exists */
-  public void get(final long id, DataCallback<DurableLivingDocument> callback) throws ErrorCodeException {
+  public void get(final long id, Callback<DurableLivingDocument> callback) throws ErrorCodeException {
     {
       DurableLivingDocument doc = get(id);
       if (doc != null) {
@@ -129,7 +128,7 @@ public class GameSpace {
       }
     }
 
-    DurableLivingDocument.load(id, factory, null, time, service, DataCallback.transform(callback, 0, (doc) -> {
+    DurableLivingDocument.load(id, factory, null, time, service, Callback.transform(callback, 0, (doc) -> {
       put(id, doc);
       return doc;
     }));

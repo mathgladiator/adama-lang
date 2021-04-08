@@ -223,6 +223,15 @@ public class RuleSetCommon {
     return false;
   }
 
+  static boolean IsAsset(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativeAsset || tyType instanceof TyReactiveAsset) { return true; }
+      SignalTypeFailure(environment, new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
   private static TyType messageUnion(final Environment environment, final TyNativeMessage aActualMessage, final TyNativeMessage bActualMessage, final boolean silent) {
     if (aActualMessage == bActualMessage || aActualMessage.storage == bActualMessage.storage || aActualMessage.name.equals(bActualMessage.name)) { // they are the same
       return aActualMessage;

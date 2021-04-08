@@ -7,6 +7,7 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.AssignableEmbedType;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
+import org.adamalang.translator.tree.types.checking.properties.CanTestEqualityResult;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeFuture;
@@ -132,6 +133,9 @@ public class RuleSetAssignment {
     final var aDynamic = RuleSetCommon.IsDynamic(environment, typeA, true);
     final var bDynamic = RuleSetCommon.IsDynamic(environment, typeB, true);
     if (aDynamic && bDynamic) { return true; }
+    final var aAsset = RuleSetCommon.IsAsset(environment, typeA, true);
+    final var bAsset = RuleSetCommon.IsAsset(environment, typeB, true);
+    if (aAsset && bAsset) { return true; }
     final var aLabel = RuleSetStateMachine.IsStateMachineRef(environment, typeA, true);
     final var bLabel = RuleSetStateMachine.IsStateMachineRef(environment, typeB, true);
     if (aLabel && bLabel) { return true; }

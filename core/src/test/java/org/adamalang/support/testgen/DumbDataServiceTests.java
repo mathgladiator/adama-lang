@@ -1,6 +1,6 @@
 package org.adamalang.support.testgen;
 
-import org.adamalang.runtime.contracts.DataCallback;
+import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.junit.Assert;
@@ -14,7 +14,7 @@ public class DumbDataServiceTests {
       dds.create(null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
-    dds.get(1, new DataCallback<DataService.LocalDocumentChange>() {
+    dds.get(1, new Callback<DataService.LocalDocumentChange>() {
       @Override
       public void success(DataService.LocalDocumentChange value) {
         Assert.fail();

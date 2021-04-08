@@ -3,6 +3,7 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.json;
 
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,6 +21,14 @@ public class JsonStreamReaderTests {
         } catch (RuntimeException re) {
             Assert.assertEquals("unexpected token: JsonToken{data='null', type=EndObject}", re.getMessage());
         }
+    }
+
+    @Test
+    public void asset() {
+        JsonStreamReader reader = new JsonStreamReader("{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}");
+        NtAsset cmp = new NtAsset(123, "name", "png", 42, "hash", "sheesh");
+        NtAsset tst = reader.readNtAsset();
+        Assert.assertEquals(cmp, tst);
     }
 
     @Test

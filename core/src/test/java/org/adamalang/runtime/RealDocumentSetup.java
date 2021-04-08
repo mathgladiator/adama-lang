@@ -22,7 +22,7 @@ public class RealDocumentSetup {
   public final DurableLivingDocument document;
   private DurableLivingDocument mirror;
 
-  public static class GotView implements DataCallback<PrivateView> {
+  public static class GotView implements Callback<PrivateView> {
 
     public PrivateView view = null;
 
@@ -37,7 +37,7 @@ public class RealDocumentSetup {
     }
   }
 
-  public static class AssertInt implements DataCallback<Integer> {
+  public static class AssertInt implements Callback<Integer> {
     public final int expected;
 
     public AssertInt(int value) {
@@ -56,7 +56,11 @@ public class RealDocumentSetup {
 
   }
 
-  public static class AssertFailure implements DataCallback<Integer> {
+  public static class AssertFailure implements Callback<Integer> {
+    private int codeToExpect;
+    public AssertFailure(int codeToExpect) {
+      this.codeToExpect = codeToExpect;
+    }
     @Override
     public void success(Integer actual) {
       throw new RuntimeException("should have failed");
@@ -64,6 +68,7 @@ public class RealDocumentSetup {
 
     @Override
     public void failure(ErrorCodeException ex) {
+      Assert.assertEquals(codeToExpect, ex.code);
     }
   }
 

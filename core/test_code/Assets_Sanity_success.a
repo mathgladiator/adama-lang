@@ -1,0 +1,11 @@
+public asset latest;
+
+public bool te;
+@construct {
+  asset x;
+  latest = x;
+  latest = @nothing;
+  asset y = x;
+  readonly asset z = y;
+  te = y == z;
+}

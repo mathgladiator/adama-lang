@@ -40,7 +40,7 @@ public class ServiceHandlerTests {
       } catch (final Exception e) {}
       cleanOnShutdown();
     }));
-    return new ServerNexus(options, db, new ServiceHandler(db), new MockAuthenticator(), new MockStaticSite());
+    return new ServerNexus(options, db, new ServiceHandler(db), new MockAuthenticator(), new MockStaticSite(), null);
   }
 
   private static void wipe(final File root) {

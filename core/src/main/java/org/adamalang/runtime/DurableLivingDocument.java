@@ -8,6 +8,7 @@ import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
@@ -42,10 +43,10 @@ public class DurableLivingDocument {
           final DocumentMonitor monitor,
           final TimeSource time,
           final DataService service,
-          final DataCallback<DurableLivingDocument> callback) {
+          final Callback<DurableLivingDocument> callback) {
     try {
       DurableLivingDocument document = new DurableLivingDocument(documentId, factory.create(monitor), time, service);
-      document.construct(who, arg, entropy, DataCallback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_FRESH_TRANSFORM, (seq) -> document));
+      document.construct(who, arg, entropy, Callback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_FRESH_TRANSFORM, (seq) -> document));
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex));
     }
@@ -57,10 +58,10 @@ public class DurableLivingDocument {
           final DocumentMonitor monitor,
           final TimeSource time,
           final DataService service,
-          final DataCallback<DurableLivingDocument> callback) {
+          final Callback<DurableLivingDocument> callback) {
     try {
       LivingDocument doc = factory.create(monitor);
-      service.get(documentId, DataCallback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_PARSE, (data) -> {
+      service.get(documentId, Callback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_PARSE, (data) -> {
           doc.__insert(new JsonStreamReader(data.patch));
           JsonStreamWriter writer = new JsonStreamWriter();
           doc.__dump(writer);
@@ -85,25 +86,25 @@ public class DurableLivingDocument {
     return writer;
   }
 
-  private void ingest(String request, DataCallback<Integer> callback) {
+  private void ingest(String request, Callback<Integer> callback) {
     try {
       final var update = document.__transact(request);
       if (update.requiresFutureInvalidation && update.whenToInvalidateMilliseconds == 0) {
-        service.patch(documentId, update, DataCallback.handoff(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_INGEST_PARTIAL, () -> {
+        service.patch(documentId, update, Callback.handoff(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_INGEST_PARTIAL, () -> {
           invalidate(callback);
         }));
       } else {
         if (update.requiresFutureInvalidation) {
           this.requiresInvalidateMilliseconds = update.whenToInvalidateMilliseconds;
         }
-        service.patch(documentId, update, DataCallback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_INGEST_DONE, (v) -> update.seq));
+        service.patch(documentId, update, Callback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_INGEST_DONE, (v) -> update.seq));
       }
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_INGEST_DRIVE, ex));
     }
   }
 
-  private void construct(final NtClient who, final String arg, final String entropy, DataCallback<Integer> callback) {
+  private void construct(final NtClient who, final String arg, final String entropy, Callback<Integer> callback) {
     try {
       final var writer = forge("construct", who);
       writer.writeObjectFieldIntro("arg");
@@ -114,7 +115,7 @@ public class DurableLivingDocument {
       }
       writer.endObject();
       final var update = document.__transact(writer.toString());
-      service.initialize(documentId, update, DataCallback.handoff(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DONE, () -> {
+      service.initialize(documentId, update, Callback.handoff(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DONE, () -> {
         invalidate(callback);
       }));
     } catch (Throwable ex) {
@@ -122,7 +123,7 @@ public class DurableLivingDocument {
     }
   }
 
-  public void invalidate(DataCallback<Integer> callback) {
+  public void invalidate(Callback<Integer> callback) {
     final var request = forge("invalidate", null);
     request.endObject();
     ingest(request.toString(), callback);
@@ -132,13 +133,13 @@ public class DurableLivingDocument {
     return document.__getCodeCost();
   }
 
-  public void bill(DataCallback<Integer> callback) {
+  public void bill(Callback<Integer> callback) {
     final var request = forge("bill", null);
     request.endObject();
     ingest(request.toString(), callback);
   }
 
-  public void connect(final NtClient who, DataCallback<Integer> callback) {
+  public void connect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("connect", who);
     request.endObject();
     ingest(request.toString(), callback);
@@ -148,27 +149,35 @@ public class DurableLivingDocument {
     return document.__isConnected(who);
   }
 
-  public void createPrivateView(final NtClient who, final Perspective perspective, DataCallback<PrivateView> callback) {
+  public void createPrivateView(final NtClient who, final Perspective perspective, Callback<PrivateView> callback) {
     PrivateView result = document.__createView(who, perspective);
-    invalidate(DataCallback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
+    invalidate(Callback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
   }
 
   public int garbageCollectPrivateViewsFor(final NtClient who) {
     return document.__garbageCollectViews(who);
   }
 
-  public void disconnect(final NtClient who, DataCallback<Integer> callback) {
+  public void disconnect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("disconnect", who);
     request.endObject();
     ingest(request.toString(), callback);
   }
 
-  public void send(final NtClient who, final String channel, final String message, DataCallback<Integer> callback) {
+  public void send(final NtClient who, final String channel, final String message, Callback<Integer> callback) {
     final var writer = forge("send", who);
     writer.writeObjectFieldIntro("channel");
     writer.writeFastString(channel);
     writer.writeObjectFieldIntro("message");
     writer.injectJson(message);
+    writer.endObject();
+    ingest(writer.toString(), callback);
+  }
+
+  public void attach(NtClient who, NtAsset asset, Callback<Integer> callback) {
+    final var writer = forge("attach", who);
+    writer.writeObjectFieldIntro("asset");
+    writer.writeNtAsset(asset);
     writer.endObject();
     ingest(writer.toString(), callback);
   }

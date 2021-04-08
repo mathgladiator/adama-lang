@@ -491,6 +491,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
     gold.append("\n  @Override");
+    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
+    gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
     gold.append("\n    return new String[] {};");
     gold.append("\n  }");
@@ -876,6 +878,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  public void __test_PrimaryTest(TestReportBuilder report) {");
     gold.append("\n    report.begin(\"PrimaryTest\");");
     gold.append("\n    {");
@@ -1280,6 +1284,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  public void __test_Addition(TestReportBuilder report) {");
     gold.append("\n    report.begin(\"Addition\");");
     gold.append("\n    {");
@@ -1777,6 +1783,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  public void __test_PrimaryTest(TestReportBuilder report) {");
     gold.append("\n    report.begin(\"PrimaryTest\");");
     gold.append("\n    {");

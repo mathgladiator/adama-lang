@@ -276,6 +276,8 @@ public class GeneratedStdLibTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  public void __test_PrimaryTest(TestReportBuilder report) {");
     gold.append("\n    report.begin(\"PrimaryTest\");");
     gold.append("\n    {");

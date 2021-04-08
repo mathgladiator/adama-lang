@@ -4,7 +4,7 @@
 package org.adamalang.data.disk;
 
 import org.adamalang.data.ErrorCodes;
-import org.adamalang.runtime.contracts.DataCallback;
+import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
@@ -19,7 +19,6 @@ import java.util.Random;
 
 /** a very simple implementation of the data service */
 public class FileSystemDataService implements DataService {
-
   public final File root;
   private final Random rng;
 
@@ -62,7 +61,7 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public synchronized void create(DataCallback<Long> callback) {
+  public synchronized void create(Callback<Long> callback) {
     try {
       for (int attempt = 0; attempt < 10; attempt++) {
         long documentId = Math.abs(rng.nextLong() + System.nanoTime());
@@ -79,7 +78,7 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public synchronized void get(long documentId, DataCallback<LocalDocumentChange> callback) {
+  public synchronized void get(long documentId, Callback<LocalDocumentChange> callback) {
     try {
       File file = new File(root, documentId + ".jsonlog");
       if (file.exists()) {
@@ -104,7 +103,7 @@ public class FileSystemDataService implements DataService {
     }
   }
 
-  private void append(File file, RemoteDocumentUpdate patch, DataCallback<Void> callback) throws Exception {
+  private void append(File file, RemoteDocumentUpdate patch, Callback<Void> callback) throws Exception {
     PrintWriter writer = new PrintWriter(new FileOutputStream(file, true), false, StandardCharsets.UTF_8);
     writer.println(patch.request);
     writer.println(patch.redo);
@@ -125,7 +124,7 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public void initialize(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback) {
+  public void initialize(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
     try {
       File file = new File(root, documentId + ".jsonlog");
       if (file.length() == 0) {
@@ -139,7 +138,7 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public synchronized void patch(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback) {
+  public synchronized void patch(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
     try {
       File file = new File(root, documentId + ".jsonlog");
       append(file, patch, callback);
@@ -149,22 +148,22 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public long fork(long oldDocumentId, long newDocumentId, long seqEnd, DataCallback<LocalDocumentChange> callback) {
+  public long fork(long oldDocumentId, long newDocumentId, long seqEnd, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void rewind(long documentId, long seqEnd, DataCallback<LocalDocumentChange> callback) {
+  public void rewind(long documentId, long seqEnd, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void unsend(long documentId, long seqBegin, long seqEnd, DataCallback<LocalDocumentChange> callback) {
+  public void unsend(long documentId, long seqBegin, long seqEnd, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void delete(long documentId, DataCallback<Long> callback) {
+  public void delete(long documentId, Callback<Long> callback) {
     throw new UnsupportedOperationException();
   }
 }

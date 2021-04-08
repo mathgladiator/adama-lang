@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
+
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
 
@@ -113,6 +115,23 @@ public class JsonStreamWriter {
   public void writeLong(final long x) {
     maybe_comma();
     sb.append("\"").append(x).append("\"");
+  }
+
+  public void writeNtAsset(final NtAsset a) {
+    beginObject();
+    writeObjectFieldIntro("id");
+    writeLong(a.id);
+    writeObjectFieldIntro("size");
+    writeLong(a.size);
+    writeObjectFieldIntro("name");
+    writeString(a.name);
+    writeObjectFieldIntro("type");
+    writeString(a.contentType);
+    writeObjectFieldIntro("md5");
+    writeString(a.md5);
+    writeObjectFieldIntro("sha384");
+    writeString(a.sha384);
+    endObject();
   }
 
   public void writeNtClient(final NtClient c) {

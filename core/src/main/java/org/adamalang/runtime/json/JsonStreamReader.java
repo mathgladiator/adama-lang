@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 
 import org.adamalang.runtime.json.token.JsonToken;
 import org.adamalang.runtime.json.token.JsonTokenType;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.translator.parser.token.Token;
@@ -107,6 +108,40 @@ public class JsonStreamReader {
       }
     }
     return new NtClient(agent, authority);
+  }
+
+  public NtAsset readNtAsset() {
+    long id = 0;
+    String name = "";
+    long size = 0;
+    String contentType = "";
+    String md5 = "";
+    String sha384 = "";
+    if (startObject()) {
+      while (notEndOfObject()) {
+        switch (fieldName()) {
+          case "id":
+            id = readLong();
+            break;
+          case "size":
+            size = readLong();
+            break;
+          case "name":
+            name = readString();
+            break;
+          case "type":
+            contentType = readString();
+            break;
+          case "md5":
+            md5 = readString();
+            break;
+          case "sha384":
+            sha384 = readString();
+            break;
+        }
+      }
+    }
+    return new NtAsset(id, name, contentType, size, md5, sha384);
   }
 
   public String readString() {

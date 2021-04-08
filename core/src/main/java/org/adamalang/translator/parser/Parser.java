@@ -131,6 +131,8 @@ public class Parser {
           return new BooleanConstant(token, false);
         case "@no_one":
           return new NoOneClientConstant(token);
+        case "@nothing":
+          return new NothingAssetConstant(token);
         case "@null":
           return new DynamicNullConstant(token);
         case "@stable":
@@ -376,7 +378,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch"));
     }
@@ -403,9 +405,11 @@ public class Parser {
         case "@construct":
           return define_constructor_trailer(op);
         case "@connected":
-          return define_connection_event_trailer(op, DocumentEvent.ClientConnected);
+          return define_document_event(op, DocumentEvent.ClientConnected);
         case "@disconnected":
-          return define_connection_event_trailer(op, DocumentEvent.ClientDisconnected);
+          return define_document_event(op, DocumentEvent.ClientDisconnected);
+        case "@attached":
+          return define_document_event(op, DocumentEvent.AssetAttachment);
         case "import": {
           final var importName = tokens.pop();
           if (importName == null) {
@@ -451,11 +455,13 @@ public class Parser {
     return new BubbleDefinition(bubbleToken, openClient, clientVar, comma, viewerStateName, closeClient, nameToken, equalsToken, expression, semicolonToken);
   }
 
-  public Consumer<TopLevelDocumentHandler> define_connection_event_trailer(final Token eventToken, final DocumentEvent which) throws AdamaLangException {
+  public Consumer<TopLevelDocumentHandler> define_document_event(final Token eventToken, final DocumentEvent which) throws AdamaLangException {
     final var openParen = consumeExpectedSymbol("(");
     final var name = id();
+    final var commaToken = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
+    final var parameterNameToken = commaToken != null ? id() : null;
     final var closeParen = consumeExpectedSymbol(")");
-    final var dce = new DefineDocumentEvent(eventToken, which, openParen, name, closeParen, block());
+    final var dce = new DefineDocumentEvent(eventToken, which, openParen, name, commaToken, parameterNameToken, closeParen, block());
     return doc -> doc.add(dce);
   }
 
@@ -1004,6 +1010,8 @@ public class Parser {
         return new TyNativeBoolean(behavior, readonlyToken, token);
       case "client":
         return new TyNativeClient(behavior, readonlyToken, token);
+      case "asset":
+        return new TyNativeAsset(behavior, readonlyToken, token);
       case "dynamic":
         return new TyNativeDynamic(behavior, readonlyToken, token);
       case "double":
@@ -1147,6 +1155,8 @@ public class Parser {
         return new TyReactiveBoolean(token);
       case "client":
         return new TyReactiveClient(token);
+      case "asset":
+        return new TyReactiveAsset(token);
       case "dynamic":
         return new TyReactiveDynamic(token);
       case "double":

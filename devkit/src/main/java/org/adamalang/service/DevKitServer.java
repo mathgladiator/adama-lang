@@ -6,8 +6,6 @@ package org.adamalang.service;
 import java.io.File;
 import java.security.AccessControlException;
 import java.util.HashMap;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.adamalang.netty.ServiceHandler;
 import org.adamalang.netty.api.AdamaSession;
@@ -21,12 +19,13 @@ import org.adamalang.netty.server.CliServerOptions;
 import org.adamalang.netty.server.ServerNexus;
 import org.adamalang.netty.server.ServerRunnable;
 import org.adamalang.netty.server.UncachedDiskStaticSite;
-import org.adamalang.runtime.DurableLivingDocument;
-import org.adamalang.runtime.contracts.DataCallback;
+import org.adamalang.runtime.contracts.AssetRequest;
+import org.adamalang.runtime.contracts.AssetService;
+import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.stdlib.Utility;
 import org.adamalang.translator.env.CompilerOptions;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -83,6 +82,25 @@ public class DevKitServer {
       }
     };
     final var serviceHandler = new ServiceHandler(db);
+
+    final var assetService = new AssetService() {
+      @Override
+      public void upload(AssetRequest request, Callback<NtAsset> callback) {
+        System.err.println("upload");
+        System.err.println("-------------------------------");
+        System.err.println("  where  space:" + request.space());
+        System.err.println("           doc:" + request.documentId());
+        System.err.println("  what    name:" + request.name());
+        System.err.println("          type:" + request.type());
+        System.err.println("          size:" + request.size());
+        System.err.println("-------------------------------");
+        long id = 0;
+        NtAsset asset = new NtAsset(id, request.name(), request.type(), request.size(), request.md5(), request.sha384());
+        callback.failure(new ErrorCodeException(-1));
+        //callback.success(asset);
+      }
+    };
+
     final var handler = new JsonHandler() {
       @Override
       public void handle(final AdamaSession session, final ObjectNode request, final JsonResponder responder) throws ErrorCodeException {
@@ -114,6 +132,6 @@ public class DevKitServer {
       }
     };
     final var site = new UncachedDiskStaticSite(new File(html));
-    return new ServerNexus(serverOptions, db, handler, authenticator, site);
+    return new ServerNexus(serverOptions, db, handler, authenticator, site, assetService);
   }
 }

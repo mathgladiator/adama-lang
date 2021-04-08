@@ -47,27 +47,27 @@ public interface DataService {
   }
 
   /** create a new empty document */
-  public void create(DataCallback<Long> callback);
+  public void create(Callback<Long> callback);
 
   /** Download the entire object and return the entire json */
-  void get(long documentId, DataCallback<LocalDocumentChange> callback);
+  void get(long documentId, Callback<LocalDocumentChange> callback);
 
   /** write the first entry for the document */
-  public void initialize(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback);
+  public void initialize(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback);
 
   /** Apply a patch to the document using rfc7396 */
-  public void patch(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback);
+  public void patch(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback);
 
   /** Create a copy of the document from the beginning of time up to indicated sequencer */
-  long fork(long oldDocumentId, long newDocumentId, long seqEnd, DataCallback<LocalDocumentChange> callback);
+  long fork(long oldDocumentId, long newDocumentId, long seqEnd, Callback<LocalDocumentChange> callback);
 
   /** Rewind the state of the document to the indicated sequencer */
-  void rewind(long documentId, long seqEnd, DataCallback<LocalDocumentChange> callback);
+  void rewind(long documentId, long seqEnd, Callback<LocalDocumentChange> callback);
 
   /** Unsend the message(s) inclusively between the indicated sequencers */
-  void unsend(long documentId, long seqBegin, long seqEnd, DataCallback<LocalDocumentChange> callback);
+  void unsend(long documentId, long seqBegin, long seqEnd, Callback<LocalDocumentChange> callback);
 
   /** Delete the document given by the ID */
-  void delete(long documentId, DataCallback<Long> callback);
+  void delete(long documentId, Callback<Long> callback);
 
 }

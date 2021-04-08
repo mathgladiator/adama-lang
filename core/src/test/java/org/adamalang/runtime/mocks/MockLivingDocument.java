@@ -12,6 +12,7 @@ import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
@@ -66,6 +67,10 @@ public class MockLivingDocument extends LivingDocument {
   public boolean __onConnected(final NtClient clientValue) {
     connects.add(clientValue);
     return true;
+  }
+
+  @Override
+  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {
   }
 
   @Override

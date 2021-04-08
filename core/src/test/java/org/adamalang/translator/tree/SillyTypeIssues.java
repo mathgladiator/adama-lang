@@ -213,4 +213,13 @@ public class SillyTypeIssues {
     TyNativeDynamic ndyn = new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("dynamic"));
     ndyn.getAdamaType();
   }
+
+  @Test
+  public void asset() {
+    TyNativeAsset na = new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("asset"));
+    TyReactiveAsset ra = new TyReactiveAsset(Token.WRAP("asset"));
+    ra.makeCopyWithNewPosition(ra, TypeBehavior.ReadOnlyNativeValue);
+    ra.getAdamaType();
+    na.getAdamaType();
+  }
 }

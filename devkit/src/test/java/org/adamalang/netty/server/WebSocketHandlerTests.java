@@ -222,7 +222,7 @@ public class WebSocketHandlerTests {
       public void close() {
       }
     };
-    final var delay = new ServerNexus(options, db, new MockJsonHandler(), slowAuthenticate, new MockStaticSite());
+    final var delay = new ServerNexus(options, db, new MockJsonHandler(), slowAuthenticate, new MockStaticSite(), null);
     final var runnable = new ServerRunnable(delay);
     final var thread = new Thread(runnable);
     thread.start();
@@ -282,7 +282,7 @@ public class WebSocketHandlerTests {
       public void close() {
       }
     };
-    final var delay = new ServerNexus(options, db, new MockJsonHandler(), slowAuthenticate, new MockStaticSite());
+    final var delay = new ServerNexus(options, db, new MockJsonHandler(), slowAuthenticate, new MockStaticSite(), null);
     final var runnable = new ServerRunnable(delay);
     final var thread = new Thread(runnable);
     thread.start();

@@ -27,6 +27,9 @@ public class RuleSetEquality {
       final var aDynamic = RuleSetCommon.IsDynamic(environment, typeA, true);
       final var bDynamic = RuleSetCommon.IsDynamic(environment, typeB, true);
       if (aDynamic && bDynamic) { return CanTestEqualityResult.Yes; }
+      final var aAsset = RuleSetCommon.IsAsset(environment, typeA, true);
+      final var bAsset = RuleSetCommon.IsAsset(environment, typeB, true);
+      if (aAsset && bAsset) { return CanTestEqualityResult.Yes; }
       final var aString = RuleSetCommon.IsString(environment, typeA, true);
       final var bString = RuleSetCommon.IsString(environment, typeB, true);
       if (aString && bString) { return CanTestEqualityResult.Yes; }

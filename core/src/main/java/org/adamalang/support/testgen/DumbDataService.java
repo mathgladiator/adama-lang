@@ -1,7 +1,7 @@
 package org.adamalang.support.testgen;
 
 import org.adamalang.runtime.DurableLivingDocument;
-import org.adamalang.runtime.contracts.DataCallback;
+import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
@@ -26,12 +26,12 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void create(DataCallback<Long> callback) {
+  public void create(Callback<Long> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void get(long documentId, DataCallback<LocalDocumentChange> callback) {
+  public void get(long documentId, Callback<LocalDocumentChange> callback) {
     if (data != null) {
       callback.success(new LocalDocumentChange(data, 0));
     } else {
@@ -39,7 +39,7 @@ public class DumbDataService implements DataService {
     }
   }
 
-  public static final DataCallback<PrivateView> NOOPPrivateView = new DataCallback<PrivateView>() {
+  public static final Callback<PrivateView> NOOPPrivateView = new Callback<PrivateView>() {
 
     @Override
     public void success(PrivateView value) {
@@ -52,7 +52,7 @@ public class DumbDataService implements DataService {
   };
 
 
-  public static final DataCallback<Integer> NOOPINT = new DataCallback<Integer>() {
+  public static final Callback<Integer> NOOPINT = new Callback<Integer>() {
 
     @Override
     public void success(Integer value) {
@@ -65,7 +65,7 @@ public class DumbDataService implements DataService {
     }
   };
 
-  public static class DumbDurableLivingDocumentAcquire implements DataCallback<DurableLivingDocument> {
+  public static class DumbDurableLivingDocumentAcquire implements Callback<DurableLivingDocument> {
     private DurableLivingDocument value;
 
     public DumbDurableLivingDocumentAcquire() {
@@ -91,12 +91,12 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void initialize(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback) {
+  public void initialize(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
     patch(documentId, patch, callback);
   }
 
   @Override
-  public void patch(long documentId, RemoteDocumentUpdate patch, DataCallback<Void> callback) {
+  public void patch(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
     updates.accept(patch);
     JsonStreamReader reader = new JsonStreamReader(patch.redo);
     tree = JsonAlgebra.merge(tree, reader.readJavaTree());
@@ -104,22 +104,22 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public long fork(long oldDocumentId, long newDocumentId, long seqEnd, DataCallback<LocalDocumentChange> callback) {
+  public long fork(long oldDocumentId, long newDocumentId, long seqEnd, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void rewind(long documentId, long seqEnd, DataCallback<LocalDocumentChange> callback) {
+  public void rewind(long documentId, long seqEnd, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void unsend(long documentId, long seqBegin, long seqEnd, DataCallback<LocalDocumentChange> callback) {
+  public void unsend(long documentId, long seqBegin, long seqEnd, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void delete(long documentId, DataCallback<Long> callback) {
+  public void delete(long documentId, Callback<Long> callback) {
     throw new UnsupportedOperationException();
   }
 }

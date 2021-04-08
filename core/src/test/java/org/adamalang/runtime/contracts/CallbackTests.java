@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class DataCallbackTests {
+public class CallbackTests {
 
-  public class MockCallback<T> implements DataCallback<T> {
+  public class MockCallback<T> implements Callback<T> {
     public T result = null;
     public ErrorCodeException exception;
 
@@ -45,7 +45,7 @@ public class DataCallbackTests {
   public void bind_happy() throws Exception {
     MockCallback<Integer> callback = new MockCallback<Integer>();
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    DataCallback<Integer> bound = DataCallback.bind(executor, 40, callback);
+    Callback<Integer> bound = Callback.bind(executor, 40, callback);
     bound.success(42);
     waitFor(executor);
     Assert.assertEquals(42, (int) callback.result);
@@ -55,7 +55,7 @@ public class DataCallbackTests {
   public void bind_throws() throws Exception {
     MockCallback<Integer> callback = new MockCallback<Integer>();
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    DataCallback<Integer> bound = DataCallback.bind(executor, 40, callback);
+    Callback<Integer> bound = Callback.bind(executor, 40, callback);
     bound.failure(new ErrorCodeException(42));
     waitFor(executor);
     Assert.assertTrue(callback.exception instanceof ErrorCodeException);
@@ -66,7 +66,7 @@ public class DataCallbackTests {
   public void bind_crash() throws Exception {
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     AtomicReference<ErrorCodeException> error = new AtomicReference<>();
-    DataCallback<Integer> bound = DataCallback.bind(executor, 40, new DataCallback<Integer>() {
+    Callback<Integer> bound = Callback.bind(executor, 40, new Callback<Integer>() {
       @Override
       public void success(Integer value) {
         throw new RuntimeException("nope");
@@ -88,7 +88,7 @@ public class DataCallbackTests {
     MockCallback<Integer> callback = new MockCallback<Integer>();
     callback.success(50);
     Assert.assertEquals(50, (int) callback.result);
-    DataCallback<Integer> t = DataCallback.transform(callback, 5, (x) -> x * x);
+    Callback<Integer> t = Callback.transform(callback, 5, (x) -> x * x);
     t.success(10);
     Assert.assertEquals(100, (int) callback.result);
     t.failure(new ErrorCodeException(15, new Exception()));
@@ -99,7 +99,7 @@ public class DataCallbackTests {
     MockCallback<Integer> callback = new MockCallback<Integer>();
     callback.success(50);
     Assert.assertEquals(50, (int) callback.result);
-    DataCallback<Integer> t = DataCallback.transform(callback, 5, (x) -> {
+    Callback<Integer> t = Callback.transform(callback, 5, (x) -> {
       throw new NullPointerException();
     });
     t.success(10);
@@ -112,7 +112,7 @@ public class DataCallbackTests {
     callback.success(50);
     Assert.assertEquals(50, (int) callback.result);
     AtomicInteger i = new AtomicInteger(0);
-    DataCallback<Void> t = DataCallback.handoff(callback, 5, () -> {
+    Callback<Void> t = Callback.handoff(callback, 5, () -> {
       i.set(42);
     });
     t.failure(new ErrorCodeException(15, new RuntimeException()));
@@ -127,7 +127,7 @@ public class DataCallbackTests {
     callback.success(50);
     Assert.assertEquals(50, (int) callback.result);
     AtomicInteger i = new AtomicInteger(0);
-    DataCallback<Void> t = DataCallback.handoff(callback, 5, () -> {
+    Callback<Void> t = Callback.handoff(callback, 5, () -> {
       throw new NullPointerException();
     });
     t.success(null);

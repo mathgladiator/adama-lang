@@ -3,6 +3,7 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.json;
 
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.junit.Assert;
@@ -22,6 +23,13 @@ public class JsonStreamWriterTests {
         } catch (RuntimeException re) {
             Assert.assertTrue(re.getMessage().startsWith("unexpected object:"));
         }
+    }
+
+    @Test
+    public void asset() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeNtAsset(new NtAsset(123, "name", "png", 42, "hash", "sheesh"));
+        Assert.assertEquals("{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}", writer.toString());
     }
 
     @Test

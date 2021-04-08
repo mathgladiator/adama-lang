@@ -8,6 +8,6 @@ import org.junit.Test;
 public class ServerNexusTests {
   @Test
   public void coverage() {
-    new ServerNexus(null, null, null, null, null);
+    new ServerNexus(null, null, null, null, null, null);
   }
 }

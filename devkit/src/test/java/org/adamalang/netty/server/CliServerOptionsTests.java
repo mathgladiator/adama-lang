@@ -54,7 +54,7 @@ public class CliServerOptionsTests {
     final var options = new CliServerOptions(new String[] {});
     Assert.assertEquals(8080, options.port());
     Assert.assertEquals(65536, options.maxWebSocketFrameSize());
-    Assert.assertEquals(65536, options.maxContentLengthSize());
+    Assert.assertEquals(4194304, options.maxContentLengthSize());
     Assert.assertEquals(2500, options.timeoutWebsocketHandshake());
     Assert.assertEquals("/~socket", options.websocketPath());
     Assert.assertEquals("/~health_check_lb", options.healthCheckPath());

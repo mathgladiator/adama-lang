@@ -1,0 +1,13 @@
+public asset latest;
+
+public formula my_file = latest;
+
+public formula my_name = latest.name();
+public formula my_id = latest.id();
+public formula my_size = latest.size();
+public formula my_type = latest.type();
+public formula my_valid = latest.valid();
+
+@attached (who, file) {
+  latest = file;
+}

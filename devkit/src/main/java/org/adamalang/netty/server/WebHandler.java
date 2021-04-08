@@ -3,19 +3,30 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.netty.server;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.netty.handler.codec.http.multipart.*;
 import org.adamalang.netty.ErrorCodes;
 import org.adamalang.netty.api.AdamaSession;
+import org.adamalang.netty.api.GameSpace;
 import org.adamalang.netty.client.AdamaCookieCodec;
 import org.adamalang.netty.contracts.AuthCallback;
 import org.adamalang.netty.contracts.JsonResponder;
 import org.adamalang.netty.contracts.StaticSite;
+import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.contracts.AssetRequest;
+import org.adamalang.runtime.contracts.AssetService;
+import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.runtime.stdlib.Utility;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -29,10 +40,13 @@ import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.QueryStringDecoder;
+import org.adamalang.runtime.natives.NtAsset;
+import org.adamalang.runtime.natives.NtClient;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   public static final JsonMapper MAPPER = new JsonMapper();
+  private static final HttpDataFactory factory = new DefaultHttpDataFactory(true);
 
   @Deprecated
   public static ObjectNode parseJsonObject(final String json) {
@@ -75,6 +89,28 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     this.nexus = nexus;
   }
 
+  /*
+  public static class AssetUpload implements AssetService.AssetRequest {
+    public
+  }
+  */
+
+  private static String getSpace(QueryStringDecoder qsd) {
+    List<String> values = qsd.parameters().get("space");
+    if (values == null || values.size() != 1) {
+      throw new RuntimeException("no space parameter");
+    }
+    return values.get(0);
+  }
+
+  private static long getDocumentId(QueryStringDecoder qsd) {
+    List<String> values = qsd.parameters().get("id");
+    if (values == null || values.size() != 1) {
+      throw new RuntimeException("no id parameter");
+    }
+    return Long.parseLong(values.get(0));
+  }
+
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
     var generatedFailureStatusCode = HttpResponseStatus.BAD_REQUEST;
@@ -87,6 +123,122 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
           return;
         }
         if (req.method() == HttpMethod.POST) {
+          if (qsd.path().equals("/upload")) {
+            String space = getSpace(qsd);
+            GameSpace gs = nexus.db.getOrCreate(space);
+            long docId = getDocumentId(qsd);
+            gs.get(docId, new Callback<DurableLivingDocument>() {
+              @Override
+              public void success(DurableLivingDocument document) {
+                try {
+                  HttpPostRequestDecoder httpDecoder = new HttpPostRequestDecoder(factory, req);
+                  httpDecoder.setDiscardThreshold(0);
+                  for (InterfaceHttpData data : httpDecoder.getBodyHttpDatas()) {
+                    if (data.getHttpDataType() == InterfaceHttpData.HttpDataType.FileUpload) {
+                      FileUpload result = (FileUpload) data;
+                      MessageDigest digest1 = MessageDigest.getInstance("SHA-384");
+                      MessageDigest digest2 = MessageDigest.getInstance("MD5");
+                      InputStream in = new FileInputStream(result.getFile());
+                      try {
+                        byte[] buffer = new byte[256 * 256];
+                        int rd;
+                        while ((rd = in.read(buffer)) > 0) {
+                          digest1.update(buffer, 0, rd);
+                          digest2.update(buffer, 0, rd);
+                        }
+                        byte[] hash1 = digest1.digest();
+                        byte[] hash2 = digest1.digest();
+                      } finally {
+                        in.close();
+                      }
+                      AssetRequest request = new AssetRequest() {
+                        @Override
+                        public String name() {
+                          return result.getFilename();
+                        }
+
+                        @Override
+                        public String type() {
+                          return result.getContentType();
+                        }
+
+                        @Override
+                        public long documentId() {
+                          return docId;
+                        }
+
+                        @Override
+                        public String space() {
+                          return space;
+                        }
+
+                        @Override
+                        public long size() {
+                          return result.length();
+                        }
+
+                        @Override
+                        public String md5() {
+                          return null;
+                        }
+
+                        @Override
+                        public String sha384() {
+                          return null;
+                        }
+
+                        @Override
+                        public Supplier<InputStream> source() {
+                          return () -> {
+                            try {
+                              return new FileInputStream(result.getFile());
+                            } catch (IOException ioe) {
+                              throw new RuntimeException(ioe);
+                            }
+                          };
+                        }
+                      };
+                      System.err.println("Got asset request, now I just need a service for it... blah");
+                      nexus.assetService.upload(request, new Callback<NtAsset>() {
+                        @Override
+                        public void success(NtAsset asset) {
+                          document.attach(NtClient.NO_ONE, asset, new Callback<Integer>() {
+                                    @Override
+                                    public void success(Integer value) {
+
+                                    }
+
+                                    @Override
+                                    public void failure(ErrorCodeException ex) {
+
+                                    }
+                                  });
+                          System.err.println("got the asset");
+                        }
+
+                        @Override
+                        public void failure(ErrorCodeException ex) {
+                          System.err.println("failed at this endeavor... this is getting complicated");
+                        }
+                      });
+                    }
+                  }
+                } catch (Exception ex) {
+                  failure(new ErrorCodeException(-1, ex));
+                }
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+
+              }
+            });
+            // TODO: validate both these exist
+
+
+            sendWithKeepAlive(ctx, req, StaticSite.ofHTML(req, "Uploaded Result:" + System.currentTimeMillis()));
+            return;
+          }
           final var request = WebHandler.parseJsonObject(req.content().toString(StandardCharsets.UTF_8));
           final AuthCallback afterAuth = new AuthCallback() {
             @Override

@@ -1,6 +1,6 @@
 package org.adamalang.data.disk;
 
-import org.adamalang.runtime.contracts.DataCallback;
+import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.junit.Assert;
@@ -27,7 +27,7 @@ public class FileSystemDataServiceTests {
     }
   }
 
-  private static class LocalDataCallback<T> implements DataCallback<T> {
+  private static class LocalCallback<T> implements Callback<T> {
     private T value = null;
     private Exception ex;
 
@@ -53,12 +53,12 @@ public class FileSystemDataServiceTests {
   @Test
   public void testFlow() throws Exception {
     d("test_flow", (f) -> {
-      LocalDataCallback<Long> id = new LocalDataCallback<>();
+      LocalCallback<Long> id = new LocalCallback<>();
       f.create(id);
-      LocalDataCallback<DataService.LocalDocumentChange> fetch = new LocalDataCallback<>();
+      LocalCallback<DataService.LocalDocumentChange> fetch = new LocalCallback<>();
       f.get(id.get(), fetch);
       Assert.assertEquals("{}", fetch.get().patch);
-      LocalDataCallback<Void> written = new LocalDataCallback<>();
+      LocalCallback<Void> written = new LocalCallback<>();
       f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, "{}", "{\"x\":123}", "{\"x\":null}", false, 0), written);
       f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, "{}", "{\"x\":42}", "{\"x\":123}", false, 0), written);
       f.get(id.get(), fetch);

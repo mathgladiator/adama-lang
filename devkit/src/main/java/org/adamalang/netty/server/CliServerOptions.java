@@ -16,7 +16,7 @@ public class CliServerOptions implements ServerOptions {
   public CliServerOptions(final String... args) {
     var _port = 8080;
     var _maxWebSocketFrameSize = 65536;
-    var _maxContentLengthSize = 65536;
+    var _maxContentLengthSize = 4194304;
     var _timeoutWebsocketHandshake = 2500;
     var _websocketPath = "/~socket";
     var _healthCheckPath = "/~health_check_lb";
