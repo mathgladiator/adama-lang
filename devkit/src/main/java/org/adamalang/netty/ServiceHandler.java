@@ -16,6 +16,7 @@ import org.adamalang.runtime.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -62,9 +63,12 @@ public class ServiceHandler implements JsonHandler {
     executorDEMO = Executors.newSingleThreadScheduledExecutor();
   }
 
+  private String extractSpaceParameter(final ObjectNode request) throws ErrorCodeException {
+    return str(request, "gamespace", true, ErrorCodes.USERLAND_REQUEST_NO_GAMESPACE_PROPERTY);
+  }
+
   private GameSpace findGamespace(final ObjectNode request) throws ErrorCodeException {
-    final var name = str(request, "gamespace", true, ErrorCodes.USERLAND_REQUEST_NO_GAMESPACE_PROPERTY);
-    return db.getOrCreate(name);
+    return db.getOrCreate(extractSpaceParameter(request));
   }
 
   @Override
@@ -79,7 +83,6 @@ public class ServiceHandler implements JsonHandler {
       }
     });
   }
-
 
   public static NtClient whoFrom(final JsonNode node) {
     if (node == null) { return NtClient.NO_ONE; }
@@ -111,6 +114,38 @@ public class ServiceHandler implements JsonHandler {
       }
       case "reflect": {
         responder.respond("{\"result\":" + findGamespace(request).reflect() + "}", true, null);
+        return;
+      }
+      case "load_code": {
+        String gamespace = extractSpaceParameter(request);
+        try {
+          JsonStreamWriter writer = new JsonStreamWriter();
+          writer.beginObject();
+          writer.writeObjectFieldIntro("result");
+          writer.writeString(db.getCode(gamespace));
+          writer.endObject();
+          responder.respond(writer.toString(), true, null);
+        } catch (Exception ex) {
+          throw new ErrorCodeException(ErrorCodes.DEVKIT_CANTLOAD_SCRIPT, ex);
+        }
+        return;
+      }
+      case "save_code": {
+        String gamespace = extractSpaceParameter(request);
+        String code = str(request, "code", true, ErrorCodes.DEVKIT_REQUEST_HAS_NO_SCRIPT);
+        try {
+          db.saveCode(gamespace, code);
+          responder.respond("{\"result\":true}", true, null);
+        } catch (Exception ex) {
+          throw new ErrorCodeException(ErrorCodes.DEVKIT_CANTSAVE_SCRIPT, ex);
+        }
+        return;
+      }
+      case "deploy": {
+        GameSpace gs = findGamespace(request);
+        gs.deploy();
+        // TODO: return data about compilation... etc
+        responder.respond("{\"result\":true}", true, null);
         return;
       }
       case "create": {

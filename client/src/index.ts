@@ -6,14 +6,6 @@ export function MakeTree(): Tree {
   return new Tree();
 }
 
-/*
-export class TreeStream {
-  cancel() {
-
-  }
-};
-*/
-
 export class Connection {
   // how long between retries
   backoff: number;
@@ -254,6 +246,49 @@ export class Connection {
       });
     });
   }
+
+  async load_code(gs: string) {
+    var request = { method: "load_code", gamespace: gs };
+    var self = this;
+    return new Promise(function (good, bad) {
+      self._send(request, function (response: { [k: string]: any }) {
+        if ('failure' in response) {
+          bad(response.reason)
+        } else {
+          good(response);
+        }
+      });
+    });
+  }
+
+  async save_code(gs: string, code: string) {
+    var request = { method: "save_code", gamespace: gs, code: code};
+    var self = this;
+    return new Promise(function (good, bad) {
+      self._send(request, function (response: { [k: string]: any }) {
+        if ('failure' in response) {
+          bad(response.reason)
+        } else {
+          good(response);
+        }
+      });
+    });
+  }
+
+  async deploy(gs: string) {
+    var request = { method: "deploy", gamespace: gs};
+    var self = this;
+    return new Promise(function (good, bad) {
+      self._send(request, function (response: { [k: string]: any }) {
+        if ('failure' in response) {
+          bad(response.reason)
+        } else {
+          good(response);
+        }
+      });
+    });
+  }
+
 
   /** api: generate a new game */
   async create(gs: string, id: string, arg: object) {

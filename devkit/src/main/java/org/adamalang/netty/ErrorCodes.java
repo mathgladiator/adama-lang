@@ -39,4 +39,8 @@ public class ErrorCodes {
 
   public static final int USERLAND_CANT_COMPILE_ADAMA_SCRIPT = 40200;
 
+  public static final int DEVKIT_CANTLOAD_SCRIPT = 50000;
+  public static final int DEVKIT_CANTSAVE_SCRIPT = 50001;
+  public static final int DEVKIT_REQUEST_HAS_NO_SCRIPT = 50002;
+
 }

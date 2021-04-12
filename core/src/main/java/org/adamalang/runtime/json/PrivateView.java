@@ -8,13 +8,18 @@ import org.adamalang.runtime.natives.NtClient;
 
 public abstract class PrivateView {
   public boolean alive;
-  private final Perspective perspective;
+  public final Perspective perspective;
   public final NtClient who;
+  private PrivateView usurper;
 
   public PrivateView(final NtClient who, final Perspective perspective) {
     alive = true;
     this.who = who;
     this.perspective = perspective;
+  }
+
+  public void usurp(PrivateView usurper) {
+    this.usurper = usurper;
   }
 
   public abstract void ingest(JsonStreamReader reader);
@@ -30,6 +35,9 @@ public abstract class PrivateView {
   }
 
   public synchronized void kill() {
+    if (usurper != null) {
+      usurper.kill();
+    }
     alive = false;
   }
 

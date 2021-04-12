@@ -14,8 +14,8 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 /** A LivingDocument tied to a document id and DataService */
 public class DurableLivingDocument {
+  public LivingDocument document;
   public final long documentId;
-  public final LivingDocument document;
   public final TimeSource time;
   private final DataService service;
   private Integer requiresInvalidateMilliseconds;
@@ -70,6 +70,16 @@ public class DurableLivingDocument {
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_LOAD, ex));
     }
+  }
+
+  public void deploy(LivingDocumentFactory factory, Callback<Integer> callback) throws ErrorCodeException {
+    LivingDocument newDocument = factory.create(document.__monitor);
+    JsonStreamWriter writer = new JsonStreamWriter();
+    document.__dump(writer);
+    newDocument.__insert(new JsonStreamReader(writer.toString()));
+    document.__usurp(newDocument);
+    document = newDocument;
+    invalidate(callback);
   }
 
   public JsonStreamWriter forge(final String command, final NtClient who) {

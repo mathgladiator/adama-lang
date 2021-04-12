@@ -146,6 +146,18 @@ public abstract class LivingDocument implements RxParent {
     return view;
   }
 
+  // private final HashMap<NtClient, ArrayList<PrivateView>> __trackedViews = new HashMap<>();
+  public void __usurp(LivingDocument usurpingDocument) {
+    for (Map.Entry<NtClient, ArrayList<PrivateView>> existing : __trackedViews.entrySet()) {
+      for (PrivateView pv : existing.getValue()) {
+        // create a new view within the usurping document
+        PrivateView usurper = usurpingDocument.__createView(existing.getKey(), pv.perspective);
+        // the usuper takes over the current view
+        pv.usurp(usurper);
+      }
+    }
+  }
+
   /** internal: we compute per client */
   private synchronized void __distributeClientViews() {
     final var startedTime = System.nanoTime();

@@ -5,13 +5,18 @@ package org.adamalang.netty.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.adamalang.netty.ErrorCodes;
+import org.adamalang.runtime.LivingDocument;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.translator.env.CompilerOptions;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 /** a mapping of files to their game spaces */
 public class GameSpaceDB {
@@ -53,6 +58,16 @@ public class GameSpaceDB {
     map.clear();
   }
 
+  public synchronized String getCode(String gamespace) throws Exception {
+    final var gameSource = new File(schemaRoot, gamespace);
+    return Files.readString(gameSource.toPath(), StandardCharsets.UTF_8);
+  }
+
+  public synchronized void saveCode(String gamespace, String code) throws Exception {
+    final var gameSource = new File(schemaRoot, gamespace);
+    Files.writeString(gameSource.toPath(), code, StandardCharsets.UTF_8);
+  }
+
   /** get a gamespace (via filename) */
   public synchronized GameSpace getOrCreate(final String gamespace) throws ErrorCodeException {
     try {
@@ -66,8 +81,15 @@ public class GameSpaceDB {
       }
       final var gameData = new File(dataRoot, gamespace);
       sanityCheckDataDirectory(gameData);
-      final var factory = GameSpace.buildLivingDocumentFactory(schemaRoot, options, gamespace, "Game" + classId++);
-      gs = new GameSpace(gamespace, factory, time, gameData);
+      final Supplier<LivingDocumentFactory> deployer = () -> {
+        try {
+          return GameSpace.buildLivingDocumentFactory(schemaRoot, options, gamespace, "Game" + classId++);
+        } catch (ErrorCodeException ex) {
+          throw new RuntimeException(ex);
+        }
+      };
+      final var factory = deployer.get();
+      gs = new GameSpace(gamespace, factory, time, gameData, deployer);
       map.put(gamespace, gs);
       return gs;
     } catch (Throwable ex) {

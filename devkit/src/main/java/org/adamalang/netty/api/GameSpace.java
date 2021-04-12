@@ -6,6 +6,7 @@ package org.adamalang.netty.api;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.function.Supplier;
 
 import org.adamalang.data.disk.FileSystemDataService;
 import org.adamalang.netty.ErrorCodes;
@@ -60,23 +61,45 @@ public class GameSpace {
     }
   }
 
+  private LivingDocumentFactory factory;
+
   public final String name;
-  public final LivingDocumentFactory factory;
   public final File root;
   public final TimeSource time;
 
   public final HashMap<Long, DurableLivingDocument> documents;
   public final DataService service;
+  private final Supplier<LivingDocumentFactory> deployer;
 
-  public GameSpace(final String name, final LivingDocumentFactory factory, final TimeSource time, final File root) {
+  public GameSpace(final String name, final LivingDocumentFactory factory, final TimeSource time, final File root, Supplier<LivingDocumentFactory> deployer) {
     this.name = name;
     this.factory = factory;
     this.time = time;
     this.root = root;
+    this.deployer = deployer;
     // TODO: consider scanning for existing files, and then LOAD THEM UP
-    // TODO: sync the key generation up
     this.documents = new LinkedHashMap<>();
     this.service = new FileSystemDataService(root);
+  }
+
+  public void deploy() throws ErrorCodeException {
+    LivingDocumentFactory newFactory = deployer.get();
+    factory = newFactory;
+
+    // TODO: accumulate the successes and failures?
+    for (DurableLivingDocument document : documents.values()) {
+      document.deploy(newFactory, new Callback<Integer>() {
+        @Override
+        public void success(Integer value) {
+
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
+    }
   }
 
   /** return the reflected schema for the document */
