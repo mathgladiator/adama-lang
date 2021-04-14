@@ -1,0 +1,17 @@
+record Card {
+  public int id;
+  private client owner;
+  private int ordering;
+
+  method reset() {
+    ordering = Random.genInt();
+    owner = @no_one;
+  }
+}
+
+@connected(who) {
+  return true;
+}
+
+@construct {
+}

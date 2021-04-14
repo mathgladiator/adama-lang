@@ -187,13 +187,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
       environment.document.createError(this, String.format("id must be type int"), "Record");
     }
     typedAlready = true;
-    final var newEnv = environment.scope();
-    for (final Consumer<Environment> type : storage.typeCheckOrder) {
-      type.accept(newEnv);
-    }
-    for (final TyNativeFunctional functional : storage.methodTypes.values()) {
-      functional.typing(environment);
-    }
+    storage.typing(environment.scope());
   }
 
   @Override

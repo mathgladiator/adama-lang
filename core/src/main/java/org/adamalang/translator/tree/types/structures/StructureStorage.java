@@ -35,6 +35,7 @@ public class StructureStorage extends DocumentPosition {
   public final StorageSpecialization specialization;
   public final ArrayList<Consumer<Environment>> typeCheckOrder;
   public final HashSet<String> fieldsWithDefaults;
+  private boolean typedAlready;
 
   public StructureStorage(final StorageSpecialization specialization, final boolean anonymous, final Token openBraceToken) {
     this.specialization = specialization;
@@ -54,6 +55,7 @@ public class StructureStorage extends DocumentPosition {
     methodTypes = new HashMap<>();
     fieldsWithDefaults = new HashSet<>();
     ingest(openBraceToken);
+    typedAlready = false;
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
@@ -114,13 +116,9 @@ public class StructureStorage extends DocumentPosition {
 
   public void add(final DefineMethod dm) {
     emissions.add(emit -> dm.emit(emit));
-    add(dm, typeCheckOrder);
-  }
-
-  public void add(final DefineMethod dm, final ArrayList<Consumer<Environment>> order) {
     ingest(dm);
     methods.add(dm);
-    order.add(env -> {
+    typeCheckOrder.add(env -> {
       final var foi = dm.typing(env);
       var functional = methodTypes.get(dm.name);
       if (functional == null) {
@@ -266,5 +264,18 @@ public class StructureStorage extends DocumentPosition {
       if (!a.equals(b)) { return false; }
     }
     return !thisIt.hasNext() && !thisOther.hasNext();
+  }
+
+  public void typing(Environment environment) {
+    if (typedAlready) {
+      return;
+    }
+    for (final Consumer<Environment> type : typeCheckOrder) {
+      type.accept(environment);
+    }
+    for (final TyNativeFunctional functional : methodTypes.values()) {
+      functional.typing(environment);
+    }
+    typedAlready = true;
   }
 }

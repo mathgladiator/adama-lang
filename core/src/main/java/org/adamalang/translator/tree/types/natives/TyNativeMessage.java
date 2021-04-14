@@ -179,11 +179,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
 
   @Override
   public void typing(final Environment environment) {
-    final var newEnv = environment.scope();
-    for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
-      e.getValue().typing(newEnv, storage);
-      newEnv.rules.Resolve(e.getValue().type, false);
-    }
+    storage.typing(environment.scope());
   }
 
   @Override
