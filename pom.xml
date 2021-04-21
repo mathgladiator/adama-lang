@@ -22,6 +22,7 @@
         <module>data</module>
         <module>devkit</module>
         <module>lsp</module>
+        <module>web</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
