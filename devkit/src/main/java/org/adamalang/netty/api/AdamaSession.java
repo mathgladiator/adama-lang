@@ -6,6 +6,7 @@ package org.adamalang.netty.api;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.adamalang.api.session.UserSession;
 import org.adamalang.runtime.natives.NtClient;
 
 /** a session of a connected user */
@@ -13,11 +14,13 @@ public class AdamaSession {
   private boolean alive;
   private final HashMap<String, Runnable> onSessionDeath;
   public final NtClient who;
+  public final UserSession session;
 
   public AdamaSession(final NtClient who) {
     alive = true;
     this.who = who;
     onSessionDeath = new HashMap<>();
+    this.session = new UserSession(who);
   }
 
   /** is the session still alive? */
@@ -30,6 +33,7 @@ public class AdamaSession {
     for (final Runnable event : killUnderLock()) {
       event.run();
     }
+    session.kill();
   }
 
   /** see: kill; this has a lock and returns the events to run. can't be null. */

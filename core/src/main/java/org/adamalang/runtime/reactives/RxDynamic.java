@@ -45,6 +45,11 @@ public class RxDynamic extends RxBase implements Comparable<RxDynamic>, CanGetAn
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    set(reader.readNtDynamic());
+  }
+
+  @Override
   public void __revert() {
     if (__isDirty()) {
       value = backup;

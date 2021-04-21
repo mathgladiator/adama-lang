@@ -13,6 +13,11 @@ public class ErrorCodeException extends Exception {
     this.code = code;
   }
 
+  public ErrorCodeException(final int code, String message) {
+    super(message);
+    this.code = code;
+  }
+
   public ErrorCodeException(final int code, final Throwable cause) {
     super("code:" + code + ":" + cause.getMessage(), cause);
     this.code = code;

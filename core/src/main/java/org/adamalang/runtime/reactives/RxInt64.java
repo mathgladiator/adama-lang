@@ -44,6 +44,11 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    set(reader.readLong());
+  }
+
+  @Override
   public void __revert() {
     if (__isDirty()) {
       value = backup;

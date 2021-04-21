@@ -17,6 +17,7 @@
     </licenses>
     <url>http://www.adama-lang.org/</url>
     <modules>
+        <module>api</module>
         <module>core</module>
         <module>data</module>
         <module>devkit</module>

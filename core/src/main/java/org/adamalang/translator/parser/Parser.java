@@ -378,7 +378,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@can_attach"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch"));
     }
@@ -410,6 +410,8 @@ public class Parser {
           return define_document_event(op, DocumentEvent.ClientDisconnected);
         case "@attached":
           return define_document_event(op, DocumentEvent.AssetAttachment);
+        case "@can_attach":
+          return define_document_event(op, DocumentEvent.AskAssetAttachment);
         case "import": {
           final var importName = tokens.pop();
           if (importName == null) {

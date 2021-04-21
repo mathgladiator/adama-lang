@@ -16,7 +16,6 @@ public class RxAssetTests {
     RxAsset b = new RxAsset(null, B);
     Assert.assertEquals(1, a.compareTo(b));
     Assert.assertEquals(-1, b.compareTo(a));
-
   }
 
   @Test
@@ -70,7 +69,16 @@ public class RxAssetTests {
     a.__insert(new JsonStreamReader("{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}"));
     a.__dump(c);
     Assert.assertEquals("{\"id\":\"42\",\"size\":\"42\",\"name\":\"name\",\"type\":\"jpg\",\"md5\":\"hash2\",\"sha384\":\"sheesh2\"}{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}", c.toString());
+  }
 
+
+  @Test
+  public void patch() {
+    JsonStreamWriter c = new JsonStreamWriter();
+    RxAsset a = new RxAsset(null, B);
+    a.__patch(new JsonStreamReader("{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}"));
+    a.__dump(c);
+    Assert.assertEquals("{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}", c.toString());
   }
 
 }

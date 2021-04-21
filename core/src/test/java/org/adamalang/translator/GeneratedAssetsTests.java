@@ -148,6 +148,60 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public void __patch(JsonStreamReader __reader) {");
+    gold.append("\n    if (__reader.startObject()) {");
+    gold.append("\n      while(__reader.notEndOfObject()) {");
+    gold.append("\n        String __fieldName = __reader.fieldName();");
+    gold.append("\n        switch (__fieldName) {");
+    gold.append("\n          case \"latest\":");
+    gold.append("\n            latest.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__state\":");
+    gold.append("\n            __state.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__constructed\":");
+    gold.append("\n            __constructed.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__next_time\":");
+    gold.append("\n            __next_time.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__blocked\":");
+    gold.append("\n            __blocked.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__seq\":");
+    gold.append("\n            __seq.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__entropy\":");
+    gold.append("\n            __entropy.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_future_id\":");
+    gold.append("\n            __auto_future_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__connection_id\":");
+    gold.append("\n            __connection_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__message_id\":");
+    gold.append("\n            __message_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__time\":");
+    gold.append("\n            __time.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_table_row_id\":");
+    gold.append("\n            __auto_table_row_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__clients\":");
+    gold.append("\n            __hydrateClients(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__messages\":");
+    gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          default:");
+    gold.append("\n            __reader.skipValue();");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
     gold.append("\n    __writer.writeObjectFieldIntro(\"latest\");");
@@ -348,9 +402,14 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public void __onAssetAttached__0(NtClient who, NtAsset file) {");
+    gold.append("\n  public boolean __onCanAssetAttached__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
+    gold.append("\n    return true;");
+    gold.append("\n  }");
+    gold.append("\n  public void __onAssetAttached__0(NtClient who, NtAsset file) {");
+    gold.append("\n    __code_cost += 2;");
+    gold.append("\n    __track(1);");
     gold.append("\n    latest.set(file);");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -360,6 +419,12 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
+    gold.append("\n    boolean __result = false;");
+    gold.append("\n    if (__onCanAssetAttached__0(__cvalue)) __result = true;");
+    gold.append("\n    return __result;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {");
     gold.append("\n    __onAssetAttached__0(__cvalue, __asset);");
@@ -412,38 +477,78 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Failures_2 = null;
-  private String get_Failures_2() {
-    if (cached_Failures_2 != null) {
-      return cached_Failures_2;
+  private String cached_CanAttach_2 = null;
+  private String get_CanAttach_2() {
+    if (cached_CanAttach_2 != null) {
+      return cached_CanAttach_2;
     }
-    cached_Failures_2 = generateTestOutput(false, "Failures_2", "./test_code/Assets_Failures_failure.a");
-    return cached_Failures_2;
+    cached_CanAttach_2 = generateTestOutput(false, "CanAttach_2", "./test_code/Assets_CanAttach_failure.a");
+    return cached_CanAttach_2;
+  }
+
+  @Test
+  public void testCanAttachFailure() {
+    assertLiveFail(get_CanAttach_2());
+  }
+
+  @Test
+  public void testCanAttachNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_CanAttach_2());
+  }
+
+  @Test
+  public void testCanAttachExceptionFree() {
+    assertExceptionFree(get_CanAttach_2());
+  }
+
+  @Test
+  public void testCanAttachTODOFree() {
+    assertTODOFree(get_CanAttach_2());
+  }
+
+  @Test
+  public void stable_CanAttach_2() {
+    String live = get_CanAttach_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Assets_CanAttach_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":17},\"end\":{\"line\":1,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_attach handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Failures_3 = null;
+  private String get_Failures_3() {
+    if (cached_Failures_3 != null) {
+      return cached_Failures_3;
+    }
+    cached_Failures_3 = generateTestOutput(false, "Failures_3", "./test_code/Assets_Failures_failure.a");
+    return cached_Failures_3;
   }
 
   @Test
   public void testFailuresFailure() {
-    assertLiveFail(get_Failures_2());
+    assertLiveFail(get_Failures_3());
   }
 
   @Test
   public void testFailuresNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_Failures_2());
+    assertNotTerribleLineNumbers(get_Failures_3());
   }
 
   @Test
   public void testFailuresExceptionFree() {
-    assertExceptionFree(get_Failures_2());
+    assertExceptionFree(get_Failures_3());
   }
 
   @Test
   public void testFailuresTODOFree() {
-    assertTODOFree(get_Failures_2());
+    assertTODOFree(get_Failures_3());
   }
 
   @Test
-  public void stable_Failures_2() {
-    String live = get_Failures_2();
+  public void stable_Failures_3() {
+    String live = get_Failures_3();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Assets_Failures_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -452,43 +557,43 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Sanity_3 = null;
-  private String get_Sanity_3() {
-    if (cached_Sanity_3 != null) {
-      return cached_Sanity_3;
+  private String cached_Sanity_4 = null;
+  private String get_Sanity_4() {
+    if (cached_Sanity_4 != null) {
+      return cached_Sanity_4;
     }
-    cached_Sanity_3 = generateTestOutput(true, "Sanity_3", "./test_code/Assets_Sanity_success.a");
-    return cached_Sanity_3;
+    cached_Sanity_4 = generateTestOutput(true, "Sanity_4", "./test_code/Assets_Sanity_success.a");
+    return cached_Sanity_4;
   }
 
   @Test
   public void testSanityEmission() {
-    assertEmissionGood(get_Sanity_3());
+    assertEmissionGood(get_Sanity_4());
   }
 
   @Test
   public void testSanitySuccess() {
-    assertLivePass(get_Sanity_3());
+    assertLivePass(get_Sanity_4());
   }
 
   @Test
   public void testSanityGoodWillHappy() {
-    assertGoodWillHappy(get_Sanity_3());
+    assertGoodWillHappy(get_Sanity_4());
   }
 
   @Test
   public void testSanityExceptionFree() {
-    assertExceptionFree(get_Sanity_3());
+    assertExceptionFree(get_Sanity_4());
   }
 
   @Test
   public void testSanityTODOFree() {
-    assertTODOFree(get_Sanity_3());
+    assertTODOFree(get_Sanity_4());
   }
 
   @Test
-  public void stable_Sanity_3() {
-    String live = get_Sanity_3();
+  public void stable_Sanity_4() {
+    String live = get_Sanity_4();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Assets_Sanity_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -513,10 +618,10 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\nimport java.util.Comparator;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Sanity_3 extends LivingDocument {");
+    gold.append("\npublic class Sanity_4 extends LivingDocument {");
     gold.append("\n  private final RxAsset latest;");
     gold.append("\n  private final RxBoolean te;");
-    gold.append("\n  public Sanity_3(DocumentMonitor __monitor) {");
+    gold.append("\n  public Sanity_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    latest = new RxAsset(this, NtAsset.NOTHING);");
     gold.append("\n    te = new RxBoolean(this, false);");
@@ -567,6 +672,63 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__clients\":");
+    gold.append("\n            __hydrateClients(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__messages\":");
+    gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          default:");
+    gold.append("\n            __reader.skipValue();");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __patch(JsonStreamReader __reader) {");
+    gold.append("\n    if (__reader.startObject()) {");
+    gold.append("\n      while(__reader.notEndOfObject()) {");
+    gold.append("\n        String __fieldName = __reader.fieldName();");
+    gold.append("\n        switch (__fieldName) {");
+    gold.append("\n          case \"latest\":");
+    gold.append("\n            latest.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"te\":");
+    gold.append("\n            te.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__state\":");
+    gold.append("\n            __state.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__constructed\":");
+    gold.append("\n            __constructed.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__next_time\":");
+    gold.append("\n            __next_time.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__blocked\":");
+    gold.append("\n            __blocked.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__seq\":");
+    gold.append("\n            __seq.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__entropy\":");
+    gold.append("\n            __entropy.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_future_id\":");
+    gold.append("\n            __auto_future_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__connection_id\":");
+    gold.append("\n            __connection_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__message_id\":");
+    gold.append("\n            __message_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__time\":");
+    gold.append("\n            __time.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_table_row_id\":");
+    gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__clients\":");
     gold.append("\n            __hydrateClients(__reader);");
@@ -647,16 +809,16 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    te.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSanity_3 {");
+    gold.append("\n  private class DeltaSanity_4 {");
     gold.append("\n    private DAsset __dlatest;");
     gold.append("\n    private DBoolean __dte;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSanity_3() {");
+    gold.append("\n    private DeltaSanity_4() {");
     gold.append("\n      __dlatest = new DAsset();");
     gold.append("\n      __dte = new DBoolean();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Sanity_3 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Sanity_4 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -675,8 +837,8 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    Sanity_3 __self = this;");
-    gold.append("\n    DeltaSanity_3 __state = new DeltaSanity_3();");
+    gold.append("\n    Sanity_4 __self = this;");
+    gold.append("\n    DeltaSanity_4 __state = new DeltaSanity_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -747,6 +909,11 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
+    gold.append("\n    boolean __result = false;");
+    gold.append("\n    return __result;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  @Override");

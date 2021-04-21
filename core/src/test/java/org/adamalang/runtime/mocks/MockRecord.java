@@ -113,6 +113,11 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    __insert(reader);
+  }
+
+  @Override
   public String __name() {
     return null;
   }

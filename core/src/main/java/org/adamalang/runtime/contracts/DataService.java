@@ -3,6 +3,8 @@
  * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */
 package org.adamalang.runtime.contracts;
 
+import org.adamalang.runtime.natives.NtClient;
+
 /** the contract for the data service */
 public interface DataService {
   /** the local copy of the document should be changed by incorporating the given patch */
@@ -30,14 +32,22 @@ public interface DataService {
     /** the sequencer of this change */
     public final int seq;
 
+    /** who was responsible for the update */
+    public final NtClient who;
+
+    /** an identifier for the update from a user */
+    public final String marker;
+
     /** this update is incomplete with respect to time, and this will ensure we schedule an invalidation in the future */
     public final boolean requiresFutureInvalidation;
 
     /** if requiresFutureInvalidation, then how many milliseconds should the system wait to invoke invalidation */
     public final int whenToInvalidateMilliseconds;
 
-    public RemoteDocumentUpdate(final int seq, final String request, final String redo, final String undo, final boolean requiresFutureInvalidation, int whenToInvalidateMilliseconds) {
+    public RemoteDocumentUpdate(final int seq, NtClient who, String marker, final String request, final String redo, final String undo, final boolean requiresFutureInvalidation, int whenToInvalidateMilliseconds) {
       this.seq = seq;
+      this.who = who;
+      this.marker = marker;
       this.request = request;
       this.redo = redo;
       this.undo = undo;
@@ -59,13 +69,13 @@ public interface DataService {
   public void patch(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback);
 
   /** Create a copy of the document from the beginning of time up to indicated sequencer */
-  long fork(long oldDocumentId, long newDocumentId, long seqEnd, Callback<LocalDocumentChange> callback);
+  public void fork(long oldDocumentId, long newDocumentId, NtClient who, String marker, Callback<LocalDocumentChange> callback);
 
-  /** Rewind the state of the document to the indicated sequencer */
-  void rewind(long documentId, long seqEnd, Callback<LocalDocumentChange> callback);
+  /** Rewind the state of the document to the indicated marker by the given client */
+  public void rewind(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback);
 
-  /** Unsend the message(s) inclusively between the indicated sequencers */
-  void unsend(long documentId, long seqBegin, long seqEnd, Callback<LocalDocumentChange> callback);
+  /** Unsend the message at the given marker by the given client */
+  public void unsend(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback);
 
   /** Delete the document given by the ID */
   void delete(long documentId, Callback<Long> callback);

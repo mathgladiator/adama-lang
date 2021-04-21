@@ -16,9 +16,9 @@ public class GameSpaceDBTests {
   public void gameFound() throws Exception {
     GameSpaceTests.wipeTestData();
     final var db = new GameSpaceDB(new File("./test_code"), new File("./test_data"), CompilerOptions.start().make(), TimeSource.REAL_TIME);
-    final var gs = db.getOrCreate("Demo_Bomb_success.a");
+    final var gs = db.getOrCreate("Demo_Bomb_success");
     Assert.assertNotNull(gs);
-    final var again = db.getOrCreate("Demo_Bomb_success.a");
+    final var again = db.getOrCreate("Demo_Bomb_success");
     Assert.assertTrue(gs == again);
   }
 
@@ -27,9 +27,9 @@ public class GameSpaceDBTests {
     GameSpaceTests.wipeTestData();
     final var db = new GameSpaceDB(new File("./test_code"), new File("./test_data/bad"), CompilerOptions.start().make(), TimeSource.REAL_TIME);
     new File("./test_data/bad").mkdir();
-    Files.writeString(new File("./test_data/bad/Demo_Bomb_success.a").toPath(), "blah");
+    Files.writeString(new File("./test_data/bad/Demo_Bomb_success").toPath(), "blah");
     try {
-      db.getOrCreate("Demo_Bomb_success.a");
+      db.getOrCreate("Demo_Bomb_success");
       Assert.fail();
     } catch (final ErrorCodeException e) {
       Assert.assertEquals(5001, e.code);
@@ -40,7 +40,7 @@ public class GameSpaceDBTests {
   public void gameFoundCreateDir() throws Exception {
     GameSpaceTests.wipeTestData();
     final var db = new GameSpaceDB(new File("./test_code"), new File("./test_data/needs_create"), CompilerOptions.start().make(), TimeSource.REAL_TIME);
-    final var gs = db.getOrCreate("Demo_Bomb_success.a");
+    final var gs = db.getOrCreate("Demo_Bomb_success");
     Assert.assertNotNull(gs);
   }
 

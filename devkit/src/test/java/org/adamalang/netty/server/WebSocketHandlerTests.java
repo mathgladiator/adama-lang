@@ -39,7 +39,7 @@ public class WebSocketHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(1, output.size());
-    Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
+    Assert.assertTrue(output.get(0).startsWith("DATA:{\"signal\":\"setup\",\"status\":\"connected\",\"session_id\":"));
   }
 
   @Test
@@ -60,7 +60,7 @@ public class WebSocketHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
+    Assert.assertTrue(output.get(0).startsWith("DATA:{\"signal\":\"setup\",\"status\":\"connected\",\"session_id\":"));
     Assert.assertEquals("Closed", output.get(1));
   }
 
@@ -117,7 +117,7 @@ public class WebSocketHandlerTests {
     afterWrite.await(1000, TimeUnit.MILLISECONDS);
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
+    Assert.assertTrue(output.get(0).startsWith("DATA:{\"signal\":\"setup\",\"status\":\"connected\",\"session_id\":"));
     Assert.assertEquals("DATA:{\"failure\":1,\"reason\":5501}", output.get(1));
   }
 
@@ -140,7 +140,7 @@ public class WebSocketHandlerTests {
     afterWrite.await(1000, TimeUnit.MILLISECONDS);
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
+    Assert.assertTrue(output.get(0).startsWith("DATA:{\"signal\":\"setup\",\"status\":\"connected\",\"session_id\":"));
     Assert.assertEquals("DATA:{\"failure\":1,\"reason\":13}", output.get(1));
   }
 
@@ -163,7 +163,7 @@ public class WebSocketHandlerTests {
     afterWrite.await(1000, TimeUnit.MILLISECONDS);
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
+    Assert.assertTrue(output.get(0).startsWith("DATA:{\"signal\":\"setup\",\"status\":\"connected\",\"session_id\":"));
     Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"ok\":\"go\"}}", output.get(1));
   }
 
@@ -185,7 +185,7 @@ public class WebSocketHandlerTests {
     callback.ping.await(5000, TimeUnit.MILLISECONDS);
     final var output = callback.output();
     Assert.assertEquals(1, output.size());
-    Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(0));
+    Assert.assertTrue(output.get(0).startsWith("DATA:{\"signal\":\"setup\",\"status\":\"connected\",\"session_id\":"));
   }
 
   @Test
@@ -241,7 +241,7 @@ public class WebSocketHandlerTests {
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
     Assert.assertEquals("DATA:{\"failure\":1,\"reason\":12}", output.get(0));
-    Assert.assertEquals("DATA:{\"signal\":\"setup\",\"status\":\"connected\"}", output.get(1));
+    Assert.assertTrue(output.get(1).startsWith("DATA:{\"signal\":\"setup\",\"status\":\"connected\",\"session_id\":"));
   }
 
   @Test

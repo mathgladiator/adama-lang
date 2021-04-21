@@ -5,6 +5,7 @@ package org.adamalang.netty.server;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -168,7 +169,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
           @Override
           public void success(final AdamaSession incomingSession) {
             initWithLock(incomingSession);
-            ctx.writeAndFlush(new TextWebSocketFrame("{\"signal\":\"setup\",\"status\":\"connected\"}"));
+            // TODO: replace with smaller, leader session id
+            ctx.writeAndFlush(new TextWebSocketFrame("{\"signal\":\"setup\",\"status\":\"connected\",\"session_id\":\"" + UUID.randomUUID() + "\"}"));
             Runnable heartbeatLoop = () -> {
               ctx.writeAndFlush(new TextWebSocketFrame("{\"ping\":"+(System.currentTimeMillis() - created)+",\"latency\":\""+latency.get()+"\"}"));
             };

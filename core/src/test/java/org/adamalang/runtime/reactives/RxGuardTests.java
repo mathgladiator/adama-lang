@@ -35,5 +35,6 @@ public class RxGuardTests {
     Assert.assertEquals(false, guard.invalid);
     Assert.assertEquals(4, guard.getGeneration());
     guard.__insert(null);
+    guard.__patch(null);
   }
 }

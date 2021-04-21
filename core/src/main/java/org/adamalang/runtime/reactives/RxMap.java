@@ -93,15 +93,30 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
       while (reader.notEndOfObject()) {
         final var key = codec.fromStr(reader.fieldName());
         if (reader.testLackOfNull()) {
-          var value = getOrCreate(key);
+          var value = getOrCreate(key); // TODO: this leaks dirty
           value.__insert(reader);
           created.remove(key);
+        } else {
+          remove(key); // TODO: this may cause an excess dirty
+        }
+      }
+    }
+  }
+
+  @Override
+  public void __patch(JsonStreamReader reader) {
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        final var key = codec.fromStr(reader.fieldName());
+        if (reader.testLackOfNull()) {
+          getOrCreate(key).__patch(reader);
         } else {
           remove(key);
         }
       }
     }
   }
+
 
   public NtMaybe<RangeTy> lookup(DomainTy key) {
     return new NtMaybe<>(objects.get(key));

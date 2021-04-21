@@ -76,6 +76,15 @@ public class RxClientTests {
   }
 
   @Test
+  public void patch() {
+    final var c = new RxClient(null, NtClient.NO_ONE);
+    c.__patch(new JsonStreamReader("{\"agent\":\"foo\",\"authority\":\"xyz\"}"));
+    final var g = c.get();
+    Assert.assertEquals("foo", g.agent);
+    Assert.assertEquals("xyz", g.authority);
+  }
+
+  @Test
   public void invalidate_and_revert() {
     final var c = new RxClient(null, NtClient.NO_ONE);
     final var child = new MockRxChild();

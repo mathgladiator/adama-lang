@@ -45,6 +45,11 @@ public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndS
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    set(reader.readNtClient());
+  }
+
+  @Override
   public void __revert() {
     if (__isDirty()) {
       value = backup;

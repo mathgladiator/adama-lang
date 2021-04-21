@@ -155,6 +155,27 @@ public class RxMapTests {
     Assert.assertFalse(m.lookup(1000).has());
   }
 
+
+  @Test
+  public void patch() {
+    final var m = map();
+    m.getOrCreate(100).set(50);
+    JsonStreamReader reader = new JsonStreamReader("{\"42\":123,\"50\":100,\"100\":null}");
+    m.__patch(reader);
+    {
+      JsonStreamWriter forward = new JsonStreamWriter();
+      JsonStreamWriter reverse = new JsonStreamWriter();
+      m.__commit("map", forward, reverse);
+      Assert.assertEquals("\"map\":{\"42\":123,\"50\":100}", forward.toString());
+      Assert.assertEquals("\"map\":{\"42\":null,\"50\":null}", reverse.toString());
+    }
+    JsonStreamWriter dump = new JsonStreamWriter();
+    m.__dump(dump);
+    Assert.assertEquals("{\"42\":123,\"50\":100}", dump.toString());
+    Assert.assertTrue(m.lookup(42).has());
+    Assert.assertFalse(m.lookup(1000).has());
+  }
+
   @Test
   public void lookup() {
     final var m = map();

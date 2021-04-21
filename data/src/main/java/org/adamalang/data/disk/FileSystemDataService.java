@@ -10,6 +10,7 @@ import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtClient;
 
 
 import java.io.*;
@@ -148,17 +149,17 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public long fork(long oldDocumentId, long newDocumentId, long seqEnd, Callback<LocalDocumentChange> callback) {
+  public void fork(long oldDocumentId, long newDocumentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void rewind(long documentId, long seqEnd, Callback<LocalDocumentChange> callback) {
+  public void rewind(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void unsend(long documentId, long seqBegin, long seqEnd, Callback<LocalDocumentChange> callback) {
+  public void unsend(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 

@@ -63,6 +63,13 @@ public class RxInt32Tests {
   }
 
   @Test
+  public void patch() {
+    final var d = new RxInt32(null, 1);
+    d.__patch(new JsonStreamReader("42"));
+    Assert.assertEquals(42, (int) d.get());
+  }
+
+  @Test
   public void invalidate_and_revert() {
     final var i = new RxInt32(null, 42);
     final var child = new MockRxChild();

@@ -43,6 +43,11 @@ public class RxDouble extends RxBase implements Comparable<RxDouble>, CanGetAndS
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    set(reader.readDouble());
+  }
+
+  @Override
   public void __revert() {
     if (__isDirty()) {
       value = backup;

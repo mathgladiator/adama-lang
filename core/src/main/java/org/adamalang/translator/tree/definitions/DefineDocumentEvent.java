@@ -50,8 +50,9 @@ public class DefineDocumentEvent extends Definition {
   }
 
   public Environment nextEnvironment(final Environment environment) {
-    final var next = environment.scope();
-    if (which == DocumentEvent.ClientConnected) {
+    boolean readonly = which == DocumentEvent.AskAssetAttachment;
+    final var next = readonly ? environment.scopeAsReadOnlyBoundary() : environment.scope();
+    if (which == DocumentEvent.ClientConnected || which == DocumentEvent.AskAssetAttachment) {
       next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this));
     }
     if (which == DocumentEvent.AssetAttachment) {
@@ -65,7 +66,10 @@ public class DefineDocumentEvent extends Definition {
   public void typing(final Environment environment) {
     ControlFlow codeControlFlow = code.typing(nextEnvironment(environment));
     if (which == DocumentEvent.ClientConnected && codeControlFlow == ControlFlow.Open) {
-      environment.document.createError(this, String.format("The @connected handler must return a boolean"), "ConnectionEvents");
+      environment.document.createError(this, String.format("The @connected handler must return a boolean"), "DocumentEvents");
+    }
+    if (which == DocumentEvent.AskAssetAttachment && codeControlFlow == ControlFlow.Open) {
+      environment.document.createError(this, String.format("The @can_attach handler must return a boolean"), "DocumentEvents");
     }
   }
 }

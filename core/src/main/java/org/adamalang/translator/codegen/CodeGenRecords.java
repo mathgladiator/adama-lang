@@ -274,6 +274,41 @@ public class CodeGenRecords {
     sb.append("}").tabDown().writeNewline();
     sb.append("}").tabDown().writeNewline();
     sb.append("}").writeNewline();
+    // patch
+    sb.append("@Override").writeNewline();
+    sb.append("public void __patch(JsonStreamReader __reader) {").tabUp().writeNewline();
+    sb.append("if (__reader.startObject()) {").tabUp().writeNewline();
+    sb.append("while(__reader.notEndOfObject()) {").tabUp().writeNewline();
+    sb.append("String __fieldName = __reader.fieldName();").writeNewline();
+    sb.append("switch (__fieldName) {").tabUp().writeNewline();
+    for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
+      final var fieldName = fdInOrder.name;
+      final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
+      if (isCommitRevertable(fieldType)) {
+        sb.append("case \"").append(fieldName).append("\":").tabUp().writeNewline();
+        sb.append(fieldName).append(".__patch(__reader);").writeNewline();
+        sb.append("break;").tabDown().writeNewline();
+      }
+    }
+    for (final String other : others) {
+      sb.append("case \"").append(other).append("\":").tabUp().writeNewline();
+      sb.append(other).append(".__patch(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
+    }
+    if (isRoot) {
+      sb.append("case \"__clients\":").tabUp().writeNewline();
+      sb.append("__hydrateClients(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
+      sb.append("case \"__messages\":").tabUp().writeNewline();
+      sb.append("__hydrateMessages(__reader);").writeNewline();
+      sb.append("break;").tabDown().writeNewline();
+    }
+    sb.append("default:").tabUp().writeNewline();
+    sb.append("__reader.skipValue();").tabDown().tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
   }
 
   public static void writeMethods(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {

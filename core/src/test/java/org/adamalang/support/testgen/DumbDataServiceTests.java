@@ -30,15 +30,15 @@ public class DumbDataServiceTests {
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {
-      dds.fork(1, 1, 1, null);
+      dds.fork(1, 1, null, null, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {
-      dds.rewind(1, 1, null);
+      dds.rewind(1, null, null, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {
-      dds.unsend(1,1, 1, null);
+      dds.unsend(1,null, null, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
   }

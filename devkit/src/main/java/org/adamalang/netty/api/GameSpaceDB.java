@@ -38,7 +38,7 @@ public class GameSpaceDB {
   private final HashMap<String, GameSpace> map;
   private final CompilerOptions options;
   private final File schemaRoot;
-  private final TimeSource time;
+  public final TimeSource time;
 
   public GameSpaceDB(final File schemaRoot, final File dataRoot, final CompilerOptions options, final TimeSource time) throws Exception {
     this.schemaRoot = schemaRoot;
@@ -75,7 +75,7 @@ public class GameSpaceDB {
       if (gs != null) {
         return gs;
       }
-      final var gameSource = new File(schemaRoot, gamespace);
+      final var gameSource = new File(schemaRoot, gamespace + ".a");
       if (!gameSource.exists()) {
         throw new ErrorCodeException(ErrorCodes.USERLAND_RESOURCE_CANT_FIND_GAMESPACE, new RuntimeException("gamespace: " + gamespace));
       }

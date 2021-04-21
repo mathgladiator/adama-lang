@@ -39,6 +39,9 @@ public abstract class RxBase {
   /** initialize data & merge data in */
   public abstract void __insert(JsonStreamReader reader);
 
+  /** patch the data */
+  public abstract void __patch(JsonStreamReader reader);
+
   /** tell all subscribers that they need to recompute */
   protected void __invalidateSubscribers() {
     if (__subscribers != null) {

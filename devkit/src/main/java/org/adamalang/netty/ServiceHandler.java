@@ -7,6 +7,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.adamalang.api.commands.CommandFactory;
+import org.adamalang.api.commands.Request;
+import org.adamalang.api.commands.contracts.Backbone;
+import org.adamalang.api.commands.contracts.Command;
+import org.adamalang.api.commands.contracts.CommandResponder;
+import org.adamalang.api.operations.CounterFactory;
+import org.adamalang.api.session.ImpersonatedSession;
 import org.adamalang.netty.api.AdamaSession;
 import org.adamalang.netty.api.GameSpace;
 import org.adamalang.netty.api.GameSpaceDB;
@@ -57,14 +64,18 @@ public class ServiceHandler implements JsonHandler {
 
   private final GameSpaceDB db;
   private final ScheduledExecutorService executorDEMO;
+  private final Backbone backbone;
+  private final CommandFactory commandFactory;
 
   public ServiceHandler(final GameSpaceDB db) {
     this.db = db;
     executorDEMO = Executors.newSingleThreadScheduledExecutor();
+    this.backbone = new DevKitBackbone(db, executorDEMO);
+    this.commandFactory = new CommandFactory(backbone, new CounterFactory());
   }
 
   private String extractSpaceParameter(final ObjectNode request) throws ErrorCodeException {
-    return str(request, "gamespace", true, ErrorCodes.USERLAND_REQUEST_NO_GAMESPACE_PROPERTY);
+    return str(request, "space", true, ErrorCodes.USERLAND_REQUEST_NO_GAMESPACE_PROPERTY);
   }
 
   private GameSpace findGamespace(final ObjectNode request) throws ErrorCodeException {
@@ -79,6 +90,7 @@ public class ServiceHandler implements JsonHandler {
       try {
         handleInThread(executor, session, request, responder);
       } catch (Throwable ex) {
+        ex.printStackTrace();
         responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E5_REQUEST_UNKNOWN_EXCEPTION, ex));
       }
     });
@@ -95,27 +107,21 @@ public class ServiceHandler implements JsonHandler {
 
   public void handleInThread(final ScheduledExecutorService executor, final AdamaSession session, final ObjectNode request, final JsonResponder responder) throws ErrorCodeException {
     final var method = str(request, "method", true, ErrorCodes.USERLAND_REQUEST_NO_METHOD_PROPERTY);
-    final var who = request.has("devkit_who") ? whoFrom(request.get("devkit_who")) : session.who;
+    boolean imp = request.has("devkit_who");
+    final var who = imp ? whoFrom(request.get("devkit_who")) : session.who;
     switch (method) {
-      case "generate": {
-        final var gs = findGamespace(request);
-        gs.generate(Callback.bind(executor, ErrorCodes.E5_REQUEST_GENERATE_CRASHED, new Callback<>() {
-          @Override
-          public void success(Long value) {
-            responder.respond("{\"game\":\"" + value + "\"}", true, null);
-          }
+      case "reflect":
+      case "reserve":
+      case "disconnect":
+      case "send":
+      case "connect":
+      case "create": {
+        Request req = new Request(request);
+        Command cmd = commandFactory.findAndInstrument(req, imp ? new ImpersonatedSession(who, session.session) : session.session, DevKitBackbone.wrap(responder));
+        cmd.execute();
+        return;
+      }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            responder.failure(ex);
-          }
-        }));
-        return;
-      }
-      case "reflect": {
-        responder.respond("{\"result\":" + findGamespace(request).reflect() + "}", true, null);
-        return;
-      }
       case "load_code": {
         String gamespace = extractSpaceParameter(request);
         try {
@@ -148,151 +154,6 @@ public class ServiceHandler implements JsonHandler {
         responder.respond("{\"result\":true}", true, null);
         return;
       }
-      case "create": {
-        final var gs = findGamespace(request);
-        final var id = lng(request, "game", ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
-        ObjectNode arg = (ObjectNode) node(request, "arg", ErrorCodes.USERLAND_REQUEST_NO_CONSTRUCTOR_ARG);
-        Callback<DurableLivingDocument> onCreate = Callback.bind(executor, ErrorCodes.E5_REQUEST_CREATE_CRASHED, new Callback<>() {
-          @Override
-          public void success(DurableLivingDocument value) {
-            responder.respond("{\"game\":\"" + value.documentId + "\"}", true, null);
-            witness(value, executor);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            System.err.println("FAILED TO CREATE GAME.. OK, BUT WHAT?");
-            responder.failure(ex);
-          }
-        });
-        gs.create(id, who, arg, str(request, "entropy", false, 0), onCreate);
-        return;
-      }
-      case "connect": {
-        final var gs = findGamespace(request);
-        final var id = lng(request, "game", ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
-        final var key = gs.name + ":" + id + ":" + who.agent;
-        if (session.checkNotUnique(key)) {
-          throw new ErrorCodeException(ErrorCodes.USERLAND_SESSION_CANT_CONNECT_AGAIN);
-        }
-        Callback<DurableLivingDocument> onGet = Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_GET, new Callback<DurableLivingDocument>() {
-          @Override
-          public void success(DurableLivingDocument doc) {
-            Callback<PrivateView> postPrivateView = Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_PV, new Callback<PrivateView>() {
-              @Override
-              public void success(PrivateView pv) {
-                session.subscribeToSessionDeath(key, () -> {
-                  // session death happens in HTTP land, so let's return to the executor to talk
-                  // to transactor
-                  executor.execute(() -> {
-                    pv.kill();
-                    if (doc.garbageCollectPrivateViewsFor(who) == 0) {
-                      doc.disconnect(who, Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_GC, new Callback<Integer>() {
-                        @Override
-                        public void success(Integer value) {
-                        }
-
-                        @Override
-                        public void failure(ErrorCodeException ex) {
-                          responder.failure(ex);
-                        }
-                      }));
-                    }
-                  });
-                  responder.respond("{}", true, null);
-                });
-                witness(doc, executor);
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.failure(ex);
-              }
-            });
-
-            Callback<Void> postConnect = Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_POST_CONNECT, new Callback<Void>() {
-              @Override
-              public void success(Void value) {
-                Perspective perspective = new Perspective() {
-                  @Override
-                  public void data(String data) {
-                    executor.execute(() -> {
-                      responder.respond(data, false, null);
-                    });
-                  }
-
-                  @Override
-                  public void disconnect() {
-                    // tell the client to go away
-                  }
-                };
-                doc.createPrivateView(who, perspective, postPrivateView);
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.failure(ex);
-              }
-            });
-
-            final var alreadyConnected = doc.isConnected(who);
-            if (!alreadyConnected) {
-              doc.connect(who, Callback.transform(postConnect, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_CONNECT, (x) -> null));
-            } else {
-              postConnect.success(null);
-            }
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            responder.failure(ex);
-          }
-        });
-        gs.get(id, onGet);
-        return;
-      }
-      case "disconnect": {
-        try {
-          final var gs = findGamespace(request);
-          final var id = lng(request, "game", ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
-          final var key = gs.name + ":" + id + ":" + who.agent;
-          responder.respond("{\"game\":\"" + id + "\",\"success\":"+(session.unbind(key) ? "true":"false")+"}", true, null);
-          // TODO: witness!
-        } catch (Throwable ex) {
-          responder.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E5_REQUEST_DISCONNECT_CRASHED, ex));
-        }
-        return;
-      }
-      case "send": {
-        final var gs = findGamespace(request);
-        final var id = lng(request, "game", ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
-        final var channel = str(request, "channel", true, ErrorCodes.USERLAND_REQUEST_NO_CHANNEL_PROPERTY);
-        final var msg = node(request, "message", ErrorCodes.USERLAND_REQUEST_NO_MESSAGE_PROPERTY);
-        Callback<DurableLivingDocument> onGet = Callback.bind(executor, ErrorCodes.E5_REQUEST_SEND_CRASHED, new Callback<DurableLivingDocument>() {
-          @Override
-          public void success(DurableLivingDocument value) {
-            value.send(who, channel, msg.toString(), Callback.bind(executor, ErrorCodes.E5_REQUEST_SEND_CRASHED_ACTUAL, new Callback<Integer>() {
-              @Override
-              public void success(Integer seq) {
-                responder.respond("{\"success\":" + seq + "}", true, null);
-                witness(value, executor);
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.failure(ex);
-              }
-            }));
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            responder.failure(ex);
-          }
-        });
-        gs.get(id, onGet);
-        return;
-      }
       default:
         throw new ErrorCodeException(ErrorCodes.USERLAND_REQUEST_INVALID_METHOD_PROPERTY);
     }
@@ -300,7 +161,7 @@ public class ServiceHandler implements JsonHandler {
 
   private ScheduledExecutorService pinAndFixRequest(final ObjectNode request) throws ErrorCodeException {
     // get the gamespace
-    str(request, "gamespace", true, ErrorCodes.USERLAND_REQUEST_NO_GAMESPACE_PROPERTY);
+    str(request, "space", true, ErrorCodes.USERLAND_REQUEST_NO_GAMESPACE_PROPERTY);
     // final var method = str(request, "method", true, ErrorCodeException.USERLAND_NO_METHOD_PROPERTY);
     // based on the method, extract the game or use 0
     // hash (gamepsace, game) and pick an executor

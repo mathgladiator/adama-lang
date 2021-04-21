@@ -107,16 +107,17 @@
         console.log("connected");
 
         document.getElementById("create_new_room").onclick = async function() {
-            let id = (await connection.generate("chat.a", {})).game;
-            document.getElementById("chat_id").value = (await connection.create("chat.a", id, {})).game;
+            let id = (await connection.generate("chat", {}));
+            await connection.create("chat", id, {});
+            document.getElementById("chat_id").value = id;
         };
         document.getElementById("connect_to_room").onclick = function() {
-            connection.connectTree("chat.a", document.getElementById("chat_id").value, tree);
+            connection.connectTree("chat", document.getElementById("chat_id").value, tree);
             document.getElementById("setup").style.display = "none";
         };
         document.getElementById("speak").onclick = function() {
             var msg = {what:document.getElementById("say").value};
-            connection.send("chat.a", document.getElementById("chat_id").value, "speak", msg);
+            connection.send("chat", document.getElementById("chat_id").value, "speak", msg);
         };
     })();
 

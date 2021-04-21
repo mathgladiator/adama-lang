@@ -69,6 +69,14 @@ public class RxDynamicTests {
   }
 
   @Test
+  public void patch() {
+    final var c = new RxDynamic(null, NtDynamic.NULL);
+    c.__patch(new JsonStreamReader("{\"x\":\"foo\"}"));
+    final var g = c.get();
+    Assert.assertEquals("{\"x\":\"foo\"}", g.json);
+  }
+
+  @Test
   public void invalidate_and_revert() {
     final var c = new RxDynamic(null, NtDynamic.NULL);
     final var child = new MockRxChild();

@@ -133,6 +133,22 @@ public class RxMaybeTests {
   }
 
   @Test
+  public void patch() {
+    final var mb = new RxMaybe<>(null, parent -> new RxBoolean(parent, false));
+    Assert.assertFalse(mb.has());
+    mb.__patch(new JsonStreamReader("null"));
+    Assert.assertFalse(mb.has());
+    mb.__patch(new JsonStreamReader("true"));
+    Assert.assertTrue(mb.has());
+    Assert.assertTrue((boolean) mb.get().get());
+    mb.__patch(new JsonStreamReader("false"));
+    Assert.assertTrue(mb.has());
+    Assert.assertFalse((boolean) mb.get().get());
+    mb.__patch(new JsonStreamReader("null"));
+    Assert.assertFalse(mb.has());
+  }
+
+  @Test
   public void make() {
     final var parent = new MockRxParent();
     final var mi = new RxMaybe<>(parent, p -> new RxInt32(p, 42));

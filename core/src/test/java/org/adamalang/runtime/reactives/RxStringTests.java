@@ -58,6 +58,15 @@ public class RxStringTests {
   }
 
   @Test
+  public void patch() {
+    final var d = new RxString(null, "");
+    Assert.assertFalse(d.has());
+    d.__patch(new JsonStreamReader("\"x\""));
+    Assert.assertEquals("x", d.get());
+    Assert.assertTrue(d.has());
+  }
+
+  @Test
   public void invalidate_and_revert() {
     final var child = new MockRxChild();
     final var s = new RxString(null, "xyz");

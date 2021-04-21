@@ -47,4 +47,57 @@ public class PrivateViewTests {
         pv.deliver("{}");
         Assert.assertEquals("{}", list.get(0));
     }
+
+    @Test
+    public void usurp() {
+        ArrayList<String> list = new ArrayList<>();
+        PrivateView pv1 = new PrivateView(NtClient.NO_ONE, new Perspective() {
+            @Override
+            public void data(String data) {
+                list.add(data);
+            }
+
+            @Override
+            public void disconnect() {
+
+            }
+        }) {
+
+            @Override
+            public void dumpViewer(JsonStreamWriter writer) {
+            }
+
+            @Override
+            public void update(JsonStreamWriter writer) {
+
+            }
+
+            @Override
+            public void ingest(JsonStreamReader reader) {
+
+            }
+        };
+
+        PrivateView pv2 = new PrivateView(NtClient.NO_ONE, pv1.perspective) {
+
+            @Override
+            public void dumpViewer(JsonStreamWriter writer) {
+            }
+
+            @Override
+            public void update(JsonStreamWriter writer) {
+
+            }
+
+            @Override
+            public void ingest(JsonStreamReader reader) {
+
+            }
+        };
+
+        pv2.usurp(pv1);
+        Assert.assertTrue(pv1.isAlive());
+        pv2.kill();
+        Assert.assertFalse(pv1.isAlive());
+    }
 }

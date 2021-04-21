@@ -38,6 +38,11 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    reader.skipValue();
+  }
+
+  @Override
   public boolean __raiseInvalid() {
     invalid = true;
     __invalidateSubscribers();

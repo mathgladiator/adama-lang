@@ -56,6 +56,13 @@ public class RxDoubleTests {
   }
 
   @Test
+  public void patch() {
+    final var d = new RxDouble(null, 1);
+    d.__patch(new JsonStreamReader("42"));
+    Assert.assertEquals(42, d.get(), 0.1);
+  }
+
+  @Test
   public void invalidate_and_revert() {
     final var d = new RxDouble(null, 42);
     final var child = new MockRxChild();

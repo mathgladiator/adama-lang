@@ -45,8 +45,9 @@ import org.adamalang.runtime.natives.NtClient;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
-  public static final JsonMapper MAPPER = new JsonMapper();
   private static final HttpDataFactory factory = new DefaultHttpDataFactory(true);
+
+  public static final JsonMapper MAPPER = new JsonMapper();
 
   @Deprecated
   public static ObjectNode parseJsonObject(final String json) {

@@ -34,7 +34,7 @@ public class GameSpace {
       final var time1 = System.currentTimeMillis();
       final var document = new Document();
       document.addSearchPath(root);
-      document.importFile(file, DocumentPosition.ZERO);
+      document.importFile(file + ".a", DocumentPosition.ZERO);
       document.setClassName(className);
       if (!document.check(state)) {
         if (options.stderrLoggingCompiler) {
@@ -80,6 +80,10 @@ public class GameSpace {
     // TODO: consider scanning for existing files, and then LOAD THEM UP
     this.documents = new LinkedHashMap<>();
     this.service = new FileSystemDataService(root);
+  }
+
+  public LivingDocumentFactory getFactory() {
+    return factory;
   }
 
   public void deploy() throws ErrorCodeException {

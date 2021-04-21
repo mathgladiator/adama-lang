@@ -73,4 +73,16 @@ public interface Callback<T> {
       }
     };
   }
+
+  public static final Callback<Integer> DONT_CARE_INTEGER = new Callback<Integer>() {
+    @Override
+    public void success(Integer value) {
+
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+      ex.printStackTrace();
+    }
+  };
 }

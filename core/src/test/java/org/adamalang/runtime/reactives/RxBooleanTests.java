@@ -69,6 +69,17 @@ public class RxBooleanTests {
   }
 
   @Test
+  public void patch() {
+    final var d = new RxBoolean(null, false);
+    d.__patch(new JsonStreamReader("true"));
+    Assert.assertTrue(d.get());
+    d.__patch(new JsonStreamReader("false"));
+    Assert.assertFalse(d.get());
+    d.__patch(new JsonStreamReader("true"));
+    Assert.assertTrue(d.get());
+  }
+
+  @Test
   public void invalidate_and_revert() {
     final var parent = new MockRxParent();
     final var rx = new RxBoolean(parent, false);

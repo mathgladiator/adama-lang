@@ -43,6 +43,11 @@ public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAn
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    set(reader.readBoolean());
+  }
+
+  @Override
   public void __revert() {
     if (__isDirty()) {
       value = backup;

@@ -44,6 +44,11 @@ public class RxAsset extends RxBase implements Comparable<RxAsset>, CanGetAndSet
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    set(reader.readNtAsset());
+  }
+
+  @Override
   public void __revert() {
     if (__isDirty()) {
       value = backup;

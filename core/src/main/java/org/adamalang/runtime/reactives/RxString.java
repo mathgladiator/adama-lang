@@ -43,6 +43,11 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    set(reader.readString());
+  }
+
+  @Override
   public void __revert() {
     if (__isDirty()) {
       value = backup;

@@ -31,6 +31,7 @@ public class RxLazyTests {
     Assert.assertEquals(50, (int) lz2.get());
     lz.__insert(new JsonStreamReader("{}"));
     lz.__dump(null);
+    lz.__patch(new JsonStreamReader("{}"));
   }
 
   @Test

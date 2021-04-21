@@ -31,6 +31,7 @@ public class ErrorCodes {
   public static final int E2_LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP = 2082;
   public static final int E2_LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND = 2083;
   public static final int E2_LIVING_DOCUMENT_TRANSACTION_NO_ASSET = 2084;
+  public static final int E2_LIVING_DOCUMENT_TRANSACTION_CANT_APPLY_NO_PATCH = 2090;
 
   public static final int E3_FACTORY_CANT_BIND_JAVA_CODE = 3000;
   public static final int E3_FACTORY_CANT_COMPILE_JAVA_CODE = 3001;

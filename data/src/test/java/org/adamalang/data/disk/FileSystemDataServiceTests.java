@@ -3,6 +3,7 @@ package org.adamalang.data.disk;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -59,8 +60,8 @@ public class FileSystemDataServiceTests {
       f.get(id.get(), fetch);
       Assert.assertEquals("{}", fetch.get().patch);
       LocalCallback<Void> written = new LocalCallback<>();
-      f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, "{}", "{\"x\":123}", "{\"x\":null}", false, 0), written);
-      f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, "{}", "{\"x\":42}", "{\"x\":123}", false, 0), written);
+      f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, null, "{}", "{\"x\":123}", "{\"x\":null}", false, 0), written);
+      f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, null, "{}", "{\"x\":42}", "{\"x\":123}", false, 0), written);
       f.get(id.get(), fetch);
       Assert.assertEquals("{\"x\":42}", fetch.get().patch);
     });
@@ -70,18 +71,18 @@ public class FileSystemDataServiceTests {
   public void coverage() throws Exception {
     d("crash", (f) -> {
       try {
-        f.fork(0, 0, 0, null);
+        f.fork(0, 0, null, null, null);
         Assert.fail();
       } catch (UnsupportedOperationException uoe) {
       }
 
       try {
-        f.rewind(0, 0, null);
+        f.rewind(0, null,null, null);
         Assert.fail();
       } catch (UnsupportedOperationException uoe) {
       }
       try {
-        f.unsend(0, 0, 0, null);
+        f.unsend(0, null, null, null);
         Assert.fail();
       } catch (UnsupportedOperationException uoe) {
       }

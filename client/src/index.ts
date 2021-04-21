@@ -45,6 +45,9 @@ export class Connection {
 
   onreconnect: Map<number, object>;
 
+  sessionId : string;
+  sendId : number;
+
   constructor(url: string) {
     var self = this;
     this.backoff = 1;
@@ -63,8 +66,9 @@ export class Connection {
     this.callbacks = new Map<number, (result: object) => void>();
     this.connectId = 1;
     this.onreconnect = new Map<number, object>();
-
     this.rpcid = 1;
+    this.sessionId = "";
+    this.sendId = 0;
   }
 
   /** stop the connection */
@@ -149,6 +153,7 @@ export class Connection {
         // tell the client that we are good!
         self.backoff = 1;
         self.connected = true;
+        self.sessionId = result.session_id;
         self.onstatuschange(true);
         self._reconnect();
         return;
@@ -219,14 +224,14 @@ export class Connection {
 
   /** api: generate a new game */
   async generate(gs: string) {
-    var request = { method: "generate", gamespace: gs };
+    var request = { method: "reserve", space: gs };
     var self = this;
     return new Promise(function (good, bad) {
       self._send(request, function (response: { [k: string]: any }) {
         if ('failure' in response) {
           bad(response.reason)
         } else {
-          good(response);
+          good(response.key);
         }
       });
     });
@@ -234,7 +239,7 @@ export class Connection {
 
   /** api: get the schema for the gamepsace */
   async reflect(gs: string) {
-    var request = { method: "reflect", gamespace: gs };
+    var request = { method: "reflect", space: gs, key:'0' };
     var self = this;
     return new Promise(function (good, bad) {
       self._send(request, function (response: { [k: string]: any }) {
@@ -248,7 +253,7 @@ export class Connection {
   }
 
   async load_code(gs: string) {
-    var request = { method: "load_code", gamespace: gs };
+    var request = { method: "load_code", space: gs };
     var self = this;
     return new Promise(function (good, bad) {
       self._send(request, function (response: { [k: string]: any }) {
@@ -262,7 +267,7 @@ export class Connection {
   }
 
   async save_code(gs: string, code: string) {
-    var request = { method: "save_code", gamespace: gs, code: code};
+    var request = { method: "save_code", space: gs, code: code};
     var self = this;
     return new Promise(function (good, bad) {
       self._send(request, function (response: { [k: string]: any }) {
@@ -276,7 +281,7 @@ export class Connection {
   }
 
   async deploy(gs: string) {
-    var request = { method: "deploy", gamespace: gs};
+    var request = { method: "deploy", space: gs};
     var self = this;
     return new Promise(function (good, bad) {
       self._send(request, function (response: { [k: string]: any }) {
@@ -292,7 +297,7 @@ export class Connection {
 
   /** api: generate a new game */
   async create(gs: string, id: string, arg: object) {
-    var request = { method: "create", gamespace: gs, game: id, arg: arg };
+    var request = { method: "create", space: gs, key: id, arg: arg };
     var self = this;
     return new Promise(function (good, bad) {
       self._send(request, function (response: { [k: string]: any }) {
@@ -307,7 +312,7 @@ export class Connection {
 
   /** api: connect to a game */
   async connect(gs: string, id: string, handler: (data: object) => void) {
-    var request = { method: "connect", gamespace: gs, game: id };
+    var request = { method: "connect", space: gs, key: id };
     var self = this;
     var first = true;
     return new Promise(function (good, bad) {
@@ -329,15 +334,15 @@ export class Connection {
 
   /** api: send a message */
   async send(gs: string, id: string, channel: string, msg: any, hack: (request: any) => void) {
-    var request = {method: "send", gamespace: gs, game: id, channel: channel, message: msg};
     var self = this;
+    var request = {method: "send", marker: self.sessionId = "/" + self.sendId, space: gs, key: id, channel: channel, message: msg};
+    self.sendId ++;
+
     if (hack) {
       hack(request);
     }
 
     // TODO: queue this up? with retry?
-    // TODO: generate a marker
-
     return new Promise(function (good, bad) {
       self._send(request, function (response: { [k: string]: any }) {
         if ('failure' in response) {
@@ -354,7 +359,7 @@ export class Connection {
     var keyId = this.connectId;
     this.connectId++;
     let sm = {
-      request: {method: "connect", gamespace: gs, game: id},
+      request: {method: "connect", space: gs, key: id},
       first: true,
       handler: function (r: any) {
         tree.mergeUpdate(r);

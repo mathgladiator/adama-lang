@@ -34,6 +34,10 @@ public class RxGuard extends RxBase implements RxChild {
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+  }
+
+  @Override
   public boolean __raiseInvalid() {
     generation++;
     invalid = true;

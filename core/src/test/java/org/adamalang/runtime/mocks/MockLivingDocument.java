@@ -60,6 +60,10 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  public void __patch(JsonStreamReader __reader) {
+  }
+
+  @Override
   protected void __invoke_label(final String __new_state) {
   }
 
@@ -71,6 +75,11 @@ public class MockLivingDocument extends LivingDocument {
 
   @Override
   public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {
+  }
+
+  @Override
+  public boolean __onCanAssetAttached(NtClient __cvalue) {
+    return false;
   }
 
   @Override

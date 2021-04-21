@@ -76,6 +76,15 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    if (reader.testLackOfNull()) {
+      make().__patch(reader);
+    } else {
+      delete();
+    }
+  }
+
+  @Override
   public boolean __raiseInvalid() {
     __invalidateSubscribers();
     return true;

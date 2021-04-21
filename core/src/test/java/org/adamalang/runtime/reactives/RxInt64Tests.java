@@ -68,6 +68,21 @@ public class RxInt64Tests {
     Assert.assertEquals(42, (long) d.get());
   }
 
+
+  @Test
+  public void patch1() {
+    final var d = new RxInt64(null, 1);
+    d.__patch(new JsonStreamReader("42"));
+    Assert.assertEquals(42, (long) d.get());
+  }
+
+  @Test
+  public void patch2() {
+    final var d = new RxInt64(null, 1);
+    d.__patch(new JsonStreamReader("\"42\""));
+    Assert.assertEquals(42, (long) d.get());
+  }
+
   @Test
   public void invalidate_and_revert() {
     final var l = new RxInt64(null, 42);

@@ -149,6 +149,28 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   @Override
+  public void __patch(JsonStreamReader reader) {
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        final var f2 = reader.fieldName();
+        final var key = Integer.parseInt(f2);
+        if (reader.testLackOfNull()) {
+          var tyPrior = itemsByKey.get(key);
+          if (tyPrior == null) {
+            tyPrior = make(key);
+          }
+          tyPrior.__patch(reader);
+        } else {
+          var tyPrior = itemsByKey.get(key);
+          if (tyPrior != null) {
+            tyPrior.__delete();
+          }
+        }
+      }
+    }
+  }
+
+  @Override
   public boolean __raiseInvalid() {
     __raiseDirty();
     return true;
@@ -193,7 +215,10 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   public Ty make() {
-    final var key = document.genNextAutoKey();
+    return make(document.genNextAutoKey());
+  }
+
+  public Ty make(int key) {
     final var result = maker.apply(this);
     result.__setId(key, false);
     result.__subscribe(this);

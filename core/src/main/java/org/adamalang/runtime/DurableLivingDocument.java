@@ -174,14 +174,30 @@ public class DurableLivingDocument {
     ingest(request.toString(), callback);
   }
 
-  public void send(final NtClient who, final String channel, final String message, Callback<Integer> callback) {
+  public void send(final NtClient who, final String marker, final String channel, final String message, Callback<Integer> callback) {
     final var writer = forge("send", who);
     writer.writeObjectFieldIntro("channel");
     writer.writeFastString(channel);
+    if (marker != null) {
+      writer.writeObjectFieldIntro("marker");
+      writer.writeString(marker);
+    }
     writer.writeObjectFieldIntro("message");
     writer.injectJson(message);
     writer.endObject();
     ingest(writer.toString(), callback);
+  }
+
+  public void apply(NtClient who, String patch, Callback<Integer> callback) {
+    final var writer = forge("apply", who);
+    writer.writeObjectFieldIntro("patch");
+    writer.injectJson(patch);
+    writer.endObject();
+    ingest(writer.toString(), callback);
+  }
+
+  public boolean canAttach(NtClient who) {
+    return document.__onCanAssetAttached(who);
   }
 
   public void attach(NtClient who, NtAsset asset, Callback<Integer> callback) {

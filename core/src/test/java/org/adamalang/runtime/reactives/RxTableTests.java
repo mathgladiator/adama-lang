@@ -138,6 +138,16 @@ public class RxTableTests {
   }
 
   @Test
+  public void patch_delete() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    table.__patch(new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":12},\"6\":{\"index\":13}}"));
+    Assert.assertEquals(3, table.size());
+    table.__patch(new JsonStreamReader("{\"4\":null,\"5\":null,\"6\":{\"index\":52}}"));
+    Assert.assertEquals(1, table.size());
+  }
+
+  @Test
   public void noindex() {
     final var document = new MockLivingDocument();
     new RxTable<>(document, document, "name", MockRecord::new, 0);
