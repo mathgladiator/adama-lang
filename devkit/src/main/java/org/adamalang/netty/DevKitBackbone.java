@@ -10,14 +10,18 @@
 package org.adamalang.netty;
 
 import org.adamalang.api.commands.contracts.*;
+import org.adamalang.api.util.Json;
 import org.adamalang.netty.api.GameSpace;
 import org.adamalang.netty.api.GameSpaceDB;
 import org.adamalang.netty.contracts.JsonResponder;
 import org.adamalang.runtime.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,16 +35,6 @@ public class DevKitBackbone implements Backbone {
     this.gameSpaceDB = gameSpaceDB;
     this.time = gameSpaceDB.time;
     this.executor = executor;
-  }
-
-  @Override
-  public TimeSource getTimeSource() {
-    return time;
-  }
-
-  @Override
-  public DocumentMonitor monitorFor(String space, long key) {
-    return null;
   }
 
   @Override
@@ -79,6 +73,38 @@ public class DevKitBackbone implements Backbone {
     try {
       GameSpace gs = gameSpaceDB.getOrCreate(space);
       cmd.onLivingDocumentFactory(gs.getFactory());
+    } catch (ErrorCodeException ex) {
+      responder.error(ex);
+    }
+  }
+
+  @Override
+  public void makeDocument(String space, long key, NtClient who, String arg, String entropy, DataService service, LivingDocumentFactory factory,  CommandCreatesDocument cmd, CommandResponder responder) {
+    try {
+      GameSpace gs = gameSpaceDB.getOrCreate(space);
+      // public void create(final long id, final NtClient who, final ObjectNode cons, final String entropy, Callback<DurableLivingDocument> callback) throws ErrorCodeException {
+      gs.create(key, who, Json.parseJsonObject(arg), entropy, new Callback<DurableLivingDocument>() {
+        @Override
+        public void success(DurableLivingDocument value) {
+          value.invalidate(new Callback<Integer>() {
+            @Override
+            public void success(Integer seq) {
+              cmd.onDurableDocumentCreated(value, seq);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              responder.error(ex);
+            }
+          });
+
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
     } catch (ErrorCodeException ex) {
       responder.error(ex);
     }

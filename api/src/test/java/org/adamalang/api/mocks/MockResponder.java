@@ -15,34 +15,70 @@ import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.junit.Assert;
 
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class MockResponder implements CommandResponder {
   public final ArrayList<String> data;
   private boolean done;
   public ErrorCodeException ex;
+  private final CountDownLatch doneLatch;
+  private final CountDownLatch firstLatch;
 
   public MockResponder() {
     this.data = new ArrayList<>();
     this.done = false;
+    this.doneLatch = new CountDownLatch(1);
+    this.firstLatch = new CountDownLatch(1);
+  }
+
+  public void awaitFirst() {
+    try {
+      Assert.assertTrue(firstLatch.await(2000, TimeUnit.MILLISECONDS));
+    } catch (InterruptedException ie) {
+      Assert.fail();
+    }
+  }
+
+  public void awaitDone() {
+    try {
+      Assert.assertTrue(doneLatch.await(2000, TimeUnit.MILLISECONDS));
+    } catch (InterruptedException ie) {
+      Assert.fail();
+    }
+  }
+
+  public void assertLast(String expected) {
+    Assert.assertEquals(expected, data.get(data.size() - 1));
   }
 
   @Override
   public void stream(String response) {
     Assert.assertFalse(done);
     data.add(response);
+    if (data.size() == 1) {
+      firstLatch.countDown();
+    }
   }
 
   @Override
   public void finish(String response) {
     Assert.assertFalse(done);
     done = true;
-    data.add(response.toString());
+    data.add(response);
+    if (data.size() == 1) {
+      firstLatch.countDown();
+    }
+    doneLatch.countDown();
   }
 
   @Override
   public void error(ErrorCodeException ex) {
+    ex.printStackTrace();
     Assert.assertFalse(done);
     done = true;
     this.ex = ex;
+    firstLatch.countDown();
+    doneLatch.countDown();
   }
 }

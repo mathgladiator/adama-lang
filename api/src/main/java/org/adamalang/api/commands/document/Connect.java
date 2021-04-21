@@ -13,6 +13,7 @@ import org.adamalang.api.commands.Request;
 import org.adamalang.api.commands.RequestContext;
 import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDocument;
+import org.adamalang.api.commands.contracts.CommandResponder;
 import org.adamalang.runtime.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.Perspective;
@@ -47,17 +48,7 @@ public class Connect implements Command, CommandRequiresDocument {
   @Override
   public void onDurableDocumentFound(DurableLivingDocument document) {
     if (!document.isConnected(context.session.who())) {
-      document.connect(context.session.who(), new Callback<>() {
-        @Override
-        public void success(Integer value) {
-          afterConnect(document);
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          context.responder.error(ex);
-        }
-      });
+      document.connect(context.session.who(), CommandResponder.TO_CALLBACK((iv) -> afterConnect(document), context.responder));
     } else {
       afterConnect(document);
     }
@@ -75,16 +66,7 @@ public class Connect implements Command, CommandRequiresDocument {
       public void disconnect() {
         context.responder.finish("{}");
       }
-    }, new Callback<>() {
-      @Override
-      public void success(PrivateView pv) {
-        onPrivateView(document, pv);
-      }
-      @Override
-      public void failure(ErrorCodeException ex) {
-        context.responder.error(ex);
-      }
-    });
+    }, CommandResponder.TO_CALLBACK((pv) -> onPrivateView(document, pv), context.responder));
   }
 
   // step 4: hook up disconnect
@@ -93,92 +75,10 @@ public class Connect implements Command, CommandRequiresDocument {
       pv.kill();
       if (document.garbageCollectPrivateViewsFor(context.session.who()) == 0) {
         document.disconnect(context.session.who(), Callback.DONT_CARE_INTEGER);
-      } else {
-        document.invalidate(Callback.DONT_CARE_INTEGER);
       }
+      document.invalidate(Callback.DONT_CARE_INTEGER);
       pv.perspective.disconnect();
     });
     context.backbone.invalidateAndSchedule(document);
   }
 }
-
-
-  /*
-  case "connect": {
-    final var gs = findGamespace(request);
-    final var id = lng(request, "key", ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
-    final var key = gs.name + ":" + id + ":" + who.agent;
-    if (session.checkNotUnique(key)) {
-      throw new ErrorCodeException(ErrorCodes.USERLAND_SESSION_CANT_CONNECT_AGAIN);
-    }
-    Callback<DurableLivingDocument> onGet = Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_GET, new Callback<DurableLivingDocument>() {
-      @Override
-      public void success(DurableLivingDocument doc) {
-        Callback<PrivateView> postPrivateView = Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_PV, new Callback<PrivateView>() {
-          @Override
-          public void success(PrivateView pv) {
-            session.subscribeToSessionDeath(key, () -> {
-              // session death happens in HTTP land, so let's return to the executor to talk
-              // to transactor
-              executor.execute(() -> {
-                pv.kill();
-                if (doc.garbageCollectPrivateViewsFor(who) == 0) {
-                  doc.disconnect(who, Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_GC, new Callback<Integer>() {
-                    @Override
-                    public void success(Integer value) {
-                    }
-
-                    @Override
-                    public void failure(ErrorCodeException ex) {
-                      responder.failure(ex);
-                    }
-                  }));
-                }
-              });
-              responder.respond("{}", true, null);
-            });
-            witness(doc, executor);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            responder.failure(ex);
-          }
-        });
-
-        Callback<Void> postConnect = Callback.bind(executor, ErrorCodes.E5_REQUEST_CONNECT_CRASHED_POST_CONNECT, new Callback<Void>() {
-          @Override
-          public void success(Void value) {
-            Perspective perspective = new Perspective() {
-              @Override
-              public void data(String data) {
-                executor.execute(() -> {
-                  responder.respond(data, false, null);
-                });
-              }
-
-              @Override
-              public void disconnect() {
-                // tell the client to go away
-              }
-            };
-            doc.createPrivateView(who, perspective, postPrivateView);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            responder.failure(ex);
-          }
-        });
-
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        responder.failure(ex);
-      }
-    });
-    gs.get(id, onGet);
-    return;
-  }
-*/

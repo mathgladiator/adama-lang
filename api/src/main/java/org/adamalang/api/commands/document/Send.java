@@ -13,6 +13,7 @@ import org.adamalang.api.commands.Request;
 import org.adamalang.api.commands.RequestContext;
 import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDocument;
+import org.adamalang.api.commands.contracts.CommandResponder;
 import org.adamalang.runtime.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -46,16 +47,8 @@ public class Send implements Command, CommandRequiresDocument {
 
   @Override
   public void onDurableDocumentFound(DurableLivingDocument document) {
-    document.send(context.session.who(), marker, channel, message, new Callback<Integer>() {
-      @Override
-      public void success(Integer seq) {
-        context.responder.finish("{\"seq\":" + seq + "}");
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        context.responder.error(ex);
-      }
-    });
+    document.send(context.session.who(), marker, channel, message, CommandResponder.TO_CALLBACK((seq) -> {
+      context.responder.finish("{\"seq\":" + seq + "}");
+    }, context.responder));
   }
 }

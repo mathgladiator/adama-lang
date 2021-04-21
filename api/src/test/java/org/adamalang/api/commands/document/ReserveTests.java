@@ -9,5 +9,58 @@
 */
 package org.adamalang.api.commands.document;
 
+import org.adamalang.api.commands.Scaffold;
+import org.adamalang.api.mocks.MockResponder;
+import org.junit.Assert;
+import org.junit.Test;
+
 public class ReserveTests {
+  @Test
+  public void happy() {
+    Scaffold scaffold = new Scaffold();
+    {
+      MockResponder responder = new MockResponder();
+      scaffold.dispatch("{\"method\":\"reserve\",\"space\":\"game\"}", responder);
+      responder.awaitDone();
+      Assert.assertEquals("{\"key\":\"0\"}", responder.data.get(0));
+    }
+    {
+      MockResponder responder = new MockResponder();
+      scaffold.dispatch("{\"method\":\"reserve\",\"space\":\"game\"}", responder);
+      responder.awaitDone();
+      Assert.assertEquals("{\"key\":\"1\"}", responder.data.get(0));
+    }
+  }
+
+  @Test
+  public void exhaust() {
+    Scaffold scaffold = new Scaffold();
+    {
+      MockResponder responder = new MockResponder();
+      scaffold.dispatch("{\"method\":\"reserve\",\"space\":\"game\"}", responder);
+      responder.awaitDone();
+      Assert.assertEquals("{\"key\":\"0\"}", responder.data.get(0));
+    }
+    {
+      MockResponder responder = new MockResponder();
+      scaffold.dispatch("{\"method\":\"reserve\",\"space\":\"game\"}", responder);
+      responder.awaitDone();
+      Assert.assertEquals("{\"key\":\"1\"}", responder.data.get(0));
+    }
+    for (int k = 2; k < 100; k++) {
+      {
+        MockResponder responder = new MockResponder();
+        scaffold.dispatch("{\"method\":\"reserve\",\"space\":\"game\"}", responder);
+        responder.awaitDone();
+        Assert.assertEquals("{\"key\":\""+k+"\"}", responder.data.get(0));
+      }
+    }
+    {
+      MockResponder responder = new MockResponder();
+      scaffold.dispatch("{\"method\":\"reserve\",\"space\":\"game\"}", responder);
+      responder.awaitDone();
+      Assert.assertEquals(12345, responder.ex.code);
+    }
+  }
+
 }

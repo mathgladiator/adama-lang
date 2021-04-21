@@ -14,8 +14,8 @@ import org.adamalang.api.commands.RequestContext;
 import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDataService;
 import org.adamalang.api.commands.contracts.CommandRequiresDocument;
+import org.adamalang.api.commands.contracts.CommandResponder;
 import org.adamalang.runtime.DurableLivingDocument;
-import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
@@ -47,32 +47,17 @@ public class Unsend implements Command, CommandRequiresDataService, CommandRequi
   // step 2: get the patch from the data service
   @Override
   public void onDataServiceFound(DataService service) {
-    service.unsend(key, context.session.who(), marker, new Callback<DataService.LocalDocumentChange>() {
-      @Override
-      public void success(DataService.LocalDocumentChange value) {
-        Unsend.this.change = value;
-        context.backbone.findDocument(space, key, Unsend.this, context.responder);
-      }
-      @Override
-      public void failure(ErrorCodeException ex) {
-        context.responder.error(ex);
-      }
-    });
+    service.unsend(key, context.session.who(), marker, CommandResponder.TO_CALLBACK((value) -> {
+      Unsend.this.change = value;
+      context.backbone.findDocument(space, key, Unsend.this, context.responder);
+    }, context.responder));
   }
 
   // step 3: apply the patch
   @Override
   public void onDurableDocumentFound(DurableLivingDocument document) {
-    document.apply(context.session.who(), change.patch, new Callback<Integer>() {
-      @Override
-      public void success(Integer value) {
-
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        context.responder.error(ex);
-      }
-    });
+    document.apply(context.session.who(), change.patch, CommandResponder.TO_CALLBACK((seq) -> {
+      context.responder.finish("{\"seq\":" + seq + "}");
+    }, context.responder));
   }
 }

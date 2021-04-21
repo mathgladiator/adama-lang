@@ -13,7 +13,7 @@ import org.adamalang.api.commands.Request;
 import org.adamalang.api.commands.RequestContext;
 import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDataService;
-import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.api.commands.contracts.CommandResponder;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
@@ -38,16 +38,6 @@ public class Reserve implements Command, CommandRequiresDataService {
 
   @Override
   public void onDataServiceFound(DataService dataService) {
-    dataService.create(new Callback<Long>() {
-      @Override
-      public void success(Long value) {
-        context.responder.finish("{\"key\":\"" + value + "\"}");
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        context.responder.error(ex);
-      }
-    });
+    dataService.create(CommandResponder.TO_CALLBACK((value) -> context.responder.finish("{\"key\":\"" + value + "\"}"), context.responder));
   }
 }

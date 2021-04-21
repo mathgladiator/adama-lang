@@ -9,7 +9,10 @@
 */
 package org.adamalang.api.commands.contracts;
 
+import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+
+import java.util.function.Consumer;
 
 /** how commands respond */
 public interface CommandResponder {
@@ -22,4 +25,18 @@ public interface CommandResponder {
 
   /** respond with a terminal error */
   public void error(ErrorCodeException ex);
+
+  public static <T> Callback<T> TO_CALLBACK(Consumer<T> consumer, CommandResponder responder) {
+    return new Callback<T>() {
+      @Override
+      public void success(T value) {
+        consumer.accept(value);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responder.error(ex);
+      }
+    };
+  }
 }

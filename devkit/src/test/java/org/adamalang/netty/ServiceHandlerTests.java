@@ -98,7 +98,7 @@ public class ServiceHandlerTests {
     id3.assertOnce("{\"deliver\":3,\"done\":true,\"response\":{\"seq\":7}}");
     id2.done.await(1000, TimeUnit.MILLISECONDS);
     id2.assertLast(2, "{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":130},\"outstanding\":[],\"blockers\":[],\"seq\":7}}");
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":4,\"space\":\"Demo_ServiceHandler_success\",\"method\":\"reflect\"}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":4,\"space\":\"Demo_ServiceHandler_success\",\"method\":\"reflect\",\"key\":4200}"));
     id4.done.await(1000, TimeUnit.MILLISECONDS);
     id4.assertOnce("{\"deliver\":4,\"done\":true,\"response\":{\"result\":{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"x\":{\"type\":{\"nature\":\"reactive_value\",\"type\":\"int\"},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}},\"M\":{\"nature\":\"native_message\",\"name\":\"M\",\"anonymous\":false,\"fields\":{\"dx\":{\"type\":{\"nature\":\"native_value\",\"type\":\"int\"},\"privacy\":\"public\"}}}},\"channels\":{\"change\":\"M\"},\"constructors\":[],\"labels\":[]}}}");
     cleanup();
