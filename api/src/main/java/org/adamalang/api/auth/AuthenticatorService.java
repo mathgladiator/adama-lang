@@ -9,6 +9,9 @@
 */
 package org.adamalang.api.auth;
 
+import org.adamalang.api.session.Session;
+import org.adamalang.runtime.natives.NtClient;
+
 /** service to asynchronously authenticate users by various forms */
 public interface AuthenticatorService {
   /** authenticate by token */
@@ -16,4 +19,7 @@ public interface AuthenticatorService {
 
   /** authenticate by email and password */
   public void authenticateByEmail(String email, String password, AuthenticatorCallback callback);
+
+  /** authenticate an impersonation of another person */
+  public void authenticateImpersonation(Session session, NtClient other, AuthenticatorCallback callback);
 }

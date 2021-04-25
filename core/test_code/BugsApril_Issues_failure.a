@@ -1,0 +1,7 @@
+
+
+@construct {
+  ++ (true + 1);
+  (true + 1)++;
+  @convert<Foo>(123);
+}

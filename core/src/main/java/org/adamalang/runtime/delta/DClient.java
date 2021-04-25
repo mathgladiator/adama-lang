@@ -42,6 +42,7 @@ public class DClient {
 
   private void writeOut(final PrivateLazyDeltaWriter writer) {
     final var obj = writer.planObject();
+    obj.planField("@t").writeInt(1);
     obj.planField("agent").writeFastString(prior.agent);
     obj.planField("authority").writeFastString(prior.authority);
     obj.end();

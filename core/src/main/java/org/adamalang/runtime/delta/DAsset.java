@@ -12,6 +12,7 @@ package org.adamalang.runtime.delta;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.stdlib.IdCodec;
 
 /** the asset we sent to the client */
 public class DAsset {
@@ -45,7 +46,7 @@ public class DAsset {
   private void writeOut(final PrivateLazyDeltaWriter writer) {
     final var obj = writer.planObject();
     // note; we don't send the name as that may leak private information from the uploader
-    obj.planField("id").writeFastString("" + prior.id);
+    obj.planField("id").writeFastString(IdCodec.encode(prior.id));
     obj.planField("size").writeFastString("" + prior.size);
     obj.planField("type").writeString(prior.contentType);
     obj.planField("md5").writeString(prior.md5);

@@ -13,9 +13,9 @@ import org.adamalang.runtime.natives.NtClient;
 
 public class ImpersonatedSession implements Session {
   private final NtClient who;
-  private final UserSession session;
+  private final Session session;
 
-  public ImpersonatedSession(NtClient who, UserSession session) {
+  public ImpersonatedSession(NtClient who, Session session) {
     this.who = who;
     this.session = session;
   }

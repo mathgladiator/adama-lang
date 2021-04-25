@@ -82,7 +82,9 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     if (frame instanceof TextWebSocketFrame) {
       final var request = WebHandler.parseJsonObject(((TextWebSocketFrame) frame).text());
       if (request.has("pong")) {
-        latency.set(System.currentTimeMillis() - created - request.get("ping").asLong());
+        if (request.has("ping")) {
+          latency.set(System.currentTimeMillis() - created - request.get("ping").asLong());
+        }
         return;
       }
       // extract and validate the ID

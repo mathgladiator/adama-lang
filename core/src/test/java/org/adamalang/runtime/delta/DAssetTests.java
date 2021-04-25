@@ -27,6 +27,6 @@ public class DAssetTests {
     da.show(new NtAsset(12, "name", "type", 42, "md5", "sha"), writer);
     da.show(new NtAsset(32, "name", "type", 42, "md5", "sha"), writer);
     da.hide(writer);
-    Assert.assertEquals("{\"id\":\"0\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",null,{\"id\":\"12\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\",{\"id\":\"32\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\",null", stream.toString());
+    Assert.assertEquals("{\"id\":\"AAAAAAA\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",null,{\"id\":\"RAAAAAA\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\",{\"id\":\"GAAAAAA\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\",null", stream.toString());
   }
 }

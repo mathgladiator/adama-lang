@@ -58,8 +58,12 @@ public class ConvertMessage extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    final var idealType = environment.rules.FindMessageStructure(newMessageType, this, false).makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
-    final var exprType = expression.typing(environment, null);
+    final var preCopyType = environment.rules.FindMessageStructure(newMessageType, this, false);
+    final var exprType = environment.rules.ResolvePtr(expression.typing(environment, null), false);
+    if (preCopyType == null) {
+      return null;
+    }
+    final var idealType = preCopyType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
     if (environment.rules.IsNativeArrayOfStructure(exprType, true)) {
       // X{]
       style = MessageConversionStyle.Multiple;
@@ -77,7 +81,7 @@ public class ConvertMessage extends Expression {
       style = MessageConversionStyle.Single;
       if (environment.rules.CanStructureAProjectIntoStructureB(exprType, idealType, false)) { return idealType; }
     } else if (environment.rules.IsMaybe(exprType, true)) {
-      final var subExpr = environment.rules.ExtractEmbeddedType(exprType, false);
+      final var subExpr = environment.rules.ResolvePtr(environment.rules.ExtractEmbeddedType(exprType, false), false);
       // maybe<X>
       if (subExpr != null && environment.rules.IsStructure(subExpr, false)) {
         style = MessageConversionStyle.Maybe;

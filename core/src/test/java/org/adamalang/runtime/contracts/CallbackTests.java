@@ -142,4 +142,10 @@ public class CallbackTests {
     t.success(null);
     Assert.assertEquals(5, callback.exception.code);
   }
+
+  @Test
+  public void dontcare() {
+    Callback.DONT_CARE_INTEGER.success(123);
+    Callback.DONT_CARE_INTEGER.failure(new ErrorCodeException(123));
+  }
 }

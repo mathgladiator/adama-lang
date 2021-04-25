@@ -64,10 +64,8 @@ public class FieldLookup extends Expression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     var eType = expression.typing(environment, null);
+    eType = environment.rules.ResolvePtr(eType, false);
     if (eType != null) {
-      if (eType instanceof TyNativeReactiveRecordPtr) {
-        eType = ((TyNativeReactiveRecordPtr) eType).source;
-      }
       // global object, find the function
       if (eType instanceof TyNativeGlobalObject) {
         isGlobalObject = true;
@@ -78,7 +76,7 @@ public class FieldLookup extends Expression {
         }
       }
       if (eType instanceof TyNativeList) {
-        final var elementType = ((TyNativeList) eType).getEmbeddedType(environment);
+        final var elementType = environment.rules.ResolvePtr(((TyNativeList) eType).getEmbeddedType(environment), false);
         if (elementType != null && elementType instanceof TyReactiveRecord) {
           final var fd = ((TyReactiveRecord) elementType).storage.fields.get(fieldName);
           if (fd != null) {

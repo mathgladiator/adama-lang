@@ -570,10 +570,10 @@ public class LivingDocumentTests {
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":1,\"f\":{\"id\":\"0\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"},\"outstanding\":[],\"blockers\":[],\"seq\":4}", deNO_ONE.datum.get(0).toString());
+    Assert.assertEquals("{\"data\":{\"x\":1,\"f\":{\"id\":\"AAAAAAA\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"},\"outstanding\":[],\"blockers\":[],\"seq\":4}", deNO_ONE.datum.get(0).toString());
     setup.document.attach(NtClient.NO_ONE, EXAMPLE, new RealDocumentSetup.AssertInt(6));
     Assert.assertEquals(2, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":2,\"f\":{\"id\":\"42\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"},\"outstanding\":[],\"blockers\":[],\"seq\":6}", deNO_ONE.datum.get(1).toString());
+    Assert.assertEquals("{\"data\":{\"x\":2,\"f\":{\"id\":\"DJAAAAA\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"},\"outstanding\":[],\"blockers\":[],\"seq\":6}", deNO_ONE.datum.get(1).toString());
     setup.assertCompare();
   }
 

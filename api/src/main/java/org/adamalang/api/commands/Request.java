@@ -12,6 +12,7 @@ package org.adamalang.api.commands;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.natives.NtClient;
 
 /** wrapper around an object node such that the entire API is consistent */
 public class Request {
@@ -60,6 +61,17 @@ public class Request {
   public String json_arg() throws ErrorCodeException {
     return node(node, "arg", ErrorCodes.USERLAND_REQUEST_NO_CONSTRUCTOR_ARG).toString();
   }
+
+  public NtClient impersonate() throws ErrorCodeException {
+    final var impersonateNode = node.get("impersonate");
+    if (impersonateNode != null && impersonateNode.isObject()) {
+      ObjectNode impersonateObject = (ObjectNode) impersonateNode;
+      String agent = str(impersonateObject, "agent", true, ErrorCodes.USERLAND_REQUEST_IMPERSONATE_NO_AGENT);
+      String authority = str(impersonateObject, "authority", true, ErrorCodes.USERLAND_REQUEST_IMPERSONATE_NO_AUTHORITY);
+      return new NtClient(agent, authority);
+    }
+    return null;
+  };
 
   private static String str(final ObjectNode request, final String field, final boolean mustExist, final int errorIfDoesnt) throws ErrorCodeException {
     final var fieldNode = request.get(field);

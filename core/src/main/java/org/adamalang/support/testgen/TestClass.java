@@ -32,9 +32,15 @@ public class TestClass {
     testId = 0;
     this.clazz = clazz;
     outputFile = new StringBuilder();
-    outputFile.append("/* The Adama Programming Language For Board Games!\n" +
-            " *    See http://www.adama-lang.org/ for more information.\n" +
-            " * (c) copyright 2020 Jeffrey M. Barber (http://jeffrey.io) */\n");
+    outputFile.append("/*\n" +
+            " * This file is subject to the terms and conditions outlined in the file 'LICENSE'\n" +
+            " * which is in the root directory of the repository. This file is part of the 'Adama'\n" +
+            " * project which is a programming language and document store for board games.\n" +
+            " * \n" +
+            " * See http://www.adama-lang.org/ for more information.\n" +
+            " * \n" +
+            " * (c) 2020 - 2021 by Jeffrey M. Barber (http://jeffrey.io)\n" +
+            "*/\n");
     outputFile.append("package org.adamalang.translator;\n\n");
     outputFile.append("import org.junit.Test;\n\n");
     outputFile.append(String.format("public class Generated%sTests extends GeneratedBase {\n", clazz));

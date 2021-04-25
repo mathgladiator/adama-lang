@@ -21,5 +21,6 @@ public class ExceptionTests {
     new AbortMessageException();
     new RetryProgressException(null);
     new ComputeBlockedException(NtClient.NO_ONE, "foo");
+    new ErrorCodeException(14, "Nope");
   }
 }

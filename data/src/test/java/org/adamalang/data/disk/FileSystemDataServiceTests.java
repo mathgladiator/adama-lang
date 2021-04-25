@@ -95,11 +95,6 @@ public class FileSystemDataServiceTests {
         Assert.fail();
       } catch (UnsupportedOperationException uoe) {
       }
-      try {
-        f.delete(0, null);
-        Assert.fail();
-      } catch (UnsupportedOperationException uoe) {
-      }
     });
   }
 }

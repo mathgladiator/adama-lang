@@ -32,6 +32,6 @@ public class DClientTests {
     db.show(A, writer);
     db.show(NtClient.NO_ONE, writer);
     db.show(NtClient.NO_ONE, writer);
-    Assert.assertEquals("{\"agent\":\"?\",\"authority\":\"?\"}{\"agent\":\"a\",\"authority\":\"local\"}null{\"agent\":\"a\",\"authority\":\"local\"}{\"agent\":\"?\",\"authority\":\"?\"}", stream.toString());
+    Assert.assertEquals("{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"}{\"@t\":1,\"agent\":\"a\",\"authority\":\"local\"}null{\"@t\":1,\"agent\":\"a\",\"authority\":\"local\"}{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"}", stream.toString());
   }
 }

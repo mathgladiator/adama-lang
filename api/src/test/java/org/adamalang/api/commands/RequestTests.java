@@ -67,32 +67,68 @@ public class RequestTests {
       request.method();
       Assert.fail();
     } catch (ErrorCodeException ece) {
+      Assert.assertEquals(40102, ece.code);
     }
     try {
       request.space();
       Assert.fail();
     } catch (ErrorCodeException ece) {
+      Assert.assertEquals(40100, ece.code);
     }
     try {
       request.marker();
       Assert.fail();
     } catch (ErrorCodeException ece) {
+      Assert.assertEquals(40107, ece.code);
     }
     try {
       request.channel();
       Assert.fail();
     } catch (ErrorCodeException ece) {
+      Assert.assertEquals(40104, ece.code);
     }
     Assert.assertNull(request.entropy());
     try {
       request.key();
       Assert.fail();
     } catch (ErrorCodeException ece) {
+      Assert.assertEquals(40101, ece.code);
     }
     try {
       request.id();
       Assert.fail();
     } catch (ErrorCodeException ece) {
+      Assert.assertEquals(40110, ece.code);
     }
   }
+
+  @Test
+  public void missing_impersonate1() throws ErrorCodeException {
+    Request request = new Request(Json.parseJsonObject("{\"impersonate\":{}}"));
+    try {
+      request.impersonate();
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(40111, ece.code);
+    }
+  }
+
+  @Test
+  public void missing_impersonate2() throws ErrorCodeException {
+    Request request = new Request(Json.parseJsonObject("{\"impersonate\":{\"agent\":\"f\"}}"));
+    try {
+      request.impersonate();
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(40112, ece.code);
+    }
+  }
+
+  @Test
+  public void happy_impersonate() throws ErrorCodeException {
+    Request request = new Request(Json.parseJsonObject("{\"impersonate\":{\"agent\":\"f\",\"authority\":\"a\"}}"));
+    Assert.assertEquals("f", request.impersonate().agent);
+    Assert.assertEquals("a", request.impersonate().authority);
+  }
+
 }

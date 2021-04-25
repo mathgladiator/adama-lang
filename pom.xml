@@ -23,6 +23,7 @@
         <module>devkit</module>
         <module>lsp</module>
         <module>web</module>
+        <module>benchmark</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -9,7 +9,6 @@
 */
 package org.adamalang;
 
-import org.adamalang.translator.env.CompilerOptions;
 import org.junit.Assert;
 import org.junit.Test;
 

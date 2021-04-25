@@ -97,7 +97,11 @@ public class FieldDefinition extends StructureComponent {
   public boolean equals(final Object otherRaw) {
     if (otherRaw instanceof FieldDefinition) {
       final var other = (FieldDefinition) otherRaw;
-      if (name.equals(other.name)) { return type.getAdamaType().equals(other.type.getAdamaType()); }
+      if (name.equals(other.name)) {
+        if (type != null && other.type != null) {
+          return type.getAdamaType().equals(other.type.getAdamaType());
+        }
+      }
     }
     return false;
   }

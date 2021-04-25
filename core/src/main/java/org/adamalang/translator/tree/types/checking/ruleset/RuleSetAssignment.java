@@ -13,14 +13,8 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.AssignableEmbedType;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
-import org.adamalang.translator.tree.types.checking.properties.CanTestEqualityResult;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
-import org.adamalang.translator.tree.types.natives.TyNativeArray;
-import org.adamalang.translator.tree.types.natives.TyNativeFuture;
-import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
-import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
-import org.adamalang.translator.tree.types.natives.TyNativeTable;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.traits.IsEnum;
@@ -154,7 +148,6 @@ public class RuleSetAssignment {
       }
     }
     if (RuleSetCommon.AreBothChannelTypesCompatible(environment, typeA, typeB)) { return true; }
-    if (typeA instanceof TyNativeReactiveRecordPtr && typeB instanceof TyReactiveRecord) { return ((TyNativeReactiveRecordPtr) typeA).source.getAdamaType().equals(typeB.getAdamaType()); }
     final var aEmbedAssign = TestAssignableWithEmbedd(typeA);
     final var bEmbedAssign = TestAssignableWithEmbedd(typeB);
     if (aEmbedAssign == bEmbedAssign && aEmbedAssign != AssignableEmbedType.None) {
@@ -190,10 +183,12 @@ public class RuleSetAssignment {
       final var childA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
       if (CanTypeAStoreTypeB(environment, childA, typeB, tweak, true)) { return true; }
     }
-    final var aStorage = RuleSetStructures.IsStructure(environment, typeA, true);
-    final var bStorage = RuleSetStructures.IsStructure(environment, typeB, true);
-    if (aStorage && bStorage) {
-      if (((IsStructure) typeA).name().equals(((IsStructure) typeB).name())) { return true; }
+    final var pTypeA = RuleSetCommon.ResolvePtr(environment, typeA, true);
+    final var pTypeB = RuleSetCommon.ResolvePtr(environment, typeB, true);
+    final var aStructure = RuleSetStructures.IsStructure(environment, pTypeA, true);
+    final var bStructure = RuleSetStructures.IsStructure(environment, pTypeB, true);
+    if (aStructure && bStructure) {
+      if (((IsStructure) pTypeA).name().equals(((IsStructure) pTypeB).name())) { return true; }
     }
     if (!silent) {
       environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()), "TypeCheckReferences");
@@ -211,6 +206,7 @@ public class RuleSetAssignment {
   }
 
   private static CanAssignResult TestAssignReactively(final Environment environment, final TyType left, final TyType right) {
+    //  && !RuleSetLists.TestReactiveList(environment, right, true)
     if (RuleSetLists.TestReactiveList(environment, left, true)) {
       final var childA = RuleSetCommon.ExtractEmbeddedType(environment, left, true);
       if (CanTypeAStoreTypeB(environment, childA, right, StorageTweak.None, true)) {

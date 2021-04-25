@@ -123,6 +123,14 @@ public class FileSystemDataService implements DataService {
     meta.writeInteger(patch.whenToInvalidateMilliseconds);
     meta.writeObjectFieldIntro("seq");
     meta.writeInteger(patch.seq);
+    if (patch.who != null) {
+      meta.writeObjectFieldIntro("who");
+      meta.writeNtClient(patch.who);
+    }
+    if (patch.marker != null) {
+      meta.writeObjectFieldIntro("marker");
+      meta.writeString(patch.marker);
+    }
     meta.endObject();;
     writer.println(meta.toString());
     writer.flush();
@@ -150,27 +158,34 @@ public class FileSystemDataService implements DataService {
       File file = new File(root, documentId + ".jsonlog");
       append(file, patch, callback);
     } catch (final Throwable ex) {
+      ex.printStackTrace();
       callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_CRASHED_PATCH, ex));
     }
   }
 
   @Override
   public void fork(long oldDocumentId, long newDocumentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+    // TODO: scan the old document deltas, building a new tree, stop at the given marker
+    // initialize the new document with that data blob throwing away and a pointer to the previous document
     throw new UnsupportedOperationException();
   }
 
   @Override
   public void rewind(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+    // go back to the marker while combining all the undos together
+    // formule the giant change
     throw new UnsupportedOperationException();
   }
 
   @Override
   public void unsend(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+    // go back to the marker, take the undo, then forward it through all the redos up until now
     throw new UnsupportedOperationException();
   }
 
   @Override
   public void delete(long documentId, Callback<Long> callback) {
-    throw new UnsupportedOperationException();
+    File file = new File(root, documentId + ".jsonlog");
+    file.delete();
   }
 }

@@ -57,6 +57,7 @@ public class PrefixMutate extends Expression {
       result = expression.typing(environment.scopeWithComputeContext(newContext), null);
       bumpResult = environment.rules.CanBumpBool(result, false);
     }
+    if (bumpResult == CanBumpResult.No) { return null; }
     if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) { return ((DetailComputeRequiresGet) result).typeAfterGet(environment).makeCopyWithNewPosition(this, result.behavior); }
     return result.makeCopyWithNewPosition(this, result.behavior);
   }

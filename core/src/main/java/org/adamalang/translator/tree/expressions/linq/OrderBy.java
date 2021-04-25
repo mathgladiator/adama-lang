@@ -65,7 +65,7 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
     final var typeSql = sql.typing(environment, null /* no suggestion makes sense */);
     if (typeSql != null && environment.rules.IsNativeListOfStructure(typeSql, false)) {
       var element = RuleSetCommon.ExtractEmbeddedType(environment, typeSql, false);
-      element = RuleSetCommon.Resolve(environment, element, false);
+      element = RuleSetCommon.ResolvePtr(environment, element, false);
       if (element != null && element instanceof IsStructure) {
         elementType = (IsStructure) element;
         for (final OrderPair key : keys) {

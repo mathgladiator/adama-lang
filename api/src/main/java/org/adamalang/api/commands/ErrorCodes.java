@@ -21,4 +21,8 @@ public class ErrorCodes {
   public static final int USERLAND_REQUEST_NO_MARKER_PROPERTY = 40107;
   public static final int USERLAND_REQUEST_NO_STREAM_PROPERTY = 40109;
   public static final int USERLAND_REQUEST_NO_ID_PROPERTY = 40110;
+
+  public static final int USERLAND_REQUEST_IMPERSONATE_NO_AGENT = 40111;
+  public static final int USERLAND_REQUEST_IMPERSONATE_NO_AUTHORITY = 40112;
+
 }

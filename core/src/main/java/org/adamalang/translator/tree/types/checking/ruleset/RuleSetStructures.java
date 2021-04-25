@@ -45,7 +45,7 @@ public class RuleSetStructures {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);
-      if (tyType != null && (tyType instanceof IsStructure || tyType instanceof TyNativeReactiveRecordPtr)) {
+      if (tyType != null && (tyType instanceof IsStructure)) {
         return true;
       } else if (!silent) {
         environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'record' or 'message', but got a type of '%s'.", tyTypeOriginal.getAdamaType()), "RuleSetStructures");

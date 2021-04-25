@@ -459,11 +459,11 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"latest\":{\"id\":\"0\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"my_file\":{\"id\":\"0\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"my_name\":\"\",\"my_id\":\"0\",\"my_size\":\"0\",\"my_type\":\"\",\"my_valid\":false},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"latest\":{\"id\":\"AAAAAAA\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"my_file\":{\"id\":\"AAAAAAA\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"my_name\":\"\",\"my_id\":\"0\",\"my_size\":\"0\",\"my_type\":\"\",\"my_valid\":false},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE was DENIED");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
-    gold.append("\n+ RANDO DELTA:{\"data\":{\"latest\":{\"id\":\"0\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"my_file\":{\"id\":\"0\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"my_name\":\"\",\"my_id\":\"0\",\"my_size\":\"0\",\"my_type\":\"\",\"my_valid\":false},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"latest\":{\"id\":\"AAAAAAA\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"my_file\":{\"id\":\"AAAAAAA\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"my_name\":\"\",\"my_id\":\"0\",\"my_size\":\"0\",\"my_type\":\"\",\"my_valid\":false},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"75\"} need:false in:-75");
     gold.append("\nRANDO was DENIED:");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":4}");
@@ -963,11 +963,11 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"te\":true} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"latest\":{\"id\":\"0\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"te\":true},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{\"latest\":{\"id\":\"AAAAAAA\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"te\":true},\"outstanding\":[],\"blockers\":[],\"seq\":2}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\nNO_ONE was DENIED");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
-    gold.append("\n+ RANDO DELTA:{\"data\":{\"latest\":{\"id\":\"0\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"te\":true},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{\"latest\":{\"id\":\"AAAAAAA\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\",\"te\":true},\"outstanding\":[],\"blockers\":[],\"seq\":3}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"75\"} need:false in:-75");
     gold.append("\nRANDO was DENIED:");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":4}");

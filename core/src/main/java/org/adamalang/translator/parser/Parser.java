@@ -1203,20 +1203,22 @@ public class Parser {
   public Statement statement() throws AdamaLangException {
     var op = tokens.popIf(t -> t.isSymbolWithTextEq(";"));
     if (op != null) { return new EmptyStatement(op); }
-    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "do", "while", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump"));
+    op = tokens.popIf(t -> t.isKeyword("if", "auto", "let", "var", "do", "while", "for", "foreach", "return", "continue", "abort", "block", "break", "@step", "@pump"));
     if (op == null) {
-      op = tokens.popIf(t -> t.isIdentifier("auto", "let", "transition", "invoke", "assert", "preempt"));
+      op = tokens.popIf(t -> t.isIdentifier("auto", "let", "var", "transition", "invoke", "assert", "preempt"));
     }
     if (op != null) {
       switch (op.text) {
         case "if":
           return if_statement_trailer(op);
         case "let":
+        case "var":
         case "auto": {
           final var varName = id();
           final var eqToken = consumeExpectedSymbol("=");
           final var value = expression();
           final var endToken = consumeExpectedSymbol(";");
+          // TODO: Consider forcing let to induce readonly? (it may be very interesting to introduce a read only cast..
           return new DefineVariable(op, varName, null, eqToken, value, endToken);
         }
         case "do":

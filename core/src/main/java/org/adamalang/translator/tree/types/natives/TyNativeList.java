@@ -121,7 +121,10 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
     }
     if ("toArray".equals(name)) {
       final var foi = new FunctionOverloadInstance("toArray", new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, tokenElementType.item, null).withPosition(this), new ArrayList<>(), true);
-      foi.hiddenSuffixArgs.add("(Integer __n) -> (Object) (new " + tokenElementType.item.getJavaConcreteType(environment) + "[__n])");
+      TyType elementType = environment.rules.Resolve(tokenElementType.item, true);
+      if (elementType != null) {
+        foi.hiddenSuffixArgs.add("(Integer __n) -> (Object) (new " + elementType.getJavaConcreteType(environment) + "[__n])");
+      }
       return new TyNativeFunctional("toArray", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.ExpressionThenArgs);
     }
     final var embedType = getEmbeddedType(environment);
