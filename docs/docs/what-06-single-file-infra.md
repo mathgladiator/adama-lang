@@ -24,4 +24,5 @@ This is untested, but this is... a bit much for a board game service.
 
 Mental Model: The Tiny-House for User Data
 ------------------------------------------
-TODO
+
+As a builder, both relational databases and NoSQL stores will shard user data across various machines. As a somewhat privacy concerned user, this terrifies me as all my data is potentially on hundreds of machines. With Adama, all the logic and data can exist within a singular conceptually atomic unit of a document. It's like a tiny house of all your data, and it moves with you. This container model of all your data makes it simpler to comply with emerging regulations since both developers and users can trust where data actually is.

@@ -55,3 +55,20 @@ maybe<int> key;
   }
 }
 ```
+
+## Maybe expressions
+
+An instance of a maybe with a given type can be generated on the fly via ```maybe<Type>```. Example:
+```adama
+#sm {
+	let key = @maybe<int>;
+}
+```
+
+And an instance of a maybe with a given value can be generated via ```maybe(Expr)``` . Example:
+```adama
+```adama
+#sm {
+	let key = @maybe(123);
+}
+```

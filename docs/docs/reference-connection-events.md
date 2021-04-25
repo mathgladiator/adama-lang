@@ -18,4 +18,8 @@ This code is run when a person connects to the document, and if the return value
 }
 ```
 
-In both of these events, the **who** variable has a type of ```client``` which is the user.
+In both of these events, the **who** variable has a type of ```client``` which is the user. As a rule, only connected clients can:
+* send messages
+* read the document
+
+This makes ```@connected``` the access control mechanism for authorizing people to see the document. For private documents, this places a great deal of burden on [the constructor](/docs/reference-constructor) to initialize the state with an owning ```client```.

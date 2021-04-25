@@ -76,7 +76,6 @@ public formula random_young_people = iterate _records where age < 18 shuffle;
 
 Since the canonical ordering by id is the insertion/creation ordering, **order** allows you to reorder any list;
 
->>>>>>> master
 ```adama
 public formula people_by_age = iterate _records order by age asc;
 ```
@@ -84,7 +83,7 @@ public formula people_by_age = iterate _records order by age asc;
 ### limit
 
 ```adama
-public formula youngest_person = iterate _records order by age asc limit;
+public formula youngest_person = iterate _records order by age asc limit 1;
 ```
 
 ### Bulk Assignments

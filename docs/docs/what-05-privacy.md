@@ -21,12 +21,11 @@ Notice that the **public** and **private** modifiers have been hijacked to mean 
 
 This was born from how to represent board game state such that secrets do not flow incorrectly to the wrong people. Afterall, if I can see your hand in poker, then you lose.
 
-TODO:
-* Board games depend on secrets
-* Where do databases go wrong
-* Bugs, Proofs, Containment
-* Trust
+Classical databases were built around security within an organization and the granularity within the database is too coarse-grained. It's up to application developers to protect data between people, and this is a heavy burden. This burden was inherited by NoSQL. Instead, Adama believes that a document should contain all access rules to data, and the language aims to simplify that process.
 
-Mental Model: Personal Data Security Guard
+The end goal here is to have a language which prevents information leakage to unintended parties, so developers are not in a position to accidentally leak data as reading data is entirely controlled by the document. The document is the source of truth with regards to privacy.
+
+
+Mental Model: VIP Club
 ------------------------------------------
-TODO
+The document is an exclusive club, and you have an id card. That id card is checked when entering the club via security, and it grants you access to parts of the club.

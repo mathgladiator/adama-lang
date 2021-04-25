@@ -30,6 +30,8 @@ There are a variety of ways to conjure up constants. The following table illustr
 | string | "(^"|escape)*" | "", "hello world", "\" |
 | label | #[a-z]+ | #foo, #start |
 | client | @no_one | @no_one |
+| maybe&lt;?&gt; | @maybe&lt;Type&gt; | @maybe&lt;int&gt; |
+| maybe(?) | @maybe(Expr) | @maybe(123) |
  
 ## String escaping
 

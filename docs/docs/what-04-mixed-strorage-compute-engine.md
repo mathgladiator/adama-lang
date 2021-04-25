@@ -40,9 +40,6 @@ channel my_channel(client who, AddRecord msg) {
 }
 ```
 
-TODO:
-* talk about more stuff
-
 Mental Model: Tiny Personal Databases
 -------------------------------------
-TODO
+The key idea here is that data within a **living document** is akin to a personal database within a single file. This allows developers to leverage an appropriately scaled database per user or game whilst using NoSQL scaling techniques. This eliminates cross-document data bleed, limiting inter-document communication, but that is a worthy limitation for building a new private world.

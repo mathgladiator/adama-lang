@@ -26,13 +26,6 @@ public class WebHandlerTests {
     try {
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).get("/x").execute(callback);
-        callback.awaitFirst();
-        callback.assertData("Invalid Host header");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group).server("localhost", 52000).get("/x").execute(callback);
         callback.awaitFailedToConnect();
       }
