@@ -48,7 +48,7 @@ public class WebSocketBenchmarkClientBuilder {
     port = 9000;
     uri = "/";
     maxContentLength = 1048576;
-    timeoutSeconds = 10;
+    timeoutSeconds = 30;
     headers = new DefaultHttpHeaders();
   }
 
