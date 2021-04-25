@@ -61,7 +61,7 @@ Fifth, beyond data, there is the problem of static assets and user-generated con
 
 There are more actors for sure, but the key thing to note is that building a new internet requires rethinking how to transform the old world ideas into the new world. Some ideas will die, but some may be foundational.
 
-###Operations
+### Operations
 
 As I haven't started to play with the DFINITY sdk yet, so I'm not sure about a few things. Adama was built around easy deployment, monitoring, and everything I know about operating services. This is where the IC container feels murky to me. For instance, how do I deploy and validate a new actor? How does the state up rev? Can the state down rev during a rollback? This is why Adama has all of its state represented by a giant JSON document because it is easy to understand how data can change both forward and backward.
 
