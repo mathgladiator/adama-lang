@@ -68,7 +68,9 @@ public class DurableLivingDocument {
     try {
       LivingDocument doc = factory.create(monitor);
       service.get(documentId, Callback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_PARSE, (data) -> {
-          doc.__insert(new JsonStreamReader(data.patch));
+          JsonStreamReader reader = new JsonStreamReader(data.patch);
+          reader.ingestDedupe(doc.__get_intern_strings());
+          doc.__insert(reader);
           JsonStreamWriter writer = new JsonStreamWriter();
           doc.__dump(writer);
           return new DurableLivingDocument(documentId, doc, time, service);

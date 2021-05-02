@@ -10,6 +10,8 @@
 package org.adamalang.runtime.mocks;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import org.adamalang.runtime.LivingDocument;
 import org.adamalang.runtime.async.AsyncTask;
@@ -117,5 +119,10 @@ public class MockLivingDocument extends LivingDocument {
 
   @Override
   public void __test(final TestReportBuilder report, final String testName) {
+  }
+
+  @Override
+  public Set<String> __get_intern_strings() {
+    return new HashSet<>();
   }
 }

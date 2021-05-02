@@ -19,7 +19,7 @@ import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.DefineMethod;
@@ -133,7 +133,6 @@ public class CodeGenRecords {
     if (injectRootObject) {
       classConstructorX.append("super(__owner);").writeNewline();
     }
-    // classConstructorX.append("RxParent __this_parent = this;").writeNewline();
     for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
       final var fieldName = fdInOrder.name;
       final var fieldType = environment.rules.Resolve(fdInOrder.type, false);
@@ -155,7 +154,7 @@ public class CodeGenRecords {
         continue;
       }
       final var javaConcreteType = fieldType.getJavaConcreteType(environment);
-      classFields.append("private final " + javaConcreteType + " " + fieldName + ";").writeNewline();
+      classFields.append("private final ").append(javaConcreteType).append(" ").append(fieldName).append(";").writeNewline();
       if (fieldType instanceof TyReactiveTable) {
         classConstructorX.append(fieldName).append(" = ").append(make("this", fieldName, fieldType, null, environment)).append(";").writeNewline();
       } else if (fieldType instanceof TyReactiveMap) {
@@ -199,11 +198,9 @@ public class CodeGenRecords {
       }
     }
   }
-
-  public static void writeIndices(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
-    boolean first;
-    sb.append("String[] __INDEX_COLUMNS = new String[] {");
-    first = true;
+  public static void writeIndexConstant(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
+    sb.append("private static String[] __INDEX_COLUMNS_").append(name).append(" = new String[] {");
+    boolean first = true;
     for (final Map.Entry<String, FieldDefinition> entry : storage.fields.entrySet()) {
       if ("id".equals(entry.getKey())) {
         continue;
@@ -219,9 +216,13 @@ public class CodeGenRecords {
       }
     }
     sb.append("};").writeNewline();
+  }
+
+  public static void writeIndices(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {
+    boolean first;
     sb.append("@Override").writeNewline();
     sb.append("public String[] __getIndexColumns() {").tabUp().writeNewline();
-    sb.append("return __INDEX_COLUMNS;").tabDown().writeNewline();
+    sb.append("return __INDEX_COLUMNS_").append(name).append(";").tabDown().writeNewline();
     sb.append("}").writeNewline();
     sb.append("@Override").writeNewline();
     sb.append("public int[] __getIndexValues() {").tabUp().writeNewline();
@@ -390,6 +391,14 @@ public class CodeGenRecords {
     sb.append("}").writeNewline();
     writeCommitAndRevert(storage, sb, environment, true, "__state", "__constructed", "__next_time", "__blocked", "__seq", "__entropy", "__auto_future_id", "__connection_id", "__message_id", "__time", "__auto_table_row_id");
     CodeGenDeltaClass.writeRecordDeltaClass(storage, sb, environment, environment.document.getClassName(), true);
+    sb.append("@Override").writeNewline();
+    sb.append("public Set<String> __get_intern_strings() {").tabUp().writeNewline();
+    sb.append("HashSet<String> __interns = new HashSet<>();").writeNewline();
+    for (String intern : environment.interns) {
+      sb.append("__interns.add(").append(intern).append(");").writeNewline();
+    }
+    sb.append("return __interns;").tabDown().writeNewline();
+    sb.append("}").writeNewline();
     sb.append("@Override").writeNewline();
     sb.append("public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {").tabUp().writeNewline();
     sb.append(environment.document.getClassName()).append(" __self = this;").writeNewline();

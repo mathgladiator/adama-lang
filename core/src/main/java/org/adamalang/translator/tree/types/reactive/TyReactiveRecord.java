@@ -88,6 +88,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
     }
     classConstructor.append("/* ok */").tabDown().writeNewline();
     classConstructor.append("}").writeNewline();
+    CodeGenRecords.writeIndexConstant(name, storage, sb, environment);
     sb.append("private class RTx" + name + " extends RxRecordBase<RTx").append(name).append("> {").tabUp().writeNewline();
     sb.append(classFields.toString());
     sb.append("private RTx" + name + "(RxParent __owner) {");
@@ -97,7 +98,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
     sb.append("").tabDown().writeNewline().append("}").writeNewline();
     CodeGenRecords.writeMethods(storage, sb, environment);
     CodeGenRecords.writePrivacyCommonBetweenRecordAndRoot(storage, sb, environment);
-    CodeGenRecords.writeIndices(storage, sb, environment);
+    CodeGenRecords.writeIndices(name, storage, sb, environment);
     CodeGenRecords.writeCommitAndRevert(storage, sb, environment, false);
     sb.append("@Override").writeNewline();
     sb.append("public String __name() {").tabUp().writeNewline();

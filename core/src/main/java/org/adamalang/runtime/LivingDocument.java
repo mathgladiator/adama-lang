@@ -9,12 +9,8 @@
 */
 package org.adamalang.runtime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
+
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.contracts.DataService;
@@ -65,7 +61,7 @@ public abstract class LivingDocument implements RxParent {
   protected final RxString __state;
   protected final RxInt64 __time;
   protected ArrayList<Integer> __trace;
-  private final HashMap<NtClient, ArrayList<PrivateView>> __trackedViews = new HashMap<>();
+  private final HashMap<NtClient, ArrayList<PrivateView>> __trackedViews;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -84,6 +80,7 @@ public abstract class LivingDocument implements RxParent {
     __next_time = new RxInt64(this, 0L);
     __queue = new ArrayList<>();
     __futures = new OutstandingFutureTracker(__auto_future_id);
+    __trackedViews = new HashMap<>();
     __code_cost = 0;
     __trace = new ArrayList<>();
     __clients = new TreeMap<>();
@@ -106,6 +103,9 @@ public abstract class LivingDocument implements RxParent {
       }
     }
   }
+
+  /** code generate: get strings that are part of the document */
+  public abstract Set<String> __get_intern_strings();
 
   /** code generated: commit the tree, and push data into the given delta */
   public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);

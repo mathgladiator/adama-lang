@@ -42,7 +42,7 @@ public class FileSystemLivingDocumentFactoryFactory implements LivingDocumentFac
       final var time1 = System.currentTimeMillis();
       final var document = new Document();
       document.addSearchPath(root);
-      document.importFile(space + ".g", DocumentPosition.ZERO);
+      document.importFile(space + ".a", DocumentPosition.ZERO);
       document.setClassName(className);
       if (!document.check(state)) {
         callback.failure(new ErrorCodeException(LivingDocumentFactoryFactory.USERLAND_CANT_COMPILE_ADAMA_SCRIPT, document.errorsJson()));

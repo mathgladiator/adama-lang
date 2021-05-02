@@ -9,9 +9,7 @@
 */
 package org.adamalang.runtime.json;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 import org.adamalang.runtime.json.token.JsonToken;
 import org.adamalang.runtime.json.token.JsonTokenType;
@@ -25,11 +23,22 @@ public class JsonStreamReader {
   private final String json;
   private final int n;
   ArrayDeque<JsonToken> tokens;
+  private final HashMap<String, String> dedupeStrings;
+  private final HashMap<NtClient, NtClient> dedupeClients;
 
   public JsonStreamReader(final String json) {
     this.json = json;
     n = json.length();
     tokens = new ArrayDeque<>();
+    this.dedupeStrings = new HashMap<>();
+    this.dedupeClients = new HashMap<>();
+    this.dedupeClients.put(NtClient.NO_ONE, NtClient.NO_ONE);
+  }
+
+  public void ingestDedupe(Set<String> strs) {
+    for (String str : strs) {
+      dedupeStrings.put(str, str);
+    }
   }
 
   public boolean end() {
@@ -113,7 +122,15 @@ public class JsonStreamReader {
         }
       }
     }
-    return new NtClient(agent, authority);
+
+    NtClient lookup = new NtClient(agent, authority);
+    NtClient test = dedupeClients.get(lookup);
+    if (test == null) {
+      dedupeClients.put(lookup, lookup);
+      return lookup;
+    } else {
+      return test;
+    }
   }
 
   public NtAsset readNtAsset() {
@@ -152,7 +169,14 @@ public class JsonStreamReader {
 
   public String readString() {
     ensureQueueHappy(1);
-    return tokens.removeFirst().data;
+    String lookup = tokens.removeFirst().data;
+    String test = dedupeStrings.get(lookup);
+    if (test == null) {
+      dedupeStrings.put(lookup, lookup);
+      return lookup;
+    } else {
+      return test;
+    }
   }
 
   public Object readJavaTree() {

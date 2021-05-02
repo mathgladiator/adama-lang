@@ -11,5 +11,6 @@ package org.adamalang.translator.tree.expressions;
 
 /** which environment variable should EnvStatus lookup */
 public enum EnvLookupName {
-  Blocked, Stable
+  Blocked, //
+  Stable
 }

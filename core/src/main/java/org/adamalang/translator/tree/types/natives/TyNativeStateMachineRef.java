@@ -33,16 +33,21 @@ public class TyNativeStateMachineRef extends TySimpleNative implements //
     DetailEqualityTestingRequiresWrapping, //
     AssignmentViaNative //
 {
+  public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeStateMachineRef(final TypeBehavior behavior, final Token token) {
+  public TyNativeStateMachineRef(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "String", "String");
+    this.readonlyToken = readonlyToken;
     this.token = token;
     ingest(token);
   }
 
   @Override
   public void emit(final Consumer<Token> yielder) {
+    if (readonlyToken != null) {
+      yielder.accept(readonlyToken);
+    }
     yielder.accept(token);
   }
 
@@ -68,7 +73,7 @@ public class TyNativeStateMachineRef extends TySimpleNative implements //
 
   @Override
   public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeStateMachineRef(newBehavior, token).withPosition(position);
+    return new TyNativeStateMachineRef(newBehavior, readonlyToken, token).withPosition(position);
   }
 
   @Override

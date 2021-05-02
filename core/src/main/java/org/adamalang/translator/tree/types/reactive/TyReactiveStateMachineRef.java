@@ -46,7 +46,7 @@ public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrd
 
   @Override
   public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, token);
+    return new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 
   @Override

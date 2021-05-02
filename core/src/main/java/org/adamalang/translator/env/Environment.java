@@ -37,6 +37,7 @@ public class Environment {
   private Function<String, TyType> trap = null;
   private final HashMap<String, TyType> variables;
   private Consumer<String> watch = null;
+  public final HashSet<String> interns;
 
   private Environment(final Document document, final EnvironmentState state, final Environment parent) {
     this.document = document;
@@ -52,6 +53,13 @@ public class Environment {
     } else {
       rules = new Rules(this);
       codeCoverageTracker = new CodeCoverageTracker();
+    }
+    if (parent != null) {
+      this.interns = parent.interns;
+    } else {
+      this.interns = new HashSet<>();
+      this.interns.add("\"?\"");
+      this.interns.add("\"\"");
     }
   }
 

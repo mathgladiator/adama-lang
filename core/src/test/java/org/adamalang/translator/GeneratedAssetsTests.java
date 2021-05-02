@@ -71,7 +71,9 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
     gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
+    gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Attachment_1 extends LivingDocument {");
     gold.append("\n  private final RxAsset latest;");
@@ -340,6 +342,13 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");
     gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public Set<String> __get_intern_strings() {");
+    gold.append("\n    HashSet<String> __interns = new HashSet<>();");
+    gold.append("\n    __interns.add(\"\");");
+    gold.append("\n    __interns.add(\"?\");");
+    gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
@@ -622,7 +631,9 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
     gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
+    gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Sanity_4 extends LivingDocument {");
     gold.append("\n  private final RxAsset latest;");
@@ -840,6 +851,13 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n        __writer.writeNull();");
     gold.append("\n      }");
     gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public Set<String> __get_intern_strings() {");
+    gold.append("\n    HashSet<String> __interns = new HashSet<>();");
+    gold.append("\n    __interns.add(\"\");");
+    gold.append("\n    __interns.add(\"?\");");
+    gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");

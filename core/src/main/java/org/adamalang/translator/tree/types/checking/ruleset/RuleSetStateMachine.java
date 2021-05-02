@@ -32,7 +32,7 @@ public class RuleSetStateMachine {
     final var tyType = RuleSetCommon.Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeStateMachineRef || tyType instanceof TyReactiveStateMachineRef) { return true; }
-      RuleSetCommon.SignalTypeFailure(environment, new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null), tyTypeOriginal, silent);
+      RuleSetCommon.SignalTypeFailure(environment, new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
     }
     return false;
   }

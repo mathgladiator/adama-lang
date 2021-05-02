@@ -36,12 +36,13 @@ public class StateMachineConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
+    environment.interns.add("\"" + value + "\"");
     environment.mustBeComputeContext(this);
     if (token.text.length() > 1) { // we treat # as as special case
-      if (environment.rules.FindStateMachineStep(value, this, false) != null) { return new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, token).withPosition(this); }
+      if (environment.rules.FindStateMachineStep(value, this, false) != null) { return new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this); }
       return null;
     } else {
-      return new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, token).withPosition(this);
+      return new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
     }
   }
 

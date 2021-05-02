@@ -34,6 +34,7 @@ public class StringConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
+    environment.interns.add(token.text);
     environment.mustBeComputeContext(this);
     return new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
   }

@@ -138,10 +138,13 @@ public class Benchmark {
                 toSend.set("message", decisionNode.get("options").get(rng.nextInt(count)));
                 int rpcID = table.map((resp) -> { });
                 toSend.put("id", rpcID);
-                group.schedule(() -> {
-                  System.err.println("WRITE:" + toSend.toString());
-                  channel.writeAndFlush(new TextWebSocketFrame(toSend.toString()));
-                }, 250, TimeUnit.MILLISECONDS);
+                if (canRespond) {
+                  canRespond = false;
+                  group.schedule(() -> {
+                    System.err.println("WRITE:" + toSend.toString());
+                    channel.writeAndFlush(new TextWebSocketFrame(toSend.toString()));
+                  }, 1000, TimeUnit.MILLISECONDS);
+                }
               }
             }
           }
@@ -162,17 +165,25 @@ public class Benchmark {
   public static void main(String[] args) throws Exception {
     EventLoopGroup group = new NioEventLoopGroup();
 
-    String server = "localhost";
-    int port = 8080;
-    //WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("alice").execute(new CreateGames(1000));
-    WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("alice").execute(new Player(group, 1, new Random()));
-    Thread.sleep(15000);
-    int start = 200;
-    for (int gameId = start; gameId < start + 75; gameId++) {
+    // WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("alice").execute(new CreateGames(1000));
+    /*
+    int start = 1;
+    for (int gameId = start; gameId < start + 450; gameId++) {
       WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("alice").execute(new Player(group, gameId, new Random()));
+      if (gameId == start) {
+        for (int k = 0; k < 15; k++) {
+          System.err.println("waiting for compilation: " + k);
+          Thread.sleep(1000);
+        }
+      }
       WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("bob").execute(new Player(group, gameId, new Random()));
       WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("carol").execute(new Player(group, gameId, new Random()));
       WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("dan").execute(new Player(group, gameId, new Random()));
+      if (gameId % 25 == 0) {
+        Thread.sleep(5000);
+        System.err.println("Wrote:" + (gameId - start));
+      }
     }
+    */
   }
 }

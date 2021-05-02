@@ -351,7 +351,9 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
     gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
+    gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class GlobalPolicy_8 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> r;");
@@ -577,6 +579,13 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  public Set<String> __get_intern_strings() {");
+    gold.append("\n    HashSet<String> __interns = new HashSet<>();");
+    gold.append("\n    __interns.add(\"\");");
+    gold.append("\n    __interns.add(\"?\");");
+    gold.append("\n    return __interns;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
     gold.append("\n    GlobalPolicy_8 __self = this;");
     gold.append("\n    DeltaGlobalPolicy_8 __state = new DeltaGlobalPolicy_8();");
@@ -629,6 +638,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
+    gold.append("\n  private static String[] __INDEX_COLUMNS_R = new String[] {\"x\"};");
     gold.append("\n  private class RTxR extends RxRecordBase<RTxR> {");
     gold.append("\n    private final RxInt32 x;");
     gold.append("\n    private final RxInt32 id;");
@@ -642,10 +652,9 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\n        /* ok */");
     gold.append("\n      }");
     gold.append("\n    }");
-    gold.append("\n    String[] __INDEX_COLUMNS = new String[] {\"x\"};");
     gold.append("\n    @Override");
     gold.append("\n    public String[] __getIndexColumns() {");
-    gold.append("\n      return __INDEX_COLUMNS;");
+    gold.append("\n      return __INDEX_COLUMNS_R;");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public int[] __getIndexValues() {");
