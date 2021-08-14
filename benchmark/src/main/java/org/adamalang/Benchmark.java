@@ -13,7 +13,9 @@ import org.adamalang.client.WebSocketBenchmarkClientBuilder;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class Benchmark {
@@ -83,7 +85,61 @@ public class Benchmark {
     }
   }
 
-  public static class Player implements BenchmarkClientFlow {
+  public static class BatchPlayer implements BenchmarkClientFlow {
+    private EventLoopGroup group;
+    private Channel channel;
+    private WebSocketTable table;
+    private HashSet<Integer> respondedTo;
+    private Random rng;
+    private boolean canRespond;
+
+    public BatchPlayer(EventLoopGroup group, Random rng) {
+      this.group = group;
+      this.table = new WebSocketTable();
+      this.respondedTo = new HashSet<>();
+      this.rng = rng;
+      this.canRespond = true;
+    }
+
+    @Override
+    public void ready(Channel channel) {
+      System.err.println("player connected");
+      this.channel = channel;
+      AtomicInteger start = new AtomicInteger(0);
+      AtomicReference<Runnable> ref = new AtomicReference<>();
+      Runnable add = new Runnable() {
+        @Override
+        public void run() {
+          int key = start.incrementAndGet();
+          if (key > 1200) return;
+          AtomicBoolean next = new AtomicBoolean(true);
+          int connectID = table.map((data) -> {
+            System.err.println("got:" + data.toString());
+            if (next.compareAndSet(true, false)) {
+              group.execute(ref.get());
+            }
+          });
+          String connectStr = new StringBuilder().append("{\"id\":").append(connectID).append(",\"method\":\"connect\",\"space\":\"bsg\",\"key\":\"" + key + "\"}").toString();
+          channel.writeAndFlush(new TextWebSocketFrame(connectStr));
+        }
+      };
+      ref.set(add);
+      add.run();
+
+      /*
+      for (int k = 0; k < 1200; k++) {
+
+      }
+      */
+    }
+
+    @Override
+    public void data(ObjectNode node) {
+      table.handle(node);
+    }
+  }
+
+  public static class SoloPlayer implements BenchmarkClientFlow {
     private EventLoopGroup group;
     private Channel channel;
     public int gameId;
@@ -92,7 +148,7 @@ public class Benchmark {
     private Random rng;
     private boolean canRespond;
 
-    public Player(EventLoopGroup group, int gameId, Random rng) {
+    public SoloPlayer(EventLoopGroup group, int gameId, Random rng) {
       this.group = group;
       this.gameId = gameId;
       this.table = new WebSocketTable();
@@ -131,7 +187,7 @@ public class Benchmark {
                 ObjectNode toSend = Json.newJsonObject();
                 toSend.put("method", "send");
                 toSend.put("space", "bsg");
-                toSend.put("key", "" + gameId);
+                toSend.put("key", "" + gameId); // TODO: decision should return game id
                 toSend.set("channel", decisionNode.get("channel"));
                 int count = decisionNode.get("options").size();
                 toSend.put("marker", UUID.randomUUID().toString());
@@ -152,8 +208,8 @@ public class Benchmark {
           // report DONE
         }
       });
-      String connectStr = new StringBuilder().append("{\"id\":").append(connectID).append(",\"method\":\"connect\",\"space\":\"bsg\",\"key\":\"" + gameId + "\"}").toString();
-      channel.writeAndFlush(new TextWebSocketFrame(connectStr));
+      //String connectStr = new StringBuilder().append("{\"id\":").append(connectID).append(",\"method\":\"connect\",\"space\":\"bsg\",\"key\":\"" + gameId + "\"}").toString();
+      //channel.writeAndFlush(new TextWebSocketFrame(connectStr));
     }
 
     @Override
@@ -163,27 +219,36 @@ public class Benchmark {
   }
 
   public static void main(String[] args) throws Exception {
-    EventLoopGroup group = new NioEventLoopGroup();
+    // EventLoopGroup group = new NioEventLoopGroup();
 
-    // WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("alice").execute(new CreateGames(1000));
+    // WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("alice").execute(new CreateGames(1));
+
     /*
-    int start = 1;
-    for (int gameId = start; gameId < start + 450; gameId++) {
+    WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("alice").execute(new BatchPlayer(group, new Random()));
+    WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("bob").execute(new BatchPlayer(group, new Random()));
+    WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("carol").execute(new BatchPlayer(group, new Random()));
+    WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("dan").execute(new BatchPlayer(group, new Random()));
+    */
+
+    /*
+    int start = 500;
+    for (int gameId = start; gameId < start + 1200; gameId++) {
       WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("alice").execute(new Player(group, gameId, new Random()));
       if (gameId == start) {
         for (int k = 0; k < 15; k++) {
           System.err.println("waiting for compilation: " + k);
-          Thread.sleep(1000);
+          // Thread.sleep(1000);
         }
       }
       WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("bob").execute(new Player(group, gameId, new Random()));
       WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("carol").execute(new Player(group, gameId, new Random()));
       WebSocketBenchmarkClientBuilder.start(group).server(server, port).auth("dan").execute(new Player(group, gameId, new Random()));
       if (gameId % 25 == 0) {
-        Thread.sleep(5000);
+        Thread.sleep(1000);
         System.err.println("Wrote:" + (gameId - start));
       }
     }
+    System.err.println("Done");
     */
   }
 }
