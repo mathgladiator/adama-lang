@@ -5,7 +5,7 @@ author: Jeffrey M. Barber
 author_title: Dark Lord
 author_url: https://github.com/mathgladiator
 author_image_url: https://github.com/mathgladiator.png?size=96
-tags: [adama, ui]
+tags: [adama, ui, rust]
 ---
 
 Well, February was a fun month, and I thought about many things. I’d like to share some of them now.

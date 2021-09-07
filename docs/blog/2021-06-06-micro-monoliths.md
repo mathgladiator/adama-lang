@@ -5,7 +5,7 @@ author: Jeffrey M. Barber
 author_title: Dark Lord
 author_url: https://github.com/mathgladiator
 author_image_url: https://github.com/mathgladiator.png?size=96
-tags: [adama, dfinity]
+tags: [adama, infrastructure]
 ---
 
 I’ve got my silly opinions on this site, but generally my silly thoughts have a way of manifesting over time. In this post, I’m thinking about possible alignments of my thoughts with the broader industry. The key question is which of my ideas are worth going to production with the [limited innovation tokens](http://boringtechnology.club/) I would have if leveraged in a business.

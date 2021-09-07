@@ -5,7 +5,7 @@ author: Jeffrey M. Barber
 author_title: Dark Lord
 author_url: https://github.com/mathgladiator
 author_image_url: https://github.com/mathgladiator.png?size=96
-tags: [adama, dfinity]
+tags: [adama, infrastructure, dfinity]
 ---
 
 I hope to ship a single simple game this year, so I will need some infrastructure to run the game. Alas, I'm at a crossroads.
