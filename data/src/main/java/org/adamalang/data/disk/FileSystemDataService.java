@@ -68,7 +68,7 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public synchronized void create(Callback<Long> callback) {
+  public synchronized void create(Key key, Callback<Long> callback) {
     try {
       for (int attempt = 0; attempt < 10; attempt++) {
         long documentId = Math.abs(rng.nextLong() + System.nanoTime());
@@ -85,9 +85,9 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public synchronized void get(long documentId, Callback<LocalDocumentChange> callback) {
+  public synchronized void get(Key key, Callback<LocalDocumentChange> callback) {
     try {
-      File file = new File(root, documentId + ".jsonlog");
+      File file = new File(root, key.key + ".jsonlog");
       if (file.exists()) {
         final var buffered = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
         try {
@@ -139,13 +139,13 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public void initialize(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
     try {
-      File file = new File(root, documentId + ".jsonlog");
+      File file = new File(root, key.key + ".jsonlog");
       if (file.length() == 0) {
         append(file, patch, callback);
       } else {
-        callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_FILE_EXISTS_FOR_INITIALIZE, new RuntimeException(documentId + " was not empty")));
+        callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_FILE_EXISTS_FOR_INITIALIZE, new RuntimeException(key + " was not empty")));
       }
     } catch (final Throwable ex) {
       callback.failure(new ErrorCodeException(ErrorCodes.E4_FS_DATASERVICE_CRASHED_INITIALIZE, ex));
@@ -153,9 +153,9 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public synchronized void patch(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public synchronized void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
     try {
-      File file = new File(root, documentId + ".jsonlog");
+      File file = new File(root, key.key + ".jsonlog");
       append(file, patch, callback);
     } catch (final Throwable ex) {
       ex.printStackTrace();
@@ -164,28 +164,28 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public void fork(long oldDocumentId, long newDocumentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void fork(Key keyFrom, Key keyTo, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
     // TODO: scan the old document deltas, building a new tree, stop at the given marker
     // initialize the new document with that data blob throwing away and a pointer to the previous document
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void rewind(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void rewind(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
     // go back to the marker while combining all the undos together
     // formule the giant change
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void unsend(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void unsend(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
     // go back to the marker, take the undo, then forward it through all the redos up until now
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void delete(long documentId, Callback<Long> callback) {
-    File file = new File(root, documentId + ".jsonlog");
+  public void delete(Key key, Callback<Long> callback) {
+    File file = new File(root, key.key + ".jsonlog");
     file.delete();
   }
 }

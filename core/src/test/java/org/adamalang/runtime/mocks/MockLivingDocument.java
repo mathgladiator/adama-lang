@@ -12,8 +12,8 @@ package org.adamalang.runtime.mocks;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
-import org.adamalang.runtime.LivingDocument;
+
+import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;

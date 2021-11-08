@@ -42,4 +42,11 @@ public class ErrorCodes {
   public static final int E3_FACTORY_CANT_BIND_JAVA_CODE = 3000;
   public static final int E3_FACTORY_CANT_COMPILE_JAVA_CODE = 3001;
   public static final int E3_FACTORY_CANT_CREATE_OBJECT_DUE_TO_EXCEPTION = 3002;
+
+  public static final int E4_CREATE_ALREADY_EXISTS = 4009;
+  public static final int E4_LOAD_ALREADY_EXISTS = 4010;
+  public static final int E4_FAILED_FIND_DOCUMENT = 4011;
+
+  public static final int E5_CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION = 9601;
+  public static final int USERLAND_CANT_COMPILE_ADAMA_SCRIPT = 40200;
 }

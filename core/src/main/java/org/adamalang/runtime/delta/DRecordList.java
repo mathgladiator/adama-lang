@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.function.Supplier;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
+/** a list of records that will respect privacy and sends state to client only on changes */
 public class DRecordList<dRecordTy> {
   public class Walk {
     private final ArrayList<Integer> newOrdering;
@@ -30,25 +31,33 @@ public class DRecordList<dRecordTy> {
       seen = new HashSet<>();
     }
 
+    /** we completely walked over the map */
     public void end(final PrivateLazyDeltaWriter parent) {
-      final var orderingField = parent.planField("@o");
+      // we didn't invalidate the ordering
       if (orderingUnchanged) {
+        // let's make sure the ordering respected the size
         orderingUnchanged = newOrdering.size() == order.size();
       }
+      // the ordering did not change, so let's send a new ordering differential
       if (!orderingUnchanged) {
+        final var orderingField = parent.planField("@o");
         final var array = orderingField.planArray();
         array.manifest();
         final var keyToOldPosition = new HashMap<Integer, Integer>();
+        // let's record the hold positions of the keys and their index
         for (var k = 0; k < order.size(); k++) {
           keyToOldPosition.put(order.get(k), k);
         }
+        // let's walk the new ordering
         for (var k = 0; k < newOrdering.size(); k++) {
           final int newOrderKey = newOrdering.get(k);
           final var oldPosition = keyToOldPosition.get(newOrderKey);
           if (oldPosition != null) {
+            // the new key has a key within the old array, cool
             var good = true;
             var top = k;
             int trackPosition = oldPosition;
+            // let's see how much of the new ordering starting at k is a sub ordering of the old
             for (var j = k + 1; good && j < newOrdering.size(); j++) {
               final int testOrderKey = newOrdering.get(j);
               final var testOldPosition = keyToOldPosition.get(testOrderKey);
@@ -60,8 +69,10 @@ public class DRecordList<dRecordTy> {
               }
             }
             if (top - k < 2) {
+              // too not enough overlap, write the new key and move on
               array.writeInt(newOrderKey);
             } else {
+              // ok, now write a range and skip the items
               final var rangeArr = array.planArray();
               rangeArr.writeInt(oldPosition);
               rangeArr.writeInt(oldPosition + (top - k));
@@ -69,6 +80,7 @@ public class DRecordList<dRecordTy> {
               k = top;
             }
           } else {
+            // just directly write the new key and move on
             array.writeInt(newOrderKey);
           }
         }
@@ -86,6 +98,7 @@ public class DRecordList<dRecordTy> {
       }
     }
 
+    /** a new id shows up */
     public void next(final int id) {
       seen.add(id);
       newOrdering.add(id);
@@ -107,10 +120,12 @@ public class DRecordList<dRecordTy> {
     this.cache = new HashMap<>();
   }
 
+  /** start walking the records */
   public Walk begin() {
     return new Walk();
   }
 
+  /** get the cached item */
   public dRecordTy getPrior(final int id, final Supplier<dRecordTy> maker) {
     var prior = cache.get(id);
     if (prior == null) {
@@ -120,6 +135,7 @@ public class DRecordList<dRecordTy> {
     return prior;
   }
 
+  /** the list of records is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (cache.size() > 0) {
       order.clear();

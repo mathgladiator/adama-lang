@@ -14,10 +14,9 @@ import org.adamalang.api.util.Json;
 import org.adamalang.netty.api.GameSpace;
 import org.adamalang.netty.api.GameSpaceDB;
 import org.adamalang.netty.contracts.JsonResponder;
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.natives.NtClient;
@@ -48,10 +47,10 @@ public class DevKitBackbone implements Backbone {
   }
 
   @Override
-  public void findDocument(String space, long key, CommandRequiresDocument cmd, CommandResponder responder) {
+  public void findDocument(String space, String key, CommandRequiresDocument cmd, CommandResponder responder) {
     try {
       GameSpace gs = gameSpaceDB.getOrCreate(space);
-      gs.get(key, Callback.bind(executor, 0, new Callback<DurableLivingDocument>() {
+      gs.get(Long.parseLong(key), Callback.bind(executor, 0, new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
           cmd.onDurableDocumentFound(value);
@@ -69,7 +68,7 @@ public class DevKitBackbone implements Backbone {
   }
 
   @Override
-  public void findLivingDocumentFactory(String space, long key, CommandRequiresLivingDocumentFactory cmd, CommandResponder responder) {
+  public void findLivingDocumentFactory(String space, String key, CommandRequiresLivingDocumentFactory cmd, CommandResponder responder) {
     try {
       GameSpace gs = gameSpaceDB.getOrCreate(space);
       cmd.onLivingDocumentFactory(gs.getFactory());
@@ -79,11 +78,11 @@ public class DevKitBackbone implements Backbone {
   }
 
   @Override
-  public void makeDocument(String space, long key, NtClient who, String arg, String entropy, DataService service, LivingDocumentFactory factory,  CommandCreatesDocument cmd, CommandResponder responder) {
+  public void makeDocument(String space, String key, NtClient who, String arg, String entropy, DataService service, LivingDocumentFactory factory,  CommandCreatesDocument cmd, CommandResponder responder) {
     try {
       GameSpace gs = gameSpaceDB.getOrCreate(space);
       // public void create(final long id, final NtClient who, final ObjectNode cons, final String entropy, Callback<DurableLivingDocument> callback) throws ErrorCodeException {
-      gs.create(key, who, Json.parseJsonObject(arg), entropy, new Callback<DurableLivingDocument>() {
+      gs.create(Long.parseLong(key), who, Json.parseJsonObject(arg), entropy, new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
           value.invalidate(new Callback<Integer>() {

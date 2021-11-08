@@ -3,10 +3,10 @@ package org.adamalang;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.adamalang.api.util.Json;
 import org.adamalang.data.disk.FileSystemLivingDocumentFactoryFactory;
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DocumentThreadBase;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.PrivateView;
@@ -15,11 +15,8 @@ import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -43,42 +40,42 @@ public class AutoPlay {
     AtomicInteger writes = new AtomicInteger(0);
     DataService noop = new DataService() {
       @Override
-      public void create(Callback<Long> callback) {
+      public void create(Key key, Callback<Long> callback) {
       }
 
       @Override
-      public void get(long documentId, Callback<LocalDocumentChange> callback) {
+      public void get(Key key, Callback<LocalDocumentChange> callback) {
       }
 
       @Override
-      public void initialize(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
+      public void initialize(Key keyId, RemoteDocumentUpdate patch, Callback<Void> callback) {
         callback.success(null);
         writes.incrementAndGet();
       }
 
       @Override
-      public void patch(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
+      public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
         callback.success(null);
         writes.incrementAndGet();
       }
 
       @Override
-      public void fork(long oldDocumentId, long newDocumentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+      public void fork(Key key1, Key key2, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
 
       }
 
       @Override
-      public void rewind(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+      public void rewind(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
 
       }
 
       @Override
-      public void unsend(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+      public void unsend(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
 
       }
 
       @Override
-      public void delete(long documentId, Callback<Long> callback) {
+      public void delete(Key key, Callback<Long> callback) {
       }
     };
     StringBuilder arg = new StringBuilder();
@@ -94,8 +91,14 @@ public class AutoPlay {
         return 1000;
       }
     };
+    DocumentThreadBase base = new DocumentThreadBase(noop, new Executor() {
+      @Override
+      public void execute(Runnable command) {
+        command.run();
+      }
+    }, TS);
     for (int k = 0; k < 100; k++) {
-      DurableLivingDocument.fresh(k, factory, NtClient.NO_ONE, arg.toString(), "1", null, TS, noop, new Callback<>() {
+      DurableLivingDocument.fresh(new DataService.Key("?", "" + k), factory, NtClient.NO_ONE, arg.toString(), "1", null, base, new Callback<>() {
         @Override
         public void success(DurableLivingDocument value) {
           try {

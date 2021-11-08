@@ -10,10 +10,10 @@
 package org.adamalang.api.commands.mocks;
 
 import org.adamalang.api.commands.contracts.*;
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DocumentThreadBase;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.natives.NtClient;
@@ -26,6 +26,7 @@ import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
 import java.util.HashMap;
+import java.util.concurrent.Executor;
 
 public class MockBackbone implements Backbone, TimeSource {
   public long now;
@@ -50,7 +51,7 @@ public class MockBackbone implements Backbone, TimeSource {
   }
 
   @Override
-  public void findDocument(String space, long key, CommandRequiresDocument cmd, CommandResponder responder) {
+  public void findDocument(String space, String key, CommandRequiresDocument cmd, CommandResponder responder) {
     String sKey = space + "/" + key;
     if (space.equals("bad")) {
       responder.error(new ErrorCodeException(100));
@@ -65,7 +66,14 @@ public class MockBackbone implements Backbone, TimeSource {
             findDataService(space, new CommandRequiresDataService() {
               @Override
               public void onDataServiceFound(DataService service) {
-                DurableLivingDocument.load(key, factory, null, MockBackbone.this, service, new Callback<DurableLivingDocument>() {
+                DataService.Key newKey = new DataService.Key(space, "" + key);
+                DocumentThreadBase base = new DocumentThreadBase(service, new Executor() {
+                  @Override
+                  public void execute(Runnable command) {
+                    command.run();
+                  }
+                }, MockBackbone.this);
+                DurableLivingDocument.load(newKey, factory, null, base, new Callback<DurableLivingDocument>() {
                   @Override
                   public void success(DurableLivingDocument doc) {
                     cmd.onDurableDocumentFound(doc);
@@ -85,7 +93,7 @@ public class MockBackbone implements Backbone, TimeSource {
   }
 
   @Override
-  public void findLivingDocumentFactory(String space, long key, CommandRequiresLivingDocumentFactory cmd, CommandResponder responder) {
+  public void findLivingDocumentFactory(String space, String key, CommandRequiresLivingDocumentFactory cmd, CommandResponder responder) {
     if (space.equals("bad")) {
       responder.error(new ErrorCodeException(42));
     } else {
@@ -94,9 +102,16 @@ public class MockBackbone implements Backbone, TimeSource {
   }
 
   @Override
-  public void makeDocument(String space, long key, NtClient who, String arg, String entropy, DataService service, LivingDocumentFactory factory, CommandCreatesDocument cmd, CommandResponder responder) {
+  public void makeDocument(String space, String key, NtClient who, String arg, String entropy, DataService service, LivingDocumentFactory factory, CommandCreatesDocument cmd, CommandResponder responder) {
     try {
-      DurableLivingDocument.fresh(key, factory, who, arg, entropy, null, this, service, new Callback<>() {
+
+      DocumentThreadBase base = new DocumentThreadBase(service, new Executor() {
+        @Override
+        public void execute(Runnable command) {
+          command.run();
+        }
+      }, this);
+      DurableLivingDocument.fresh(new DataService.Key(space, "" + key), factory, who, arg, entropy, null, base, new Callback<>() {
         @Override
         public void success(DurableLivingDocument doc) {
           doc.invalidate(new Callback<Integer>() {

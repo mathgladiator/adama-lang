@@ -24,7 +24,7 @@ public class RequestTests {
     Assert.assertEquals("ch", request.channel());
     Assert.assertEquals("jazz", request.entropy());
     Assert.assertEquals(42, request.id());
-    Assert.assertEquals(10000L, request.key());
+    Assert.assertEquals("10000", request.key());
     Assert.assertEquals("{}", request.json_arg());
     Assert.assertEquals("{}", request.json_message());
   }
@@ -32,12 +32,12 @@ public class RequestTests {
   @Test
   public void lng_as_ints() throws ErrorCodeException {
     Request request = new Request(Json.parseJsonObject("{\"key\":10000}"));
-    Assert.assertEquals(10000L, request.key());
+    Assert.assertEquals("10000", request.key());
   }
 
   @Test
   public void lng_inv() throws ErrorCodeException {
-    Request request = new Request(Json.parseJsonObject("{\"key\":\"x\"}"));
+    Request request = new Request(Json.parseJsonObject("{\"key\":true}"));
     try {
       request.key();
       Assert.fail();

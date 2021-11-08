@@ -11,6 +11,7 @@ package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
+/** a int32 that will respect privacy and sends state to client only on changes */
 public class DInt32 {
   private Integer prior;
 
@@ -18,6 +19,7 @@ public class DInt32 {
     prior = null;
   }
 
+  /** the int32 is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (prior != null) {
       writer.writeNull();
@@ -25,15 +27,10 @@ public class DInt32 {
     }
   }
 
-  public void show(final Integer value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null) {
-      if (value != null) {
-        writer.writeInt(value.intValue());
-      }
-    } else {
-      if (value != null && value.intValue() != prior.intValue()) {
-        writer.writeInt(value.intValue());
-      }
+  /** the int32 is visible, so show changes */
+  public void show(final int value, final PrivateLazyDeltaWriter writer) {
+    if (prior == null || value != prior.intValue()) {
+      writer.writeInt(value);
     }
     prior = value;
   }

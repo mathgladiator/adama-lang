@@ -50,8 +50,8 @@ public class Request {
     return str(node, "entropy", false, 0);
   }
 
-  public long key() throws ErrorCodeException {
-    return lng(node, "key", ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
+  public String key() throws ErrorCodeException {
+    return str(node, "key", true, ErrorCodes.USERLAND_REQUEST_NO_GAME_PROPERTY);
   }
 
   public String json_message() throws ErrorCodeException {
@@ -75,9 +75,12 @@ public class Request {
 
   private static String str(final ObjectNode request, final String field, final boolean mustExist, final int errorIfDoesnt) throws ErrorCodeException {
     final var fieldNode = request.get(field);
-    if (fieldNode == null || fieldNode.isNull() || !fieldNode.isTextual()) {
+    if (fieldNode == null || fieldNode.isNull() || !(fieldNode.isTextual() || fieldNode.isNumber())) {
       if (mustExist) { throw new ErrorCodeException(errorIfDoesnt); }
       return null;
+    }
+    if (fieldNode.isNumber()) {
+      return fieldNode.numberValue().toString();
     }
     return fieldNode.textValue();
   }

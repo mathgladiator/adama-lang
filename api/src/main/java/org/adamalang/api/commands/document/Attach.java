@@ -13,20 +13,20 @@ import org.adamalang.api.commands.Request;
 import org.adamalang.api.commands.RequestContext;
 import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDocument;
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 /** command: attach an asset to a document */
 public class Attach implements Command, CommandRequiresDocument {
   private final RequestContext context;
   private final String space;
-  private final long key;
+  private final String key;
 
   public static Attach validateAndParse(RequestContext context, Request request) throws ErrorCodeException {
     return new Attach(context, request.space(), request.key());
   }
 
-  private Attach(RequestContext context, String space, long key) {
+  private Attach(RequestContext context, String space, String key) {
     this.context = context;
     this.space = space;
     this.key = key;

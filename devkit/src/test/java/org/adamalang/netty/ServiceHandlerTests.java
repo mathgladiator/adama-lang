@@ -89,7 +89,7 @@ public class ServiceHandlerTests {
     MockClient.IdAccum id4 = callback.camp(4);
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"space\":\"Demo_ServiceHandler_success\",\"key\":\"3\",\"arg\":{}}"));
     id1.done.await(1000, TimeUnit.MILLISECONDS);
-    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"key\":\"3\",\"seq\":2}}");
+    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"seq\":2}}");
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"space\":\"Demo_ServiceHandler_success\",\"key\":\"3\"}"));
     id2.first.await(1000, TimeUnit.MILLISECONDS);
     id2.assertOnce("{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":123},\"outstanding\":[],\"blockers\":[],\"seq\":5}}");
@@ -144,7 +144,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(3, output.size());
-    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"key\":\"1\",\"seq\":3}}", output.get(1));
+    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"seq\":3}}", output.get(1));
     Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":6}}", output.get(2));
   }
 
@@ -166,7 +166,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"key\":\"5\",\"seq\":2}}", output.get(1));
+    Assert.assertEquals("DATA:{\"failure\":1,\"reason\":1011}", output.get(1));
     cleanup();
   }
 
@@ -357,7 +357,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(3, output.size());
-    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"key\":\"4\",\"seq\":3}}", output.get(1));
+    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"seq\":3}}", output.get(1));
     Assert.assertEquals("DATA:{\"failure\":2,\"reason\":2060}", output.get(2));
   }
 
@@ -380,7 +380,7 @@ public class ServiceHandlerTests {
       callback.awaitDone();
       final var output = callback.output();
       Assert.assertEquals(2, output.size());
-      Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"key\":\"42\",\"seq\":3}}", output.get(1));
+      Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"seq\":3}}", output.get(1));
     }
     {
       Assert.assertTrue(runnable.waitForReady(10000));
@@ -440,7 +440,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(2, output.size());
-    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"key\":\"2\",\"seq\":3}}", output.get(1));
+    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"seq\":3}}", output.get(1));
     cleanup();
   }
 
@@ -462,7 +462,7 @@ public class ServiceHandlerTests {
     MockClient.IdAccum id3 = callback.camp(3);
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"space\":\"Demo_Bomb_success\",\"key\":\"7\",\"arg\":{}}"));
     id1.done.await(1000, TimeUnit.MILLISECONDS);
-    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"key\":\"7\",\"seq\":3}}");
+    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"seq\":3}}");
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"space\":\"Demo_Bomb_success\",\"key\":\"7\"}"));
     id2.first.await(1000, TimeUnit.MILLISECONDS);
     id2.assertOnce("{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"x\":\"Tick\"},\"outstanding\":[],\"blockers\":[],\"seq\":6}}");
@@ -489,7 +489,7 @@ public class ServiceHandlerTests {
     b.execute(callback);
     first.await(2000, TimeUnit.MILLISECONDS);
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"connect\",\"space\":\"Demo_Bomb_success\",\"data\":{}}"));
-    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"space\":\"Demo_Bomb_success\",\"key\":\"x\",\"data\":{}}"));
+    b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"space\":\"Demo_Bomb_success\",\"key\":[],\"data\":{}}"));
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":3,\"method\":\"connect\",\"space\":\"Demo_Bomb_success\",\"key\":true,\"data\":{}}"));
     callback.awaitDone();
     final var output = callback.output();
@@ -520,7 +520,7 @@ public class ServiceHandlerTests {
     callback.awaitDone();
     final var output = callback.output();
     Assert.assertEquals(6, output.size());
-    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"key\":\"8\",\"seq\":2}}", output.get(1));
+    Assert.assertEquals("DATA:{\"deliver\":1,\"done\":true,\"response\":{\"seq\":2}}", output.get(1));
     Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"k\":1},\"outstanding\":[],\"blockers\":[],\"seq\":5}}", output.get(2));
     Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"k\":2},\"outstanding\":[],\"blockers\":[],\"seq\":7}}", output.get(3));
     Assert.assertEquals("DATA:{\"deliver\":2,\"done\":false,\"response\":{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":8}}", output.get(4));
@@ -546,7 +546,7 @@ public class ServiceHandlerTests {
     MockClient.IdAccum id3 = callback.camp(3);
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"create\",\"space\":\"Demo_Simple_success\",\"key\":\"70\",\"arg\":{}}"));
     id1.done.await(1000, TimeUnit.MILLISECONDS);
-    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"key\":\"70\",\"seq\":2}}");
+    id1.assertOnce("{\"deliver\":1,\"done\":true,\"response\":{\"seq\":2}}");
     b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":2,\"method\":\"connect\",\"space\":\"Demo_Simple_success\",\"key\":\"70\"}"));
     id2.first.await(1000, TimeUnit.MILLISECONDS);
     id2.assertOnce("{\"deliver\":2,\"done\":false,\"response\":{\"data\":{\"k\":1},\"outstanding\":[],\"blockers\":[],\"seq\":5}}");

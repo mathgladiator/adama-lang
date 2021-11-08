@@ -11,10 +11,9 @@ package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.stdlib.IdCodec;
 
-/** the asset we sent to the client */
+/** an asset that will respect privacy and sends state to client only on changes */
 public class DAsset {
   private NtAsset prior;
 
@@ -22,6 +21,7 @@ public class DAsset {
     prior = null;
   }
 
+  /** the asset is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (prior != null) {
       writer.writeNull();
@@ -29,27 +29,18 @@ public class DAsset {
     }
   }
 
+  /** the asset is visible, so show changes */
   public void show(final NtAsset value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null) {
-      if (value != null) {
-        prior = value;
-        writeOut(writer);
-      }
-    } else {
-      if (value != null && !value.equals(prior)) {
-        prior = value;
-        writeOut(writer);
-      }
+    if (prior == null || !value.equals(prior)) {
+      final var obj = writer.planObject();
+      // note; we don't send the name as that may leak private information from the uploader
+      obj.planField("id").writeFastString(IdCodec.encode(value.id));
+      obj.planField("size").writeFastString("" + value.size);
+      obj.planField("type").writeString(value.contentType);
+      obj.planField("md5").writeString(value.md5);
+      obj.planField("sha384").writeString(value.sha384);
+      obj.end();
     }
-  }
-
-  private void writeOut(final PrivateLazyDeltaWriter writer) {
-    final var obj = writer.planObject();
-    // note; we don't send the name as that may leak private information from the uploader
-    obj.planField("id").writeFastString(IdCodec.encode(prior.id));
-    obj.planField("size").writeFastString("" + prior.size);
-    obj.planField("type").writeString(prior.contentType);
-    obj.planField("md5").writeString(prior.md5);
-    obj.planField("sha384").writeString(prior.sha384);
+    prior = value;
   }
 }

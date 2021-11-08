@@ -22,7 +22,7 @@ public class ConnectTests {
       MockResponder responder = new MockResponder();
       scaffold.dispatch("{\"method\":\"create\",\"space\":\"game\",\"key\":42,\"arg\":{}}", responder);
       responder.awaitDone();
-      Assert.assertEquals("{\"key\":\"42\",\"seq\":2}", responder.data.get(0));
+      Assert.assertEquals("{\"seq\":2}", responder.data.get(0));
     }
 
     {
@@ -40,7 +40,7 @@ public class ConnectTests {
       MockResponder responder = new MockResponder();
       scaffold.dispatch("{\"method\":\"create\",\"space\":\"game\",\"key\":42,\"arg\":{}}", responder);
       responder.awaitDone();
-      Assert.assertEquals("{\"key\":\"42\",\"seq\":2}", responder.data.get(0));
+      Assert.assertEquals("{\"seq\":2}", responder.data.get(0));
     }
 
     {

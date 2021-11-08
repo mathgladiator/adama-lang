@@ -9,7 +9,7 @@
 */
 package org.adamalang.api.commands.contracts;
 
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 
 /** the command requires document creation */
 public interface CommandCreatesDocument {

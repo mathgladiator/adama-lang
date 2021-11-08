@@ -13,20 +13,20 @@ import org.adamalang.api.commands.Request;
 import org.adamalang.api.commands.RequestContext;
 import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDocument;
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 /** command: delete a document */
 public class Delete implements Command, CommandRequiresDocument {
   private final RequestContext context;
   private final String space;
-  private long key;
+  private final String key;
 
   public static Delete validateAndParse(RequestContext context, Request request) throws ErrorCodeException {
     return new Delete(context, request.space(), request.key());
   }
 
-  private Delete(RequestContext context, String space, long key) {
+  private Delete(RequestContext context, String space, String key) {
     this.context = context;
     this.space = space;
     this.key = key;

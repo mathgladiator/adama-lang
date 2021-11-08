@@ -9,7 +9,7 @@
 */
 package org.adamalang.api.commands.contracts;
 
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -20,13 +20,13 @@ public interface Backbone {
   public void findDataService(String space, CommandRequiresDataService cmd, CommandResponder responder);
 
   /** find the given document for the given key within the given space */
-  public void findDocument(String space, long key, CommandRequiresDocument cmd, CommandResponder responder);
+  public void findDocument(String space, String key, CommandRequiresDocument cmd, CommandResponder responder);
 
   /** make the document */
-  public void makeDocument(String space, long key, NtClient who, String arg, String entropy, DataService service, LivingDocumentFactory factory, CommandCreatesDocument cmd, CommandResponder responder);
+  public void makeDocument(String space, String key, NtClient who, String arg, String entropy, DataService service, LivingDocumentFactory factory, CommandCreatesDocument cmd, CommandResponder responder);
 
   /** find the appropriate living document for the space and key pair */
-  public void findLivingDocumentFactory(String space, long key, CommandRequiresLivingDocumentFactory cmd, CommandResponder responder);
+  public void findLivingDocumentFactory(String space, String key, CommandRequiresLivingDocumentFactory cmd, CommandResponder responder);
 
   /** invalidate and schedule an update for the given document */
   public void invalidateAndSchedule(DurableLivingDocument document);

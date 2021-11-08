@@ -9,11 +9,13 @@
 */
 package org.adamalang.support.testgen;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DocumentThreadBase;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.natives.NtClient;
@@ -52,7 +54,14 @@ public class PhaseRun {
     DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
 
     try {
-      DurableLivingDocument.fresh(0, factory, NtClient.NO_ONE, "{}", "0", monitor, time, dds, acquire);
+      DataService.Key key = new DataService.Key("0", "0");
+      DocumentThreadBase base = new DocumentThreadBase(dds, new Executor() {
+        @Override
+        public void execute(Runnable command) {
+          command.run();
+        }
+      }, time);
+      DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "0", monitor, base, acquire);
       DurableLivingDocument doc = acquire.get();
 
       doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
@@ -81,7 +90,7 @@ public class PhaseRun {
       dds.setData(json);
       outputFile.append(json).append("\n");
       DumbDataService.DumbDurableLivingDocumentAcquire acquire2 = new DumbDataService.DumbDurableLivingDocumentAcquire();
-      DurableLivingDocument.load(0, factory, monitor, time, dds, acquire2);
+      DurableLivingDocument.load(key, factory, monitor, base, acquire2);
       DurableLivingDocument doc2 = acquire2.get();
       outputFile.append(doc2.json()).append("\n");
       mustBeTrue(doc2.json().equals(json), "JSON don't match load, dump cycle");

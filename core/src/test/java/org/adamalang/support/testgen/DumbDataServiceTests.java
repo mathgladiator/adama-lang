@@ -20,10 +20,20 @@ public class DumbDataServiceTests {
   public void coverage() {
     DumbDataService dds = new DumbDataService((t) -> {});
     try {
-      dds.create(null);
+      dds.create(new DataService.Key("0", "0"), new Callback<Long>() {
+        @Override
+        public void success(Long value) {
+
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+
+        }
+      });
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
-    dds.get(1, new Callback<DataService.LocalDocumentChange>() {
+    dds.get(new DataService.Key("0", "0"), new Callback<DataService.LocalDocumentChange>() {
       @Override
       public void success(DataService.LocalDocumentChange value) {
         Assert.fail();
@@ -34,20 +44,21 @@ public class DumbDataServiceTests {
       }
 
     });
+    DataService.Key key = new DataService.Key("?", "1");
     try {
-      dds.delete(1, null);
+      dds.delete(key, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {
-      dds.fork(1, 1, null, null, null);
+      dds.fork(key, key, null, null, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {
-      dds.rewind(1, null, null, null);
+      dds.rewind(key, null, null, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {
-      dds.unsend(1,null, null, null);
+      dds.unsend(key,null, null, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
   }

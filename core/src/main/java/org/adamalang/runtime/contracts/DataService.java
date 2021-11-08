@@ -11,8 +11,45 @@ package org.adamalang.runtime.contracts;
 
 import org.adamalang.runtime.natives.NtClient;
 
+import java.util.Objects;
+
 /** the contract for the data service */
 public interface DataService {
+
+  /** a document is identified by a key */
+  public static class Key implements Comparable<Key> {
+    public final String space;
+    public final String key;
+
+    public Key(String space, String key) {
+      this.space = space;
+      this.key = key;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      Key key1 = (Key) o;
+      return Objects.equals(space, key1.space) && Objects.equals(key, key1.key);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(space, key);
+    }
+
+    @Override
+    public int compareTo(Key o) {
+      if (this == o) return 0;
+      int delta = space.compareTo(o.space);
+      if (delta == 0) {
+        delta = key.compareTo(o.key);
+      }
+      return delta;
+    }
+  }
+
   /** the local copy of the document should be changed by incorporating the given patch */
   public static class LocalDocumentChange {
     public final String patch;
@@ -63,27 +100,27 @@ public interface DataService {
   }
 
   /** create a new empty document */
-  public void create(Callback<Long> callback);
+  public void create(Key key, Callback<Long> callback);
 
   /** Download the entire object and return the entire json */
-  void get(long documentId, Callback<LocalDocumentChange> callback);
+  void get(Key key, Callback<LocalDocumentChange> callback);
 
   /** write the first entry for the document */
-  public void initialize(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback);
+  public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback);
 
   /** Apply a patch to the document using rfc7396 */
-  public void patch(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback);
+  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback);
 
   /** Create a copy of the document from the beginning of time up to indicated sequencer */
-  public void fork(long oldDocumentId, long newDocumentId, NtClient who, String marker, Callback<LocalDocumentChange> callback);
+  public void fork(Key keyCopy, Key keyDest, NtClient who, String marker, Callback<LocalDocumentChange> callback);
 
   /** Rewind the state of the document to the indicated marker by the given client */
-  public void rewind(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback);
+  public void rewind(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback);
 
   /** Unsend the message at the given marker by the given client */
-  public void unsend(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback);
+  public void unsend(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback);
 
   /** Delete the document given by the ID */
-  void delete(long documentId, Callback<Long> callback);
+  void delete(Key key, Callback<Long> callback);
 
 }

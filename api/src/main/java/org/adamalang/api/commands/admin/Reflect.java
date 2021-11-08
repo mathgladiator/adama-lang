@@ -20,13 +20,13 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 public class Reflect implements Command, CommandRequiresLivingDocumentFactory {
   private final RequestContext context;
   private final String space;
-  private final long key;
+  private final String key;
 
   public static Reflect validateAndParse(RequestContext context, Request request) throws ErrorCodeException {
     return new Reflect(context, request.space(), request.key());
   }
 
-  private Reflect(RequestContext context, String space, long key) {
+  private Reflect(RequestContext context, String space, String key) {
     this.context = context;
     this.space = space;
     this.key = key;

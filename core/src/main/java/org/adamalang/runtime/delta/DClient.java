@@ -12,6 +12,7 @@ package org.adamalang.runtime.delta;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtClient;
 
+/** a client that will respect privacy and sends state to client only on changes */
 public class DClient {
   private NtClient prior;
 
@@ -19,6 +20,7 @@ public class DClient {
     prior = null;
   }
 
+  /** the client is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (prior != null) {
       writer.writeNull();
@@ -26,25 +28,15 @@ public class DClient {
     }
   }
 
+  /** the client is visible, so show changes */
   public void show(final NtClient value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null) {
-      if (value != null) {
-        prior = value;
-        writeOut(writer);
-      }
-    } else {
-      if (value != null && !value.equals(prior)) {
-        prior = value;
-        writeOut(writer);
-      }
+    if (prior == null || !value.equals(prior)) {
+      final var obj = writer.planObject();
+      obj.planField("@t").writeInt(1);
+      obj.planField("agent").writeFastString(value.agent);
+      obj.planField("authority").writeFastString(value.authority);
+      obj.end();
     }
-  }
-
-  private void writeOut(final PrivateLazyDeltaWriter writer) {
-    final var obj = writer.planObject();
-    obj.planField("@t").writeInt(1);
-    obj.planField("agent").writeFastString(prior.agent);
-    obj.planField("authority").writeFastString(prior.authority);
-    obj.end();
+    prior = value;
   }
 }

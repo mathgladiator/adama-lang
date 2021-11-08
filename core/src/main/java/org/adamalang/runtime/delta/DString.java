@@ -11,6 +11,7 @@ package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
+/** a string that will respect privacy and sends state to client only on changes */
 public class DString {
   private String prior;
 
@@ -18,6 +19,7 @@ public class DString {
     prior = null;
   }
 
+  /** the string is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (prior != null) {
       writer.writeNull();
@@ -25,15 +27,10 @@ public class DString {
     }
   }
 
+  /** the fast-string is visible, so show changes */
   public void show(final String value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null) {
-      if (value != null) {
-        writer.writeString(value);
-      }
-    } else {
-      if (value != null && !value.equals(prior)) {
-        writer.writeString(value);
-      }
+    if (prior == null || !value.equals(prior)) {
+      writer.writeString(value);
     }
     prior = value;
   }

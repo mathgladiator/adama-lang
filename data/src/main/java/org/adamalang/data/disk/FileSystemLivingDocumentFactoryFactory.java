@@ -9,6 +9,7 @@
 */
 package org.adamalang.data.disk;
 
+import org.adamalang.runtime.ErrorCodes;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -45,7 +46,7 @@ public class FileSystemLivingDocumentFactoryFactory implements LivingDocumentFac
       document.importFile(space + ".a", DocumentPosition.ZERO);
       document.setClassName(className);
       if (!document.check(state)) {
-        callback.failure(new ErrorCodeException(LivingDocumentFactoryFactory.USERLAND_CANT_COMPILE_ADAMA_SCRIPT, document.errorsJson()));
+        callback.failure(new ErrorCodeException(ErrorCodes.USERLAND_CANT_COMPILE_ADAMA_SCRIPT, document.errorsJson()));
         return;
       }
       final var java = document.compileJava(state);
@@ -64,7 +65,7 @@ public class FileSystemLivingDocumentFactoryFactory implements LivingDocumentFac
     } catch (ErrorCodeException ex) {
       callback.failure(ex);
     } catch (Throwable t) {
-      callback.failure(new ErrorCodeException(LivingDocumentFactoryFactory.USERLAND_CANT_COMPILE_ADAMA_SCRIPT, t));
+      callback.failure(new ErrorCodeException(ErrorCodes.USERLAND_CANT_COMPILE_ADAMA_SCRIPT, t));
     }
   }
 }

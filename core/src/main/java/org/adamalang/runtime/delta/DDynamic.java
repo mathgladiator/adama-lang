@@ -12,6 +12,7 @@ package org.adamalang.runtime.delta;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtDynamic;
 
+/** a dynamic that will respect privacy and sends state to client only on changes */
 public class DDynamic {
   private NtDynamic prior;
 
@@ -19,6 +20,7 @@ public class DDynamic {
     prior = null;
   }
 
+  /** the dynamic tree is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (prior != null) {
       writer.writeNull();
@@ -26,17 +28,11 @@ public class DDynamic {
     }
   }
 
+  /** the dynamic tree is visible, so show changes */
   public void show(final NtDynamic value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null) {
-      if (value != null) {
-        prior = value;
-        writer.injectJson(value.json);
-      }
-    } else {
-      if (value != null && !value.equals(prior)) {
-        prior = value;
-        writer.injectJson(value.json);
-      }
+    if (value == null || !value.equals(prior)) {
+      writer.injectJson(value.json);
     }
+    prior = value;
   }
 }

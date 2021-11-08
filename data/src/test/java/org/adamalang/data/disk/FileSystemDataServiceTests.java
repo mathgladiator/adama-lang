@@ -64,14 +64,15 @@ public class FileSystemDataServiceTests {
   public void testFlow() throws Exception {
     d("test_flow", (f) -> {
       LocalCallback<Long> id = new LocalCallback<>();
-      f.create(id);
+      f.create(new DataService.Key("s", "0"), id);
+      DataService.Key key = new DataService.Key("s", id.get() + "");
       LocalCallback<DataService.LocalDocumentChange> fetch = new LocalCallback<>();
-      f.get(id.get(), fetch);
+      f.get(key, fetch);
       Assert.assertEquals("{}", fetch.get().patch);
       LocalCallback<Void> written = new LocalCallback<>();
-      f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, null, "{}", "{\"x\":123}", "{\"x\":null}", false, 0), written);
-      f.patch(id.get(), new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, null, "{}", "{\"x\":42}", "{\"x\":123}", false, 0), written);
-      f.get(id.get(), fetch);
+      f.patch(key, new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, null, "{}", "{\"x\":123}", "{\"x\":null}", false, 0), written);
+      f.patch(key, new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, null, "{}", "{\"x\":42}", "{\"x\":123}", false, 0), written);
+      f.get(key, fetch);
       Assert.assertEquals("{\"x\":42}", fetch.get().patch);
     });
   }
@@ -79,19 +80,20 @@ public class FileSystemDataServiceTests {
   @Test
   public void coverage() throws Exception {
     d("crash", (f) -> {
+      DataService.Key key = new DataService.Key("s", "0");
       try {
-        f.fork(0, 0, null, null, null);
+        f.fork(key, key, null, null, null);
         Assert.fail();
       } catch (UnsupportedOperationException uoe) {
       }
 
       try {
-        f.rewind(0, null,null, null);
+        f.rewind(key, null,null, null);
         Assert.fail();
       } catch (UnsupportedOperationException uoe) {
       }
       try {
-        f.unsend(0, null, null, null);
+        f.unsend(key, null, null, null);
         Assert.fail();
       } catch (UnsupportedOperationException uoe) {
       }

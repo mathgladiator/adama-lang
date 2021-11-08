@@ -13,12 +13,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import org.adamalang.netty.ErrorCodes;
-import org.adamalang.runtime.LivingDocument;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.translator.env.CompilerOptions;
@@ -39,7 +40,7 @@ public class GameSpaceDB {
     }
   }
 
-  private int classId;
+  private static AtomicInteger classId = new AtomicInteger(0);
   private final File dataRoot;
   private final HashMap<String, GameSpace> map;
   private final CompilerOptions options;
@@ -54,7 +55,6 @@ public class GameSpaceDB {
     this.dataRoot = dataRoot;
     this.time = time;
     map = new HashMap<>();
-    classId = 0;
   }
 
   public synchronized void close() throws Exception {
@@ -89,7 +89,8 @@ public class GameSpaceDB {
       sanityCheckDataDirectory(gameData);
       final Supplier<LivingDocumentFactory> deployer = () -> {
         try {
-          return GameSpace.buildLivingDocumentFactory(schemaRoot, options, gamespace, "Game" + classId++);
+          int classIdToUse = classId.incrementAndGet();
+          return GameSpace.buildLivingDocumentFactory(schemaRoot, options, gamespace, "Game" + classIdToUse);
         } catch (ErrorCodeException ex) {
           throw new RuntimeException(ex);
         }

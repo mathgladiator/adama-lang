@@ -14,7 +14,11 @@ import java.util.HashSet;
 import java.util.function.Supplier;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
+/** a map that will respect privacy and sends state to client only on changes */
 public class DMap<TyIn, dTyOut> {
+  // cache of all the items in the map
+  private final HashMap<TyIn, dTyOut> cache;
+
   public class Walk {
     private final HashSet<TyIn> seen;
 
@@ -22,6 +26,18 @@ public class DMap<TyIn, dTyOut> {
       this.seen = new HashSet<>();
     }
 
+    /** a new element in the map */
+    public dTyOut next(final TyIn key, final Supplier<dTyOut> maker) {
+      seen.add(key);
+      var value = cache.get(key);
+      if (value == null) {
+        value = maker.get();
+        cache.put(key, value);
+      }
+      return value;
+    }
+
+    /** the map iteration is over */
     public void end(final PrivateLazyDeltaWriter parent) {
       final var cacheIt = cache.entrySet().iterator();
       while (cacheIt.hasNext()) {
@@ -32,28 +48,19 @@ public class DMap<TyIn, dTyOut> {
         }
       }
     }
-
-    public dTyOut next(final TyIn key, final Supplier<dTyOut> maker) {
-      seen.add(key);
-      var value = cache.get(key);
-      if (value == null) {
-        value = maker.get();
-        cache.put(key, value);
-      }
-      return value;
-    }
   }
 
-  private final HashMap<TyIn, dTyOut> cache;
 
   public DMap() {
     this.cache = new HashMap<>();
   }
 
+  /** start walking items; the generated code in CodeGenDeltaClass is related */
   public DMap.Walk begin() {
     return new DMap.Walk();
   }
 
+  /** the map is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (cache.size() > 0) {
       cache.clear();

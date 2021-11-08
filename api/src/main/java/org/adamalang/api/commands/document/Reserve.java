@@ -38,6 +38,7 @@ public class Reserve implements Command, CommandRequiresDataService {
 
   @Override
   public void onDataServiceFound(DataService dataService) {
-    dataService.create(CommandResponder.TO_CALLBACK((value) -> context.responder.finish("{\"key\":\"" + value + "\"}"), context.responder));
+    // TODO: rethink this command, it may be best to figure out a better way
+    dataService.create(new DataService.Key(space, "key"), CommandResponder.TO_CALLBACK((value) -> context.responder.finish("{\"key\":\"" + value + "\"}"), context.responder));
   }
 }

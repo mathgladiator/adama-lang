@@ -11,6 +11,7 @@ package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
+/** a boolean that will respect privacy and sends state to client only on changes */
 public class DBoolean {
   private Boolean prior;
 
@@ -18,6 +19,7 @@ public class DBoolean {
     prior = null;
   }
 
+  /** the boolean is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (prior != null) {
       writer.writeNull();
@@ -25,15 +27,10 @@ public class DBoolean {
     }
   }
 
-  public void show(final Boolean value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null) {
-      if (value != null) {
-        writer.writeBool(value.booleanValue());
-      }
-    } else {
-      if (value != null && value.booleanValue() != prior.booleanValue()) {
-        writer.writeBool(value.booleanValue());
-      }
+  /** the boolean is visible, so show changes */
+  public void show(final boolean value, final PrivateLazyDeltaWriter writer) {
+    if (prior == null || value != prior.booleanValue()) {
+      writer.writeBool(value);
     }
     prior = value;
   }

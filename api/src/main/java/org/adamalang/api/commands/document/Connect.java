@@ -14,7 +14,7 @@ import org.adamalang.api.commands.RequestContext;
 import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDocument;
 import org.adamalang.api.commands.contracts.CommandResponder;
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -25,13 +25,13 @@ public class Connect implements Command, CommandRequiresDocument {
   private final RequestContext context;
   private final int id;
   private final String space;
-  private long key;
+  private final String key;
 
   public static Connect validateAndParse(RequestContext context, Request request) throws ErrorCodeException {
     return new Connect(context, request.id(), request.space(), request.key());
   }
 
-  private Connect(RequestContext context, int id, String space, long key) {
+  private Connect(RequestContext context, int id, String space, String key) {
     this.context = context;
     this.id = id;
     this.space = space;

@@ -14,8 +14,7 @@ import org.adamalang.api.commands.RequestContext;
 import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDocument;
 import org.adamalang.api.commands.contracts.CommandResponder;
-import org.adamalang.runtime.DurableLivingDocument;
-import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 /** command: send a message to a document */
@@ -23,7 +22,7 @@ public class Send implements Command, CommandRequiresDocument {
   private final RequestContext context;
   private final String marker;
   private final String space;
-  private final long key;
+  private final String key;
   private final String channel;
   private final String message;
 
@@ -31,7 +30,7 @@ public class Send implements Command, CommandRequiresDocument {
     return new Send(context, request.marker(), request.space(), request.key(), request.channel(), request.json_message());
   }
 
-  private Send(RequestContext context, String marker, String space, long key, String channel, String message) {
+  private Send(RequestContext context, String marker, String space, String key, String channel, String message) {
     this.context = context;
     this.marker = marker;
     this.space = space;

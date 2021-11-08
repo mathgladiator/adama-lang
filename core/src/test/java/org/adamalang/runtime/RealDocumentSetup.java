@@ -16,11 +16,14 @@ import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
+import org.adamalang.runtime.sys.DocumentThreadBase;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 public class RealDocumentSetup {
   public final LivingDocumentFactory factory;
@@ -120,17 +123,24 @@ public class RealDocumentSetup {
         mirror.document.__insert(new JsonStreamReader(update.redo));
       }
     });
+    DocumentThreadBase base = new DocumentThreadBase(dds, new Executor() {
+      @Override
+      public void execute(Runnable command) {
+        command.run();
+      }
+    }, time);
     dds.setData(json);
     factory = LivingDocumentTests.compile(code);
     DumbDataService.DumbDurableLivingDocumentAcquire acquireReal = new DumbDataService.DumbDurableLivingDocumentAcquire();
     DumbDataService.DumbDurableLivingDocumentAcquire acquireMirror = new DumbDataService.DumbDurableLivingDocumentAcquire();
     DocumentMonitor monitor = stdout ? new StdOutDocumentMonitor() : null;
+    DataService.Key key = new DataService.Key("space", "0");
     if (json == null) {
-      DurableLivingDocument.fresh(0, factory, NtClient.NO_ONE, "{}", "123", monitor, time, dds, acquireReal);
-      DurableLivingDocument.fresh(0, factory, NtClient.NO_ONE, "{}", "123", monitor, time, dds, acquireMirror);
+      DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireReal);
+      DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireMirror);
     } else {
-      DurableLivingDocument.load(0, factory, monitor, time, dds, acquireReal);
-      DurableLivingDocument.load(0, factory, monitor, time, dds, acquireMirror);
+      DurableLivingDocument.load(key, factory, monitor, base, acquireReal);
+      DurableLivingDocument.load(key, factory, monitor, base, acquireMirror);
     }
     document = acquireReal.get();
     mirror = acquireMirror.get();

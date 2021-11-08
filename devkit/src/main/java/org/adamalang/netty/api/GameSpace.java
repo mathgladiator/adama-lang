@@ -12,11 +12,13 @@ package org.adamalang.netty.api;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 import org.adamalang.data.disk.FileSystemDataService;
 import org.adamalang.netty.ErrorCodes;
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DocumentThreadBase;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.TimeSource;
@@ -124,7 +126,7 @@ public class GameSpace {
 
   /** generate and reserve an id to use for create */
   public synchronized void generate(Callback<Long> callback) {
-    service.create(callback);
+    service.create(new DataService.Key(null, null), callback);
   }
 
   private synchronized boolean put(long id, DurableLivingDocument doc) {
@@ -142,7 +144,14 @@ public class GameSpace {
 
   /** create a living document with the the given id for the given person with the given argument and entropy */
   public void create(final long id, final NtClient who, final ObjectNode cons, final String entropy, Callback<DurableLivingDocument> callback) throws ErrorCodeException {
-    DurableLivingDocument.fresh(id, factory, who, cons.toString(), entropy, null, time, service, Callback.transform(callback, 0, (doc) -> {
+    DataService.Key key = new DataService.Key(name, id + "");
+    DocumentThreadBase base = new DocumentThreadBase(service, new Executor() {
+      @Override
+      public void execute(Runnable command) {
+        command.run();
+      }
+    }, time);
+    DurableLivingDocument.fresh(key, factory, who, cons.toString(), entropy, null, base, Callback.transform(callback, 0, (doc) -> {
       if (put(id, doc)) {
         return doc;
       } else {
@@ -161,7 +170,16 @@ public class GameSpace {
       }
     }
 
-    DurableLivingDocument.load(id, factory, null, time, service, Callback.transform(callback, 0, (doc) -> {
+    DocumentThreadBase base = new DocumentThreadBase(service, new Executor() {
+      @Override
+      public void execute(Runnable command) {
+        command.run();
+      }
+    }, time);
+
+    DataService.Key key = new DataService.Key(name, "" +id);
+
+    DurableLivingDocument.load(key, factory, null, base, Callback.transform(callback, 0, (doc) -> {
       put(id, doc);
       return doc;
     }));

@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import org.adamalang.runtime.LivingDocument;
+import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.contracts.WhereClause;

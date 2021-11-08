@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
+/** a list that will respect privacy and sends state to client only on changes */
 public class DList<dTy> {
   public final ArrayList<dTy> cachedDeltas;
   private int emittedSize;
@@ -22,13 +23,7 @@ public class DList<dTy> {
     this.emittedSize = 0;
   }
 
-  public dTy getPrior(final int k, final Supplier<dTy> maker) {
-    while (cachedDeltas.size() <= k) {
-      cachedDeltas.add(maker.get());
-    }
-    return cachedDeltas.get(k);
-  }
-
+  /** the list is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (emittedSize > 0) {
       emittedSize = 0;
@@ -37,7 +32,19 @@ public class DList<dTy> {
     }
   }
 
+  /** get the prior value at the given index using the supplier to fill in holes */
+  public dTy getPrior(final int k, final Supplier<dTy> maker) {
+    // Note: this function is called by generated code (See CodeGenDeltaClass) for each item in the array, and the value
+    // will be written out per item if there is something.
+    while (cachedDeltas.size() <= k) {
+      cachedDeltas.add(maker.get());
+    }
+    return cachedDeltas.get(k);
+  }
+
+  /** rectify the size */
   public void rectify(final int size, final PrivateLazyDeltaWriter writer) {
+    // Note; this is called after the iteration to null out items
     for (var k = size; k < cachedDeltas.size(); k++) {
       writer.planField("" + k).writeNull();
     }

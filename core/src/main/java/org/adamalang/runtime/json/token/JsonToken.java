@@ -9,6 +9,7 @@
 */
 package org.adamalang.runtime.json.token;
 
+/** a simple token type paired with data */
 public class JsonToken {
   public final String data;
   public final JsonTokenType type;

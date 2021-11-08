@@ -9,7 +9,7 @@
 */
 package org.adamalang.support.testgen;
 
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -36,12 +36,12 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void create(Callback<Long> callback) {
+  public void create(Key key, Callback<Long> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void get(long documentId, Callback<LocalDocumentChange> callback) {
+  public void get(Key key, Callback<LocalDocumentChange> callback) {
     if (data != null) {
       callback.success(new LocalDocumentChange(data, 0));
     } else {
@@ -101,12 +101,12 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void initialize(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    patch(documentId, patch, callback);
+  public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
+    patch(key, patch, callback);
   }
 
   @Override
-  public void patch(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
     updates.accept(patch);
     JsonStreamReader reader = new JsonStreamReader(patch.redo);
     tree = JsonAlgebra.merge(tree, reader.readJavaTree());
@@ -114,22 +114,22 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void fork(long oldDocumentId, long newDocumentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void fork(Key key1, Key key2, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void rewind(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void rewind(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void unsend(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void unsend(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void delete(long documentId, Callback<Long> callback) {
+  public void delete(Key key, Callback<Long> callback) {
     throw new UnsupportedOperationException();
   }
 }

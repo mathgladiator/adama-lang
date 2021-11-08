@@ -63,7 +63,7 @@ public class AsyncTask {
 
   /** execute the task */
   public void execute() throws RetryProgressException {
-    /** we must have either an action and not be aborted */
+    // we must have either an action and not be aborted
     if (action != null && !aborted) {
       try {
         action.execute(); // compute

@@ -10,20 +10,12 @@
 package org.adamalang.runtime.reactives;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
-import org.adamalang.runtime.LivingDocument;
-import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
-import org.adamalang.runtime.contracts.WhereClause;
-import org.adamalang.runtime.index.ReactiveIndex;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
-import org.adamalang.runtime.natives.lists.SelectorRxObjectList;
 
 /** a reactive map */
 public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<Map.Entry<DomainTy, RangeTy>>, RxParent, RxChild {

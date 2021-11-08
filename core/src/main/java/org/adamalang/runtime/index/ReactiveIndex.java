@@ -19,7 +19,7 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
    * bucket for SURE */
   private final HashMap<Integer, TreeSet<Ty>> index;
   /** as things change, we lose certainty of where items exist and have a grab-all
-   * bucket */
+   * bucket; this is an optimization such that indexing happens between operations */
   private final TreeSet<Ty> unknowns;
 
   public ReactiveIndex(final TreeSet<Ty> unknowns) {
@@ -27,6 +27,7 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
     this.unknowns = unknowns;
   }
 
+  /** add the item to the given index (via value `at`) */
   public void add(final int at, final Ty item) {
     var set = index.get(at);
     if (set == null) {
@@ -36,6 +37,7 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
     set.add(item);
   }
 
+  /** delete the item from the given index (via value `at`) */
   public boolean delete(final int at, final Ty item) {
     final var set = index.get(at);
     final var result = set.remove(item);
@@ -45,14 +47,17 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
     return result;
   }
 
+  /** remove the item from the unknowns */
   public void delete(final Ty item) {
     unknowns.remove(item);
   }
 
-  public TreeSet<Ty> of(final int value) {
-    return index.get(value);
+  /** get the index */
+  public TreeSet<Ty> of(final int at) {
+    return index.get(at);
   }
 
+  /** remove the item from the index */
   public void remove(final int at, final Ty item) {
     if (delete(at, item)) {
       unknowns.add(item);

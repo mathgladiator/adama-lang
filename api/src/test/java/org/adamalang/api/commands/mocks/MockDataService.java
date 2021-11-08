@@ -35,7 +35,7 @@ public class MockDataService implements DataService {
   }
 
   private long ids;
-  private HashMap<Long, LocalSite> sites;
+  private HashMap<Key, LocalSite> sites;
 
   public MockDataService() {
     this.ids = 0;
@@ -43,7 +43,7 @@ public class MockDataService implements DataService {
   }
 
   @Override
-  public void create(Callback<Long> callback) {
+  public void create(Key key, Callback<Long> callback) {
     long id = ids;
     ids++;
     if (id >= 100) {
@@ -54,7 +54,7 @@ public class MockDataService implements DataService {
   }
 
   @Override
-  public void get(long documentId, Callback<LocalDocumentChange> callback) {
+  public void get(Key key, Callback<LocalDocumentChange> callback) {
     LocalSite site = new LocalSite();
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeTree(site.tree);
@@ -62,40 +62,40 @@ public class MockDataService implements DataService {
   }
 
   @Override
-  public void initialize(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
     LocalSite site = new LocalSite();
     site.ingest(patch.redo);
     site.seq = patch.seq;
-    sites.put(documentId, site);
+    sites.put(key, site);
     callback.success(null);
   }
 
   @Override
-  public void patch(long documentId, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
     LocalSite site = new LocalSite();
     site.ingest(patch.redo);
     site.seq = patch.seq;
-    sites.put(documentId, site);
+    sites.put(key, site);
     callback.success(null);
   }
 
   @Override
-  public void fork(long oldDocumentId, long newDocumentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void fork(Key keySource, Key keyDest, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
 
   }
 
   @Override
-  public void rewind(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void rewind(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
 
   }
 
   @Override
-  public void unsend(long documentId, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void unsend(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
 
   }
 
   @Override
-  public void delete(long documentId, Callback<Long> callback) {
+  public void delete(Key key, Callback<Long> callback) {
 
   }
 }

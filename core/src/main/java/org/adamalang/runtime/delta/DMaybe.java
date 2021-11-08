@@ -12,9 +12,11 @@ package org.adamalang.runtime.delta;
 import java.util.function.Supplier;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
+/** a maybe wrapper that will respect privacy and sends state to client only on changes */
 public class DMaybe<dTy> {
   private dTy cache;
 
+  /** get or make the cached delta (see CodeGenDeltaClass) */
   public dTy get(final Supplier<dTy> maker) {
     if (cache == null) {
       cache = maker.get();
@@ -22,6 +24,7 @@ public class DMaybe<dTy> {
     return cache;
   }
 
+  /** the maybe is either no longer visible (was made private or isn't present) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (cache != null) {
       writer.writeNull();

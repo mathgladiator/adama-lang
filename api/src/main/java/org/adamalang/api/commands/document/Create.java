@@ -15,7 +15,7 @@ import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandCreatesDocument;
 import org.adamalang.api.commands.contracts.CommandRequiresDataService;
 import org.adamalang.api.commands.contracts.CommandRequiresLivingDocumentFactory;
-import org.adamalang.runtime.DurableLivingDocument;
+import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -24,7 +24,7 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 public class Create implements Command, CommandRequiresDataService, CommandRequiresLivingDocumentFactory, CommandCreatesDocument {
   private final RequestContext context;
   private final String space;
-  private long key;
+  private final String key;
   private final String entropy;
   private String arg;
   private DataService service;
@@ -34,7 +34,7 @@ public class Create implements Command, CommandRequiresDataService, CommandRequi
     return new Create(context, request.space(), request.key(), request.entropy(), request.json_arg());
   }
 
-  private Create(RequestContext context, String space, long key, String entropy, String arg) {
+  private Create(RequestContext context, String space, String key, String entropy, String arg) {
     this.context = context;
     this.space = space;
     this.key = key;
@@ -66,6 +66,6 @@ public class Create implements Command, CommandRequiresDataService, CommandRequi
   // step 4: the document is made, tell people about it
   @Override
   public void onDurableDocumentCreated(DurableLivingDocument document, int seq) {
-    context.responder.finish("{\"key\":\"" + document.documentId + "\",\"seq\":" + seq + "}");
+    context.responder.finish("{\"seq\":" + seq + "}");
   }
 }

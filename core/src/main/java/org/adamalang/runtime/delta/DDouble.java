@@ -11,6 +11,7 @@ package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
+/** a double that will respect privacy and sends state to client only on changes */
 public class DDouble {
   private Double prior;
 
@@ -18,6 +19,7 @@ public class DDouble {
     prior = null;
   }
 
+  /** the double is no longer visible (was made private) */
   public void hide(final PrivateLazyDeltaWriter writer) {
     if (prior != null) {
       writer.writeNull();
@@ -25,15 +27,10 @@ public class DDouble {
     }
   }
 
-  public void show(final Double value, final PrivateLazyDeltaWriter writer) {
-    if (prior == null) {
-      if (value != null) {
-        writer.writeDouble(value.doubleValue());
-      }
-    } else {
-      if (value != null && value.doubleValue() != prior.doubleValue()) {
-        writer.writeDouble(value.doubleValue());
-      }
+  /** the double is visible, so show changes */
+  public void show(final double value, final PrivateLazyDeltaWriter writer) {
+    if (prior == null || value != prior) {
+      writer.writeDouble(value);
     }
     prior = value;
   }
