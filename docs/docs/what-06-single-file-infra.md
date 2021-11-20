@@ -9,7 +9,7 @@ The state of the world
 Building a web product is a complete pain in the ass. First, you must build the UI and then have the UI be hosted on a server which is usually stateless. The server then must implement an API to expose data to the UI, so the UI can be useful to enable people to do stuff. The API then must coordinate state with a database or other data stores, and if you want any modern features you will need a queue or messaging stack. The messaging stack must inter-op with the API server, and that stack also will reach out to a variety of notification services. All this then requires some form of infrastructure orchestration because you will inevitably give up on building a monolith and get a microservice architecture, and then reliability becomes a hard task because you will rely on the network to behave. The network will mostly behave, but everyone will periodically be forced to (re)learn how to deal with queueing theory. Shit will happen, and services will fail due to growth. Holy crap.
 
 
-![This is fine: http://gunshowcomic.com/648](/img/meme.this-is-fine.jpg.webp)
+![Credit: KC Green; this is fine: http://gunshowcomic.com/648](/img/meme.this-is-fine.jpg.webp)
 
 There are so many things behind most websites, that it is a crazy mess. It's MADNESS, and it sure isn't fine. Is it any wonder that [I'm full of hate?](http://www.adama-lang.org/blog/it-begins)
 
