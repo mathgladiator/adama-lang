@@ -147,5 +147,7 @@ public class CallbackTests {
   public void dontcare() {
     Callback.DONT_CARE_INTEGER.success(123);
     Callback.DONT_CARE_INTEGER.failure(new ErrorCodeException(123));
+    Callback.DONT_CARE_VOID.success(null);
+    Callback.DONT_CARE_VOID.failure(new ErrorCodeException(123));
   }
 }

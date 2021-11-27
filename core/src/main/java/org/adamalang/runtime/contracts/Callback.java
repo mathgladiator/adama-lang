@@ -91,4 +91,16 @@ public interface Callback<T> {
       ex.printStackTrace();
     }
   };
+
+  public static final Callback<Void> DONT_CARE_VOID = new Callback<Void>() {
+    @Override
+    public void success(Void value) {
+
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+      ex.printStackTrace();
+    }
+  };
 }

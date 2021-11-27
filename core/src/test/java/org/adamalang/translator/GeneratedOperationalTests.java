@@ -95,6 +95,9 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n          case \"__next_time\":");
     gold.append("\n            __next_time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__last_expire_time\":");
+    gold.append("\n            __last_expire_time.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__blocked\":");
     gold.append("\n            __blocked.__insert(__reader);");
     gold.append("\n            break;");
@@ -118,6 +121,9 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__dedupe\":");
+    gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__clients\":");
     gold.append("\n            __hydrateClients(__reader);");
@@ -149,6 +155,9 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n          case \"__next_time\":");
     gold.append("\n            __next_time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__last_expire_time\":");
+    gold.append("\n            __last_expire_time.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__blocked\":");
     gold.append("\n            __blocked.__patch(__reader);");
     gold.append("\n            break;");
@@ -173,6 +182,9 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__dedupe\":");
+    gold.append("\n            __hydrateDeduper(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__clients\":");
     gold.append("\n            __hydrateClients(__reader);");
     gold.append("\n            break;");
@@ -196,6 +208,8 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n    __constructed.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__next_time\");");
     gold.append("\n    __next_time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__last_expire_time\");");
+    gold.append("\n    __last_expire_time.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__blocked\");");
     gold.append("\n    __blocked.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__seq\");");
@@ -212,6 +226,7 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n    __time.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
+    gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
     gold.append("\n    __writer.endObject();");
@@ -221,6 +236,7 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
     gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
     gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __last_expire_time.__commit(\"__last_expire_time\", __forward, __reverse);");
     gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
     gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
     gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
@@ -237,6 +253,7 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n    __state.__revert();");
     gold.append("\n    __constructed.__revert();");
     gold.append("\n    __next_time.__revert();");
+    gold.append("\n    __last_expire_time.__revert();");
     gold.append("\n    __blocked.__revert();");
     gold.append("\n    __seq.__revert();");
     gold.append("\n    __entropy.__revert();");

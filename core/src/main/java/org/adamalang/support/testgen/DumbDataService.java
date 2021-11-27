@@ -9,6 +9,8 @@
 */
 package org.adamalang.support.testgen;
 
+import org.adamalang.runtime.contracts.ActiveKeyStream;
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
@@ -36,17 +38,17 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void create(Key key, Callback<Long> callback) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     if (data != null) {
-      callback.success(new LocalDocumentChange(data, 0));
+      callback.success(new LocalDocumentChange(data));
     } else {
       callback.failure(new ErrorCodeException(0, new UnsupportedOperationException()));
     }
+  }
+
+  @Override
+  public void scan(ActiveKeyStream streamback) {
+    streamback.finish();
   }
 
   public static final Callback<PrivateView> NOOPPrivateView = new Callback<PrivateView>() {
@@ -114,22 +116,12 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void fork(Key key1, Key key2, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void rewind(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void unsend(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void delete(Key key, Callback<Long> callback) {
+  public void delete(Key key, Callback<Void> callback) {
     throw new UnsupportedOperationException();
   }
 }

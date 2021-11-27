@@ -17,6 +17,7 @@ channel<M> foo;
   readonly table<M> r9 = p;
   readonly channel<M> r10 = foo;
   readonly table<M> r11;
+  readonly label r12;
 }
 
 #fooz {

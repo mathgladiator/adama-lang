@@ -33,6 +33,7 @@ public class ErrorCodes {
   public static final int E2_LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED = 2061;
   public static final int E2_LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED = 2070;
   public static final int E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO = 2080;
+  public static final int E2_LIVING_DOCUMENT_TRANSACTION_NO_LIMIT = 2085;
   public static final int E2_LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG = 2081;
   public static final int E2_LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP = 2082;
   public static final int E2_LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND = 2083;
@@ -49,4 +50,9 @@ public class ErrorCodes {
 
   public static final int E5_CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION = 9601;
   public static final int USERLAND_CANT_COMPILE_ADAMA_SCRIPT = 40200;
+
+  public static final int E6_DOCUMENT_ALREADY_CREATED = 5990;
+  public static final int E7_MESSAGE_ALREADY_SENT = 99922;
+  public static final int E7_EXPIRE_LIMIT_MUST_BE_POSITIVE = 99923;
+
 }

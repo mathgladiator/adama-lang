@@ -1,4 +1,0 @@
-test PrimaryTest {
-  assert Secure.stringEquals("a", "a");
-  double d = Math.sin(1.2);
-}

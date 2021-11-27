@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
 import org.adamalang.runtime.stdlib.LibMath;
-import org.adamalang.runtime.stdlib.LibSecure;
 import org.adamalang.runtime.stdlib.LibStatistics;
 import org.adamalang.runtime.stdlib.LibString;
 import org.adamalang.translator.reflect.GlobalFactory;
@@ -36,7 +35,6 @@ public class GlobalObjectPool {
         "exp", "log", "log10", "pow", "sqrt", "cbrt", "floorDiv", "floorMod", "IEEEremainder", "expm1", "log1p", "signum", "ulp", "fma", "copySign", "getExponent", "powerOfTwo", "E", "PI");
     GlobalFactory.mergeInto(mathlib, LibMath.class, "near", "SQRT2");
     pool.add(mathlib);
-    pool.add(GlobalFactory.makeGlobal("Secure", LibSecure.class));
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class));
     final var random = new TyNativeGlobalObject("Random", null);
     random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));

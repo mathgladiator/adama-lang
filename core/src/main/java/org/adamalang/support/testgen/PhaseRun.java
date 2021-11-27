@@ -19,6 +19,7 @@ import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.SimpleExecutor;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 public class PhaseRun {
@@ -54,13 +55,8 @@ public class PhaseRun {
     DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
 
     try {
-      DataService.Key key = new DataService.Key("0", "0");
-      DocumentThreadBase base = new DocumentThreadBase(dds, new Executor() {
-        @Override
-        public void execute(Runnable command) {
-          command.run();
-        }
-      }, time);
+      Key key = new Key("0", "0");
+      DocumentThreadBase base = new DocumentThreadBase(dds, SimpleExecutor.NOW, time);
       DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "0", monitor, base, acquire);
       DurableLivingDocument doc = acquire.get();
 

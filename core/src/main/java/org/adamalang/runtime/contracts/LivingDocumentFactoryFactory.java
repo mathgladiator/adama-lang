@@ -11,7 +11,9 @@ package org.adamalang.runtime.contracts;
 
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
+/** This represents where scripts live such that deployments can pull versions based on the key */
 public interface LivingDocumentFactoryFactory {
 
-  public void load(String space, Callback<LivingDocumentFactory> callback);
+  /** fetch the factory for the given key */
+  public void fetch(Key key, Callback<LivingDocumentFactory> callback);
 }

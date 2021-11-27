@@ -11,6 +11,7 @@ import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.SimpleExecutor;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
@@ -23,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AutoPlay {
   public static void main(String[] args) {
     FileSystemLivingDocumentFactoryFactory factoryFactory = new FileSystemLivingDocumentFactoryFactory(new File("../adama-binary/schema"), CompilerOptions.start().make());
-    factoryFactory.load("bsg", new Callback<LivingDocumentFactory>() {
+    factoryFactory.fetch(new Key("bsg", null), new Callback<LivingDocumentFactory>() {
       @Override
       public void success(LivingDocumentFactory value) {
         gotLivingDocumentFactory(value);
@@ -40,7 +41,8 @@ public class AutoPlay {
     AtomicInteger writes = new AtomicInteger(0);
     DataService noop = new DataService() {
       @Override
-      public void create(Key key, Callback<Long> callback) {
+      public void scan(ActiveKeyStream stream) {
+        stream.finish();
       }
 
       @Override
@@ -60,22 +62,11 @@ public class AutoPlay {
       }
 
       @Override
-      public void fork(Key key1, Key key2, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
-
+      public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
       }
 
       @Override
-      public void rewind(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
-
-      }
-
-      @Override
-      public void unsend(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
-
-      }
-
-      @Override
-      public void delete(Key key, Callback<Long> callback) {
+      public void delete(Key key, Callback<Void> callback) {
       }
     };
     StringBuilder arg = new StringBuilder();
@@ -91,14 +82,9 @@ public class AutoPlay {
         return 1000;
       }
     };
-    DocumentThreadBase base = new DocumentThreadBase(noop, new Executor() {
-      @Override
-      public void execute(Runnable command) {
-        command.run();
-      }
-    }, TS);
+    DocumentThreadBase base = new DocumentThreadBase(noop, SimpleExecutor.NOW, TS);
     for (int k = 0; k < 100; k++) {
-      DurableLivingDocument.fresh(new DataService.Key("?", "" + k), factory, NtClient.NO_ONE, arg.toString(), "1", null, base, new Callback<>() {
+      DurableLivingDocument.fresh(new Key("?", "" + k), factory, NtClient.NO_ONE, arg.toString(), "1", null, base, new Callback<>() {
         @Override
         public void success(DurableLivingDocument value) {
           try {

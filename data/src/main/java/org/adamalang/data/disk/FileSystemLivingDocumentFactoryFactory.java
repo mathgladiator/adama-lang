@@ -10,6 +10,7 @@
 package org.adamalang.data.disk;
 
 import org.adamalang.runtime.ErrorCodes;
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -34,7 +35,7 @@ public class FileSystemLivingDocumentFactoryFactory implements LivingDocumentFac
     this.idGen = 0;
   }
 
-  public void load(String space, Callback<LivingDocumentFactory> callback) {
+  public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
     try {
       String className = "FSDoc_" + idGen;
       idGen++;
@@ -43,7 +44,7 @@ public class FileSystemLivingDocumentFactoryFactory implements LivingDocumentFac
       final var time1 = System.currentTimeMillis();
       final var document = new Document();
       document.addSearchPath(root);
-      document.importFile(space + ".a", DocumentPosition.ZERO);
+      document.importFile(key.space + ".a", DocumentPosition.ZERO);
       document.setClassName(className);
       if (!document.check(state)) {
         callback.failure(new ErrorCodeException(ErrorCodes.USERLAND_CANT_COMPILE_ADAMA_SCRIPT, document.errorsJson()));
@@ -54,12 +55,12 @@ public class FileSystemLivingDocumentFactoryFactory implements LivingDocumentFac
       document.writeTypeReflectionJson(reflection);
       final var time2 = System.currentTimeMillis();
       if (options.stderrLoggingCompiler) {
-        System.err.println("PRODUCED JAVA:" + space + " [" + (time2 - time1) + " ms]");
+        System.err.println("PRODUCED JAVA:" + key.space + " [" + (time2 - time1) + " ms]");
       }
       final var factory = new LivingDocumentFactory(className, java, reflection.toString());
       final var time3 = System.currentTimeMillis();
       if (options.stderrLoggingCompiler) {
-        System.err.println("COMPILED JAVA:" + space + " [" + (time3 - time2) + " ms]");
+        System.err.println("COMPILED JAVA:" + key.space + " [" + (time3 - time2) + " ms]");
       }
       callback.success(factory);
     } catch (ErrorCodeException ex) {

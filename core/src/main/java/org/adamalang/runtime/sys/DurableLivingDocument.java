@@ -34,23 +34,28 @@ public class DurableLivingDocument {
     }
   }
 
+  private LivingDocumentFactory currentFactory;
   public final DocumentThreadBase base;
-  public final DataService.Key key;
-  public LivingDocument document;
+  public final Key key;
+  private LivingDocument document;
   private Integer requiresInvalidateMilliseconds;
-
   private final ArrayDeque<IngestRequest> pending;
   private boolean inflightPatch;
   private boolean catastrophicFailureOccurred;
 
-  private DurableLivingDocument(final DataService.Key key, final LivingDocument document, final DocumentThreadBase base) {
+  private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
     this.document = document;
+    this.currentFactory = currentFactory;
     this.base = base;
     this.requiresInvalidateMilliseconds = null;
     this.pending = new ArrayDeque<>(2);
     this.inflightPatch = false;
     this.catastrophicFailureOccurred = false;
+  }
+
+  public LivingDocument document() {
+    return document;
   }
 
   public Integer getAndCleanRequiresInvalidateMilliseconds() {
@@ -60,7 +65,7 @@ public class DurableLivingDocument {
   }
 
   public static void fresh(
-          final DataService.Key key,
+          final Key key,
           final LivingDocumentFactory factory,
           final NtClient who,
           final String arg,
@@ -69,7 +74,7 @@ public class DurableLivingDocument {
           final DocumentThreadBase base,
           final Callback<DurableLivingDocument> callback) {
     try {
-      DurableLivingDocument document = new DurableLivingDocument(key, factory.create(monitor), base);
+      DurableLivingDocument document = new DurableLivingDocument(key, factory.create(monitor), factory, base);
       document.construct(who, arg, entropy, Callback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_FRESH_TRANSFORM, (seq) -> document));
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex));
@@ -77,7 +82,7 @@ public class DurableLivingDocument {
   }
 
   public static void load(
-          final DataService.Key key,
+          final Key key,
           final LivingDocumentFactory factory,
           final DocumentMonitor monitor,
           final DocumentThreadBase base,
@@ -90,11 +95,15 @@ public class DurableLivingDocument {
           doc.__insert(reader);
           JsonStreamWriter writer = new JsonStreamWriter();
           doc.__dump(writer);
-          return new DurableLivingDocument(key, doc, base);
+          return new DurableLivingDocument(key, doc, factory, base);
       }));
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_LOAD, ex));
     }
+  }
+
+  public LivingDocumentFactory getCurrentFactory() {
+    return currentFactory;
   }
 
   public void deploy(LivingDocumentFactory factory, Callback<Integer> callback) throws ErrorCodeException {
@@ -104,6 +113,7 @@ public class DurableLivingDocument {
     newDocument.__insert(new JsonStreamReader(writer.toString()));
     document.__usurp(newDocument);
     document = newDocument;
+    currentFactory = factory;
     invalidate(callback);
   }
 
@@ -131,6 +141,11 @@ public class DurableLivingDocument {
         invalidate(callback);
       } else {
         callback.success(seq);
+        if (requiresInvalidateMilliseconds != null) {
+          base.executor.schedule(key, () -> {
+            invalidate(Callback.DONT_CARE_INTEGER);
+          }, requiresInvalidateMilliseconds);
+        }
       }
     } else {
       callback.success(seq);
@@ -139,6 +154,8 @@ public class DurableLivingDocument {
   }
 
   private void catastrophicFailure() {
+    document.__nukeViews();
+    base.map.remove(key);
     catastrophicFailureOccurred = true;
     while (pending.size() > 0) {
       pending.removeFirst().callback.failure(new ErrorCodeException(ErrorCodes.E5_CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
@@ -187,7 +204,6 @@ public class DurableLivingDocument {
     }
   }
 
-
   private void ingest(String request, Callback<Integer> callback) {
     try {
       queueAndExecuteUnderLock(new IngestRequest(request, callback));
@@ -232,6 +248,14 @@ public class DurableLivingDocument {
     ingest(request.toString(), callback);
   }
 
+  public void expire(long limit, Callback<Integer> callback) {
+    final var request = forge("expire", null);
+    request.writeObjectFieldIntro("limit");
+    request.writeLong(limit);
+    request.endObject();
+    ingest(request.toString(), callback);
+  }
+
   public void connect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("connect", who);
     request.endObject();
@@ -251,10 +275,21 @@ public class DurableLivingDocument {
     return document.__garbageCollectViews(who);
   }
 
+  public void scheduleCleanup() {
+    base.executor.schedule(key, () -> {
+      if (document.__canRemoveFromMemory()) {
+        base.map.remove(key);
+      }
+    }, base.getMillisecondsForCleanupCheck());
+  }
+
   public void disconnect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("disconnect", who);
     request.endObject();
     ingest(request.toString(), callback);
+    if (document.__canRemoveFromMemory()) {
+      scheduleCleanup();
+    }
   }
 
   public void send(final NtClient who, final String marker, final String channel, final String message, Callback<Integer> callback) {
@@ -296,4 +331,21 @@ public class DurableLivingDocument {
     document.__dump(writer);
     return writer.toString();
   }
+
+  public void postLoadReconcile() {
+    for (NtClient client : document.__reconcileClientsToForceDisconnect()) {
+      disconnect(client, Callback.DONT_CARE_INTEGER);
+    }
+  }
+
+  public static final Callback<DurableLivingDocument> INVALIDATE_ON_SUCCESS = new Callback<DurableLivingDocument>() {
+    @Override
+    public void success(DurableLivingDocument value) {
+      value.invalidate(Callback.DONT_CARE_INTEGER);
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+    }
+  };
 }

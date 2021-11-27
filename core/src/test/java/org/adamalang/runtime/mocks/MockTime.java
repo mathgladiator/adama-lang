@@ -23,7 +23,11 @@ public class MockTime implements TimeSource {
   }
 
   @Override
-  public long nowMilliseconds() {
+  public synchronized long nowMilliseconds() {
     return time;
+  }
+
+  public synchronized void set(long t) {
+    this.time = t;
   }
 }

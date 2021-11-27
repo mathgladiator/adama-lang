@@ -10,8 +10,10 @@
 package org.adamalang.data.disk;
 
 import org.adamalang.data.ErrorCodes;
+import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -67,7 +69,6 @@ public class FileSystemDataService implements DataService {
     this.rng = new Random();
   }
 
-  @Override
   public synchronized void create(Key key, Callback<Long> callback) {
     try {
       for (int attempt = 0; attempt < 10; attempt++) {
@@ -85,6 +86,11 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
+  public void scan(ActiveKeyStream streamback) {
+    streamback.finish();
+  }
+
+  @Override
   public synchronized void get(Key key, Callback<LocalDocumentChange> callback) {
     try {
       File file = new File(root, key.key + ".jsonlog");
@@ -98,7 +104,7 @@ public class FileSystemDataService implements DataService {
           }
           JsonStreamWriter writer = new JsonStreamWriter();
           writer.writeTree(state);
-          callback.success(new LocalDocumentChange(writer.toString(), 0));
+          callback.success(new LocalDocumentChange(writer.toString()));
         } finally {
           buffered.close();
         }
@@ -126,10 +132,6 @@ public class FileSystemDataService implements DataService {
     if (patch.who != null) {
       meta.writeObjectFieldIntro("who");
       meta.writeNtClient(patch.who);
-    }
-    if (patch.marker != null) {
-      meta.writeObjectFieldIntro("marker");
-      meta.writeString(patch.marker);
     }
     meta.endObject();;
     writer.println(meta.toString());
@@ -164,27 +166,14 @@ public class FileSystemDataService implements DataService {
   }
 
   @Override
-  public void fork(Key keyFrom, Key keyTo, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
-    // TODO: scan the old document deltas, building a new tree, stop at the given marker
-    // initialize the new document with that data blob throwing away and a pointer to the previous document
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void rewind(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
     // go back to the marker while combining all the undos together
     // formule the giant change
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void unsend(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
-    // go back to the marker, take the undo, then forward it through all the redos up until now
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void delete(Key key, Callback<Long> callback) {
+  public void delete(Key key, Callback<Void> callback) {
     File file = new File(root, key.key + ".jsonlog");
     file.delete();
   }

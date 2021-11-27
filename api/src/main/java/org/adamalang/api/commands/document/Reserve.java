@@ -15,6 +15,7 @@ import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDataService;
 import org.adamalang.api.commands.contracts.CommandResponder;
 import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 /** command: reserve an id for a document */
@@ -39,6 +40,5 @@ public class Reserve implements Command, CommandRequiresDataService {
   @Override
   public void onDataServiceFound(DataService dataService) {
     // TODO: rethink this command, it may be best to figure out a better way
-    dataService.create(new DataService.Key(space, "key"), CommandResponder.TO_CALLBACK((value) -> context.responder.finish("{\"key\":\"" + value + "\"}"), context.responder));
   }
 }

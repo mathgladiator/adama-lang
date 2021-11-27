@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 
 import org.adamalang.data.disk.FileSystemDataService;
 import org.adamalang.netty.ErrorCodes;
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
@@ -25,6 +26,7 @@ import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.SimpleExecutor;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -126,7 +128,8 @@ public class GameSpace {
 
   /** generate and reserve an id to use for create */
   public synchronized void generate(Callback<Long> callback) {
-    service.create(new DataService.Key(null, null), callback);
+    // TODO: this is broken, but I intend to nuke all this shit anyway, so what-ev
+    callback.success(System.nanoTime());
   }
 
   private synchronized boolean put(long id, DurableLivingDocument doc) {
@@ -144,13 +147,8 @@ public class GameSpace {
 
   /** create a living document with the the given id for the given person with the given argument and entropy */
   public void create(final long id, final NtClient who, final ObjectNode cons, final String entropy, Callback<DurableLivingDocument> callback) throws ErrorCodeException {
-    DataService.Key key = new DataService.Key(name, id + "");
-    DocumentThreadBase base = new DocumentThreadBase(service, new Executor() {
-      @Override
-      public void execute(Runnable command) {
-        command.run();
-      }
-    }, time);
+    Key key = new Key(name, id + "");
+    DocumentThreadBase base = new DocumentThreadBase(service, SimpleExecutor.NOW, time);
     DurableLivingDocument.fresh(key, factory, who, cons.toString(), entropy, null, base, Callback.transform(callback, 0, (doc) -> {
       if (put(id, doc)) {
         return doc;
@@ -170,14 +168,9 @@ public class GameSpace {
       }
     }
 
-    DocumentThreadBase base = new DocumentThreadBase(service, new Executor() {
-      @Override
-      public void execute(Runnable command) {
-        command.run();
-      }
-    }, time);
+    DocumentThreadBase base = new DocumentThreadBase(service, SimpleExecutor.NOW, time);
 
-    DataService.Key key = new DataService.Key(name, "" +id);
+    Key key = new Key(name, "" +id);
 
     DurableLivingDocument.load(key, factory, null, base, Callback.transform(callback, 0, (doc) -> {
       put(id, doc);

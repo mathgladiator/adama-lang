@@ -9,8 +9,10 @@
 */
 package org.adamalang.api.commands.mocks;
 
+import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -42,7 +44,6 @@ public class MockDataService implements DataService {
     this.sites = new HashMap<>();
   }
 
-  @Override
   public void create(Key key, Callback<Long> callback) {
     long id = ids;
     ids++;
@@ -54,11 +55,16 @@ public class MockDataService implements DataService {
   }
 
   @Override
+  public void scan(ActiveKeyStream stream) {
+    stream.finish();
+  }
+
+  @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     LocalSite site = new LocalSite();
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeTree(site.tree);
-    callback.success(new LocalDocumentChange(writer.toString(), site.seq));
+    callback.success(new LocalDocumentChange(writer.toString()));
   }
 
   @Override
@@ -80,22 +86,12 @@ public class MockDataService implements DataService {
   }
 
   @Override
-  public void fork(Key keySource, Key keyDest, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
+  public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
 
   }
 
   @Override
-  public void rewind(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
-
-  }
-
-  @Override
-  public void unsend(Key key, NtClient who, String marker, Callback<LocalDocumentChange> callback) {
-
-  }
-
-  @Override
-  public void delete(Key key, Callback<Long> callback) {
+  public void delete(Key key, Callback<Void> callback) {
 
   }
 }

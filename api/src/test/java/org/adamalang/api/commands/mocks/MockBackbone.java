@@ -10,6 +10,7 @@
 package org.adamalang.api.commands.mocks;
 
 import org.adamalang.api.commands.contracts.*;
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.Callback;
@@ -17,6 +18,7 @@ import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.SimpleExecutor;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -26,7 +28,6 @@ import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
 import java.util.HashMap;
-import java.util.concurrent.Executor;
 
 public class MockBackbone implements Backbone, TimeSource {
   public long now;
@@ -66,13 +67,8 @@ public class MockBackbone implements Backbone, TimeSource {
             findDataService(space, new CommandRequiresDataService() {
               @Override
               public void onDataServiceFound(DataService service) {
-                DataService.Key newKey = new DataService.Key(space, "" + key);
-                DocumentThreadBase base = new DocumentThreadBase(service, new Executor() {
-                  @Override
-                  public void execute(Runnable command) {
-                    command.run();
-                  }
-                }, MockBackbone.this);
+                Key newKey = new Key(space, "" + key);
+                DocumentThreadBase base = new DocumentThreadBase(service, SimpleExecutor.NOW, MockBackbone.this);
                 DurableLivingDocument.load(newKey, factory, null, base, new Callback<DurableLivingDocument>() {
                   @Override
                   public void success(DurableLivingDocument doc) {
@@ -105,13 +101,8 @@ public class MockBackbone implements Backbone, TimeSource {
   public void makeDocument(String space, String key, NtClient who, String arg, String entropy, DataService service, LivingDocumentFactory factory, CommandCreatesDocument cmd, CommandResponder responder) {
     try {
 
-      DocumentThreadBase base = new DocumentThreadBase(service, new Executor() {
-        @Override
-        public void execute(Runnable command) {
-          command.run();
-        }
-      }, this);
-      DurableLivingDocument.fresh(new DataService.Key(space, "" + key), factory, who, arg, entropy, null, base, new Callback<>() {
+      DocumentThreadBase base = new DocumentThreadBase(service, SimpleExecutor.NOW, this);
+      DurableLivingDocument.fresh(new Key(space, "" + key), factory, who, arg, entropy, null, base, new Callback<>() {
         @Override
         public void success(DurableLivingDocument doc) {
           doc.invalidate(new Callback<Integer>() {

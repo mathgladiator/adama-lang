@@ -9,8 +9,10 @@
 */
 package org.adamalang.support.testgen;
 
+import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,21 +21,18 @@ public class DumbDataServiceTests {
   @Test
   public void coverage() {
     DumbDataService dds = new DumbDataService((t) -> {});
-    try {
-      dds.create(new DataService.Key("0", "0"), new Callback<Long>() {
-        @Override
-        public void success(Long value) {
+    dds.scan(new ActiveKeyStream() {
+      @Override
+      public void schedule(Key key, long time) {
 
-        }
+      }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
+      @Override
+      public void finish() {
 
-        }
-      });
-      Assert.fail();
-    } catch (UnsupportedOperationException uoe) {}
-    dds.get(new DataService.Key("0", "0"), new Callback<DataService.LocalDocumentChange>() {
+      }
+    });
+    dds.get(new Key("0", "0"), new Callback<DataService.LocalDocumentChange>() {
       @Override
       public void success(DataService.LocalDocumentChange value) {
         Assert.fail();
@@ -44,21 +43,17 @@ public class DumbDataServiceTests {
       }
 
     });
-    DataService.Key key = new DataService.Key("?", "1");
+    Key key = new Key("?", "1");
     try {
       dds.delete(key, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {
-      dds.fork(key, key, null, null, null);
+      dds.compute(key, DataService.ComputeMethod.Rewind, 1, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
     try {
-      dds.rewind(key, null, null, null);
-      Assert.fail();
-    } catch (UnsupportedOperationException uoe) {}
-    try {
-      dds.unsend(key,null, null, null);
+      dds.compute(key, DataService.ComputeMethod.Unsend, 1, null);
       Assert.fail();
     } catch (UnsupportedOperationException uoe) {}
   }

@@ -15,6 +15,7 @@ import org.adamalang.api.commands.contracts.Command;
 import org.adamalang.api.commands.contracts.CommandRequiresDataService;
 import org.adamalang.api.commands.contracts.CommandRequiresDocument;
 import org.adamalang.api.commands.contracts.CommandResponder;
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -47,7 +48,7 @@ public class Unsend implements Command, CommandRequiresDataService, CommandRequi
   // step 2: get the patch from the data service
   @Override
   public void onDataServiceFound(DataService service) {
-    service.unsend(new DataService.Key(space, key), context.session.who(), marker, CommandResponder.TO_CALLBACK((value) -> {
+    service.compute(new Key(space, key), DataService.ComputeMethod.Unsend, 0, CommandResponder.TO_CALLBACK((value) -> {
       Unsend.this.change = value;
       context.backbone.findDocument(space, key, Unsend.this, context.responder);
     }, context.responder));

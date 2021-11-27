@@ -22,5 +22,8 @@ public class ExceptionTests {
     new RetryProgressException(null);
     new ComputeBlockedException(NtClient.NO_ONE, "foo");
     new ErrorCodeException(14, "Nope");
+
+    ErrorCodeException eee = new ErrorCodeException(14, "Nope");
+    Assert.assertTrue(eee == ErrorCodeException.detectOrWrap(5400, eee));
   }
 }

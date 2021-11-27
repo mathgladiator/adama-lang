@@ -125,6 +125,9 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n          case \"__next_time\":");
     gold.append("\n            __next_time.__insert(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__last_expire_time\":");
+    gold.append("\n            __last_expire_time.__insert(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__blocked\":");
     gold.append("\n            __blocked.__insert(__reader);");
     gold.append("\n            break;");
@@ -148,6 +151,9 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__dedupe\":");
+    gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__clients\":");
     gold.append("\n            __hydrateClients(__reader);");
@@ -188,6 +194,9 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n          case \"__next_time\":");
     gold.append("\n            __next_time.__patch(__reader);");
     gold.append("\n            break;");
+    gold.append("\n          case \"__last_expire_time\":");
+    gold.append("\n            __last_expire_time.__patch(__reader);");
+    gold.append("\n            break;");
     gold.append("\n          case \"__blocked\":");
     gold.append("\n            __blocked.__patch(__reader);");
     gold.append("\n            break;");
@@ -211,6 +220,9 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n            break;");
     gold.append("\n          case \"__auto_table_row_id\":");
     gold.append("\n            __auto_table_row_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__dedupe\":");
+    gold.append("\n            __hydrateDeduper(__reader);");
     gold.append("\n            break;");
     gold.append("\n          case \"__clients\":");
     gold.append("\n            __hydrateClients(__reader);");
@@ -241,6 +253,8 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    __constructed.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__next_time\");");
     gold.append("\n    __next_time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__last_expire_time\");");
+    gold.append("\n    __last_expire_time.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__blocked\");");
     gold.append("\n    __blocked.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__seq\");");
@@ -257,6 +271,7 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    __time.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
     gold.append("\n    __auto_table_row_id.__dump(__writer);");
+    gold.append("\n    __dumpDeduper(__writer);");
     gold.append("\n    __dumpClients(__writer);");
     gold.append("\n    __dumpMessages(__writer);");
     gold.append("\n    __writer.endObject();");
@@ -266,6 +281,7 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
     gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
     gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __last_expire_time.__commit(\"__last_expire_time\", __forward, __reverse);");
     gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
     gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
     gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
@@ -285,6 +301,7 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    __state.__revert();");
     gold.append("\n    __constructed.__revert();");
     gold.append("\n    __next_time.__revert();");
+    gold.append("\n    __last_expire_time.__revert();");
     gold.append("\n    __blocked.__revert();");
     gold.append("\n    __seq.__revert();");
     gold.append("\n    __entropy.__revert();");
@@ -470,15 +487,15 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":4}");
     gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":4}");
-    gold.append("\n{\"command\":\"bill\",\"timestamp\":\"125\"}-->{\"__goodwill_used\":0,\"__cost\":5,\"__billing_seq\":4} need:true in:0");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"150\"}-->{\"__messages\":null,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__time\":\"150\"} need:false in:-150");
-    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":5}");
-    gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":5}");
+    gold.append("\n{\"command\":\"bill\",\"timestamp\":\"125\"}-->{\"__goodwill_used\":0,\"__cost\":5,\"__billing_seq\":4,\"__seq\":5,\"__time\":\"125\"} need:true in:0");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"150\"}-->{\"__messages\":null,\"__seq\":6,\"__entropy\":\"-8929183248358367000\",\"__time\":\"150\"} need:false in:-150");
+    gold.append("\n+ NO_ONE DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":6}");
+    gold.append("\n+ RANDO DELTA:{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":6}");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":6,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0}");
-    gold.append("\n{\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__blocked\":false,\"__seq\":5,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":6,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":6,\"__entropy\":\"-8929183248358367000\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"150\",\"__auto_table_row_id\":0}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\nTEST[PrimaryTest] = 100.0%");
     gold.append("\n");

@@ -9,6 +9,8 @@
 */
 package org.adamalang.runtime.json;
 
+import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -41,6 +43,30 @@ public class JsonAlgebra {
     return patchObject;
   }
 
+  /** an accumulator/fold version of merge */
+  public static AutoMorphicAccumulator<String> mergeAccumulator() {
+    return new AutoMorphicAccumulator<>() {
+      private Object state = null;
+
+      @Override
+      public void next(String data) {
+        JsonStreamReader reader = new JsonStreamReader(data);
+        if (state == null) {
+          state = reader.readJavaTree();
+        } else {
+          state = merge(state, reader.readJavaTree());
+        }
+      }
+
+      @Override
+      public String finish() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(state);
+        return writer.toString();
+      }
+    };
+  }
+
   /** Given an UNDO at a fixed point in time, and a REDO in the future; manipulate the UNDO such that the
    * REDO will cancel out a change from UNDO; return true if the undo becomes empty */
   @SuppressWarnings("unchecked")
@@ -60,5 +86,24 @@ public class JsonAlgebra {
       }
     }
     return undo.isEmpty();
+  }
+
+  /** an accumulator/fold version of rollUndoForward */
+  public static AutoMorphicAccumulator<String> rollUndoForwardAccumulator(String undo) {
+    return new AutoMorphicAccumulator<>() {
+      private HashMap<String, Object> state = (HashMap<String, Object>) new JsonStreamReader(undo).readJavaTree();
+
+      @Override
+      public void next(String data) {
+        rollUndoForward(state, (HashMap<String, Object>) new JsonStreamReader(data).readJavaTree());
+      }
+
+      @Override
+      public String finish() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeTree(state);
+        return writer.toString();
+      }
+    };
   }
 }

@@ -18,6 +18,7 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
+import org.adamalang.runtime.sys.SimpleExecutor;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
@@ -120,21 +121,16 @@ public class RealDocumentSetup {
         System.out.println("REVERSE:" + update.undo);
       }
       if (mirror != null) {
-        mirror.document.__insert(new JsonStreamReader(update.redo));
+        mirror.document().__insert(new JsonStreamReader(update.redo));
       }
     });
-    DocumentThreadBase base = new DocumentThreadBase(dds, new Executor() {
-      @Override
-      public void execute(Runnable command) {
-        command.run();
-      }
-    }, time);
+    DocumentThreadBase base = new DocumentThreadBase(dds, SimpleExecutor.NOW, time);
     dds.setData(json);
     factory = LivingDocumentTests.compile(code);
     DumbDataService.DumbDurableLivingDocumentAcquire acquireReal = new DumbDataService.DumbDurableLivingDocumentAcquire();
     DumbDataService.DumbDurableLivingDocumentAcquire acquireMirror = new DumbDataService.DumbDurableLivingDocumentAcquire();
     DocumentMonitor monitor = stdout ? new StdOutDocumentMonitor() : null;
-    DataService.Key key = new DataService.Key("space", "0");
+    Key key = new Key("space", "0");
     if (json == null) {
       DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireReal);
       DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireMirror);
