@@ -9,7 +9,6 @@
 */
 package org.adamalang.support.testgen;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -19,7 +18,7 @@ import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.SimpleExecutor;
+import org.adamalang.runtime.contracts.SimpleExecutor;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 public class PhaseRun {

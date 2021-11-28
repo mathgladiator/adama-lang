@@ -1,6 +1,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.contracts.SimpleExecutor;
 import org.junit.Test;
 
 public class SimpleExecutorNowTests {

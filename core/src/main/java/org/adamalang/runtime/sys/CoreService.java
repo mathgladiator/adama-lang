@@ -5,11 +5,9 @@ import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.threads.NamedThreadFactory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -35,7 +33,7 @@ public class CoreService {
         bases = new DocumentThreadBase[nThreads];
         this.alive = new AtomicBoolean(true);
         for (int k = 0; k < nThreads; k++) {
-            ScheduledExecutorService realExecutorToUse = Executors.newSingleThreadScheduledExecutor();
+            ScheduledExecutorService realExecutorToUse = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("core-" + k));
             SimpleExecutor executor = new SimpleExecutor() {
                 @Override
                 public void execute(Runnable command) {

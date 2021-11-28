@@ -11,7 +11,7 @@ import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.SimpleExecutor;
+import org.adamalang.runtime.contracts.SimpleExecutor;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 

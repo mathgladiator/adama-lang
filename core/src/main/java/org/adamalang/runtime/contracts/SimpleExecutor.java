@@ -1,6 +1,4 @@
-package org.adamalang.runtime.sys;
-
-import org.adamalang.runtime.contracts.Key;
+package org.adamalang.runtime.contracts;
 
 import java.util.concurrent.CountDownLatch;
 

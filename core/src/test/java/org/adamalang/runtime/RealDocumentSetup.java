@@ -18,13 +18,12 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
-import org.adamalang.runtime.sys.SimpleExecutor;
+import org.adamalang.runtime.contracts.SimpleExecutor;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
 
 public class RealDocumentSetup {
   public final LivingDocumentFactory factory;

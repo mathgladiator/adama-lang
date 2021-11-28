@@ -12,7 +12,6 @@ package org.adamalang.netty.api;
 import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 import org.adamalang.data.disk.FileSystemDataService;
@@ -26,7 +25,7 @@ import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.SimpleExecutor;
+import org.adamalang.runtime.contracts.SimpleExecutor;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
