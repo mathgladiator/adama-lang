@@ -20,5 +20,11 @@ public class LibMathTests {
     Assert.assertEquals(2, LibMath.round(1.6));
     Assert.assertEquals(1, LibMath.round(1.4));
     Assert.assertTrue(LibMath.near(0.3, 0.2 + 0.1));
+    Assert.assertTrue(LibMath.near(1.4142135623730950488016887242097, LibMath.SQRT2));
+    Assert.assertTrue(LibMath.near(0.3382, LibMath.roundTo(0.338198742, 4)));
+    Assert.assertTrue(LibMath.near(0.338, LibMath.roundTo(0.338198742, 3)));
+    Assert.assertTrue(LibMath.near(0.34, LibMath.roundTo(0.338198742, 2)));
+    Assert.assertTrue(LibMath.near(0.3, LibMath.roundTo(0.338198742, 1)));
+    Assert.assertTrue(LibMath.near(0.0, LibMath.roundTo(0.338198742, 0)));
   }
 }

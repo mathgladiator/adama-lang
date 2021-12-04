@@ -11,20 +11,28 @@ package org.adamalang.translator.reflect;
 
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
-import org.adamalang.translator.tree.types.natives.TyNativeDouble;
-import org.adamalang.translator.tree.types.natives.TyNativeInteger;
-import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.natives.TyNativeLong;
-import org.adamalang.translator.tree.types.natives.TyNativeString;
+import org.adamalang.translator.tree.types.natives.*;
 
 /** convert a known java type into an Adama type */
 public class TypeBridge {
-  public static TyType getAdamaType(final Class<?> x, final HiddenType ht) {
+
+  public static TyType getAdamaSubType(String core, final Class<?>[] hiddenTypes) {
+    if (hiddenTypes == null || hiddenTypes.length == 0) {
+      throw new RuntimeException(core + " requires @HiddenType/@HiddenTypes annotation because Java sucks");
+    }
+    Class<?> head = hiddenTypes[0];
+    Class<?>[] tail = new Class[hiddenTypes.length - 1];
+    for (int k = 0; k < tail.length; k++) {
+      tail[k] = hiddenTypes[k + 1];
+    }
+    return getAdamaType(head, tail);
+  }
+
+  public static TyType getAdamaType(final Class<?> x, final Class<?>[] hiddenTypes) {
     if (int.class == x || Integer.class == x) {
       return new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (Long.class == x || long.class == x) {
@@ -40,8 +48,11 @@ public class TypeBridge {
     } else if (Void.class == x || void.class == x) {
       return null;
     } else if (NtList.class == x) {
-      if (ht != null) { return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(getAdamaType(ht.clazz(), null))); }
-      throw new RuntimeException("NtList requires @HiddenType annotation because Java sucks:" + ht);
+      TyType subType = getAdamaSubType("NtList<>", hiddenTypes);
+      return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(subType));
+    } else if (NtMaybe.class == x) {
+      TyType subType = getAdamaSubType("NtMaybe<>", hiddenTypes);
+      return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(subType));
     }
     throw new RuntimeException("can't find:" + x.toString());
   }

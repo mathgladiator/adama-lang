@@ -9,7 +9,6 @@
 */
 package org.adamalang.translator.env;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 
 /** compiler options to control anything */
@@ -93,8 +92,6 @@ public class CompilerOptions {
       return this;
     }
   }
-
-
 
   public static Builder start() {
     return new Builder();

@@ -24,11 +24,13 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
   public final HashMap<String, TyNativeFunctional> functions;
   public final String globalName;
   public final String importPackage;
+  public final boolean availableForStatic;
 
-  public TyNativeGlobalObject(final String globalName, final String importPackage) {
+  public TyNativeGlobalObject(final String globalName, final String importPackage, boolean availableForStatic) {
     super(TypeBehavior.ReadOnlyNativeValue);
     this.globalName = globalName;
     this.importPackage = importPackage;
+    this.availableForStatic = availableForStatic;
     functions = new HashMap<>();
   }
 
@@ -54,6 +56,9 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
 
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
+    if (environment.state.isStatic() && !availableForStatic) {
+      return null;
+    }
     final var found = functions.get(name);
     if (found != null) { return found; }
     return null;
@@ -61,7 +66,7 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
 
   @Override
   public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeGlobalObject(globalName, null).withPosition(position);
+    return new TyNativeGlobalObject(globalName, null, availableForStatic).withPosition(position);
   }
 
   @Override

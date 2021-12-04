@@ -11,6 +11,7 @@ package org.adamalang.translator.tree.definitions;
 
 /** an event that happens outside of message flow */
 public enum DocumentEvent {
+  AskCreation, //
   AskAssetAttachment, //
   AssetAttachment, //
   ClientConnected, //

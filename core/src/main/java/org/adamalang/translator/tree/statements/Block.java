@@ -63,16 +63,16 @@ public class Block extends Statement {
     }
     if (brace) {
       sb.tabUp().append("{").writeNewline();
-      if (!environment.state.hasNoCost()) {
+      if (!environment.state.hasNoCost() && !environment.state.isStatic()) {
         sb.append(String.format("__code_cost += %d;", 1 + statements.size())).writeNewline();
       }
-    } else if (!environment.state.hasNoCost()) {
+    } else if (!environment.state.hasNoCost() && !environment.state.isStatic()) {
       sb.append(String.format("__code_cost += %d;", 1 + statements.size())).writeNewline();
     }
     for (var k = 0; k < n; k++) {
       final var s = statements.get(k);
       final var codeCoverageIndex = environment.codeCoverageTracker.register(s);
-      if (environment.state.options.produceCodeCoverage) {
+      if (environment.state.options.produceCodeCoverage && !environment.state.isStatic()) {
         sb.append(String.format("__track(%d);", codeCoverageIndex)).writeNewline();
       }
       s.writeJava(sb, child);

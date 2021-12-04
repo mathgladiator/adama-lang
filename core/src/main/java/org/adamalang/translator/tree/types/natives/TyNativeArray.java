@@ -117,7 +117,7 @@ public class TyNativeArray extends TyType implements //
       return new TyNativeFunctionInternalFieldReplacement("length",
           FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("length", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, arrayToken).withPosition(this), new ArrayList<>(), false)), FunctionStyleJava.None);
     }
-    return null;
+    return environment.state.globals.findExtension(this, name);
   }
 
   @Override

@@ -19,6 +19,7 @@ public class EnvironmentState {
   private boolean isMessageHandler;
   private boolean isNoCost;
   private boolean isStateMachineTransition;
+  private boolean isStatic;
   public final CompilerOptions options;
   private boolean pure;
   private boolean reactiveExpression;
@@ -37,6 +38,7 @@ public class EnvironmentState {
     computationContext = prior.computationContext;
     readonly = prior.readonly;
     reactiveExpression = prior.reactiveExpression;
+    isStatic = prior.isStatic;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -51,10 +53,15 @@ public class EnvironmentState {
     readonly = false;
     reactiveExpression = false;
     computationContext = ComputeContext.Unknown;
+    isStatic = false;
   }
 
   public boolean hasNoCost() {
     return isNoCost;
+  }
+
+  public boolean isStatic() {
+    return isStatic;
   }
 
   public boolean isContextComputation() {
@@ -103,6 +110,12 @@ public class EnvironmentState {
   public EnvironmentState scopeNoCost() {
     final var next = new EnvironmentState(this);
     next.isNoCost = true;
+    return next;
+  }
+
+  public EnvironmentState scopeStatic() {
+    final var next = new EnvironmentState(this);
+    next.isStatic = true;
     return next;
   }
 

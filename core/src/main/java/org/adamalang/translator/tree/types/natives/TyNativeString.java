@@ -9,6 +9,7 @@
 */
 package org.adamalang.translator.tree.types.natives;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -96,11 +97,7 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
       return new TyNativeFunctional("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true)),
           FunctionStyleJava.ExpressionThenArgs);
     }
-    if ("reverse".equals(name)) {
-      return new TyNativeFunctional("reverse", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("LibString.reverse", new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true)),
-          FunctionStyleJava.InjectNameThenExpressionAndArgs);
-    }
-    return null;
+    return environment.state.globals.findExtension(this, name);
   }
 
   @Override

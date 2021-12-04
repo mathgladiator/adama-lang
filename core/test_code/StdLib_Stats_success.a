@@ -1,0 +1,47 @@
+record R {
+  int x;
+  double y;
+}
+
+table<R> rows;
+
+double y1;
+double y2;
+double y3;
+double y4;
+double y5;
+double y6;
+double y7;
+
+int x1;
+int x2;
+int x3;
+int x4;
+int x5;
+int x6;
+double x7;
+
+@construct {
+  rows <- {x:1,y:29.0};
+  rows <- {x:2,y:6.0};
+  rows <- {x:3,y:1.0};
+  rows <- {x:4,y:100.0};
+  rows <- {x:5,y:23.0};
+  rows <- {x:6,y:452.45};
+
+  y1 = (iterate rows).y.sum().getOrDefaultTo(-1000.0);
+  y2 = (iterate rows).y.median().getOrDefaultTo(-1000.0);
+  y3 = (iterate rows).y.maximum().getOrDefaultTo(-1000.0);
+  y4 = (iterate rows).y.minimum().getOrDefaultTo(-1000.0);
+  y5 = (iterate rows).y.percentile(0.0).getOrDefaultTo(-1000.0);
+  y6 = (iterate rows).y.percentile(0.95).getOrDefaultTo(-1000.0);
+  y7 = (iterate rows).y.average().getOrDefaultTo(-1000.0);
+
+  x1 = (iterate rows).x.sum().getOrDefaultTo(-1000);
+  x2 = (iterate rows).x.median().getOrDefaultTo(-1000);
+  x3 = (iterate rows).x.maximum().getOrDefaultTo(-1000);
+  x4 = (iterate rows).x.minimum().getOrDefaultTo(-1000);
+  x5 = (iterate rows).x.percentile(0.0).getOrDefaultTo(-1000);
+  x6 = (iterate rows).x.percentile(0.95).getOrDefaultTo(-1000);
+  x7 = (iterate rows).x.average().getOrDefaultTo(-1000.0);
+}

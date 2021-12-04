@@ -63,6 +63,11 @@ public class Environment {
     }
   }
 
+  /** get the root environment for the document; this is for static methods like @can_create */
+  public Environment staticPolicy() {
+    return new Environment(document, state, null).scopeAsReadOnlyBoundary();
+  }
+
   /** when we need to create a variable, let's make it globally unique */
   public int autoVariable() {
     return state.autoId.getAndIncrement();
@@ -184,6 +189,11 @@ public class Environment {
   /** create a new environment which is for the given computation context */
   public Environment scopeWithComputeContext(final ComputeContext context) {
     return new Environment(document, state.scopeWithComputeContext(context), this);
+  }
+
+  /** create a new environment which is for static methods (i.e. policy methods) */
+  public Environment scopeStatic() {
+    return new Environment(document, state.scopeStatic(), this);
   }
 
   /** set the return type of the given scope */

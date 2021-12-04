@@ -1,0 +1,36 @@
+public string x1;
+public string x2;
+public string x3;
+public string x4;
+
+public double z1;
+
+public long z2;
+
+
+record R {
+  int x;
+  double y;
+}
+
+table<R> rows;
+
+public int d1;
+public double d2;
+
+@construct {
+  x1 = (34).charOf();
+  x2 = (32).charOf();
+  x3 = @maybe(65).charOf().getOrDefaultTo("huh");
+  x4 = @maybe<int>.charOf().getOrDefaultTo("nope");
+  z1 = (3.14).sin();
+  z2 = -123;
+  z2 = z2.abs();
+
+  rows <- {x:1,y:29.0};
+  rows <- {x:2,y:6.0};
+  rows <- {x:3,y:1.0};
+
+  d1 = (iterate rows).x.sum().getOrDefaultTo(-1000);
+  d2 = (iterate rows).y.average().getOrDefaultTo(-1000.0);
+}

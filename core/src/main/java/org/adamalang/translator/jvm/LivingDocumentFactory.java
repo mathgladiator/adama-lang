@@ -10,6 +10,7 @@
 package org.adamalang.translator.jvm;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -17,6 +18,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 
 import org.adamalang.runtime.ErrorCodes;
+import org.adamalang.runtime.natives.NtCreateContext;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -28,6 +30,7 @@ import org.adamalang.runtime.ops.TestReportBuilder;
 /** responsible for compiling java code into a LivingDocumentFactory */
 public class LivingDocumentFactory {
   private final Constructor<?> constructor;
+  private final Method creationPolicyMethod;
   public final String reflection;
 
   public LivingDocumentFactory(final String className, final String javaSource, String reflection) throws ErrorCodeException {
@@ -47,6 +50,7 @@ public class LivingDocumentFactory {
       final var loader = new ByteArrayClassLoader(classBytes);
       final Class<?> clazz = Class.forName(className, true, loader);
       constructor = clazz.getConstructor(DocumentMonitor.class);
+      creationPolicyMethod = clazz.getMethod("__onCanCreate", NtClient.class, NtCreateContext.class);
       this.reflection = reflection;
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.E3_FACTORY_CANT_BIND_JAVA_CODE, ex);

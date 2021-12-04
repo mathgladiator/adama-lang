@@ -23,11 +23,13 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 /** Represents the type for a boolean value (true/false); this uses the native
  * 'boolean' java type */
 public class TyNativeBoolean extends TySimpleNative implements //
     DetailHasDeltaType, //
+    DetailTypeHasMethods, //
     IsNativeValue, //
     AssignmentViaNative //
 {
@@ -77,5 +79,10 @@ public class TyNativeBoolean extends TySimpleNative implements //
     writer.writeObjectFieldIntro("type");
     writer.writeString("bool");
     writer.endObject();
+  }
+
+  @Override
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    return environment.state.globals.findExtension(this, name);
   }
 }

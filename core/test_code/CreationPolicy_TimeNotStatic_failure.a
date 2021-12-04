@@ -1,0 +1,4 @@
+@can_create (who, context) {
+  let x = Time.now();
+  return false;
+}

@@ -25,12 +25,14 @@ import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 /** Represents the integral with 64 bits of storage; this uses the 'long' java
  * type */
 public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
     CanBeMapDomain, //
     DetailHasDeltaType, //
+    DetailTypeHasMethods, //
     IsOrderable, //
     AssignmentViaNative //
 {
@@ -87,4 +89,8 @@ public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
     return "RxMap.LongCodec";
   }
 
+  @Override
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    return environment.state.globals.findExtension(this, name);
+  }
 }

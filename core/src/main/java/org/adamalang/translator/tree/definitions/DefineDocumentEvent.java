@@ -12,12 +12,17 @@ package org.adamalang.translator.tree.definitions;
 import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.expressions.Expression;
+import org.adamalang.translator.tree.privacy.Policy;
+import org.adamalang.translator.tree.privacy.PublicPolicy;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
+import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeAsset;
-import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
+import org.adamalang.translator.tree.types.natives.*;
+import org.adamalang.translator.tree.types.structures.FieldDefinition;
+import org.adamalang.translator.tree.types.structures.StorageSpecialization;
+import org.adamalang.translator.tree.types.structures.StructureStorage;
 
 /** defines an event for when connected or not */
 public class DefineDocumentEvent extends Definition {
@@ -56,12 +61,26 @@ public class DefineDocumentEvent extends Definition {
   }
 
   public Environment nextEnvironment(final Environment environment) {
+    if (which == DocumentEvent.AskCreation) {
+      Environment next = environment.staticPolicy().scopeStatic();
+      next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken));
+      next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
+      if (commaToken != null) {
+        StructureStorage createContextMessageStorage = new StructureStorage(StorageSpecialization.Message, false, null);
+        createContextMessageStorage.add(FieldDefinition.invent(new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), "ip"));
+        createContextMessageStorage.add(FieldDefinition.invent(new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), "origin"));
+        createContextMessageStorage.add(FieldDefinition.invent(new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), "key"));
+        TyNativeMessage createContextType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__CreateDocumentContext"), createContextMessageStorage);
+        next.define(parameterNameToken.text, createContextType, true, this);
+      }
+      return next;
+    }
     boolean readonly = which == DocumentEvent.AskAssetAttachment;
     final var next = readonly ? environment.scopeAsReadOnlyBoundary() : environment.scope();
     if (which == DocumentEvent.ClientConnected || which == DocumentEvent.AskAssetAttachment) {
       next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this));
     }
-    if (which == DocumentEvent.AssetAttachment) {
+    if (which == DocumentEvent.AssetAttachment && commaToken != null) {
       next.define(parameterNameToken.text, new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
     }
     next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
@@ -71,11 +90,18 @@ public class DefineDocumentEvent extends Definition {
   @Override
   public void typing(final Environment environment) {
     ControlFlow codeControlFlow = code.typing(nextEnvironment(environment));
-    if (which == DocumentEvent.ClientConnected && codeControlFlow == ControlFlow.Open) {
-      environment.document.createError(this, String.format("The @connected handler must return a boolean"), "DocumentEvents");
-    }
-    if (which == DocumentEvent.AskAssetAttachment && codeControlFlow == ControlFlow.Open) {
-      environment.document.createError(this, String.format("The @can_attach handler must return a boolean"), "DocumentEvents");
+    if (codeControlFlow == ControlFlow.Open) {
+      switch (which) {
+        case ClientConnected:
+          environment.document.createError(this, String.format("The @connected handler must return a boolean"), "DocumentEvents");
+          return;
+        case AskCreation:
+          environment.document.createError(this, String.format("The @can_create handler must return a boolean"), "DocumentEvents");
+          return;
+        case AskAssetAttachment:
+          environment.document.createError(this, String.format("The @can_attach handler must return a boolean"), "DocumentEvents");
+          return;
+      }
     }
   }
 }

@@ -24,12 +24,14 @@ import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 /** represents a double precision floating point number. For instance, 3.14 is a
  * floating point number. This uses the native 'double' java type. */
 public class TyNativeDouble extends TySimpleNative implements //
     IsNativeValue, //
     DetailHasDeltaType, //
+    DetailTypeHasMethods, //
     DetailEqualityTestingRequiresWrapping, //
     AssignmentViaNative //
 {
@@ -84,5 +86,10 @@ public class TyNativeDouble extends TySimpleNative implements //
     writer.writeObjectFieldIntro("type");
     writer.writeString("double");
     writer.endObject();
+  }
+
+  @Override
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    return environment.state.globals.findExtension(this, name);
   }
 }

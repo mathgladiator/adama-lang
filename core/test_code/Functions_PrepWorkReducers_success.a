@@ -26,6 +26,6 @@ double result3;
   things <- {x:2, y:10.0};
   things <- {x:3, y:1000.0};
   result = foo((iterate things).x);
-  result2 = Statistics.sum((iterate things).x);
-  result3 = Statistics.sum((iterate things).y);
+  result2 = Statistics.sum((iterate things).x).getOrDefaultTo(-1000);
+  result3 = Statistics.sum((iterate things).y).getOrDefaultTo(-1000.0); // NOTE: -1000 causes an issue because int can't go into Double, so that's tricky and may require a cast of sorts
 }

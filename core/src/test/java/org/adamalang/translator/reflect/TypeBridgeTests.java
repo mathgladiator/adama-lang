@@ -11,6 +11,7 @@ package org.adamalang.translator.reflect;
 
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMaybe;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,6 +35,16 @@ public class TypeBridgeTests {
     var worked = false;
     try {
       TypeBridge.getAdamaType(NtList.class, null);
+      worked = true;
+    } catch (final RuntimeException re) {}
+    Assert.assertFalse(worked);
+  }
+
+  @Test
+  public void ntMaybeNoAnnotation() {
+    var worked = false;
+    try {
+      TypeBridge.getAdamaType(NtMaybe.class, null);
       worked = true;
     } catch (final RuntimeException re) {}
     Assert.assertFalse(worked);

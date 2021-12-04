@@ -378,8 +378,10 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
-    gold.append("\n    boolean __result = false;");
-    gold.append("\n    return __result;");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanCreate(NtClient __client, NtCreateContext __context) {");
+    gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
@@ -1031,8 +1033,10 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
-    gold.append("\n    boolean __result = false;");
-    gold.append("\n    return __result;");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanCreate(NtClient __client, NtCreateContext __context) {");
+    gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
@@ -1555,8 +1559,10 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
-    gold.append("\n    boolean __result = false;");
-    gold.append("\n    return __result;");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanCreate(NtClient __client, NtCreateContext __context) {");
+    gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");

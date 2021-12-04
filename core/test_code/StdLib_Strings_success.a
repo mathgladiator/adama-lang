@@ -1,0 +1,23 @@
+public string x1;
+public string x2;
+public string x3;
+public string x4;
+public string x5;
+public string x6;
+public string x7;
+public string x8;
+public string x9;
+public string x10;
+
+@construct {
+  x1 = "123".reverse();
+  x2 = "m".multiply(4);
+  x3 = (x2 + "z").multiply(2);
+  x4 = x3.left(2).getOrDefaultTo("");
+  x5 = "54321".left(1000).right(2).reverse().multiply(3).right(4).multiply(3).reverse().getOrDefaultTo("NOPE");
+  x6 = "OK".left(-1).reverse().right(1).getOrDefaultTo("NOPE");
+  x7 = "OK".right(-1).multiply(3).left(1).getOrDefaultTo("NOPE");
+  x8 = "OKOK".right(3).left(2).getOrDefaultTo("Noooooo");
+  x9 = " abc ".trim().mid(2, 1).getOrDefaultTo("Noooooo");
+  x10 = "abcdefg".substr(1, 4).getOrDefaultTo("Noooooo").upper();
+}

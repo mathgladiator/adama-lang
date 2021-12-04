@@ -30,20 +30,20 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 public class GlobalObjectPool {
   public static GlobalObjectPool createPoolWithStdLib() {
     final var pool = new GlobalObjectPool();
-    pool.add(GlobalFactory.makeGlobal("String", LibString.class));
-    final var mathlib = GlobalFactory.makeGlobalExplicit("Math", Math.class, "min", "max", "ceil", "floor", "sin", "cos", "tan", "abs", "round", "asin", "acos", "atan", "toRadians", "toDegrees", "sinh", "cosh", "tanh", "atan2", "hypot",
+    pool.add(GlobalFactory.makeGlobal("String", LibString.class, pool.extensions));
+    final var mathlib = GlobalFactory.makeGlobalExplicit("Math", Math.class, pool.extensions, true,"min", "max", "ceil", "floor", "sin", "cos", "tan", "abs", "round", "asin", "acos", "atan", "toRadians", "toDegrees", "sinh", "cosh", "tanh", "atan2", "hypot",
         "exp", "log", "log10", "pow", "sqrt", "cbrt", "floorDiv", "floorMod", "IEEEremainder", "expm1", "log1p", "signum", "ulp", "fma", "copySign", "getExponent", "powerOfTwo", "E", "PI");
-    GlobalFactory.mergeInto(mathlib, LibMath.class, "near", "SQRT2");
+    GlobalFactory.mergeInto(mathlib, LibMath.class, pool.extensions, true, "near", "SQRT2");
     pool.add(mathlib);
-    pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class));
-    final var random = new TyNativeGlobalObject("Random", null);
+    pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
+    final var random = new TyNativeGlobalObject("Random", null, false);
     random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
     random.functions.put("genInt", generateInternalDocumentFunction("__randomInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
     random.functions.put("genDouble", generateInternalDocumentFunction("__randomDouble", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
     random.functions.put("getDoubleGaussian", generateInternalDocumentFunction("__randomGaussian", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
     random.functions.put("genLong", generateInternalDocumentFunction("__randomLong", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
     pool.add(random);
-    final var time = new TyNativeGlobalObject("Time", null);
+    final var time = new TyNativeGlobalObject("Time", null, false);
     time.functions.put("now", generateInternalDocumentFunction("__timeNow", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
     pool.add(time);
     return pool;
@@ -65,13 +65,23 @@ public class GlobalObjectPool {
   }
 
   private final HashMap<String, TyNativeGlobalObject> globalObjects;
+  protected final HashMap<String, HashMap<String, TyNativeFunctional>> extensions;
 
   private GlobalObjectPool() {
     globalObjects = new HashMap<>();
+    extensions = new HashMap<>();
   }
 
   public void add(final TyNativeGlobalObject globalObject) {
     globalObjects.put(globalObject.globalName, globalObject);
+  }
+
+  public TyNativeFunctional findExtension(TyType type, String name) {
+    HashMap<String, TyNativeFunctional> extensionsOnType = extensions.get(type.getAdamaType());
+    if (extensionsOnType != null) {
+      return extensionsOnType.get(name);
+    }
+    return null;
   }
 
   public TyNativeGlobalObject get(final String name) {

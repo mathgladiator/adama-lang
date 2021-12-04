@@ -127,10 +127,16 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
       }
       return new TyNativeFunctional("toArray", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.ExpressionThenArgs);
     }
+    TyNativeFunctional extensionBeforeAggregate = environment.state.globals.findExtension(this, name);
+    if (extensionBeforeAggregate != null) {
+      return extensionBeforeAggregate;
+    }
     final var embedType = getEmbeddedType(environment);
     if (embedType != null && embedType instanceof DetailTypeHasMethods) {
       final var childMethod = ((DetailTypeHasMethods) embedType).lookupMethod(name, environment);
-      if (childMethod != null) { return new TyNativeAggregateFunctional(embedType, childMethod); }
+      if (childMethod != null) {
+        return new TyNativeAggregateFunctional(embedType, childMethod);
+      }
     }
     return null;
   }

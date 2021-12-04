@@ -56,14 +56,14 @@ public class SillyTypeIssues {
 
   @Test
   public void glob() {
-    new TyNativeGlobalObject(null, null).typing(null);
-    new TyNativeGlobalObject(null, null).makeCopyWithNewPosition(new TyNativeGlobalObject(null, null), TypeBehavior.ReadOnlyNativeValue);
-    new TyNativeGlobalObject(null, null).writeTypeReflectionJson(new JsonStreamWriter());
+    new TyNativeGlobalObject(null, null, true).typing(null);
+    new TyNativeGlobalObject(null, null, true).makeCopyWithNewPosition(new TyNativeGlobalObject(null, null, true), TypeBehavior.ReadOnlyNativeValue);
+    new TyNativeGlobalObject(null, null, true).writeTypeReflectionJson(new JsonStreamWriter());
   }
 
   @Test
   public void global() {
-    final var ngo = new TyNativeGlobalObject("X", "y");
+    final var ngo = new TyNativeGlobalObject("X", "y", true);
     try {
       ngo.emit(null);
       Assert.fail();

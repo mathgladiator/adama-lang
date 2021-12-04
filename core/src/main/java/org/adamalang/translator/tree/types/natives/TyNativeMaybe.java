@@ -114,7 +114,13 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("delete".equals(name)) { return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", null, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs); }
-    return null;
+    if ("has".equals(name)) { return new TyNativeFunctional("has", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("has", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs); }
+    if ("getOrDefaultTo".equals(name)) {
+      ArrayList<TyType> args = new ArrayList<>();
+      args.add(tokenElementType.item);
+      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, false)), FunctionStyleJava.ExpressionThenArgs);
+    }
+    return environment.state.globals.findExtension(this, name);
   }
 
   @Override

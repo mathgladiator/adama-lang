@@ -61,8 +61,17 @@ public class NtMaybe<T> {
     }
   }
 
+  /** get the value; note; this returns null and is not appropriate for the runtime */
   public T get() {
     return this.value;
+  }
+
+  /** get the value if it is available, otherwise return the default value (appropriate for runtime) */
+  public T getOrDefaultTo(T defaultValue) {
+    if (this.value != null) {
+      return this.value;
+    }
+    return defaultValue;
   }
 
   /** is it available */

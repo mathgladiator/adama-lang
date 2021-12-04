@@ -1,0 +1,5 @@
+@can_create (who, context) {
+  if (context.ipppp == "nope") {
+    return false;
+  }
+}

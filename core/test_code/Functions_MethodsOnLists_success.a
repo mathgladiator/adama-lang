@@ -32,10 +32,10 @@ public int v2;
   int five = 5;
   int three = 3;
   (iterate t).foo(y);
-  value = Statistics.sum((iterate t).square_plus(seven));
-  value5 = Statistics.sum((iterate t).square_plus_plus(seven, five, three));
+  value = Statistics.sum((iterate t).square_plus(seven)).getOrDefaultTo(-1000);
+  value5 = Statistics.sum((iterate t).square_plus_plus(seven, five, three)).getOrDefaultTo(-1000);
   y = 100;
-  v2 = Statistics.sum((iterate t).goo()); // no closure, has return type
+  v2 = Statistics.sum((iterate t).goo()).getOrDefaultTo(-1000); // no closure, has return type
   (iterate t).delete(); // no closure, no return type
 }
 

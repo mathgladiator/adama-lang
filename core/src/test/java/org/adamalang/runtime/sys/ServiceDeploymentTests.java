@@ -197,7 +197,7 @@ public class ServiceDeploymentTests {
                 streamback.get().send("foo", null, "{}", callback);
                 callback.await_success(6);
             }
-            factoryFactory.set(new LivingDocumentFactory("Foo", "\nimport org.adamalang.runtime.contracts.DocumentMonitor;\n class Foo { public Foo(DocumentMonitor dm) {} }", "{}"));
+            factoryFactory.set(new LivingDocumentFactory("Foo", "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who, NtCreateContext context) { return false; } }", "{}"));
             CountDownLatch deployed = new CountDownLatch(1);
             service.deploy(new DeploymentMonitor() {
                 @Override
@@ -224,6 +224,7 @@ public class ServiceDeploymentTests {
             service.shutdown();
         }
     }
+
 
 
 }

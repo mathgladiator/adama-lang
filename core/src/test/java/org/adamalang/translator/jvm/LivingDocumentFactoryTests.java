@@ -16,7 +16,7 @@ import org.junit.Test;
 public class LivingDocumentFactoryTests {
   @Test
   public void almostOK() throws Exception {
-    final var compiler = new LivingDocumentFactory("Foo", "\nimport org.adamalang.runtime.contracts.DocumentMonitor;\n class Foo { public Foo(DocumentMonitor dm) {} }", "{}");
+    final var compiler = new LivingDocumentFactory("Foo", "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who, NtCreateContext context) { return false; } }", "{}");
     var success = false;
     try {
       compiler.create(null);
@@ -41,7 +41,7 @@ public class LivingDocumentFactoryTests {
 
   @Test
   public void castFailure() throws Exception {
-    final var compiler = new LivingDocumentFactory("Foo", "\nimport org.adamalang.runtime.contracts.DocumentMonitor;\n class Foo { public Foo(DocumentMonitor dm) {} }", "{}");
+    final var compiler = new LivingDocumentFactory("Foo", "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who, NtCreateContext context) { return false; } }", "{}");
     var success = false;
     try {
       compiler.create(null);
@@ -55,7 +55,17 @@ public class LivingDocumentFactoryTests {
   @Test
   public void noConstructor() throws Exception {
     try {
-      new LivingDocumentFactory("Foo", "class Foo {}", "{}");
+      new LivingDocumentFactory("Foo", "import org.adamalang.runtime.natives.*; class Foo { public static boolean __onCanCreate(NtClient who, NtCreateContext context) { return false; } }", "{}");
+      Assert.fail();
+    } catch (final ErrorCodeException nsme) {
+      Assert.assertEquals(3000, nsme.code);
+    }
+  }
+
+  @Test
+  public void noPolicy() throws Exception {
+    try {
+      new LivingDocumentFactory("Foo", "import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} }", "{}");
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
       Assert.assertEquals(3000, nsme.code);
