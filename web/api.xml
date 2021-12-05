@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<api>
+    <parameter-definition name="identity" type="str" optional="false">
+        <documentation>
+            Identity is a signed JWT token used to identity the caller of the specific request. It is required to provide identity to the particular request.
+        </documentation>
+        <error code="4232">
+            'identity' was missing from the request, and it is required to identify the caller.
+        </error>
+        <lookup service="org.adamalang.web.extern.Authenticator"
+                output-name="who"
+                output-java-type="org.adamalang.runtime.natives.NtClient"
+                error-code="2423" />
+    </parameter-definition>
+
+    <parameter-definition name="space" type="str">
+        <documentation>
+            'space' is a collection of documents with the same schema and logic.
+        </documentation>
+        <error code="2324">
+            'space' was missing from the request
+        </error>
+        <lookup service="org.adamalang.web.extern.SpacePolicyLocator"
+                output-name="policy"
+                output-java-type="org.adamalang.web.extern.SpacePolicy"
+                error-code="4404" />
+
+    </parameter-definition>
+
+    <parameter-definition name="key" type="str">
+        <documentation>
+            'key' is a identifier within a space to uniquely identify a single document.
+        </documentation>
+        <error code="2324">
+            'key' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="entropy" type="str" optional="true">
+        <documentation>
+            'entropy' is a key used to seed the random generator
+        </documentation>
+    </parameter-definition>
+
+    <parameter-definition name="arg" type="json-object">
+        <documentation>
+            'arg' is an object that is used
+        </documentation>
+        <error code="2324">
+            'arg' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <responder name="simple" type="request-response">
+        <field name="success" type="bool" />
+        <field name="failure_code" type="int" optional="true" />
+    </responder>
+
+    <responder name="data" type="stream">
+        <field name="delta" type="json" />
+    </responder>
+
+
+    <method name="create-space" type="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+    </method>
+
+    <method name="get-space" type="simple">
+        <parameter name="identity" type="str" />
+        <parameter name="space" type="str" />
+    </method>
+
+    <method name="create-document" type="simple">
+        <parameter name="identity" type="str" />
+        <parameter name="space" type="str" />
+        <parameter name="key" type="str" />
+        <parameter name="entropy" type="long" optional="true" />
+        <parameter name="arg" type="json" />
+    </method>
+
+    <method name="connect-document" type="stream">
+        <parameter name="identity" type="str" />
+        <parameter name="space" type="str" />
+        <parameter name="key" type="str" />
+    </method>
+
+
+
+</api>

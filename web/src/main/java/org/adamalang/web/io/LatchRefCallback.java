@@ -1,0 +1,29 @@
+package org.adamalang.web.io;
+
+import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
+
+public class LatchRefCallback<T> implements Callback<T> {
+    public final BulkLatch<?> latch;
+    private T value;
+
+    public LatchRefCallback(BulkLatch<?> latch) {
+        this.latch = latch;
+        this.value = null;
+    }
+
+    public T get() {
+        return value;
+    }
+
+    @Override
+    public void success(T value) {
+        this.value = value;
+        latch.countdown(null);
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+        latch.countdown(ex.code);
+    }
+}

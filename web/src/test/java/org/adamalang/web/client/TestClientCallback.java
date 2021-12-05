@@ -11,7 +11,7 @@ package org.adamalang.web.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.api.util.Json;
+import org.adamalang.web.io.Json;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ public class TestClientCallback {
     Assert.assertTrue(failedToConnectLatch.await(5000, TimeUnit.MILLISECONDS));
   }
   public void awaitFirst() throws Exception {
-    Assert.assertTrue(firstLatch.await(5000, TimeUnit.MILLISECONDS));
+    Assert.assertTrue(firstLatch.await(25000, TimeUnit.MILLISECONDS));
   }
 
   public void assertData(String data) {

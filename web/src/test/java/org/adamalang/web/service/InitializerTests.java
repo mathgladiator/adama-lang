@@ -9,11 +9,12 @@
 */
 package org.adamalang.web.service;
 
+import org.adamalang.web.service.mocks.MockServiceBase;
 import org.junit.Test;
 
 public class InitializerTests {
   @Test
   public void sanity() throws Exception {
-    new Initializer(NexusTests.mockNexus(NexusTests.Scenario.Dev));
+    new Initializer(ConfigTests.mockConfig(ConfigTests.Scenario.Dev), new MockServiceBase());
   }
 }

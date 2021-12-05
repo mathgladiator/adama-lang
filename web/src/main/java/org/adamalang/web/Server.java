@@ -10,4 +10,8 @@
 package org.adamalang.web;
 
 public class Server {
+
+    public static void main() {
+
+    }
 }
