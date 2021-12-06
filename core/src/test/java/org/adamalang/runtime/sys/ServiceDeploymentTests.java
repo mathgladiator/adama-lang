@@ -115,7 +115,7 @@ public class ServiceDeploymentTests {
             {
                 LatchCallback callback = new LatchCallback();
                 streamback.get().send("foo", null, "{}", callback);
-                callback.await_failure(9601);
+                callback.await_failure(144416);
             }
             latch.run();
             Assert.assertEquals("STATUS:Connected", streamback.get(0));

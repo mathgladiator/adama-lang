@@ -42,7 +42,7 @@ public class LivingDocumentFactory {
       for (final Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
         System.err.println(diagnostic.toString());
       }
-      throw new ErrorCodeException(ErrorCodes.E3_FACTORY_CANT_COMPILE_JAVA_CODE);
+      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_COMPILE_JAVA_CODE);
     }
     try {
       final var classBytes = fileManager.getClasses();
@@ -53,7 +53,7 @@ public class LivingDocumentFactory {
       creationPolicyMethod = clazz.getMethod("__onCanCreate", NtClient.class, NtCreateContext.class);
       this.reflection = reflection;
     } catch (final Exception ex) {
-      throw new ErrorCodeException(ErrorCodes.E3_FACTORY_CANT_BIND_JAVA_CODE, ex);
+      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
     }
   }
 
@@ -61,7 +61,7 @@ public class LivingDocumentFactory {
     try {
       return (LivingDocument) constructor.newInstance(monitor);
     } catch (final Exception ex) {
-      throw new ErrorCodeException(ErrorCodes.E3_FACTORY_CANT_CREATE_OBJECT_DUE_TO_EXCEPTION, ex);
+      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_CREATE_OBJECT_DUE_TO_CATASTROPHE, ex);
     }
   }
 

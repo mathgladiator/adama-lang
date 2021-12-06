@@ -145,11 +145,11 @@ public class ServiceCatastropheTests {
             dataService.unpause();
             latch1.run();
             callback1.await_failure(999);
-            callback2.await_failure(9601);
-            callback3.await_failure(9601);
+            callback2.await_failure(144416);
+            callback3.await_failure(144416);
             LatchCallback callback4 = new LatchCallback();
             streamback1.get().send("foo", null,"{}", callback4);
-            callback4.await_failure(9601);
+            callback4.await_failure(144416);
             Assert.assertEquals("STATUS:Connected", streamback1.get(0));
             Assert.assertEquals("{\"data\":{\"x\":1},\"outstanding\":[],\"blockers\":[],\"seq\":4}", streamback1.get(1));
             Assert.assertEquals("STATUS:Disconnected", streamback1.get(2));

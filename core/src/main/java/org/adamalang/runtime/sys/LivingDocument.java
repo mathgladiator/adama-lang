@@ -594,12 +594,12 @@ public abstract class LivingDocument implements RxParent {
             arg = __parse_construct_arg(reader);
             break;
           default:
-            throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
         }
       }
     }
-    if (command == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND); }
-    if (timestamp == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP); }
+    if (command == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND); }
+    if (timestamp == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP); }
     __time.set(timestamp);
     switch (command) {
       case "bill":
@@ -611,34 +611,34 @@ public abstract class LivingDocument implements RxParent {
           return __transaction_invalidate_body(who, requestJson);
         }
       case "construct":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
-        if (__constructed.get()) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED); }
-        if (arg == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG); }
+        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
+        if (__constructed.get()) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED); }
+        if (arg == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG); }
         return __transaction_construct(requestJson, who, arg, entropy);
       case "connect":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
+        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
         return __transaction_connect(requestJson, who);
       case "disconnect":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
+        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
         return __transaction_disconnect(requestJson, who);
       case "attach":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
-        if (asset == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_ASSET); }
+        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
+        if (asset == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ASSET); }
         return __transaction_attach(requestJson, who, asset);
       case "send":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
-        if (channel == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL); }
-        if (message == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE); }
+        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
+        if (channel == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL); }
+        if (message == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE); }
         return __transaction_send(requestJson, who, marker, channel, timestamp, message);
       case "expire":
-        if (limit == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_LIMIT); }
+        if (limit == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT); }
         return __transaction_expire(requestJson, limit);
       case "apply":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
-        if (patch == null) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_CANT_APPLY_NO_PATCH); }
+        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
+        if (patch == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PATCH); }
         return __transaction_apply_patch(requestJson, who, patch);
     }
-    throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND);
+    throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND);
   }
 
   /** transaction: bill */
@@ -674,7 +674,7 @@ public abstract class LivingDocument implements RxParent {
     }
     try {
       __random = new Random(Long.parseLong(__entropy.get()));
-      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED); }
+      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED); }
 
       // execute the attachment
       __onAssetAttached(who, asset);
@@ -709,7 +709,7 @@ public abstract class LivingDocument implements RxParent {
     }
     try {
       __random = new Random(Long.parseLong(__entropy.get()));
-      if (__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED); }
+      if (__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED); }
       if (__onConnected(who)) {
         // user was accepted, so let's commit it
         // generate a connection id for the user
@@ -742,7 +742,7 @@ public abstract class LivingDocument implements RxParent {
       } else {
         // clean up because it was rejected
         __revert();
-        throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED);
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CLIENT_REJECTED);
       }
     } finally {
       if (__monitor != null) {
@@ -763,7 +763,7 @@ public abstract class LivingDocument implements RxParent {
         __entropy.set(entropy);
       }
       __random = new Random(Long.parseLong(__entropy.get()));
-      if (__constructed.get()) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED); }
+      if (__constructed.get()) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED); }
       __construct_intern(who, arg);
       __constructed.set(true);
       final var forward = new JsonStreamWriter();
@@ -792,7 +792,7 @@ public abstract class LivingDocument implements RxParent {
     }
     try {
       __random = new Random(Long.parseLong(__entropy.get()));
-      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_CANT_DISCONNECT_DUE_TO_NOT_CONNECTED); }
+      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_DISCONNECT_DUE_TO_NOT_CONNECTED); }
       // disconnect them
       __onDisconnected(who);
       // stop tracking them
@@ -930,7 +930,7 @@ public abstract class LivingDocument implements RxParent {
     }
     try {
       if (limit < 0) {
-        throw new ErrorCodeException(ErrorCodes.E7_EXPIRE_LIMIT_MUST_BE_POSITIVE);
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_EXPIRE_LIMIT_MUST_BE_POSITIVE);
       }
       // create the delta
       final var forward = new JsonStreamWriter();
@@ -984,13 +984,13 @@ public abstract class LivingDocument implements RxParent {
       String dedupeKey = who.agent + "/" + who.authority + "/" + marker;
       if (marker != null) {
         if (__dedupe.containsKey(dedupeKey)) {
-          throw new ErrorCodeException(ErrorCodes.E7_MESSAGE_ALREADY_SENT);
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_ALREADY_SENT);
         }
         __dedupe.put(dedupeKey, __time.get());
       }
       __random = new Random(Long.parseLong(__entropy.get()));
       // they must be connected
-      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.E2_LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED); }
+      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED); }
       // create the delta
       final var forward = new JsonStreamWriter();
       final var reverse = new JsonStreamWriter();

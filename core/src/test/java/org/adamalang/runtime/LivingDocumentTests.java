@@ -107,7 +107,7 @@ public class LivingDocumentTests {
     try {
       setup.document.document().__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(2083, drre.code);
+      Assert.assertEquals(132116, drre.code);
     }
   }
 
@@ -120,7 +120,7 @@ public class LivingDocumentTests {
     try {
       document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(2081, drre.code);
+      Assert.assertEquals(196624, drre.code);
     }
   }
 
@@ -345,7 +345,7 @@ public class LivingDocumentTests {
       setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(6));
       Assert.fail();
     } catch (RuntimeException ece) {
-      Assert.assertEquals(99922, ((ErrorCodeException) ece.getCause()).code);
+      Assert.assertEquals(143407, ((ErrorCodeException) ece.getCause()).code);
     }
     String z = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString();
     Assert.assertEquals("142", z);
@@ -453,7 +453,7 @@ public class LivingDocumentTests {
   @Test
   public void send_must_be_connected() throws Exception {
     final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; } message M {} channel<M> foo;");
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(2060));
+    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(143373));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(5));
     setup.assertCompare();
@@ -510,7 +510,7 @@ public class LivingDocumentTests {
     try {
       setup.document.document().__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(2040, drre.code);
+      Assert.assertEquals(160268, drre.code);
     }
     setup.assertCompare();
   }
@@ -531,7 +531,7 @@ public class LivingDocumentTests {
     try {
       setup.document.document().__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(2050, drre.code);
+      Assert.assertEquals(184332, drre.code);
     }
     setup.assertCompare();
   }
@@ -603,8 +603,8 @@ public class LivingDocumentTests {
   public void transact_add_client_cant_connect_again_but_only_after_disconnect() throws Exception {
     final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
     setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
-    setup.document.connect(A, new RealDocumentSetup.AssertFailure(2010));
-    setup.document.disconnect(A, new RealDocumentSetup.AssertFailure(1011));
+    setup.document.connect(A, new RealDocumentSetup.AssertFailure(115724));
+    setup.document.disconnect(A, new RealDocumentSetup.AssertInt(5));
     setup.document.connect(A, new RealDocumentSetup.AssertInt(7));
     setup.assertCompare();
   }
@@ -612,7 +612,7 @@ public class LivingDocumentTests {
   @Test
   public void transact_add_client_not_allowed() throws Exception {
     final var setup = new RealDocumentSetup("@construct {}");
-    setup.document.connect(A, new RealDocumentSetup.AssertFailure(2070));
+    setup.document.connect(A, new RealDocumentSetup.AssertFailure(184333));
     setup.assertCompare();
   }
 
@@ -621,7 +621,7 @@ public class LivingDocumentTests {
   @Test
   public void attach_requires_connection() throws Exception {
     final var setup = new RealDocumentSetup("@construct {}");
-    setup.document.attach(NtClient.NO_ONE, EXAMPLE, new RealDocumentSetup.AssertFailure(2061));
+    setup.document.attach(NtClient.NO_ONE, EXAMPLE, new RealDocumentSetup.AssertFailure(125966));
   }
 
   @Test
@@ -659,7 +659,7 @@ public class LivingDocumentTests {
       setup.document.document().__transact(writer.toString());
       Assert.fail();
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(2084, drre.code);
+      Assert.assertEquals(143380, drre.code);
     }
   }
 
@@ -674,14 +674,14 @@ public class LivingDocumentTests {
       setup.document.document().__transact(writer.toString());
       Assert.fail();
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(2001, drre.code);
+      Assert.assertEquals(184335, drre.code);
     }
   }
 
   @Test
   public void transact_disconnect_without_connection() throws Exception {
     final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
-    setup.document.disconnect(A, new RealDocumentSetup.AssertFailure(2030));
+    setup.document.disconnect(A, new RealDocumentSetup.AssertFailure(145423));
     setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
     setup.document.disconnect(A, new RealDocumentSetup.AssertInt(5));
     setup.document.connect(A, new RealDocumentSetup.AssertInt(7));
@@ -711,7 +711,7 @@ public class LivingDocumentTests {
         document.__transact(writer.toString());
         Assert.fail();
       } catch (final ErrorCodeException drre) {
-        Assert.assertEquals(2020, drre.code);
+        Assert.assertEquals(132111, drre.code);
       }
     }
   }
@@ -727,7 +727,7 @@ public class LivingDocumentTests {
     }
     {
       final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }", prior);
-      setup.document.connect(A, new RealDocumentSetup.AssertFailure(2010));
+      setup.document.connect(A, new RealDocumentSetup.AssertFailure(115724));
       setup.document.connect(B, new RealDocumentSetup.AssertInt(5));
     }
   }
@@ -742,7 +742,7 @@ public class LivingDocumentTests {
     try {
       document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(2000, drre.code);
+      Assert.assertEquals(194575, drre.code);
     }
     setup.assertCompare();
   }
@@ -759,7 +759,7 @@ public class LivingDocumentTests {
     try {
       document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(2082, drre.code);
+      Assert.assertEquals(143889, drre.code);
     }
     setup.assertCompare();
   }
@@ -773,7 +773,7 @@ public class LivingDocumentTests {
     try {
       document.__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
-      Assert.assertEquals(2080, drre.code);
+      Assert.assertEquals(122896, drre.code);
     }
     setup.assertCompare();
   }
@@ -823,7 +823,7 @@ public class LivingDocumentTests {
     Assert.assertEquals(123, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     Assert.assertEquals(124, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
-    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertFailure(2010));
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertFailure(115724));
     Assert.assertEquals(124, ((int) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
     setup.assertCompare();
     Assert.assertEquals(0, setup.document.getCodeCost());

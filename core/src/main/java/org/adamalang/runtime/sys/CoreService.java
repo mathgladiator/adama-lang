@@ -100,7 +100,7 @@ public class CoreService {
         base.executor.execute(() -> {
             // the document already exists
             if (base.map.containsKey(key)) {
-                callback.failure(new ErrorCodeException(ErrorCodes.E6_DOCUMENT_ALREADY_CREATED));
+                callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED));
                 return;
             }
             // fetch the factory

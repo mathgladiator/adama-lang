@@ -22,7 +22,7 @@ public class LivingDocumentFactoryTests {
       compiler.create(null);
       success = true;
     } catch (final ErrorCodeException nsme) {
-      Assert.assertEquals(3002, nsme.code);
+      Assert.assertEquals(115747, nsme.code);
     }
     Assert.assertFalse(success);
   }
@@ -34,7 +34,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory("Foo", "import org.adamalang.runtime.reactives.RxObject;\n class Foo { public Foo(}", "{}");
       failed = false;
     } catch (final ErrorCodeException nsme) {
-      Assert.assertEquals(3001, nsme.code);
+      Assert.assertEquals(180258, nsme.code);
     }
     Assert.assertTrue(failed);
   }
@@ -47,7 +47,7 @@ public class LivingDocumentFactoryTests {
       compiler.create(null);
       success = true;
     } catch (final ErrorCodeException nsme) {
-      Assert.assertEquals(3002, nsme.code);
+      Assert.assertEquals(115747, nsme.code);
     }
     Assert.assertFalse(success);
   }
@@ -58,7 +58,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory("Foo", "import org.adamalang.runtime.natives.*; class Foo { public static boolean __onCanCreate(NtClient who, NtCreateContext context) { return false; } }", "{}");
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
-      Assert.assertEquals(3000, nsme.code);
+      Assert.assertEquals(198174, nsme.code);
     }
   }
 
@@ -68,7 +68,7 @@ public class LivingDocumentFactoryTests {
       new LivingDocumentFactory("Foo", "import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} }", "{}");
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
-      Assert.assertEquals(3000, nsme.code);
+      Assert.assertEquals(198174, nsme.code);
     }
   }
 }

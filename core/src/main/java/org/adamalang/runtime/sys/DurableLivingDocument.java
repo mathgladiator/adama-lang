@@ -75,9 +75,9 @@ public class DurableLivingDocument {
           final Callback<DurableLivingDocument> callback) {
     try {
       DurableLivingDocument document = new DurableLivingDocument(key, factory.create(monitor), factory, base);
-      document.construct(who, arg, entropy, Callback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_FRESH_TRANSFORM, (seq) -> document));
+      document.construct(who, arg, entropy, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST, (seq) -> document));
     } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex));
     }
   }
 
@@ -89,7 +89,7 @@ public class DurableLivingDocument {
           final Callback<DurableLivingDocument> callback) {
     try {
       LivingDocument doc = factory.create(monitor);
-      base.service.get(key, Callback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_PARSE, (data) -> {
+      base.service.get(key, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_READ, (data) -> {
           JsonStreamReader reader = new JsonStreamReader(data.patch);
           reader.ingestDedupe(doc.__get_intern_strings());
           doc.__insert(reader);
@@ -98,7 +98,7 @@ public class DurableLivingDocument {
           return new DurableLivingDocument(key, doc, factory, base);
       }));
     } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_LOAD, ex));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex));
     }
   }
 
@@ -158,7 +158,7 @@ public class DurableLivingDocument {
     base.map.remove(key);
     catastrophicFailureOccurred = true;
     while (pending.size() > 0) {
-      pending.removeFirst().callback.failure(new ErrorCodeException(ErrorCodes.E5_CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
+      pending.removeFirst().callback.failure(new ErrorCodeException(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
     }
   }
 
@@ -194,7 +194,7 @@ public class DurableLivingDocument {
 
   private void queueAndExecuteUnderLock(IngestRequest request) {
     if (catastrophicFailureOccurred) {
-      request.callback.failure(new ErrorCodeException(ErrorCodes.E5_CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
+      request.callback.failure(new ErrorCodeException(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
       return;
     }
     if (inflightPatch) {
@@ -205,11 +205,7 @@ public class DurableLivingDocument {
   }
 
   private void ingest(String request, Callback<Integer> callback) {
-    try {
-      queueAndExecuteUnderLock(new IngestRequest(request, callback));
-    } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_INGEST_DRIVE, ex));
-    }
+    queueAndExecuteUnderLock(new IngestRequest(request, callback));
   }
 
   private void construct(final NtClient who, final String arg, final String entropy, Callback<Integer> callback) {
@@ -223,12 +219,12 @@ public class DurableLivingDocument {
       }
       writer.endObject();
       final var change = document.__transact(writer.toString());
-      base.service.initialize(key, change.update, Callback.handoff(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DONE, () -> {
+      base.service.initialize(key, change.update, Callback.handoff(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_PERSIST, () -> {
         change.complete();
         invalidate(callback);
       }));
     } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex));
     }
   }
 
@@ -268,7 +264,7 @@ public class DurableLivingDocument {
 
   public  void createPrivateView(final NtClient who, final Perspective perspective, Callback<PrivateView> callback) {
     PrivateView result = document.__createView(who, perspective);
-    invalidate(Callback.transform(callback, ErrorCodes.E1_DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
+    invalidate(Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
   }
 
   public int garbageCollectPrivateViewsFor(final NtClient who) {
