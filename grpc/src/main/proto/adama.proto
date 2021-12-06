@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.adamalang.grpc.proto";
+option java_outer_classname = "AdamaService";
+
+package adama_service;
+
+service Adama {
+  rpc MultiplexedProtocol(stream MultiplexedStreamMessageClient) returns (stream MultiplexedStreamMessageServer) {}
+
+  rpc SingleProtocol(stream StreamMessageClient) returns (stream StreamMessageServer) {}
+
+  rpc Attach(AttachRequest) returns (AttachResponse) {}
+
+  rpc Create(CreateRequest) returns (CreateResponse) {}
+
+  rpc Destroy(DestroyRequest) returns (DestroyResponse) {}
+
+  rpc Rewind(RewindRequest) returns (RewindResponse) {}
+
+  rpc Unsend(UnsendRequest) returns (UnsendResponse) {}
+
+  rpc Fork(ForkRequest) returns (ForkResponse) {}
+}
+
+message AttachRequest {}
+message AttachResponse {}
+
+message CreateRequest {
+  string space = 1;
+  string key = 2;
+  string args = 3;
+  string entropy = 4;
+  string agent = 5;
+  string authority = 6;
+}
+
+message CreateResponse {
+  bool success = 1;
+  int32 failure_reason = 2;
+}
+
+// P2
+message DestroyRequest {}
+message DestroyResponse {}
+
+message RewindRequest {}
+message RewindResponse {}
+
+message UnsendRequest {}
+message UnsendResponse {}
+
+message ForkRequest {}
+message ForkResponse {}
+
+message StreamConnect {
+  string space = 1;
+  string key = 2;
+  string agent = 3;
+  string authority = 4;
+}
+
+enum StreamStatusCode {
+  Dead = 0;
+  Found = 1;
+  Connected = 2;
+  Paused = 3;
+  Resumed = 4;
+  PleaseRetry = 5;
+}
+
+message StreamStatus {
+  StreamStatusCode code = 1;
+}
+
+message StreamSend {
+  string channel = 1;
+  string message = 2;
+}
+
+message StreamData {
+  string delta = 1;
+}
+
+message StreamDisconnect {}
+
+message StreamMessageClient {
+  oneof ByType {
+    StreamConnect connect = 1;
+    StreamSend send = 2;
+    StreamDisconnect disconnect = 3;
+  }
+}
+
+message StreamMessageServer {
+  oneof ByType {
+    StreamStatus status = 1;
+    StreamData data = 2;
+  }
+}
+
+message MultiplexedStreamMessageClient {
+  int64 id = 1;
+  StreamMessageClient payload = 2;
+}
+
+message MultiplexedStreamMessageServer {
+  int64 id = 1;
+  StreamMessageServer payload = 2;
+}
+

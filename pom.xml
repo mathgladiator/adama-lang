@@ -24,6 +24,8 @@
         <module>lsp</module>
         <module>web</module>
         <module>benchmark</module>
+        <module>grpc</module>
+        <module>data-mysql</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

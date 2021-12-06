@@ -68,8 +68,7 @@ public class JsonRequest {
         return lng(node, field, mustExist, errorIfDoesnt);
     }
 
-
-    public JsonNode getObject(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
+    public ObjectNode getObject(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
         return node(node, field, mustExist, errorIfDoesnt);
     }
 
