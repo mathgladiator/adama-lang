@@ -26,6 +26,7 @@
         <module>benchmark</module>
         <module>grpc</module>
         <module>data-mysql</module>
+        <module>apikit</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

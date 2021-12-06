@@ -1,16 +1,12 @@
-package org.adamalang.web.apicodegen;
-import org.adamalang.web.apicodegen.codegen.AssembleNexus;
-import org.adamalang.web.apicodegen.codegen.AssembleRequestTypes;
-import org.adamalang.web.apicodegen.model.Lookup;
-import org.adamalang.web.apicodegen.model.Method;
-import org.adamalang.web.apicodegen.model.ParameterDefinition;
+package org.adamalang.apikit;
+
+import org.adamalang.apikit.codegen.*;
+import org.adamalang.apikit.model.*;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.regex.Pattern;
 
 public class Tool {
 
@@ -19,15 +15,6 @@ public class Tool {
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.parse(input);
     }
-
-
-/*
-
-
-
-
-    */
-
 
     public static void main(String[] args) throws Exception {
         FileInputStream input = new FileInputStream("web/api.xml");
@@ -50,21 +37,5 @@ public class Tool {
         for (Map.Entry<String, String> request : requests.entrySet()) {
             Files.writeString(new File(outputPath, request.getKey()).toPath(), request.getValue());
         }
-
     }
-
-
-        /*
-        Map<String, WSLookupService> services = servicesOf(doc);
-        WSMethod[] methods = methodsOf(doc, services);
-
-
-
-
-
-
-            Files.writeString(new File(outputPath, ).toPath(), java.toString());
-        }
-    }
-    */
 }

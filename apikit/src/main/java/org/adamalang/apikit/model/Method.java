@@ -1,4 +1,4 @@
-package org.adamalang.web.apicodegen.model;
+package org.adamalang.apikit.model;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -1,7 +1,6 @@
-package org.adamalang.web.apicodegen.codegen;
+package org.adamalang.apikit.codegen;
 
-import org.adamalang.web.apicodegen.model.Lookup;
-import org.adamalang.web.apicodegen.model.ParameterDefinition;
+import org.adamalang.apikit.model.*;
 
 import java.util.Map;
 import java.util.TreeMap;
