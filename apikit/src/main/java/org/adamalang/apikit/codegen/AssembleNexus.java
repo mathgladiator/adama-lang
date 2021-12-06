@@ -19,6 +19,7 @@ public class AssembleNexus {
         for (Lookup service : services.values()) {
             imps.add(service.service);
         }
+        imps.add("java.util.concurrent.Executor");
 
         StringBuilder nexus = new StringBuilder();
         nexus.append("package ").append(packageName).append(";\n\n");
@@ -26,22 +27,18 @@ public class AssembleNexus {
             nexus.append("import ").append(imp).append(";\n");
         }
         nexus.append("\n");
-        nexus.append("class Nexus {\n");
-
+        nexus.append("class ConnectionNexus {\n");
+        nexus.append("  public final Executor executor;\n");
         for (Lookup service : services.values()) {
             nexus.append("  public final ").append(service.shortServiceName).append(" ").append(service.fieldInputName).append(";\n");
         }
         nexus.append("\n");
-        nexus.append("  public Nexus(");
-        boolean first = true;
+        nexus.append("  public ConnectionNexus(Executor executor");
         for (Lookup service : services.values()) {
-            if (!first) {
-                nexus.append(", ");
-            }
-            first = false;
-            nexus.append(service.shortServiceName).append(" ").append(service.fieldInputName);
+            nexus.append(", ").append(service.shortServiceName).append(" ").append(service.fieldInputName);
         }
         nexus.append(") {\n");
+        nexus.append("    this.executor = executor;");
         for (Lookup service : services.values()) {
             nexus.append("    this.").append(service.fieldInputName).append(" = ").append(service.fieldInputName).append(";\n");
         }

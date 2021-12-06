@@ -44,12 +44,45 @@
 
     <parameter-definition name="arg" type="json-object">
         <documentation>
-            'arg' is an object that is used
+            'arg' is an object that is used to construct a document.
         </documentation>
         <error code="2324">
             'arg' was missing from the request
         </error>
     </parameter-definition>
+
+    <parameter-definition name="channel" type="str">
+        <documentation>
+            'channel' is a identifier within a document used for communication
+        </documentation>
+        <error code="2324">
+            'channel' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="message" type="json-object">
+        <documentation>
+            'message' is an object that is sent to a message under a given channel
+        </documentation>
+        <error code="324">
+            'message' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="stream" type="long">
+        <documentation>
+            'stream' is a key to locate a sub-stream within a connection
+        </documentation>
+        <error code="32423">
+            'stream' was missing from the request
+        </error>
+    </parameter-definition>
+
+
+    <internal-error code="423">
+        Something is messed up on the insides, sorry
+    </internal-error>
+
 
     <responder name="simple" type="request-response">
         <field name="success" type="bool" />
@@ -61,30 +94,36 @@
     </responder>
 
 
+
+
     <method name="create-space" type="simple">
         <parameter name="identity" />
         <parameter name="space" />
     </method>
 
     <method name="get-space" type="simple">
-        <parameter name="identity" type="str" />
-        <parameter name="space" type="str" />
+        <parameter name="identity" />
+        <parameter name="space" />
     </method>
 
     <method name="create-document" type="simple">
-        <parameter name="identity" type="str" />
-        <parameter name="space" type="str" />
-        <parameter name="key" type="str" />
-        <parameter name="entropy" type="long" optional="true" />
-        <parameter name="arg" type="json" />
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="entropy" />
+        <parameter name="arg" />
     </method>
 
-    <method name="connect-document" type="stream">
-        <parameter name="identity" type="str" />
-        <parameter name="space" type="str" />
-        <parameter name="key" type="str" />
+    <method name="connect-document" type="stream" create="document-stream">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="key" />
     </method>
 
-
+    <method name="send-message" type="simple" on="document-stream" find-by="stream">
+        <parameter name="stream" />
+        <parameter name="channel" />
+        <parameter name="message" />
+    </method>
 
 </api>

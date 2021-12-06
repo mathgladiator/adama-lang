@@ -1,4 +1,4 @@
-package org.adamalang.web.contracts;
+package org.adamalang.web.io;
 
 import org.adamalang.runtime.contracts.Callback;
 

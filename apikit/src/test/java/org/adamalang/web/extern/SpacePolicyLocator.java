@@ -1,8 +1,7 @@
 package org.adamalang.web.extern;
 
 import org.adamalang.runtime.contracts.Callback;
-import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.web.contracts.AsyncTransform;
+import org.adamalang.web.io.AsyncTransform;
 
 public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy>  {
     @Override

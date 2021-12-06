@@ -47,10 +47,10 @@ public class AssembleRequestTypes {
             java.append("  }\n");
             java.append("\n");
 
-            java.append("  public static void resolve(Executor executor, Nexus nexus, JsonRequest request, Callback<").append(method.camelName).append("Request> callback) {\n");
+            java.append("  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<").append(method.camelName).append("Request> callback) {\n");
             java.append("    try {\n");
             if (outstandingCallCount > 0) {
-                java.append("      final BulkLatch<").append(method.camelName).append("Request> _latch = new BulkLatch<>(executor, ").append(outstandingCallCount).append(", callback);\n");
+                java.append("      final BulkLatch<").append(method.camelName).append("Request> _latch = new BulkLatch<>(nexus.executor, ").append(outstandingCallCount).append(", callback);\n");
             }
             for (ParameterDefinition parameter : method.parameters) {
                 java.append("      final ").append(parameter.type.javaType()).append(" ").append(parameter.name).append(" = ");
@@ -78,7 +78,7 @@ public class AssembleRequestTypes {
             if (outstandingCallCount > 0) {
                 java.append("      _latch.with(() -> ");
             } else {
-                java.append("      executor.execute(() -> {\n");
+                java.append("      nexus.executor.execute(() -> {\n");
                 java.append("        callback.success(");
             }
 
@@ -109,7 +109,7 @@ public class AssembleRequestTypes {
                 }
             }
             java.append("    } catch (ErrorCodeException ece) {\n");
-            java.append("      executor.execute(() -> {\n");
+            java.append("      nexus.executor.execute(() -> {\n");
             java.append("        callback.failure(ece);\n");
             java.append("      });\n");
             java.append("    }\n");

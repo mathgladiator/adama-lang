@@ -22,7 +22,6 @@ public class Method {
 
     public TreeSet<String> imports() {
         TreeSet<String> set = new TreeSet<>();
-        set.add("java.util.concurrent.Executor");
         set.add("org.adamalang.runtime.exceptions.ErrorCodeException");
         set.add("org.adamalang.web.io.*");
         set.add("org.adamalang.runtime.contracts.Callback");

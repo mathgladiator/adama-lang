@@ -17,7 +17,7 @@ public class Tool {
     }
 
     public static void main(String[] args) throws Exception {
-        FileInputStream input = new FileInputStream("web/api.xml");
+        FileInputStream input = new FileInputStream("apikit/api.xml");
         Document doc = load(input);
         Map<String, ParameterDefinition> parameters = ParameterDefinition.buildMap(doc);
         Method[] methods = Method.methodsOf(doc, parameters);
@@ -26,14 +26,14 @@ public class Tool {
         String nexus = AssembleNexus.make(packageName, parameters);
         Map<String, String> requests = AssembleRequestTypes.make(packageName, methods);
 
-        String outputPathStr = "web/src/main/java/org/adamalang/web/api";
+        String outputPathStr = "apikit/src/test/java/org/adamalang/web/api";
         File outputPath = new File(outputPathStr);
         if (!(outputPath.exists() && outputPath.isDirectory())) {
             throw new Exception("path does not exist");
         }
 
         // write out the nexus
-        Files.writeString(new File(outputPath, "Nexus.java").toPath(), nexus);
+        Files.writeString(new File(outputPath, "ConnectionNexus.java").toPath(), nexus);
         for (Map.Entry<String, String> request : requests.entrySet()) {
             Files.writeString(new File(outputPath, request.getKey()).toPath(), request.getValue());
         }
