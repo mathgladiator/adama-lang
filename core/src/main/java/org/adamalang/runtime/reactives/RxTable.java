@@ -221,7 +221,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   public Ty make() {
-    return make(document.genNextAutoKey());
+    return make(document.__genNextAutoKey());
   }
 
   public Ty make(int key) {

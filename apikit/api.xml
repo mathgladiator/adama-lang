@@ -1,55 +1,60 @@
 <?xml version="1.0"?>
 <api>
-    <parameter-definition name="identity" type="str" optional="false">
+    <parameter-definition name="identity" type="string">
         <documentation>
-            Identity is a signed JWT token used to identity the caller of the specific request. It is required to provide identity to the particular request.
+            Identity is a token passed to the Authenticator which has the job of producing an agent (i.e. who is this person) and an authority (who vouches for this person).
+            This is an opaque string for most of the system, but a common convention is to use JWT.
         </documentation>
-        <error code="4232">
-            'identity' was missing from the request, and it is required to identify the caller.
+        <error code="458759">
+            The parameter 'identity' was missing from the request.
         </error>
         <lookup service="org.adamalang.web.extern.Authenticator"
                 output-name="who"
                 output-java-type="org.adamalang.runtime.natives.NtClient"
-                error-code="2423" />
+                error-code="444420" />
     </parameter-definition>
 
-    <parameter-definition name="space" type="str">
+    <parameter-definition name="space" type="string">
         <documentation>
-            'space' is a collection of documents with the same schema and logic.
+            A space is a collection of documents with the same schema and logic, and the 'space' parameter is used to denote the name of that collection.
         </documentation>
-        <error code="2324">
-            'space' was missing from the request
+        <error code="461828">
+            The parameter 'space' was missing from the request.
         </error>
         <lookup service="org.adamalang.web.extern.SpacePolicyLocator"
                 output-name="policy"
                 output-java-type="org.adamalang.web.extern.SpacePolicy"
-                error-code="4404" />
-
+                error-code="454658" />
     </parameter-definition>
 
-    <parameter-definition name="key" type="str">
+    <parameter-definition name="key" type="string">
         <documentation>
-            'key' is a identifier within a space to uniquely identify a single document.
+            Within a space, documents are organized within a map and the 'key' parameter will uniquely identify documents.
         </documentation>
-        <error code="2324">
-            'key' was missing from the request
+        <error code="466947">
+            The parameter 'key' was missing from the request.
         </error>
     </parameter-definition>
 
-    <parameter-definition name="entropy" type="str" optional="true">
+    <parameter-definition name="entropy" type="string" optional="true">
         <documentation>
-            'entropy' is a key used to seed the random generator
+            Each document has a random number generator. When 'entropy' is present, it will seed the random number generate such that the randomness is now deterministic.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="arg" type="json-object">
         <documentation>
-            'arg' is an object that is used to construct a document.
+            Documents are constructed with a message argument per the @construct event. The 'arg' is an object which is deserialized within the constructor's message type.
         </documentation>
-        <error code="2324">
-            'arg' was missing from the request
+        <error code="461826">
+            The parameter 'arg' was missing or invalid from the request.
         </error>
     </parameter-definition>
+
+
+
+
+
 
     <parameter-definition name="channel" type="str">
         <documentation>
@@ -69,14 +74,186 @@
         </error>
     </parameter-definition>
 
-    <parameter-definition name="stream" type="long">
+    <parameter-definition name="connection" type="long">
         <documentation>
-            'stream' is a key to locate a sub-stream within a connection
+            'connection' is a key to locate a sub-stream within a connection
         </documentation>
         <error code="32423">
-            'stream' was missing from the request
+            'connection' was missing from the request
         </error>
     </parameter-definition>
+
+    <parameter-definition name="code" type="string">
+        <documentation>
+            'code' is a randomly (secure) generated unique code to the socket and the universe which is sent via email
+        </documentation>
+        <error code="32423">
+            'code' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="email" type="long">
+        <documentation>
+            'email' is the email being accessed
+        </documentation>
+        <error code="322">
+            'email' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="plan" type="json-object">
+        <documentation>
+            'plan' is the email being accessed
+        </documentation>
+        <error code="322">
+            'email' was missing from the request
+        </error>
+    </parameter-definition>
+
+
+    <parameter-definition name="limit" type="int" optional="true">
+        <documentation>
+            'limit' is the maximum number of items to return during a listing process
+        </documentation>
+    </parameter-definition>
+    <parameter-definition name="marker" type="string" optional="true">
+        <documentation>
+            'marker' is a key to skip ahead a listing
+        </documentation>
+    </parameter-definition>
+
+
+    <parameter-definition name="name" type="string">
+        <documentation>
+            'name' is an identifer
+        </documentation>
+        <error code="32423">
+            'name' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="algorithm" type="string">
+        <documentation>
+            'algorithm' is an valid JWT algorithm which is not none.
+        </documentation>
+        <error code="32423">
+            'algorithm' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="public-key" type="string">
+        <documentation>
+            'public-key' is a public key used by a JWT algorithm
+        </documentation>
+        <error code="32423">
+            'public-key' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="policy" type="json-object">
+        <documentation>
+            'policy' is an attached policy for keys to evaluate against
+        </documentation>
+        <error code="322">
+            'policy' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="authority" type="string">
+        <documentation>
+            An authority is collection of users.
+        </documentation>
+        <error code="322">
+            'authority' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="role" type="string">
+        <documentation>
+            An role is a manner of user which has different capabilities
+        </documentation>
+        <error code="322">
+            'role' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="seq" type="integer">
+        <documentation>
+            A 'seq' is an index in a log
+        </documentation>
+        <error code="322">
+            'seq' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="endpoint" type="string">
+        <documentation>
+            A 'endpoint' is WebSocket address
+        </documentation>
+        <error code="322">
+            'endpoint' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="filename" type="string">
+        <documentation>
+            A filename is a nice description of the file being uploaded
+        </documentation>
+        <error code="322">
+            'filename' was missing from the request
+        </error>
+    </parameter-definition>
+
+
+    <parameter-definition name="chunk-md5" type="string">
+        <documentation>
+            A md5 hash of a chunk being uploaded
+        </documentation>
+        <error code="322">
+            'chunk-md5' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="content-type" type="string">
+        <documentation>
+            The MIME type like text/json or video/mp4
+        </documentation>
+        <error code="322">
+            'content-type' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="base64-bytes" type="string">
+        <documentation>
+            Bytes encoded in base64
+        </documentation>
+        <error code="322">
+            'base64-bytes' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="md5" type="string">
+        <documentation>
+            The md5 of the entire file being uploaded
+        </documentation>
+        <error code="322">
+            'md5' was missing from the request
+        </error>
+    </parameter-definition>
+
+    <parameter-definition name="upload" type="long">
+        <documentation>
+            The id of the upload in progress
+        </documentation>
+        <error code="322">
+            'upload' was missing from the request
+        </error>
+    </parameter-definition>
+
+
+
+
+
 
 
     <internal-error code="423">
@@ -84,46 +261,809 @@
     </internal-error>
 
 
-    <responder name="simple" type="request-response">
-        <field name="success" type="bool" />
-        <field name="failure_code" type="int" optional="true" />
+    <field-definition name="success" type="boolean">
+        <documentation>
+            'success' indicates if the operation or method was successful
+        </documentation>
+    </field-definition>
+
+    <field-definition name="delta" type="json-object" optional="true">
+        <documentation>
+            A json delta representing a change of data. See XYZ for more information about how to use the delta format.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="plan" type="json-object">
+        <documentation>
+            A plan is a predictable mapping of keys to implementation. The core reason for having multiple concurrent implementations is to have a smooth and orderly deployment.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="authority" type="string">
+        <documentation>
+            An authority is collection of users.
+        </documentation>
+    </field-definition>
+
+
+
+    <responder name="simple">
     </responder>
 
-    <responder name="data" type="stream">
-        <field name="delta" type="json" />
+    <responder name="plan">
+        <field name="plan" />
+    </responder>
+
+    <responder name="claim-result">
+        <field name="authority" />
+    </responder>
+
+    <responder name="data" stream="true">
+        <field name="delta" />
     </responder>
 
 
 
 
-    <method name="create-space" type="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
+    <method name="init/start" responder="simple" create="waiting-for-email">
+        <parameter name="email" />
+        <documentation>
+            This establishes a developer machine via email verification. The expectation is that while the email is being sent, the socket is held open for the developer to complete the operation by providing the generated code.
+
+            The generated code is securely randomized and tied to the socket to provide a secure way to validate the email on the other end.
+
+            Developer accounts are keyed off of email.
+        </documentation>
     </method>
 
-    <method name="get-space" type="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
+    <method name="init/generate-new-key-pair" responder="simple" handler="waiting-for-email" find-by="connection" error-find-by="2324">
+        <parameter name="connection" />
+        <parameter name="code" />
+        <documentation>
+            When the developer receives an email, this method is invoked to complete the hand-shake.
+
+            The server will generate a key-pair and send the secret to the client to stash within their config, and the public key will be stored to validate future requests made by this developer machine.
+
+            A public key will be held onto for 30 days.
+        </documentation>
     </method>
 
-    <method name="create-document" type="simple">
+    <method name="init/revoke-all" responder="simple" handler="waiting-for-email" find-by="connection" error-find-by="2324">
+        <parameter name="connection" />
+        <parameter name="code" />
+        <documentation>
+            When the developer receives an email, this method is invoked to revoke all existing public keys.
+
+            This same code, having been validated via email, can then be used to generate a
+        </documentation>
+    </method>
+
+
+
+    <method name="billing/add" responder="simple">
+        <parameter name="identity" />
+        <parameter name="name" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="billing/list" responder="simple">
+        <parameter name="identity" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="billing/get" responder="simple">
+        <parameter name="identity" />
+        <parameter name="name" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/billing/set" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="name" />
+        <documentation>
+            Each space is bill seperately.
+        </documentation>
+    </method>
+
+
+    <method name="authority/claim" responder="claim-result">
+        <parameter name="identity" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="authority/transfer-ownership" responder="simple">
+        <parameter name="identity" />
+        <parameter name="email" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="authority/list" responder="simple">
+        <parameter name="identity" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="authority/keys/add" responder="simple">
+        <parameter name="identity" />
+        <parameter name="name" />
+        <parameter name="authority" />
+        <parameter name="public-key" />
+        <parameter name="algorithm" />
+        <parameter name="policy" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="authority/keys/list" responder="simple">
+        <parameter name="identity" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="authority/keys/remove" responder="simple">
+        <parameter name="identity" />
+        <parameter name="name" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/create" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/get" responder="plan">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/update" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="plan" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/delete" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/role/set" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="email" />
+        <parameter name="role" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/owner/set" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="email" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/reflect" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="key" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/list" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="marker" />
+        <parameter name="limit" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="document/create" responder="simple">
         <parameter name="identity" />
         <parameter name="space" />
         <parameter name="key" />
         <parameter name="entropy" />
         <parameter name="arg" />
+        <documentation>
+        </documentation>
     </method>
 
-    <method name="connect-document" type="stream" create="document-stream">
+    <method name="document/list" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="limit" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="connection/create" responder="data" create="document-stream">
         <parameter name="identity" />
         <parameter name="space" />
         <parameter name="key" />
+        <documentation>
+        </documentation>
     </method>
 
-    <method name="send-message" type="simple" on="document-stream" find-by="stream">
-        <parameter name="stream" />
+    <method name="connection/send" responder="simple" handler="document-stream" find-by="connection" error-find-by="4232">
+        <parameter name="connection" />
         <parameter name="channel" />
         <parameter name="message" />
+        <documentation>
+        </documentation>
     </method>
+
+    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection" error-find-by="4232" destroy="true" call-on-disconnect="true">
+        <parameter name="connection" />
+        <documentation>
+        </documentation>
+    </method>
+
+
+    <method name="web-hook/add" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="endpoint" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="web-hook/list" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="web-hook/remove" responder="simple">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="endpoint" />
+        <documentation>
+        </documentation>
+    </method>
+
+
+
+    <method name="attachment/start" responder="simple" create="attachment-upload">
+        <parameter name="identity" />
+        <parameter name="space" />
+        <parameter name="key" />
+        <parameter name="filename" />
+        <parameter name="content-type" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="42322">
+        <parameter name="upload" />
+        <parameter name="chunk-md5" />
+        <parameter name="base64-bytes" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="42322">
+        <parameter name="upload" />
+        <parameter name="md5" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <!--
+
+
+454659
+425987
+405505
+455681
+473103
+460815
+425999
+453647
+481294
+405519
+457743
+430095
+456716
+461836
+477196
+470028
+462859
+455691
+409608
+443401
+409609
+457751
+453655
+478227
+477201
+474128
+457745
+454673
+441361
+438302
+405532
+447516
+444445
+445477
+466979
+458787
+408610
+414755
+446499
+458784
+488495
+461871
+472109
+453676
+445484
+494636
+454699
+474167
+446519
+474164
+482355
+449586
+489523
+497715
+491570
+437299
+492594
+454704
+492593
+479280
+453681
+488496
+445503
+480316
+472124
+458810
+427067
+402488
+409668
+455747
+425025
+429135
+407628
+405580
+490573
+401484
+457805
+458826
+471124
+490579
+471123
+445520
+471133
+408690
+441456
+477311
+497790
+409727
+474238
+438396
+443516
+469116
+445563
+474233
+454791
+454788
+456835
+457859
+458881
+416896
+487552
+471183
+404621
+466060
+471180
+483468
+456842
+457867
+454795
+441500
+471196
+445602
+475315
+457906
+457907
+494770
+426161
+449727
+405692
+453820
+457917
+408765
+470204
+442552
+475335
+442567
+490692
+465092
+438466
+404674
+478403
+487619
+437442
+459971
+447683
+424131
+409792
+413888
+459968
+458959
+490703
+454860
+448716
+462028
+487627
+443595
+489672
+474312
+458961
+405727
+472285
+406748
+457947
+405720
+473316
+487651
+400608
+442592
+472303
+408815
+450799
+462062
+458988
+488684
+474347
+409845
+467187
+461042
+494834
+437491
+438512
+454896
+449776
+487665
+449791
+446719
+447743
+412924
+409852
+470268
+475388
+425213
+445693
+463100
+462075
+408825
+463096
+493827
+454915
+446723
+443648
+454912
+474383
+456975
+454940
+455964
+462116
+425251
+442670
+474415
+445739
+471351
+408884
+426289
+491839
+450879
+475452
+458051
+417110
+449888
+443756
+445840
+412064
+469427
+499123
+458172
+405956
+426436
+460227
+474562
+438723
+410051
+458176
+474560
+458177
+409036
+430540
+451020
+491981
+409037
+441808
+454119
+455151
+462316
+460275
+406003
+458227
+444913
+473599
+459263
+409087
+470523
+406020
+406018
+463363
+459264
+475663
+401935
+458255
+474636
+496140
+458256
+475676
+429600
+459296
+409135
+471596
+474679
+408116
+446003
+491056
+401980
+446012
+489020
+459324
+454203
+462393
+444995
+442994
+455311
+455336
+458419
+443068
+446148
+443076
+426692
+492227
+408259
+456387
+474818
+459457
+453312
+458432
+444096
+466624
+467648
+460495
+495310
+409292
+471755
+445136
+446173
+446168
+474871
+443127
+445175
+428787
+413424
+446192
+427760
+471792
+472816
+492293
+439042
+447234
+454402
+451331
+445187
+474882
+429827
+492290
+408323
+410368
+401152
+446208
+443136
+450304
+462592
+493312
+426767
+447247
+408335
+478990
+454412
+447244
+407308
+446218
+475915
+424723
+458512
+429840
+462608
+461599
+462623
+455454
+471836
+495399
+450340
+413472
+429856
+467744
+471840
+409390
+458540
+457515
+456502
+473907
+406323
+450355
+488242
+401203
+407347
+472881
+488240
+475967
+449343
+443199
+429887
+488254
+450364
+447292
+443197
+462652
+460603
+450363
+458555
+495416
+442169
+457529
+467768
+462648
+446276
+466754
+455491
+461632
+495439
+474959
+474958
+426831
+402255
+410444
+425804
+444240
+495441
+473951
+459620
+471927
+446326
+487283
+467827
+459633
+456560
+466815
+450431
+443263
+434044
+458620
+462716
+459643
+455547
+451448
+406402
+459649
+455552
+493455
+475023
+450444
+475020
+468874
+410507
+456607
+450463
+459677
+446364
+459676
+443299
+452524
+446380
+461740
+466860
+495539
+451507
+428979
+444336
+443312
+492464
+496560
+447423
+425916
+430013
+471995
+458682
+448455
+446407
+462790
+443332
+455618
+475075
+447427
+462786
+439235
+444355
+488385
+439233
+480207
+472015
+456655
+434127
+462797
+439243
+407496
+463816
+457687
+446419
+457680
+471007
+494559
+479196
+461788
+459736
+448480
+462831
+460783
+405484
+492535
+463863
+494583
+455668
+454644
+493556
+453621
+460787
+492531
+406514
+466931
+462832
+458737
+445438
+451582
+439295
+439292
+428028
+465917
+402428
+488444
+471036
+476156
+406525
+445437
+477179
+442363
+410619
+407544
+475129
+-->
 
 </api>

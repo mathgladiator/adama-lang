@@ -44,14 +44,28 @@ public class DumbDataServiceTests {
 
     });
     Key key = new Key("?", "1");
-    try {
-      dds.delete(key, null);
-      Assert.fail();
-    } catch (UnsupportedOperationException uoe) {}
-    try {
-      dds.compute(key, DataService.ComputeMethod.Rewind, 1, null);
-      Assert.fail();
-    } catch (UnsupportedOperationException uoe) {}
+    dds.delete(key, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        Assert.fail();
+      }
+    });
+    dds.compute(key, DataService.ComputeMethod.Rewind, 1, new Callback<DataService.LocalDocumentChange>() {
+      @Override
+      public void success(DataService.LocalDocumentChange value) {
+        Assert.assertEquals("{\"x\":1000}", value.patch);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        Assert.fail();
+      }
+    });
     try {
       dds.compute(key, DataService.ComputeMethod.Unsend, 1, null);
       Assert.fail();

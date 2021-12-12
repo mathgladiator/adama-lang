@@ -121,7 +121,11 @@ public class MockInstantDataService implements DataService {
 
     @Override
     public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
-        callback.failure(new ErrorCodeException(5));
+        if (method == ComputeMethod.Rewind) {
+            callback.success(new LocalDocumentChange("{\"x\":1000}"));
+        } else {
+            callback.failure(new ErrorCodeException(5));
+        }
     }
 
     @Override

@@ -18,11 +18,7 @@ import org.adamalang.runtime.stdlib.LibString;
 import org.adamalang.translator.reflect.GlobalFactory;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeDouble;
-import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
-import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
-import org.adamalang.translator.tree.types.natives.TyNativeInteger;
-import org.adamalang.translator.tree.types.natives.TyNativeLong;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 
@@ -36,6 +32,10 @@ public class GlobalObjectPool {
     GlobalFactory.mergeInto(mathlib, LibMath.class, pool.extensions, true, "near", "SQRT2");
     pool.add(mathlib);
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
+    final var document = new TyNativeGlobalObject("Document", null, false);
+    document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));
+    document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeVoid()));
+    pool.add(document);
     final var random = new TyNativeGlobalObject("Random", null, false);
     random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
     random.functions.put("genInt", generateInternalDocumentFunction("__randomInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));

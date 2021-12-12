@@ -12,6 +12,7 @@ package org.adamalang.runtime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
@@ -24,6 +25,7 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.sys.DurableLivingDocument;
+import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -324,6 +326,41 @@ public class LivingDocumentTests {
 
   @Test
   @SuppressWarnings("unchecked")
+  public void message_cause_rewind() throws Exception {
+    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }", null, false);
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
+    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(5));
+    String x = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString();
+    Assert.assertEquals("1000", x);
+    setup.assertCompare();
+  }
+
+  @Test
+  public void message_cause_rewind_failure() throws Exception {
+    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }", null, false);
+    ((DumbDataService) setup.document.base.service).computesWork = false;
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
+    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(23456));
+  }
+
+  @Test
+  public void message_cause_self_destruct() throws Exception {
+    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }", null, false);
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
+    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(134195));
+    Assert.assertTrue(((DumbDataService) setup.document.base.service).deleted.contains(new Key("space", "0")));
+  }
+
+  @Test
+  public void message_cause_self_destruct_but_fails() throws Exception {
+    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }", null, false);
+    ((DumbDataService) setup.document.base.service).deletesWork = false;
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
+    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(1234567));
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
   public void message_abort() throws Exception {
     final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x = 100; abort; }", null, false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
@@ -616,7 +653,7 @@ public class LivingDocumentTests {
     setup.assertCompare();
   }
 
-  private static final NtAsset EXAMPLE = new NtAsset(42, "file.png", "image/png", 1024, "some hash", "a better hash");
+  private static final NtAsset EXAMPLE = new NtAsset("42", "file.png", "image/png", 1024, "some hash", "a better hash");
 
   @Test
   public void attach_requires_connection() throws Exception {
@@ -643,10 +680,10 @@ public class LivingDocumentTests {
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":1,\"f\":{\"id\":\"AAAAAAA\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}},\"outstanding\":[],\"blockers\":[],\"seq\":4}", deNO_ONE.datum.get(0).toString());
+    Assert.assertEquals("{\"data\":{\"x\":1,\"f\":{\"id\":\"\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}},\"outstanding\":[],\"blockers\":[],\"seq\":4}", deNO_ONE.datum.get(0).toString());
     setup.document.attach(NtClient.NO_ONE, EXAMPLE, new RealDocumentSetup.AssertInt(6));
     Assert.assertEquals(2, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":2,\"f\":{\"id\":\"DJAAAAA\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"}},\"outstanding\":[],\"blockers\":[],\"seq\":6}", deNO_ONE.datum.get(1).toString());
+    Assert.assertEquals("{\"data\":{\"x\":2,\"f\":{\"id\":\"42\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"}},\"outstanding\":[],\"blockers\":[],\"seq\":6}", deNO_ONE.datum.get(1).toString());
     setup.assertCompare();
   }
 

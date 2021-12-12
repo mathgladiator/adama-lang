@@ -23,6 +23,20 @@ public class LatchCallback implements Callback<Integer> {
         latch.countDown();
     }
 
+    public Callback<Boolean> toBool(int trueValue, int falseValue) {
+        return new Callback<>() {
+            @Override
+            public void success(Boolean value) {
+                LatchCallback.this.success(value ? trueValue : falseValue);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+                LatchCallback.this.failure(ex);
+            }
+        };
+    }
+
     @Override
     public void failure(ErrorCodeException ex) {
         this.ex = ex;

@@ -126,7 +126,7 @@ public class JsonStreamWriter {
   public void writeNtAsset(final NtAsset a) {
     beginObject();
     writeObjectFieldIntro("id");
-    writeLong(a.id);
+    writeString(a.id);
     writeObjectFieldIntro("size");
     writeLong(a.size);
     writeObjectFieldIntro("name");

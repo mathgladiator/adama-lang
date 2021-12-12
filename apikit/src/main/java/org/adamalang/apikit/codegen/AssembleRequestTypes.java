@@ -17,7 +17,7 @@ public class AssembleRequestTypes {
             java.append("\n");
             java.append("class ").append(method.camelName).append("Request {\n");
             for (ParameterDefinition parameter : method.parameters) {
-                java.append("  public final ").append(parameter.type.javaType()).append(" ").append(parameter.name).append(";\n");
+                java.append("  public final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName).append(";\n");
                 if (parameter.lookup != null) {
                     java.append("  public final ").append(parameter.lookup.shortOutputJavaType).append(" ").append(parameter.lookup.outputName).append(";\n");
                 }
@@ -30,7 +30,7 @@ public class AssembleRequestTypes {
                     java.append(", ");
                 }
                 first = false;
-                java.append("final ").append(parameter.type.javaType()).append(" ").append(parameter.name);
+                java.append("final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName);
                 if (parameter.lookup != null) {
                     java.append(", final ").append(parameter.lookup.shortOutputJavaType).append(" ").append(parameter.lookup.outputName);
                 }
@@ -38,7 +38,7 @@ public class AssembleRequestTypes {
             java.append(") {\n");
             int outstandingCallCount = 0;
             for (ParameterDefinition parameter : method.parameters) {
-                java.append("    this.").append(parameter.name).append(" = ").append(parameter.name).append(";\n");
+                java.append("    this.").append(parameter.camelName).append(" = ").append(parameter.camelName).append(";\n");
                 if (parameter.lookup != null) {
                     outstandingCallCount++;
                     java.append("    this.").append(parameter.lookup.outputName).append(" = ").append(parameter.lookup.outputName).append(";\n");
@@ -53,7 +53,7 @@ public class AssembleRequestTypes {
                 java.append("      final BulkLatch<").append(method.camelName).append("Request> _latch = new BulkLatch<>(nexus.executor, ").append(outstandingCallCount).append(", callback);\n");
             }
             for (ParameterDefinition parameter : method.parameters) {
-                java.append("      final ").append(parameter.type.javaType()).append(" ").append(parameter.name).append(" = ");
+                java.append("      final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName).append(" = ");
                 switch (parameter.type) {
                     case String:
                         java.append("request.getString(\"");
@@ -74,6 +74,9 @@ public class AssembleRequestTypes {
                 if (parameter.lookup != null) {
                     java.append("      final LatchRefCallback<").append(parameter.lookup.shortOutputJavaType).append("> ").append(parameter.lookup.outputName).append(" = new LatchRefCallback<>(_latch);\n");
                 }
+                if (parameter.validator != null) {
+                    java.append("      ").append(parameter.validator.shortServiceName).append(".validate(").append(parameter.camelName).append(", ").append(parameter.validator.errorCode).append(");\n");
+                }
             }
             if (outstandingCallCount > 0) {
                 java.append("      _latch.with(() -> ");
@@ -89,7 +92,7 @@ public class AssembleRequestTypes {
                     java.append(", ");
                 }
                 first = false;
-                java.append(parameter.name);
+                java.append(parameter.camelName);
                 if (parameter.lookup != null) {
                     java.append(", ").append(parameter.lookup.outputName).append(".get()");
                 }
@@ -105,7 +108,7 @@ public class AssembleRequestTypes {
 
             for (ParameterDefinition parameter : method.parameters) {
                 if (parameter.lookup != null) {
-                    java.append("      nexus.").append(parameter.lookup.fieldInputName).append(".execute(").append(parameter.name).append(", ").append(parameter.lookup.outputName).append(");\n");
+                    java.append("      nexus.").append(parameter.lookup.fieldInputName).append(".execute(").append(parameter.camelName).append(", ").append(parameter.lookup.outputName).append(");\n");
                 }
             }
             java.append("    } catch (ErrorCodeException ece) {\n");

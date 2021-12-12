@@ -42,18 +42,13 @@ public class ErrorCodes {
   public static final int FACTORY_CANT_CREATE_OBJECT_DUE_TO_CATASTROPHE = 115747;
   public static final int CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION = 144416;
   public static final int SERVICE_DOCUMENT_ALREADY_CREATED = 130092;
-
   public static final int USERLAND_CANT_COMPILE_ADAMA_SCRIPT = 144417;
+  public static final int DOCUMENT_SELF_DESTRUCT_SUCCESSFUL = 134195;
+  public static final int DOCUMENT_REWIND_IN_PROGRESS = 111155;
 
 
 
   /**
-   * 133120
-   * 113708
-   * 195116
-   * 113711
-   * 134195
-   * 111155
    * 198705
    * 116787
    * 144944

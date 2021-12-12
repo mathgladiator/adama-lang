@@ -64,9 +64,9 @@ public class GenErrors {
 
     public static void main(String[] args) throws Exception {
         GenErrors err = new GenErrors();
-        HashSet<Integer> existingErrors = err.candidates(1);
-        for (int k = 0; k < 250; k++) {
-            insertBest(existingErrors, err.candidates(1));
+        HashSet<Integer> existingErrors = err.candidates(4);
+        for (int k = 0; k < 500; k++) {
+            insertBest(existingErrors, err.candidates(4));
         }
         for (int error : existingErrors) {
             System.err.println(error);

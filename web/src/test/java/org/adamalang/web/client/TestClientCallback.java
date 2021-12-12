@@ -26,6 +26,7 @@ public class TestClientCallback {
   private final CountDownLatch firstLatch;
   private final CountDownLatch failureLatch;
   private final CountDownLatch failedToConnectLatch;
+  private final CountDownLatch disconnectLatch;
   private String data;
   private Throwable exception;
   private ArrayList<String> writes;
@@ -45,18 +46,15 @@ public class TestClientCallback {
     public synchronized void deliver(String data) {
       firstLatch.countDown();
       writes.add(data);
+      for (CountDownLatch latch : arrivals) {
+        latch.countDown();
+      }
     }
 
     public synchronized CountDownLatch latch(int c) {
       CountDownLatch latch = new CountDownLatch(c);
       arrivals.add(latch);
       return latch;
-    }
-
-    private synchronized void arrival() {
-      for (CountDownLatch latch : arrivals) {
-        latch.countDown();
-      }
     }
 
     public void assertData(int at, String data) {
@@ -75,6 +73,7 @@ public class TestClientCallback {
     this.failureLatch = new CountDownLatch(1);
     this.failedToConnectLatch = new CountDownLatch(1);
     this.pingLatch = new CountDownLatch(1);
+    this.disconnectLatch = new CountDownLatch(1);
     this.data = "";
     this.writes = new ArrayList<>();
     this.mailboxes = new HashMap<>();
@@ -136,14 +135,27 @@ public class TestClientCallback {
     failedToConnectLatch.countDown();
   }
 
+  public void awaitDisconnect() throws Exception {
+    Assert.assertTrue(disconnectLatch.await(5000, TimeUnit.MILLISECONDS));
+  }
+
   public void successfulResponse(String data) {
-    this.data += data;
+    if (!data.contains("ping")) {
+      this.data += data;
+    }
     writes.add(data);
     firstLatch.countDown();
     try {
       ObjectNode node = Json.parseJsonObject(data);
+
       if (node.has("ping")) {
         pingLatch.countDown();
+      }
+
+      if (node.has("status")) {
+        if ("disconnected".equals(node.get("status").textValue())) {
+          disconnectLatch.countDown();
+        }
       }
       if (node.has("id")) {
         JsonNode idNode = node.get("id");

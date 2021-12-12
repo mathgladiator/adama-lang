@@ -27,6 +27,7 @@
         <module>grpc</module>
         <module>data-mysql</module>
         <module>apikit</module>
+        <module>cli</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

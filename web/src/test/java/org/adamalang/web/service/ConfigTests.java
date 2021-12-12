@@ -62,6 +62,7 @@ public class ConfigTests {
   public static Config mockConfig(Scenario scenario) throws Exception {
     ObjectNode configNode = Json.newJsonObject();
     configNode.put("http_port", scenario.port);
+    configNode.put("websocket_heart_beat_ms", 250);
     return new Config(configNode);
   }
 }

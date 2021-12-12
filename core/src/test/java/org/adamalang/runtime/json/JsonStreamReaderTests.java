@@ -32,7 +32,7 @@ public class JsonStreamReaderTests {
     @Test
     public void asset() {
         JsonStreamReader reader = new JsonStreamReader("{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}");
-        NtAsset cmp = new NtAsset(123, "name", "png", 42, "hash", "sheesh");
+        NtAsset cmp = new NtAsset("123", "name", "png", 42, "hash", "sheesh");
         NtAsset tst = reader.readNtAsset();
         Assert.assertEquals(cmp, tst);
     }

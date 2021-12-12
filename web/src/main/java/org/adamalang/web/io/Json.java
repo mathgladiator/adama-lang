@@ -12,6 +12,7 @@ package org.adamalang.web.io;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+/** helpful toolss for Jackson JSON library */
 public class Json {
   public static final JsonMapper MAPPER = new JsonMapper();
 

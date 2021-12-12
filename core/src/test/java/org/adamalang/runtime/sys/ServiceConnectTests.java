@@ -1,9 +1,11 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.runtime.LivingDocumentTests;
+import org.adamalang.runtime.RealDocumentSetup;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockTime;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -15,6 +17,7 @@ import java.util.HashMap;
 public class ServiceConnectTests {
     private static final Key KEY = new Key("space", "key");
     private static final String SIMPLE_CODE_MSG = "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+    private static final String SIMPLE_CODE_ATTACH = "public int x; @connected(who) { x = 42; return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
 
     @Test
     public void connect_super_happy_connect() throws Exception {
@@ -80,6 +83,70 @@ public class ServiceConnectTests {
             cb1.await_success(5);
             latch2.run();
             Assert.assertEquals("{\"data\":{\"x\":142},\"outstanding\":[],\"blockers\":[],\"seq\":5}", streamback.get(2));
+            streamback.get().disconnect();
+            latch3.run();
+            Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
+        } finally {
+            service.shutdown();
+        }
+    }
+
+    @Test
+    public void connect_attach_nope() throws Exception {
+        LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+        MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+        TimeSource time = new MockTime();
+        MockInstantDataService dataService = new MockInstantDataService();
+        dataService.initialize(KEY, wrap("{\"__constructed\":true}"), Callback.DONT_CARE_VOID);
+        dataService.patch(KEY, wrap("{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"), Callback.DONT_CARE_VOID);
+        CoreService service = new CoreService(factoryFactory, dataService, time, 3);
+        try {
+            MockStreamback streamback = new MockStreamback();
+            Runnable latch1 = streamback.latchAt(2);
+            Runnable latch2 = streamback.latchAt(3);
+            service.connect(NtClient.NO_ONE, KEY, streamback);
+            streamback.await_began();
+            latch1.run();
+            Assert.assertEquals("STATUS:Connected", streamback.get(0));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":3}", streamback.get(1));
+            LatchCallback cb1 = new LatchCallback();
+            streamback.get().canAttach(cb1.toBool(-5, 5));
+            cb1.await_success(5);
+            streamback.get().disconnect();
+            latch2.run();
+            Assert.assertEquals("STATUS:Disconnected", streamback.get(2));
+        } finally {
+            service.shutdown();
+        }
+    }
+
+    @Test
+    public void connect_attach_yay() throws Exception {
+        LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_ATTACH);
+        MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+        TimeSource time = new MockTime();
+        MockInstantDataService dataService = new MockInstantDataService();
+        dataService.initialize(KEY, wrap("{\"__constructed\":true}"), Callback.DONT_CARE_VOID);
+        dataService.patch(KEY, wrap("{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"), Callback.DONT_CARE_VOID);
+        CoreService service = new CoreService(factoryFactory, dataService, time, 3);
+        try {
+            MockStreamback streamback = new MockStreamback();
+            Runnable latch1 = streamback.latchAt(2);
+            Runnable latch2 = streamback.latchAt(3);
+            Runnable latch3 = streamback.latchAt(4);
+            service.connect(NtClient.NO_ONE, KEY, streamback);
+            streamback.await_began();
+            latch1.run();
+            Assert.assertEquals("STATUS:Connected", streamback.get(0));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":3}", streamback.get(1));
+            LatchCallback cb1 = new LatchCallback();
+            LatchCallback cb2 = new LatchCallback();
+            streamback.get().canAttach(cb1.toBool(-5, 5));
+            cb1.await_success(-5);
+            streamback.get().attach(new NtAsset("id", "name", "meme", 1, "", ""), cb2);
+            cb2.await_success(5);
+            Assert.assertEquals("{\"data\":{\"x\":43},\"outstanding\":[],\"blockers\":[],\"seq\":5}", streamback.get(2));
+            latch2.run();
             streamback.get().disconnect();
             latch3.run();
             Assert.assertEquals("STATUS:Disconnected", streamback.get(3));

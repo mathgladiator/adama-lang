@@ -134,7 +134,7 @@ public class JsonStreamReader {
   }
 
   public NtAsset readNtAsset() {
-    long id = 0;
+    String id = "";
     String name = "";
     long size = 0;
     String contentType = "";
@@ -144,7 +144,7 @@ public class JsonStreamReader {
       while (notEndOfObject()) {
         switch (fieldName()) {
           case "id":
-            id = readLong();
+            id = readString();
             break;
           case "size":
             size = readLong();

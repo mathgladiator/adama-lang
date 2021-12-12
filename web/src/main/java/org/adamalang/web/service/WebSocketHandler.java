@@ -11,6 +11,7 @@ package org.adamalang.web.service;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
@@ -70,10 +71,9 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final WebSocketFrame frame) throws Exception {
-    JsonResponder responderExtern = null;
       try {
         if (!(frame instanceof TextWebSocketFrame)) {
-          throw new Exception("only accepts text frames");
+          throw new ErrorCodeException(ErrorCodes.ONLY_ACCEPTS_TEXT_FRAMES);
         }
         // parse the request
         final var requestNode = Json.parseJsonObject(((TextWebSocketFrame) frame).text());
@@ -101,15 +101,13 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
             ctx.writeAndFlush(new TextWebSocketFrame("{\"failure\":" + id + ",\"reason\":" + ex.code + "}"));
           }
         };
-        responderExtern = responder;
 
         // execute the request
         connection.execute(request, responder);
 
       } catch (Exception ex) {
-        if (responderExtern != null) {
-          responderExtern.error(new ErrorCodeException(ErrorCodes.E5_UNCAUGHT_EXCEPTION_WEB_SOCKET, ex));
-        }
+        ErrorCodeException codedException = ErrorCodeException.detectOrWrap(ErrorCodes.UNCAUGHT_EXCEPTION_WEB_SOCKET, ex);
+        ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"disconnected\",\"reason\":"+codedException.code+"}"));
         end(ctx);
       }
   }
@@ -128,8 +126,11 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       // tell client all is ok
       ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\"}"));
 
-      // TODO: link in Origin header, IP, etc...
-      ConnectionContext context = new ConnectionContext();
+      HttpHeaders headers = ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
+      String origin = headers.get("Origin");
+      String ip = ctx.channel().remoteAddress().toString();
+      String userAgent = headers.get("User-Agent");
+      ConnectionContext context = new ConnectionContext(origin, ip, userAgent);
 
       // establish the service
       connection = base.establish(context);

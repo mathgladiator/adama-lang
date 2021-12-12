@@ -9,12 +9,19 @@
 */
 package org.adamalang.web.service;
 
+import io.netty.buffer.Unpooled;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
 import org.adamalang.web.service.mocks.MockServiceBase;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class WebSocketHandlerTests {
   @Test
@@ -32,136 +39,112 @@ public class WebSocketHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket().execute(callback);
         callback.awaitFirst();
-        callback.assertData("{\"signal\":\"setup\",\"status\":\"connected\"}");
+        callback.assertData("{\"status\":\"connected\"}");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", config.port).auth("yoke").get("/s").withWebSocket().execute(callback);
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
+        b.execute(callback);
+        callback.awaitFirst();
+        callback.assertData("{\"status\":\"connected\"}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
-      }
 
-      /*
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("yoke").get("/s").withWebSocket().execute(callback);
-        callback.awaitFirst();
-        callback.assertDataPrefix("{\"signal\":\"setup\",\"status\":\"connected\",\"session_id\":");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("bad").get("/").withWebSocket().execute(callback);
-        callback.awaitFirst();
-        callback.assertData("{\"signal\":\"setup\",\"status\":\"failed_auth\"}");
+        TestClientCallback.Mailbox box = callback.getOrCreate(500);
+        CountDownLatch latch = box.latch(2);
+        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":500,\"method\":\"cake\"}"));
+        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+        box.assertData(0, "{\"deliver\":500,\"done\":false,\"response\":{\"boss\":1}}");
+        box.assertData(1, "{\"deliver\":500,\"done\":true,\"response\":{\"boss\":2}}");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("crash").get("/").withWebSocket().execute(callback);
-        callback.awaitClosed();
-        callback.assertData("");
-      }
-
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("yoke").get("/").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        b.channel().writeAndFlush(new BinaryWebSocketFrame(Unpooled.copiedBuffer("{\"pong\":500}".getBytes(StandardCharsets.UTF_8))));
-        callback.awaitClosed();
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("yoke").get("/").withWebSocket();
-        b.execute(callback);
-        callback.awaitFirst();
-        b.channel().writeAndFlush(new TextWebSocketFrame("{\"pong\":500,\"ping\":"+(System.currentTimeMillis() - 500)+"}"));
+        callback.assertData("{\"status\":\"connected\"}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
+
+        TestClientCallback.Mailbox box = callback.getOrCreate(500);
+        CountDownLatch latch = box.latch(1);
+        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":500,\"method\":\"ex\"}"));
+        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+        box.assertData(0, "{\"failure\":500,\"reason\":1234}");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("yoke").get("/").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
+        callback.assertData("{\"status\":\"connected\"}");
+        callback.awaitPing();
+        callback.assertDataPrefix(1, "{\"ping\":");
+
+        TestClientCallback.Mailbox box = callback.getOrCreate(500);
+        CountDownLatch latch = box.latch(1);
+        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":500,\"method\":\"kill\"}"));
+        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+        box.assertData(0, "{\"deliver\":500,\"done\":false,\"response\":{\"death\":1}}");
+        callback.awaitDisconnect();
+        callback.assertData("{\"status\":\"connected\"}{\"deliver\":500,\"done\":false,\"response\":{\"death\":1}}{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
+        b.execute(callback);
+        callback.awaitFirst();
+        callback.assertData("{\"status\":\"connected\"}");
+        callback.awaitPing();
+        callback.assertDataPrefix(1, "{\"ping\":");
         b.channel().writeAndFlush(new TextWebSocketFrame("{}"));
-        callback.awaitClosed();
+        callback.awaitDisconnect();
+        callback.assertData("{\"status\":\"connected\"}{\"status\":\"disconnected\",\"reason\":233120}");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("null").get("/").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        TestClientCallback.Mailbox box1 = callback.getOrCreate(1);
-        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1}"));
-        box1.awaitFirst();
-        box1.assertData(0, "{\"failure\":1,\"reason\":40000}");
+        callback.assertData("{\"status\":\"connected\"}");
+        callback.awaitPing();
+        callback.assertDataPrefix(1, "{\"ping\":");
+        b.channel().writeAndFlush(new TextWebSocketFrame("{\"pong\":42}"));
+        callback.awaitDisconnect();
+        callback.assertData("{\"status\":\"connected\"}{\"status\":\"disconnected\",\"reason\":295116}");
       }
+
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("yoke").get("/").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        TestClientCallback.Mailbox box1 = callback.getOrCreate(1);
-        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"impersonate\":{\"agent\":\"foo\",\"authority\":\"nope\"}}"));
-        box1.awaitFirst();
-        box1.assertData(0, "{\"failure\":1,\"reason\":45000}");
+        callback.assertData("{\"status\":\"connected\"}");
+        callback.awaitPing();
+        callback.assertDataPrefix(1, "{\"ping\":");
+        b.channel().writeAndFlush(new TextWebSocketFrame("{\"pong\":42,\"ping\":80}"));
+        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":500,\"method\":\"kill\"}"));
+        callback.awaitDisconnect();
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("yoke").get("/").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
-        TestClientCallback.Mailbox box1 = callback.getOrCreate(1);
-        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"impersonate\":{\"agent\":\"crash\",\"authority\":\"nope\"}}"));
-        box1.awaitFirst();
-        box1.assertData(0, "{\"failure\":1,\"reason\":5501}");
+        callback.assertData("{\"status\":\"connected\"}");
+        callback.awaitPing();
+        callback.assertDataPrefix(1, "{\"ping\":");
+        b.channel().writeAndFlush(new BinaryWebSocketFrame(Unpooled.wrappedBuffer(new byte[] { 0x42 })));
+        callback.awaitDisconnect();
+        callback.assertData("{\"status\":\"connected\"}{\"status\":\"disconnected\",\"reason\":213711}");
       }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("yoke").get("/").withWebSocket();
-        b.execute(callback);
-        callback.awaitFirst();
-        TestClientCallback.Mailbox box1 = callback.getOrCreate(1);
-        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"impersonate\":{\"agent\":\"free\",\"authority\":\"free\"},\"method\":\"single\"}"));
-        box1.awaitFirst();
-        box1.assertData(0, "{\"deliver\":1,\"done\":true,\"response\":{\"once\":1}}");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("yoke").get("/").withWebSocket();
-        b.execute(callback);
-        callback.awaitFirst();
-        TestClientCallback.Mailbox box1 = callback.getOrCreate(1);
-        CountDownLatch latch = box1.latch(3);
-        b.channel().writeAndFlush(new TextWebSocketFrame("{\"id\":1,\"method\":\"stream\"}"));
-        latch.await(1000, TimeUnit.MILLISECONDS);
-        box1.assertData(0, "{\"deliver\":1,\"done\":false,\"response\":{\"s\":1}}");
-        box1.assertData(1, "{\"deliver\":1,\"done\":false,\"response\":{\"s\":2}}");
-        box1.assertData(2, "{\"deliver\":1,\"done\":true,\"response\":{\"s\":3}}");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", nexus.config.port).auth("slow").get("/").withWebSocket();
-        b.execute(callback);
-        Thread.sleep(250); // HOPE
-        b.channel().close().sync();
-        callback.awaitClosed();
-        Thread.sleep(1500);
-      }
-
-       */
     } finally {
       runnable.shutdown();
       thread.join();

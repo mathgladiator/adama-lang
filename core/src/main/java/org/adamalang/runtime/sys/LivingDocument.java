@@ -18,10 +18,7 @@ import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.RxParent;
-import org.adamalang.runtime.exceptions.ComputeBlockedException;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
-import org.adamalang.runtime.exceptions.RetryProgressException;
+import org.adamalang.runtime.exceptions.*;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
@@ -94,7 +91,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** generate a new auto key for a table; all tables share the space id space */
-  public int genNextAutoKey() {
+  public int __genNextAutoKey() {
     return __auto_table_row_id.bumpUpPre();
   }
 
@@ -308,6 +305,7 @@ public abstract class LivingDocument implements RxParent {
         if (__monitor != null) {
           __monitor.goodwillFailureAt(startLine, startPosition, endLine, endLinePosition);
         }
+        __revert();
         throw new GoodwillExhaustedException(startLine, startPosition, endLine, endLinePosition);
       }
     }
@@ -447,6 +445,18 @@ public abstract class LivingDocument implements RxParent {
   /** artifact: from RxParent */
   @Override
   public void __raiseDirty() {
+  }
+
+  /** the code will vomit up a signal to destroy itself. This must be caught at a higher level. */
+  protected void __destroyDocument() {
+    throw new PerformDocumentDeleteException();
+  }
+
+  /** this code will vomit up a signal to rewind to a prior state. This must be caught at a higher level */
+  protected void __rewindDocument(int seq) {
+    // restore the document state
+    __revert();
+    throw new PerformDocumentRewindException(seq);
   }
 
   /** exposed: random number between 0 and n exclusive */

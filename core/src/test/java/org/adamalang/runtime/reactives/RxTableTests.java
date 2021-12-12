@@ -22,7 +22,7 @@ import org.junit.Test;
 public class RxTableTests {
   private MockLivingDocument doc(int keyStart) {
     final var document = new MockLivingDocument();
-    while (document.genNextAutoKey() < keyStart - 1) {
+    while (document.__genNextAutoKey() < keyStart - 1) {
     }
     return document;
   }

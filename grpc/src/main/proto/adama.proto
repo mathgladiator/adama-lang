@@ -7,14 +7,11 @@ option java_outer_classname = "AdamaService";
 package adama_service;
 
 service Adama {
-  rpc MultiplexedProtocol(stream MultiplexedStreamMessageClient) returns (stream MultiplexedStreamMessageServer) {}
-
-  rpc SingleProtocol(stream StreamMessageClient) returns (stream StreamMessageServer) {}
-
-  rpc Attach(AttachRequest) returns (AttachResponse) {}
-
   rpc Create(CreateRequest) returns (CreateResponse) {}
 
+  rpc MultiplexedProtocol(stream MultiplexedStreamMessageClient) returns (stream MultiplexedStreamMessageServer) {}
+
+  /*
   rpc Destroy(DestroyRequest) returns (DestroyResponse) {}
 
   rpc Rewind(RewindRequest) returns (RewindResponse) {}
@@ -22,15 +19,14 @@ service Adama {
   rpc Unsend(UnsendRequest) returns (UnsendResponse) {}
 
   rpc Fork(ForkRequest) returns (ForkResponse) {}
+  */
 }
 
-message AttachRequest {}
-message AttachResponse {}
 
 message CreateRequest {
   string space = 1;
   string key = 2;
-  string args = 3;
+  string arg = 3;
   string entropy = 4;
   string agent = 5;
   string authority = 6;
@@ -41,19 +37,6 @@ message CreateResponse {
   int32 failure_reason = 2;
 }
 
-// P2
-message DestroyRequest {}
-message DestroyResponse {}
-
-message RewindRequest {}
-message RewindResponse {}
-
-message UnsendRequest {}
-message UnsendResponse {}
-
-message ForkRequest {}
-message ForkResponse {}
-
 message StreamConnect {
   string space = 1;
   string key = 2;
@@ -62,12 +45,8 @@ message StreamConnect {
 }
 
 enum StreamStatusCode {
-  Dead = 0;
-  Found = 1;
-  Connected = 2;
-  Paused = 3;
-  Resumed = 4;
-  PleaseRetry = 5;
+  Disconnected = 0;
+  Connected = 1;
 }
 
 message StreamStatus {
@@ -76,11 +55,36 @@ message StreamStatus {
 
 message StreamSend {
   string channel = 1;
-  string message = 2;
+  string marker = 2;
+  string message = 3;
+}
+
+message StreamAskAttachmentRequest {
+}
+
+message StreamAskAttachmentResponse {
+  bool allowed = 1;
+}
+
+message StreamAttach {
+  string id = 1;
+  string filename = 2;
+  string content_type = 3;
+  int64 size = 4;
+  string md5 = 5;
+  string sha384 = 6;
+}
+
+message StreamSeqResult {
+  int32 seq = 1;
 }
 
 message StreamData {
   string delta = 1;
+}
+
+message StreamError {
+  int32 code = 1;
 }
 
 message StreamDisconnect {}
@@ -90,6 +94,8 @@ message StreamMessageClient {
     StreamConnect connect = 1;
     StreamSend send = 2;
     StreamDisconnect disconnect = 3;
+    StreamAskAttachmentRequest ask = 4;
+    StreamAttach attach = 5;
   }
 }
 
@@ -97,12 +103,16 @@ message StreamMessageServer {
   oneof ByType {
     StreamStatus status = 1;
     StreamData data = 2;
+    StreamError error = 3;
+    StreamAskAttachmentResponse response = 4;
+    StreamSeqResult result = 5;
   }
 }
 
 message MultiplexedStreamMessageClient {
   int64 id = 1;
-  StreamMessageClient payload = 2;
+  int64 act = 2;
+  StreamMessageClient payload = 3;
 }
 
 message MultiplexedStreamMessageServer {

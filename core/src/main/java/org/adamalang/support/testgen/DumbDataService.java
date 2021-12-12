@@ -21,14 +21,20 @@ import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.function.Consumer;
 
 public class DumbDataService implements DataService {
   private Object tree;
   private String data;
   private Consumer<RemoteDocumentUpdate> updates;
+  public final HashSet<Key> deleted;
+  public boolean deletesWork = true;
+  public boolean computesWork = true;
+
   public DumbDataService(Consumer<RemoteDocumentUpdate> updates) {
     this.tree = new HashMap<String, Object>();
+    this.deleted = new HashSet<>();
     this.data = null;
     this.updates = updates;
   }
@@ -117,11 +123,24 @@ public class DumbDataService implements DataService {
 
   @Override
   public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
-    throw new UnsupportedOperationException();
+    if (computesWork) {
+      if (method == ComputeMethod.Rewind) {
+        callback.success(new LocalDocumentChange("{\"x\":1000}"));
+      } else {
+        throw new UnsupportedOperationException();
+      }
+    } else {
+      callback.failure(new ErrorCodeException(23456));
+    }
   }
 
   @Override
   public void delete(Key key, Callback<Void> callback) {
-    throw new UnsupportedOperationException();
+    if (deletesWork) {
+      deleted.add(key);
+      callback.success(null);
+    } else {
+      callback.failure(new ErrorCodeException(1234567));
+    }
   }
 }

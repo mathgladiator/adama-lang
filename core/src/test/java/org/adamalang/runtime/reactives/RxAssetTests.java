@@ -16,15 +16,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class RxAssetTests {
-  private static final NtAsset A = new NtAsset(123, "name", "png", 42, "hash", "sheesh");
-  private static final NtAsset B = new NtAsset(42, "name", "jpg", 42, "hash2", "sheesh2");
+  private static final NtAsset A = new NtAsset("123", "name", "png", 42, "hash", "sheesh");
+  private static final NtAsset B = new NtAsset("42", "name", "jpg", 42, "hash2", "sheesh2");
 
   @Test
   public void compare() {
     RxAsset a = new RxAsset(null, A);
     RxAsset b = new RxAsset(null, B);
-    Assert.assertEquals(1, a.compareTo(b));
-    Assert.assertEquals(-1, b.compareTo(a));
+    Assert.assertEquals(-3, a.compareTo(b));
+    Assert.assertEquals(3, b.compareTo(a));
   }
 
   @Test

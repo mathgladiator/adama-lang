@@ -3,6 +3,7 @@ package org.adamalang.web.io;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
+/** this wraps a callback to call into a BulkLatch. This acts as a ref which is triggers a cascade on the bulk latch */
 public class LatchRefCallback<T> implements Callback<T> {
     public final BulkLatch<?> latch;
     private T value;
@@ -12,6 +13,7 @@ public class LatchRefCallback<T> implements Callback<T> {
         this.value = null;
     }
 
+    /** get the value; this is only available after a success */
     public T get() {
         return value;
     }

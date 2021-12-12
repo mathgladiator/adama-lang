@@ -63,7 +63,6 @@ public class TestClientRequestBuilder {
   }
 
   public void execute(final TestClientCallback callback) {
-    System.err.println("Bootstrapping request");
     final var b = new Bootstrap();
     b.group(workerGroup);
     b.channel(NioSocketChannel.class);
@@ -75,7 +74,6 @@ public class TestClientRequestBuilder {
         ch.pipeline().addLast(new WriteTimeoutHandler(timeoutSeconds));
         ch.pipeline().addLast(new ReadTimeoutHandler(timeoutSeconds));
         if (websocket) {
-          System.err.println("using websocket");
           channelToUse = ch;
           ch.pipeline().addLast(WebSocketClientCompressionHandler.INSTANCE);
           ch.pipeline().addLast(new WebSocketClientProtocolHandler( //

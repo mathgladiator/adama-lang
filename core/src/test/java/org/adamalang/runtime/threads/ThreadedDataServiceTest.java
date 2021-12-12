@@ -67,12 +67,12 @@ public class ThreadedDataServiceTest {
         ds.compute(key, DataService.ComputeMethod.Rewind, 1, new Callback<DataService.LocalDocumentChange>() {
             @Override
             public void success(DataService.LocalDocumentChange value) {
-
+                latch.countDown();
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
-                latch.countDown();
+
             }
         });
         ds.delete(key, new Callback<Void>() {

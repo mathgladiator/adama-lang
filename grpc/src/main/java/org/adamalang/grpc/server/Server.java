@@ -1,4 +1,4 @@
-package org.adamalang.grpc;
+package org.adamalang.grpc.server;
 
 import org.adamalang.runtime.sys.CoreService;
 

@@ -26,7 +26,7 @@ import org.junit.Test;
 public class SelectoRxTObjectListTests {
   private MockLivingDocument doc(int keyStart) {
     final var document = new MockLivingDocument();
-    while (document.genNextAutoKey() < keyStart - 1) {
+    while (document.__genNextAutoKey() < keyStart - 1) {
     }
     return document;
   }
@@ -249,7 +249,7 @@ public class SelectoRxTObjectListTests {
         return true;
       }
     });
-    while (document.genNextAutoKey() < 7) {
+    while (document.__genNextAutoKey() < 7) {
     }
     final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
     table.__insert(new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":2},\"6\":{\"index\":5},\"7\":{\"index\":5}}}"));

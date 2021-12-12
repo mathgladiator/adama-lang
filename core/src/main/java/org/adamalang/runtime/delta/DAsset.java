@@ -34,7 +34,7 @@ public class DAsset {
     if (prior == null || !value.equals(prior)) {
       final var obj = writer.planObject();
       // note; we don't send the name as that may leak private information from the uploader
-      obj.planField("id").writeFastString(IdCodec.encode(value.id));
+      obj.planField("id").writeString(value.id);
       obj.planField("size").writeFastString("" + value.size);
       obj.planField("type").writeString(value.contentType);
       obj.planField("md5").writeString(value.md5);

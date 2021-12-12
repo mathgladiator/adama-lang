@@ -12,7 +12,7 @@ public interface Streamback {
     /** the stream has a status representing what is happening at the given moment */
     public static enum StreamStatus {
         Connected,
-        Disconnected,
+        Disconnected;
     }
 
     /** inform the client of a status update */
