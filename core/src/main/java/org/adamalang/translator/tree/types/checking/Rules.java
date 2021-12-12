@@ -70,14 +70,6 @@ public class Rules {
     return RuleSetAssignment.CanAssignWithAdd(environment, tyTypeA, tyTypeB, silent);
   }
 
-  public CanAssignResult CanAssignWithDivide(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetAssignment.CanAssignWithDivide(environment, tyTypeA, tyTypeB, silent);
-  }
-
-  public CanAssignResult CanAssignWithMod(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetAssignment.CanAssignWithMod(environment, tyTypeA, tyTypeB, silent);
-  }
-
   public CanAssignResult CanAssignWithMult(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetAssignment.CanAssignWithMult(environment, tyTypeA, tyTypeB, silent);
   }

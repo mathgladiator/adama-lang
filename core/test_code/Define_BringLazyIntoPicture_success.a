@@ -7,5 +7,4 @@ formula x = raw + raw + 1;
   k += x;
   k *= x;
   k -= x;
-  k %= x;
 }

@@ -30,6 +30,5 @@ int hex;
   assign += 100;
   assign *= 3;
   assign -= 17;
-  assign %= 17;
   hex = 0x123fb;
 }

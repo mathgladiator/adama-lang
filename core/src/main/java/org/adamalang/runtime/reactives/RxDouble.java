@@ -101,12 +101,6 @@ public class RxDouble extends RxBase implements Comparable<RxDouble>, CanGetAndS
     return value;
   }
 
-  public double opDivBy(final double x) {
-    value /= x;
-    __raiseDirty();
-    return value;
-  }
-
   public double opMultBy(final double x) {
     value *= x;
     __raiseDirty();

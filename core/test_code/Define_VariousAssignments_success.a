@@ -12,8 +12,6 @@ test Ints {
   rx *= 7;
   x -= 5;
   rx -= 5;
-  x %= 100;
-  rx %= 100;
   sx = x;
 }
 
@@ -28,7 +26,5 @@ test Doubles {
   ry *= 7;
   y -= 5;
   ry -= 5;
-  y /= 100;
-  ry /= 100;
   sy = y;
 }

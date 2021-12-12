@@ -45,28 +45,11 @@ public class LocalTypeAssignmentResult {
     return false;
   }
 
-  public void divide() {
-    // type the left side under assignment
-    ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
-    rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
-    assignResult = environment.rules.CanAssignWithDivide(ltype, rtype, false);
-    canMathResult = environment.rules.CanDivide(environment.rules.Resolve(ltype, true), rtype, false);
-    environment.rules.CanTypeAStoreTypeB(ltype, rtype, StorageTweak.Divide, false);
-  }
-
   public void ingest() {
     ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
     rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     environment.rules.CanAIngestB(ltype, rtype, false);
     assignResult = CanAssignResult.YesWithIngestionCodeGen;
-  }
-
-  public void mod() {
-    ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
-    rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
-    assignResult = environment.rules.CanAssignWithMod(ltype, rtype, false);
-    canMathResult = environment.rules.CanMod(environment.rules.Resolve(ltype, true), rtype, false);
-    environment.rules.CanTypeAStoreTypeB(ltype, rtype, StorageTweak.Mod, false);
   }
 
   public void multiply() {

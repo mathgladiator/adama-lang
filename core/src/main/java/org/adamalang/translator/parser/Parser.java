@@ -354,7 +354,7 @@ public class Parser {
       }
     }
     final var leftSide = expression();
-    var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("+=", "-=", "*=", "/=", "%=", "<-"));
+    var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("+=", "-=", "*=", "<-"));
     if (hasAssignment == null) {
       hasAssignment = tokens.popIf(t -> t.isSymbolWithTextEq("="));
     }

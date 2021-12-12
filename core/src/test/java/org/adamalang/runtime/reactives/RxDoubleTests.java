@@ -107,7 +107,5 @@ public class RxDoubleTests {
     Assert.assertEquals(22, d.get(), 0.1);
     d.opSubFrom(7);
     Assert.assertEquals(15, d.get(), 0.1);
-    d.opDivBy(30.0);
-    Assert.assertEquals(0.5, d.get(), 0.1);
   }
 }

@@ -108,12 +108,6 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
     return value;
   }
 
-  public long opModBy(final long x) {
-    value %= x;
-    __raiseDirty();
-    return value;
-  }
-
   public long opMultBy(final long x) {
     value *= x;
     __raiseDirty();

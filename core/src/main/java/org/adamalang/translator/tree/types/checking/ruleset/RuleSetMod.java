@@ -20,13 +20,6 @@ public class RuleSetMod {
       final var aInteger = RuleSetCommon.IsInteger(environment, typeA, true);
       final var bInteger = RuleSetCommon.IsInteger(environment, typeB, true);
       if (aInteger && bInteger) { return CanMathResult.YesAndResultIsInteger; }
-      if (RuleSetLists.TestReactiveList(environment, typeA, true)) {
-        final var subTypeA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
-        if (subTypeA != null) {
-          final var childToRight = CanMod(environment, subTypeA, typeB, silent);
-          if (childToRight != CanMathResult.No) { return RuleSetMath.UpgradeToList(childToRight); }
-        }
-      }
       if (!silent) {
         environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: the types '%s' and '%s' are unable to be used with the mod (%%) operator/.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetLogic");
       }

@@ -114,7 +114,5 @@ public class RxInt32Tests {
     Assert.assertEquals(22, (int) i.get());
     i.opSubFrom(7);
     Assert.assertEquals(15, (int) i.get());
-    i.opModBy(14);
-    Assert.assertEquals(1, (int) i.get());
   }
 }

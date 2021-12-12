@@ -20,13 +20,6 @@ public class RuleSetDivide {
       final var aNumber = RuleSetCommon.IsNumeric(environment, typeA, true);
       final var bNumber = RuleSetCommon.IsNumeric(environment, typeB, true);
       if (aNumber && bNumber) { return CanMathResult.YesAndResultIsDouble; }
-      if (RuleSetLists.TestReactiveList(environment, typeA, true)) {
-        final var subTypeA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
-        if (subTypeA != null) {
-          final var childToRight = CanDivide(environment, subTypeA, typeB, silent);
-          if (childToRight != CanMathResult.No) { return RuleSetMath.UpgradeToList(childToRight); }
-        }
-      }
       if (!silent) {
         environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: the types '%s' and '%s' are unable to be divided with the / operator.", typeA.getAdamaType(), typeB.getAdamaType()), "Divide");
       }

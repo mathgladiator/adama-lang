@@ -24,7 +24,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 
-/** left {=,+=,*=,/=,%=,-=,<-} right */
+/** left {=,+=,*=,-=,<-} right */
 public class Assignment extends Statement {
   public Expression altExpression;
   public final Expression expression;
@@ -102,12 +102,6 @@ public class Assignment extends Statement {
         break;
       case MultiplyBy:
         result.multiply();
-        break;
-      case DivideBy:
-        result.divide();
-        break;
-      case ModBy:
-        result.mod();
         break;
     }
     return ControlFlow.Open;

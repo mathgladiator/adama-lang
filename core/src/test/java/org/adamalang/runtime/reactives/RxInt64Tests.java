@@ -128,7 +128,5 @@ public class RxInt64Tests {
     Assert.assertEquals(22, (long) l.get());
     l.opSubFrom(7);
     Assert.assertEquals(15, (long) l.get());
-    l.opModBy(14);
-    Assert.assertEquals(1, (long) l.get());
   }
 }

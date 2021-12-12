@@ -113,12 +113,6 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
     return value;
   }
 
-  public int opModBy(final int x) {
-    value %= x;
-    __raiseDirty();
-    return value;
-  }
-
   public int opMultBy(final int x) {
     value *= x;
     __raiseDirty();

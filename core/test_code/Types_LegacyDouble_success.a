@@ -24,7 +24,6 @@ private double assign;
 
   assign = 0;
   assign += 100;
-  assign /= 2;
   assign *= 3;
   assign -= 17;
 }

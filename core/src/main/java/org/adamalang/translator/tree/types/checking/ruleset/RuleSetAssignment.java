@@ -50,28 +50,6 @@ public class RuleSetAssignment {
     return CanAssignResult.No;
   }
 
-  public static CanAssignResult CanAssignWithDivide(final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) { return CanAssignResult.No; }
-    var result = TestAssignReactively(environment, left, right);
-    if (result != CanAssignResult.No) { return result; }
-    if (left instanceof AssignmentViaNative) { return CanAssignResult.YesWithNativeOp; }
-    result = CanAssignBase(environment, left, right, silent);
-    if (result != CanAssignResult.No) { return result; }
-    environment.document.createError(left, String.format("The type '%s' is not applicable for division based assignment (/=)", left.getAdamaType()), "Assignment");
-    return CanAssignResult.No;
-  }
-
-  public static CanAssignResult CanAssignWithMod(final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) { return CanAssignResult.No; }
-    var result = TestAssignReactively(environment, left, right);
-    if (result != CanAssignResult.No) { return result; }
-    if (left instanceof AssignmentViaNative) { return CanAssignResult.YesWithNativeOp; }
-    result = CanAssignBase(environment, left, right, silent);
-    if (result != CanAssignResult.No) { return result; }
-    environment.document.createError(left, String.format("The type '%s' is not applicable for division based assignment (%%=)", left.getAdamaType()), "Assignment");
-    return CanAssignResult.No;
-  }
-
   public static CanAssignResult CanAssignWithMult(final Environment environment, final TyType left, final TyType right, final boolean silent) {
     if (left == null || right == null) { return CanAssignResult.No; }
     var result = TestAssignReactively(environment, left, right);
