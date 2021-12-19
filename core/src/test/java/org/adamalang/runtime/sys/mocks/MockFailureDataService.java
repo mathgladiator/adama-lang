@@ -13,9 +13,13 @@ public class MockFailureDataService implements DataService {
         callback.failure(new ErrorCodeException(999));
     }
 
+    public boolean crashScan = false;
     @Override
     public void scan(ActiveKeyStream streamback) {
         streamback.finish();
+        if (crashScan) {
+            streamback.error(new ErrorCodeException(231));
+        }
     }
 
     @Override

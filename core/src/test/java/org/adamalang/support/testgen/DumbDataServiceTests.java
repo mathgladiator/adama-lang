@@ -31,6 +31,10 @@ public class DumbDataServiceTests {
       public void finish() {
 
       }
+
+      @Override
+      public void error(ErrorCodeException failure) {
+      }
     });
     dds.get(new Key("0", "0"), new Callback<DataService.LocalDocumentChange>() {
       @Override

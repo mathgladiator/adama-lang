@@ -10,6 +10,7 @@
 package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtComplex;
 
 public class PrivateLazyDeltaWriter {
   public static PrivateLazyDeltaWriter bind(final NtClient who, final JsonStreamWriter writer, Object viewerState) {
@@ -75,6 +76,11 @@ public class PrivateLazyDeltaWriter {
   public void writeDouble(final double d) {
     manifest();
     writer.writeDouble(d);
+  }
+
+  public void writeNtComplex(final NtComplex c) {
+    manifest();
+    writer.writeNtComplex(c);
   }
 
   public void writeFastString(final String str) {

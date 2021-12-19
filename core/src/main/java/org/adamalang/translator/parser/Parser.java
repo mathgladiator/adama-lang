@@ -137,6 +137,8 @@ public class Parser {
           return new BooleanConstant(token, false);
         case "@no_one":
           return new NoOneClientConstant(token);
+        case "@i":
+          return new ComplexConstant(0.0, 1.0, token);
         case "@nothing":
           return new NothingAssetConstant(token);
         case "@null":
@@ -1026,6 +1028,8 @@ public class Parser {
         return new TyNativeDynamic(behavior, readonlyToken, token);
       case "double":
         return new TyNativeDouble(behavior, readonlyToken, token);
+      case "complex":
+        return new TyNativeComplex(behavior, readonlyToken, token);
       case "int":
         return new TyNativeInteger(behavior, readonlyToken, token);
       case "long":
@@ -1171,6 +1175,8 @@ public class Parser {
         return new TyReactiveDynamic(token);
       case "double":
         return new TyReactiveDouble(token);
+      case "complex":
+        return new TyReactiveComplex(token);
       case "int":
         return new TyReactiveInteger(token);
       case "long":
@@ -1300,6 +1306,7 @@ public class Parser {
       case "client":
       case "dynamic":
       case "double":
+      case "complex":
       case "int":
       case "string":
       case "label":

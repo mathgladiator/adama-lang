@@ -23,17 +23,34 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         this.service = service;
     }
 
+    private static String fixEntropy(String entropy) {
+        if ("".equals(entropy)) {
+            return null;
+        }
+        try {
+            Long.parseLong(entropy);
+            return entropy;
+        } catch (NumberFormatException nfe) {
+            return "" + entropy.hashCode();
+        }
+    }
+
     @Override
     public void create(CreateRequest request, StreamObserver<CreateResponse> responseObserver) {
-        service.create(new NtClient(request.getAgent(), request.getAuthority()), new Key(request.getSpace(), request.getKey()), request.getArg(), request.getEntropy(), new Callback<Void>() {
+        System.err.println("seeing create...");
+        service.create(new NtClient(request.getAgent(), request.getAuthority()), new Key(request.getSpace(), request.getKey()), request.getArg(), fixEntropy(request.getEntropy()), new Callback<Void>() {
             @Override
             public void success(Void value) {
+                System.err.println("... as success");
                 responseObserver.onNext(CreateResponse.newBuilder().setSuccess(true).build());
+                responseObserver.onCompleted();
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
+                System.err.println("... as failure:" + ex.code);
                 responseObserver.onNext(CreateResponse.newBuilder().setSuccess(false).setFailureReason(ex.code).build());
+                responseObserver.onCompleted();
             }
         });
     }
@@ -115,6 +132,8 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                                     responseObserver.onNext(MultiplexedStreamMessageServer.newBuilder().setId(id).setPayload(toServer).build());
                                 }
                             });
+                        } else {
+                            // TODO: error
                         }
                         break;
                     case DISCONNECT:

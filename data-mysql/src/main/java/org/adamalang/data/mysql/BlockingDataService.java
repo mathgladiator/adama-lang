@@ -1,20 +1,20 @@
 package org.adamalang.data.mysql;
 
-import org.adamalang.runtime.contracts.ActiveKeyStream;
-import org.adamalang.runtime.contracts.Callback;
-import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.json.JsonAlgebra;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
-public class BlockingMySqlDataService implements DataService {
-    private final MySqlBase base;
+/** Implements the DataService while blocking the caller's thread */
+public class BlockingDataService implements DataService {
+    private final Base base;
     private final SimpleDateFormat dateFormat;
 
-    public BlockingMySqlDataService(final MySqlBase base) {
+    public BlockingDataService(final Base base) {
         this.base = base;
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
@@ -45,7 +45,7 @@ public class BlockingMySqlDataService implements DataService {
                     int head_seq = rs.getInt(2);
                     return new LookupResult(id, head_seq);
                 } else {
-                    throw new ErrorCodeException(111);
+                    throw new ErrorCodeException(ErrorCodes.LOOKUP_FAILED);
                 }
             } finally {
                 rs.close();
@@ -81,27 +81,19 @@ public class BlockingMySqlDataService implements DataService {
     public void scan(ActiveKeyStream stream) {
         try {
             String scanSQL = new StringBuilder("SELECT `space`, `key`, `when` FROM `").append(base.databaseName).append("`.`index` WHERE `invalidate` = 1").toString();
-            Connection connection = base.pool.getConnection();
-            try {
-                MySqlBase.walk(connection, (rs) -> {
-                    try {
-                        Key key = new Key(rs.getString(1), rs.getString(2));
-                        long absolute = rs.getDate(3).getTime();
-                        long now = System.currentTimeMillis();
-                        long relative = absolute < now ? 0 : absolute - now;
-                        stream.schedule(key, relative);
-                    } catch (SQLException ex) {
-                        // TODO: WTF, maybe ignore
-                        ex.printStackTrace();
-                    }
+            try (Connection connection = base.pool.getConnection() ) {
+                Base.walk(connection, (rs) -> {
+                    Key key = new Key(rs.getString(1), rs.getString(2));
+                    long absolute = rs.getDate(3).getTime();
+                    long now = System.currentTimeMillis();
+                    long relative = absolute < now ? 0 : absolute - now;
+                    stream.schedule(key, relative);
                 }, scanSQL);
                 stream.finish();
-            } finally {
-                connection.close();
             }
         } catch (Exception ex) {
-            // TODO: shut down the adama server?
-            ex.printStackTrace();
+            ex.printStackTrace(); // TODO: PROPER LOGGING
+            stream.error(ErrorCodeException.detectOrWrap(ErrorCodes.SCAN_FAILURE, ex));
         }
     }
 
@@ -111,18 +103,12 @@ public class BlockingMySqlDataService implements DataService {
             // look up the index to get the id
             LookupResult lookup = lookup(connection, key);
             String walkRedoSQL = new StringBuilder("SELECT `redo` FROM `").append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id).append(" ORDER BY `seq_begin`").toString();
-            MySqlBase.walk(connection, (rs) -> {
-                try {
-                    String redo = rs.getString(1);
-                    System.err.println(redo);
-                    // TODO: parse the JSON
-                    // TODO: merge the JSON
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
+            AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
+            Base.walk(connection, (rs) -> {
+                merge.next(rs.getString(1));
             }, walkRedoSQL);
-            return null;
-        }, callback);
+            return new LocalDocumentChange(merge.finish());
+        }, callback, ErrorCodes.GET_FAILURE);
     }
 
     @Override
@@ -145,14 +131,14 @@ public class BlockingMySqlDataService implements DataService {
                 statementInsertIndex.execute();
 
                 // insert the delta
-                int parent = MySqlBase.getInsertId(statementInsertIndex);
+                int parent = Base.getInsertId(statementInsertIndex);
                 insertDelta(connection, parent, patch);
             } finally {
                 statementInsertIndex.close();
             }
 
             return null;
-        }, callback);
+        }, callback, ErrorCodes.INITIALIZE_FAILURE);
     }
 
     @Override
@@ -161,7 +147,7 @@ public class BlockingMySqlDataService implements DataService {
             // read the index
             LookupResult lookup = lookup(connection, key);
             if (lookup.head_seq + 1 != patch.seq) {
-                throw new ErrorCodeException(500); // duplicate
+                throw new ErrorCodeException(ErrorCodes.PATCH_LATE_SEQ_NOT_INC);
             }
 
             // update the index
@@ -171,12 +157,12 @@ public class BlockingMySqlDataService implements DataService {
               .append(", `invalidate`=").append(patch.requiresFutureInvalidation ? 1 : 0) //
               .append(", `when`='").append(whenOf(patch)) //
               .append("' WHERE `id`=").append(lookup.id).toString();
-            MySqlBase.execute(connection, updateIndexSQL);
+            Base.execute(connection, updateIndexSQL);
 
             // insert delta
             insertDelta(connection, lookup.id, patch);
             return null;
-        }, callback);
+        }, callback, ErrorCodes.PATCH_FAILURE);
     }
 
     @Override
@@ -186,31 +172,44 @@ public class BlockingMySqlDataService implements DataService {
             LookupResult lookup = lookup(connection, key);
 
             if (method == ComputeMethod.Rewind) {
-                String walkUndoSQL = new StringBuilder("SELECT `undo` FROM `") //
+                String walkUndoSQL = new StringBuilder("SELECT `undo`,`redo` FROM `") //
                         .append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
                         .append(" AND `seq_begin` >= ").append(seq) //
                         .append(" ORDER BY `seq_begin` DESC").toString();
-                MySqlBase.walk(connection, (rs) -> {
-                    try {
-                        String undo = rs.getString(1);
-                        System.err.println(undo);
-                        // TODO: use accumulator
-                    } catch (SQLException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
+                int count = Base.walk(connection, (rs) -> {
+                    undo.next(rs.getString(1));
                 }, walkUndoSQL);
-
-                // TODO: return finished
+                if (count == 0) {
+                    throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_REWIND);
+                }
+                return new LocalDocumentChange(undo.finish());
             }
 
             if (method == ComputeMethod.Unsend) {
-                // TODO: get the UNDO at seq
-                // TODO: walk the REDO past seq
+                String getUndoSQL = new StringBuilder("SELECT `undo` FROM `") //
+                        .append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                        .append(" AND `seq_begin` = ").append(seq) //
+                        .append(" AND `seq_end` = ").append(seq).toString();
+
+                String walkRedoSQL = new StringBuilder("SELECT `redo` FROM `") //
+                        .append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                        .append(" AND `seq_begin` > ").append(seq) //
+                        .append(" ORDER BY `seq_begin` ASC").toString();
+                AtomicReference<AutoMorphicAccumulator<String>> unsend = new AtomicReference<>();
+                int count = Base.walk(connection, (rs1) -> {
+                    unsend.set(JsonAlgebra.rollUndoForwardAccumulator(rs1.getString(1)));
+                    Base.walk(connection, (rs2) -> {
+                        unsend.get().next(rs2.getString(1));
+                    }, walkRedoSQL);
+                }, getUndoSQL);
+                if (count == 0) {
+                    throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_UNSEND);
+                }
+                return new LocalDocumentChange(unsend.get().finish());
             }
-
-
-            return null;
-        }, callback);
+            throw new ErrorCodeException(ErrorCodes.COMPUTE_UNKNOWN_METHOD);
+        }, callback, ErrorCodes.COMPUTE_FAILURE);
     }
 
     @Override
@@ -222,16 +221,16 @@ public class BlockingMySqlDataService implements DataService {
             String deleteIndexSQL = new StringBuilder() //
                     .append("DELETE FROM `").append(base.databaseName).append("`.`index` ") //
                     .append("WHERE `id`=").append(lookup.id).toString();
-            MySqlBase.execute(connection, deleteIndexSQL);
+            Base.execute(connection, deleteIndexSQL);
 
             // build a list of all the history pointers and put them into a garbage collection queue
 
             String deleteDeltasSQL = new StringBuilder() //
                     .append("DELETE FROM `").append(base.databaseName).append("`.`deltas` ") //
                     .append("WHERE `parent`=").append(lookup.id).toString();
-            MySqlBase.execute(connection, deleteDeltasSQL);
+            Base.execute(connection, deleteDeltasSQL);
             return null;
-        }, callback);
+        }, callback, ErrorCodes.DELETE_FAILURE);
     }
 
 }

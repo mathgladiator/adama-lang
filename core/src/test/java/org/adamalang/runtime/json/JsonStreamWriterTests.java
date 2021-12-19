@@ -11,6 +11,7 @@ package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,6 +37,13 @@ public class JsonStreamWriterTests {
         JsonStreamWriter writer = new JsonStreamWriter();
         writer.writeNtAsset(new NtAsset("123", "name", "png", 42, "hash", "sheesh"));
         Assert.assertEquals("{\"id\":\"123\",\"size\":\"42\",\"name\":\"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}", writer.toString());
+    }
+
+    @Test
+    public void complex() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        writer.writeNtComplex(new NtComplex(1.2, 2.4));
+        Assert.assertEquals("{\"r\":1.2,\"i\":2.4}", writer.toString());
     }
 
     @Test

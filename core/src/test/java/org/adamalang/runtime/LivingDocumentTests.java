@@ -248,9 +248,9 @@ public class LivingDocumentTests {
     setup.document.apply(NtClient.NO_ONE, "{\"x\":4242}", new RealDocumentSetup.AssertInt(3));
     setup.document.deploy(new RealDocumentSetup("public formula x = 50;").factory, new RealDocumentSetup.AssertInt(4));
     Assert.assertEquals(3, list.size());
-    Assert.assertEquals("{\"data\":{\"x\":0},\"outstanding\":[],\"blockers\":[],\"seq\":2}", list.get(0));
-    Assert.assertEquals("{\"data\":{\"x\":4242},\"outstanding\":[],\"blockers\":[],\"seq\":3}", list.get(1));
-    Assert.assertEquals("{\"data\":{\"x\":50},\"outstanding\":[],\"blockers\":[],\"seq\":4}", list.get(2));
+    Assert.assertEquals("{\"data\":{\"x\":0},\"seq\":2}", list.get(0));
+    Assert.assertEquals("{\"data\":{\"x\":4242},\"seq\":3}", list.get(1));
+    Assert.assertEquals("{\"data\":{\"x\":50},\"seq\":4}", list.get(2));
   }
 
   @Test
@@ -680,10 +680,10 @@ public class LivingDocumentTests {
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":1,\"f\":{\"id\":\"\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}},\"outstanding\":[],\"blockers\":[],\"seq\":4}", deNO_ONE.datum.get(0).toString());
+    Assert.assertEquals("{\"data\":{\"x\":1,\"f\":{\"id\":\"\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}},\"seq\":4}", deNO_ONE.datum.get(0).toString());
     setup.document.attach(NtClient.NO_ONE, EXAMPLE, new RealDocumentSetup.AssertInt(6));
     Assert.assertEquals(2, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":2,\"f\":{\"id\":\"42\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"}},\"outstanding\":[],\"blockers\":[],\"seq\":6}", deNO_ONE.datum.get(1).toString());
+    Assert.assertEquals("{\"data\":{\"x\":2,\"f\":{\"id\":\"42\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"}},\"seq\":6}", deNO_ONE.datum.get(1).toString());
     setup.assertCompare();
   }
 
@@ -822,15 +822,15 @@ public class LivingDocumentTests {
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":124},\"outstanding\":[],\"blockers\":[],\"seq\":4}", deNO_ONE.datum.get(0).toString());
+    Assert.assertEquals("{\"data\":{\"x\":124},\"seq\":4}", deNO_ONE.datum.get(0).toString());
     final var deA = new RealDocumentSetup.ArrayPerspective();
     final var deB = new RealDocumentSetup.ArrayPerspective();
     setup.document.connect(A, new RealDocumentSetup.AssertInt(6));
     setup.document.createPrivateView(A, deA, new RealDocumentSetup.GotView());
     setup.document.connect(B, new RealDocumentSetup.AssertInt(9));
     setup.document.createPrivateView(B, deB, new RealDocumentSetup.GotView());
-    Assert.assertEquals("{\"data\":{\"x\":125},\"outstanding\":[],\"blockers\":[],\"seq\":7}", deA.datum.get(0).toString());
-    Assert.assertEquals("{\"data\":{\"x\":126},\"outstanding\":[],\"blockers\":[],\"seq\":10}", deB.datum.get(0).toString());
+    Assert.assertEquals("{\"data\":{\"x\":125},\"seq\":7}", deA.datum.get(0).toString());
+    Assert.assertEquals("{\"data\":{\"x\":126},\"seq\":10}", deB.datum.get(0).toString());
     setup.assertCompare();
   }
 
@@ -841,15 +841,15 @@ public class LivingDocumentTests {
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":124},\"outstanding\":[],\"blockers\":[],\"seq\":4}", deNO_ONE.datum.get(0).toString());
+    Assert.assertEquals("{\"data\":{\"x\":124},\"seq\":4}", deNO_ONE.datum.get(0).toString());
     final var deA = new RealDocumentSetup.ArrayPerspective();
     final var deB = new RealDocumentSetup.ArrayPerspective();
     setup.document.connect(A, new RealDocumentSetup.AssertInt(6));
     setup.document.createPrivateView(A, deA, new RealDocumentSetup.GotView());
     setup.document.connect(B, new RealDocumentSetup.AssertInt(9));
     setup.document.createPrivateView(B, deB, new RealDocumentSetup.GotView());
-    Assert.assertEquals("{\"data\":{\"x\":125},\"outstanding\":[],\"blockers\":[],\"seq\":7}", deA.datum.get(0).toString());
-    Assert.assertEquals("{\"data\":{\"x\":126},\"outstanding\":[],\"blockers\":[],\"seq\":10}", deB.datum.get(0).toString());
+    Assert.assertEquals("{\"data\":{\"x\":125},\"seq\":7}", deA.datum.get(0).toString());
+    Assert.assertEquals("{\"data\":{\"x\":126},\"seq\":10}", deB.datum.get(0).toString());
     setup.assertCompare();
   }
 

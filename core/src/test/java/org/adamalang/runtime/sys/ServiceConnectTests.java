@@ -38,12 +38,12 @@ public class ServiceConnectTests {
             streamback.await_began();
             latch1.run();
             Assert.assertEquals("STATUS:Connected", streamback.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":4}", streamback.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
             LatchCallback cb1 = new LatchCallback();
             streamback.get().send("foo", null, "{}", cb1);
             cb1.await_success(6);
             latch2.run();
-            Assert.assertEquals("{\"data\":{\"x\":142},\"outstanding\":[],\"blockers\":[],\"seq\":6}", streamback.get(2));
+            Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":6}", streamback.get(2));
             streamback.get().disconnect();
             latch3.run();
             Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
@@ -77,12 +77,12 @@ public class ServiceConnectTests {
             streamback.await_began();
             latch1.run();
             Assert.assertEquals("STATUS:Connected", streamback.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":3}", streamback.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback.get(1));
             LatchCallback cb1 = new LatchCallback();
             streamback.get().send("foo", null, "{}", cb1);
             cb1.await_success(5);
             latch2.run();
-            Assert.assertEquals("{\"data\":{\"x\":142},\"outstanding\":[],\"blockers\":[],\"seq\":5}", streamback.get(2));
+            Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streamback.get(2));
             streamback.get().disconnect();
             latch3.run();
             Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
@@ -108,7 +108,7 @@ public class ServiceConnectTests {
             streamback.await_began();
             latch1.run();
             Assert.assertEquals("STATUS:Connected", streamback.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":3}", streamback.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback.get(1));
             LatchCallback cb1 = new LatchCallback();
             streamback.get().canAttach(cb1.toBool(-5, 5));
             cb1.await_success(5);
@@ -138,14 +138,14 @@ public class ServiceConnectTests {
             streamback.await_began();
             latch1.run();
             Assert.assertEquals("STATUS:Connected", streamback.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":3}", streamback.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback.get(1));
             LatchCallback cb1 = new LatchCallback();
             LatchCallback cb2 = new LatchCallback();
             streamback.get().canAttach(cb1.toBool(-5, 5));
             cb1.await_success(-5);
             streamback.get().attach(new NtAsset("id", "name", "meme", 1, "", ""), cb2);
             cb2.await_success(5);
-            Assert.assertEquals("{\"data\":{\"x\":43},\"outstanding\":[],\"blockers\":[],\"seq\":5}", streamback.get(2));
+            Assert.assertEquals("{\"data\":{\"x\":43},\"seq\":5}", streamback.get(2));
             latch2.run();
             streamback.get().disconnect();
             latch3.run();
@@ -179,14 +179,14 @@ public class ServiceConnectTests {
             latch1a.run();
             latch2a.run();
             Assert.assertEquals("STATUS:Connected", streamback1.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":4}", streamback1.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback1.get(1));
             Assert.assertEquals("STATUS:Connected", streamback2.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":5}", streamback2.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":5}", streamback2.get(1));
             streamback1.get().disconnect();
             streamback2.get().disconnect();
             latch1b.run();
             latch2b.run();
-            Assert.assertEquals("{\"data\":{},\"outstanding\":[],\"blockers\":[],\"seq\":5}", streamback1.get(2));
+            Assert.assertEquals("{\"seq\":5}", streamback1.get(2));
             Assert.assertEquals("STATUS:Disconnected", streamback1.get(3));
             Assert.assertEquals("STATUS:Disconnected", streamback2.get(2));
         } finally {
@@ -221,9 +221,9 @@ public class ServiceConnectTests {
             latch1.run();
             latch2.run();
             Assert.assertEquals("STATUS:Connected", streamback1.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":3}", streamback1.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback1.get(1));
             Assert.assertEquals("STATUS:Connected", streamback2.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":42},\"outstanding\":[],\"blockers\":[],\"seq\":3}", streamback2.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback2.get(1));
         } finally {
             service.shutdown();
         }

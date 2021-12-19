@@ -10,6 +10,7 @@
 package org.adamalang.translator.reflect;
 
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.tree.common.TokenizedItem;
@@ -45,6 +46,8 @@ public class TypeBridge {
       return new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (NtClient.class == x) {
       return new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, null);
+    } else if (NtComplex.class == x) {
+      return new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, null);
     } else if (Void.class == x || void.class == x) {
       return null;
     } else if (NtList.class == x) {

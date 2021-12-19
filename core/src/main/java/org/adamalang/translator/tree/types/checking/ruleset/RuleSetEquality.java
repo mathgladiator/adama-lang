@@ -21,6 +21,9 @@ public class RuleSetEquality {
       final var aInteger = RuleSetCommon.IsInteger(environment, typeA, true);
       final var bInteger = RuleSetCommon.IsInteger(environment, typeB, true);
       if (aInteger && bInteger) { return CanTestEqualityResult.Yes; }
+      final var aComplex = RuleSetCommon.IsComplex(environment, typeA, true);
+      final var bComplex = RuleSetCommon.IsComplex(environment, typeB, true);
+      if (aComplex && bComplex) { return CanTestEqualityResult.YesButViaNear; }
       final var aLong = RuleSetCommon.IsLong(environment, typeA, true);
       final var bLong = RuleSetCommon.IsLong(environment, typeB, true);
       if ((aInteger || aLong) && (bInteger || bLong)) { return CanTestEqualityResult.Yes; }

@@ -96,9 +96,9 @@ public class PhaseRun {
         search = search.getCause();
         if (search instanceof GoodwillExhaustedException) {
           outputFile.append("GOODWILL EXHAUSTED:" + gee.getMessage()).append("!!!\n!!!\n");
-          return;
         }
       }
+      outputFile.append("RuntimeException:" + gee.getMessage()).append("!!!\n!!!\n");
     }
   }
 }

@@ -11,6 +11,7 @@ package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtComplex;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -38,8 +39,24 @@ public class JsonStreamReaderTests {
     }
 
     @Test
+    public void complex() {
+        JsonStreamReader reader = new JsonStreamReader("{\"r\":1.2,\"i\":2.4}");
+        NtComplex cmp = new NtComplex(1.2, 2.4);
+        NtComplex tst = reader.readNtCompex();
+        Assert.assertEquals(cmp, tst);
+    }
+
+    @Test
+    public void asset_ws() {
+        JsonStreamReader reader = new JsonStreamReader("   { \t \"id\"  \r :  \n  \"123\" \n , \n \"size\" \n : \n \"42\" \n , \n \"name\" \n : \n \"name\",\"type\":\"png\",\"md5\":\"hash\",\"sha384\":\"sheesh\"}");
+        NtAsset cmp = new NtAsset("123", "name", "png", 42, "hash", "sheesh");
+        NtAsset tst = reader.readNtAsset();
+        Assert.assertEquals(cmp, tst);
+    }
+
+    @Test
     public void tree_empty_obj() {
-        JsonStreamReader reader = new JsonStreamReader("{}");
+        JsonStreamReader reader = new JsonStreamReader("  {  }  ");
         Object obj = reader.readJavaTree();
         Assert.assertTrue(obj instanceof HashMap);
         Assert.assertTrue(reader.end());
@@ -47,7 +64,7 @@ public class JsonStreamReaderTests {
 
     @Test
     public void tree_obj() {
-        JsonStreamReader reader = new JsonStreamReader("{\"x\":123}");
+        JsonStreamReader reader = new JsonStreamReader("{\"x\"  :  123}");
         Object obj = reader.readJavaTree();
         Assert.assertTrue(obj instanceof HashMap);
         Assert.assertTrue(123 == (int) (((HashMap<?, ?>) obj).get("x")));

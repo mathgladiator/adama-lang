@@ -96,6 +96,9 @@ public class RuleSetAssignment {
     final var aDouble = RuleSetCommon.IsDouble(environment, typeA, true);
     final var bDouble = RuleSetCommon.IsDouble(environment, typeB, true);
     if (aDouble && (bDouble || bInteger)) { return true; }
+    final var aComplex = RuleSetCommon.IsComplex(environment, typeA, true);
+    final var bComplex = RuleSetCommon.IsComplex(environment, typeB, true);
+    if (aComplex && bComplex) { return true; }
     final var aBoolean = RuleSetCommon.IsBoolean(environment, typeA, true);
     final var bBoolean = RuleSetCommon.IsBoolean(environment, typeB, true);
     if (aBoolean && bBoolean) { return true; }

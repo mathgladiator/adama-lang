@@ -179,6 +179,15 @@ public class RuleSetCommon {
     return false;
   }
 
+  static boolean IsComplex(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+    final var tyType = Resolve(environment, tyTypeOriginal, silent);
+    if (tyType != null) {
+      if (tyType instanceof TyNativeComplex || tyType instanceof TyReactiveComplex) { return true; }
+      SignalTypeFailure(environment, new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+    }
+    return false;
+  }
+
   public static boolean IsInteger(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {

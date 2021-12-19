@@ -179,9 +179,30 @@ public abstract class LivingDocument implements RxParent {
         if (pv.isAlive()) {
           final var writer = new JsonStreamWriter();
           writer.beginObject();
-          writer.writeObjectFieldIntro("data");
-          pv.update(writer);
-          __futures.dump(writer, entryTrackedView.getKey());
+          boolean wroteData = false;
+          { // write out the data if there are changes
+            JsonStreamWriter data = new JsonStreamWriter();
+            pv.update(data);
+            String dataStr = data.toString();
+            if (!"{}".equals(dataStr)) {
+              writer.writeObjectFieldIntro("data");
+              writer.inline(dataStr);
+              writer.force_comma_introduction();
+              wroteData = true;
+            }
+          }
+          { // write out the outstanding and blockers arrays if they have changed for the view
+            JsonStreamWriter futures = new JsonStreamWriter();
+            __futures.dump(futures, entryTrackedView.getKey());
+            String futuresStr = futures.toString();
+            if (pv.futures(futuresStr)) {
+              if (wroteData) {
+                writer.force_comma();
+              }
+              writer.inline(futuresStr);
+              writer.force_comma_introduction();
+            }
+          }
           writer.writeObjectFieldIntro("seq");
           writer.writeInteger(__seq.get());
           writer.endObject();

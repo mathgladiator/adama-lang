@@ -1,0 +1,44 @@
+package org.adamalang.translator.tree.expressions.constants;
+
+import org.adamalang.runtime.stdlib.LibMath;
+import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.expressions.Expression;
+import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyNativeComplex;
+
+import java.util.function.Consumer;
+
+public class ComplexConstant extends Expression {
+    public final Token[] tokens;
+    public final double real;
+    public final double imaginary;
+
+    public ComplexConstant(final double real, final double imaginary, final Token... tokens) {
+        this.tokens = tokens;
+        this.real = real;
+        this.imaginary = imaginary;
+        for (Token token : tokens) {
+            ingest(token);
+        }
+    }
+
+    @Override
+    public void emit(final Consumer<Token> yielder) {
+        for (Token token : tokens) {
+            yielder.accept(token);
+        }
+    }
+
+    @Override
+    protected TyType typingInternal(final Environment environment, final TyType suggestion) {
+        environment.mustBeComputeContext(this);
+        return new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, tokens[0]).withPosition(this);
+    }
+
+    @Override
+    public void writeJava(final StringBuilder sb, final Environment environment) {
+        sb.append("new NtComplex(").append(real).append(", ").append(imaginary).append(")");
+    }
+}

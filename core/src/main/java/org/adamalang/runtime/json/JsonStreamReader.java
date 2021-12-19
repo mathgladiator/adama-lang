@@ -15,6 +15,7 @@ import org.adamalang.runtime.json.token.JsonToken;
 import org.adamalang.runtime.json.token.JsonTokenType;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
 import org.adamalang.translator.parser.token.Token;
 
@@ -133,6 +134,24 @@ public class JsonStreamReader {
     }
   }
 
+  public NtComplex readNtCompex() {
+    double re = 0.0;
+    double im = 0.0;
+    if (startObject()) {
+      while (notEndOfObject()) {
+        switch (fieldName()) {
+          case "r":
+            re = readDouble();
+            break;
+          case "i":
+            im = readDouble();
+            break;
+        }
+      }
+    }
+    return new NtComplex(re, im);
+  }
+
   public NtAsset readNtAsset() {
     String id = "";
     String name = "";
@@ -216,8 +235,20 @@ public class JsonStreamReader {
   }
 
   private void readToken() {
+    if (index >= json.length()) {
+      return;
+    }
     final var start = json.charAt(index);
     switch (start) {
+      case ' ':
+      case '\n':
+      case '\r':
+      case '\t':
+      case ',':
+      case ':':
+        index++;
+        readToken();
+        return;
       case '{':
         index++;
         tokens.addLast(new JsonToken(JsonTokenType.StartObject, null));
@@ -233,11 +264,6 @@ public class JsonStreamReader {
       case ']':
         index++;
         tokens.addLast(new JsonToken(JsonTokenType.EndArray, null));
-        return;
-      case ',':
-      case ':':
-        index++;
-        readToken();
         return;
       case '\"':
         StringBuilder sb = null;

@@ -3,6 +3,7 @@ package org.adamalang.runtime.sys;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.TimeSource;
+import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.mocks.*;
@@ -54,6 +55,23 @@ public class ServiceCatastropheTests {
         }
     }
 
+
+    @Test
+    public void crash_scan() throws Exception {
+        LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+        MockInstantLivingDocumentFactoryFactory factoryFactory = new MockInstantLivingDocumentFactoryFactory(factory);
+        TimeSource time = new MockTime();
+        MockFailureDataService failureDataService = new MockFailureDataService();
+        failureDataService.crashScan = true;
+        try {
+            new CoreService(factoryFactory, failureDataService, time, 3);
+            Assert.fail();
+        } catch (RuntimeException re) {
+            ErrorCodeException ece = ErrorCodeException.detectOrWrap(111, re);
+            Assert.assertEquals(231, ece.code);
+        }
+    }
+
     @Test
     public void send_failure_disconnects_and_reconcile() throws Exception {
         LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
@@ -83,7 +101,7 @@ public class ServiceCatastropheTests {
             callback1.await_failure(999);
             latch1.run();
             Assert.assertEquals("STATUS:Connected", streamback1.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":1},\"outstanding\":[],\"blockers\":[],\"seq\":4}", streamback1.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":1},\"seq\":4}", streamback1.get(1));
             Assert.assertEquals("STATUS:Disconnected", streamback1.get(2));
             dataService.pause();
             dataService.set(realDataService);
@@ -95,8 +113,8 @@ public class ServiceCatastropheTests {
             streamback2.await_began();
             latch2.run();
             Assert.assertEquals("STATUS:Connected", streamback2.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":2},\"outstanding\":[],\"blockers\":[],\"seq\":7}", streamback2.get(1));
-            Assert.assertEquals("{\"data\":{\"x\":1},\"outstanding\":[],\"blockers\":[],\"seq\":9}", streamback2.get(2));
+            Assert.assertEquals("{\"data\":{\"x\":2},\"seq\":7}", streamback2.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":1},\"seq\":9}", streamback2.get(2));
 
             latch.run();
             realDataService.assertLogAt(0, "INIT:space/key:0->{\"__constructed\":true,\"__entropy\":\"1\"}");
@@ -151,7 +169,7 @@ public class ServiceCatastropheTests {
             streamback1.get().send("foo", null,"{}", callback4);
             callback4.await_failure(144416);
             Assert.assertEquals("STATUS:Connected", streamback1.get(0));
-            Assert.assertEquals("{\"data\":{\"x\":1},\"outstanding\":[],\"blockers\":[],\"seq\":4}", streamback1.get(1));
+            Assert.assertEquals("{\"data\":{\"x\":1},\"seq\":4}", streamback1.get(1));
             Assert.assertEquals("STATUS:Disconnected", streamback1.get(2));
         } finally {
             service.shutdown();

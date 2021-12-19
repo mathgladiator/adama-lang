@@ -44,19 +44,18 @@ public class ErrorCodes {
   public static final int SERVICE_DOCUMENT_ALREADY_CREATED = 130092;
   public static final int USERLAND_CANT_COMPILE_ADAMA_SCRIPT = 144417;
   public static final int DOCUMENT_SELF_DESTRUCT_SUCCESSFUL = 134195;
-  public static final int DOCUMENT_REWIND_IN_PROGRESS = 111155;
-
+  public static final int INMEMORY_DATA_GET_CANT_FIND_DOCUMENT = 198705;
+  public static final int INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS = 116787;
+  public static final int INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT = 144944;
+  public static final int INMEMORY_DATA_COMPUTE_CANT_FIND_DOCUMENT = 106546;
+  public static final int INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO = 128052;
+  public static final int INMEMORY_DATA_COMPUTE_UNSEND_FAILED_TO_FIND = 194612;
+  public static final int INMEMORY_DATA_DELETE_CANT_FIND_DOCUMENT = 117816;
+  public static final int INMEMORY_DATA_COMPUTE_INVALID_METHOD = 127034;
 
 
   /**
-   * 198705
-   * 116787
-   * 144944
-   * 106546
-   * 128052
-   * 194612
-   * 117816
-   * 127034
+   *
    * 117818
    * 155711
    * 126012

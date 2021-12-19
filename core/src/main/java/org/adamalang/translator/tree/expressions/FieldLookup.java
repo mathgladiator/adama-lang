@@ -71,7 +71,7 @@ public class FieldLookup extends Expression {
         isGlobalObject = true;
         final var func = ((TyNativeGlobalObject) eType).lookupMethod(fieldName, environment);
         if (func == null) {
-          environment.document.createError(this, String.format("Global '%s' lacks '%s'", ((TyNativeGlobalObject) eType).globalName, fieldName), "GlobaLookup");
+          environment.document.createError(this, String.format("Global '%s' lacks '%s'", ((TyNativeGlobalObject) eType).globalName, fieldName), "GlobalLookup");
           return null;
         }
       }

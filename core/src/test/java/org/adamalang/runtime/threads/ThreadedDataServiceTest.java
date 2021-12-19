@@ -32,6 +32,11 @@ public class ThreadedDataServiceTest {
             public void finish() {
                 latch.countDown();
             }
+
+            @Override
+            public void error(ErrorCodeException failure) {
+
+            }
         });
         ds.get(key, new Callback<DataService.LocalDocumentChange>() {
             @Override

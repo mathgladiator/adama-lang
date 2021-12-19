@@ -14,16 +14,19 @@ import org.adamalang.runtime.natives.NtClient;
 
 /** a private view of the document where private lives; code is generated to use this */
 public abstract class PrivateView {
+  private static final String DEFAULT_FUTURES = "\"outstanding\":[],\"blockers\":[]";
   public final Perspective perspective;
   public final NtClient who;
   private boolean alive;
   private PrivateView usurper;
+  private String lastWrittenFutures;
 
   /** construct the view based on the person (who) and the connection (perspective) */
   public PrivateView(final NtClient who, final Perspective perspective) {
     alive = true;
     this.who = who;
     this.perspective = perspective;
+    this.lastWrittenFutures = DEFAULT_FUTURES;
   }
 
   /** a new private view was created on a different document which is usurping the existing document.
@@ -46,6 +49,20 @@ public abstract class PrivateView {
   /** is the view still alive and interesting to the user */
   public synchronized boolean isAlive() {
     return alive;
+  }
+
+  /** dedupe excessive outstanding and blockers sharing */
+  public boolean futures(String futures) {
+    String futuresToTest = futures;
+    if (futuresToTest.equals(DEFAULT_FUTURES)) { // save some memory
+      futuresToTest = DEFAULT_FUTURES;
+    }
+    if (futuresToTest == lastWrittenFutures || lastWrittenFutures.equals(futures)) {
+      return false;
+    } else {
+      lastWrittenFutures = futures;
+      return true;
+    }
   }
 
   /** the client is no longer interested */

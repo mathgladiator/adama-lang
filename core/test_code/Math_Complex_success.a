@@ -1,0 +1,24 @@
+complex c1;
+public complex c2;
+
+double c3_r;
+double c3_i;
+double sqrt_4;
+bool eq1;
+
+public complex c4;
+public formula c4_len = c4.len();
+
+@construct {
+    c1 = @i;
+    c2 = Math.sqrt(-4);
+    complex l1 = @i;
+    complex l2;
+    l2 = Math.sqrt(-4);
+    c3_r = l2.re();
+    c3_i = l2.im();
+    eq1 = l2 == l1;
+    readonly complex l3 = l2;
+    c4 = c2.conj();
+    sqrt_4 = Math.sqrt(4).re();
+}

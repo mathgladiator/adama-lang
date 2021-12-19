@@ -16,6 +16,7 @@ import java.util.Stack;
 
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
 
 /** Very fast Json stream writer. */
@@ -84,6 +85,14 @@ public class JsonStreamWriter {
     }
   }
 
+  public void force_comma_introduction() {
+    commaStateMachine = CommaStateMachine.IntroduceComma;
+  }
+
+  public void force_comma() {
+    sb.append(",");
+  }
+
   private void pop_need_comma() {
     commaStateMachine = commas.pop();
   }
@@ -106,6 +115,19 @@ public class JsonStreamWriter {
   public void writeDouble(final double d) {
     maybe_comma();
     sb.append(d);
+  }
+
+  public void writeNtComplex(final NtComplex c) {
+    beginObject();
+    writeObjectFieldIntro("r");
+    writeDouble(c.real);
+    writeObjectFieldIntro("i");
+    writeDouble(c.imaginary);
+    endObject();
+  }
+
+  public void inline(final String s) {
+    sb.append(s);
   }
 
   public void writeFastString(final String s) {

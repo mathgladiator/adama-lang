@@ -76,7 +76,14 @@ public class CoreService {
 
             @Override
             public void finish() {
+                // TODO: this is strange
                 // this is interesting from an operational perspective, but not so from a coverage perspective
+            }
+
+            @Override
+            public void error(ErrorCodeException failure) {
+                // TODO: log it, we are in a half dead-state
+                throw new RuntimeException(failure);
             }
         });
     }

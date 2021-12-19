@@ -27,9 +27,9 @@ public class GlobalObjectPool {
   public static GlobalObjectPool createPoolWithStdLib() {
     final var pool = new GlobalObjectPool();
     pool.add(GlobalFactory.makeGlobal("String", LibString.class, pool.extensions));
-    final var mathlib = GlobalFactory.makeGlobalExplicit("Math", Math.class, pool.extensions, true,"min", "max", "ceil", "floor", "sin", "cos", "tan", "abs", "round", "asin", "acos", "atan", "toRadians", "toDegrees", "sinh", "cosh", "tanh", "atan2", "hypot",
-        "exp", "log", "log10", "pow", "sqrt", "cbrt", "floorDiv", "floorMod", "IEEEremainder", "expm1", "log1p", "signum", "ulp", "fma", "copySign", "getExponent", "powerOfTwo", "E", "PI");
-    GlobalFactory.mergeInto(mathlib, LibMath.class, pool.extensions, true, "near", "SQRT2");
+    final var mathlib = GlobalFactory.makeGlobalExplicit("Math", Math.class, pool.extensions, true,"min", "max", "ceil", "floor", "sin", "cos", "tan", "abs", "asin", "acos", "atan", "toRadians", "toDegrees", "sinh", "cosh", "tanh", "atan2", "hypot",
+        "exp", "log", "log10", "pow", "cbrt", "floorDiv", "floorMod", "IEEEremainder", "expm1", "log1p", "signum", "ulp", "fma", "copySign", "getExponent", "powerOfTwo", "E", "PI");
+    GlobalFactory.mergeInto(mathlib, LibMath.class, pool.extensions, true, "near", "sqrt", "SQRT2", "round", "roundTo", "conj", "len");
     pool.add(mathlib);
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);

@@ -1,5 +1,7 @@
 package org.adamalang.runtime.contracts;
 
+import org.adamalang.runtime.exceptions.ErrorCodeException;
+
 /** When a process starts, Adama needs to pull from the data store all keys which may have a temporal state machine */
 public interface ActiveKeyStream {
 
@@ -8,4 +10,6 @@ public interface ActiveKeyStream {
 
     /** the data store has finished feeding Adama */
     public void finish();
+
+    public void error(ErrorCodeException failure);
 }

@@ -212,6 +212,13 @@ public class SillyTypeIssues {
   }
 
   @Test
+  public void ntcomplex() {
+    new TyNativeComplex(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
+    Assert.assertEquals("complex", new TyNativeComplex(null, null, null).getAdamaType());
+    Assert.assertEquals("complex", new TyReactiveComplex(null).makeCopyWithNewPosition(DocumentPosition.ZERO, TypeBehavior.ReadWriteWithSetGet).getAdamaType());
+  }
+
+  @Test
   public void dynamics() {
     TyReactiveDynamic rdyn = new TyReactiveDynamic(Token.WRAP("dynamic"));
     rdyn.makeCopyWithNewPosition(rdyn, TypeBehavior.ReadWriteNative);
