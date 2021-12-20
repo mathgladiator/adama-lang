@@ -16,8 +16,8 @@ public class AttachmentFinishRequest {
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<AttachmentFinishRequest> callback) {
     try {
-      final Long upload = request.getLong("upload", true, 322);
-      final String md5 = request.getString("md5", true, 322);
+      final Long upload = request.getLong("upload", true, 409609);
+      final String md5 = request.getString("md5", true, 443401);
       nexus.executor.execute(() -> {
         callback.success(new AttachmentFinishRequest(upload, md5));
       });

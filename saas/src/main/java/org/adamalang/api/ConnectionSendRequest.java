@@ -19,9 +19,9 @@ public class ConnectionSendRequest {
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<ConnectionSendRequest> callback) {
     try {
-      final Long connection = request.getLong("connection", true, 32423);
-      final String channel = request.getString("channel", true, 2324);
-      final ObjectNode message = request.getObject("message", true, 324);
+      final Long connection = request.getLong("connection", true, 405505);
+      final String channel = request.getString("channel", true, 454659);
+      final ObjectNode message = request.getObject("message", true, 425987);
       nexus.executor.execute(() -> {
         callback.success(new ConnectionSendRequest(connection, channel, message));
       });

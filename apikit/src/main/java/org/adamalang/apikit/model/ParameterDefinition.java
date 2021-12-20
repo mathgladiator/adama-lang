@@ -44,6 +44,11 @@ public class ParameterDefinition {
             if (rawType == null) {
                 throw new Exception("parameter-definition needs a type");
             }
+            String rawMissingErrorCode = element.getAttribute("missing-error");
+            if (rawMissingErrorCode == null || "".equals(rawMissingErrorCode)) {
+                rawMissingErrorCode = "0";
+            }
+
             Type type = Type.of(rawType);
             if (type == null) {
                 throw new Exception("parameter-definition's type must be valid");
@@ -53,7 +58,7 @@ public class ParameterDefinition {
             String documentation = null;
             Transform transform = null;
             Validator validator = null;
-            int errorCodeIfMissing = 0;
+            int errorCodeIfMissing = Integer.parseInt(rawMissingErrorCode);
 
             NodeList children = node.getChildNodes();
             for (int j = 0; j < children.getLength(); j++) {
@@ -99,14 +104,6 @@ public class ParameterDefinition {
                         }
                         int errorCodeOnFailure = Integer.parseInt(errorCodeOnFailureRaw);
                         transform = new Transform(name, type, service, outputName, outputJavaName, errorCodeOnFailure);
-                    }
-                    break;
-                    case "error": {
-                        String errorCodeOnMissingRaw = childElement.getAttribute("code");
-                        if (errorCodeOnMissingRaw == null) {
-                            throw new Exception("error needs a code");
-                        }
-                        errorCodeIfMissing = Integer.parseInt(errorCodeOnMissingRaw);
                     }
                     break;
                 }

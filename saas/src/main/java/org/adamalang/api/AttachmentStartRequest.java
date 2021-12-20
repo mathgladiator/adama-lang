@@ -34,8 +34,8 @@ public class AttachmentStartRequest {
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
-      final String filename = request.getString("filename", true, 322);
-      final String contentType = request.getString("content-type", true, 322);
+      final String filename = request.getString("filename", true, 470028);
+      final String contentType = request.getString("content-type", true, 455691);
       _latch.with(() -> new AttachmentStartRequest(identity, who.get(), space, policy.get(), key, filename, contentType));
       nexus.identityService.execute(identity, who);
       nexus.spaceService.execute(space, policy);

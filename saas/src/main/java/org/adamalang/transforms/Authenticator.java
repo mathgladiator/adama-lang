@@ -37,31 +37,23 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
     public void execute(String identity, Callback<AuthenticatedUser> callback) {
         try {
             TokenParts tokenParts = new TokenParts(identity);
-
+            // TODO: check for Facebook Prefix
+            // TODO: check for Google Prefix
             if ("adama".equals(tokenParts.iss)) {
                 int userId = Integer.parseInt(tokenParts.sub);
                 for (String publicKey64 : Users.listKeys(nexus.base, userId)) {
                     byte[] publicKey = Base64.getDecoder().decode(publicKey64);
                     X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
                     KeyFactory kf = KeyFactory.getInstance("RSA");
-                    try {
-                        Jwts.parserBuilder().setSigningKey(kf.generatePublic(spec)).requireIssuer("adama").build().parseClaimsJws(identity);
-                        callback.success(new AuthenticatedUser(userId, new NtClient("" + userId, "adama")));
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+                    Jwts.parserBuilder().setSigningKey(kf.generatePublic(spec)).requireIssuer("adama").build().parseClaimsJws(identity);
+                    callback.success(new AuthenticatedUser(userId, new NtClient("" + userId, "adama")));
                 }
             } else {
                 // TODO: list all public keys for the authority
-
             }
-
-
         } catch (Exception ex) {
             callback.failure(ErrorCodeException.detectOrWrap(124, ex));
         }
-
-
         callback.success(new AuthenticatedUser(0, NtClient.NO_ONE));
     }
 

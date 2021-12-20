@@ -21,7 +21,7 @@ public class InitStartRequest {
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<InitStartRequest> callback) {
     try {
       final BulkLatch<InitStartRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
-      final String email = request.getString("email", true, 322);
+      final String email = request.getString("email", true, 473103);
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
       _latch.with(() -> new InitStartRequest(email, userId.get()));
       nexus.emailService.execute(email, userId);

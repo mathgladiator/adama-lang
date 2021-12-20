@@ -30,7 +30,7 @@ public class SpaceUpdateRequest {
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final ObjectNode plan = request.getObject("plan", true, 322);
+      final ObjectNode plan = request.getObject("plan", true, 425999);
       _latch.with(() -> new SpaceUpdateRequest(identity, who.get(), space, policy.get(), plan));
       nexus.identityService.execute(identity, who);
       nexus.spaceService.execute(space, policy);

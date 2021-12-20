@@ -31,7 +31,7 @@ public class SpaceOwnerSetRequest {
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final String email = request.getString("email", true, 322);
+      final String email = request.getString("email", true, 473103);
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
       _latch.with(() -> new SpaceOwnerSetRequest(identity, who.get(), space, policy.get(), email, userId.get()));
       nexus.identityService.execute(identity, who);

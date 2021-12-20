@@ -31,11 +31,11 @@ public class AuthorityKeysAddRequest {
       final BulkLatch<AuthorityKeysAddRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
-      final String name = request.getString("name", true, 32423);
-      final String authority = request.getString("authority", true, 322);
-      final String publicKey = request.getString("public-key", true, 32423);
-      final String algorithm = request.getString("algorithm", true, 32423);
-      final ObjectNode policy = request.getObject("policy", true, 322);
+      final String name = request.getString("name", true, 453647);
+      final String authority = request.getString("authority", true, 430095);
+      final String publicKey = request.getString("public-key", true, 405519);
+      final String algorithm = request.getString("algorithm", true, 481294);
+      final ObjectNode policy = request.getObject("policy", true, 457743);
       _latch.with(() -> new AuthorityKeysAddRequest(identity, who.get(), name, authority, publicKey, algorithm, policy));
       nexus.identityService.execute(identity, who);
     } catch (ErrorCodeException ece) {

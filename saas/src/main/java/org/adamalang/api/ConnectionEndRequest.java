@@ -14,7 +14,7 @@ public class ConnectionEndRequest {
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<ConnectionEndRequest> callback) {
     try {
-      final Long connection = request.getLong("connection", true, 32423);
+      final Long connection = request.getLong("connection", true, 405505);
       nexus.executor.execute(() -> {
         callback.success(new ConnectionEndRequest(connection));
       });

@@ -29,7 +29,7 @@ public class WebHookAddRequest {
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final String endpoint = request.getString("endpoint", true, 322);
+      final String endpoint = request.getString("endpoint", true, 477196);
       _latch.with(() -> new WebHookAddRequest(identity, who.get(), space, policy.get(), endpoint));
       nexus.identityService.execute(identity, who);
       nexus.spaceService.execute(space, policy);

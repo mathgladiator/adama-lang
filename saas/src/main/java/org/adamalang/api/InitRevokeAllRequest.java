@@ -18,8 +18,8 @@ public class InitRevokeAllRequest {
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<InitRevokeAllRequest> callback) {
     try {
-      final Long connection = request.getLong("connection", true, 32423);
-      final String code = request.getString("code", true, 32423);
+      final Long connection = request.getLong("connection", true, 405505);
+      final String code = request.getString("code", true, 455681);
       nexus.executor.execute(() -> {
         callback.success(new InitRevokeAllRequest(connection, code));
       });

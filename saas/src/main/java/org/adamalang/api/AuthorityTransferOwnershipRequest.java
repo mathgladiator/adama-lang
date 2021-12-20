@@ -24,7 +24,7 @@ public class AuthorityTransferOwnershipRequest {
       final BulkLatch<AuthorityTransferOwnershipRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
-      final String email = request.getString("email", true, 322);
+      final String email = request.getString("email", true, 473103);
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
       _latch.with(() -> new AuthorityTransferOwnershipRequest(identity, who.get(), email, userId.get()));
       nexus.identityService.execute(identity, who);

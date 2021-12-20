@@ -29,7 +29,7 @@ public class SpaceBillingSetRequest {
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final String name = request.getString("name", true, 32423);
+      final String name = request.getString("name", true, 453647);
       _latch.with(() -> new SpaceBillingSetRequest(identity, who.get(), space, policy.get(), name));
       nexus.identityService.execute(identity, who);
       nexus.spaceService.execute(space, policy);

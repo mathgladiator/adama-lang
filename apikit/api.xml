@@ -1,39 +1,36 @@
 <?xml version="1.0"?>
 <api output-path="./saas/src/main/java/org/adamalang/api" package="org.adamalang.api">
-    <parameter-definition name="identity" type="string">
+    <parameter-definition name="identity" type="string" missing-error="458759">
         <documentation>
             Identity is a token passed to the Authenticator which has the job of producing an agent (i.e. who is this person) and an authority (who vouches for this person).
             This is an opaque string for most of the system, but a common convention is to use JWT.
+
+            This parameter may also be prefixed with "FB/" or "GOOGLE/" for usage of common social media validation. TODO: flush out social media login.
         </documentation>
-        <error code="458759">
-            The parameter 'identity' was missing from the request.
-        </error>
         <transform service="org.adamalang.transforms.Authenticator"
                 output-name="who"
                 output-java-type="org.adamalang.transforms.results.AuthenticatedUser"
                 error-code="444420" />
     </parameter-definition>
 
-    <parameter-definition name="space" type="string">
+    <parameter-definition name="space" type="string" missing-error="461828">
         <documentation>
-            A space is a collection of documents with the same schema and logic, and the 'space' parameter is used to denote the name of that collection.
+            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to denote the name of that collection.
+
+            Spaces are case insensitive using the regex a-z[a-z0-9\.]* to validation.
         </documentation>
-        <error code="461828">
-            The parameter 'space' was missing from the request.
-        </error>
         <transform service="org.adamalang.transforms.SpacePolicyLocator"
                 output-name="policy"
                 output-java-type="org.adamalang.transforms.results.SpacePolicy"
                 error-code="454658" />
     </parameter-definition>
 
-    <parameter-definition name="key" type="string">
+    <parameter-definition name="key" type="string" missing-error="466947">
         <documentation>
             Within a space, documents are organized within a map and the 'key' parameter will uniquely identify documents.
+
+            Keys are case insensitive using the regex [a-z0-9\.-_]* for validation
         </documentation>
-        <error code="466947">
-            The parameter 'key' was missing from the request.
-        </error>
     </parameter-definition>
 
     <parameter-definition name="entropy" type="string" optional="true">
@@ -42,216 +39,166 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="arg" type="json-object">
+    <parameter-definition name="arg" type="json-object" missing-error="461826">
         <documentation>
             Documents are constructed with a message argument per the @construct event. The 'arg' is an object which is deserialized within the constructor's message type.
         </documentation>
-        <error code="461826">
-            The parameter 'arg' was missing or invalid from the request.
-        </error>
     </parameter-definition>
 
-
-
-
-
-
-    <parameter-definition name="channel" type="str">
+    <parameter-definition name="channel" type="string" missing-error="454659">
         <documentation>
             'channel' is a identifier within a document used for communication
         </documentation>
-        <error code="2324">
-            'channel' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="message" type="json-object">
+    <parameter-definition name="message" type="json-object" missing-error="425987">
         <documentation>
             'message' is an object that is sent to a message under a given channel
         </documentation>
-        <error code="324">
-            'message' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="connection" type="long">
+    <parameter-definition name="connection" type="long" missing-error="405505">
         <documentation>
             'connection' is a key to locate a sub-stream within a connection
+
+            This parameter originates as the id sent during the method 'init/start' since the initiation requires an active connection between the client and the server.
         </documentation>
-        <error code="32423">
-            'connection' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="code" type="string">
+    <parameter-definition name="code" type="string" missing-error="455681">
         <documentation>
             'code' is a randomly (secure) generated unique code to the socket and the universe which is sent via email
         </documentation>
-        <error code="32423">
-            'code' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="email" type="string">
+    <parameter-definition name="email" type="string" missing-error="473103">
         <documentation>
             'email' is the email being accessed
         </documentation>
-        <error code="322">
-            'email' was missing from the request
-        </error>
         <transform service="org.adamalang.transforms.UserIdResolver"
                    output-name="userId"
                    output-java-type="Integer"
-                   error-code="444420" />
+                   error-code="460815" />
     </parameter-definition>
 
-    <parameter-definition name="plan" type="json-object">
+    <parameter-definition name="plan" type="json-object" missing-error="425999">
         <documentation>
-            'plan' is the email being accessed
-        </documentation>
-        <error code="322">
-            'plan' was missing from the request
-        </error>
-    </parameter-definition>
+            This 'plan' parameter contains multiple Adama scripts all gated on various rules.
 
+            These rules allow for a migration to happen slowly on your schedule.
+
+            Note: this method will validate that the scripts are valid, compile, and will not have any major regressions during role out.
+        </documentation>
+    </parameter-definition>
 
     <parameter-definition name="limit" type="int" optional="true">
         <documentation>
             'limit' is the maximum number of items to return during a listing process
         </documentation>
     </parameter-definition>
+
     <parameter-definition name="marker" type="string" optional="true">
         <documentation>
-            'marker' is a key to skip ahead a listing
+            'marker' is a key to skip ahead a listing. When iterating, value will be returned that are after marker. To paginate an entire list, then
         </documentation>
     </parameter-definition>
 
 
-    <parameter-definition name="name" type="string">
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <parameter-definition name="name" type="string" missing-error="453647">
         <documentation>
             'name' is an identifer
         </documentation>
-        <error code="32423">
-            'name' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="algorithm" type="string">
+    <parameter-definition name="algorithm" type="string" missing-error="481294">
         <documentation>
             'algorithm' is an valid JWT algorithm which is not none.
         </documentation>
-        <error code="32423">
-            'algorithm' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="public-key" type="string">
+    <parameter-definition name="public-key" type="string" missing-error="405519">
         <documentation>
             'public-key' is a public key used by a JWT algorithm
         </documentation>
-        <error code="32423">
-            'public-key' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="policy" type="json-object">
+    <parameter-definition name="policy" type="json-object" missing-error="457743">
         <documentation>
             'policy' is an attached policy for keys to evaluate against
         </documentation>
-        <error code="322">
-            'policy' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="authority" type="string">
+    <parameter-definition name="authority" type="string" missing-error="430095">
         <documentation>
             An authority is collection of users.
         </documentation>
-        <error code="322">
-            'authority' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="role" type="string">
+    <parameter-definition name="role" type="string" missing-error="456716">
         <documentation>
             An role is a manner of user which has different capabilities
         </documentation>
-        <error code="322">
-            'role' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="seq" type="integer">
+    <parameter-definition name="seq" type="integer" missing-error="461836">
         <documentation>
             A 'seq' is an index in a log
         </documentation>
-        <error code="322">
-            'seq' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="endpoint" type="string">
+    <parameter-definition name="endpoint" type="string" missing-error="477196">
         <documentation>
             A 'endpoint' is WebSocket address
         </documentation>
-        <error code="322">
-            'endpoint' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="filename" type="string">
+    <parameter-definition name="filename" type="string" missing-error="470028">
         <documentation>
             A filename is a nice description of the file being uploaded
         </documentation>
-        <error code="322">
-            'filename' was missing from the request
-        </error>
     </parameter-definition>
 
-
-    <parameter-definition name="chunk-md5" type="string">
+    <parameter-definition name="chunk-md5" type="string" missing-error="462859">
         <documentation>
             A md5 hash of a chunk being uploaded
         </documentation>
-        <error code="322">
-            'chunk-md5' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="content-type" type="string">
+    <parameter-definition name="content-type" type="string" missing-error="455691">
         <documentation>
             The MIME type like text/json or video/mp4
         </documentation>
-        <error code="322">
-            'content-type' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="base64-bytes" type="string">
+    <parameter-definition name="base64-bytes" type="string" missing-error="409608">
         <documentation>
             Bytes encoded in base64
         </documentation>
-        <error code="322">
-            'base64-bytes' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="md5" type="string">
+    <parameter-definition name="md5" type="string" missing-error="443401">
         <documentation>
             The md5 of the entire file being uploaded
         </documentation>
-        <error code="322">
-            'md5' was missing from the request
-        </error>
     </parameter-definition>
 
-    <parameter-definition name="upload" type="long">
+    <parameter-definition name="upload" type="long" missing-error="409609">
         <documentation>
             The id of the upload in progress
         </documentation>
-        <error code="322">
-            'upload' was missing from the request
-        </error>
     </parameter-definition>
 
 
@@ -580,29 +527,8 @@
     <!--
 
 
-454659
-425987
-405505
-455681
-473103
-460815
-425999
-453647
-481294
-405519
-457743
-430095
-456716
-461836
-477196
-470028
-462859
-455691
-409608
-443401
-409609
-457751
-453655
+
+
 478227
 477201
 474128
@@ -894,6 +820,8 @@
 408323
 410368
 401152
+457751
+453655
 446208
 443136
 450304

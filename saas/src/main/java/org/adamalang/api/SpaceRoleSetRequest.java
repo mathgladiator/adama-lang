@@ -33,9 +33,9 @@ public class SpaceRoleSetRequest {
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final String email = request.getString("email", true, 322);
+      final String email = request.getString("email", true, 473103);
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
-      final String role = request.getString("role", true, 322);
+      final String role = request.getString("role", true, 456716);
       _latch.with(() -> new SpaceRoleSetRequest(identity, who.get(), space, policy.get(), email, userId.get(), role));
       nexus.identityService.execute(identity, who);
       nexus.spaceService.execute(space, policy);
