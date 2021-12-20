@@ -10,7 +10,7 @@
         </error>
         <transform service="org.adamalang.transforms.Authenticator"
                 output-name="who"
-                output-java-type="org.adamalang.runtime.natives.NtClient"
+                output-java-type="org.adamalang.transforms.results.AuthenticatedUser"
                 error-code="444420" />
     </parameter-definition>
 
@@ -92,13 +92,17 @@
         </error>
     </parameter-definition>
 
-    <parameter-definition name="email" type="long">
+    <parameter-definition name="email" type="string">
         <documentation>
             'email' is the email being accessed
         </documentation>
         <error code="322">
             'email' was missing from the request
         </error>
+        <transform service="org.adamalang.transforms.UserIdResolver"
+                   output-name="userId"
+                   output-java-type="Integer"
+                   error-code="444420" />
     </parameter-definition>
 
     <parameter-definition name="plan" type="json-object">
@@ -106,7 +110,7 @@
             'plan' is the email being accessed
         </documentation>
         <error code="322">
-            'email' was missing from the request
+            'plan' was missing from the request
         </error>
     </parameter-definition>
 
@@ -285,6 +289,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="private-key" type="string">
+        <documentation>
+            A private key
+        </documentation>
+    </field-definition>
+
 
 
     <responder name="simple">
@@ -302,7 +312,9 @@
         <field name="delta" />
     </responder>
 
-
+    <responder name="private-key">
+        <field name="private-key" />
+    </responder>
 
 
     <method name="init/start" responder="simple" create="waiting-for-email">
@@ -316,7 +328,17 @@
         </documentation>
     </method>
 
-    <method name="init/generate-new-key-pair" responder="simple" handler="waiting-for-email" find-by="connection" error-find-by="2324">
+    <method name="init/revoke-all" responder="simple" handler="waiting-for-email" find-by="connection" error-find-by="2324">
+        <parameter name="connection" />
+        <parameter name="code" />
+        <documentation>
+            When the developer receives an email, this method is invoked to revoke all existing public keys.
+
+            This same code, having been validated via email, can then be used to generate a new key pair.
+        </documentation>
+    </method>
+
+    <method name="init/generate-new-key-pair" responder="private-key" handler="waiting-for-email" find-by="connection" error-find-by="2324" destroy="true">
         <parameter name="connection" />
         <parameter name="code" />
         <documentation>
@@ -327,18 +349,6 @@
             A public key will be held onto for 30 days.
         </documentation>
     </method>
-
-    <method name="init/revoke-all" responder="simple" handler="waiting-for-email" find-by="connection" error-find-by="2324">
-        <parameter name="connection" />
-        <parameter name="code" />
-        <documentation>
-            When the developer receives an email, this method is invoked to revoke all existing public keys.
-
-            This same code, having been validated via email, can then be used to generate a
-        </documentation>
-    </method>
-
-
 
     <method name="billing/add" responder="simple">
         <parameter name="identity" />

@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class WebSocketClient {
@@ -31,26 +32,61 @@ public class WebSocketClient {
     public class Connection {
         private final AtomicInteger idgen;
         private final Channel channel;
-        private final ConcurrentHashMap<Long, Consumer<Object>> callbacks;
+        private final ConcurrentHashMap<Long, BiConsumer<Object, Boolean>> callbacks;
 
-        public Connection(Channel channel, ConcurrentHashMap<Long, Consumer<Object>> callbacks) {
+        public Connection(Channel channel, ConcurrentHashMap<Long, BiConsumer<Object, Boolean>> callbacks) {
             this.idgen = new AtomicInteger(0);
             this.channel = channel;
             this.callbacks = callbacks;
         }
 
-        public ObjectNode requestResponse(ObjectNode request) throws Exception {
+        public void stream(ObjectNode request, Consumer<ObjectNode> stream) throws Exception {
+            long id = idgen.incrementAndGet();
+            request.put("id", Long.toString(id));
+            CountDownLatch latch = new CountDownLatch(1);
+            AtomicReference<Exception> value = new AtomicReference<>(null);
+            callbacks.put(id, (result, done) -> {
+                if (result instanceof ObjectNode) {
+                    stream.accept((ObjectNode) result);
+                    if (done) {
+                        latch.countDown();
+                    }
+                } else if (result instanceof Exception) {
+                    value.set((Exception) result);
+                }
+            });
+            channel.writeAndFlush(new TextWebSocketFrame(request.toString()));
+            latch.await();
+            if (value.get() != null) {
+                throw value.get();
+            }
+        }
+
+        public long open(ObjectNode request, Consumer<ObjectNode> stream, Consumer<Exception> error) throws Exception {
+            long id = idgen.incrementAndGet();
+            request.put("id", Long.toString(id));
+            callbacks.put(id, (result, done) -> {
+                if (result instanceof ObjectNode) {
+                    stream.accept((ObjectNode) result);
+                } else if (result instanceof Exception) {
+                    error.accept((Exception) result);
+                }
+            });
+            channel.writeAndFlush(new TextWebSocketFrame(request.toString()));
+            return id;
+        }
+
+        public ObjectNode execute(ObjectNode request) throws Exception {
             long id = idgen.incrementAndGet();
             request.put("id", Long.toString(id));
             CountDownLatch latch = new CountDownLatch(1);
 
             AtomicReference<Object> value = new AtomicReference<>(null);
             try {
-                callbacks.put(id, result -> {
+                callbacks.put(id, (result, done) -> {
                     value.set(result);
                     latch.countDown();
                 });
-                System.err.println(request.toString() + "-->");
                 channel.writeAndFlush(new TextWebSocketFrame(request.toString()));
                 boolean result = latch.await(5000, TimeUnit.MILLISECONDS);
                 if (result && value.get() != null) {
@@ -73,7 +109,7 @@ public class WebSocketClient {
         String url = "ws://localhost:8080/s";
         final var b = new Bootstrap();
         b.group(group);
-        ConcurrentHashMap<Long, Consumer<Object>> callbacks = new ConcurrentHashMap<>();
+        ConcurrentHashMap<Long, BiConsumer<Object, Boolean>> callbacks = new ConcurrentHashMap<>();
         b.channel(NioSocketChannel.class);
         CountDownLatch connected = new CountDownLatch(1);
         b.handler(new ChannelInitializer<SocketChannel>() {
@@ -118,17 +154,17 @@ public class WebSocketClient {
                         if (node.has("failure")) {
                             long id = node.get("failure").asLong();
                             int reason = node.get("reason").asInt();
-                            Consumer<Object> callback = callbacks.remove(id);
+                            BiConsumer<Object, Boolean> callback = callbacks.remove(id);
                             if (callback != null) {
-                                callback.accept(new Exception("failure: " + reason));
+                                callback.accept(new Exception("failure: " + reason), true);
                                 return;
                             }
                         } else if (node.has("deliver")) {
                             long id = node.get("deliver").asLong();
                             boolean done = node.get("done").asBoolean();
-                            Consumer<Object> callback = done ? callbacks.remove(id) : callbacks.get(id);
+                            BiConsumer<Object, Boolean> callback = done ? callbacks.remove(id) : callbacks.get(id);
                             if (callback != null) {
-                                callback.accept(node.get("response"));
+                                callback.accept(node.get("response"), done);
                                 return;
                             }
                         }

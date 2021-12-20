@@ -22,14 +22,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServiceRunnable implements Runnable {
   private Channel channel;
-  private final Config config;
+  private final WebConfig webConfig;
   private final ServiceBase base;
   private final CountDownLatch ready;
   private final AtomicBoolean started;
   private boolean stopped;
 
-  public ServiceRunnable(final Config config, ServiceBase base) {
-    this.config = config;
+  public ServiceRunnable(final WebConfig webConfig, ServiceBase base) {
+    this.webConfig = webConfig;
     this.base = base;
     started = new AtomicBoolean();
     channel = null;
@@ -69,8 +69,8 @@ public class ServiceRunnable implements Runnable {
           final EventLoopGroup workerGroup = new NioEventLoopGroup();
           try {
             final var b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(config, base));
-            final var ch = b.bind(config.port).sync().channel();
+            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, base));
+            final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             // TODO: log information out
             ch.closeFuture().sync();

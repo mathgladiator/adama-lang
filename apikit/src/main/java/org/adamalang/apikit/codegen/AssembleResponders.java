@@ -35,7 +35,7 @@ public class AssembleResponders {
                         java.append(", ");
                     }
                     first = false;
-                    java.append(fd.type.javaType()).append(" ").append(fd.name);
+                    java.append(fd.type.javaType()).append(" ").append(fd.camelName);
                 }
                 java.append(") {\n");
                 java.append("    ObjectNode _obj = new JsonMapper().createObjectNode();\n");
@@ -43,12 +43,12 @@ public class AssembleResponders {
                     String ext = "";
                     if (fd.optional) {
                         ext = "  ";
-                        java.append("    if (").append(fd.name).append(" != null) {\n");
+                        java.append("    if (").append(fd.camelName).append(" != null) {\n");
                     }
                     if (fd.type == Type.JsonObject) {
-                        java.append(ext + "    _obj.set(\"").append(fd.name).append("\", ").append(fd.name).append(");\n");
+                        java.append(ext + "    _obj.set(\"").append(fd.name).append("\", ").append(fd.camelName).append(");\n");
                     } else {
-                        java.append(ext + "    _obj.put(\"").append(fd.name).append("\", ").append(fd.name).append(");\n");
+                        java.append(ext + "    _obj.put(\"").append(fd.name).append("\", ").append(fd.camelName).append(");\n");
                     }
                     if (fd.optional) {
                         java.append("    }\n");

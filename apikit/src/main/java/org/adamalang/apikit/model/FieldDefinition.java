@@ -10,12 +10,14 @@ import java.util.TreeMap;
 
 public class FieldDefinition {
     public final String name;
+    public final String camelName;
     public final Type type;
     public final boolean optional;
     public final String documentation;
 
     public FieldDefinition(final String name, Type type, boolean optional, String documentation) {
         this.name = name;
+        this.camelName = Common.camelize(name, true);
         this.type = type;
         this.optional = optional;
         this.documentation = documentation;

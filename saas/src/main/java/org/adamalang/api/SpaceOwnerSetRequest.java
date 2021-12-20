@@ -1,38 +1,42 @@
 package org.adamalang.api;
 
-import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.web.io.*;
 
 /**  */
 public class SpaceOwnerSetRequest {
   public final String identity;
-  public final NtClient who;
+  public final AuthenticatedUser who;
   public final String space;
   public final SpacePolicy policy;
-  public final Long email;
+  public final String email;
+  public final Integer userId;
 
-  public SpaceOwnerSetRequest(final String identity, final NtClient who, final String space, final SpacePolicy policy, final Long email) {
+  public SpaceOwnerSetRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String email, final Integer userId) {
     this.identity = identity;
     this.who = who;
     this.space = space;
     this.policy = policy;
     this.email = email;
+    this.userId = userId;
   }
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceOwnerSetRequest> callback) {
     try {
-      final BulkLatch<SpaceOwnerSetRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
+      final BulkLatch<SpaceOwnerSetRequest> _latch = new BulkLatch<>(nexus.executor, 3, callback);
       final String identity = request.getString("identity", true, 458759);
-      final LatchRefCallback<NtClient> who = new LatchRefCallback<>(_latch);
+      final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final Long email = request.getLong("email", true, 322);
-      _latch.with(() -> new SpaceOwnerSetRequest(identity, who.get(), space, policy.get(), email));
+      final String email = request.getString("email", true, 322);
+      final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
+      _latch.with(() -> new SpaceOwnerSetRequest(identity, who.get(), space, policy.get(), email, userId.get()));
       nexus.identityService.execute(identity, who);
       nexus.spaceService.execute(space, policy);
+      nexus.emailService.execute(email, userId);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

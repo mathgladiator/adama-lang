@@ -6,7 +6,7 @@ import org.adamalang.web.io.*;
 
 /** When the developer receives an email, this method is invoked to revoke all existing public keys.
   * 
-  * This same code, having been validated via email, can then be used to generate a */
+  * This same code, having been validated via email, can then be used to generate a new key pair. */
 public class InitRevokeAllRequest {
   public final Long connection;
   public final String code;

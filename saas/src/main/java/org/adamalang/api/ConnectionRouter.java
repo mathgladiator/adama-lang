@@ -56,10 +56,10 @@ public class ConnectionRouter {
               }
             });
           } return;
-          case "init/generate-new-key-pair": {
-            InitGenerateNewKeyPairRequest.resolve(nexus, request, new Callback<>() {
+          case "init/revoke-all": {
+            InitRevokeAllRequest.resolve(nexus, request, new Callback<>() {
               @Override
-              public void success(InitGenerateNewKeyPairRequest resolved) {
+              public void success(InitRevokeAllRequest resolved) {
                 WaitingForEmailHandler handlerToUse = inflightWaitingForEmail.get(resolved.connection);
                 if (handlerToUse != null) {
                   handlerToUse.handle(resolved, new SimpleResponder(responder));
@@ -73,13 +73,13 @@ public class ConnectionRouter {
               }
             });
           } return;
-          case "init/revoke-all": {
-            InitRevokeAllRequest.resolve(nexus, request, new Callback<>() {
+          case "init/generate-new-key-pair": {
+            InitGenerateNewKeyPairRequest.resolve(nexus, request, new Callback<>() {
               @Override
-              public void success(InitRevokeAllRequest resolved) {
-                WaitingForEmailHandler handlerToUse = inflightWaitingForEmail.get(resolved.connection);
+              public void success(InitGenerateNewKeyPairRequest resolved) {
+                WaitingForEmailHandler handlerToUse = inflightWaitingForEmail.remove(resolved.connection);
                 if (handlerToUse != null) {
-                  handlerToUse.handle(resolved, new SimpleResponder(responder));
+                  handlerToUse.handle(resolved, new PrivateKeyResponder(responder));
                 } else {
                   responder.error(new ErrorCodeException(2324));
                 }

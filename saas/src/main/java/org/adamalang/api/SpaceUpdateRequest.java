@@ -1,21 +1,21 @@
 package org.adamalang.api;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.web.io.*;
 
 /**  */
 public class SpaceUpdateRequest {
   public final String identity;
-  public final NtClient who;
+  public final AuthenticatedUser who;
   public final String space;
   public final SpacePolicy policy;
   public final ObjectNode plan;
 
-  public SpaceUpdateRequest(final String identity, final NtClient who, final String space, final SpacePolicy policy, final ObjectNode plan) {
+  public SpaceUpdateRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final ObjectNode plan) {
     this.identity = identity;
     this.who = who;
     this.space = space;
@@ -27,7 +27,7 @@ public class SpaceUpdateRequest {
     try {
       final BulkLatch<SpaceUpdateRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
-      final LatchRefCallback<NtClient> who = new LatchRefCallback<>(_latch);
+      final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final ObjectNode plan = request.getObject("plan", true, 322);

@@ -17,9 +17,9 @@ public class ServiceRunnableTests {
 
   @Test
   public void test_interrupt() throws Exception {
-    Config config = ConfigTests.mockConfig(ConfigTests.Scenario.Mock1);
+    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.Mock1);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(config, base);
+    final var runnable = new ServiceRunnable(webConfig, base);
     final var thread = new Thread(runnable);
     thread.start();
     Assert.assertTrue(runnable.waitForReady(2500));
@@ -31,9 +31,9 @@ public class ServiceRunnableTests {
 
   @Test
   public void test_shutdown() throws Exception {
-    Config config = ConfigTests.mockConfig(ConfigTests.Scenario.Mock2);
+    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.Mock2);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(config, base);
+    final var runnable = new ServiceRunnable(webConfig, base);
     final var thread = new Thread(runnable);
     thread.start();
     Assert.assertTrue(runnable.waitForReady(10000));
@@ -45,9 +45,9 @@ public class ServiceRunnableTests {
 
   @Test
   public void test_tight_shutdown() throws Exception {
-    Config config = ConfigTests.mockConfig(ConfigTests.Scenario.Mock3);
+    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.Mock3);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(config, base);
+    final var runnable = new ServiceRunnable(webConfig, base);
     runnable.shutdown();
     final var thread = new Thread(runnable);
     thread.start();

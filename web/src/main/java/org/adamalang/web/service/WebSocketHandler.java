@@ -31,15 +31,15 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame>  {
   private boolean ended;
-  private final Config config;
+  private final WebConfig webConfig;
   private final ServiceBase base;
   private ServiceConnection connection;
   private ScheduledFuture<?> future;
   private long created;
   private AtomicLong latency;
 
-  public WebSocketHandler(final Config config, final ServiceBase base) {
-    this.config = config;
+  public WebSocketHandler(final WebConfig webConfig, final ServiceBase base) {
+    this.webConfig = webConfig;
     this.base = base;
     this.connection = null;
     this.ended = false;
@@ -149,7 +149,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       };
 
       // schedule the heartbeat loop
-      future = ctx.executor().scheduleAtFixedRate(heartbeatLoop, config.heartbeatTimeMilliseconds, config.heartbeatTimeMilliseconds, TimeUnit.MILLISECONDS);
+      future = ctx.executor().scheduleAtFixedRate(heartbeatLoop, webConfig.heartbeatTimeMilliseconds, webConfig.heartbeatTimeMilliseconds, TimeUnit.MILLISECONDS);
     }
   }
 

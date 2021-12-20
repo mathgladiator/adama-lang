@@ -14,14 +14,11 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.multipart.*;
-import org.adamalang.runtime.contracts.Callback;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 import java.nio.charset.StandardCharsets;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
-  private static void sendWithKeepAlive(final Config config, final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
+  private static void sendWithKeepAlive(final WebConfig webConfig, final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
     final var responseStatus = res.status();
     String origin = req.headers().get("origin");
     if (origin != null) {
@@ -35,16 +32,16 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
   }
 
-  private final Config config;
+  private final WebConfig webConfig;
 
-  public WebHandler(Config config) {
-    this.config = config;
+  public WebHandler(WebConfig webConfig) {
+    this.webConfig = webConfig;
   }
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
     // analyze the request
-    boolean isHealthCheck = config.healthCheckPath.equals(req.uri());
+    boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
 
     // send the default response for bad or health checks
     HttpResponseStatus status = isHealthCheck ? HttpResponseStatus.OK : HttpResponseStatus.BAD_REQUEST;
@@ -52,6 +49,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
     HttpUtil.setContentLength(res, content.length);
     res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=UTF-8");
-    sendWithKeepAlive(config, ctx, req, res);
+    sendWithKeepAlive(webConfig, ctx, req, res);
   }
 }

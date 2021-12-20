@@ -20,9 +20,9 @@ public class WebHandlerTests {
   @Test
   public void flow() throws Exception {
     EventLoopGroup group = new NioEventLoopGroup();
-    Config config = ConfigTests.mockConfig(ConfigTests.Scenario.ProdScope);
+    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ProdScope);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(config, base);
+    final var runnable = new ServiceRunnable(webConfig, base);
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
@@ -35,42 +35,42 @@ public class WebHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", config.port).get("/x").execute(callback);
+        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/x").execute(callback);
         callback.awaitFirst();
         callback.assertData("Bad Request");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", config.port).get("/demo.html").execute(callback);
+        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/demo.html").execute(callback);
         callback.awaitFirst();
         callback.assertData("Bad Request");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", config.port).header("origin", "http://localhost").get("/demo.html").execute(callback);
+        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).header("origin", "http://localhost").get("/demo.html").execute(callback);
         callback.awaitFirst();
         callback.assertData("Bad Request");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", config.port).get(config.healthCheckPath).execute(callback);
+        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get(webConfig.healthCheckPath).execute(callback);
         callback.awaitFirst();
         callback.assertDataPrefix("HEALTHY:");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", config.port).get("/ex_500").execute(callback);
+        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/ex_500").execute(callback);
         callback.awaitFirst();
         callback.assertData("Bad Request");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", config.port).header("origin", "http://localhost").junk().get("/demo.html").execute(callback);
+        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).header("origin", "http://localhost").junk().get("/demo.html").execute(callback);
         callback.awaitFailure();
       }
     } finally {

@@ -21,12 +21,12 @@ import org.slf4j.LoggerFactory;
 
 public class Initializer extends ChannelInitializer<SocketChannel> {
   private final Logger logger;
-  private final Config config;
+  private final WebConfig webConfig;
   private final ServiceBase base;
 
-  public Initializer(final Config config, final ServiceBase base) {
+  public Initializer(final WebConfig webConfig, final ServiceBase base) {
     this.logger = LoggerFactory.getLogger("Initializer");
-    this.config = config;
+    this.webConfig = webConfig;
     this.base = base;
   }
 
@@ -35,10 +35,10 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
     logger.info("initializing channel: {}", ch.remoteAddress());
     final var pipeline = ch.pipeline();
     pipeline.addLast(new HttpServerCodec());
-    pipeline.addLast(new HttpObjectAggregator(config.maxContentLengthSize));
+    pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
     pipeline.addLast(new WebSocketServerCompressionHandler());
-    pipeline.addLast(new WebSocketServerProtocolHandler("/s", null, true, config.maxWebSocketFrameSize, false, true, config.timeoutWebsocketHandshake));
-    pipeline.addLast(new WebHandler(config));
-    pipeline.addLast(new WebSocketHandler(config, base));
+    pipeline.addLast(new WebSocketServerProtocolHandler("/s", null, true, webConfig.maxWebSocketFrameSize, false, true, webConfig.timeoutWebsocketHandshake));
+    pipeline.addLast(new WebHandler(webConfig));
+    pipeline.addLast(new WebSocketHandler(webConfig, base));
   }
 }

@@ -10,18 +10,21 @@ import org.adamalang.web.io.*;
   * 
   * Developer accounts are keyed off of email. */
 public class InitStartRequest {
-  public final Long email;
+  public final String email;
+  public final Integer userId;
 
-  public InitStartRequest(final Long email) {
+  public InitStartRequest(final String email, final Integer userId) {
     this.email = email;
+    this.userId = userId;
   }
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<InitStartRequest> callback) {
     try {
-      final Long email = request.getLong("email", true, 322);
-      nexus.executor.execute(() -> {
-        callback.success(new InitStartRequest(email));
-      });
+      final BulkLatch<InitStartRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
+      final String email = request.getString("email", true, 322);
+      final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
+      _latch.with(() -> new InitStartRequest(email, userId.get()));
+      nexus.emailService.execute(email, userId);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

@@ -2,32 +2,30 @@ package org.adamalang.saas;
 
 import org.adamalang.api.ConnectionNexus;
 import org.adamalang.api.ConnectionRouter;
-import org.adamalang.impl.RootHandlerImpl;
+import org.adamalang.extern.ExternNexus;
+import org.adamalang.frontend.RootHandlerImpl;
 import org.adamalang.transforms.Authenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
+import org.adamalang.transforms.UserIdResolver;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.Json;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
-import org.adamalang.web.service.Config;
+import org.adamalang.web.service.WebConfig;
 import org.adamalang.web.service.ServiceRunnable;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Frontend {
-    public static void execute() throws Exception {
-        // TODO: search args for --config to pick up a file to use for config
-        Config config = new Config(Json.parseJsonObject("{}"));
+    public static ServiceBase makeService(ExternNexus extern) throws Exception {
+        // TODO: make multiple of these
         ExecutorService executor = Executors.newSingleThreadExecutor();
-
-        // TODO: add the gRPC client here, yay!
-        RootHandlerImpl handler = new RootHandlerImpl();
-
-        ServiceBase base = context -> new ServiceConnection() {
+        RootHandlerImpl handler = new RootHandlerImpl(extern);
+        return context -> new ServiceConnection() {
             // TODO: pick an executor (randomly? pick two and do the faster of the two?)
-            ConnectionNexus nexus = new ConnectionNexus(executor, new Authenticator(), new SpacePolicyLocator());
+            ConnectionNexus nexus = new ConnectionNexus(executor, new UserIdResolver(executor, extern.base), new Authenticator(extern), new SpacePolicyLocator());
             ConnectionRouter router = new ConnectionRouter(nexus, handler);
             @Override
             public void execute(JsonRequest request, JsonResponder responder) {
@@ -36,6 +34,9 @@ public class Frontend {
 
             @Override
             public boolean keepalive() {
+                // TODO: check with the nexus for some activity
+                // TODO: rule #1: there should be activity within the first 30 seconds of a connection
+                // TODO: rule #2: there should be activity within the last 5 minutes
                 return true;
             }
 
@@ -44,7 +45,12 @@ public class Frontend {
                 router.disconnect();
             }
         };
-        final var runnable = new ServiceRunnable(config, base);
+    }
+
+    public static void execute(ExternNexus extern, String config) throws Exception {
+        WebConfig webConfig = new WebConfig(Json.parseJsonObject(config));
+        ServiceBase serviceBase = makeService(extern);
+        final var runnable = new ServiceRunnable(webConfig, serviceBase);
         final var thread = new Thread(runnable);
         thread.start();
         runnable.waitForReady(1000);

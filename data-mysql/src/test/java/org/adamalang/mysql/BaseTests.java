@@ -10,8 +10,8 @@ import java.sql.SQLException;
 public class BaseTests {
     @Test
     public void failure_coverage() throws Exception {
-        Config config = ConfigTests.getLocalIntegrationConfig();
-        ComboPooledDataSource pool = config.createComboPooledDataSource();
+        BaseConfig baseConfig = BaseConfigTests.getLocalIntegrationConfig();
+        ComboPooledDataSource pool = baseConfig.createComboPooledDataSource();
         try {
             Base base = new Base(pool, "failures_1");
             Connection connection = pool.getConnection();

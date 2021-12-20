@@ -27,9 +27,9 @@ public class WebSocketHandlerTests {
   @Test
   public void flow() throws Exception {
     EventLoopGroup group = new NioEventLoopGroup();
-    Config config = ConfigTests.mockConfig(ConfigTests.Scenario.DevScope);
+    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.DevScope);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(config, base);
+    final var runnable = new ServiceRunnable(webConfig, base);
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);
@@ -37,14 +37,14 @@ public class WebSocketHandlerTests {
       runnable.waitForReady(1000);
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket().execute(callback);
+        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket().execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -61,7 +61,7 @@ public class WebSocketHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -77,7 +77,7 @@ public class WebSocketHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -95,7 +95,7 @@ public class WebSocketHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -108,7 +108,7 @@ public class WebSocketHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -122,7 +122,7 @@ public class WebSocketHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -135,7 +135,7 @@ public class WebSocketHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", config.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
