@@ -12,7 +12,7 @@ package org.adamalang.data.cloud;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.adamalang.runtime.stdlib.IdCodec;
-import org.adamalang.data.mysql.IdFactory;
+import org.adamalang.mysql.IdFactory;
 import org.adamalang.runtime.contracts.AssetRequest;
 import org.adamalang.runtime.contracts.AssetService;
 import org.adamalang.runtime.contracts.Callback;
@@ -50,7 +50,7 @@ public class AWSS3AssetService implements AssetService {
           // TODO: encode better; the document id AND id needs a bijective encoder such that the bits are reversed
           String key = "assets/" + IdCodec.encode(request.documentId()) + "/" + IdCodec.encode(id);
           s3.putObject(bucket, key, request.source().get(), metadata);
-          NtAsset asset = new NtAsset(id, request.name(), request.type(), request.size(), request.md5(), request.sha384());
+          NtAsset asset = new NtAsset("" + id, request.name(), request.type(), request.size(), request.md5(), request.sha384());
           callback.success(asset);
         } catch (Throwable t) {
           callback.failure(new ErrorCodeException(0, t));

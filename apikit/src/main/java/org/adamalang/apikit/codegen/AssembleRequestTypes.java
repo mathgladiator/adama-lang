@@ -4,8 +4,25 @@ import org.adamalang.apikit.model.*;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 public class AssembleRequestTypes {
+
+    private static String fixDocumentation(String documentation) {
+        String[] lines = documentation.trim().split(Pattern.quote("\n"));
+        boolean first = true;
+        StringBuilder output = new StringBuilder();
+        for (String ln : lines) {
+            if (!first) {
+                output.append("\n  * ");
+            }
+            first = false;
+            output.append(ln.trim());
+        }
+
+        return output.toString();
+
+    }
     public static Map<String, String> make(String packageName, Method[] methods) throws Exception {
         TreeMap<String, String> files = new TreeMap<>();
         for (Method method : methods) {
@@ -15,11 +32,12 @@ public class AssembleRequestTypes {
                 java.append("import ").append(imp).append(";\n");
             }
             java.append("\n");
-            java.append("class ").append(method.camelName).append("Request {\n");
+            java.append("/** ").append(fixDocumentation(method.documentation.trim())).append(" */\n");
+            java.append("public class ").append(method.camelName).append("Request {\n");
             for (ParameterDefinition parameter : method.parameters) {
                 java.append("  public final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName).append(";\n");
-                if (parameter.lookup != null) {
-                    java.append("  public final ").append(parameter.lookup.shortOutputJavaType).append(" ").append(parameter.lookup.outputName).append(";\n");
+                if (parameter.transform != null) {
+                    java.append("  public final ").append(parameter.transform.shortOutputJavaType).append(" ").append(parameter.transform.outputName).append(";\n");
                 }
             }
             java.append("\n");
@@ -31,17 +49,17 @@ public class AssembleRequestTypes {
                 }
                 first = false;
                 java.append("final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName);
-                if (parameter.lookup != null) {
-                    java.append(", final ").append(parameter.lookup.shortOutputJavaType).append(" ").append(parameter.lookup.outputName);
+                if (parameter.transform != null) {
+                    java.append(", final ").append(parameter.transform.shortOutputJavaType).append(" ").append(parameter.transform.outputName);
                 }
             }
             java.append(") {\n");
             int outstandingCallCount = 0;
             for (ParameterDefinition parameter : method.parameters) {
                 java.append("    this.").append(parameter.camelName).append(" = ").append(parameter.camelName).append(";\n");
-                if (parameter.lookup != null) {
+                if (parameter.transform != null) {
                     outstandingCallCount++;
-                    java.append("    this.").append(parameter.lookup.outputName).append(" = ").append(parameter.lookup.outputName).append(";\n");
+                    java.append("    this.").append(parameter.transform.outputName).append(" = ").append(parameter.transform.outputName).append(";\n");
                 }
             }
             java.append("  }\n");
@@ -71,8 +89,8 @@ public class AssembleRequestTypes {
                         throw new RuntimeException();
                 }
                 java.append(parameter.name).append("\", ").append(parameter.optional ? "false" : "true").append(", ").append(parameter.errorCodeIfMissing).append(");\n");
-                if (parameter.lookup != null) {
-                    java.append("      final LatchRefCallback<").append(parameter.lookup.shortOutputJavaType).append("> ").append(parameter.lookup.outputName).append(" = new LatchRefCallback<>(_latch);\n");
+                if (parameter.transform != null) {
+                    java.append("      final LatchRefCallback<").append(parameter.transform.shortOutputJavaType).append("> ").append(parameter.transform.outputName).append(" = new LatchRefCallback<>(_latch);\n");
                 }
                 if (parameter.validator != null) {
                     java.append("      ").append(parameter.validator.shortServiceName).append(".validate(").append(parameter.camelName).append(", ").append(parameter.validator.errorCode).append(");\n");
@@ -93,8 +111,8 @@ public class AssembleRequestTypes {
                 }
                 first = false;
                 java.append(parameter.camelName);
-                if (parameter.lookup != null) {
-                    java.append(", ").append(parameter.lookup.outputName).append(".get()");
+                if (parameter.transform != null) {
+                    java.append(", ").append(parameter.transform.outputName).append(".get()");
                 }
             }
             java.append(")");
@@ -107,8 +125,8 @@ public class AssembleRequestTypes {
             }
 
             for (ParameterDefinition parameter : method.parameters) {
-                if (parameter.lookup != null) {
-                    java.append("      nexus.").append(parameter.lookup.fieldInputName).append(".execute(").append(parameter.camelName).append(", ").append(parameter.lookup.outputName).append(");\n");
+                if (parameter.transform != null) {
+                    java.append("      nexus.").append(parameter.transform.fieldInputName).append(".execute(").append(parameter.camelName).append(", ").append(parameter.transform.outputName).append(");\n");
                 }
             }
             java.append("    } catch (ErrorCodeException ece) {\n");

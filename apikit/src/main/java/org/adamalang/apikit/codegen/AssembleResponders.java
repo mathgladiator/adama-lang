@@ -18,7 +18,7 @@ public class AssembleResponders {
                 java.append("import ").append(imp).append(";\n");
             }
             java.append("\n");
-            java.append("class ").append(responder.camelName).append("Responder {\n");
+            java.append("public class ").append(responder.camelName).append("Responder {\n");
             java.append("  public final JsonResponder responder;\n");
             java.append("\n");
             java.append("  public ").append(responder.camelName).append("Responder(JsonResponder responder) {\n");

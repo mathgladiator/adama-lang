@@ -1,6 +1,6 @@
 package org.adamalang.runtime.sys;
 
-import org.adamalang.runtime.ErrorCodes;
+import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.PrivateView;

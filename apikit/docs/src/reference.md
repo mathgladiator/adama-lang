@@ -88,15 +88,6 @@ Each space is bill seperately.
 ## Method: connection/end
 
 
-## Method: document/rewind
-
-
-## Method: document/unsend
-
-
-## Method: document/delete
-
-
 ## Method: web-hook/add
 
 
@@ -104,9 +95,6 @@ Each space is bill seperately.
 
 
 ## Method: web-hook/remove
-
-
-## Method: document/copy
 
 
 ## Method: attachment/start

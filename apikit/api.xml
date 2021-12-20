@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<api>
+<api output-path="./saas/src/main/java/org/adamalang/api" package="org.adamalang.api">
     <parameter-definition name="identity" type="string">
         <documentation>
             Identity is a token passed to the Authenticator which has the job of producing an agent (i.e. who is this person) and an authority (who vouches for this person).
@@ -8,7 +8,7 @@
         <error code="458759">
             The parameter 'identity' was missing from the request.
         </error>
-        <lookup service="org.adamalang.web.extern.Authenticator"
+        <transform service="org.adamalang.transforms.Authenticator"
                 output-name="who"
                 output-java-type="org.adamalang.runtime.natives.NtClient"
                 error-code="444420" />
@@ -21,9 +21,9 @@
         <error code="461828">
             The parameter 'space' was missing from the request.
         </error>
-        <lookup service="org.adamalang.web.extern.SpacePolicyLocator"
+        <transform service="org.adamalang.transforms.SpacePolicyLocator"
                 output-name="policy"
-                output-java-type="org.adamalang.web.extern.SpacePolicy"
+                output-java-type="org.adamalang.transforms.results.SpacePolicy"
                 error-code="454658" />
     </parameter-definition>
 
@@ -510,7 +510,7 @@
         </documentation>
     </method>
 
-    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection" error-find-by="4232" destroy="true" call-on-disconnect="true">
+    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection" error-find-by="4232" destroy="true">
         <parameter name="connection" />
         <documentation>
         </documentation>

@@ -9,7 +9,7 @@
 */
 package org.adamalang.data.disk;
 
-import org.adamalang.runtime.ErrorCodes;
+import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.contracts.Callback;

@@ -1,6 +1,6 @@
 package org.adamalang.runtime.data;
 
-import org.adamalang.runtime.ErrorCodes;
+import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;

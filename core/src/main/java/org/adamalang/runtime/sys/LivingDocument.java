@@ -11,7 +11,7 @@ package org.adamalang.runtime.sys;
 
 import java.util.*;
 
-import org.adamalang.runtime.ErrorCodes;
+import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.contracts.DataService;

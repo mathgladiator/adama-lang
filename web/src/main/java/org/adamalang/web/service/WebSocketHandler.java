@@ -16,6 +16,7 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.contracts.ServiceBase;
@@ -81,6 +82,8 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
           latency.set(System.currentTimeMillis() - created - requestNode.get("ping").asLong());
           return;
         }
+
+        System.err.println("REQ:" + requestNode.toString());
         JsonRequest request = new JsonRequest(requestNode);
         final var id = request.id();
 

@@ -17,7 +17,7 @@ import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 
-import org.adamalang.runtime.ErrorCodes;
+import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.natives.NtCreateContext;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.contracts.DocumentMonitor;

@@ -40,6 +40,11 @@ public class AssembleHandlers {
                 }
                 java.append(" handle(").append(method.camelName).append("Request request, ").append(method.responder.camelName).append("Responder responder);\n\n");
             }
+            if (root.equals("Root")) {
+                java.append("public void disconnect();");
+            } else {
+                java.append("public void disconnect(long id);");
+            }
             java.append("}\n");
             files.put(root + "Handler.java", java.toString());
         }

@@ -28,6 +28,8 @@
         <module>data-mysql</module>
         <module>apikit</module>
         <module>cli</module>
+        <module>saas</module>
+        <module>errors</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

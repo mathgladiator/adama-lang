@@ -13,17 +13,17 @@ public class ParameterDefinition {
     public final String camelName;
     public final Type type;
     public final boolean optional;
-    public final Lookup lookup;
+    public final Transform transform;
     public final Validator validator;
     public final String documentation;
     public final int errorCodeIfMissing;
 
-    public ParameterDefinition(final String name, Type type, boolean optional, Lookup lookup, Validator validator, String documentation, int errorCodeIfMissing) {
+    public ParameterDefinition(final String name, Type type, boolean optional, Transform transform, Validator validator, String documentation, int errorCodeIfMissing) {
         this.name = name;
         this.camelName = Common.camelize(name, true);
         this.type = type;
         this.optional = optional;
-        this.lookup = lookup;
+        this.transform = transform;
         this.validator = validator;
         this.documentation = documentation;
         this.errorCodeIfMissing = errorCodeIfMissing;
@@ -51,7 +51,7 @@ public class ParameterDefinition {
             boolean optional = "true".equals(element.getAttribute("optional"));
 
             String documentation = null;
-            Lookup lookup = null;
+            Transform transform = null;
             Validator validator = null;
             int errorCodeIfMissing = 0;
 
@@ -74,31 +74,31 @@ public class ParameterDefinition {
                         }
                         String errorCodeOnFailureRaw = childElement.getAttribute("error-code");
                         if (errorCodeOnFailureRaw == null) {
-                            throw new Exception("lookup needs an error-code");
+                            throw new Exception("transform needs an error-code");
                         }
                         int errorCodeOnFailure = Integer.parseInt(errorCodeOnFailureRaw);
                         validator = new Validator(service, errorCodeOnFailure);
                     }
                     break;
-                    case "lookup": {
+                    case "transform": {
                         String service = childElement.getAttribute("service");
                         if (service == null) {
-                            throw new Exception("lookup needs a service");
+                            throw new Exception("transform needs a service");
                         }
                         String outputName = childElement.getAttribute("output-name");
                         if (outputName == null) {
-                            throw new Exception("lookup needs an output-name");
+                            throw new Exception("transform needs an output-name");
                         }
                         String outputJavaName = childElement.getAttribute("output-java-type");
                         if (outputJavaName == null) {
-                            throw new Exception("lookup needs an output-java-type");
+                            throw new Exception("transform needs an output-java-type");
                         }
                         String errorCodeOnFailureRaw = childElement.getAttribute("error-code");
                         if (errorCodeOnFailureRaw == null) {
-                            throw new Exception("lookup needs an error-code");
+                            throw new Exception("transform needs an error-code");
                         }
                         int errorCodeOnFailure = Integer.parseInt(errorCodeOnFailureRaw);
-                        lookup = new Lookup(name, type, service, outputName, outputJavaName, errorCodeOnFailure);
+                        transform = new Transform(name, type, service, outputName, outputJavaName, errorCodeOnFailure);
                     }
                     break;
                     case "error": {
@@ -117,7 +117,7 @@ public class ParameterDefinition {
             if (errorCodeIfMissing == 0 && !optional) {
                 throw new Exception("non-optional parameter is missing non-zero error code:" + name);
             }
-            ParameterDefinition definition = new ParameterDefinition(name, type, optional, lookup, validator, documentation, errorCodeIfMissing);
+            ParameterDefinition definition = new ParameterDefinition(name, type, optional, transform, validator, documentation, errorCodeIfMissing);
             if (parameters.containsKey(name)) {
                 throw new Exception("parameter already defined: " + name);
             }

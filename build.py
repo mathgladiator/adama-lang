@@ -52,3 +52,7 @@ if generate:
 if made_jar:
     args = ["cp", "./devkit/target/devkit-0.2-jar-with-dependencies.jar", "./demo/devkit.jar"]
     os.system(" ".join(args))
+    args = ["cp", "./saas/target/saas-0.2-jar-with-dependencies.jar", "./demo/saas.jar"]
+    os.system(" ".join(args))
+    args = ["cp", "./cli/target/cli-0.2-jar-with-dependencies.jar", "./demo/cli.jar"]
+    os.system(" ".join(args))
