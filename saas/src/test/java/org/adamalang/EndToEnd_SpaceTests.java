@@ -25,10 +25,15 @@ public class EndToEnd_SpaceTests {
             Iterator<String> c4 = fe.execute("{\"id\":4,\"identity\":\""+alice+"\",\"method\":\"space/set-role\",\"space\":\"spacename\",\"email\":\"bob@x.com\",\"role\":\"developer\"}");
             Assert.assertEquals("FINISH:{}", c4.next());
 
-            Iterator<String> c5 = fe.execute("{\"id\":3,\"identity\":\""+bob+"\",\"method\":\"space/list\"}");
+            Iterator<String> c5 = fe.execute("{\"id\":5,\"identity\":\""+bob+"\",\"method\":\"space/list\"}");
+            Assert.assertEquals("STREAM:{\"space\":\"spacename\",\"role\":\"developer\",\"billing\":\"free\",\"created\":", c5.next().substring(0, 74));
             Assert.assertEquals("FINISH:{}", c5.next());
 
+            Iterator<String> c6 = fe.execute("{\"id\":6,\"identity\":\""+alice+"\",\"method\":\"space/set-role\",\"space\":\"spacename\",\"email\":\"bob@x.com\",\"role\":\"none\"}");
+            Assert.assertEquals("FINISH:{}", c6.next());
 
+            Iterator<String> c7 = fe.execute("{\"id\":7,\"identity\":\""+bob+"\",\"method\":\"space/list\"}");
+            Assert.assertEquals("FINISH:{}", c7.next());
         }
     }
 }

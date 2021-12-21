@@ -4,10 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.runtime.contracts.ExceptionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.transforms.results.AuthenticatedUser;
@@ -17,13 +19,16 @@ import java.security.KeyFactory;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Authenticator implements AsyncTransform<String, AuthenticatedUser> {
-
     public final ExternNexus nexus;
+    private final ExceptionLogger logger;
 
     public Authenticator(ExternNexus nexus) {
         this.nexus = nexus;
+        this.logger = nexus.makeLogger(Authenticator.class);
     }
 
     @Override
@@ -40,7 +45,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
                     KeyFactory kf = KeyFactory.getInstance("EC");
                     try {
                         Jwts.parserBuilder().setSigningKey(kf.generatePublic(spec)).requireIssuer("adama").build().parseClaimsJws(identity);
-                        callback.success(new AuthenticatedUser(userId, new NtClient("" + userId, "adama")));
+                        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtClient("" + userId, "adama")));
                         return;
                     } catch (Exception ex) {
                         // move on
@@ -53,9 +58,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
                 callback.failure(new ErrorCodeException(-1));
             }
         } catch (Exception ex) {
-            // TODO: remove this, but we are going to need a logger of sorts
-            ex.printStackTrace();
-            callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex));
+            callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, logger));
         }
     }
 

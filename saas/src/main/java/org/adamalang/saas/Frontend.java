@@ -23,8 +23,8 @@ public class Frontend {
         // TODO: make multiple of these
         ExecutorService executor = Executors.newSingleThreadExecutor();
         RootHandlerImpl handler = new RootHandlerImpl(extern);
-        SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(Executors.newSingleThreadExecutor(), extern.base);
-        UserIdResolver userIdResolver = new UserIdResolver(Executors.newSingleThreadExecutor(), extern.base);
+        SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(Executors.newSingleThreadExecutor(), extern);
+        UserIdResolver userIdResolver = new UserIdResolver(Executors.newSingleThreadExecutor(), extern);
 
         return context -> new ServiceConnection() {
             // TODO: pick an executor (randomly? pick two and do the faster of the two?)

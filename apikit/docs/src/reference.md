@@ -22,22 +22,19 @@ A public key will be held onto for 30 days.
 ## Method: probe
 This is useful to validate an identity without executing anything
 
-## Method: authority/claim
+## Method: authority/create
 
 
-## Method: authority/transfer-ownership
+## Method: authority/set
+
+
+## Method: authority/transfer
 
 
 ## Method: authority/list
 
 
-## Method: authority/keys/add
-
-
-## Method: authority/keys/list
-
-
-## Method: authority/keys/remove
+## Method: authority/destroy
 
 
 ## Method: space/create

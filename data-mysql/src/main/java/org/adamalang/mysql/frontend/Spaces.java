@@ -6,7 +6,9 @@ import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Spaces {
 
@@ -28,11 +30,13 @@ public class Spaces {
         public final int id;
         public final int owner;
         public final String billing;
+        public final Set<Integer> developers;
 
-        public Space(int id, int owner, String billing) {
+        public Space(int id, int owner, String billing, Set<Integer> developers) {
             this.id = id;
             this.owner = owner;
             this.billing = billing;
+            this.developers = developers;
         }
     }
     public static Space getSpaceId(Base base, String space) throws Exception {
@@ -42,7 +46,16 @@ public class Spaces {
                 statement.setString(1, space);
                 try (ResultSet rs = statement.executeQuery()) {
                     if (rs.next()) {
-                        return new Space(rs.getInt(1), rs.getInt(2), rs.getString(3));
+                        Set<Integer> developers = new HashSet<>();
+                        String sqlGrants = new StringBuilder("SELECT `user`, `role` FROM `").append(base.databaseName).append("`grants` WHERE `space`=").append(rs.getInt(1)).toString();
+                        Base.walk(connection, (g) -> {
+                            switch (g.getInt(2)) {
+                                case 0x01: // Role.Developer
+                                    developers.add(g.getInt(1));
+                                    break;
+                            }
+                        }, sqlGrants);
+                        return new Space(rs.getInt(1), rs.getInt(2), rs.getString(3), developers);
                     }
                     throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_DOESNT_EXIST);
                 }

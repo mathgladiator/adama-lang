@@ -104,10 +104,10 @@ public class ConnectionRouter {
               }
             });
           } return;
-          case "authority/claim": {
-            AuthorityClaimRequest.resolve(nexus, request, new Callback<>() {
+          case "authority/create": {
+            AuthorityCreateRequest.resolve(nexus, request, new Callback<>() {
               @Override
-              public void success(AuthorityClaimRequest resolved) {
+              public void success(AuthorityCreateRequest resolved) {
                 handler.handle(resolved, new ClaimResultResponder(responder));
               }
               @Override
@@ -116,10 +116,22 @@ public class ConnectionRouter {
               }
             });
           } return;
-          case "authority/transfer-ownership": {
-            AuthorityTransferOwnershipRequest.resolve(nexus, request, new Callback<>() {
+          case "authority/set": {
+            AuthoritySetRequest.resolve(nexus, request, new Callback<>() {
               @Override
-              public void success(AuthorityTransferOwnershipRequest resolved) {
+              public void success(AuthoritySetRequest resolved) {
+                handler.handle(resolved, new ClaimResultResponder(responder));
+              }
+              @Override
+              public void failure(ErrorCodeException ex) {
+                responder.error(ex);
+              }
+            });
+          } return;
+          case "authority/transfer": {
+            AuthorityTransferRequest.resolve(nexus, request, new Callback<>() {
+              @Override
+              public void success(AuthorityTransferRequest resolved) {
                 handler.handle(resolved, new SimpleResponder(responder));
               }
               @Override
@@ -140,34 +152,10 @@ public class ConnectionRouter {
               }
             });
           } return;
-          case "authority/keys/add": {
-            AuthorityKeysAddRequest.resolve(nexus, request, new Callback<>() {
+          case "authority/destroy": {
+            AuthorityDestroyRequest.resolve(nexus, request, new Callback<>() {
               @Override
-              public void success(AuthorityKeysAddRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "authority/keys/list": {
-            AuthorityKeysListRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(AuthorityKeysListRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "authority/keys/remove": {
-            AuthorityKeysRemoveRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(AuthorityKeysRemoveRequest resolved) {
+              public void success(AuthorityDestroyRequest resolved) {
                 handler.handle(resolved, new SimpleResponder(responder));
               }
               @Override

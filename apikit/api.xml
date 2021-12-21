@@ -124,21 +124,9 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="algorithm" type="string" missing-error="481294">
+    <parameter-definition name="key-store" type="json-object" missing-error="457743">
         <documentation>
-            'algorithm' is an valid JWT algorithm which is not none.
-        </documentation>
-    </parameter-definition>
-
-    <parameter-definition name="public-key" type="string" missing-error="405519">
-        <documentation>
-            'public-key' is a public key used by a JWT algorithm
-        </documentation>
-    </parameter-definition>
-
-    <parameter-definition name="policy" type="json-object" missing-error="457743">
-        <documentation>
-            'policy' is an attached policy for keys to evaluate against
+            'key-store' is a collection of public keys used to validate an authority
         </documentation>
     </parameter-definition>
 
@@ -334,14 +322,22 @@
         </documentation>
     </method>
 
-    <method name="authority/claim" responder="claim-result">
+    <method name="authority/create" responder="claim-result">
         <parameter name="identity" />
         <documentation>
         </documentation>
     </method>
 
-    <method name="authority/transfer-ownership" responder="simple">
+    <method name="authority/set" responder="claim-result">
         <parameter name="identity" />
+        <parameter name="authority" />
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="authority/transfer" responder="simple">
+        <parameter name="identity" />
+        <parameter name="name" />
         <parameter name="email" />
         <documentation>
         </documentation>
@@ -353,33 +349,12 @@
         </documentation>
     </method>
 
-    <method name="authority/keys/add" responder="simple">
-        <parameter name="identity" />
-        <parameter name="name" />
-        <parameter name="authority" />
-        <parameter name="public-key" />
-        <parameter name="algorithm" />
-        <parameter name="policy" />
-        <documentation>
-        </documentation>
-    </method>
-
-    <method name="authority/keys/list" responder="simple">
-        <parameter name="identity" />
-        <documentation>
-        </documentation>
-    </method>
-
-    <method name="authority/keys/remove" responder="simple">
+    <method name="authority/destroy" responder="simple">
         <parameter name="identity" />
         <parameter name="name" />
         <documentation>
         </documentation>
     </method>
-
-
-
-
 
     <method name="space/create" responder="simple">
         <parameter name="identity" />

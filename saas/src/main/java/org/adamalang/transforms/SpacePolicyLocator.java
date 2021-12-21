@@ -1,8 +1,10 @@
 package org.adamalang.transforms;
 
 import org.adamalang.ErrorCodes;
+import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.Base;
 import org.adamalang.mysql.frontend.Spaces;
+import org.adamalang.runtime.contracts.ExceptionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.runtime.contracts.Callback;
@@ -12,15 +14,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
 public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
-
-    public final Base base;
     public final Executor executor;
+    public final Base base;
+    private final ExceptionLogger logger;
     public final ConcurrentHashMap<String, SpacePolicy> policies;
 
-    public SpacePolicyLocator(Executor executor, Base base) {
+    public SpacePolicyLocator(Executor executor, ExternNexus nexus) {
         this.executor = executor;
-        this.base = base;
+        this.base = nexus.base;
         this.policies = new ConcurrentHashMap<>();
+        this.logger = nexus.makeLogger(SpacePolicyLocator.class);
     }
 
     @Override
@@ -36,8 +39,7 @@ public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
                 policies.putIfAbsent(spaceName, new SpacePolicy(space));
                 callback.success(policies.get(spaceName));
             } catch (Exception ex) {
-                ex.printStackTrace(); // TODO: log this
-                callback.failure(new ErrorCodeException(ErrorCodes.SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION, ex));
+                callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION, ex, logger));
             }
         });
     }

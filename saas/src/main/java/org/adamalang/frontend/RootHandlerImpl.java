@@ -9,21 +9,23 @@ import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
+import org.adamalang.runtime.contracts.ExceptionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 import java.security.KeyPair;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 
 public class RootHandlerImpl implements RootHandler {
     private final ExternNexus nexus;
     private final SecureRandom rng;
+    private final ExceptionLogger logger;
 
     public RootHandlerImpl(ExternNexus nexus) throws Exception {
         this.nexus = nexus;
         this.rng = SecureRandom.getInstanceStrong();
+        this.logger = nexus.makeLogger(RootHandler.class);
     }
 
     private String generateCode() {
@@ -62,14 +64,12 @@ public class RootHandlerImpl implements RootHandler {
                         try {
                             Users.addKey(nexus.base, startRequest.userId, publicKey, new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60));
                         } catch (Exception ex) {
-                            // TODO: better error code
-                            responder.error(ErrorCodeException.detectOrWrap(2345, ex));
+                            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_GENERATE_UNKNOWN_EXCEPTION, ex, logger));
                             return;
                         }
                         responder.complete(Jwts.builder().setSubject("" + startRequest.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
                     } else {
-                        // TODO: better error code
-                        responder.error(new ErrorCodeException(1));
+                        responder.error(new ErrorCodeException(ErrorCodes.API_INIT_GENERATE_CODE_MISMATCH));
                     }
                 } finally {
                     startResponder.complete();
@@ -79,17 +79,15 @@ public class RootHandlerImpl implements RootHandler {
             @Override
             public void handle(InitRevokeAllRequest request, SimpleResponder responder) {
                 if (generatedCode.equals(request.code)) {
-                    // 1: DELETE all held public keys
                     try {
                         Users.removeAllKeys(nexus.base, startRequest.userId);
                     } catch (Exception ex) {
-                        // TODO: better error code
-                        responder.error(ErrorCodeException.detectOrWrap(2345, ex));
+                        responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION, ex, logger));
                         return;
                     }
                     responder.complete();
                 } else {
-                    responder.error(new ErrorCodeException(1));
+                    responder.error(new ErrorCodeException(ErrorCodes.API_INIT_REVOKE_ALL_CODE_MISMATCH));
                 }
             }
 
@@ -98,14 +96,18 @@ public class RootHandlerImpl implements RootHandler {
             }
         };
     }
-
     @Override
-    public void handle(AuthorityClaimRequest request, ClaimResultResponder responder) {
+    public void handle(AuthorityCreateRequest request, ClaimResultResponder responder) {
 
     }
 
     @Override
-    public void handle(AuthorityTransferOwnershipRequest request, SimpleResponder responder) {
+    public void handle(AuthoritySetRequest request, ClaimResultResponder responder) {
+
+    }
+
+    @Override
+    public void handle(AuthorityTransferRequest request, SimpleResponder responder) {
 
     }
 
@@ -115,24 +117,14 @@ public class RootHandlerImpl implements RootHandler {
     }
 
     @Override
-    public void handle(AuthorityKeysAddRequest request, SimpleResponder responder) {
-
-    }
-
-    @Override
-    public void handle(AuthorityKeysListRequest request, SimpleResponder responder) {
-
-    }
-
-    @Override
-    public void handle(AuthorityKeysRemoveRequest request, SimpleResponder responder) {
+    public void handle(AuthorityDestroyRequest request, SimpleResponder responder) {
 
     }
 
     @Override
     public void handle(SpaceCreateRequest request, SimpleResponder responder) {
         try {
-            Spaces.createSpace(nexus.base, request.who.userId, request.space);
+            Spaces.createSpace(nexus.base, request.who.id, request.space);
             responder.complete();
         } catch (Exception ex) {
             ex.printStackTrace(); // TODO: LOG THIS
@@ -148,7 +140,17 @@ public class RootHandlerImpl implements RootHandler {
 
     @Override
     public void handle(SpaceUpdateRequest request, SimpleResponder responder) {
-
+        try {
+            if (request.policy.canUserSetPlan(request.who)) {
+                Spaces.setPlan(nexus.base, request.policy.id, request.plan.toString());
+                responder.complete();
+            } else {
+                throw new ErrorCodeException(ErrorCodes.API_SPACE_UPDATE_PERMISSION_FAILURE);
+            }
+        } catch (Exception ex) {
+            // TODO: LOG IF not ErrorCode... need to pass a Logger into the DetectOrWrap.. BOOM
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_UPDATE_UNKNOWN_EXCEPTION, ex));
+        }
     }
 
     @Override
@@ -160,8 +162,9 @@ public class RootHandlerImpl implements RootHandler {
     public void handle(SpaceSetRoleRequest request, SimpleResponder responder) {
         try {
             Role role = Role.from(request.role);
-            if (request.policy.canUserSetRole(request.who.userId)) {
+            if (request.policy.canUserSetRole(request.who)) {
                 Spaces.setRole(nexus.base, request.policy.id, request.userId, role);
+                responder.complete();
             } else {
                 throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_PERMISSION_FAILURE);
             }
@@ -183,7 +186,7 @@ public class RootHandlerImpl implements RootHandler {
     @Override
     public void handle(SpaceListRequest request, SpaceListingResponder responder) {
         try {
-            for (Spaces.Item item : Spaces.list(nexus.base, request.who.userId, request.marker, request.limit == null ? 100 : request.limit)) {
+            for (Spaces.Item item : Spaces.list(nexus.base, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
                 responder.next(item.name, item.callerRole, item.billing, item.created);
             }
             responder.finish();

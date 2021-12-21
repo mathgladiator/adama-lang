@@ -795,14 +795,22 @@ public class ErrorCodes {
     public static final int API_SPACE_LIST_UNKNOWN_EXCEPTION = 941064;
     public static final int API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION = 986120;
     public static final int API_SPACE_SET_ROLE_PERMISSION_FAILURE = 921607;
+    public static final int API_SPACE_UPDATE_PERMISSION_FAILURE = 901127;
+    public static final int API_SPACE_UPDATE_UNKNOWN_EXCEPTION = 965636;
+
+
+    public static final int API_INIT_GENERATE_UNKNOWN_EXCEPTION = 965636;
+    public static final int API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION = 946179;
+    public static final int API_INIT_GENERATE_CODE_MISMATCH = 916486;
+    public static final int API_INIT_REVOKE_ALL_CODE_MISMATCH = 974851;
 
 
     /**
-     * 901127
-     * 965636
-     * 916486
-     * 974851
-     * 946179
+     *
+     *
+     *
+     *
+     *
      * 965635
      * 913408
      * 941059

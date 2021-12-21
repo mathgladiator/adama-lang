@@ -70,29 +70,15 @@ public class ManagementInstaller {
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
             .append("  `authority` VARCHAR(64) NOT NULL,") //
+            .append("  `keystore` TEXT NOT NULL,") //
             .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
             .append("  PRIMARY KEY (`id`),") //
             .append("  INDEX `o` (`owner`),") //
-            .append("  INDEX `s` (`authority`),") //
+            .append("  UNIQUE `s` (`authority`),") //
             .append("  INDEX `c` (`created` DESC))") //
             .append(" ENGINE = InnoDB") //
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
-
-        String createSecretsTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `" + base.databaseName + "`.`authority_keys` (") //
-            .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
-            .append("  `authority` INT(4) UNSIGNED NOT NULL,") //
-            .append("  `public_key` TEXT NOT NULL,") //
-            .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
-            .append("  `expires` DATETIME,") //
-            .append("  PRIMARY KEY (`id`),") //
-            .append("  INDEX `a` (`authority`),") //
-            .append("  INDEX `e` (`expires` ASC))") //
-            .append(" ENGINE = InnoDB") //
-            .append(" DEFAULT CHARACTER SET = utf8;") //
-            .toString();
-
 
         Connection connection = base.pool.getConnection();
         try {
@@ -102,7 +88,6 @@ public class ManagementInstaller {
             Base.execute(connection, createSpaceTableSQL);
             Base.execute(connection, createGrantTableSQL);
             Base.execute(connection, createAuthoritiesTableSQL);
-            Base.execute(connection, createSecretsTableSQL);
         } finally {
             connection.close();
         }
@@ -116,7 +101,6 @@ public class ManagementInstaller {
             Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`spaces`;").toString());
             Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`grants`;").toString());
             Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`authorities`;").toString());
-            Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`authority_keys`;").toString());
             Base.execute(connection, new StringBuilder("DROP DATABASE `").append(base.databaseName).append("`;").toString());
         } finally {
             connection.close();

@@ -4,18 +4,17 @@ import org.adamalang.runtime.natives.NtClient;
 
 public class AuthenticatedUser {
     public static enum Source {
-        Developer,
+        Social,
+        Adama,
         Authority,
     }
-    public final int userId;
+    public final Source source;
+    public final int id;
     public final NtClient who;
 
-    public AuthenticatedUser(int userId, NtClient who) {
-        this.userId = userId;
+    public AuthenticatedUser(Source source, int id, NtClient who) {
+        this.source = source;
+        this.id = id;
         this.who = who;
-    }
-
-    public boolean isDeveloper() {
-        return true;
     }
 }

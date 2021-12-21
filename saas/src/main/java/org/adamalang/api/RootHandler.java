@@ -6,17 +6,15 @@ public interface RootHandler {
 
   public void handle(ProbeRequest request, SimpleResponder responder);
 
-  public void handle(AuthorityClaimRequest request, ClaimResultResponder responder);
+  public void handle(AuthorityCreateRequest request, ClaimResultResponder responder);
 
-  public void handle(AuthorityTransferOwnershipRequest request, SimpleResponder responder);
+  public void handle(AuthoritySetRequest request, ClaimResultResponder responder);
+
+  public void handle(AuthorityTransferRequest request, SimpleResponder responder);
 
   public void handle(AuthorityListRequest request, SimpleResponder responder);
 
-  public void handle(AuthorityKeysAddRequest request, SimpleResponder responder);
-
-  public void handle(AuthorityKeysListRequest request, SimpleResponder responder);
-
-  public void handle(AuthorityKeysRemoveRequest request, SimpleResponder responder);
+  public void handle(AuthorityDestroyRequest request, SimpleResponder responder);
 
   public void handle(SpaceCreateRequest request, SimpleResponder responder);
 
