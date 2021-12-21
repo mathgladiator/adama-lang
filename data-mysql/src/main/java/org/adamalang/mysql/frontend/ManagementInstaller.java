@@ -40,14 +40,15 @@ public class ManagementInstaller {
         String createSpaceTableSQL = new StringBuilder() //
             .append("CREATE TABLE IF NOT EXISTS `" + base.databaseName + "`.`spaces` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
-            .append("  `creator` INT(4) UNSIGNED NOT NULL,") //
+            .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
             .append("  `name` VARCHAR(128) NOT NULL,") //
+            .append("  `billing` VARCHAR(16) NOT NULL,") //
             .append("  `plan` TEXT NOT NULL,") //
             .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
             .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
             .append("  PRIMARY KEY (`id`),") //
             .append("  UNIQUE `u` (`name`),") //
-            .append("  INDEX `c` (`creator`))") //
+            .append("  INDEX `c` (`owner`))") //
             .append(" ENGINE = InnoDB") //
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();

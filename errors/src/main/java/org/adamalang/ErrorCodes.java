@@ -62,6 +62,19 @@ public class ErrorCodes {
     public static final int LOOKUP_FAILED = 625676;
 
     /**
+     *      * 688141
+     *      * 601088
+     *      * 634880
+     *      * 643072
+     *      * 654339
+     *      * 662528
+     */
+
+    public static final int FRONTEND_SPACE_ALREADY_EXISTS = 679948;
+    public static final int FRONTEND_SPACE_DOESNT_EXIST = 625678;
+    public static final int FRONTEND_PLAN_DOESNT_EXIST = 609294;
+
+    /**
      *
      * 117818
      * 155711
@@ -279,15 +292,7 @@ public class ErrorCodes {
      */
 
     /**
-     * 679948
-     * 625678
-     * 609294
-     * 688141
-     * 601088
-     * 634880
-     * 643072
-     * 654339
-     * 662528
+
      * 602115
      * 626691
      * 654341

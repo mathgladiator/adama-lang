@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,13 +60,12 @@ public class Users {
         }
     }
 
-    public static void removeAllKeys(Base base, int userId) throws Exception {
+    public static int removeAllKeys(Base base, int userId) throws Exception {
         try (Connection connection = base.pool.getConnection()) {
             String sql = new StringBuilder().append("DELETE FROM `").append(base.databaseName).append("`.`email_keys` WHERE `user`=?").toString();
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setInt(1, userId);
-                statement.execute();
-                return;
+                return statement.executeUpdate();
             }
         }
     }

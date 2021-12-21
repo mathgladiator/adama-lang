@@ -24,6 +24,12 @@ public class Base implements AutoCloseable {
         }
     }
 
+    public static int executeUpdate(Connection connection, String sql) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            return statement.executeUpdate(sql);
+        }
+    }
+
     @Override
     public void close() throws Exception {
         pool.close();
