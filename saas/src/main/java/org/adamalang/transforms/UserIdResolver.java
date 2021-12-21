@@ -1,5 +1,6 @@
 package org.adamalang.transforms;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.mysql.Base;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.runtime.contracts.Callback;
@@ -22,8 +23,8 @@ public class UserIdResolver implements AsyncTransform<String, Integer> {
             try {
                 callback.success(Users.getOrCreateUserId(base, email));
             } catch (Exception ex) {
-                ex.printStackTrace();
-                callback.failure(new ErrorCodeException(230));
+                ex.printStackTrace(); // TODO: LOG THIS
+                callback.failure(new ErrorCodeException(ErrorCodes.USERID_RESOLVE_UNKNOWN_EXCEPTION, ex));
             }
         });
     }

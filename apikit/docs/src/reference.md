@@ -22,18 +22,6 @@ A public key will be held onto for 30 days.
 ## Method: probe
 This is useful to validate an identity without executing anything
 
-## Method: billing/add
-
-
-## Method: billing/list
-
-
-## Method: billing/get
-
-
-## Method: space/billing/set
-Each space is bill seperately.
-
 ## Method: authority/claim
 
 
@@ -64,7 +52,7 @@ Each space is bill seperately.
 ## Method: space/delete
 
 
-## Method: space/role/set
+## Method: space/set-role
 
 
 ## Method: space/owner/set
@@ -89,15 +77,6 @@ Each space is bill seperately.
 
 
 ## Method: connection/end
-
-
-## Method: web-hook/add
-
-
-## Method: web-hook/list
-
-
-## Method: web-hook/remove
 
 
 ## Method: attachment/start

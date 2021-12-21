@@ -1,6 +1,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.runtime.LivingDocumentTests;
+import org.adamalang.runtime.contracts.ExceptionLogger;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.TimeSource;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -67,7 +68,12 @@ public class ServiceCatastropheTests {
             new CoreService(factoryFactory, failureDataService, time, 3);
             Assert.fail();
         } catch (RuntimeException re) {
-            ErrorCodeException ece = ErrorCodeException.detectOrWrap(111, re);
+            ErrorCodeException ece = ErrorCodeException.detectOrWrap(111, re, new ExceptionLogger() {
+                @Override
+                public void convertedToErrorCode(Throwable t, int errorCode) {
+                    t.printStackTrace();
+                }
+            });
             Assert.assertEquals(231, ece.code);
         }
     }

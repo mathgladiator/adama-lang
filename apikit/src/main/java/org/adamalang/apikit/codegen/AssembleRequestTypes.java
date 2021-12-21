@@ -36,8 +36,9 @@ public class AssembleRequestTypes {
             java.append("public class ").append(method.camelName).append("Request {\n");
             for (ParameterDefinition parameter : method.parameters) {
                 java.append("  public final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName).append(";\n");
-                if (parameter.transform != null) {
-                    java.append("  public final ").append(parameter.transform.shortOutputJavaType).append(" ").append(parameter.transform.outputName).append(";\n");
+                Transform transform = parameter.getTransform(method.name);
+                if (transform != null) {
+                    java.append("  public final ").append(transform.shortOutputJavaType).append(" ").append(transform.outputName).append(";\n");
                 }
             }
             java.append("\n");
@@ -49,17 +50,19 @@ public class AssembleRequestTypes {
                 }
                 first = false;
                 java.append("final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName);
-                if (parameter.transform != null) {
-                    java.append(", final ").append(parameter.transform.shortOutputJavaType).append(" ").append(parameter.transform.outputName);
+                Transform transform = parameter.getTransform(method.name);
+                if (transform != null) {
+                    java.append(", final ").append(transform.shortOutputJavaType).append(" ").append(transform.outputName);
                 }
             }
             java.append(") {\n");
             int outstandingCallCount = 0;
             for (ParameterDefinition parameter : method.parameters) {
                 java.append("    this.").append(parameter.camelName).append(" = ").append(parameter.camelName).append(";\n");
-                if (parameter.transform != null) {
+                Transform transform = parameter.getTransform(method.name);
+                if (transform != null) {
                     outstandingCallCount++;
-                    java.append("    this.").append(parameter.transform.outputName).append(" = ").append(parameter.transform.outputName).append(";\n");
+                    java.append("    this.").append(transform.outputName).append(" = ").append(transform.outputName).append(";\n");
                 }
             }
             java.append("  }\n");
@@ -89,8 +92,9 @@ public class AssembleRequestTypes {
                         throw new RuntimeException();
                 }
                 java.append(parameter.name).append("\", ").append(parameter.optional ? "false" : "true").append(", ").append(parameter.errorCodeIfMissing).append(");\n");
-                if (parameter.transform != null) {
-                    java.append("      final LatchRefCallback<").append(parameter.transform.shortOutputJavaType).append("> ").append(parameter.transform.outputName).append(" = new LatchRefCallback<>(_latch);\n");
+                Transform transform = parameter.getTransform(method.name);
+                if (transform != null) {
+                    java.append("      final LatchRefCallback<").append(transform.shortOutputJavaType).append("> ").append(transform.outputName).append(" = new LatchRefCallback<>(_latch);\n");
                 }
                 if (parameter.validator != null) {
                     java.append("      ").append(parameter.validator.shortServiceName).append(".validate(").append(parameter.camelName).append(", ").append(parameter.validator.errorCode).append(");\n");
@@ -111,8 +115,9 @@ public class AssembleRequestTypes {
                 }
                 first = false;
                 java.append(parameter.camelName);
-                if (parameter.transform != null) {
-                    java.append(", ").append(parameter.transform.outputName).append(".get()");
+                Transform transform = parameter.getTransform(method.name);
+                if (transform != null) {
+                    java.append(", ").append(transform.outputName).append(".get()");
                 }
             }
             java.append(")");
@@ -125,8 +130,9 @@ public class AssembleRequestTypes {
             }
 
             for (ParameterDefinition parameter : method.parameters) {
-                if (parameter.transform != null) {
-                    java.append("      nexus.").append(parameter.transform.fieldInputName).append(".execute(").append(parameter.camelName).append(", ").append(parameter.transform.outputName).append(");\n");
+                Transform transform = parameter.getTransform(method.name);
+                if (transform != null) {
+                    java.append("      nexus.").append(transform.fieldInputName).append(".execute(").append(parameter.camelName).append(", ").append(transform.outputName).append(");\n");
                 }
             }
             java.append("    } catch (ErrorCodeException ece) {\n");

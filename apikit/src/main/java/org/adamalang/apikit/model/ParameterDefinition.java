@@ -5,6 +5,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -17,8 +19,9 @@ public class ParameterDefinition {
     public final Validator validator;
     public final String documentation;
     public final int errorCodeIfMissing;
+    public final HashSet<String> skipTransformOnMethods;
 
-    public ParameterDefinition(final String name, Type type, boolean optional, Transform transform, Validator validator, String documentation, int errorCodeIfMissing) {
+    public ParameterDefinition(final String name, Type type, boolean optional, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods) {
         this.name = name;
         this.camelName = Common.camelize(name, true);
         this.type = type;
@@ -27,6 +30,14 @@ public class ParameterDefinition {
         this.validator = validator;
         this.documentation = documentation;
         this.errorCodeIfMissing = errorCodeIfMissing;
+        this.skipTransformOnMethods = skipTransformOnMethods;
+    }
+
+    public Transform getTransform(String method) {
+        if (skipTransformOnMethods.contains(method)) {
+            return null;
+        }
+        return transform;
     }
 
     public static Map<String, ParameterDefinition> buildMap(Document document) throws Exception {
@@ -58,6 +69,7 @@ public class ParameterDefinition {
             String documentation = null;
             Transform transform = null;
             Validator validator = null;
+            HashSet<String> skipTransforms = new HashSet<>();
             int errorCodeIfMissing = Integer.parseInt(rawMissingErrorCode);
 
             NodeList children = node.getChildNodes();
@@ -83,6 +95,14 @@ public class ParameterDefinition {
                         }
                         int errorCodeOnFailure = Integer.parseInt(errorCodeOnFailureRaw);
                         validator = new Validator(service, errorCodeOnFailure);
+                    }
+                    break;
+                    case "skip-transform": {
+                        String methodOn = childElement.getAttribute("on");
+                        if (methodOn == null || "".equals(methodOn)) {
+                            throw new Exception("skip-transform needs a on to identify a method");
+                        }
+                        skipTransforms.add(methodOn);
                     }
                     break;
                     case "transform": {
@@ -114,7 +134,7 @@ public class ParameterDefinition {
             if (errorCodeIfMissing == 0 && !optional) {
                 throw new Exception("non-optional parameter is missing non-zero error code:" + name);
             }
-            ParameterDefinition definition = new ParameterDefinition(name, type, optional, transform, validator, documentation, errorCodeIfMissing);
+            ParameterDefinition definition = new ParameterDefinition(name, type, optional, transform, validator, documentation, errorCodeIfMissing, skipTransforms);
             if (parameters.containsKey(name)) {
                 throw new Exception("parameter already defined: " + name);
             }

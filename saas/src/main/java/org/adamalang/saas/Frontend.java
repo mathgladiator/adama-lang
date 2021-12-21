@@ -23,9 +23,15 @@ public class Frontend {
         // TODO: make multiple of these
         ExecutorService executor = Executors.newSingleThreadExecutor();
         RootHandlerImpl handler = new RootHandlerImpl(extern);
+        SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(Executors.newSingleThreadExecutor(), extern.base);
+        UserIdResolver userIdResolver = new UserIdResolver(Executors.newSingleThreadExecutor(), extern.base);
+
         return context -> new ServiceConnection() {
             // TODO: pick an executor (randomly? pick two and do the faster of the two?)
-            ConnectionNexus nexus = new ConnectionNexus(executor, new UserIdResolver(executor, extern.base), new Authenticator(extern), new SpacePolicyLocator());
+            ConnectionNexus nexus = new ConnectionNexus(executor, //
+                    userIdResolver, //
+                    new Authenticator(extern), //
+                    spacePolicyLocator); //
             ConnectionRouter router = new ConnectionRouter(nexus, handler);
             @Override
             public void execute(JsonRequest request, JsonResponder responder) {

@@ -3,14 +3,17 @@ package org.adamalang.frontend;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 import java.security.KeyPair;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 
@@ -97,26 +100,6 @@ public class RootHandlerImpl implements RootHandler {
     }
 
     @Override
-    public void handle(BillingAddRequest request, SimpleResponder responder) {
-
-    }
-
-    @Override
-    public void handle(BillingListRequest request, SimpleResponder responder) {
-
-    }
-
-    @Override
-    public void handle(BillingGetRequest request, SimpleResponder responder) {
-
-    }
-
-    @Override
-    public void handle(SpaceBillingSetRequest request, SimpleResponder responder) {
-
-    }
-
-    @Override
     public void handle(AuthorityClaimRequest request, ClaimResultResponder responder) {
 
     }
@@ -148,8 +131,13 @@ public class RootHandlerImpl implements RootHandler {
 
     @Override
     public void handle(SpaceCreateRequest request, SimpleResponder responder) {
-        System.err.println("creating space:" + request.space);
-        responder.complete();
+        try {
+            Spaces.createSpace(nexus.base, request.who.userId, request.space);
+            responder.complete();
+        } catch (Exception ex) {
+            ex.printStackTrace(); // TODO: LOG THIS
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex));
+        }
     }
 
     @Override
@@ -169,8 +157,18 @@ public class RootHandlerImpl implements RootHandler {
     }
 
     @Override
-    public void handle(SpaceRoleSetRequest request, SimpleResponder responder) {
-
+    public void handle(SpaceSetRoleRequest request, SimpleResponder responder) {
+        try {
+            Role role = Role.from(request.role);
+            if (request.policy.canUserSetRole(request.who.userId)) {
+                Spaces.setRole(nexus.base, request.policy.id, request.userId, role);
+            } else {
+                throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_PERMISSION_FAILURE);
+            }
+        } catch (Exception ex) {
+            // TODO: LOG IF not ErrorCode... need to pass a Logger into the DetectOrWrap.. BOOM
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION, ex));
+        }
     }
 
     @Override
@@ -180,12 +178,19 @@ public class RootHandlerImpl implements RootHandler {
 
     @Override
     public void handle(SpaceReflectRequest request, SimpleResponder responder) {
-
     }
 
     @Override
-    public void handle(SpaceListRequest request, SimpleResponder responder) {
-
+    public void handle(SpaceListRequest request, SpaceListingResponder responder) {
+        try {
+            for (Spaces.Item item : Spaces.list(nexus.base, request.who.userId, request.marker, request.limit == null ? 100 : request.limit)) {
+                responder.next(item.name, item.callerRole, item.billing, item.created);
+            }
+            responder.finish();
+        } catch (Exception ex) {
+            ex.printStackTrace(); // TODO: LOG THIS
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_UNKNOWN_EXCEPTION, ex));
+        }
     }
 
     @Override
@@ -201,21 +206,6 @@ public class RootHandlerImpl implements RootHandler {
     @Override
     public DocumentStreamHandler handle(ConnectionCreateRequest request, DataResponder responder) {
         return null;
-    }
-
-    @Override
-    public void handle(WebHookAddRequest request, SimpleResponder responder) {
-
-    }
-
-    @Override
-    public void handle(WebHookListRequest request, SimpleResponder responder) {
-
-    }
-
-    @Override
-    public void handle(WebHookRemoveRequest request, SimpleResponder responder) {
-
     }
 
     @Override

@@ -9,8 +9,9 @@
 */
 package org.adamalang.runtime.exceptions;
 
-/** an error happened related to an error code that we can present to the
- * public */
+import org.adamalang.runtime.contracts.ExceptionLogger;
+
+/** an error happened related to an error code that we can present to the public */
 public class ErrorCodeException extends Exception {
   public final int code;
 
@@ -29,7 +30,12 @@ public class ErrorCodeException extends Exception {
     this.code = code;
   }
 
+  @Deprecated
   public static ErrorCodeException detectOrWrap(int code, Throwable cause) {
+    return detectOrWrap(code, cause, null);
+  }
+
+  public static ErrorCodeException detectOrWrap(int code, Throwable cause, ExceptionLogger logger) {
     if (cause instanceof RuntimeException) {
       if (cause.getCause() instanceof ErrorCodeException) {
         return (ErrorCodeException) (cause.getCause());
@@ -37,6 +43,9 @@ public class ErrorCodeException extends Exception {
     }
     if (cause instanceof ErrorCodeException) {
       return (ErrorCodeException) cause;
+    }
+    if (logger != null) {
+      logger.convertedToErrorCode(cause, code);
     }
     return new ErrorCodeException(code, cause);
   }

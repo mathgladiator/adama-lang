@@ -42,9 +42,10 @@ public class Method {
         set.add("org.adamalang.web.io.*");
         set.add("org.adamalang.runtime.contracts.Callback");
         for (ParameterDefinition parameter : parameters) {
-            if (parameter.transform != null) {
-                if (parameter.transform.outputJavaType.indexOf('.') > 0) {
-                    set.add(parameter.transform.outputJavaType);
+            Transform transform = parameter.getTransform(this.name);
+            if (transform != null) {
+                if (transform.outputJavaType.indexOf('.') > 0) {
+                    set.add(transform.outputJavaType);
                 }
             }
             if (parameter.validator != null) {

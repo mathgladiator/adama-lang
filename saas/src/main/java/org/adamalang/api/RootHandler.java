@@ -6,14 +6,6 @@ public interface RootHandler {
 
   public void handle(ProbeRequest request, SimpleResponder responder);
 
-  public void handle(BillingAddRequest request, SimpleResponder responder);
-
-  public void handle(BillingListRequest request, SimpleResponder responder);
-
-  public void handle(BillingGetRequest request, SimpleResponder responder);
-
-  public void handle(SpaceBillingSetRequest request, SimpleResponder responder);
-
   public void handle(AuthorityClaimRequest request, ClaimResultResponder responder);
 
   public void handle(AuthorityTransferOwnershipRequest request, SimpleResponder responder);
@@ -34,25 +26,19 @@ public interface RootHandler {
 
   public void handle(SpaceDeleteRequest request, SimpleResponder responder);
 
-  public void handle(SpaceRoleSetRequest request, SimpleResponder responder);
+  public void handle(SpaceSetRoleRequest request, SimpleResponder responder);
 
   public void handle(SpaceOwnerSetRequest request, SimpleResponder responder);
 
   public void handle(SpaceReflectRequest request, SimpleResponder responder);
 
-  public void handle(SpaceListRequest request, SimpleResponder responder);
+  public void handle(SpaceListRequest request, SpaceListingResponder responder);
 
   public void handle(DocumentCreateRequest request, SimpleResponder responder);
 
   public void handle(DocumentListRequest request, SimpleResponder responder);
 
   public DocumentStreamHandler handle(ConnectionCreateRequest request, DataResponder responder);
-
-  public void handle(WebHookAddRequest request, SimpleResponder responder);
-
-  public void handle(WebHookListRequest request, SimpleResponder responder);
-
-  public void handle(WebHookRemoveRequest request, SimpleResponder responder);
 
   public AttachmentUploadHandler handle(AttachmentStartRequest request, SimpleResponder responder);
 

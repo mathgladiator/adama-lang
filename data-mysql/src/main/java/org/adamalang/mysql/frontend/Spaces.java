@@ -24,14 +24,25 @@ public class Spaces {
         }
     }
 
-    public static int getSpaceId(Base base, String space) throws Exception {
+    public static class Space {
+        public final int id;
+        public final int owner;
+        public final String billing;
+
+        public Space(int id, int owner, String billing) {
+            this.id = id;
+            this.owner = owner;
+            this.billing = billing;
+        }
+    }
+    public static Space getSpaceId(Base base, String space) throws Exception {
         try (Connection connection = base.pool.getConnection()) {
-            String sql = new StringBuilder("SELECT `id` FROM `").append(base.databaseName).append("`.`spaces` WHERE name=?").toString();
+            String sql = new StringBuilder("SELECT `id`,`owner`,`billing` FROM `").append(base.databaseName).append("`.`spaces` WHERE name=?").toString();
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, space);
                 try (ResultSet rs = statement.executeQuery()) {
                     if (rs.next()) {
-                        return rs.getInt(1);
+                        return new Space(rs.getInt(1), rs.getInt(2), rs.getString(3));
                     }
                     throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_DOESNT_EXIST);
                 }

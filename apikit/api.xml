@@ -23,6 +23,7 @@
                 output-name="policy"
                 output-java-type="org.adamalang.transforms.results.SpacePolicy"
                 error-code="454658" />
+        <skip-transform on="space/create" />
     </parameter-definition>
 
     <parameter-definition name="key" type="string" missing-error="466947">
@@ -242,7 +243,36 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="space" type="string">
+        <documentation>
+            A space
+        </documentation>
+    </field-definition>
 
+    <field-definition name="role" type="string">
+        <documentation>
+            Each developer has a role to a document
+        </documentation>
+    </field-definition>
+
+    <field-definition name="billing" type="string">
+        <documentation>
+            Where the bill is sent for this space
+        </documentation>
+    </field-definition>
+
+    <field-definition name="created" type="string">
+        <documentation>
+            When the space was created
+        </documentation>
+    </field-definition>
+
+    <responder name="space-listing" stream="true">
+        <field name="space" />
+        <field name="role" />
+        <field name="billing" />
+        <field name="created" />
+    </responder>
 
     <responder name="simple">
     </responder>
@@ -275,7 +305,7 @@
         </documentation>
     </method>
 
-    <method name="init/revoke-all" responder="simple" handler="waiting-for-email" find-by="connection" error-find-by="2324">
+    <method name="init/revoke-all" responder="simple" handler="waiting-for-email" find-by="connection" error-find-by="441361">
         <parameter name="connection" />
         <parameter name="code" />
         <documentation>
@@ -285,7 +315,7 @@
         </documentation>
     </method>
 
-    <method name="init/generate-identity" responder="initiation" handler="waiting-for-email" find-by="connection" error-find-by="2324" destroy="true">
+    <method name="init/generate-identity" responder="initiation" handler="waiting-for-email" find-by="connection" error-find-by="454673" destroy="true">
         <parameter name="connection" />
         <parameter name="code" />
         <documentation>
@@ -303,36 +333,6 @@
             This is useful to validate an identity without executing anything
         </documentation>
     </method>
-
-    <method name="billing/add" responder="simple">
-        <parameter name="identity" />
-        <parameter name="name" />
-        <documentation>
-        </documentation>
-    </method>
-
-    <method name="billing/list" responder="simple">
-        <parameter name="identity" />
-        <documentation>
-        </documentation>
-    </method>
-
-    <method name="billing/get" responder="simple">
-        <parameter name="identity" />
-        <parameter name="name" />
-        <documentation>
-        </documentation>
-    </method>
-
-    <method name="space/billing/set" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="name" />
-        <documentation>
-            Each space is bill seperately.
-        </documentation>
-    </method>
-
 
     <method name="authority/claim" responder="claim-result">
         <parameter name="identity" />
@@ -377,6 +377,10 @@
         </documentation>
     </method>
 
+
+
+
+
     <method name="space/create" responder="simple">
         <parameter name="identity" />
         <parameter name="space" />
@@ -406,7 +410,7 @@
         </documentation>
     </method>
 
-    <method name="space/role/set" responder="simple">
+    <method name="space/set-role" responder="simple">
         <parameter name="identity" />
         <parameter name="space" />
         <parameter name="email" />
@@ -431,9 +435,8 @@
         </documentation>
     </method>
 
-    <method name="space/list" responder="simple">
+    <method name="space/list" responder="space-listing">
         <parameter name="identity" />
-        <parameter name="space" />
         <parameter name="marker" />
         <parameter name="limit" />
         <documentation>
@@ -466,7 +469,7 @@
         </documentation>
     </method>
 
-    <method name="connection/send" responder="simple" handler="document-stream" find-by="connection" error-find-by="4232">
+    <method name="connection/send" responder="simple" handler="document-stream" find-by="connection" error-find-by="457745">
         <parameter name="connection" />
         <parameter name="channel" />
         <parameter name="message" />
@@ -474,32 +477,8 @@
         </documentation>
     </method>
 
-    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection" error-find-by="4232" destroy="true">
+    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection" error-find-by="474128" destroy="true">
         <parameter name="connection" />
-        <documentation>
-        </documentation>
-    </method>
-
-
-    <method name="web-hook/add" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="endpoint" />
-        <documentation>
-        </documentation>
-    </method>
-
-    <method name="web-hook/list" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <documentation>
-        </documentation>
-    </method>
-
-    <method name="web-hook/remove" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="endpoint" />
         <documentation>
         </documentation>
     </method>
@@ -516,7 +495,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="42322">
+    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201">
         <parameter name="upload" />
         <parameter name="chunk-md5" />
         <parameter name="base64-bytes" />
@@ -524,7 +503,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="42322">
+    <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="478227">
         <parameter name="upload" />
         <parameter name="md5" />
         <documentation>
@@ -532,16 +511,6 @@
     </method>
 
     <!--
-
-
-
-
-478227
-477201
-474128
-457745
-454673
-441361
 438302
 405532
 447516

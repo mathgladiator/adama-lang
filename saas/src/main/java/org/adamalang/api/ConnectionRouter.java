@@ -66,7 +66,7 @@ public class ConnectionRouter {
                 if (handlerToUse != null) {
                   handlerToUse.handle(resolved, new SimpleResponder(responder));
                 } else {
-                  responder.error(new ErrorCodeException(2324));
+                  responder.error(new ErrorCodeException(441361));
                 }
               }
               @Override
@@ -83,7 +83,7 @@ public class ConnectionRouter {
                 if (handlerToUse != null) {
                   handlerToUse.handle(resolved, new InitiationResponder(responder));
                 } else {
-                  responder.error(new ErrorCodeException(2324));
+                  responder.error(new ErrorCodeException(454673));
                 }
               }
               @Override
@@ -96,54 +96,6 @@ public class ConnectionRouter {
             ProbeRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(ProbeRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "billing/add": {
-            BillingAddRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(BillingAddRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "billing/list": {
-            BillingListRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(BillingListRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "billing/get": {
-            BillingGetRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(BillingGetRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "space/billing/set": {
-            SpaceBillingSetRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(SpaceBillingSetRequest resolved) {
                 handler.handle(resolved, new SimpleResponder(responder));
               }
               @Override
@@ -272,10 +224,10 @@ public class ConnectionRouter {
               }
             });
           } return;
-          case "space/role/set": {
-            SpaceRoleSetRequest.resolve(nexus, request, new Callback<>() {
+          case "space/set-role": {
+            SpaceSetRoleRequest.resolve(nexus, request, new Callback<>() {
               @Override
-              public void success(SpaceRoleSetRequest resolved) {
+              public void success(SpaceSetRoleRequest resolved) {
                 handler.handle(resolved, new SimpleResponder(responder));
               }
               @Override
@@ -312,7 +264,7 @@ public class ConnectionRouter {
             SpaceListRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(SpaceListRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
+                handler.handle(resolved, new SpaceListingResponder(responder));
               }
               @Override
               public void failure(ErrorCodeException ex) {
@@ -366,7 +318,7 @@ public class ConnectionRouter {
                 if (handlerToUse != null) {
                   handlerToUse.handle(resolved, new SimpleResponder(responder));
                 } else {
-                  responder.error(new ErrorCodeException(4232));
+                  responder.error(new ErrorCodeException(457745));
                 }
               }
               @Override
@@ -383,44 +335,8 @@ public class ConnectionRouter {
                 if (handlerToUse != null) {
                   handlerToUse.handle(resolved, new SimpleResponder(responder));
                 } else {
-                  responder.error(new ErrorCodeException(4232));
+                  responder.error(new ErrorCodeException(474128));
                 }
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "web-hook/add": {
-            WebHookAddRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(WebHookAddRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "web-hook/list": {
-            WebHookListRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(WebHookListRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "web-hook/remove": {
-            WebHookRemoveRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(WebHookRemoveRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
               }
               @Override
               public void failure(ErrorCodeException ex) {
@@ -450,7 +366,7 @@ public class ConnectionRouter {
                 if (handlerToUse != null) {
                   handlerToUse.handle(resolved, new SimpleResponder(responder));
                 } else {
-                  responder.error(new ErrorCodeException(42322));
+                  responder.error(new ErrorCodeException(477201));
                 }
               }
               @Override
@@ -467,7 +383,7 @@ public class ConnectionRouter {
                 if (handlerToUse != null) {
                   handlerToUse.handle(resolved, new SimpleResponder(responder));
                 } else {
-                  responder.error(new ErrorCodeException(42322));
+                  responder.error(new ErrorCodeException(478227));
                 }
               }
               @Override
