@@ -236,7 +236,7 @@
         </documentation>
     </field-definition>
 
-    <field-definition name="private-key" type="string">
+    <field-definition name="identity" type="string">
         <documentation>
             A private key
         </documentation>
@@ -259,8 +259,8 @@
         <field name="delta" />
     </responder>
 
-    <responder name="private-key">
-        <field name="private-key" />
+    <responder name="initiation">
+        <field name="identity" />
     </responder>
 
 
@@ -285,7 +285,7 @@
         </documentation>
     </method>
 
-    <method name="init/generate-new-key-pair" responder="private-key" handler="waiting-for-email" find-by="connection" error-find-by="2324" destroy="true">
+    <method name="init/generate-identity" responder="initiation" handler="waiting-for-email" find-by="connection" error-find-by="2324" destroy="true">
         <parameter name="connection" />
         <parameter name="code" />
         <documentation>
@@ -294,6 +294,13 @@
             The server will generate a key-pair and send the secret to the client to stash within their config, and the public key will be stored to validate future requests made by this developer machine.
 
             A public key will be held onto for 30 days.
+        </documentation>
+    </method>
+
+    <method name="probe" responder="simple">
+        <parameter name="identity" />
+        <documentation>
+            This is useful to validate an identity without executing anything
         </documentation>
     </method>
 

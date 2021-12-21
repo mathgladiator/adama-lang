@@ -40,7 +40,7 @@ public class Users {
     public static List<String> listKeys(Base base, int userId) throws Exception {
         try (Connection connection = base.pool.getConnection()) {
             ArrayList<String> keys = new ArrayList<>();
-            String sql = new StringBuilder().append("SELECT `public_key` FROM `").append(base.databaseName).append("`.`email_keys` WHERE `userId`=").append(userId).toString();
+            String sql = new StringBuilder().append("SELECT `public_key` FROM `").append(base.databaseName).append("`.`email_keys` WHERE `user`=").append(userId).toString();
             Base.walk(connection, (rs) -> {
                 keys.add(rs.getString(1));
             }, sql);

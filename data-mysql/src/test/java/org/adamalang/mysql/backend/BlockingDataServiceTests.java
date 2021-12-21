@@ -1,6 +1,5 @@
 package org.adamalang.mysql.backend;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.adamalang.ErrorCodes;
 import org.adamalang.mysql.Base;
 import org.adamalang.mysql.BaseConfig;
@@ -22,9 +21,7 @@ public class BlockingDataServiceTests {
     @Test
     public void flow_1() throws Exception {
         BaseConfig baseConfig = BaseConfigTests.getLocalIntegrationConfig();
-        ComboPooledDataSource pool = baseConfig.createComboPooledDataSource();
-        try {
-            Base base = new Base(pool, "flow_1");
+        try (Base base = new Base(baseConfig)) {
             DataServiceInstaller installer = new DataServiceInstaller(base);
             try {
                 // make sure the database and tables are all proper and set
@@ -116,8 +113,6 @@ public class BlockingDataServiceTests {
             } finally {
                 installer.uninstall();
             }
-        } finally {
-            pool.close();
         }
     }
 }

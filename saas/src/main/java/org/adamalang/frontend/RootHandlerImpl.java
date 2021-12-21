@@ -36,32 +36,40 @@ public class RootHandlerImpl implements RootHandler {
     }
 
     @Override
-    public WaitingForEmailHandler handle(InitStartRequest startRequest, SimpleResponder startResponder) {
-        String generatedCode = "CODE"; // TODO abstract this out for testing
-        // nexus.email.sendCode(request.email, generatedCode);
+    public void handle(ProbeRequest request, SimpleResponder responder) {
+        responder.complete();
+    }
 
-        // 1 GENERATE PROPER CODE
-        // 2 SEND EMAIL ABOUT CODE
+    @Override
+    public WaitingForEmailHandler handle(InitStartRequest startRequest, SimpleResponder startResponder) {
+        String generatedCode = generateCode();
         return new WaitingForEmailHandler() {
+
             @Override
-            public void handle(InitGenerateNewKeyPairRequest request, PrivateKeyResponder responder) {
-                if (generatedCode.equals(request.code)) {
-                    KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
-                    String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-                    try {
-                        Users.addKey(nexus.base, startRequest.userId, publicKey, new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60));
-                    } catch (Exception ex) {
+            public void bind() {
+                nexus.email.sendCode(startRequest.email, generatedCode);
+            }
+
+            @Override
+            public void handle(InitGenerateIdentityRequest request, InitiationResponder responder) {
+                try {
+                    if (generatedCode.equals(request.code)) {
+                        KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+                        String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+                        try {
+                            Users.addKey(nexus.base, startRequest.userId, publicKey, new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60));
+                        } catch (Exception ex) {
+                            // TODO: better error code
+                            responder.error(ErrorCodeException.detectOrWrap(2345, ex));
+                            return;
+                        }
+                        responder.complete(Jwts.builder().setSubject("" + startRequest.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
+                    } else {
                         // TODO: better error code
-                        responder.error(ErrorCodeException.detectOrWrap(2345, ex));
-                        startResponder.error(ErrorCodeException.detectOrWrap(2345, ex));
-                        return;
+                        responder.error(new ErrorCodeException(1));
                     }
-                    responder.complete(Jwts.builder().setSubject("" + startRequest.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
+                } finally {
                     startResponder.complete();
-                } else {
-                    // TODO: better error code
-                    responder.error(new ErrorCodeException(1));
-                    startResponder.error(new ErrorCodeException(1));
                 }
             }
 
@@ -74,7 +82,6 @@ public class RootHandlerImpl implements RootHandler {
                     } catch (Exception ex) {
                         // TODO: better error code
                         responder.error(ErrorCodeException.detectOrWrap(2345, ex));
-                        startResponder.error(ErrorCodeException.detectOrWrap(2345, ex));
                         return;
                     }
                     responder.complete();

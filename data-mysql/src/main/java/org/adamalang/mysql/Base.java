@@ -9,19 +9,24 @@ import org.adamalang.runtime.exceptions.ErrorCodeException;
 import java.sql.*;
 
 /** the connection pool and helpers for interacting with MySQL */
-public class Base {
+public class Base implements AutoCloseable {
     public final ComboPooledDataSource pool;
     public final String databaseName;
 
-    public Base(ComboPooledDataSource pool, String databaseName) {
-        this.pool = pool;
-        this.databaseName = databaseName;
+    public Base(BaseConfig config) throws Exception {
+        this.pool = config.createComboPooledDataSource();
+        this.databaseName = config.databaseName;
     }
 
     public static boolean execute(Connection connection, String sql) throws SQLException {
         try (Statement statement = connection.createStatement()) {
             return statement.execute(sql);
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        pool.close();
     }
 
     public <R> void transact(SQLTransact<R> transaction, Callback<R> callback, int failureReason) {

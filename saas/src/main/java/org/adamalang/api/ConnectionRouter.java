@@ -48,7 +48,9 @@ public class ConnectionRouter {
             InitStartRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(InitStartRequest resolved) {
-                inflightWaitingForEmail.put(requestId, handler.handle(resolved, new SimpleResponder(new JsonResponderHashMapCleanupProxy<>(nexus.executor, inflightWaitingForEmail, requestId, responder))));
+                WaitingForEmailHandler handlerMade = handler.handle(resolved, new SimpleResponder(new JsonResponderHashMapCleanupProxy<>(nexus.executor, inflightWaitingForEmail, requestId, responder)));
+                inflightWaitingForEmail.put(requestId, handlerMade);
+                handlerMade.bind();
               }
               @Override
               public void failure(ErrorCodeException ex) {
@@ -73,16 +75,28 @@ public class ConnectionRouter {
               }
             });
           } return;
-          case "init/generate-new-key-pair": {
-            InitGenerateNewKeyPairRequest.resolve(nexus, request, new Callback<>() {
+          case "init/generate-identity": {
+            InitGenerateIdentityRequest.resolve(nexus, request, new Callback<>() {
               @Override
-              public void success(InitGenerateNewKeyPairRequest resolved) {
+              public void success(InitGenerateIdentityRequest resolved) {
                 WaitingForEmailHandler handlerToUse = inflightWaitingForEmail.remove(resolved.connection);
                 if (handlerToUse != null) {
-                  handlerToUse.handle(resolved, new PrivateKeyResponder(responder));
+                  handlerToUse.handle(resolved, new InitiationResponder(responder));
                 } else {
                   responder.error(new ErrorCodeException(2324));
                 }
+              }
+              @Override
+              public void failure(ErrorCodeException ex) {
+                responder.error(ex);
+              }
+            });
+          } return;
+          case "probe": {
+            ProbeRequest.resolve(nexus, request, new Callback<>() {
+              @Override
+              public void success(ProbeRequest resolved) {
+                handler.handle(resolved, new SimpleResponder(responder));
               }
               @Override
               public void failure(ErrorCodeException ex) {
@@ -334,7 +348,9 @@ public class ConnectionRouter {
             ConnectionCreateRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(ConnectionCreateRequest resolved) {
-                inflightDocumentStream.put(requestId, handler.handle(resolved, new DataResponder(new JsonResponderHashMapCleanupProxy<>(nexus.executor, inflightDocumentStream, requestId, responder))));
+                DocumentStreamHandler handlerMade = handler.handle(resolved, new DataResponder(new JsonResponderHashMapCleanupProxy<>(nexus.executor, inflightDocumentStream, requestId, responder)));
+                inflightDocumentStream.put(requestId, handlerMade);
+                handlerMade.bind();
               }
               @Override
               public void failure(ErrorCodeException ex) {
@@ -416,7 +432,9 @@ public class ConnectionRouter {
             AttachmentStartRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(AttachmentStartRequest resolved) {
-                inflightAttachmentUpload.put(requestId, handler.handle(resolved, new SimpleResponder(new JsonResponderHashMapCleanupProxy<>(nexus.executor, inflightAttachmentUpload, requestId, responder))));
+                AttachmentUploadHandler handlerMade = handler.handle(resolved, new SimpleResponder(new JsonResponderHashMapCleanupProxy<>(nexus.executor, inflightAttachmentUpload, requestId, responder)));
+                inflightAttachmentUpload.put(requestId, handlerMade);
+                handlerMade.bind();
               }
               @Override
               public void failure(ErrorCodeException ex) {

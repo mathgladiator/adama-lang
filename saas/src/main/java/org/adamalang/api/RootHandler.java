@@ -4,6 +4,8 @@ package org.adamalang.api;
 public interface RootHandler {
   public WaitingForEmailHandler handle(InitStartRequest request, SimpleResponder responder);
 
+  public void handle(ProbeRequest request, SimpleResponder responder);
+
   public void handle(BillingAddRequest request, SimpleResponder responder);
 
   public void handle(BillingListRequest request, SimpleResponder responder);
@@ -54,4 +56,6 @@ public interface RootHandler {
 
   public AttachmentUploadHandler handle(AttachmentStartRequest request, SimpleResponder responder);
 
-public void disconnect();}
+public void disconnect();
+
+}

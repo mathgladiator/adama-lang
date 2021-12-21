@@ -12,12 +12,15 @@ When the developer receives an email, this method is invoked to revoke all exist
 
 This same code, having been validated via email, can then be used to generate a new key pair.
 
-## Method: init/generate-new-key-pair
+## Method: init/generate-identity
 When the developer receives an email, this method is invoked to complete the hand-shake.
 
 The server will generate a key-pair and send the secret to the client to stash within their config, and the public key will be stored to validate future requests made by this developer machine.
 
 A public key will be held onto for 30 days.
+
+## Method: probe
+This is useful to validate an identity without executing anything
 
 ## Method: billing/add
 

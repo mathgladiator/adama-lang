@@ -22,7 +22,8 @@ public class UserIdResolver implements AsyncTransform<String, Integer> {
             try {
                 callback.success(Users.getOrCreateUserId(base, email));
             } catch (Exception ex) {
-                callback.failure(new ErrorCodeException(0));
+                ex.printStackTrace();
+                callback.failure(new ErrorCodeException(230));
             }
         });
     }

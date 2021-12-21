@@ -37,6 +37,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
     public void execute(String identity, Callback<AuthenticatedUser> callback) {
         try {
             TokenParts tokenParts = new TokenParts(identity);
+            System.err.println("Token parts:" + tokenParts.sub + "/" + tokenParts.iss);
             // TODO: check for Facebook Prefix
             // TODO: check for Google Prefix
             if ("adama".equals(tokenParts.iss)) {
@@ -44,14 +45,21 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
                 for (String publicKey64 : Users.listKeys(nexus.base, userId)) {
                     byte[] publicKey = Base64.getDecoder().decode(publicKey64);
                     X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
-                    KeyFactory kf = KeyFactory.getInstance("RSA");
-                    Jwts.parserBuilder().setSigningKey(kf.generatePublic(spec)).requireIssuer("adama").build().parseClaimsJws(identity);
-                    callback.success(new AuthenticatedUser(userId, new NtClient("" + userId, "adama")));
+                    KeyFactory kf = KeyFactory.getInstance("EC");
+                    try {
+                        Jwts.parserBuilder().setSigningKey(kf.generatePublic(spec)).requireIssuer("adama").build().parseClaimsJws(identity);
+                        callback.success(new AuthenticatedUser(userId, new NtClient("" + userId, "adama")));
+                        return;
+                    } catch (Exception ex) {
+                        // move on
+                    }
                 }
+                callback.failure(new ErrorCodeException(4542));
             } else {
-                // TODO: list all public keys for the authority
+                callback.failure(new ErrorCodeException(454223));
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             callback.failure(ErrorCodeException.detectOrWrap(124, ex));
         }
         callback.success(new AuthenticatedUser(0, NtClient.NO_ONE));

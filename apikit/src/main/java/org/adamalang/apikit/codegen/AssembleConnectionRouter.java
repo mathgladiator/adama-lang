@@ -72,7 +72,9 @@ public class AssembleConnectionRouter {
                 router.append("                }\n");
             } else {
                 if (method.create != null) {
-                    router.append("                ").append("inflight").append(Common.camelize(method.create)).append(".put(requestId, handler.handle(resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder))));\n");
+                    router.append("                ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder)));\n");
+                    router.append("                ").append("inflight").append(Common.camelize(method.create)).append(".put(requestId, handlerMade);\n");
+                    router.append("                ").append("handlerMade.bind();\n");
                 } else {
                     router.append("                handler.handle(resolved, new ").append(method.responder.camelName).append("Responder(responder));\n");
                 }

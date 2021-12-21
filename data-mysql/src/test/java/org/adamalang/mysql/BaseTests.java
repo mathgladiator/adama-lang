@@ -1,6 +1,5 @@
 package org.adamalang.mysql;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,10 +10,8 @@ public class BaseTests {
     @Test
     public void failure_coverage() throws Exception {
         BaseConfig baseConfig = BaseConfigTests.getLocalIntegrationConfig();
-        ComboPooledDataSource pool = baseConfig.createComboPooledDataSource();
-        try {
-            Base base = new Base(pool, "failures_1");
-            Connection connection = pool.getConnection();
+        try (Base base = new Base(baseConfig)) {
+            Connection connection = base.pool.getConnection();
             try {
                 Base.execute(connection, "INSERT");
             } catch (SQLException ex) {
@@ -22,9 +19,6 @@ public class BaseTests {
             } finally {
                 connection.close();
             }
-
-        } finally {
-            pool.close();
         }
     }
 }

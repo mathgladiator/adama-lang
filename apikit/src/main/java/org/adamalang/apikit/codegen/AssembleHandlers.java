@@ -31,6 +31,9 @@ public class AssembleHandlers {
             java.append("package ").append(packageName).append(";\n\n");
             java.append("\n");
             java.append("public interface ").append(root).append("Handler {\n");
+            if (!root.equals("Root")) {
+                java.append("public void bind();\n\n");
+            }
             for (Method method : byHandler.get(root)) {
                 java.append("  public ");
                 if (method.create != null) {
@@ -41,9 +44,9 @@ public class AssembleHandlers {
                 java.append(" handle(").append(method.camelName).append("Request request, ").append(method.responder.camelName).append("Responder responder);\n\n");
             }
             if (root.equals("Root")) {
-                java.append("public void disconnect();");
+                java.append("public void disconnect();\n\n");
             } else {
-                java.append("public void disconnect(long id);");
+                java.append("public void disconnect(long id);\n\n");
             }
             java.append("}\n");
             files.put(root + "Handler.java", java.toString());
