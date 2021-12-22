@@ -7,19 +7,23 @@ option java_outer_classname = "AdamaService";
 package adama_service;
 
 service Adama {
+  /** create a new document */
   rpc Create(CreateRequest) returns (CreateResponse) {}
 
+  /** open a bidi connection */
   rpc MultiplexedProtocol(stream MultiplexedStreamMessageClient) returns (stream MultiplexedStreamMessageServer) {}
 
-  /*
-  rpc Destroy(DestroyRequest) returns (DestroyResponse) {}
+  /** deploy a space */
+  rpc Deploy(DeployRequest) returns (DeployResponse) {}
+}
 
-  rpc Rewind(RewindRequest) returns (RewindResponse) {}
+message DeployRequest {
+  string space = 1;
+  string plan = 2;
+}
 
-  rpc Unsend(UnsendRequest) returns (UnsendResponse) {}
+message DeployResponse {
 
-  rpc Fork(ForkRequest) returns (ForkResponse) {}
-  */
 }
 
 

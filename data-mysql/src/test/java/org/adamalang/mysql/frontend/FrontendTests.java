@@ -41,9 +41,9 @@ public class FrontendTests {
                 int alice = Users.getOrCreateUserId(base, "alice@x.com");
                 int bob = Users.getOrCreateUserId(base, "bob@x.com");
                 Assert.assertEquals(1, Spaces.createSpace(base, alice, "space1"));
-                Assert.assertEquals(1, Spaces.getSpaceId(base, "space1"));
+                Assert.assertEquals(1, Spaces.getSpaceId(base, "space1").id);
                 Assert.assertEquals(2, Spaces.createSpace(base, bob, "space2"));
-                Assert.assertEquals(2, Spaces.getSpaceId(base, "space2"));
+                Assert.assertEquals(2, Spaces.getSpaceId(base, "space2").id);
                 Assert.assertEquals("{}", Spaces.getPlan(base, 1));
                 Assert.assertEquals("{}", Spaces.getPlan(base, 2));
                 Spaces.setPlan(base, 1, "{\"x\":1}");
@@ -118,11 +118,6 @@ public class FrontendTests {
                 } catch (ErrorCodeException ex) {
                     Assert.assertEquals(609294, ex.code);
                 }
-
-
-
-
-
             } finally {
                 installer.uninstall();
             }

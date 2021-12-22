@@ -47,7 +47,7 @@ public class Spaces {
                 try (ResultSet rs = statement.executeQuery()) {
                     if (rs.next()) {
                         Set<Integer> developers = new HashSet<>();
-                        String sqlGrants = new StringBuilder("SELECT `user`, `role` FROM `").append(base.databaseName).append("`grants` WHERE `space`=").append(rs.getInt(1)).toString();
+                        String sqlGrants = new StringBuilder("SELECT `user`,`role` FROM `").append(base.databaseName).append("`.`grants` WHERE `space`=").append(rs.getInt(1)).toString();
                         Base.walk(connection, (g) -> {
                             switch (g.getInt(2)) {
                                 case 0x01: // Role.Developer

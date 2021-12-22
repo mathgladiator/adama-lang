@@ -41,7 +41,7 @@ public class EndToEnd_InitFlowTests {
             String identity2 = Json.parseJsonObject(result2.substring(7)).get("identity").textValue();
             Assert.assertEquals("FINISH:{}", c4.next());
             Iterator<String> c7 = fe.execute("{\"id\":7,\"method\":\"probe\",\"identity\":\""+identity1+"\"}");
-            Assert.assertEquals("ERROR:4542", c7.next());
+            Assert.assertEquals("ERROR:966671", c7.next());
             Iterator<String> c8 = fe.execute("{\"id\":8,\"method\":\"probe\",\"identity\":\""+identity2+"\"}");
             Assert.assertEquals("FINISH:{}", c8.next());
         }
