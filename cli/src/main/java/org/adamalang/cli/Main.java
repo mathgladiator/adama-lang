@@ -2,6 +2,7 @@ package org.adamalang.cli;
 
 import org.adamalang.cli.commands.Authority;
 import org.adamalang.cli.commands.Init;
+import org.adamalang.cli.commands.Local;
 import org.adamalang.cli.commands.Space;
 
 public class Main {
@@ -25,6 +26,9 @@ public class Main {
             case "authority":
                 Authority.execute(config, next);
                 return;
+            case "local":
+                Local.execute(config, next);
+                return;
             case "help":
                 rootHelp();
                 return;
@@ -44,5 +48,6 @@ public class Main {
         System.out.println("    " + Util.prefix("init", Util.ANSI.Green) + "              Initializes the config with a valid token");
         System.out.println("    " + Util.prefix("space", Util.ANSI.Green) + "             Manages spaces");
         System.out.println("    " + Util.prefix("authority", Util.ANSI.Green) + "         Manage authorities");
+        System.out.println("    " + Util.prefix("local", Util.ANSI.Green) + "             Local developer tools");
     }
 }

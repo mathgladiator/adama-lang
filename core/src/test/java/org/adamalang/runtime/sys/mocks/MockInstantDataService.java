@@ -59,6 +59,10 @@ public class MockInstantDataService implements DataService {
         Assert.assertEquals(expected, log.get(k));
     }
 
+    public synchronized String getLogAt(int k) {
+        return log.get(k);
+    }
+
     public synchronized Runnable latchLogAt(int count) {
         CountDownLatch latch = new CountDownLatch(count);
         latches.add(latch);

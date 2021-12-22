@@ -12,11 +12,22 @@ public class Space {
         String command = Util.normalize(args[0]);
         String[] next = Util.tail(args);
         switch (command) {
+            case "create":
+                // TODO: (1) validate next[0] exists and is a validate space name, (2) send the command along to the socket
+                return;
+            case "list":
+                // TODO: (1) search for marker in next, (2) search for limit in next, (3) send the command along, (4) return beautiful results
+                return;
+            case "deploy":
+                // TODO: (1) search for --file OR --plan, (2.a) for --file, build a dumb plan and compile the file for fast, (2.b) for --plan validate the plan json, (3) send the plan to socket
+                return;
+            case "download":
+                // TODO: (1) validate next[0] exists and then go forth and fetch the plan and return a pretty printed version
+                return;
             case "help":
                 spaceHelp();
                 return;
         }
-
     }
 
     public static void spaceHelp() {

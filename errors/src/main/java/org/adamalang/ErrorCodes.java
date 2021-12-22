@@ -63,7 +63,7 @@ public class ErrorCodes {
 
     /**
      *      *
-     *      * 601088
+     *      *
      *      * 634880
      *      * 643072
      *      * 654339
@@ -75,23 +75,29 @@ public class ErrorCodes {
     public static final int FRONTEND_PLAN_DOESNT_EXIST = 609294;
     public static final int INVALID_ROLE = 688141;
 
+    public static final int FRONTEND_AUTHORITY_ALREADY_EXISTS = 601088;
+
+
+    public static final int DEPLOYMENT_PLAN_MUST_BE_ROOT_OBJECT = 117818;
+    public static final int DEPLOYMENT_PLAN_NO_VERSIONS = 115788;
+    public static final int DEPLOYMENT_PLAN_NO_DEFAULT = 143948;
+    public static final int DEPLOYMENT_PLAN_VERSIONS_MUST_BE_OBJECT = 155711;
+    public static final int DEPLOYMENT_PLAN_PLAN_MUST_BE_ARRAY = 126012;
+    public static final int DEPLOYMENT_PLAN_PLAN_ARRAY_ELEMENT_MUST_OBJECT = 176703;
+    public static final int DEPLOYMENT_PLAN_PERCENT_MUST_BE_DOUBLE = 151615;
+    public static final int DEPLOYMENT_PLAN_VERSION_MUST_EXIST = 120895;
+    public static final int DEPLOYMENT_PLAN_PLAN_NO_VERSION = 199768;
+    public static final int DEPLOYMENT_PLAN_MUST_HAVE_DEFAULT = 145980;
+    public static final int DEPLOYMENT_CANT_PARSE_LANGUAGE = 117823;
+    public static final int DEPLOYMENT_CANT_TYPE_LANGUAGE = 132157;
+    public static final int DEPLOYMENT_FACTORY_CANT_FIND_SPACE = 134214;
+    public static final int DEPLOYMENT_UNKNOWN_FIELD_ROOT = 143430;
+    public static final int DEPLOYMENT_UNKNOWN_FIELD_STAGE = 116812;
+    public static final int DEPLOYMENT_UNKNOWN_EXCEPTION = 116812;
+
+
     /**
      *
-     * 117818
-     * 155711
-     * 126012
-     * 176703
-     * 151615
-     * 120895
-     * 145980
-     * 117823
-     * 132157
-     * 134214
-     * 143430
-     * 116812
-     * 115788
-     * 143948
-     * 199768
      * 120944
      * 127088
      * 134259
