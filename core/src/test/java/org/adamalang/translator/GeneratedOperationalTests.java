@@ -48,7 +48,6 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("Path:Operational_Goodwill_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
-    gold.append("\nimport org.adamalang.runtime.*;");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");

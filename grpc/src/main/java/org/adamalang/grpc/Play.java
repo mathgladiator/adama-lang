@@ -3,17 +3,18 @@ package org.adamalang.grpc;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import org.adamalang.grpc.client.Client;
-import org.adamalang.grpc.client.DocumentEvents;
-import org.adamalang.grpc.client.DocumentEventsFactory;
+import org.adamalang.grpc.client.RemoteDocumentEvents;
+import org.adamalang.grpc.client.DefunctDocumentEventsFactory;
 import org.adamalang.grpc.client.MultiplexProtocol;
 import org.adamalang.grpc.common.MachineIdentity;
 import org.adamalang.grpc.server.Server;
-import org.adamalang.runtime.contracts.Callback;
-import org.adamalang.runtime.contracts.Key;
-import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
-import org.adamalang.runtime.contracts.TimeSource;
+import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.data.InMemoryDataService;
+import org.adamalang.runtime.deploy.DeploymentFactory;
+import org.adamalang.runtime.deploy.DeploymentFactoryBase;
+import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
@@ -27,27 +28,10 @@ import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class Play {
-
-    public static class FiniteDocumentFactory implements LivingDocumentFactoryFactory {
-        public final HashMap<String, LivingDocumentFactory> factories;
-
-        public FiniteDocumentFactory() {
-            this.factories = new HashMap<>();
-        }
-
-        @Override
-        public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
-            LivingDocumentFactory factory = factories.get(key.space);
-            if (factory == null) {
-                callback.failure(new ErrorCodeException(12345));
-                return;
-            }
-            callback.success(factory);
-        }
-    }
-
+    /*
     public static LivingDocumentFactory compile(final String code) throws Exception {
         final var options = CompilerOptions.start().enableCodeCoverage().noCost().make();
         final var globals = GlobalObjectPool.createPoolWithStdLib();
@@ -63,13 +47,18 @@ public class Play {
         final var java = document.compileJava(state);
         return new LivingDocumentFactory("MeCode", java, "{}");
     }
+    */
 
     public static void main(String[] args) throws Exception {
-        ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
-        FiniteDocumentFactory factory = new FiniteDocumentFactory();
-        factory.factories.put("space", compile("@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } "));
+        DeploymentPlan plan = new DeploymentPlan("{\"versions\":{\"x\":\"@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; }\"},\"default\":\"x\"}", (t, errorCode) -> {
 
-        CoreService service = new CoreService(factory, //
+        });
+        DeploymentFactoryBase base = new DeploymentFactoryBase();
+        base.deploy("space", plan);
+
+        ScheduledExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
+
+        CoreService service = new CoreService(base, //
                 new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
                 TimeSource.REAL_TIME, 2);
 
@@ -79,6 +68,10 @@ public class Play {
         server.start();
 
         Client client = new Client(identity, "127.0.0.1:2321", inMemoryThread);
+        System.err.println("Ping now!");
+        client.ping(1000);
+        System.err.println("Ping!");
+
         Futures.addCallback(client.create("me", "life", "space", "123", null, "{}"), new FutureCallback<Void>() {
             @Override
             public void onSuccess(@NullableDecl Void unused) {
@@ -89,6 +82,7 @@ public class Play {
             @Override
             public void onFailure(Throwable throwable) {
                 System.err.println("Failure");
+                throwable.printStackTrace();
             }
         }, inMemoryThread);
 
@@ -96,11 +90,11 @@ public class Play {
             @Override
             public void onSuccess(@NullableDecl MultiplexProtocol multiplexProtocol) {
                 System.err.println("found protocol");
-                multiplexProtocol.connect("space", "123", "me", "life", new DocumentEventsFactory() {
+                multiplexProtocol.connect("space", "123", "me", "life", new DefunctDocumentEventsFactory() {
                     @Override
-                    public DocumentEvents make(MultiplexProtocol.DocumentConnection connection) {
+                    public RemoteDocumentEvents make(MultiplexProtocol.DocumentConnection connection) {
                         System.err.println("connected");
-                        return new DocumentEvents() {
+                        return new RemoteDocumentEvents() {
                             @Override
                             public void delta(String data) {
                                 System.err.println("DELTA:" + data);

@@ -8,6 +8,9 @@ package adama_service;
 
 service Adama {
   /** create a new document */
+  rpc Ping(PingRequest) returns (PingResponse) {}
+
+  /** create a new document */
   rpc Create(CreateRequest) returns (CreateResponse) {}
 
   /** open a bidi connection */
@@ -26,6 +29,11 @@ message DeployResponse {
 
 }
 
+message PingRequest {
+}
+
+message PingResponse {
+}
 
 message CreateRequest {
   string space = 1;

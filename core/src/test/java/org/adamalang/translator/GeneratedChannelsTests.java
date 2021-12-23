@@ -55,7 +55,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
-    gold.append("\nimport org.adamalang.runtime.*;");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
@@ -645,7 +644,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("Path:Channels_DuplicateHandlers_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":0},\"end\":{\"line\":4,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'goo' is already handled (MessageHandlers)\"},{\"range\":{\"start\":{\"line\":5,\"character\":0},\"end\":{\"line\":5,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Channel 'goo' is already handled (MessageHandlers)\"}]\"--JAVA---------------------------------------------");
-    gold.append("\nimport org.adamalang.runtime.*;");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
@@ -1068,7 +1066,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
-    gold.append("\nimport org.adamalang.runtime.*;");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
@@ -1789,7 +1786,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
-    gold.append("\nimport org.adamalang.runtime.*;");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
@@ -2297,7 +2293,6 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
-    gold.append("\nimport org.adamalang.runtime.*;");
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");

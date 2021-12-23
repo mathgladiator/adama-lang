@@ -20,7 +20,7 @@ public class MultiplexProtocol {
 
     public class DocumentConnection {
         private final long id;
-        private DocumentEvents events;
+        private RemoteDocumentEvents events;
 
 
         public DocumentConnection() {
@@ -28,7 +28,7 @@ public class MultiplexProtocol {
             this.events = null;
         }
 
-        protected void bind(DocumentEvents events) {
+        protected void bind(RemoteDocumentEvents events) {
             this.events = events;
         }
 
@@ -52,9 +52,6 @@ public class MultiplexProtocol {
             public void onNext(MultiplexedStreamMessageServer multiplexedStreamMessageServer) {
                 service.execute(() -> {
                     StreamMessageServer payload = multiplexedStreamMessageServer.getPayload();
-
-
-
                     if (payload.getByTypeCase() == StreamMessageServer.ByTypeCase.BYTYPE_NOT_SET) {
                         // TODO: send an error
                         return;
@@ -136,11 +133,11 @@ public class MultiplexProtocol {
         });
     }
 
-    public void connect(String space, String key, String agent, String authority, DocumentEventsFactory factory) {
+    public void connect(String space, String key, String agent, String authority, DefunctDocumentEventsFactory factory) {
         DocumentConnection dc = new DocumentConnection();
         service.execute(() -> {
             documents.put(dc.id, dc);
-            DocumentEvents events = factory.make(dc);
+            RemoteDocumentEvents events = factory.make(dc);
             dc.bind(events);
             upstream.onNext(MultiplexedStreamMessageClient.newBuilder().setId(dc.id).setPayload(StreamMessageClient.newBuilder().setConnect(StreamConnect.newBuilder().setAgent(agent).setAuthority(authority).setSpace(space).setKey(key).build()).build()).build());
             // TODO: write out the create message

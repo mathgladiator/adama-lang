@@ -24,7 +24,7 @@ public class ErrorCodesTests {
   @Test
   public void no_dupes() throws Exception {
     HashSet<Integer> values = new HashSet<>();
-    for (Field field: org.adamalang.runtime.ErrorCodes.class.getFields()) {
+    for (Field field: ErrorCodes.class.getFields()) {
       int v = (int) field.get(null);
       Assert.assertFalse("dupe:" + v, values.contains(v));
     }

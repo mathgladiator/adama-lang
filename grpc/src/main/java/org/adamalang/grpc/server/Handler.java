@@ -36,19 +36,22 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     }
 
     @Override
+    public void ping(PingRequest request, StreamObserver<PingResponse> responseObserver) {
+        responseObserver.onNext(PingResponse.newBuilder().build());
+        responseObserver.onCompleted();
+    }
+
+    @Override
     public void create(CreateRequest request, StreamObserver<CreateResponse> responseObserver) {
-        System.err.println("seeing create...");
-        service.create(new NtClient(request.getAgent(), request.getAuthority()), new Key(request.getSpace(), request.getKey()), request.getArg(), fixEntropy(request.getEntropy()), new Callback<Void>() {
+        service.create(new NtClient(request.getAgent(), request.getAuthority()), new Key(request.getSpace(), request.getKey()), request.getArg(), fixEntropy(request.getEntropy()), new Callback<>() {
             @Override
             public void success(Void value) {
-                System.err.println("... as success");
                 responseObserver.onNext(CreateResponse.newBuilder().setSuccess(true).build());
                 responseObserver.onCompleted();
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
-                System.err.println("... as failure:" + ex.code);
                 responseObserver.onNext(CreateResponse.newBuilder().setSuccess(false).setFailureReason(ex.code).build());
                 responseObserver.onCompleted();
             }

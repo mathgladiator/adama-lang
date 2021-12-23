@@ -18,7 +18,6 @@ public class CodeGenDocument {
     if (environment.state.options.packageName != null) {
       sb.append("package ").append(environment.state.options.packageName).append(";").writeNewline().writeNewline();
     }
-    sb.append("import org.adamalang.runtime.*;").writeNewline();
     sb.append("import org.adamalang.runtime.async.*;").writeNewline();
     sb.append("import org.adamalang.runtime.contracts.*;").writeNewline();
     sb.append("import org.adamalang.runtime.delta.*;").writeNewline();
