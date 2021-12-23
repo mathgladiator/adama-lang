@@ -7,7 +7,7 @@ The mission of Adama is to simplify building online board games. With a bit of s
 
 Neat, right? Adama, the language, is a way of laying out state and then defining how to manipulate that state within a closed container. Manipulation of state is done by people via messages, and the document is computed reactively similar to Excel.
 
-Now, the entire purpose is to play an online board game, but this extends well beyond board games. However, manifesting those values will take time to communicate. For now, the key is that players connect to a shared document, and the document enforces both rules and privacy via the Adama langauge.
+Now, the entire purpose is to play an online board game, but this extends well beyond board games. However, manifesting those values will take time to communicate. For now, the key is that players connect to a shared document, and the document enforces both rules and privacy via the Adama language.
 
 For more information on why, please refer to [the origin story](http://www.adama-lang.org/docs/why-the-origin-story) over at http://www.adama-lang.org/
 

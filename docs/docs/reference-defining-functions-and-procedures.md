@@ -8,7 +8,7 @@ title: Defining Functions & Procedures
 Adama has two forms of colloquial functions.
 
 
-Functions in Adama are pure in that they have no side-effects and also are context-free.
+Functions in Adama are pure in that they have no side effects and also are context-free.
 
 ```adama
 function square(int x) -> int {

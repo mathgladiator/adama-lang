@@ -8,7 +8,7 @@ How to control the flow of a game?
 
 With [time](what-the-living-document) and [messages](what-actors-are-actings) driving changes to the **living document**, the next challenge is organizing messages from multiple clients. This is where we combine the state machine model with messaging to turn Adama code into a ["dungeon master"](https://en.wikipedia.org/wiki/Dungeon_Master) (or, [a workflow coordinator](https://en.wikipedia.org/wiki/Workflow_management_system)).
 
-This is accomplished by creating ["incomplete" channels that yield futures](https://en.wikipedia.org/wiki/Futures_and_promises). First, you define a message.
+This is accomplished by creating ["incomplete" channels that yield futures](https://en.wikipedia.org/wiki/Futures_and_promises). First, you define a message:
 
 ```adama
 message PickANumber {
@@ -16,7 +16,7 @@ message PickANumber {
 }
 ```
 
-Then, you define the incomplete channel.
+Then, you define the incomplete channel:
 
 ```adama
 channel decide_number : PickANumber;
@@ -72,7 +72,7 @@ The above Adama code performs several actions, so there are comments to explain 
   future<PickANumber> b = decide_number.fetch(player2);
 ```
 
-The **fetch** method on a channel will reach out to the client and ask for a specific type of a message for delivery on that channel. This fetch returns a future which can be awaited to return the message from the user. Notice, concurrency is built into this model and both players can contribute their number independently at the same time. A future represents a value which will arrive... in the future.
+The **fetch** method on a channel will reach out to the client and ask for a specific type of message for delivery on that channel. This fetch returns a future which can be awaited to return the message from the user. Notice, concurrency is built into this model and both players can contribute their number independently at the same time. A future represents a value which will arrive... in the future.
 
 The second key element is found in the following code to get the contributions from the players:
 ```adama
