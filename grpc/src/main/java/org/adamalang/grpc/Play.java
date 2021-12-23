@@ -77,6 +77,7 @@ public class Play {
 
         Server server = new Server(identity, service, 2321);
         server.start();
+
         Client client = new Client(identity, "127.0.0.1:2321", inMemoryThread);
         Futures.addCallback(client.create("me", "life", "space", "123", null, "{}"), new FutureCallback<Void>() {
             @Override

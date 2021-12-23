@@ -56,7 +56,8 @@ public class KeyTool {
         Files.copy(caCert.toPath(), new File("/tmp/ca-cert.pem").toPath());
         Files.copy(caKey.toPath(), new File("/tmp/ca-key.pem").toPath());
 
-        pipe("/usr/bin/openssl req -newkey rsa:4096 -nodes -keyout /tmp/machine-key.pem -out /tmp/machine-req.pem -subj /C=US/ST=Kansas/L=OverlandPark/O=Adama/OU=Adama/CN=adama.com/emailAddress=admin@adama.com");
+        // TODO: sort out a more generic subject
+        pipe("/usr/bin/openssl req -newkey rsa:4096 -nodes -keyout /tmp/machine-key.pem -out /tmp/machine-req.pem -subj /C=US/ST=Kansas/L=KansasCity/O=Adama/OU=Adama/CN=adama.com/emailAddress=admin@adama.com");
         Files.writeString(new File("/tmp/machine.cnf").toPath(), "subjectAltName=IP:" + ip);
         pipe("/usr/bin/openssl x509 -req -in /tmp/machine-req.pem -days 365 -CA /tmp/ca-cert.pem -CAkey /tmp/ca-key.pem -CAcreateserial -out /tmp/machine-cert.pem -extfile /tmp/machine.cnf");
         String json = MachineIdentity.convertToJson(new File("/tmp/ca-cert.pem"), new File("/tmp/machine-cert.pem"), new File("/tmp/machine-key.pem"));
