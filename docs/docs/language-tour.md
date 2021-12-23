@@ -26,7 +26,7 @@ However, a human viewer (such as yourself or myself) of the document will only s
 {"name":"You"}
 ```
 
-This is because the **score** field is defined with the private modifier. By modifying a field with **private**, only the code within the document can operate on the **score** field. This is useful, for example, to define secrects in a game. A key function in board games is the need for secrets (i.e. the contents of your hand) or an unrevealed state of objects such as the ordering of cards within a deck.
+This is because the **score** field is defined with the private modifier. By modifying a field with **private**, only the code within the document can operate on the **score** field. This is useful, for example, to define secrets in a game. A key function in board games is the need for secrets (i.e. the contents of your hand) or an unrevealed state of objects such as the ordering of cards within a deck.
 
 The following diagram visualizes the Adama environment and architecture:
 
@@ -34,7 +34,7 @@ The following diagram visualizes the Adama environment and architecture:
 
 Here is a brief overview of the Adama working environment:
 
-- Connect (via a client) Adama Document Store with a persisent connection. 
+- Connect (via a client) Adama Document Store with a persistent connection. 
 - The store will then send to you a private version of the document. 
 - This private version is tailored for you based on directives from the Adama code provided to the store (e.g., the **private** modifier sets the **sore** variable as private in the above example). 
 
@@ -143,9 +143,9 @@ Messages alone create a nice theoretical framework, but they may not be practica
 
 ## Let the Server Take Control!
 
-To control message flow, Adama uses an incomplete **channel** identfier. An incomplete channel is like a [promise](https://en.wikipedia.org/wiki/Futures_and_promises) that indicates clients may provide a message of a specific type, but only when the document asks for it.
+To control message flow, Adama uses an incomplete **channel** identifier. An incomplete channel is like a [promise](https://en.wikipedia.org/wiki/Futures_and_promises) that indicates clients may provide a message of a specific type, but only when the document asks for it.
 
-Adama uses a third party to broker the communicate between players. That is, it determines who is asking players for messages? This is where the document's [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine) comes into play. The document can be in exactly one state at any time, and states are represented via hashtags. For instance, ```#mylabel``` is a state machine label used to denote a potential state of the document.
+Adama uses a third party to broker the communication between players. That is, it determines who is asking players for messages? This is where the document's [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine) comes into play. The document can be in exactly one state at any time, and states are represented via hashtags. For instance, ```#mylabel``` is a state machine label used to denote a potential state of the document.
 
 We can associate code to a state machine label directly and set the document to that state via the **transition** keyword.
 
@@ -172,7 +172,7 @@ public int turn;
 }
 ```
 
-The reason we took this detour is to have a third party be able to use the incomplete channel. For instance, the document somehow learns of two players within a game; these player's associated clients are stored within the document via:
+The reason we took this detour is to have a third party be able to use the incomplete channel. For instance, the document somehow learns of two players within a game; these players' associated clients are stored within the document via:
 
 ```adama
 private client player1;

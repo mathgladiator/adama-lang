@@ -71,7 +71,7 @@ Messages can also be constructed anonymously on the fly.
 }
 ```
 
-It is worth noting that the type of messages undergo static type rectification, so the above is 100% statically typed. It also leverages a simplified form of type inference such that messages of a known type can me constructed.
+It is worth noting that the type of messages undergo static type rectification, so the above is 100% statically typed. It also leverages a simplified form of type inference such that messages of a known type can be constructed.
 ```adama
 message M {
   int x;
@@ -101,4 +101,4 @@ message M {
 }
 ```
 
-The useful of this conversion will become clear when [channels and futures are outlined.](/docs/reference-channels-handlers-futures).
+The usefulness of this conversion will become clear when [channels and futures are outlined](/docs/reference-channels-handlers-futures).

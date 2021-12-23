@@ -22,7 +22,7 @@ And we introduce two non-traditional ones:
 
 ### if
 
-**if** statements are straightforward ways of controling the flow of execution, and Adama's **if** behave like most other languages.
+**if** statements are straightforward ways of controlling the flow of execution, and Adama's **if** behave like most other languages.
 
 ```adama
 public int x;

@@ -28,7 +28,7 @@ public int z;
 
 ### Unary numeric negation: - *expr*
 
-When you want want to turn a positive into a negative, a negative into a positive, a smile into a frown, a frown upside down, or [reflect a value over the y-axis.](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). This is done with the subtract symbol prefixing any expression.
+When you want to turn a positive into a negative, a negative into a positive, a smile into a frown, a frown upside down, or [reflect a value over the y-axis](https://en.wikipedia.org/wiki/Cartesian_coordinate_system). This is done with the subtract symbol prefixing any expression.
 
 **Sample Code**
 ```adama

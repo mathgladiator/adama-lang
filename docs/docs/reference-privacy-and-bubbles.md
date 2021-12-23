@@ -61,7 +61,7 @@ client owner;
 viewer_is<owner> int data_only_for_owner;
 ```
 
-Here, the field owner is referenced via the privacy modifer for data_only_for_owner such that only the device/client authenticated can see that data.
+Here, the field owner is referenced via the privacy modifier for data_only_for_owner such that only the device/client authenticated can see that data.
 
 ### use_policy&lt;&gt; &amp; policy
 

@@ -57,7 +57,7 @@ channel my_channel(client who, MyName msg) {
 }
 ```
 
-The above code will temporarily set the top level name field to "n00b" which is [visible only to the running code](https://en.wikipedia.org/wiki/ACID), but the @abort will roll-back all changes encountered and it will be as [if the message never happened](https://en.wikipedia.org/wiki/Database_transaction). This is super important for ensuring the document is never inconsistent or torn.
+The above code will temporarily set the top level name field to "n00b" which is [visible only to the running code](https://en.wikipedia.org/wiki/ACID), but the @abort will roll back all changes encountered and it will be as [if the message never happened](https://en.wikipedia.org/wiki/Database_transaction). This is super important for ensuring the document is never inconsistent or torn.
 
 Mental Model: Old School Chat Room
 ----------------------------------

@@ -13,7 +13,7 @@ First, it is hard to get code right, so we have to fix issues. The good news is 
 
 Second, code does not exist in a vacuum. The code must run on a machine, and the code must leverage a run-time. Achieving stability requires defining how to leverage a machine, and then being exceptionally careful with the run-time.
 
-Machines are, more or less, stable enough. Fortunately, machines can be emulated with virtual machines. Adama is initially targetting a virtual machine which _*should*_ last a 1000 years: the JVM. The JVM can run code from the 90s, but there can be breakage. For instance, that breakage generally happens at the edge which are explored due to performance. For Adama, we will therefore drop extreme performance as a requirement. Performance is a nice to have, but it is more important to focus on conceptual simplicitly and keeping the math at the elementary level.
+Machines are, more or less, stable enough. Fortunately, machines can be emulated with virtual machines. Adama is initially targeting a virtual machine which _*should*_ last 1000 years: the JVM. The JVM can run code from the 90s, but there can be breakage. For instance, that breakage generally happens at the edge which are explored due to performance. For Adama, we will therefore drop extreme performance as a requirement. Performance is a nice to have, but it is more important to focus on conceptual simplicity and keeping the math at the elementary level.
 
 Run-times require great care to build to remain stable. This means when something is added to the run-time, then it should remain functional for a very long time. With Performance a non-goal, the goal is for the run-time to only expose deterministic and simple features.
 
@@ -21,9 +21,9 @@ Achieving a stable run-time is a serious burden. Every API in Adama gets a serio
 
 Third, stability requires a closed ecosystem. Adama will not support direct networking or disk access. This is why many games from the 90s can be emulated with great success, and this is why some MMOs are gone forever.
 
-Fourth, stability requires a lack of growth. Adama and the run-time is limited such that no more than 1,000 people can play a single game at a time. There, growth solved!
+Fourth, stability requires a lack of growth. Adama and the run-time are limited such that no more than 1,000 people can play a single game at a time. There, growth solved!
 
-The reality of this desire to achieve stabiliy is a disciplined approach. This project is not going to be done in a weekend, but a decade.
+The reality of this desire to achieve stability is a disciplined approach. This project is not going to be done in a weekend, but a decade.
 
-> Slow is smooth smooth is fast.
+> Slow is smooth, smooth is fast.
 

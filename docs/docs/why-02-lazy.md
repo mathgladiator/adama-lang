@@ -1,6 +1,6 @@
 ---
 id: why-being-lazy-is-key
-title: Lazyness as a Virtue
+title: Laziness as a Virtue
 ---
 
 A core principle within Adama is that we should off-load as much work as possible to the language and run-time. We should be lazy and allow the language to do some valuable heavy lifting for us. The question then is "how can the language help with building real things?".
@@ -19,6 +19,6 @@ With Excel in mind, Adama will do some heavy lifting for product builders. Adama
 * Using a disks that may fail
 * Think about synchronizing state
 
-Excel is the rallying cry for Adama because Excel is just so fucking awesome at being productive. The challenge with Excel is that shipping products with it is not competitive to shipping software with "serious languages" from "serious programmers" to build web products. Adama hopes is to be as productive as Excel except with pure text files.
+Excel is the rallying cry for Adama because Excel is just so fucking awesome at being productive. The challenge with Excel is that shipping products with it is not competitive with shipping software in "serious languages" from "serious programmers" to build web products. Adama hopes is to be as productive as Excel except with pure text files.
 
 Sadly, Just being super productive is not enough for this world. Adama must also support some super powers...

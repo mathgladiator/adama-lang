@@ -19,7 +19,7 @@ table<Account> accounts;
 
 Notice that the **public** and **private** modifiers have been hijacked to mean "which humans can see this data!", and this mirrors my understanding of field visibility when I was a kid.
 
-This was born from how to represent board game state such that secrets do not flow incorrectly to the wrong people. Afterall, if I can see your hand in poker, then you lose.
+This was born from how to represent board game state such that secrets do not flow incorrectly to the wrong people. After all, if I can see your hand in poker, then you lose.
 
 Classical databases were built around security within an organization and the granularity within the database is too coarse-grained. It's up to application developers to protect data between people, and this is a heavy burden. This burden was inherited by NoSQL. Instead, Adama believes that a document should contain all access rules to data, and the language aims to simplify that process.
 

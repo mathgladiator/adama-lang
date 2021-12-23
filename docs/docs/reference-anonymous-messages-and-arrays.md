@@ -92,7 +92,7 @@ While the above sample is trivial, this construct enforces the appropriate type 
 
 ## What is "Type Rectification" and why should you care?
 
-Type rectification is the process of taking two values of two types, then finding (or creating) a type which allows both of them of them to fit together. For instance, the rectified type of int and double is double because double can hold both values.
+Type rectification is the process of taking two values of two types, then finding (or creating) a type which allows both of them to fit together. For instance, the rectified type of int and double is double because double can hold both values.
 
 
 ## TODO

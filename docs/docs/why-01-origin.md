@@ -3,7 +3,7 @@ id: why-the-origin-story
 title: Origin Story
 ---
 
-This programming language was born from a desire to bring a great game board-game online: <a href="https://boardgamegeek.com/boardgame/37111/battlestar-galactica-board-game">Battlestar Galactica</a>. [I](/docs/who-jeff) absolute love board games. Unfortunately, every time I try to implement it or any other board game, I find myself broken hating everything about the technology I use.
+This programming language was born from a desire to bring a great game board-game online: <a href="https://boardgamegeek.com/boardgame/37111/battlestar-galactica-board-game">Battlestar Galactica</a>. [I](/docs/who-jeff) absolutely love board games. Unfortunately, every time I try to implement it or any other board game, I find myself broken hating everything about the technology I use.
 
 At core, [I](/docs/who-jeff) believe board games represent a limit point of both technical and product complexity where traditional web techniques break down. However, old-school gaming techniques work better, but these old-school techniques have their own issues. The first motivation of this project is to bridge how web and old-school gaming techniques can work together in a cohesive way.
 

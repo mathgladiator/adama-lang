@@ -23,7 +23,7 @@ will construct the document:
 
 ## Diving Into Details
 
-Constructors can also accept a ```client``` and message argument. For instance, the following is a more representive constructor.
+Constructors can also accept a ```client``` and message argument. For instance, the following is a more representative constructor.
 
 ```adama
 message Arg {

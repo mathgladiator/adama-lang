@@ -72,7 +72,7 @@ The above Adama code performs several actions, so there are comments to explain 
   future<PickANumber> b = decide_number.fetch(player2);
 ```
 
-The **fetch** method on a channel will reach out to the client and ask for a specific type of a message for delivery on that channel. This fetch returns a future which can be awaited to return the message from the user. Notice, concurrency is built into this model and both players can contribute their number independently at the same time. A future represents a value which will arrive... in the future.
+The **fetch** method on a channel will reach out to the client and ask for a specific type of message for delivery on that channel. This fetch returns a future which can be awaited to return the message from the user. Notice, concurrency is built into this model and both players can contribute their number independently at the same time. A future represents a value which will arrive... in the future.
 
 The second key element is found in the following code to get the contributions from the players:
 ```adama
