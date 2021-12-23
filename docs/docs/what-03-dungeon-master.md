@@ -8,7 +8,7 @@ How to control the flow of a game?
 
 With [time](what-the-living-document) and [messages](what-actors-are-actings) driving changes to the **living document**, the next challenge is organizing messages from multiple clients. This is where we combine the state machine model with messaging to turn Adama code into a ["dungeon master"](https://en.wikipedia.org/wiki/Dungeon_Master) (or, [a workflow coordinator](https://en.wikipedia.org/wiki/Workflow_management_system)).
 
-This is accomplished by creating ["incomplete" channels that yield futures](https://en.wikipedia.org/wiki/Futures_and_promises). First, you define a message.
+This is accomplished by creating ["incomplete" channels that yield futures](https://en.wikipedia.org/wiki/Futures_and_promises). First, you define a message:
 
 ```adama
 message PickANumber {
@@ -16,7 +16,7 @@ message PickANumber {
 }
 ```
 
-Then, you define the incomplete channel.
+Then, you define the incomplete channel:
 
 ```adama
 channel decide_number : PickANumber;

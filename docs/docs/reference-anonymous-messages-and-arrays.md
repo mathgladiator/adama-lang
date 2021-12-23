@@ -38,7 +38,7 @@ Adama supports anonymous arrays as well via the brackets similar in syntax to Ja
 }
 ```
 
-It is worth noting that these arrays are statically typed, and the elements within must have a compatible type under "type rectification". An interesting example for the need of type rectification is the following snippet.
+It is worth noting that these arrays are statically typed, and the elements within must have a compatible type under "type rectification". An interesting example for the need of type rectification is the following snippet:
 
 ```adama
 @construct {

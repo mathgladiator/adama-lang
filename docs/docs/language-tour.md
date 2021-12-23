@@ -34,9 +34,9 @@ The following diagram visualizes the Adama environment and architecture:
 
 Here is a brief overview of the Adama working environment:
 
-- Connect (via a client) Adama Document Store with a persistent connection. 
+- Connect (via a client) to the Adama Document Store with a persistent connection. 
 - The store will then send to you a private version of the document. 
-- This private version is tailored for you based on directives from the Adama code provided to the store (e.g., the **private** modifier sets the **sore** variable as private in the above example). 
+- This private version is tailored for you based on directives from the Adama code provided to the store (e.g., the **private** modifier sets the **score** variable as private in the above example). 
 
 Adama is not only a data-centric programming language, but a privacy-focused language such that secrets between players (i.e. individual hands) and the universe (i.e. decks) are not disclosed. This environment is essential for games requiring secrets so that other gamers do not gain an unfair advantage from "hacking" environment variables. 
 
@@ -54,7 +54,7 @@ public Card a;
 public Card b;
 ```
 
-A record is a structure that defines one or more named typed fields under a single type name. In the above example, the structure **Card** is the combination of **suit** and **rank** integer fields. These structures can then be used to create instances within the document of that type. The above code  backend would have the following JSON:
+A record is a structure that defines one or more named typed fields under a single type name. In the above example, the structure **Card** is the combination of **suit** and **rank** integer fields. These structures can then be used to create instances within the document of that type. The above code backend would have the following JSON:
 
 ```json
 {
@@ -69,7 +69,7 @@ The above example is great for cleaning up patterns within the global document, 
 table<Card> deck;
 ```
 
-But this begs the question: how do records flow into the deck? Adama uses events that can be associated with developer code which is evaluated when event trigger. This code can then manipulate the document.
+But this begs the question: how do records flow into the deck? Adama uses events that can be associated with developer code which is evaluated when events trigger. This code can then manipulate the document.
 
 One example of an event is the creation of the document. The event is created via a constructor (using the **@construct** identifier). This constructor can be used with an "ingestion" operator (**<-**) and some C style **for** loops. The following Adama code builds a table of Card records based on the JSON document structure:
 
@@ -83,15 +83,15 @@ One example of an event is the creation of the document. The event is created vi
 }
 ```
 
-The above code will construct the state of the document representing a typical deck of cards containing 52 cards, 4 suits and 13 cards per suit. Tables are always private in Adama, so viewers of the document will not see table structures. However, the dta contained within the table will be viewable. Queries against the table expose selected data to people such as players. As an example, the following code will let everyone know the size of the deck.
+The above code will construct the state of the document representing a typical deck of cards containing 52 cards, 4 suits and 13 cards per suit. Tables are always private in Adama, so viewers of the document will not see table structures. However, the data contained within the table will be viewable. Queries against the table expose selected data to people such as players. As an example, the following code will let everyone know the size of the deck:
 
 ```adama
 public formula deck_size = deck.size();
 ```
 
-The above **formula** variable represents Adama's [reactive programming language](https://en.wikipedia.org/wiki/Reactive_programming). As the deck undergoes changes during gameplay, the formula variables depending on that deck will be recomputed and updates are sent to viewers such as players in the game.
+The above **formula** variable represents Adama's [reactive programming language](https://en.wikipedia.org/wiki/Reactive_programming). As the deck undergoes changes during gameplay, the formula variables depending on that deck will be recomputed and updates will be sent to viewers such as players in the game.
 
-Because Adama continually updates the state of document, the connection from your device to the Adama Document Store uses a socket. The socket provides a way for the server to know the state of the client, and then minimize the compute overhead on the server. This enables small data changes to manifest in small compute changes that translate to less network usage. Less network usages translates to less client device compute overhead, and this manifests into less battery consumption for the end-user. Board games can last for hours when they leverage Adama's reduction in battery power consumption.
+Because Adama continually updates the state of document, the connection from your device to the Adama Document Store uses a socket. The socket provides a way for the server to know the state of the client, and then minimize the compute overhead on the server. This enables small data changes to manifest in small compute changes that translate to less network usage. Less network usage translates to less client device compute overhead, and this manifests into less battery consumption for the end-user. Board games can last for hours when they leverage Adama's reduction in battery power consumption.
 
 A table is an exceptionally powerful tool, and Adama uses [language integrated query](https://en.wikipedia.org/wiki/Language_Integrated_Query) (LINQ) to query data. Using the Card structure, the following example adds a **client** type to the Card record to indicate possession of the card:
 
@@ -145,7 +145,7 @@ Messages alone create a nice theoretical framework, but they may not be practica
 
 To control message flow, Adama uses an incomplete **channel** identifier. An incomplete channel is like a [promise](https://en.wikipedia.org/wiki/Futures_and_promises) that indicates clients may provide a message of a specific type, but only when the document asks for it.
 
-Adama uses a third party to broker the communication between players. That is, it determines who is asking players for messages? This is where the document's [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine) comes into play. The document can be in exactly one state at any time, and states are represented via hashtags. For instance, ```#mylabel``` is a state machine label used to denote a potential state of the document.
+Adama uses a third party to broker the communication between players. That is, it determines who is asking players for messages. This is where the document's [finite state machine](https://en.wikipedia.org/wiki/Finite-state_machine) comes into play. The document can be in exactly one state at any time, and states are represented via hashtags. For instance, ```#mylabel``` is a state machine label used to denote a potential state of the document.
 
 We can associate code to a state machine label directly and set the document to that state via the **transition** keyword.
 
@@ -179,13 +179,13 @@ private client player1;
 private client player2;
 ```
 
-Now, we can define an incomplete for the document to ask players for cards.
+Now, we can define an incomplete channel for the document to ask players for cards.
 
 ```adama
 channel<Draw> how_many_cards;
 ```
 
-This incomplete channel will accept message only from code via a **fetch** method on the channel. We can leverage the state machine code to ask players for the number of cards they wish to draw using the following Adama code:
+This incomplete channel will accept messages only from code via a **fetch** method on the channel. We can leverage the state machine code to ask players for the number of cards they wish to draw using the following Adama code:
 
 ```adama
 #round {

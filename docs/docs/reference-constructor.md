@@ -17,7 +17,7 @@ public int x;
 
 will construct the document:
 
-```js
+```json
 {"x":42}
 ```
 

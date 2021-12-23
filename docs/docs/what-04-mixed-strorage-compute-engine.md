@@ -22,7 +22,7 @@ and then define a table:
 table<MyRecord> my_records;
 ```
 
-Tables are not directly exported to people, and instead require a formula to yield data. We can do that via the iterate expression
+Tables are not directly exported to people, and instead require a formula to yield data. We can do that via the "iterate" expression
 
 ```adama
 public formula records_by_name = iterate my_records order by name asc;

@@ -24,7 +24,7 @@ channel change_output(client sender, ChangeOutput change) {
 }
 ```
 
-This enables users to send messages via the change_output channel which will execute the associated code. In this example, 'change_output' is the name of the channel which clients will annotate their message with to execute the associated code. Nothing stops from introducing multiple channels with the same type.
+This enables users to send messages via the change_output channel which will execute the associated code. In this example, 'change_output' is the name of the channel which clients will annotate their message with to execute the associated code. Nothing stops you from introducing multiple channels with the same type.
 
 ```adama
 channel change_output(client sender, ChangeOutput change) {
@@ -62,7 +62,7 @@ private client player2;
 }
 ```
 
-Note, these two users can come up with the message independently and this decoupling of asking a person (i.e. the ```fetch```) and getting the data in code (i.e. the await) enables concurrency.
+Note, these two users can come up with the message independently and this decoupling of asking a person (i.e. the ```fetch```) and getting the data in code (i.e. the ```await```) enables concurrency.
 
 ## Diving into Details
 

@@ -32,7 +32,7 @@ Beyond fields, it is worth nothing that records can have [methods](/docs/referen
 
 ## Fast Intro: Message
 
-A message is similar to a record except without any privacy awareness or privacy concerns. All fields within a message are public, and the expectation is that messages come from users. The following defines real-world message.
+A message is similar to a record except without any privacy awareness or privacy concerns. All fields within a message are public, and the expectation is that messages come from users. The following defines a real-world message:
 
 ```adama
 message JoinGroup {
@@ -62,7 +62,7 @@ Records also have:
 
 ## Diving Into Details: Messages
 
-Most types that can be defined within code can be defined within a messages. The exceptions are channels and futures.
+Most types that can be defined within code can be defined within a message. The exceptions are channels and futures.
 
 Messages can also be constructed anonymously on the fly.
 ```adama

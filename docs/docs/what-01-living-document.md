@@ -8,11 +8,11 @@ What is a Living Document?
 
 Let's start by defining a **living** document as opposed to a **dead** document. Take a look at the following example JSON document:
 
-```js
+```json
 {
 	"name": "Jeff",	
 	"state": "Washington",
-	"title": "Dark Lord",
+	"title": "Dark Lord"
 }
 ```
 
@@ -46,7 +46,7 @@ Alternatively, a living document is a tiny **persistent** server.
 
 Mental Model: Tiny Persistent Servers
 -------------------------------------
-An exceptionally tiny _persistent_ server is an alternative view of this concept. This is what the merging of state and compute looks like with Adama. With Adama, you outline the shape of your state and then open up mechanisms for how that state changes. This is comparable to building a server in whatever language you want except the discipline to correctly persist state outside of the server is handled for you by the run-time.
+An exceptionally tiny _persistent_ server is an alternative view of this concept. This is what the merging of state and compute looks like with Adama. With Adama, you outline the shape of your state and then open up mechanisms for how that state changes. This is comparable to building a server in whatever language you want except the discipline to correctly persist state outside of the server is handled for you by the runtime.
 
 For the target domain of board games, this is exceptionally useful because representing the state of board games is a difficult task within itself. With Adama, a single document represents the entirety of a single game's state via a singular definition.
 

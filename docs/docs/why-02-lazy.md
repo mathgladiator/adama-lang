@@ -3,7 +3,7 @@ id: why-being-lazy-is-key
 title: Laziness as a Virtue
 ---
 
-A core principle within Adama is that we should off-load as much work as possible to the language and run-time. We should be lazy and allow the language to do some valuable heavy lifting for us. The question then is "how can the language help with building real things?".
+A core principle within Adama is that we should off-load as much work as possible to the language and runtime. We should be lazy and allow the language to do some valuable heavy lifting for us. The question then is "how can the language help with building real things?".
 
 Well, the challenge is that most of the "serious programmer" languages these days are within a narrow band and do similar enough things. Worse yet, we can be rather discriminatory when it comes to languages. For instance, consider Dijkstra once wrote:
 

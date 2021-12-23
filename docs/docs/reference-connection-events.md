@@ -11,7 +11,7 @@ The primary mechanism for users to get access to the document is via a persisten
 }
 ```
 
-This code is run when a person connects to the document, and if the return value is true then the connection is established. Not only can they connect, but they also naturally disconnect (either on purpose or due to technical difficulties). The disconnect signal is an informational event only, and is available via the @disconnected keyword
+This code is run when a person connects to the document, and if the return value is true then the connection is established. Not only can they connect, but they also naturally disconnect (either on purpose or due to technical difficulties). The disconnect signal is an informational event only, and is available via the @disconnected keyword.
 
 ```adama
 @disconnnected (who) {	

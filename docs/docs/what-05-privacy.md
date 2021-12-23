@@ -6,7 +6,7 @@ title: Privacy as a First Class Concept
 Don't show others my hand
 -------------------------
 
-So, exposing data from a table opens up the challenge of "well, wait, who can see that data?" One solution is to ensure all queries are respectful of the board game rules, but this requires ensuring all leafs in a forest are doing the right job. It would be better if the actual data could be encoded with who can see it. We start by defining the simplest model. So, here, we define an *Account*:
+So, exposing data from a table opens up the challenge of "well, wait, who can see that data?". One solution is to ensure all queries are respectful of the board game rules, but this requires ensuring all leafs in a forest are doing the right job. It would be better if the actual data could be encoded with who can see it. We start by defining the simplest model. So, here, we define an *Account*:
 
 ```adama
 record Account {

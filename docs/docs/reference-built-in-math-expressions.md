@@ -20,7 +20,7 @@ public int z;
 ```
 
 **Result**
-```js
+```json
   {"z":6}
 ```
 
@@ -40,7 +40,7 @@ public formula neg_z = -z;
 ```
 
 **Result**
-```js
+```json
 {"z":42,"neg_z":-42}
 ```
 
@@ -61,7 +61,7 @@ public formula not_a = !a;
 ```
 
 **Result**
-```js
+```json
 {"a":true,"not_a":false}
 ```
 
@@ -82,11 +82,11 @@ public formula c = b + 100;
 ```
 
 **Result**
-```js
+```json
 {"a":1,"b":11,"c":111}
 ```
 
-**Typing:**  The addition operator commonly is used to add two numbers, but it can also be used with strings and lists. The following table summarizes the typing and behavior.
+**Typing:**  The addition operator is commonly used to add two numbers, but it can also be used with strings and lists. The following table summarizes the typing and behavior:
 
 | left type | right type | result type | behavior |
 | --- | --- | --- | --- |
@@ -133,13 +133,13 @@ public formula c = b - 100;
 ```
 
 **Result**
-```js
+```json
 {"a":1000,"b":990,"c":890}
 ```
 
 **Typing:**  
 
-The subtraction operator commonly is used to subtract a number from another number, but it can also be used with lists. The following table summarizes the typing and behavior.
+The subtraction operator is commonly used to subtract a number from another number, but it can also be used with lists. The following table summarizes the typing and behavior.
 
 | left type | right type | result type | behavior |
 | --- | --- | --- | --- |
@@ -173,7 +173,7 @@ public formula c = b * 3;
 ```
 
 **Result**
-```js
+```json
 {"a":7,"b":14,"c":42}
 ```
 
@@ -201,7 +201,7 @@ public formula c = b / 10;
 ```
 
 **Result**
-```js
+```json
 {"a":20.0,"b":10.0,"c":1.0}
 ```
 
@@ -223,13 +223,13 @@ public formula c = a % 4;
 ```
 
 **Result**
-```js
+```json
 {"a":7,"b":1,"c":3}
 ```
 
 **Typing:** The left and right side must be integral (i.e. int or long), and the result is integral as well. The following table summarizes the logic precisely.
 
-| left type | right type | result type
+| left type | right type | result type |
 | --- | --- | --- |
 | int | int | int |
 | long | int | int |
@@ -254,7 +254,7 @@ public formula cmp2 = b < a;
 ```
 
 **Result**
-```js
+```json
 {"a":1,"b":2,"cmp1":true,"cmp2":false}
 ```
 
@@ -292,7 +292,7 @@ public formula cmp2 = b > a;
 ```
 
 **Result**
-```js
+```json
 {"a":1,"b":2,"cmp1":false,"cmp2":true}
 ```
 
@@ -317,7 +317,7 @@ public formula cmp3 = a + 1 <= b;
 ```
 
 **Result**
-```js
+```json
 {"a":1,"b":2,"cmp1":true,"cmp2":false,"cmp3":true}
 ```
 
@@ -343,7 +343,7 @@ public formula cmp3 = a + 1 >= b;
 **Typing:** This has the same typing as &lt;
 
 **Result**
-```js
+```json
 {"a":1,"b":2,"cmp1":false,"cmp2":true,"cmp3":true}
 ```
 
@@ -363,7 +363,7 @@ public formula eq2 = a + 1 == b;
 ```
 
 **Result**
-```js
+```json
 {"a":1,"b":2,"eq1":false,"eq2":true}
 ```
 
@@ -385,7 +385,7 @@ public formula neq2 = a + 1 != b;
 ```
 
 **Result**
-```js
+```json
 {"a":1,"b":2,"neq1":true,"neq2":false}
 ```
 
@@ -415,7 +415,7 @@ public formula and = a && b;
 ```
 
 **Result**
-```js
+```json
 {"a":true,"b":false,"and":false}
 ```
 
@@ -445,7 +445,7 @@ public formula or = a || b;
 ```
 
 **Result**
-```js
+```json
 {"a":true,"b":false,"or":true}
 ```
 
@@ -463,7 +463,7 @@ public formula inline = a ? 5 : 10;
 ```
 
 **Result**
-```js
+```json
 {"cond":true,"inline":5}
 ```
 
