@@ -27,13 +27,13 @@ record Row {
   // a private person
   private client who;
 
-  // data that is only visiable to the who
+  // data that is only visible to the who
   viewer_is<who> int whos_age;
 
   // a custom policy based on code
   use_policy<my_policy> int custom;
 
-  // defining the polcy
+  // defining the policy
   policy my_policy(c) {
     return pub < pri;
   }
@@ -54,14 +54,14 @@ The **private** modifier hides data from users. The **public** modifier disclose
 
 ### client_is&lt;&gt;
 
-Inside the angle brackets denotes a variable local to the document or record which must be of type client. For instance
+Inside the angle brackets denotes a variable local to the document or record which must be of type client. For instance:
 
 ```adama
 client owner;
 viewer_is<owner> int data_only_for_owner;
 ```
 
-Here, the field owner is referenced via the privacy modifer for data_only_for_owner such that only the device/client authenticated can see that data.
+Here, the field owner is referenced via the privacy modifier for data_only_for_owner such that only the device/client authenticated can see that data.
 
 ### use_policy&lt;&gt; &amp; policy
 

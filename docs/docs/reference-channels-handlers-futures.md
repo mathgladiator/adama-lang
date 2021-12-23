@@ -24,7 +24,7 @@ channel change_output(client sender, ChangeOutput change) {
 }
 ```
 
-This enables users to send messages via the change_output channel which will execute the associated code. In this example, 'change_output' is the name of the channel which clients will annotate their messager with to execute the associated code. Nothing stops from introducing multiple channels with the same type.
+This enables users to send messages via the change_output channel which will execute the associated code. In this example, 'change_output' is the name of the channel which clients will annotate their message with to execute the associated code. Nothing stops you from introducing multiple channels with the same type.
 
 ```adama
 channel change_output(client sender, ChangeOutput change) {
@@ -62,7 +62,7 @@ private client player2;
 }
 ```
 
-Note, these two users can come up with the message independently and this decoupling of asking a person (i.e. the ```fetch```) and getting the data in code (i.e. the await) enables concurrency.
+Note, these two users can come up with the message independently and this decoupling of asking a person (i.e. the ```fetch```) and getting the data in code (i.e. the ```await```) enables concurrency.
 
 ## Diving into Details
 
@@ -72,4 +72,4 @@ channels have a fetch method that will result in a single message but has the se
 
 ### channel&lt;T&gt;.decide(who, T[])
 
-Similar to fetch, the decide function enables something very cool and is the recommended approach for board games. Decide will ask the user to pick exactly one item from the given array of options. This is exciting as this enables AI to auto play games, but this is outside of the topic of the documentation... for now.
+Similar to fetch, the decide function enables something very cool and is the recommended approach for board games. Decide will ask the user to pick exactly one item from the given array of options. This is exciting as this enables AI to autoplay games, but this is outside the topic of the documentation... for now.

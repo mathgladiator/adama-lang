@@ -11,7 +11,7 @@ Adama takes the position that tooling should be mostly in your face and out of y
 * Adama's deployment must run in a sub-second timeframe.
 * Tests written within Adama run in a sub-millisecond timeframe.
 
-With such speed, each key-stroke can be validated, and if things are not working then real-time diagnostics will tell you why (with your text editor of choice via [LSP](https://microsoft.github.io/language-server-protocol/)). If validation worked, then a deployment will happen, tests are run and reported (via LSP), and results are visible within the product. Keep in mind, Adama is aiming to be competitive with Excel. Typing in Excel produces results!
+With such speed, each keystroke can be validated, and if things are not working then real-time diagnostics will tell you why (with your text editor of choice via [LSP](https://microsoft.github.io/language-server-protocol/)). If validation worked, then a deployment will happen, tests are run and reported (via LSP), and results are visible within the product. Keep in mind, Adama is aiming to be competitive with Excel. Typing in Excel produces results!
 
 The same must be true in Adama. However, going fast sometimes causes a new set of problems. For instance, after a deployment, human interaction in a game may be needed to test it. Well, this interaction can change the state in a bad way. Thus, Adama must enable time travel!
 
