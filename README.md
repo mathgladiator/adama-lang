@@ -11,18 +11,6 @@ Now, the entire purpose is to play an online board game, but this extends well b
 
 For more information on why, please refer to [the origin story](http://www.adama-lang.org/docs/why-the-origin-story) over at http://www.adama-lang.org/
 
-# OK, How do I play with this thing?
-
-Well... you need to install java 11 and maven. I'm currently using Ubuntu within Windows Linux Subsystem, but you can check out the repo and then build the jar via
-
-```sh
-./build.py jar
-```
-
-Then you can run the demo
-```sh
-./demo.py
-```
 
 [You see more in the tutorial series within the documentation.](http://www.adama-lang.org/docs/how-devkit-install)
 

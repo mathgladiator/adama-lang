@@ -3,6 +3,8 @@ id: how-hello-adama
 title: Hello Adama
 ---
 
+NOTE: this is all changing due to the future SaaS model.
+
 TODO:
 - [ ] write the bootstrap tool to create directories and seeds
 - [ ] outline what the seed does

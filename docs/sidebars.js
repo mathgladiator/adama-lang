@@ -20,7 +20,6 @@ module.exports = {
       'what-a-single-file',
     ],
     'How (the Tutorial)': [
-      'how-devkit-install',
       'how-hello-adama',
     ],
     'Language Guide & Reference': [

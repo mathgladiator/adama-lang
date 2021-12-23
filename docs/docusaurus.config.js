@@ -42,10 +42,6 @@ module.exports = {
               label: 'What',
               to: 'docs/what-the-living-document',
             },
-            {
-              label: 'How',
-              to: 'docs/how-devkit-install',
-            },
           ],
         },
         {

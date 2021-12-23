@@ -68,8 +68,8 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('docs/how-devkit-install')}>
-              Coming Soon...
+              to={useBaseUrl('docs/why-the-origin-story')}>
+              Learn more...
             </Link>
           </div>
         </div>
