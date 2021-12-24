@@ -117,12 +117,12 @@ public class TestBed implements AutoCloseable {
     }
 
     public void stopServer() throws Exception {
-        server.stop();
+        server.close();
     }
 
     @Override
     public void close() throws Exception {
-        server.stop();
+        server.close();
         clientExecutor.shutdown();
     }
 }

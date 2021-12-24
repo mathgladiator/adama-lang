@@ -1,56 +1,24 @@
 package org.adamalang.grpc;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import org.adamalang.grpc.client.Client;
-import org.adamalang.grpc.client.RemoteDocumentEvents;
-import org.adamalang.grpc.client.DefunctDocumentEventsFactory;
-import org.adamalang.grpc.client.MultiplexProtocol;
+import org.adamalang.grpc.client.InstanceClient;
+import org.adamalang.grpc.client.contracts.ClientLifecycle;
+import org.adamalang.grpc.client.contracts.RemoteDocument;
+import org.adamalang.grpc.client.contracts.DocumentEvents;
+import org.adamalang.grpc.client.contracts.CreateCallback;
 import org.adamalang.grpc.common.MachineIdentity;
 import org.adamalang.grpc.server.Server;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.data.InMemoryDataService;
-import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.CoreService;
-import org.adamalang.translator.env.CompilerOptions;
-import org.adamalang.translator.env.EnvironmentState;
-import org.adamalang.translator.env.GlobalObjectPool;
-import org.adamalang.translator.jvm.LivingDocumentFactory;
-import org.adamalang.translator.parser.Parser;
-import org.adamalang.translator.parser.token.TokenEngine;
-import org.adamalang.translator.tree.Document;
-import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 
-import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class Play {
-    /*
-    public static LivingDocumentFactory compile(final String code) throws Exception {
-        final var options = CompilerOptions.start().enableCodeCoverage().noCost().make();
-        final var globals = GlobalObjectPool.createPoolWithStdLib();
-        final var state = new EnvironmentState(globals, options);
-        final var document = new Document();
-        document.setClassName("MeCode");
-        final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
-        final var parser = new Parser(tokenEngine);
-        parser.document().accept(document);
-        if (!document.check(state)) {
-            throw new Exception("Failed to check:" + document.errorsJson());
-        }
-        final var java = document.compileJava(state);
-        return new LivingDocumentFactory("MeCode", java, "{}");
-    }
-    */
-
     public static void main(String[] args) throws Exception {
-        DeploymentPlan plan = new DeploymentPlan("{\"versions\":{\"x\":\"@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; }\"},\"default\":\"x\"}", (t, errorCode) -> {
+        DeploymentPlan plan = new DeploymentPlan("{\"versions\":{\"x\":\"@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; transition #p in 1; }\"},\"default\":\"x\"}", (t, errorCode) -> {
 
         });
         DeploymentFactoryBase base = new DeploymentFactoryBase();
@@ -67,24 +35,69 @@ public class Play {
         Server server = new Server(identity, service, 2321);
         server.start();
 
-        Client client = new Client(identity, "127.0.0.1:2321", inMemoryThread);
+        InstanceClient instanceClient = new InstanceClient(identity, "127.0.0.1:2321", inMemoryThread, new ClientLifecycle() {
+            @Override
+            public void connected(InstanceClient client) {
+                System.err.println("Client connected");
+            }
+
+            @Override
+            public void disconnected(InstanceClient client) {
+                System.err.println("Client disconnected");
+            }
+        }, (t, errorCode) -> {
+            t.printStackTrace();
+        });
         System.err.println("Ping now!");
-        client.ping(1000);
+        instanceClient.ping(1000);
         System.err.println("Ping!");
 
-        Futures.addCallback(client.create("me", "life", "space", "123", null, "{}"), new FutureCallback<Void>() {
+        instanceClient.create("me", "life", "space", "123", null, "{}", new CreateCallback() {
             @Override
-            public void onSuccess(@NullableDecl Void unused) {
-                System.err.println("Success!");
-                // TODO: connect to download
+            public void created() {
+                System.err.println("Created!");
+
+                RemoteDocument doc = instanceClient.connect("me", "life", "space", "123", new DocumentEvents() {
+                    @Override
+                    public void delta(String data) {
+                        System.err.println("DELTA:" + data);
+                    }
+
+                    @Override
+                    public void connected() {
+                        System.err.println("CONNECTED, yay!");
+                    }
+
+                    @Override
+                    public void disconnected() {
+                        System.err.println("DISCONNECTED");
+                    }
+
+                    @Override
+                    public void error(int code) {
+                        System.err.println("ERROR:" + code);
+                    }
+                });
             }
 
             @Override
-            public void onFailure(Throwable throwable) {
-                System.err.println("Failure");
-                throwable.printStackTrace();
+            public void error(int code) {
+                System.err.println("ERROR:" + code);
             }
-        }, inMemoryThread);
+        });
+
+
+
+        for (int k = 0; k < 10; k++) {
+            System.err.print(".");
+            Thread.sleep(1000);
+        }
+        instanceClient.close();
+        server.close();
+        service.shutdown();
+        inMemoryThread.shutdown();
+
+        /*
 
         Futures.addCallback(client.findConnection(), new FutureCallback<MultiplexProtocol>() {
             @Override
@@ -124,5 +137,6 @@ public class Play {
                 throwable.printStackTrace();
             }
         }, inMemoryThread);
+        */
     }
 }

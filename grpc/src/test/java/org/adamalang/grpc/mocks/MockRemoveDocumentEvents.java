@@ -1,18 +1,46 @@
 package org.adamalang.grpc.mocks;
 
-import org.adamalang.grpc.client.RemoteDocumentEvents;
+import org.adamalang.grpc.client.contracts.DocumentEvents;
+import org.junit.Assert;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-public class MockRemoveDocumentEvents implements RemoteDocumentEvents {
+public class MockRemoveDocumentEvents implements DocumentEvents {
     private final ArrayList<String> history;
+    private ArrayList<CountDownLatch> latches;
 
     public MockRemoveDocumentEvents() {
         this.history = new ArrayList<>();
+        latches = new ArrayList<>();
+    }
+
+
+    public synchronized Runnable latchAt(int write) {
+        CountDownLatch latch = new CountDownLatch(write);
+        latches.add(latch);
+        return () -> {
+            try {
+                Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
+            } catch (InterruptedException ie) {
+                Assert.fail();
+            }
+        };
+    }
+
+    public synchronized void assertWrite(int write, String expected) {
+        Assert.assertTrue(write < history.size());
+        Assert.assertEquals(expected, history.get(write));
     }
 
     private synchronized void write(String x) {
+        System.err.println("MOCK:" + x);
         history.add(x);
+        for (CountDownLatch latch : latches) {
+            latch.countDown();
+        }
     }
 
 

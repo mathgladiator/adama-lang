@@ -14,6 +14,16 @@ public class Spaces {
 
     public static int createSpace(Base base, int userId, String space) throws Exception {
         try (Connection connection = base.pool.getConnection()) {
+            String sqlTestWater = new StringBuilder().append("SELECT `owner`, `id` FROM `").append(base.databaseName).append("`.`spaces` WHERE `name`=?").toString();
+            try (PreparedStatement statement = connection.prepareStatement(sqlTestWater, Statement.RETURN_GENERATED_KEYS)) {
+                statement.setString(1, space);
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()) {
+                    if (rs.getInt(1) == userId) {
+                        return rs.getInt(2);
+                    }
+                }
+            }
             String sql = new StringBuilder().append("INSERT INTO `").append(base.databaseName).append("`.`spaces` (`owner`, `name`, `plan`, `billing`) VALUES (?,?,'{}', 'free')").toString();
             try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 statement.setInt(1, userId);
@@ -39,6 +49,7 @@ public class Spaces {
             this.developers = developers;
         }
     }
+
     public static Space getSpaceId(Base base, String space) throws Exception {
         try (Connection connection = base.pool.getConnection()) {
             String sql = new StringBuilder("SELECT `id`,`owner`,`billing` FROM `").append(base.databaseName).append("`.`spaces` WHERE name=?").toString();
@@ -47,6 +58,8 @@ public class Spaces {
                 try (ResultSet rs = statement.executeQuery()) {
                     if (rs.next()) {
                         Set<Integer> developers = new HashSet<>();
+                        int owner = rs.getInt(2);
+                        developers.add(owner);
                         String sqlGrants = new StringBuilder("SELECT `user`,`role` FROM `").append(base.databaseName).append("`.`grants` WHERE `space`=").append(rs.getInt(1)).toString();
                         Base.walk(connection, (g) -> {
                             switch (g.getInt(2)) {
@@ -55,7 +68,7 @@ public class Spaces {
                                     break;
                             }
                         }, sqlGrants);
-                        return new Space(rs.getInt(1), rs.getInt(2), rs.getString(3), developers);
+                        return new Space(rs.getInt(1), owner, rs.getString(3), developers);
                     }
                     throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_DOESNT_EXIST);
                 }

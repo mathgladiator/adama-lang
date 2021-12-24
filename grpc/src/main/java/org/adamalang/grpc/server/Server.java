@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-public class Server {
+public class Server implements AutoCloseable {
     private final Supplier<io.grpc.Server> serverSupplier;
     private io.grpc.Server server;
     private final AtomicBoolean alive;
@@ -38,16 +38,16 @@ public class Server {
             server = serverSupplier.get();
             server.start();
             Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
-                Server.this.stop();
+                Server.this.close();
             })));
         }
     }
 
     /** Finish serving request */
-    public void stop() throws InterruptedException {
+    @Override
+    public void close() throws InterruptedException {
         if (alive.compareAndExchange(true, false) == true) {
-            alive.set(false);
-            server.shutdown().awaitTermination(30, TimeUnit.SECONDS);
+            server.shutdownNow().awaitTermination(2, TimeUnit.SECONDS);
             server = null;
         }
     }

@@ -1,19 +1,18 @@
 package org.adamalang.grpc.server;
 
 import io.grpc.stub.StreamObserver;
+import org.adamalang.ErrorCodes;
 import org.adamalang.grpc.proto.*;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
 
 public class Handler extends AdamaGrpc.AdamaImplBase {
 
@@ -59,25 +58,22 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     }
 
     @Override
-    public StreamObserver<MultiplexedStreamMessageClient> multiplexedProtocol(StreamObserver<MultiplexedStreamMessageServer> responseObserver) {
+    public StreamObserver<StreamMessageClient> multiplexedProtocol(StreamObserver<StreamMessageServer> responseObserver) {
         ConcurrentHashMap<Long, CoreStream> streams = new ConcurrentHashMap<>();
-
+        responseObserver.onNext(StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
         return new StreamObserver<>() {
             @Override
-            public void onNext(MultiplexedStreamMessageClient multiplexedStreamMessageClient) {
-                long id = multiplexedStreamMessageClient.getId();
-                long actOn = multiplexedStreamMessageClient.getAct();
+            public void onNext(StreamMessageClient payload) {
+                long id = payload.getId();
+                long actOn = payload.getAct();
                 CoreStream stream = null;
                 if (actOn > 0) {
                     stream = streams.get(actOn);
                     if (stream == null) {
-                        int ERRORCODETODO = 555;
-                        StreamMessageServer toServer = StreamMessageServer.newBuilder().setError(StreamError.newBuilder().setCode(555).build()).build();
-                        responseObserver.onNext(MultiplexedStreamMessageServer.newBuilder().setId(id).setPayload(toServer).build());
+                        responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_COMMON_FAILED_TO_FIND_STREAM_USING_GIVEN_ACT).build()).build());
                         return;
                     }
                 }
-                StreamMessageClient payload = multiplexedStreamMessageClient.getPayload();
                 switch (payload.getByTypeCase()) {
                     case CONNECT:
                         StreamConnect connect = payload.getConnect();
@@ -98,8 +94,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                                         code = StreamStatusCode.Disconnected;
                                         break;
                                 }
-                                StreamMessageServer toServer = StreamMessageServer.newBuilder().setStatus(org.adamalang.grpc.proto.StreamStatus.newBuilder().setCode(code).build()).build();
-                                responseObserver.onNext(MultiplexedStreamMessageServer.newBuilder().setId(id).setPayload(toServer).build());
+                                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setStatus(org.adamalang.grpc.proto.StreamStatus.newBuilder().setCode(code).build()).build());
                                 if (status == StreamStatus.Disconnected) {
                                     streams.remove(id);
                                 }
@@ -107,44 +102,76 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
                             @Override
                             public void next(String data) {
-                                StreamMessageServer toServer = StreamMessageServer.newBuilder().setData(StreamData.newBuilder().setDelta(data).build()).build();
-                                responseObserver.onNext(MultiplexedStreamMessageServer.newBuilder().setId(id).setPayload(toServer).build());
+                                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setData(StreamData.newBuilder().setDelta(data).build()).build());
                             }
 
                             @Override
                             public void failure(ErrorCodeException exception) {
-                                StreamMessageServer toServer = StreamMessageServer.newBuilder().setError(StreamError.newBuilder().setCode(exception.code).build()).build();
-                                responseObserver.onNext(MultiplexedStreamMessageServer.newBuilder().setId(id).setPayload(toServer).build());
+                                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(exception.code).build()).build());
                                 streams.remove(id);
                             }
                         });
                         break;
+                    case ASK:
+                        if (stream != null) {
+                            stream.canAttach(new Callback<>() {
+                                @Override
+                                public void success(Boolean value) {
+                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResponse(StreamAskAttachmentResponse.newBuilder().setAllowed(value).build()).build());
+                                }
+
+                                @Override
+                                public void failure(ErrorCodeException ex) {
+                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ex.code).build()).build());
+                                }
+                            });
+
+                        } else {
+                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_ASK_ATTACH_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT).build()).build());
+                        }
+                    case ATTACH:
+                        if (stream != null) {
+                            StreamAttach attach = payload.getAttach();
+                            NtAsset asset = new NtAsset(attach.getId(), attach.getFilename(), attach.getContentType(), attach.getSize(), attach.getMd5(), attach.getSha384());
+                            stream.attach(asset, new Callback<>() {
+                                @Override
+                                public void success(Integer value) {
+                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResult(StreamSeqResult.newBuilder().setSeq(value).build()).build());
+                                }
+
+                                @Override
+                                public void failure(ErrorCodeException ex) {
+                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ex.code).build()).build());
+                                }
+                            });
+                        } else {
+                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_ATTACH_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT).build()).build());
+                        }
                     case SEND:
                         if (stream != null) {
                             StreamSend send = payload.getSend();
                             stream.send(send.getChannel(), send.getMarker(), send.getMessage(), new Callback<>() {
                                 @Override
                                 public void success(Integer value) {
-                                    StreamMessageServer toServer = StreamMessageServer.newBuilder().setResult(StreamSeqResult.newBuilder().setSeq(value).build()).build();
-                                    responseObserver.onNext(MultiplexedStreamMessageServer.newBuilder().setId(id).setPayload(toServer).build());
+                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResult(StreamSeqResult.newBuilder().setSeq(value).build()).build());
                                 }
 
                                 @Override
                                 public void failure(ErrorCodeException exception) {
-                                    StreamMessageServer toServer = StreamMessageServer.newBuilder().setError(StreamError.newBuilder().setCode(exception.code).build()).build();
-                                    responseObserver.onNext(MultiplexedStreamMessageServer.newBuilder().setId(id).setPayload(toServer).build());
+                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(exception.code).build()).build());
                                 }
                             });
                         } else {
-                            // TODO: error
+                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_SEND_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT).build()).build());
                         }
                         break;
                     case DISCONNECT:
                         if (stream != null) {
                             stream.disconnect();
                             streams.remove(actOn);
-                            StreamMessageServer toServer = StreamMessageServer.newBuilder().setStatus(org.adamalang.grpc.proto.StreamStatus.newBuilder().setCode(StreamStatusCode.Disconnected).build()).build();
-                            responseObserver.onNext(MultiplexedStreamMessageServer.newBuilder().setId(id).setPayload(toServer).build());
+                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setStatus(org.adamalang.grpc.proto.StreamStatus.newBuilder().setCode(StreamStatusCode.Disconnected).build()).build());
+                        } else {
+                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_DISCONNECT_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT).build()).build());
                         }
                         break;
                 }
@@ -163,6 +190,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                 for (CoreStream stream : streams.values()) {
                     stream.disconnect();
                 }
+                responseObserver.onCompleted();
             }
         };
     }

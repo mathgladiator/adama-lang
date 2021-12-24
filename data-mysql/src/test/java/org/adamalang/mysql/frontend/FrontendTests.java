@@ -32,6 +32,65 @@ public class FrontendTests {
     }
 
     @Test
+    public void authorities() throws Exception {
+        BaseConfig baseConfig = BaseConfigTests.getLocalIntegrationConfig();
+        try (Base base = new Base(baseConfig)) {
+            ManagementInstaller installer = new ManagementInstaller(base);
+            try {
+                installer.install();
+                int failures = 0;
+
+                Authorities.createAuthority(base, 1, "auth_space_1");
+                try {
+                    Authorities.createAuthority(base, 1, "auth_space_1");
+                    Assert.fail();
+                } catch (ErrorCodeException ece) {
+                    failures++;
+                    Assert.assertEquals(601088, ece.code);
+                }
+                Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":1}");
+                Assert.assertEquals("{\"x\":1}", Authorities.getKeystore(base, "auth_space_1"));
+                Authorities.deleteAuthority(base, 1, "auth_space_1");
+
+                try {
+                    Authorities.getKeystore(base, "auth_space_1");
+                    Assert.fail();
+                } catch (ErrorCodeException ece) {
+                    failures++;
+                    Assert.assertEquals(643072, ece.code);
+                }
+
+                try {
+                    Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":1}");
+                    Assert.fail();
+                } catch (ErrorCodeException ece) {
+                    failures++;
+                    Assert.assertEquals(634880, ece.code);
+                }
+
+                try {
+                    Authorities.deleteAuthority(base, 1, "auth_space_1");
+                    Assert.fail();
+                } catch (ErrorCodeException ece) {
+                    failures++;
+                    Assert.assertEquals(654339, ece.code);
+                }
+
+                Assert.assertEquals(4, failures);
+                Authorities.createAuthority(base, 1, "auth_space_1");
+                Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":2}");
+                Assert.assertEquals("{\"x\":2}", Authorities.getKeystore(base, "auth_space_1"));
+                Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":3}");
+                Assert.assertEquals("{\"x\":3}", Authorities.getKeystore(base, "auth_space_1"));
+
+
+            } finally {
+                installer.uninstall();
+            }
+        }
+    }
+
+    @Test
     public void spaces() throws Exception {
         BaseConfig baseConfig = BaseConfigTests.getLocalIntegrationConfig();
         try (Base base = new Base(baseConfig)) {
@@ -41,8 +100,22 @@ public class FrontendTests {
                 int alice = Users.getOrCreateUserId(base, "alice@x.com");
                 int bob = Users.getOrCreateUserId(base, "bob@x.com");
                 Assert.assertEquals(1, Spaces.createSpace(base, alice, "space1"));
+                Assert.assertEquals(1, Spaces.createSpace(base, alice, "space1"));
                 Assert.assertEquals(1, Spaces.getSpaceId(base, "space1").id);
                 Assert.assertEquals(2, Spaces.createSpace(base, bob, "space2"));
+                Assert.assertEquals(2, Spaces.createSpace(base, bob, "space2"));
+                try {
+                    Spaces.createSpace(base, bob, "space1");
+                    Assert.fail();
+                } catch (ErrorCodeException ex) {
+                    Assert.assertEquals(679948, ex.code);
+                }
+                try {
+                    Spaces.createSpace(base, alice, "space2");
+                    Assert.fail();
+                } catch (ErrorCodeException ex) {
+                    Assert.assertEquals(679948, ex.code);
+                }
                 Assert.assertEquals(2, Spaces.getSpaceId(base, "space2").id);
                 Assert.assertEquals("{}", Spaces.getPlan(base, 1));
                 Assert.assertEquals("{}", Spaces.getPlan(base, 2));
@@ -66,6 +139,11 @@ public class FrontendTests {
                 }
                 Spaces.setRole(base, 2, alice, Role.Developer);
                 {
+                    Spaces.Space space1 = Spaces.getSpaceId(base, "space1");
+                    Spaces.Space space2 = Spaces.getSpaceId(base, "space2");
+                    Assert.assertTrue(space1.developers.contains(1));
+                    Assert.assertTrue(space2.developers.contains(1));
+                    Assert.assertTrue(space2.developers.contains(2));
                     List<Spaces.Item> ls1 = Spaces.list(base, alice, null, 5);
                     List<Spaces.Item> ls2 = Spaces.list(base, bob, null, 5);
                     Assert.assertEquals(2, ls1.size());

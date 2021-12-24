@@ -14,7 +14,7 @@ service Adama {
   rpc Create(CreateRequest) returns (CreateResponse) {}
 
   /** open a bidi connection */
-  rpc MultiplexedProtocol(stream MultiplexedStreamMessageClient) returns (stream MultiplexedStreamMessageServer) {}
+  rpc MultiplexedProtocol(stream StreamMessageClient) returns (stream StreamMessageServer) {}
 
   /** deploy a space */
   rpc Deploy(DeployRequest) returns (DeployResponse) {}
@@ -102,33 +102,29 @@ message StreamError {
 message StreamDisconnect {}
 
 message StreamMessageClient {
+  int64 id = 1;
+  int64 act = 2;
   oneof ByType {
-    StreamConnect connect = 1;
-    StreamSend send = 2;
-    StreamDisconnect disconnect = 3;
-    StreamAskAttachmentRequest ask = 4;
-    StreamAttach attach = 5;
+    StreamConnect connect = 3;
+    StreamSend send = 4;
+    StreamDisconnect disconnect = 5;
+    StreamAskAttachmentRequest ask = 6;
+    StreamAttach attach = 7;
   }
+}
+
+message Establish {
 }
 
 message StreamMessageServer {
+  int64 id = 1;
   oneof ByType {
-    StreamStatus status = 1;
-    StreamData data = 2;
-    StreamError error = 3;
-    StreamAskAttachmentResponse response = 4;
-    StreamSeqResult result = 5;
+    Establish establish = 2;
+    StreamStatus status = 3;
+    StreamData data = 4;
+    StreamError error = 5;
+    StreamAskAttachmentResponse response = 6;
+    StreamSeqResult result = 7;
   }
-}
-
-message MultiplexedStreamMessageClient {
-  int64 id = 1;
-  int64 act = 2;
-  StreamMessageClient payload = 3;
-}
-
-message MultiplexedStreamMessageServer {
-  int64 id = 1;
-  StreamMessageServer payload = 2;
 }
 

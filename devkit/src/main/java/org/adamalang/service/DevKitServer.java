@@ -10,6 +10,7 @@
 package org.adamalang.service;
 
 import java.io.File;
+import java.nio.file.AccessDeniedException;
 import java.security.AccessControlException;
 import java.util.HashMap;
 
@@ -101,7 +102,7 @@ public class DevKitServer {
         System.err.println("          size:" + request.size());
         System.err.println("-------------------------------");
         long id = 0;
-        NtAsset asset = new NtAsset(id, request.name(), request.type(), request.size(), request.md5(), request.sha384());
+        NtAsset asset = new NtAsset(id + "", request.name(), request.type(), request.size(), request.md5(), request.sha384());
         callback.failure(new ErrorCodeException(-1));
         //callback.success(asset);
       }
@@ -124,7 +125,7 @@ public class DevKitServer {
               responder.respond("{\"retry_connection\":true}", true, headers);
               return;
             }
-            responder.failure(new ErrorCodeException(403, new AccessControlException("denied")));
+            responder.failure(new ErrorCodeException(403, new AccessDeniedException("denied")));
           }
         } else {
           serviceHandler.handle(session, request, responder);
