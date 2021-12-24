@@ -154,14 +154,12 @@ public class InstanceClient implements AutoCloseable {
             executor.execute(() -> {
                 if (upstream != null) {
                     upstream.onNext(StreamMessageClient.newBuilder().setId(nextId.getAndIncrement()).setAct(docId).setDisconnect(StreamDisconnect.newBuilder().build()).build());
-                } else {
-                    System.err.println("cant disconnect");
                 }
             });
         }
     }
 
-    /** coninect to a document */
+    /** connect to a document */
     public void connect(String agent, String authority, String space, String key, Events events) {
         long docId = nextId.getAndIncrement();
         executor.execute(() -> {

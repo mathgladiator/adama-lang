@@ -164,8 +164,13 @@ public class InstanceClientTests {
                 @Override
                 public void connected(InstanceClient.Remote remote) {
                     this.remote = remote;
-                    remote.disconnect();
                     super.connected(remote);
+                }
+
+                @Override
+                public void delta(String data) {
+                    remote.disconnect();
+                    super.delta(data);
                 }
 
                 @Override
@@ -404,6 +409,259 @@ public class InstanceClientTests {
                 events.assertWrite(0, "CONNECTED");
                 events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
                 events.assertWrite(2, "DISCONNECTED");
+            }
+        }
+    }
+
+
+    @Test
+    public void cantAttachSocketDisconnect() throws Exception {
+        try (TestBed bed = new TestBed(10008, "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            bed.startServer();
+            MockClentLifecycle lifecycle = new MockClentLifecycle();
+            CountDownLatch cantAttachLatch = new CountDownLatch(1);
+            AtomicInteger error = new AtomicInteger(0);
+            MockEvents events = new MockEvents() {
+                InstanceClient.Remote remote;
+
+                @Override
+                public void connected(InstanceClient.Remote remote) {
+                    this.remote = remote;
+                    super.connected(remote);
+                }
+
+                @Override
+                public void delta(String data) {
+                    try {
+                        bed.stopServer();
+                    } catch (Exception ex) {
+
+                    }
+                    super.delta(data);
+                }
+
+                @Override
+                public void disconnected() {
+                    remote.canAttach(new AskAttachmentCallback() {
+                        @Override
+                        public void allow() {
+                        }
+
+                        @Override
+                        public void reject() {
+                        }
+
+                        @Override
+                        public void error(int code) {
+                            error.set(code);
+                            cantAttachLatch.countDown();
+                        }
+                    });
+                    super.disconnected();
+                }
+            };
+            Runnable happy = events.latchAt(3);
+            try (InstanceClient client = new InstanceClient(bed.identity, "127.0.0.1:10008", bed.clientExecutor, new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {
+                    AssertCreateSuccess success = new AssertCreateSuccess();
+                    client.create("nope", "nope", "space", "1", "123", "{}", success);
+                    success.await();
+                    client.connect("nope", "test", "space", "1", events);
+                    lifecycle.connected(client);
+                }
+
+                @Override
+                public void disconnected(InstanceClient client) {
+                    lifecycle.disconnected(client);
+                }
+            }, (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+            })) {
+                bed.startServer();
+                happy.run();
+                Assert.assertTrue(cantAttachLatch.await(2000, TimeUnit.MILLISECONDS));
+                Assert.assertEquals(701452, error.get());
+                events.assertWrite(0, "CONNECTED");
+                events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
+                events.assertWrite(2, "DISCONNECTED");
+            }
+        }
+    }
+
+    @Test
+    public void attachSocketDisconnect() throws Exception {
+        try (TestBed bed = new TestBed(10009, "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            bed.startServer();
+            MockClentLifecycle lifecycle = new MockClentLifecycle();
+            CountDownLatch attachLatch = new CountDownLatch(1);
+            AtomicInteger error = new AtomicInteger(0);
+            MockEvents events = new MockEvents() {
+                InstanceClient.Remote remote;
+
+                @Override
+                public void connected(InstanceClient.Remote remote) {
+                    this.remote = remote;
+                    super.connected(remote);
+                }
+
+                @Override
+                public void delta(String data) {
+                    try {
+                        bed.stopServer();
+                    } catch (Exception ex) {
+
+                    }
+                    super.delta(data);
+                }
+
+                @Override
+                public void disconnected() {
+                    remote.attach("id", "name", "text/json", 42, "x", "y", new SeqCallback() {
+                        @Override
+                        public void success(int seq) {
+                        }
+
+                        @Override
+                        public void error(int code) {
+                            error.set(code);
+                            attachLatch.countDown();
+                        }
+                    });
+                    super.disconnected();
+                }
+            };
+            Runnable happy = events.latchAt(3);
+            try (InstanceClient client = new InstanceClient(bed.identity, "127.0.0.1:10009", bed.clientExecutor, new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {
+                    AssertCreateSuccess success = new AssertCreateSuccess();
+                    client.create("nope", "nope", "space", "1", "123", "{}", success);
+                    success.await();
+                    client.connect("nope", "test", "space", "1", events);
+                    lifecycle.connected(client);
+                }
+
+                @Override
+                public void disconnected(InstanceClient client) {
+                    lifecycle.disconnected(client);
+                }
+            }, (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+            })) {
+                bed.startServer();
+                happy.run();
+                Assert.assertTrue(attachLatch.await(2000, TimeUnit.MILLISECONDS));
+                Assert.assertEquals(786442, error.get());
+                events.assertWrite(0, "CONNECTED");
+                events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
+                events.assertWrite(2, "DISCONNECTED");
+            }
+        }
+    }
+
+
+    @Test
+    public void socketDisconnectThenSendFailure() throws Exception {
+        try (TestBed bed = new TestBed(10010, "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            bed.startServer();
+            MockClentLifecycle lifecycle = new MockClentLifecycle();
+            AtomicInteger errorCodeSeq = new AtomicInteger(0);
+            CountDownLatch latch = new CountDownLatch(1);
+            MockEvents events = new MockEvents() {
+                InstanceClient.Remote remote = null;
+                @Override
+                public void connected(InstanceClient.Remote remote) {
+                    this.remote = remote;
+                    super.connected(remote);
+                }
+
+                @Override
+                public void delta(String data) {
+                    try {
+                        bed.stopServer();
+                    } catch (Exception ex) {
+
+                    }
+                    super.delta(data);
+                }
+                @Override
+                public void disconnected() {
+                    remote.send("foo", "marker1", "{\"z\":\"100\"}", new SeqCallback() {
+                        @Override
+                        public void success(int seq) {
+                        }
+
+                        @Override
+                        public void error(int code) {
+                            errorCodeSeq.set(code);
+                            latch.countDown();
+                        }
+                    });
+                    super.disconnected();
+                }
+            };
+            Runnable happy = events.latchAt(3);
+            try (InstanceClient client = new InstanceClient(bed.identity, "127.0.0.1:10010", bed.clientExecutor, new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {
+                    AssertCreateSuccess success = new AssertCreateSuccess();
+                    client.create("nope", "nope", "space", "1", "123", "{}", success);
+                    success.await();
+                    client.connect("nope", "test", "space", "1", events);
+                    lifecycle.connected(client);
+                }
+
+                @Override
+                public void disconnected(InstanceClient client) {
+                    lifecycle.disconnected(client);
+                }
+            }, (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+            })) {
+                bed.startServer();
+                happy.run();
+                Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+                events.assertWrite(0, "CONNECTED");
+                events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
+                events.assertWrite(2, "DISCONNECTED");
+                Assert.assertEquals(777231, errorCodeSeq.get());
+            }
+        }
+    }
+
+
+    @Test
+    public void noSocket() throws Exception {
+        try (TestBed bed = new TestBed(10011, "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            bed.startServer();
+            MockClentLifecycle lifecycle = new MockClentLifecycle();
+            MockEvents events = new MockEvents() {
+                InstanceClient.Remote remote = null;
+                @Override
+                public void connected(InstanceClient.Remote remote) {
+                    this.remote = remote;
+                    super.connected(remote);
+                }
+            };
+            Runnable happy = events.latchAt(1);
+            try (InstanceClient client = new InstanceClient(bed.identity, "127.0.0.1:10011", bed.clientExecutor, new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {
+                    client.close();
+                    client.connect("nope", "test", "space", "1", events);
+                }
+
+                @Override
+                public void disconnected(InstanceClient client) {
+                    lifecycle.disconnected(client);
+                }
+            }, (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+            })) {
+                bed.startServer();
+                happy.run();
+                events.assertWrite(0, "DISCONNECTED");
             }
         }
     }
