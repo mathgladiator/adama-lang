@@ -97,21 +97,6 @@ public class TestBed implements AutoCloseable {
 
     }
 
-    public <V> V assertGood(ListenableFuture<V> future) throws Exception {
-        return future.get(5000, TimeUnit.MILLISECONDS);
-    }
-
-    public <V> void assertBad(ListenableFuture<V> future) throws Exception {
-        boolean failure = true;
-        try {
-            future.get(5000, TimeUnit.MILLISECONDS);
-            failure = false;
-        } catch (Exception ex) {
-        }
-        Assert.assertTrue(failure);
-    }
-
-
     public void startServer() throws Exception {
         server.start();
     }

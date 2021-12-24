@@ -65,10 +65,9 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             @Override
             public void onNext(StreamMessageClient payload) {
                 long id = payload.getId();
-                long actOn = payload.getAct();
                 CoreStream stream = null;
-                if (actOn > 0) {
-                    stream = streams.get(actOn);
+                if (payload.hasAct()) {
+                    stream = streams.get(payload.getAct());
                     if (stream == null) {
                         responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_COMMON_FAILED_TO_FIND_STREAM_USING_GIVEN_ACT).build()).build());
                         return;
@@ -111,78 +110,65 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                                 streams.remove(id);
                             }
                         });
-                        break;
+                        return;
                     case ASK:
-                        if (stream != null) {
-                            stream.canAttach(new Callback<>() {
-                                @Override
-                                public void success(Boolean value) {
-                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResponse(StreamAskAttachmentResponse.newBuilder().setAllowed(value).build()).build());
-                                }
+                        stream.canAttach(new Callback<>() {
+                            @Override
+                            public void success(Boolean value) {
+                                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResponse(StreamAskAttachmentResponse.newBuilder().setAllowed(value).build()).build());
+                            }
 
-                                @Override
-                                public void failure(ErrorCodeException ex) {
-                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ex.code).build()).build());
-                                }
-                            });
-
-                        } else {
-                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_ASK_ATTACH_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT).build()).build());
-                        }
+                            @Override
+                            public void failure(ErrorCodeException ex) {
+                                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ex.code).build()).build());
+                            }
+                        });
+                        return;
                     case ATTACH:
-                        if (stream != null) {
-                            StreamAttach attach = payload.getAttach();
-                            NtAsset asset = new NtAsset(attach.getId(), attach.getFilename(), attach.getContentType(), attach.getSize(), attach.getMd5(), attach.getSha384());
-                            stream.attach(asset, new Callback<>() {
-                                @Override
-                                public void success(Integer value) {
-                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResult(StreamSeqResult.newBuilder().setSeq(value).build()).build());
-                                }
+                        StreamAttach attach = payload.getAttach();
+                        NtAsset asset = new NtAsset(attach.getId(), attach.getFilename(), attach.getContentType(), attach.getSize(), attach.getMd5(), attach.getSha384());
+                        stream.attach(asset, new Callback<>() {
+                            @Override
+                            public void success(Integer value) {
+                                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResult(StreamSeqResult.newBuilder().setSeq(value).build()).build());
+                            }
 
-                                @Override
-                                public void failure(ErrorCodeException ex) {
-                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ex.code).build()).build());
-                                }
-                            });
-                        } else {
-                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_ATTACH_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT).build()).build());
-                        }
+                            @Override
+                            public void failure(ErrorCodeException ex) {
+                                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ex.code).build()).build());
+                            }
+                        });
+                        return;
                     case SEND:
-                        if (stream != null) {
-                            StreamSend send = payload.getSend();
-                            stream.send(send.getChannel(), send.getMarker(), send.getMessage(), new Callback<>() {
-                                @Override
-                                public void success(Integer value) {
-                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResult(StreamSeqResult.newBuilder().setSeq(value).build()).build());
-                                }
-
-                                @Override
-                                public void failure(ErrorCodeException exception) {
-                                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(exception.code).build()).build());
-                                }
-                            });
-                        } else {
-                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_SEND_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT).build()).build());
+                        StreamSend send = payload.getSend();
+                        String marker = null;
+                        if (send.hasMarker()) {
+                            marker = send.getMarker();
                         }
-                        break;
+                        stream.send(send.getChannel(), marker, send.getMessage(), new Callback<>() {
+                            @Override
+                            public void success(Integer value) {
+                                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResult(StreamSeqResult.newBuilder().setSeq(value).build()).build());
+                            }
+
+                            @Override
+                            public void failure(ErrorCodeException exception) {
+                                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(exception.code).build()).build());
+                            }
+                        });
+                        return;
                     case DISCONNECT:
-                        if (stream != null) {
-                            stream.disconnect();
-                            streams.remove(actOn);
-                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setStatus(org.adamalang.grpc.proto.StreamStatus.newBuilder().setCode(StreamStatusCode.Disconnected).build()).build());
-                        } else {
-                            responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_DISCONNECT_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT).build()).build());
-                        }
-                        break;
+                        System.err.println("disconnect");
+                        stream.disconnect();
+                        streams.remove(payload.getAct());
+                        return;
                 }
-
             }
 
             @Override
             public void onError(Throwable throwable) {
-                for (CoreStream stream : streams.values()) {
-                    stream.disconnect();
-                }
+                // TODO: log throwable
+               onCompleted();
             }
 
             @Override

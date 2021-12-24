@@ -1312,21 +1312,15 @@ public class ErrorCodes {
      * 998384
      */
     public static final int GRPC_COMMON_FAILED_TO_FIND_STREAM_USING_GIVEN_ACT = 798735;
-
-    public static final int GRPC_SEND_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT = 723976;
-    public static final int GRPC_DISCONNECT_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT = 791567;
-    public static final int GRPC_ATTACH_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT = 782351;
-    public static final int GRPC_ASK_ATTACH_FAILED_TO_FIND_DOCUMENT_STREAM_NO_ACT = 770063;
     public static final int GRPC_SEND_FAILED_NOT_CONNECTED = 777231;
     public static final int GRPC_ASK_FAILED_NOT_CONNECTED = 701452;
     public static final int GRPC_ATTACHED_FAILED_NOT_CONNECTED = 786442;
-    public static final int GRPC_SEQ_UNKNOWN_EXCEPTION = 700431;
     public static final int GRPC_CREATE_UNKNOWN_EXCEPTION = 723982;
     public static final int GRPC_DISCONNECT = 786441;
     public static final int GRPC_FAILURE = 716812;
-    public static final int GRPC_DOCUMENT_STREAM_NOT_CONNECTED = 781324;
 
     /**
+     * 791567
      * 782348
      * 786436
      * 734211

@@ -1,7 +1,7 @@
 package org.adamalang.grpc.mocks;
 
+import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.contracts.Events;
-import org.adamalang.grpc.client.contracts.Remote;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class MockEvents implements Events {
     }
 
     @Override
-    public void connected(Remote remote) {
+    public void connected(InstanceClient.Remote remote) {
         write("CONNECTED");
     }
 

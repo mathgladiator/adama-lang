@@ -4,7 +4,6 @@ import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.contracts.Lifecycle;
 
 public class MockClentLifecycle implements Lifecycle {
-
     public StringBuilder events;
 
     public MockClentLifecycle() {
@@ -13,11 +12,15 @@ public class MockClentLifecycle implements Lifecycle {
     @Override
     public synchronized void connected(InstanceClient client) {
         events.append("C");
-
     }
 
     @Override
     public synchronized void disconnected(InstanceClient client) {
         events.append("D");
+    }
+
+    @Override
+    public synchronized String toString() {
+        return events.toString();
     }
 }

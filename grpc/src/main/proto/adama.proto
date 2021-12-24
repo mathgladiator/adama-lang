@@ -39,7 +39,7 @@ message CreateRequest {
   string space = 1;
   string key = 2;
   string arg = 3;
-  string entropy = 4;
+  optional string entropy = 4;
   string agent = 5;
   string authority = 6;
 }
@@ -67,7 +67,7 @@ message StreamStatus {
 
 message StreamSend {
   string channel = 1;
-  string marker = 2;
+  optional string marker = 2;
   string message = 3;
 }
 
@@ -103,7 +103,7 @@ message StreamDisconnect {}
 
 message StreamMessageClient {
   int64 id = 1;
-  int64 act = 2;
+  optional int64 act = 2;
   oneof ByType {
     StreamConnect connect = 3;
     StreamSend send = 4;

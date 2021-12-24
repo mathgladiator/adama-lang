@@ -5,7 +5,6 @@ import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
 import org.adamalang.grpc.client.contracts.*;
-import org.adamalang.grpc.client.contracts.Remote;
 import org.adamalang.grpc.common.MachineIdentity;
 import org.adamalang.grpc.proto.*;
 import org.adamalang.runtime.contracts.ExceptionLogger;
@@ -46,7 +45,7 @@ public class InstanceClient implements AutoCloseable {
         this.documents = new HashMap<>();
         this.outstanding = new HashMap<>();
         this.asks = new HashMap<>();
-        this.nextId = new AtomicLong(0);
+        this.nextId = new AtomicLong(1);
         this.upstream = null;
         this.downstream = null;
         this.lifecycle = lifecycle;
@@ -104,65 +103,67 @@ public class InstanceClient implements AutoCloseable {
         stub.create(request, CreateCallback.WRAP(callback, logger));
     }
 
-    private Remote makeRemoteDocument(long docId) {
-        return new Remote() {
-            @Override
-            public void canAttach(AskAttachmentCallback callback) {
-                long askId = nextId.getAndIncrement();
-                executor.execute(() -> {
-                    if (upstream != null) {
-                        asks.put(askId, callback);
-                        upstream.onNext(StreamMessageClient.newBuilder().setId(askId).setAct(docId).setAsk(StreamAskAttachmentRequest.newBuilder().build()).build());
-                    } else {
-                        callback.error(ErrorCodes.GRPC_ASK_FAILED_NOT_CONNECTED);
+    public class Remote {
+        private final long docId;
+
+        public Remote(long docId) {
+            this.docId = docId;
+        }
+
+        public void canAttach(AskAttachmentCallback callback) {
+            long askId = nextId.getAndIncrement();
+            executor.execute(() -> {
+                if (upstream != null) {
+                    asks.put(askId, callback);
+                    upstream.onNext(StreamMessageClient.newBuilder().setId(askId).setAct(docId).setAsk(StreamAskAttachmentRequest.newBuilder().build()).build());
+                } else {
+                    callback.error(ErrorCodes.GRPC_ASK_FAILED_NOT_CONNECTED);
+                }
+            });
+        }
+
+        public void attach(String id, String name, String contentType, long size, String md5, String sha384, SeqCallback callback) {
+            long attachId = nextId.getAndIncrement();
+            executor.execute(() -> {
+                if (upstream != null) {
+                    outstanding.put(attachId, callback);
+                    upstream.onNext(StreamMessageClient.newBuilder().setId(attachId).setAct(docId).setAttach(StreamAttach.newBuilder().setId(id).setFilename(name).setContentType(contentType).setSize(size).setMd5(md5).setSha384(sha384).build()).build());
+                } else {
+                    callback.error(ErrorCodes.GRPC_ATTACHED_FAILED_NOT_CONNECTED);
+                }
+            });
+        }
+
+        public void send(String channel, String marker, String message, SeqCallback callback) {
+            long sendId = nextId.getAndIncrement();
+            executor.execute(() -> {
+                if (upstream != null) {
+                    outstanding.put(sendId, callback);
+                    StreamSend.Builder send = StreamSend.newBuilder().setChannel(channel).setMessage(message);
+                    if (marker != null) {
+                        send.setMarker(marker);
                     }
-                });
-            }
+                    upstream.onNext(StreamMessageClient.newBuilder().setId(sendId).setAct(docId).setSend(send.build()).build());
+                } else {
+                    callback.error(ErrorCodes.GRPC_SEND_FAILED_NOT_CONNECTED);
+                }
+            });
+        }
 
-            @Override
-            public void attach(String id, String name, String contentType, long size, String md5, String sha384, SeqCallback callback) {
-                long attachId = nextId.getAndIncrement();
-                executor.execute(() -> {
-                    if (upstream != null) {
-                        outstanding.put(attachId, callback);
-                        upstream.onNext(StreamMessageClient.newBuilder().setId(attachId).setAct(docId).setAttach(StreamAttach.newBuilder().setId(id).setFilename(name).setContentType(contentType).setSize(size).setMd5(md5).setSha384(sha384).build()).build());
-                    } else {
-                        callback.error(ErrorCodes.GRPC_ATTACHED_FAILED_NOT_CONNECTED);
-                    }
-                });
-
-            }
-
-            @Override
-            public void send(String channel, String marker, String message, SeqCallback callback) {
-                long sendId = nextId.getAndIncrement();
-                executor.execute(() -> {
-                    if (upstream != null) {
-                        outstanding.put(sendId, callback);
-                        upstream.onNext(StreamMessageClient.newBuilder().setId(sendId).setAct(docId).setSend(StreamSend.newBuilder().setChannel(channel).setMarker(marker).setMessage(message).build()).build());
-                    } else {
-                        callback.error(ErrorCodes.GRPC_SEND_FAILED_NOT_CONNECTED);
-                    }
-                });
-            }
-
-            @Override
-            public void disconnect() {
-                executor.execute(() -> {
-                    if (upstream != null) {
-                        upstream.onNext(StreamMessageClient.newBuilder().setId(docId).setDisconnect(StreamDisconnect.newBuilder().build()).build());
-                        documents.remove(docId);
-                    }
-                });
-            }
-        };
-
+        public void disconnect() {
+            executor.execute(() -> {
+                if (upstream != null) {
+                    upstream.onNext(StreamMessageClient.newBuilder().setId(nextId.getAndIncrement()).setAct(docId).setDisconnect(StreamDisconnect.newBuilder().build()).build());
+                } else {
+                    System.err.println("cant disconnect");
+                }
+            });
+        }
     }
 
     /** coninect to a document */
     public void connect(String agent, String authority, String space, String key, Events events) {
         long docId = nextId.getAndIncrement();
-
         executor.execute(() -> {
             if (this.upstream != null) {
                 documents.put(docId, events);
@@ -218,7 +219,7 @@ public class InstanceClient implements AutoCloseable {
                         }
                         AskAttachmentCallback ask = asks.remove(message.getId());
                         if (ask != null) {
-                            callback.error(message.getError().getCode());
+                            ask.error(message.getError().getCode());
                             return;
                         }
                     });
@@ -248,7 +249,7 @@ public class InstanceClient implements AutoCloseable {
                         if (message.getStatus().getCode() == StreamStatusCode.Connected) {
                             Events events = documents.get(message.getId());
                             if (events != null) {
-                                events.connected(makeRemoteDocument(message.getId()));
+                                events.connected(new Remote(message.getId()));
                             }
                         } else {
                             Events events = documents.remove(message.getId());
@@ -271,9 +272,10 @@ public class InstanceClient implements AutoCloseable {
         @Override
         public void onCompleted() {
             executor.execute(() -> {
-                boolean send = upstream != null;
+                boolean send = InstanceClient.this.upstream != null;
                 downstream = null;
                 upstream = null;
+                InstanceClient.this.upstream = null;
                 for (Events events : documents.values()) {
                     events.disconnected();
                 }
