@@ -1,18 +1,18 @@
 package org.adamalang.grpc.mocks;
 
-import org.adamalang.grpc.client.contracts.DocumentEvents;
+import org.adamalang.grpc.client.contracts.Events;
+import org.adamalang.grpc.client.contracts.Remote;
 import org.junit.Assert;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class MockRemoveDocumentEvents implements DocumentEvents {
+public class MockEvents implements Events {
     private final ArrayList<String> history;
     private ArrayList<CountDownLatch> latches;
 
-    public MockRemoveDocumentEvents() {
+    public MockEvents() {
         this.history = new ArrayList<>();
         latches = new ArrayList<>();
     }
@@ -50,7 +50,7 @@ public class MockRemoveDocumentEvents implements DocumentEvents {
     }
 
     @Override
-    public void connected() {
+    public void connected(Remote remote) {
         write("CONNECTED");
     }
 

@@ -1,19 +1,16 @@
 package org.adamalang.grpc.client;
 
 import org.adamalang.grpc.TestBed;
-import org.adamalang.grpc.client.contracts.ClientLifecycle;
+import org.adamalang.grpc.client.contracts.Lifecycle;
 import org.adamalang.grpc.mocks.*;
-import org.adamalang.runtime.contracts.ExceptionLogger;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class InstanceClientTests {
     @Test
-    public void client_survives_server_stop() throws Exception {
+    public void stubPersistent() throws Exception {
         try (TestBed bed = new TestBed(12346, "@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
             MockClentLifecycle lifecycle = new MockClentLifecycle();
             try (InstanceClient client = new InstanceClient(bed.identity, "127.0.0.1:12346", bed.clientExecutor, lifecycle, new StdErrLogger())) {
@@ -49,17 +46,17 @@ public class InstanceClientTests {
     }
 
     @Test
-    public void client_connects() throws Exception {
+    public void multiplexPersistent() throws Exception {
         try (TestBed bed = new TestBed(12346, "@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.1; } #p { x++; } ")) {
             bed.startServer();
             MockClentLifecycle lifecycle = new MockClentLifecycle();
-            MockRemoveDocumentEvents events = new MockRemoveDocumentEvents();
+            MockEvents events = new MockEvents();
             Runnable happy = events.latchAt(5);
             Runnable disconnect = events.latchAt(6);
             Runnable reconnect = events.latchAt(8);
             Runnable disconnectAgain = events.latchAt(9);
             AtomicBoolean created = new AtomicBoolean(false);
-            try (InstanceClient client = new InstanceClient(bed.identity, "127.0.0.1:12346", bed.clientExecutor, new ClientLifecycle() {
+            try (InstanceClient client = new InstanceClient(bed.identity, "127.0.0.1:12346", bed.clientExecutor, new Lifecycle() {
                 @Override
                 public void connected(InstanceClient client) {
                     System.err.println("connected");

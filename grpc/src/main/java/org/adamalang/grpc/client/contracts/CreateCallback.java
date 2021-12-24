@@ -6,10 +6,12 @@ import org.adamalang.grpc.proto.CreateResponse;
 import org.adamalang.runtime.contracts.ExceptionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
+/** asking for a document to be created is either success or not (with a code) */
 public interface CreateCallback {
-
+    /** create was successful */
     public void created();
 
+    /** create was not successful */
     public void error(int code);
 
     public static StreamObserver<CreateResponse> WRAP(CreateCallback callback, ExceptionLogger logger) {

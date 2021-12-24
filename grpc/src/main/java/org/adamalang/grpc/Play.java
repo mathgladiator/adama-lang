@@ -1,9 +1,9 @@
 package org.adamalang.grpc;
 
 import org.adamalang.grpc.client.InstanceClient;
-import org.adamalang.grpc.client.contracts.ClientLifecycle;
-import org.adamalang.grpc.client.contracts.RemoteDocument;
-import org.adamalang.grpc.client.contracts.DocumentEvents;
+import org.adamalang.grpc.client.contracts.Lifecycle;
+import org.adamalang.grpc.client.contracts.Remote;
+import org.adamalang.grpc.client.contracts.Events;
 import org.adamalang.grpc.client.contracts.CreateCallback;
 import org.adamalang.grpc.common.MachineIdentity;
 import org.adamalang.grpc.server.Server;
@@ -35,7 +35,7 @@ public class Play {
         Server server = new Server(identity, service, 2321);
         server.start();
 
-        InstanceClient instanceClient = new InstanceClient(identity, "127.0.0.1:2321", inMemoryThread, new ClientLifecycle() {
+        InstanceClient instanceClient = new InstanceClient(identity, "127.0.0.1:2321", inMemoryThread, new Lifecycle() {
             @Override
             public void connected(InstanceClient client) {
                 System.err.println("Client connected");
@@ -56,15 +56,14 @@ public class Play {
             @Override
             public void created() {
                 System.err.println("Created!");
-
-                RemoteDocument doc = instanceClient.connect("me", "life", "space", "123", new DocumentEvents() {
+                instanceClient.connect("me", "life", "space", "123", new Events() {
                     @Override
                     public void delta(String data) {
                         System.err.println("DELTA:" + data);
                     }
 
                     @Override
-                    public void connected() {
+                    public void connected(Remote remote) {
                         System.err.println("CONNECTED, yay!");
                     }
 

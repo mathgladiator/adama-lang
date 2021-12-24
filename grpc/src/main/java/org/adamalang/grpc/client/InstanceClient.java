@@ -5,7 +5,7 @@ import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
 import org.adamalang.grpc.client.contracts.*;
-import org.adamalang.grpc.client.contracts.RemoteDocument;
+import org.adamalang.grpc.client.contracts.Remote;
 import org.adamalang.grpc.common.MachineIdentity;
 import org.adamalang.grpc.proto.*;
 import org.adamalang.runtime.contracts.ExceptionLogger;
@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /** a managed client that makes talking to the gRPC server nice */
 public class InstanceClient implements AutoCloseable {
-    private final ClientLifecycle lifecycle;
+    private final Lifecycle lifecycle;
     public final ScheduledExecutorService executor;
-    private final HashMap<Long, DocumentEvents> documents;
+    private final HashMap<Long, Events> documents;
     private final HashMap<Long, SeqCallback> outstanding;
     private final HashMap<Long, AskAttachmentCallback> asks;
     private AtomicLong nextId;
@@ -35,7 +35,7 @@ public class InstanceClient implements AutoCloseable {
     private boolean alive;
     private int backoff;
 
-    public InstanceClient(MachineIdentity identity, String target, ScheduledExecutorService executor, ClientLifecycle lifecycle, ExceptionLogger logger) throws Exception {
+    public InstanceClient(MachineIdentity identity, String target, ScheduledExecutorService executor, Lifecycle lifecycle, ExceptionLogger logger) throws Exception {
         ChannelCredentials credentials = TlsChannelCredentials.newBuilder()
                 .keyManager(identity.getCert(), identity.getKey())
                 .trustManager(identity.getTrust()).build();
@@ -94,6 +94,7 @@ public class InstanceClient implements AutoCloseable {
         return false;
     }
 
+    /** create a document */
     public void create(String agent, String authority, String space, String key, String entropy, String arg, CreateCallback callback) {
         CreateRequest.Builder builder = CreateRequest.newBuilder().setAgent(agent).setAuthority(authority).setSpace(space).setKey(key).setArg(arg);
         if (entropy != null) {
@@ -103,18 +104,8 @@ public class InstanceClient implements AutoCloseable {
         stub.create(request, CreateCallback.WRAP(callback, logger));
     }
 
-    public RemoteDocument connect(String agent, String authority, String space, String key, DocumentEvents events) {
-        long docId = nextId.getAndIncrement();
-        executor.execute(() -> {
-            if (this.upstream != null) {
-                documents.put(docId, events);
-                upstream.onNext(StreamMessageClient.newBuilder().setId(docId).setConnect(StreamConnect.newBuilder().setAgent(agent).setAuthority(authority).setSpace(space).setKey(key).build()).build());
-            } else {
-                events.disconnected();
-            }
-        });
-
-        return new RemoteDocument() {
+    private Remote makeRemoteDocument(long docId) {
+        return new Remote() {
             @Override
             public void canAttach(AskAttachmentCallback callback) {
                 long askId = nextId.getAndIncrement();
@@ -165,6 +156,21 @@ public class InstanceClient implements AutoCloseable {
                 });
             }
         };
+
+    }
+
+    /** coninect to a document */
+    public void connect(String agent, String authority, String space, String key, Events events) {
+        long docId = nextId.getAndIncrement();
+
+        executor.execute(() -> {
+            if (this.upstream != null) {
+                documents.put(docId, events);
+                upstream.onNext(StreamMessageClient.newBuilder().setId(docId).setConnect(StreamConnect.newBuilder().setAgent(agent).setAuthority(authority).setSpace(space).setKey(key).build()).build());
+            } else {
+                events.disconnected();
+            }
+        });
     }
 
     @Override
@@ -192,7 +198,7 @@ public class InstanceClient implements AutoCloseable {
                     return;
                 case DATA:
                     executor.execute(() -> {
-                        DocumentEvents events = documents.get(message.getId());
+                        Events events = documents.get(message.getId());
                         if (events != null) {
                             events.delta(message.getData().getDelta());
                         }
@@ -200,7 +206,7 @@ public class InstanceClient implements AutoCloseable {
                     return;
                 case ERROR:
                     executor.execute(() -> {
-                        DocumentEvents events = documents.remove(message.getId());
+                        Events events = documents.remove(message.getId());
                         if (events != null) {
                             events.error(message.getError().getCode());
                             return;
@@ -240,12 +246,12 @@ public class InstanceClient implements AutoCloseable {
                 case STATUS:
                     executor.execute(() -> {
                         if (message.getStatus().getCode() == StreamStatusCode.Connected) {
-                            DocumentEvents events = documents.get(message.getId());
+                            Events events = documents.get(message.getId());
                             if (events != null) {
-                                events.connected();
+                                events.connected(makeRemoteDocument(message.getId()));
                             }
                         } else {
-                            DocumentEvents events = documents.remove(message.getId());
+                            Events events = documents.remove(message.getId());
                             if (events != null) {
                                 events.disconnected();
                             }
@@ -268,7 +274,7 @@ public class InstanceClient implements AutoCloseable {
                 boolean send = upstream != null;
                 downstream = null;
                 upstream = null;
-                for (DocumentEvents events : documents.values()) {
+                for (Events events : documents.values()) {
                     events.disconnected();
                 }
                 documents.clear();
