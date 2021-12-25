@@ -18,7 +18,11 @@ public class SES implements Email {
 
     @Override
     public void sendCode(String email, String code) {
-
-
+        SendEmailRequest request = new SendEmailRequest();
+        request.setReplyToAddresses(Collections.singleton("nope@jeffrey.io"));
+        request.setDestination(new Destination().withToAddresses(email));
+        request.setMessage(new Message().withSubject(new Content().withData("Your Super Secret Code for Adama Platform").withCharset("UTF-8")).withBody(new Body().withText(new Content().withData("Your code is " + code).withCharset("UTF-8"))));
+        request.setSource("boss@jeffrey.io");
+        client.sendEmail(request);
     }
 }

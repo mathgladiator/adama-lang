@@ -28,11 +28,11 @@ public class Authority {
         System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
         System.out.println("");
         System.out.println(Util.prefix("AUTHORITYSUBCOMMAND:", Util.ANSI.Yellow));
-        System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List authorities for developer");
         System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Creates a new authority");
-        System.out.println("    " + Util.prefix("list-keys", Util.ANSI.Green) + "         List keys for an authority");
-        System.out.println("    " + Util.prefix("add-key", Util.ANSI.Green) + "           Add a public key to an authority");
-        System.out.println("    " + Util.prefix("revoke-key", Util.ANSI.Green) + "        Remove a key from an authority");
+        System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List authorities this developer owns");
+        System.out.println("    " + Util.prefix("download", Util.ANSI.Green) + "          Download the keystore");
+        System.out.println("    " + Util.prefix("upload", Util.ANSI.Green) + "            Upload the keystore");
+        System.out.println("    " + Util.prefix("destroy", Util.ANSI.Green) + "           Destroy an authority");
         System.out.println("    " + Util.prefix("manual", Util.ANSI.Green) + "            Show expanded help which illustrates how the above is used internally");
     }
 }

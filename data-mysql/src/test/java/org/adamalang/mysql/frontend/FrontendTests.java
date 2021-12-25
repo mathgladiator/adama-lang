@@ -7,6 +7,7 @@ import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class FrontendTests {
             try {
                 installer.install();
                 int failures = 0;
-
+                Assert.assertEquals(0, Authorities.list(base, 1).size());
                 Authorities.createAuthority(base, 1, "auth_space_1");
                 try {
                     Authorities.createAuthority(base, 1, "auth_space_1");
@@ -48,10 +49,16 @@ public class FrontendTests {
                     failures++;
                     Assert.assertEquals(601088, ece.code);
                 }
+                {
+                    ArrayList<String> listing = Authorities.list(base, 1);
+                    Assert.assertEquals(1, listing.size());
+                    Assert.assertEquals("auth_space_1", listing.get(0));
+                }
+
                 Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":1}");
                 Assert.assertEquals("{\"x\":1}", Authorities.getKeystore(base, "auth_space_1"));
                 Authorities.deleteAuthority(base, 1, "auth_space_1");
-
+                Assert.assertEquals(0, Authorities.list(base, 1).size());
                 try {
                     Authorities.getKeystore(base, "auth_space_1");
                     Assert.fail();
@@ -59,7 +66,6 @@ public class FrontendTests {
                     failures++;
                     Assert.assertEquals(643072, ece.code);
                 }
-
                 try {
                     Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":1}");
                     Assert.fail();
@@ -67,7 +73,6 @@ public class FrontendTests {
                     failures++;
                     Assert.assertEquals(634880, ece.code);
                 }
-
                 try {
                     Authorities.deleteAuthority(base, 1, "auth_space_1");
                     Assert.fail();
@@ -75,14 +80,31 @@ public class FrontendTests {
                     failures++;
                     Assert.assertEquals(654339, ece.code);
                 }
-
-                Assert.assertEquals(4, failures);
                 Authorities.createAuthority(base, 1, "auth_space_1");
                 Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":2}");
                 Assert.assertEquals("{\"x\":2}", Authorities.getKeystore(base, "auth_space_1"));
                 Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":3}");
                 Assert.assertEquals("{\"x\":3}", Authorities.getKeystore(base, "auth_space_1"));
-
+                {
+                    ArrayList<String> listing = Authorities.list(base, 1);
+                    Assert.assertEquals(1, listing.size());
+                    Assert.assertEquals("auth_space_1", listing.get(0));
+                }
+                Authorities.changeOwner(base, "auth_space_1", 1, 2);
+                Assert.assertEquals(0, Authorities.list(base, 1).size());
+                {
+                    ArrayList<String> listing = Authorities.list(base, 2);
+                    Assert.assertEquals(1, listing.size());
+                    Assert.assertEquals("auth_space_1", listing.get(0));
+                }
+                try {
+                    Authorities.changeOwner(base, "auth_space_1", 4, 3);
+                    Assert.fail();
+                } catch (ErrorCodeException ece) {
+                    failures++;
+                    Assert.assertEquals(662528, ece.code);
+                }
+                Assert.assertEquals(5, failures);
 
             } finally {
                 installer.uninstall();

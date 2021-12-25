@@ -322,6 +322,8 @@
         </documentation>
     </method>
 
+
+
     <method name="authority/create" responder="claim-result">
         <parameter name="identity" />
         <documentation>
@@ -355,6 +357,8 @@
         <documentation>
         </documentation>
     </method>
+
+
 
     <method name="space/create" responder="simple">
         <parameter name="identity" />

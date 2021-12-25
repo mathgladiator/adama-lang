@@ -5,6 +5,7 @@ import org.adamalang.mysql.Base;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Authorities {
 
@@ -31,6 +32,31 @@ public class Authorities {
                 statement.setString(3, authority);
                 if (statement.executeUpdate() != 1) {
                     throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_SET_NOT_FOUND);
+                }
+            }
+        }
+    }
+
+    public static ArrayList<String> list(Base base, int ownerId) throws Exception {
+        try (Connection connection = base.pool.getConnection()) {
+            ArrayList<String> results = new ArrayList<>();
+            String sql = new StringBuilder().append("SELECT `authority` FROM `").append(base.databaseName).append("`.`authorities` WHERE owner=").append(ownerId).append(" ORDER BY `authority` ASC").toString();
+            Base.walk(connection, (rs) -> {
+                results.add(rs.getString(1));
+            }, sql);
+            return results;
+        }
+    }
+
+    public static void changeOwner(Base base, String authority, int oldOwnerId, int newOwnerId) throws Exception {
+        try (Connection connection = base.pool.getConnection()) {
+            String sql = new StringBuilder().append("UPDATE `").append(base.databaseName).append("`.`authorities` SET `owner`=? WHERE `owner`=? AND authority=?").toString();
+            try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                statement.setInt(1, newOwnerId);
+                statement.setInt(2, oldOwnerId);
+                statement.setString(3, authority);
+                if (statement.executeUpdate() != 1) {
+                    throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_CHANGE_OWNER_NOT_FOUND_OR_INCORRECT);
                 }
             }
         }

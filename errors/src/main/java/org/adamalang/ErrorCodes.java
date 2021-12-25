@@ -60,26 +60,15 @@ public class ErrorCodes {
     public static final int COMPUTE_EMPTY_UNSEND = 650252;
     public static final int COMPUTE_UNKNOWN_METHOD = 656396;
     public static final int LOOKUP_FAILED = 625676;
-
-    /**
-     *      *
-     *      *
-     *      *
-     *      *
-     *      *
-     *      * 662528
-     */
-
     public static final int FRONTEND_SPACE_ALREADY_EXISTS = 679948;
     public static final int FRONTEND_SPACE_DOESNT_EXIST = 625678;
     public static final int FRONTEND_PLAN_DOESNT_EXIST = 609294;
     public static final int INVALID_ROLE = 688141;
-
     public static final int FRONTEND_AUTHORITY_ALREADY_EXISTS = 601088;
     public static final int FRONTEND_AUTHORITY_SET_NOT_FOUND = 634880;
+    public static final int FRONTEND_AUTHORITY_CHANGE_OWNER_NOT_FOUND_OR_INCORRECT = 662528;
     public static final int FRONTEND_AUTHORITY_GET_NOT_FOUND = 643072;
     public static final int FRONTEND_AUTHORITY_DELETE_NOT_FOUND = 654339;
-
 
     public static final int DEPLOYMENT_PLAN_MUST_BE_ROOT_OBJECT = 117818;
     public static final int DEPLOYMENT_PLAN_NO_VERSIONS = 115788;
