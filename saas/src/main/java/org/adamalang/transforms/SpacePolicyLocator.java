@@ -28,6 +28,7 @@ public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
 
     @Override
     public void execute(String spaceName, Callback<SpacePolicy> callback) {
+        // TODO: validate the space name
         SpacePolicy policy = policies.get(spaceName);
         if (policy != null) {
             callback.success(policy);

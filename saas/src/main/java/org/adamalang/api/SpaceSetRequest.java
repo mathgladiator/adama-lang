@@ -1,38 +1,37 @@
 package org.adamalang.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
-import org.adamalang.validators.ValidateKey;
 import org.adamalang.web.io.*;
 
 /**  */
-public class ConnectionCreateRequest {
+public class SpaceSetRequest {
   public final String identity;
   public final AuthenticatedUser who;
   public final String space;
   public final SpacePolicy policy;
-  public final String key;
+  public final ObjectNode plan;
 
-  public ConnectionCreateRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key) {
+  public SpaceSetRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final ObjectNode plan) {
     this.identity = identity;
     this.who = who;
     this.space = space;
     this.policy = policy;
-    this.key = key;
+    this.plan = plan;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<ConnectionCreateRequest> callback) {
+  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceSetRequest> callback) {
     try {
-      final BulkLatch<ConnectionCreateRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
+      final BulkLatch<SpaceSetRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
-      final String key = request.getString("key", true, 466947);
-      ValidateKey.validate(key);
-      _latch.with(() -> new ConnectionCreateRequest(identity, who.get(), space, policy.get(), key));
+      final ObjectNode plan = request.getObject("plan", true, 425999);
+      _latch.with(() -> new SpaceSetRequest(identity, who.get(), space, policy.get(), plan));
       nexus.identityService.execute(identity, who);
       nexus.spaceService.execute(space, policy);
     } catch (ErrorCodeException ece) {

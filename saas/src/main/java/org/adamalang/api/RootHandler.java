@@ -8,11 +8,11 @@ public interface RootHandler {
 
   public void handle(AuthorityCreateRequest request, ClaimResultResponder responder);
 
-  public void handle(AuthoritySetRequest request, ClaimResultResponder responder);
+  public void handle(AuthoritySetRequest request, SimpleResponder responder);
 
   public void handle(AuthorityTransferRequest request, SimpleResponder responder);
 
-  public void handle(AuthorityListRequest request, SimpleResponder responder);
+  public void handle(AuthorityListRequest request, AuthorityListingResponder responder);
 
   public void handle(AuthorityDestroyRequest request, SimpleResponder responder);
 
@@ -20,7 +20,7 @@ public interface RootHandler {
 
   public void handle(SpaceGetRequest request, PlanResponder responder);
 
-  public void handle(SpaceUpdateRequest request, SimpleResponder responder);
+  public void handle(SpaceSetRequest request, SimpleResponder responder);
 
   public void handle(SpaceDeleteRequest request, SimpleResponder responder);
 
@@ -28,7 +28,7 @@ public interface RootHandler {
 
   public void handle(SpaceOwnerSetRequest request, SimpleResponder responder);
 
-  public void handle(SpaceReflectRequest request, SimpleResponder responder);
+  public void handle(SpaceReflectRequest request, ReflectionResponder responder);
 
   public void handle(SpaceListRequest request, SpaceListingResponder responder);
 

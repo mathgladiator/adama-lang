@@ -6,16 +6,21 @@ import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.mysql.Base;
+import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.runtime.contracts.ExceptionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.web.io.Json;
 
 import java.security.KeyPair;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 
 public class RootHandlerImpl implements RootHandler {
     private final ExternNexus nexus;
@@ -98,27 +103,77 @@ public class RootHandlerImpl implements RootHandler {
     }
     @Override
     public void handle(AuthorityCreateRequest request, ClaimResultResponder responder) {
-
+        String authority = UUID.randomUUID().toString();
+        try {
+            if (request.who.source == AuthenticatedUser.Source.Adama) {
+                Authorities.createAuthority(nexus.base, request.who.id, authority);
+                responder.complete(authority);
+            } else {
+                responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+            }
+        } catch (Exception ex) {
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+        }
     }
 
     @Override
-    public void handle(AuthoritySetRequest request, ClaimResultResponder responder) {
-
+    public void handle(AuthoritySetRequest request, SimpleResponder responder) {
+        try {
+            if (request.who.source == AuthenticatedUser.Source.Adama) {
+                // NOTE: setKeystore validates ownership
+                Authorities.setKeystore(nexus.base, request.who.id, request.authority, request.keyStore.toString());
+                responder.complete();
+            } else {
+                responder.error(new ErrorCodeException(ErrorCodes.API_SET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+            }
+        } catch (Exception ex) {
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SET_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+        }
     }
 
     @Override
     public void handle(AuthorityTransferRequest request, SimpleResponder responder) {
-
+        try {
+            if (request.who.source == AuthenticatedUser.Source.Adama) {
+                // NOTE: changeOwner validates ownership
+                Authorities.changeOwner(nexus.base, request.authority, request.who.id, request.userId);
+                responder.complete();
+            } else {
+                responder.error(new ErrorCodeException(ErrorCodes.API_TRANSFER_OWNER_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+            }
+        } catch (Exception ex) {
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_TRANSFER_OWNER_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+        }
     }
 
     @Override
-    public void handle(AuthorityListRequest request, SimpleResponder responder) {
-
+    public void handle(AuthorityListRequest request, AuthorityListingResponder responder) {
+        try {
+            if (request.who.source == AuthenticatedUser.Source.Adama) {
+                for (String authority : Authorities.list(nexus.base, request.who.id)) {
+                    responder.next(authority);
+                }
+                responder.finish();
+            } else {
+                responder.error(new ErrorCodeException(ErrorCodes.API_LIST_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+            }
+        } catch (Exception ex) {
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_LIST_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+        }
     }
 
     @Override
     public void handle(AuthorityDestroyRequest request, SimpleResponder responder) {
-
+        try {
+            if (request.who.source == AuthenticatedUser.Source.Adama) {
+                // NOTE: deleteAuthority validates ownership
+                Authorities.deleteAuthority(nexus.base, request.who.id, request.authority);
+            } else {
+                responder.error(new ErrorCodeException(ErrorCodes.API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+            }
+        } catch (Exception ex) {
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DELETE_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+        }
     }
 
     @Override
@@ -127,35 +182,41 @@ public class RootHandlerImpl implements RootHandler {
             Spaces.createSpace(nexus.base, request.who.id, request.space);
             responder.complete();
         } catch (Exception ex) {
-            ex.printStackTrace(); // TODO: LOG THIS
-            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex));
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex, logger));
         }
     }
 
     @Override
     public void handle(SpaceGetRequest request, PlanResponder responder) {
-        System.err.println("get space space:" + request.space);
-        responder.error(new ErrorCodeException(134));
+        try {
+            if (request.policy.canUserGetPlan(request.who)) {
+                responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.base, request.policy.id)));
+            } else {
+                responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE));
+            }
+        } catch (Exception ex) {
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_GET_PLAN_UNKNOWN_EXCEPTION, ex, logger));
+        }
     }
 
     @Override
-    public void handle(SpaceUpdateRequest request, SimpleResponder responder) {
+    public void handle(SpaceSetRequest request, SimpleResponder responder) {
         try {
             if (request.policy.canUserSetPlan(request.who)) {
                 Spaces.setPlan(nexus.base, request.policy.id, request.plan.toString());
                 responder.complete();
             } else {
-                throw new ErrorCodeException(ErrorCodes.API_SPACE_UPDATE_PERMISSION_FAILURE);
+                throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
             }
         } catch (Exception ex) {
-            // TODO: LOG IF not ErrorCode... need to pass a Logger into the DetectOrWrap.. BOOM
-            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_UPDATE_UNKNOWN_EXCEPTION, ex));
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION, ex, logger));
         }
     }
 
     @Override
     public void handle(SpaceDeleteRequest request, SimpleResponder responder) {
-
+        // TODO: see if the space is empty, if not then reject
+        // TODO: this requires document listing to work which is tricky due to the bifurication
     }
 
     @Override
@@ -166,54 +227,107 @@ public class RootHandlerImpl implements RootHandler {
                 Spaces.setRole(nexus.base, request.policy.id, request.userId, role);
                 responder.complete();
             } else {
-                throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_PERMISSION_FAILURE);
+                throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE);
             }
         } catch (Exception ex) {
-            // TODO: LOG IF not ErrorCode... need to pass a Logger into the DetectOrWrap.. BOOM
-            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION, ex));
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION, ex, logger));
         }
     }
 
     @Override
     public void handle(SpaceOwnerSetRequest request, SimpleResponder responder) {
+        try {
+            if (request.policy.canUserChangeOwner(request.who)) {
+                Spaces.changePrimaryOwner(nexus.base, request.policy.id, request.policy.owner, request.userId);
+                responder.complete();
+            } else {
+                throw new ErrorCodeException(ErrorCodes.API_SPACE_CHANGE_OWNER_NO_PERMISSION_TO_EXECUTE);
+            }
 
+        } catch (Exception ex) {
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CHANGE_OWNER_UNKNOWN_EXCEPTION, ex, logger));
+        }
     }
 
     @Override
-    public void handle(SpaceReflectRequest request, SimpleResponder responder) {
+    public void handle(SpaceReflectRequest request, ReflectionResponder responder) {
+        // TODO: find the space
+        // TODO: go to the Adama host
+        // TODO: ask the factory for the reflection string
     }
 
     @Override
     public void handle(SpaceListRequest request, SpaceListingResponder responder) {
         try {
-            for (Spaces.Item item : Spaces.list(nexus.base, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
-                responder.next(item.name, item.callerRole, item.billing, item.created);
+            if (request.who.source == AuthenticatedUser.Source.Adama) {
+                for (Spaces.Item item : Spaces.list(nexus.base, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
+                    responder.next(item.name, item.callerRole, item.billing, item.created);
+                }
+                responder.finish();
+            } else {
+                responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_LIST_NO_PERMISSION_TO_EXECUTE));
             }
-            responder.finish();
         } catch (Exception ex) {
-            ex.printStackTrace(); // TODO: LOG THIS
-            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_UNKNOWN_EXCEPTION, ex));
+            responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_UNKNOWN_EXCEPTION, ex, logger));
         }
     }
 
     @Override
     public void handle(DocumentCreateRequest request, SimpleResponder responder) {
-
+        // TODO: find the appropriate Adama host
+        // TODO: send the create over and respond
     }
 
     @Override
     public void handle(DocumentListRequest request, SimpleResponder responder) {
-
+        // TODO: find any appropriate Adama host (pick any, but this does depend on the underlying data model)
+        // TODO: execute the list
     }
 
     @Override
     public DocumentStreamHandler handle(ConnectionCreateRequest request, DataResponder responder) {
+        // TODO: find the _right_ adama host
+        // TODO: execute the connect
         return null;
     }
 
     @Override
     public AttachmentUploadHandler handle(AttachmentStartRequest request, SimpleResponder responder) {
-        return null;
+        // TODO: find the _right_ adama host
+        // TODO: ask if the current user can attach
+        return new AttachmentUploadHandler() {
+            @Override
+            public void bind() {
+                // TODO: OPEN LOCAL FILE
+                // TODO: OPEN DIGEST FOR MD5
+                // TODO: OPEN DIGEST FOR SHA-384
+                // TODO: generate ID
+            }
+
+            @Override
+            public void handle(AttachmentAppendRequest request, SimpleResponder responder) {
+                // TODO: UPDATE DIGESTS
+                // TODO: VALIDATE CHUNK
+                // TODO: APPEND TO FILE
+            }
+
+            @Override
+            public void handle(AttachmentFinishRequest request, SimpleResponder responder) {
+                // TODO: CLOSE THE FILE
+                // TODO: COMPUTE FINAL DIGESTS
+                // TODO: UPLOAD TO S3
+                // TODO: find _right_ adama host
+                // TODO: attach to Adama
+                // TODO: DELETE FILE
+
+            }
+
+            @Override
+            public void disconnect(long id) {
+                // TODO: if finished, then nothing
+                // TODO: otherwise, delete file
+            }
+        };
     }
 
     @Override

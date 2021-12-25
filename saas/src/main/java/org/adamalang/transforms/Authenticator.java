@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.ExceptionLogger;
@@ -19,6 +20,8 @@ import java.security.KeyFactory;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.regex.Pattern;
+
+import org.adamalang.web.io.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +36,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
 
     @Override
     public void execute(String identity, Callback<AuthenticatedUser> callback) {
+        // TODO: think about caching and an implicit "@" for use the most recently authenticate key
         try {
             // TODO: check for Facebook Prefix
             // TODO: check for Google Prefix
@@ -53,8 +57,10 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
                 }
                 callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
             } else {
+                ObjectNode keystore = Json.parseJsonObject(Authorities.getKeystoreInternal(nexus.base, parsedToken.iss));
+                // TODO: cache the lookup, parsing, teardown
                 // TODO: decode the authority
-                // TODO: look up the authority
+                // TODO: for each public key, test the given token
                 callback.failure(new ErrorCodeException(-1));
             }
         } catch (Exception ex) {

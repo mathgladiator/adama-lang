@@ -92,12 +92,12 @@ public class AssembleRequestTypes {
                         throw new RuntimeException();
                 }
                 java.append(parameter.name).append("\", ").append(parameter.optional ? "false" : "true").append(", ").append(parameter.errorCodeIfMissing).append(");\n");
+                if (parameter.validator != null) {
+                    java.append("      ").append(parameter.validator.shortServiceName).append(".validate(").append(parameter.camelName).append(");\n");
+                }
                 Transform transform = parameter.getTransform(method.name);
                 if (transform != null) {
                     java.append("      final LatchRefCallback<").append(transform.shortOutputJavaType).append("> ").append(transform.outputName).append(" = new LatchRefCallback<>(_latch);\n");
-                }
-                if (parameter.validator != null) {
-                    java.append("      ").append(parameter.validator.shortServiceName).append(".validate(").append(parameter.camelName).append(", ").append(parameter.validator.errorCode).append(");\n");
                 }
             }
             if (outstandingCallCount > 0) {

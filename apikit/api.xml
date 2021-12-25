@@ -32,6 +32,7 @@
 
             Keys are case insensitive using the regex [a-z0-9\.-_]* for validation
         </documentation>
+        <validate service="org.adamalang.validators.ValidateKey" />
     </parameter-definition>
 
     <parameter-definition name="entropy" type="string" optional="true">
@@ -50,6 +51,7 @@
         <documentation>
             'channel' is a identifier within a document used for communication
         </documentation>
+        <validate service="org.adamalang.validators.ValidateChannel" />
     </parameter-definition>
 
     <parameter-definition name="message" type="json-object" missing-error="425987">
@@ -107,17 +109,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     <parameter-definition name="name" type="string" missing-error="453647">
         <documentation>
             'name' is an identifer
@@ -128,6 +119,7 @@
         <documentation>
             'key-store' is a collection of public keys used to validate an authority
         </documentation>
+        <validate service="org.adamalang.validators.ValidateKeystore" />
     </parameter-definition>
 
     <parameter-definition name="authority" type="string" missing-error="430095">
@@ -145,12 +137,6 @@
     <parameter-definition name="seq" type="integer" missing-error="461836">
         <documentation>
             A 'seq' is an index in a log
-        </documentation>
-    </parameter-definition>
-
-    <parameter-definition name="endpoint" type="string" missing-error="477196">
-        <documentation>
-            A 'endpoint' is WebSocket address
         </documentation>
     </parameter-definition>
 
@@ -191,16 +177,6 @@
     </parameter-definition>
 
 
-
-
-
-
-
-    <internal-error code="423">
-        Something is messed up on the insides, sorry
-    </internal-error>
-
-
     <field-definition name="success" type="boolean">
         <documentation>
             'success' indicates if the operation or method was successful
@@ -216,6 +192,12 @@
     <field-definition name="plan" type="json-object">
         <documentation>
             A plan is a predictable mapping of keys to implementation. The core reason for having multiple concurrent implementations is to have a smooth and orderly deployment.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="reflection" type="json-object">
+        <documentation>
+            A reflect is a json object describing the schema of a document.
         </documentation>
     </field-definition>
 
@@ -255,6 +237,8 @@
         </documentation>
     </field-definition>
 
+
+
     <responder name="space-listing" stream="true">
         <field name="space" />
         <field name="role" />
@@ -262,11 +246,26 @@
         <field name="created" />
     </responder>
 
+    <responder name="space-listing" stream="true">
+        <field name="space" />
+        <field name="role" />
+        <field name="billing" />
+        <field name="created" />
+    </responder>
+
+    <responder name="authority-listing" stream="true">
+        <field name="authority" />
+    </responder>
+
     <responder name="simple">
     </responder>
 
     <responder name="plan">
         <field name="plan" />
+    </responder>
+
+    <responder name="reflection">
+        <field name="reflection" />
     </responder>
 
     <responder name="claim-result">
@@ -280,6 +279,9 @@
     <responder name="initiation">
         <field name="identity" />
     </responder>
+
+
+
 
 
     <method name="init/start" responder="simple" create="waiting-for-email">
@@ -330,22 +332,23 @@
         </documentation>
     </method>
 
-    <method name="authority/set" responder="claim-result">
+    <method name="authority/set" responder="simple">
         <parameter name="identity" />
         <parameter name="authority" />
+        <parameter name="key-store" />
         <documentation>
         </documentation>
     </method>
 
     <method name="authority/transfer" responder="simple">
         <parameter name="identity" />
-        <parameter name="name" />
+        <parameter name="authority" />
         <parameter name="email" />
         <documentation>
         </documentation>
     </method>
 
-    <method name="authority/list" responder="simple">
+    <method name="authority/list" responder="authority-listing">
         <parameter name="identity" />
         <documentation>
         </documentation>
@@ -353,7 +356,7 @@
 
     <method name="authority/destroy" responder="simple">
         <parameter name="identity" />
-        <parameter name="name" />
+        <parameter name="authority" />
         <documentation>
         </documentation>
     </method>
@@ -374,7 +377,7 @@
         </documentation>
     </method>
 
-    <method name="space/update" responder="simple">
+    <method name="space/set" responder="simple">
         <parameter name="identity" />
         <parameter name="space" />
         <parameter name="plan" />
@@ -406,7 +409,7 @@
         </documentation>
     </method>
 
-    <method name="space/reflect" responder="simple">
+    <method name="space/reflect" responder="reflection">
         <parameter name="identity" />
         <parameter name="space" />
         <parameter name="key" />

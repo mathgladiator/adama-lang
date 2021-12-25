@@ -5,6 +5,7 @@ import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
+import org.adamalang.validators.ValidateKey;
 import org.adamalang.web.io.*;
 
 /**  */
@@ -35,6 +36,7 @@ public class DocumentCreateRequest {
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
+      ValidateKey.validate(key);
       final String entropy = request.getString("entropy", false, 0);
       final ObjectNode arg = request.getObject("arg", true, 461826);
       _latch.with(() -> new DocumentCreateRequest(identity, who.get(), space, policy.get(), key, entropy, arg));

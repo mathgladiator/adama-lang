@@ -3,6 +3,7 @@ package org.adamalang.api;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.validators.ValidateChannel;
 import org.adamalang.web.io.*;
 
 /**  */
@@ -21,6 +22,7 @@ public class ConnectionSendRequest {
     try {
       final Long connection = request.getLong("connection", true, 405505);
       final String channel = request.getString("channel", true, 454659);
+      ValidateChannel.validate(channel);
       final ObjectNode message = request.getObject("message", true, 425987);
       nexus.executor.execute(() -> {
         callback.success(new ConnectionSendRequest(connection, channel, message));

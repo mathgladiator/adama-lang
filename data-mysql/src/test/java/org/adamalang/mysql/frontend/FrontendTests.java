@@ -56,11 +56,11 @@ public class FrontendTests {
                 }
 
                 Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":1}");
-                Assert.assertEquals("{\"x\":1}", Authorities.getKeystore(base, "auth_space_1"));
+                Assert.assertEquals("{\"x\":1}", Authorities.getKeystoreInternal(base, "auth_space_1"));
                 Authorities.deleteAuthority(base, 1, "auth_space_1");
                 Assert.assertEquals(0, Authorities.list(base, 1).size());
                 try {
-                    Authorities.getKeystore(base, "auth_space_1");
+                    Authorities.getKeystoreInternal(base, "auth_space_1");
                     Assert.fail();
                 } catch (ErrorCodeException ece) {
                     failures++;
@@ -82,9 +82,9 @@ public class FrontendTests {
                 }
                 Authorities.createAuthority(base, 1, "auth_space_1");
                 Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":2}");
-                Assert.assertEquals("{\"x\":2}", Authorities.getKeystore(base, "auth_space_1"));
+                Assert.assertEquals("{\"x\":2}", Authorities.getKeystoreInternal(base, "auth_space_1"));
                 Authorities.setKeystore(base, 1, "auth_space_1", "{\"x\":3}");
-                Assert.assertEquals("{\"x\":3}", Authorities.getKeystore(base, "auth_space_1"));
+                Assert.assertEquals("{\"x\":3}", Authorities.getKeystoreInternal(base, "auth_space_1"));
                 {
                     ArrayList<String> listing = Authorities.list(base, 1);
                     Assert.assertEquals(1, listing.size());

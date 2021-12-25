@@ -9,12 +9,12 @@ import org.adamalang.web.io.*;
 public class AuthorityDestroyRequest {
   public final String identity;
   public final AuthenticatedUser who;
-  public final String name;
+  public final String authority;
 
-  public AuthorityDestroyRequest(final String identity, final AuthenticatedUser who, final String name) {
+  public AuthorityDestroyRequest(final String identity, final AuthenticatedUser who, final String authority) {
     this.identity = identity;
     this.who = who;
-    this.name = name;
+    this.authority = authority;
   }
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<AuthorityDestroyRequest> callback) {
@@ -22,8 +22,8 @@ public class AuthorityDestroyRequest {
       final BulkLatch<AuthorityDestroyRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
-      final String name = request.getString("name", true, 453647);
-      _latch.with(() -> new AuthorityDestroyRequest(identity, who.get(), name));
+      final String authority = request.getString("authority", true, 430095);
+      _latch.with(() -> new AuthorityDestroyRequest(identity, who.get(), authority));
       nexus.identityService.execute(identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {

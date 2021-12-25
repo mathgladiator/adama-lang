@@ -4,6 +4,7 @@ import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
+import org.adamalang.validators.ValidateKey;
 import org.adamalang.web.io.*;
 
 /**  */
@@ -34,6 +35,7 @@ public class AttachmentStartRequest {
       final String space = request.getString("space", true, 461828);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
+      ValidateKey.validate(key);
       final String filename = request.getString("filename", true, 470028);
       final String contentType = request.getString("content-type", true, 455691);
       _latch.with(() -> new AttachmentStartRequest(identity, who.get(), space, policy.get(), key, filename, contentType));

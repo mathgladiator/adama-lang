@@ -120,7 +120,7 @@ public class ConnectionRouter {
             AuthoritySetRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(AuthoritySetRequest resolved) {
-                handler.handle(resolved, new ClaimResultResponder(responder));
+                handler.handle(resolved, new SimpleResponder(responder));
               }
               @Override
               public void failure(ErrorCodeException ex) {
@@ -144,7 +144,7 @@ public class ConnectionRouter {
             AuthorityListRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(AuthorityListRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
+                handler.handle(resolved, new AuthorityListingResponder(responder));
               }
               @Override
               public void failure(ErrorCodeException ex) {
@@ -188,10 +188,10 @@ public class ConnectionRouter {
               }
             });
           } return;
-          case "space/update": {
-            SpaceUpdateRequest.resolve(nexus, request, new Callback<>() {
+          case "space/set": {
+            SpaceSetRequest.resolve(nexus, request, new Callback<>() {
               @Override
-              public void success(SpaceUpdateRequest resolved) {
+              public void success(SpaceSetRequest resolved) {
                 handler.handle(resolved, new SimpleResponder(responder));
               }
               @Override
@@ -240,7 +240,7 @@ public class ConnectionRouter {
             SpaceReflectRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(SpaceReflectRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
+                handler.handle(resolved, new ReflectionResponder(responder));
               }
               @Override
               public void failure(ErrorCodeException ex) {

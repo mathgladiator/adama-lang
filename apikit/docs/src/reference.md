@@ -43,7 +43,7 @@ This is useful to validate an identity without executing anything
 ## Method: space/get
 
 
-## Method: space/update
+## Method: space/set
 
 
 ## Method: space/delete

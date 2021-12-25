@@ -89,12 +89,7 @@ public class ParameterDefinition {
                         if (service == null) {
                             throw new Exception("validate needs a service");
                         }
-                        String errorCodeOnFailureRaw = childElement.getAttribute("error-code");
-                        if (errorCodeOnFailureRaw == null) {
-                            throw new Exception("transform needs an error-code");
-                        }
-                        int errorCodeOnFailure = Integer.parseInt(errorCodeOnFailureRaw);
-                        validator = new Validator(service, errorCodeOnFailure);
+                        validator = new Validator(service);
                     }
                     break;
                     case "skip-transform": {

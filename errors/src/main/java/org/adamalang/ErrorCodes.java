@@ -65,10 +65,10 @@ public class ErrorCodes {
     public static final int FRONTEND_PLAN_DOESNT_EXIST = 609294;
     public static final int INVALID_ROLE = 688141;
     public static final int FRONTEND_AUTHORITY_ALREADY_EXISTS = 601088;
-    public static final int FRONTEND_AUTHORITY_SET_NOT_FOUND = 634880;
+    public static final int FRONTEND_AUTHORITY_SET_NOT_FOUNDOR_WRONG_OWNER = 634880;
     public static final int FRONTEND_AUTHORITY_CHANGE_OWNER_NOT_FOUND_OR_INCORRECT = 662528;
     public static final int FRONTEND_AUTHORITY_GET_NOT_FOUND = 643072;
-    public static final int FRONTEND_AUTHORITY_DELETE_NOT_FOUND = 654339;
+    public static final int FRONTEND_AUTHORITY_DELETE_NOT_FOUND_OR_INCORRECT = 654339;
 
     public static final int DEPLOYMENT_PLAN_MUST_BE_ROOT_OBJECT = 117818;
     public static final int DEPLOYMENT_PLAN_NO_VERSIONS = 115788;
@@ -790,11 +790,6 @@ public class ErrorCodes {
     public static final int USERID_RESOLVE_UNKNOWN_EXCEPTION = 979980;
     public static final int SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION = 969741;
     public static final int API_SPACE_CREATE_UNKNOWN_EXCEPTION = 900104;
-    public static final int API_SPACE_LIST_UNKNOWN_EXCEPTION = 941064;
-    public static final int API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION = 986120;
-    public static final int API_SPACE_SET_ROLE_PERMISSION_FAILURE = 921607;
-    public static final int API_SPACE_UPDATE_PERMISSION_FAILURE = 901127;
-    public static final int API_SPACE_UPDATE_UNKNOWN_EXCEPTION = 965636;
 
 
     public static final int API_INIT_GENERATE_UNKNOWN_EXCEPTION = 965636;
@@ -803,27 +798,38 @@ public class ErrorCodes {
     public static final int API_INIT_REVOKE_ALL_CODE_MISMATCH = 974851;
 
 
+    public static final int API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE = 901127;
+    public static final int API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION = 965636;
+
+    public static final int API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE = 965635;
+    public static final int API_SPACE_GET_PLAN_UNKNOWN_EXCEPTION = 913408;
+
+    public static final int API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION = 986120;
+    public static final int API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE = 921607;
+
+    public static final int API_SPACE_CHANGE_OWNER_UNKNOWN_EXCEPTION = 941059;
+    public static final int API_SPACE_CHANGE_OWNER_NO_PERMISSION_TO_EXECUTE = 908291;
+
+    public static final int API_SPACE_LIST_UNKNOWN_EXCEPTION = 941064;
+    public static final int API_SPACE_LIST_NO_PERMISSION_TO_EXECUTE = 920576;
+
+    public static final int API_CREATE_AUTHORITY_UNKNOWN_EXCEPTION = 982016;
+    public static final int API_CREATE_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 990208;
+
+    public static final int API_SET_AUTHORITY_UNKNOWN_EXCEPTION = 900098;
+    public static final int API_SET_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 970780;
+
+    public static final int API_TRANSFER_OWNER_AUTHORITY_UNKNOWN_EXCEPTION = 968705;
+    public static final int API_TRANSFER_OWNER_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 933916;
+
+    public static final int API_LIST_AUTHORITY_UNKNOWN_EXCEPTION = 998430;
+    public static final int API_LIST_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 904223;
+
+    public static final int API_DELETE_AUTHORITY_UNKNOWN_EXCEPTION = 913436;
+    public static final int API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 901144;
+
+
     /**
-     *
-     *
-     *
-     *
-     *
-     * 965635
-     * 913408
-     * 941059
-     * 908291
-     * 920576
-     * 982016
-     * 990208
-     * 900098
-     * 968705
-     * 998430
-     * 913436
-     * 970780
-     * 933916
-     * 904223
-     * 901144
      * 987155
      * 933907
      * 946192

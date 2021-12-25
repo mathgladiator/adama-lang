@@ -31,7 +31,7 @@ public class Authorities {
                 statement.setInt(2, ownerId);
                 statement.setString(3, authority);
                 if (statement.executeUpdate() != 1) {
-                    throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_SET_NOT_FOUND);
+                    throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_SET_NOT_FOUNDOR_WRONG_OWNER);
                 }
             }
         }
@@ -62,7 +62,7 @@ public class Authorities {
         }
     }
 
-    public static String getKeystore(Base base, String authority) throws Exception {
+    public static String getKeystoreInternal(Base base, String authority) throws Exception {
         try (Connection connection = base.pool.getConnection()) {
             String sql = new StringBuilder().append("SELECT `keystore` FROM `").append(base.databaseName).append("`.`authorities` WHERE authority=?").toString();
             try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -84,7 +84,7 @@ public class Authorities {
                 statement.setInt(1, ownerId);
                 statement.setString(2, authority);
                 if (statement.executeUpdate() != 1) {
-                    throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_DELETE_NOT_FOUND);
+                    throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_DELETE_NOT_FOUND_OR_INCORRECT);
                 }
             }
         }
