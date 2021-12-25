@@ -11,10 +11,9 @@ Now, the entire purpose is to play an online board game, but this extends well b
 
 For more information on why, please refer to [the origin story](http://www.adama-lang.org/docs/why-the-origin-story) over at http://www.adama-lang.org/
 
-
-[You see more in the tutorial series within the documentation.](http://www.adama-lang.org/docs/how-devkit-install)
+# What is the status
+Let's just say that the E2E experience is completely broken at the moment. I had a devkit, but stopped maintaining it for a variety of reasons. Expect and update in February 2022 with a sense of a SaaS offering.
 
 # License
-
-Board games are the foothold killer use-case for Adama, but the ultimate goal of Adama is to redefine how applications get built with user-centric privacy as a first-class consideration. This ambitious goal of changing the entire landscape requires an open agenda, so the language is open source under the [Apache 2 license](LICENSE).
+Board games are the foothold killer use-case for Adama, but the ultimate goal of Adama is to redefine how applications get built with user-centric privacy as a first-class consideration. This ambitious goal of changing the entire landscape requires an open agenda, so the language is open source under the [MIT](LICENSE).
 

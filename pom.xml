@@ -17,13 +17,9 @@
     </licenses>
     <url>http://www.adama-lang.org/</url>
     <modules>
-        <module>api</module>
         <module>core</module>
-        <module>data</module>
-        <module>devkit</module>
         <module>lsp</module>
         <module>web</module>
-        <module>benchmark</module>
         <module>grpc</module>
         <module>data-mysql</module>
         <module>apikit</module>
