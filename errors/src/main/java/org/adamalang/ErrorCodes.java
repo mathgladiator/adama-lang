@@ -39,6 +39,7 @@ public class ErrorCodes {
     public static final int INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS = 116787;
     public static final int INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT = 144944;
     public static final int INMEMORY_DATA_COMPUTE_CANT_FIND_DOCUMENT = 106546;
+    public static final int INMEMORY_DATA_COMPUTE_PATCH_NOTHING_TODO = 120944;
     public static final int INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO = 128052;
     public static final int INMEMORY_DATA_COMPUTE_UNSEND_FAILED_TO_FIND = 194612;
     public static final int INMEMORY_DATA_DELETE_CANT_FIND_DOCUMENT = 117816;
@@ -49,13 +50,16 @@ public class ErrorCodes {
     public static final int USERLAND_REQUEST_NO_METHOD_PROPERTY = 213708;
     public static final int USERLAND_REQUEST_NO_ID_PROPERTY = 233120;
 
+    /** all DataService implementations must use this for a patch failure due to sequencer out of whack */
+    public static final int UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF = 621580;
+
     public static final int INITIALIZE_FAILURE = 667658;
     public static final int PATCH_FAILURE = 640009;
     public static final int COMPUTE_FAILURE = 605195;
     public static final int GET_FAILURE = 669710;
     public static final int DELETE_FAILURE = 641036;
-    public static final int PATCH_LATE_SEQ_NOT_INC = 621580;
     public static final int SCAN_FAILURE = 643084;
+    public static final int COMPUTE_EMPTY_PATCH = 602115;
     public static final int COMPUTE_EMPTY_REWIND = 694287;
     public static final int COMPUTE_EMPTY_UNSEND = 650252;
     public static final int COMPUTE_UNKNOWN_METHOD = 656396;
@@ -89,8 +93,6 @@ public class ErrorCodes {
 
 
     /**
-     *
-     * 120944
      * 127088
      * 134259
      * 180858
@@ -291,8 +293,6 @@ public class ErrorCodes {
      */
 
     /**
-
-     * 602115
      * 626691
      * 654341
      * 684039

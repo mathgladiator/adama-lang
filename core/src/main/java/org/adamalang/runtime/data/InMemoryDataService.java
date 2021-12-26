@@ -18,11 +18,13 @@ public class InMemoryDataService implements DataService {
         private final ArrayList<RemoteDocumentUpdate> updates;
         private boolean active;
         private long timeToWake;
+        private int seq;
 
         public InMemoryDocument() {
             this.updates = new ArrayList<>();
             this.active = false;
             this.timeToWake = 0;
+            this.seq = 0;
         }
     }
 
@@ -76,6 +78,7 @@ public class InMemoryDataService implements DataService {
                 return;
             }
             InMemoryDocument document = new InMemoryDocument();
+            document.seq = patch.seq;
             document.updates.add(patch);
             datum.put(key, document);
             callback.success(null);
@@ -90,6 +93,11 @@ public class InMemoryDataService implements DataService {
                 callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT));
                 return;
             }
+            if (patch.seq != document.seq + 1) {
+                callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
+                return;
+            }
+            document.seq = patch.seq;
             document.updates.add(patch);
             if (patch.requiresFutureInvalidation) {
                 document.active = true;
@@ -110,6 +118,21 @@ public class InMemoryDataService implements DataService {
                 callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_CANT_FIND_DOCUMENT));
                 return;
             }
+            if (method == ComputeMethod.Patch) {
+                AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
+                // get items in order
+                for (RemoteDocumentUpdate update : document.updates) {
+                    if (update.seq > seq) {
+                        redo.next(update.redo);
+                    }
+                }
+                if (redo.empty()) {
+                    callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_PATCH_NOTHING_TODO));
+                    return;
+                }
+                callback.success(new LocalDocumentChange(redo.finish()));
+                return;
+            }
             if (method == ComputeMethod.Rewind) {
                 Stack<RemoteDocumentUpdate> toUndo = new Stack<>();
                 // get items in order
@@ -118,16 +141,14 @@ public class InMemoryDataService implements DataService {
                         toUndo.push(update);
                     }
                 }
-
-                if (toUndo.empty()) {
-                    callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
-                    return;
-                }
-
                 // walk them backwards to build appropriate undo
                 AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
                 while (!toUndo.empty()) {
                     undo.next(toUndo.pop().undo);
+                }
+                if (undo.empty()) {
+                    callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
+                    return;
                 }
                 callback.success(new LocalDocumentChange(undo.finish()));
                 return;

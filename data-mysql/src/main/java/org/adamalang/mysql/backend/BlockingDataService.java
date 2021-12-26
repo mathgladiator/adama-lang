@@ -149,7 +149,7 @@ public class BlockingDataService implements DataService {
             // read the index
             LookupResult lookup = lookup(connection, key);
             if (lookup.head_seq + 1 != patch.seq) {
-                throw new ErrorCodeException(ErrorCodes.PATCH_LATE_SEQ_NOT_INC);
+                throw new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF);
             }
 
             // update the index
@@ -173,16 +173,31 @@ public class BlockingDataService implements DataService {
             // look up the index to get the id
             LookupResult lookup = lookup(connection, key);
 
+            if (method == ComputeMethod.Patch) {
+                String walkUndoSQL = new StringBuilder("SELECT `redo` FROM `") //
+                        .append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                        .append(" AND `seq_begin` > ").append(seq) //
+                        .append(" ORDER BY `seq_begin` DESC").toString();
+                AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
+                Base.walk(connection, (rs) -> {
+                    redo.next(rs.getString(1));
+                }, walkUndoSQL);
+                if (redo.empty()) {
+                    throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_REWIND);
+                }
+                return new LocalDocumentChange(redo.finish());
+            }
+
             if (method == ComputeMethod.Rewind) {
-                String walkUndoSQL = new StringBuilder("SELECT `undo`,`redo` FROM `") //
+                String walkUndoSQL = new StringBuilder("SELECT `undo` FROM `") //
                         .append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
                         .append(" AND `seq_begin` >= ").append(seq) //
                         .append(" ORDER BY `seq_begin` DESC").toString();
                 AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
-                int count = Base.walk(connection, (rs) -> {
+                Base.walk(connection, (rs) -> {
                     undo.next(rs.getString(1));
                 }, walkUndoSQL);
-                if (count == 0) {
+                if (undo.empty()) {
                     throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_REWIND);
                 }
                 return new LocalDocumentChange(undo.finish());
@@ -224,9 +239,7 @@ public class BlockingDataService implements DataService {
                     .append("DELETE FROM `").append(base.databaseName).append("`.`index` ") //
                     .append("WHERE `id`=").append(lookup.id).toString();
             Base.execute(connection, deleteIndexSQL);
-
             // build a list of all the history pointers and put them into a garbage collection queue
-
             String deleteDeltasSQL = new StringBuilder() //
                     .append("DELETE FROM `").append(base.databaseName).append("`.`deltas` ") //
                     .append("WHERE `parent`=").append(lookup.id).toString();

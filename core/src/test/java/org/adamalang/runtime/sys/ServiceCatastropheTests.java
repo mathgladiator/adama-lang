@@ -182,7 +182,6 @@ public class ServiceCatastropheTests {
         }
     }
 
-
     @Test
     public void reconcile_recovery() throws Exception {
         LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);

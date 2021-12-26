@@ -70,11 +70,15 @@ public interface DataService {
   public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback);
 
   public static enum ComputeMethod {
+    /** patch the local document to be up to date after the given sequencer */
+    Patch,
+    /** rewind the document to the given sequencer */
     Rewind,
+    /** unsend the message sent on the given sequencer */
     Unsend
   }
 
-  /** Compute the change to rewind the state of the document to the indicated seq by the given client */
+  /** Compute the change  the state of the document to the indicated seq by the given client */
   public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback);
 
   /** Delete the document given by the ID */

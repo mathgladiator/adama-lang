@@ -93,16 +93,21 @@ public class BlockingDataServiceTests {
                 Assert.assertEquals("{\"y\":0}", cb10.value);
 
                 SimpleDataCallback cb11 = new SimpleDataCallback();
-                service.compute(KEY_1, null, 1, cb11);
-                cb11.assertFailure(656396);
+                service.compute(KEY_1, DataService.ComputeMethod.Patch, 1, cb11);
+                cb11.assertSuccess();
+                Assert.assertEquals("{\"x\":2}", cb11.value);
 
-                SimpleMockCallback cb12 = new SimpleMockCallback();
-                service.delete(KEY_1, cb12);
-                cb12.assertSuccess();
+                SimpleDataCallback cb12 = new SimpleDataCallback();
+                service.compute(KEY_1, null, 1, cb12);
+                cb12.assertFailure(656396);
 
                 SimpleMockCallback cb13 = new SimpleMockCallback();
                 service.delete(KEY_1, cb13);
-                cb13.assertFailure(625676);
+                cb13.assertSuccess();
+
+                SimpleMockCallback cb14 = new SimpleMockCallback();
+                service.delete(KEY_1, cb14);
+                cb14.assertFailure(625676);
 
                 {
                     MockActiveKeyStream aks = new MockActiveKeyStream();

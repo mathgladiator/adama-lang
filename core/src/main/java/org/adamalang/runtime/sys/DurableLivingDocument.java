@@ -30,11 +30,17 @@ public class DurableLivingDocument {
     private final NtClient who;
     private final String request;
     private final Callback<Integer> callback;
+    private int attempts;
 
     private IngestRequest(NtClient who, String request, Callback<Integer> callback) {
       this.who = who;
       this.request = request;
       this.callback = callback;
+      this.attempts = 0;
+    }
+
+    public boolean tryAgain() {
+      return attempts ++ < 5;
     }
   }
 
@@ -186,8 +192,32 @@ public class DurableLivingDocument {
         @Override
         public void failure(ErrorCodeException ex) {
           base.executor.execute(() -> {
-            request.callback.failure(ex);
-            catastrophicFailure();
+            if (ex.code == ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF) {
+              if (!request.tryAgain()) {
+                request.callback.failure(ex);
+                catastrophicFailure();
+                return;
+              }
+              document.__insert(new JsonStreamReader(change.update.undo));
+              base.service.compute(key, DataService.ComputeMethod.Patch, document.__seq.get(), new Callback<>() {
+                @Override
+                public void success(DataService.LocalDocumentChange value) {
+                  base.executor.execute(() -> {
+                    document.__insert(new JsonStreamReader(value.patch));
+                    executeNow(request);
+                  });
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  request.callback.failure(ex);
+                  catastrophicFailure();
+                }
+              });
+            } else {
+              request.callback.failure(ex);
+              catastrophicFailure();
+            }
           });
         }
       });

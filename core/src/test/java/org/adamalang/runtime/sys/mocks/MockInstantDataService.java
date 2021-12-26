@@ -1,5 +1,6 @@
 package org.adamalang.runtime.sys.mocks;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.Callback;
 import org.adamalang.runtime.contracts.DataService;
@@ -22,6 +23,10 @@ public class MockInstantDataService implements DataService {
     private final ArrayList<String> log;
     private final ArrayList<CountDownLatch> latches;
     private final ArrayList<Key> bootstrap;
+    private boolean enableSeqSkip = false;
+    private int seqToSkip = 0;
+    private boolean infiniteSkip = false;
+    private boolean crashSeqSkip = false;
 
     public MockInstantDataService() {
         this.logByKey = new HashMap<>();
@@ -111,10 +116,35 @@ public class MockInstantDataService implements DataService {
         callback.success(new LocalDocumentChange(writer.toString()));
     }
 
+    public void skipAt(int seq) {
+        this.enableSeqSkip = true;
+        this.seqToSkip = seq;
+    }
+
+    public void infiniteSkip() {
+        this.infiniteSkip = true;
+    }
+
+    public void killSkip() {
+        crashSeqSkip = true;
+    }
+
     @Override
     public synchronized void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
         println("PATCH:" + key.space + "/" + key.key + ":" + patch.seq  +"->" + patch.redo);
         ArrayList<RemoteDocumentUpdate> log = logByKey.get(key);
+        if (infiniteSkip) {
+            callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
+            println("SKIP++");
+            return;
+        }
+        if (enableSeqSkip) {
+            if (patch.seq == seqToSkip) {
+                callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
+                println("SKIP");
+                return;
+            }
+        }
         if (key != null) {
             log.add(patch);
             callback.success(null);
@@ -123,9 +153,18 @@ public class MockInstantDataService implements DataService {
         }
     }
 
+    private int skipTrack = 0;
     @Override
     public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
-        if (method == ComputeMethod.Rewind) {
+        if (method == ComputeMethod.Patch) {
+            if (crashSeqSkip) {
+                callback.failure(new ErrorCodeException(555));
+                println("CRASH");
+            } else {
+                skipTrack += 10000;
+                callback.success(new LocalDocumentChange("{\"x\":" + skipTrack * 7 + ",\"__seq\":" + skipTrack + "}"));
+            }
+        } else if (method == ComputeMethod.Rewind) {
             callback.success(new LocalDocumentChange("{\"x\":1000}"));
         } else {
             callback.failure(new ErrorCodeException(5));

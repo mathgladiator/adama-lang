@@ -49,6 +49,11 @@ public class JsonAlgebra {
       private Object state = null;
 
       @Override
+      public boolean empty() {
+        return state == null;
+      }
+
+      @Override
       public void next(String data) {
         JsonStreamReader reader = new JsonStreamReader(data);
         if (state == null) {
@@ -92,6 +97,11 @@ public class JsonAlgebra {
   public static AutoMorphicAccumulator<String> rollUndoForwardAccumulator(String undo) {
     return new AutoMorphicAccumulator<>() {
       private HashMap<String, Object> state = (HashMap<String, Object>) new JsonStreamReader(undo).readJavaTree();
+
+      @Override
+      public boolean empty() {
+        return false;
+      }
 
       @Override
       public void next(String data) {

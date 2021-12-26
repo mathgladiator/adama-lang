@@ -89,6 +89,18 @@ public class InMemoryDataServiceTests {
                 Assert.fail();
             }
         });
+        ds.patch(key, update(3, "{\"x\":3}", "{\"x\":2}"), new Callback<Void>() {
+            @Override
+            public void success(Void value) {
+                Assert.fail();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+                success.getAndIncrement();
+                Assert.assertEquals(621580, ex.code);
+            }
+        });
         ds.compute(key, DataService.ComputeMethod.Rewind, 1, new Callback<DataService.LocalDocumentChange>() {
             @Override
             public void success(DataService.LocalDocumentChange value) {
@@ -99,6 +111,30 @@ public class InMemoryDataServiceTests {
             @Override
             public void failure(ErrorCodeException ex) {
                 Assert.fail();
+            }
+        });
+        ds.compute(key, DataService.ComputeMethod.Patch, 1, new Callback<DataService.LocalDocumentChange>() {
+            @Override
+            public void success(DataService.LocalDocumentChange value) {
+                success.getAndIncrement();
+                Assert.assertEquals("{\"x\":3}", value.patch);
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+                Assert.fail();
+            }
+        });
+        ds.compute(key, DataService.ComputeMethod.Patch, 10, new Callback<DataService.LocalDocumentChange>() {
+            @Override
+            public void success(DataService.LocalDocumentChange value) {
+                Assert.fail();
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+                success.getAndIncrement();
+                Assert.assertEquals(120944, ex.code);
             }
         });
         ds.compute(key, DataService.ComputeMethod.Unsend, 1, new Callback<DataService.LocalDocumentChange>() {
@@ -136,7 +172,7 @@ public class InMemoryDataServiceTests {
         ds.scan(addToScanned);
         Assert.assertEquals(1, scanned.size());
         ds.delete(key, bumpSuccess(success));
-        Assert.assertEquals(10, success.get());
+        Assert.assertEquals(13, success.get());
     }
 
     @Test
