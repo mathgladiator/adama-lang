@@ -18,6 +18,12 @@ import org.junit.Test;
 
 public class RxBooleanTests {
   @Test
+  public void memory() {
+    final var rt = new RxBoolean(null, true);
+    Assert.assertEquals(42, rt.__memory());
+  }
+
+  @Test
   public void compare() {
     final var rt = new RxBoolean(null, true);
     final var rf = new RxBoolean(null, false);

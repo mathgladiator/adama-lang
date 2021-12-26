@@ -44,4 +44,8 @@ public class NtClient implements Comparable<NtClient> {
   public String toString() {
     return "CLIENT<" + agent + "@" + authority + ">";
   }
+
+  public long memory() {
+    return (agent.length() + authority.length()) * 2;
+  }
 }

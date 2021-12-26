@@ -1,9 +1,10 @@
 package org.adamalang.extern;
 
 import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.runtime.natives.NtAsset;
 
 import java.io.File;
 
 public interface AssetUploader {
-    public void upload(String id, File file, Callback<Boolean> callback);
+    public void upload(NtAsset asset, File localFile, Callback<Boolean> callback);
 }

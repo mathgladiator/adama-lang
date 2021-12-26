@@ -17,6 +17,14 @@ import org.junit.Test;
 
 public class RxFastStringTests {
   @Test
+  public void memory() {
+    final var a = new RxFastString(null, "a");
+    final var b = new RxFastString(null, "bison");
+    Assert.assertEquals(60, a.__memory());
+    Assert.assertEquals(76, b.__memory());
+  }
+
+  @Test
   public void compare1() {
     final var a = new RxFastString(null, "a");
     final var b = new RxFastString(null, "b");

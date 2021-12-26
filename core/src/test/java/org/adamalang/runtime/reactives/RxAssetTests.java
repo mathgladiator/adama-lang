@@ -20,6 +20,16 @@ public class RxAssetTests {
   private static final NtAsset B = new NtAsset("42", "name", "jpg", 42, "hash2", "sheesh2");
 
   @Test
+  public void memory() {
+    Assert.assertEquals(88, A.memory());
+    Assert.assertEquals(90, B.memory());
+    RxAsset a = new RxAsset(null, A);
+    RxAsset b = new RxAsset(null, B);
+    Assert.assertEquals(232, a.__memory());
+    Assert.assertEquals(236, b.__memory());
+  }
+
+  @Test
   public void compare() {
     RxAsset a = new RxAsset(null, A);
     RxAsset b = new RxAsset(null, B);

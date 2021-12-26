@@ -9,6 +9,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class RxComplexTests {
+    @Test
+    public void memory() {
+        final var d = new RxComplex(null, new NtComplex(1, 2));
+        Assert.assertEquals(88, d.__memory());
+    }
 
     @Test
     public void dirty_and_commit() {

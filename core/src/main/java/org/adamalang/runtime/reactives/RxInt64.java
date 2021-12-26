@@ -134,4 +134,9 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
       __raiseDirty();
     }
   }
+
+  @Override
+  public long __memory() {
+    return super.__memory() + 16;
+  }
 }

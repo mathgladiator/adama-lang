@@ -18,6 +18,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class RxMapTests {
+  @Test
+  public void memory() {
+    final var m = map();
+    Assert.assertEquals(168, m.__memory());
+    m.getOrCreate(42).set(52);
+    Assert.assertEquals(236, m.__memory());
+    m.getOrCreate(123).set(52);
+    Assert.assertEquals(304, m.__memory());
+  }
 
   private RxMap<Integer, RxInt32> map() {
     return new RxMap<Integer, RxInt32>(new MockRxParent(), new RxMap.IntegerCodec<RxInt32>() {

@@ -18,6 +18,14 @@ import org.junit.Test;
 
 public class RxInt32Tests {
   @Test
+  public void memory() {
+    final var i1 = new RxInt32(null, 1);
+    final var i2 = new RxInt32(null, 2);
+    Assert.assertEquals(48, i1.__memory());
+    Assert.assertEquals(48, i2.__memory());
+  }
+
+  @Test
   public void compare() {
     final var i1 = new RxInt32(null, 1);
     final var i2 = new RxInt32(null, 2);

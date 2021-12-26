@@ -10,6 +10,7 @@
 package org.adamalang.runtime.index;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TreeSet;
 import org.adamalang.runtime.reactives.RxRecordBase;
 
@@ -62,5 +63,14 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
     if (delete(at, item)) {
       unknowns.add(item);
     }
+  }
+
+  /** (approx) how many bytes of memory does this index use */
+  public long memory() {
+    long sum = 64;
+    for (Map.Entry<Integer, TreeSet<Ty>> entry : index.entrySet()) {
+      sum += entry.getValue().size() * 20 + 20;
+    }
+    return sum;
   }
 }

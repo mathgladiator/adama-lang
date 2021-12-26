@@ -52,8 +52,6 @@ if generate:
     os.chdir(cwd)
 
 if made_jar:
-    args = ["cp", "./devkit/target/devkit-0.2-jar-with-dependencies.jar", "./release/devkit.jar"]
-    os.system(" ".join(args))
     args = ["cp", "./saas/target/saas-0.2-jar-with-dependencies.jar", "./release/saas.jar"]
     os.system(" ".join(args))
     args = ["cp", "./cli/target/cli-0.2-jar-with-dependencies.jar", "./release/cli.jar"]

@@ -31,6 +31,12 @@ public class RxRecordBaseTest {
   }
 
   @Test
+  public void memory() {
+    final var a = new MockRecord(null);
+    Assert.assertEquals(42, a.__memory());
+  }
+
+  @Test
   public void sanity() {
     final var mr = new MockRecord(null);
     final var child = new MockRxChild();

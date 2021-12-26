@@ -17,4 +17,8 @@ public class NtComplex {
         NtComplex ntComplex = (NtComplex) o;
         return Double.compare(ntComplex.real, real) == 0 && Double.compare(ntComplex.imaginary, imaginary) == 0;
     }
+
+    public long memory() {
+        return 16;
+    }
 }

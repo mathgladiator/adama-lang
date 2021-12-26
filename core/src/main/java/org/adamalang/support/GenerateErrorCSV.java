@@ -60,7 +60,7 @@ public class GenerateErrorCSV {
                     writer.print(range.get("end").get("character").toString());
                     writer.print(",");
                     JsonStreamWriter escaped = new JsonStreamWriter();
-                    escaped.writeString(node.get("message").toString());
+                    escaped.writeString(node.get("message").toString().replaceAll(Pattern.quote("\\"), "/"));
                     writer.print(escaped.toString());
                     writer.println();
                 }

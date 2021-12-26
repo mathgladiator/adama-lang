@@ -527,6 +527,10 @@ public abstract class LivingDocument implements RxParent {
   /** code generated: run the test for the given test name */
   public abstract void __test(TestReportBuilder report, String testName);
 
+  public long __memory() {
+    return 384;
+  }
+
   /** exposed: @step; for testing */
   protected void __test_progress() {
     try {
@@ -633,8 +637,6 @@ public abstract class LivingDocument implements RxParent {
     if (timestamp == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP); }
     __time.set(timestamp);
     switch (command) {
-      case "bill":
-        return __transaction_bill(requestJson);
       case "invalidate":
         if (__monitor != null) {
           return __transaction_invalidate_monitored(who, requestJson);
@@ -670,30 +672,6 @@ public abstract class LivingDocument implements RxParent {
         return __transaction_apply_patch(requestJson, who, patch);
     }
     throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND);
-  }
-
-  /** transaction: bill */
-  private LivingDocumentChange __transaction_bill(final String request) {
-    final var ticks = __goodwillLimitOfBudget - __goodwillBudget;
-    final var cost = __code_cost;
-    __goodwillBudget = __goodwillLimitOfBudget;
-    __code_cost = 0;
-    final var forward = new JsonStreamWriter();
-    final var reverse = new JsonStreamWriter();
-    forward.beginObject();
-    reverse.beginObject();
-
-    forward.writeObjectFieldIntro("__goodwill_used");
-    forward.writeInteger(ticks);
-    forward.writeObjectFieldIntro("__cost");
-    forward.writeInteger(cost);
-    forward.writeObjectFieldIntro("__billing_seq");
-    forward.writeInteger(__seq.get());
-    __seq.bumpUpPre();
-    __commit(null, forward, reverse);
-    forward.endObject();
-    reverse.endObject();
-    return new LivingDocumentChange(new DataService.RemoteDocumentUpdate(__seq.get(), NtClient.NO_ONE, request, forward.toString(), reverse.toString(), true, 0), null);
   }
 
   /** transaction: a person connects to document */

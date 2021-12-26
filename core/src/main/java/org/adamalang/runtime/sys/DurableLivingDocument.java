@@ -278,10 +278,8 @@ public class DurableLivingDocument {
     return document.__getCodeCost();
   }
 
-  public void bill(Callback<Integer> callback) {
-    final var request = forge("bill", null);
-    request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), callback);
+  public long getMemoryBytes() {
+    return document.__memory();
   }
 
   public void expire(long limit, Callback<Integer> callback) {

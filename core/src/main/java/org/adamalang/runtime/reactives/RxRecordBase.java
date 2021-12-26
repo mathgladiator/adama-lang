@@ -75,4 +75,9 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   public int hashCode() {
     return __id();
   }
+
+  @Override
+  public long __memory() {
+    return super.__memory() + 2;
+  }
 }

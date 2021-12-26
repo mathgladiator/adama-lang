@@ -20,6 +20,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class RxTableTests {
+  @Test
+  public void memory() {
+    final var document = doc(7);
+    final var table = new RxTable<>(document, document, "name", MockRecord::new, 1);
+    Assert.assertEquals(176, table.__memory());
+    table.__insert(new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":12},\"6\":{\"index\":13}}"));
+    Assert.assertEquals(462, table.__memory());
+  }
+
   private MockLivingDocument doc(int keyStart) {
     final var document = new MockLivingDocument();
     while (document.__genNextAutoKey() < keyStart - 1) {

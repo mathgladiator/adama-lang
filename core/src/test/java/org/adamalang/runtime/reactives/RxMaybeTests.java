@@ -19,6 +19,15 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class RxMaybeTests {
+  @Test
+  public void memory() {
+    final var parent = new MockRxParent();
+    final var mi = new RxMaybe<>(parent, p -> new RxInt32(p, 42));
+    Assert.assertEquals(64, mi.__memory());
+    mi.make();
+    Assert.assertEquals(112, mi.__memory());
+  }
+
   private static void commitCheck(final RxMaybe<RxInt32> mi, String expectedForward, String expectedReverse) {
     final var writer = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();

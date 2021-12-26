@@ -95,4 +95,9 @@ public abstract class RxBase {
     }
     __subscribers.add(link);
   }
+
+  /** return the rough # of bytes */
+  public long __memory() {
+    return 40L;
+  }
 }

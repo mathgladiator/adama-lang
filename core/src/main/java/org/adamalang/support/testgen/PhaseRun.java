@@ -50,15 +50,14 @@ public class PhaseRun {
       outputFile.append(patch.request.toString() + "-->" + patch.redo.toString() + " need:" + patch.requiresFutureInvalidation + " in:" + patch.whenToInvalidateMilliseconds + "\n");
       testTime.addAndGet(Math.max(patch.whenToInvalidateMilliseconds / 2, 25));
     });
-
     DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
-
     try {
       Key key = new Key("0", "0");
       DocumentThreadBase base = new DocumentThreadBase(dds, SimpleExecutor.NOW, time);
       DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "0", monitor, base, acquire);
       DurableLivingDocument doc = acquire.get();
-
+      outputFile.append("CPU:").append(doc.getCodeCost()).append("\n");
+      outputFile.append("MEMORY:").append(doc.getMemoryBytes()).append("\n");
       doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
         outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
       }), DumbDataService.NOOPPrivateView);
@@ -77,7 +76,6 @@ public class PhaseRun {
         outputFile.append("RANDO was DENIED:\n");
       }
       doc.invalidate(DumbDataService.NOOPINT);
-      doc.bill(DumbDataService.NOOPINT);
       outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
       outputFile.append(doc.json()).append("\n");
       outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");

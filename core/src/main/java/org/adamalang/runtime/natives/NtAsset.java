@@ -67,4 +67,8 @@ public class NtAsset implements Comparable<NtAsset> {
   public int hashCode() {
     return Objects.hash(id, name, contentType, size, md5, sha384);
   }
+
+  public long memory() {
+    return (id.length() + name.length() + contentType.length() + md5.length() + sha384.length()) * 2 + 48;
+  }
 }

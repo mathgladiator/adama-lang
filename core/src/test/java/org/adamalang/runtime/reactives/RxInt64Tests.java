@@ -18,6 +18,14 @@ import org.junit.Test;
 
 public class RxInt64Tests {
   @Test
+  public void memory() {
+    final var l1 = new RxInt64(null, 1);
+    final var l2 = new RxInt64(null, 2);
+    Assert.assertEquals(56, l1.__memory());
+    Assert.assertEquals(56, l2.__memory());
+  }
+
+  @Test
   public void compare() {
     final var l1 = new RxInt64(null, 1);
     final var l2 = new RxInt64(null, 2);

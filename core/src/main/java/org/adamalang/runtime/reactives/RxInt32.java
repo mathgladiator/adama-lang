@@ -132,4 +132,9 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
       __raiseDirty();
     }
   }
+
+  @Override
+  public long __memory() {
+    return super.__memory() + 8;
+  }
 }

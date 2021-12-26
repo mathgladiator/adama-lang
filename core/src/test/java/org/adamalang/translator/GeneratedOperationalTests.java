@@ -70,6 +70,12 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class Goodwill_1 extends LivingDocument {");
     gold.append("\n  private final RxInt32 z;");
+    gold.append("\n  @Override");
+    gold.append("\n  public long __memory() {");
+    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    __sum += z.__memory();");
+    gold.append("\n    return __sum;");
+    gold.append("\n  }");
     gold.append("\n  public Goodwill_1(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    z = new RxInt32(this, 0);");

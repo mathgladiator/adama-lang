@@ -275,4 +275,21 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       return itemsByKey.size();
     }
   }
+
+  @Override
+  public long __memory() {
+    long sum = super.__memory() + 64 + className.length() * 2;
+    if (indices != null) {
+      for (ReactiveIndex<Ty> idx : indices) {
+        sum += idx.memory();
+      }
+    }
+    for (Ty value : itemsByKey.values()) {
+      sum += value.__memory() + 20;
+    }
+    if (unknowns != null) {
+      sum += unknowns.size() * 8;
+    }
+    return sum;
+  }
 }

@@ -23,6 +23,12 @@ public class RxClientTests {
   private static final NtClient CC = new NtClient("c", "c");
 
   @Test
+  public void memory() {
+    final var a = new RxClient(null, A);
+    Assert.assertEquals(64, a.__memory());
+  }
+
+  @Test
   public void compare() {
     final var a = new RxClient(null, A);
     final var b = new RxClient(null, B);

@@ -167,4 +167,9 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
     }
     __raiseDirty();
   }
+
+  @Override
+  public long __memory() {
+    return super.__memory() + 24 + (value != null ? value.__memory() : 0) + (priorValue != null ? priorValue.__memory() :  0);
+  }
 }

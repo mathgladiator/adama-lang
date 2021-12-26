@@ -127,4 +127,9 @@ public class RxDouble extends RxBase implements Comparable<RxDouble>, CanGetAndS
     this.value = value;
     __raiseDirty();
   }
+
+  @Override
+  public long __memory() {
+    return super.__memory() + 16;
+  }
 }

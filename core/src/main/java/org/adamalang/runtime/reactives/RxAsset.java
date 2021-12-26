@@ -79,4 +79,9 @@ public class RxAsset extends RxBase implements Comparable<RxAsset>, CanGetAndSet
       __raiseDirty();
     }
   }
+
+  @Override
+  public long __memory() {
+    return super.__memory() + backup.memory() + value.memory() + 16;
+  }
 }

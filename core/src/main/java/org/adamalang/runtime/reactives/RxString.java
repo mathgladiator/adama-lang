@@ -104,4 +104,9 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
     this.value = value;
     __raiseDirty();
   }
+
+  @Override
+  public long __memory() {
+    return super.__memory() + (backup.length() + value.length()) * 2 + 16;
+  }
 }

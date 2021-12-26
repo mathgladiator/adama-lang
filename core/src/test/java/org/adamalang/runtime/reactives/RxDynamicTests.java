@@ -22,6 +22,12 @@ public class RxDynamicTests {
   private static final NtDynamic B = new NtDynamic("false");
 
   @Test
+  public void memory() {
+    Assert.assertEquals(8, A.memory());
+    Assert.assertEquals(10, B.memory());
+  }
+
+  @Test
   public void compare() {
     final var a = new RxDynamic(null, A);
     final var b = new RxDynamic(null, B);

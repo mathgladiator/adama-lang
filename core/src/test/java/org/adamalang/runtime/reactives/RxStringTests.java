@@ -18,12 +18,21 @@ import org.junit.Test;
 
 public class RxStringTests {
   @Test
+  public void memory() {
+    final var a = new RxString(null, "a");
+    final var b = new RxString(null, "b");
+    Assert.assertEquals(60, a.__memory());
+    Assert.assertEquals(60, b.__memory());
+  }
+
+  @Test
   public void compare() {
     final var a = new RxString(null, "a");
     final var b = new RxString(null, "b");
     Assert.assertEquals(-1, a.compareTo(b));
     Assert.assertEquals(1, b.compareTo(a));
   }
+
   @Test
   public void dump() {
     final var d = new RxString(null, "xyz");

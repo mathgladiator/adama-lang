@@ -98,7 +98,7 @@ public class CodeGenRecords {
       final var numberIndicies = ((TyReactiveRecord) ((TyReactiveTable) fieldType).getEmbeddedType(environment)).storage.indices.size();
       result.append("new RxTable<>(__self, ").append(parent).append(", \"").append(className);
       result.append("\", (RxParent __parent) -> new RTx").append(((TyReactiveTable) fieldType).recordName);
-      result.append("(__parent), ").append("" + numberIndicies).append(")");
+      result.append("(__parent), ").append(numberIndicies).append(")");
     } else if (fieldType instanceof TyReactiveRecord) {
       result.append("new ").append(fieldType.getJavaConcreteType(environment)).append("(").append(parent).append(")");
     } else if (fieldType instanceof TyReactiveMap) {
@@ -349,6 +349,14 @@ public class CodeGenRecords {
     for (final Map.Entry<String, BubbleDefinition> bubbleDefinitionEntry : storage.bubbles.entrySet()) {
       bubbleDefinitionEntry.getValue().writeSetup(sb, environment);
     }
+    sb.append("@Override").writeNewline();
+    sb.append("public long __memory() {").tabUp().writeNewline();
+    sb.append("long __sum = super.__memory();").writeNewline();
+    for (final FieldDefinition fdInOrder : storage.fieldsByOrder) {
+      sb.append("__sum += ").append(fdInOrder.name).append(".__memory();").writeNewline();
+    }
+    sb.append("return __sum;").tabDown().writeNewline();
+    sb.append("}").writeNewline();
   }
 
   public static void writerDump(final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment, final boolean isRoot, final String... others) {

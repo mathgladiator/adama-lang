@@ -43,4 +43,13 @@ public class ReactiveIndexTests {
     Assert.assertNull(index.of(42));
     Assert.assertTrue(unknowns.contains(MockRecord.make(1)));
   }
+
+  @Test
+  public void memory() {
+    final var unknowns = new TreeSet<MockRecord>();
+    final var index = new ReactiveIndex<>(unknowns);
+    Assert.assertEquals(64, index.memory());
+    index.add(42, MockRecord.make(1));
+    Assert.assertEquals(104, index.memory());
+  }
 }

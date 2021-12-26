@@ -18,6 +18,12 @@ import org.junit.Test;
 
 public class RxDoubleTests {
   @Test
+  public void memory() {
+    final var d1 = new RxDouble(null, 1);
+    Assert.assertEquals(56, d1.__memory());
+  }
+
+  @Test
   public void compare() {
     final var d1 = new RxDouble(null, 1);
     final var d2 = new RxDouble(null, 2);

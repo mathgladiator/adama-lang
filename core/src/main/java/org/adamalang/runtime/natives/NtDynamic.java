@@ -38,4 +38,8 @@ public class NtDynamic implements Comparable<NtDynamic>  {
   }
 
   public static final NtDynamic NULL = new NtDynamic("null");
+
+  public long memory() {
+    return json.length() * 2;
+  }
 }

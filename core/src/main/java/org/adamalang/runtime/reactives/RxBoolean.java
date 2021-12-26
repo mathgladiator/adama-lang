@@ -78,4 +78,9 @@ public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAn
       __raiseDirty();
     }
   }
+
+  @Override
+  public long __memory() {
+    return super.__memory() + 2;
+  }
 }

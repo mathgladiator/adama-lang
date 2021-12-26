@@ -182,6 +182,18 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     return objects.size();
   }
 
+  @Override
+  public long __memory() {
+    long sum = super.__memory() + 128;
+    for (Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
+      sum += entry.getValue().__memory() + 20;
+      if (entry.getKey() instanceof String) {
+        sum += ((String) entry.getKey()).length() * 2;
+      }
+    }
+    return sum;
+  }
+
   public static abstract class IntegerCodec<R extends RxBase> implements Codec<Integer, R> {
     public String toStr(Integer key) {
       return "" + key;
