@@ -17,8 +17,9 @@ public class Tool {
         return builder.parse(input);
     }
 
-    public static void main(String[] args) throws Exception {
-        FileInputStream input = new FileInputStream("apikit/api.xml");
+    public static void build() throws Exception {
+        // TODO: move into args
+        FileInputStream input = new FileInputStream("saas/api.xml");
         Document doc = load(input);
         NodeList apiList = doc.getElementsByTagName("api");
         if (apiList == null || apiList.getLength() == 0) {
@@ -33,6 +34,7 @@ public class Tool {
         if (outputPathStr == null || "".equals(outputPathStr)) {
             throw new Exception("no output path");
         }
+
         if (packageName == null || "".equals(packageName)) {
             throw new Exception("no package name");
         }
@@ -62,8 +64,7 @@ public class Tool {
         for (Map.Entry<String, String> request : apiOutput.entrySet()) {
             Files.writeString(new File(outputPath, request.getKey()).toPath(), request.getValue());
         }
-
-
+        // TODO: move to Schema
         Files.writeString(new File("apikit/docs/src/reference.md").toPath(), AssembleAPIDocs.docify(methods));
     }
 }

@@ -1,16 +1,16 @@
 package org.adamalang.extern;
 
-import org.adamalang.mysql.Base;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.contracts.ExceptionLogger;
 
 public class ExternNexus {
 
     public final Email email;
-    public final Base base;
+    public final DataBase dataBase;
 
-    public ExternNexus(Email email, Base base) {
+    public ExternNexus(Email email, DataBase dataBase) {
         this.email = email;
-        this.base = base;
+        this.dataBase = dataBase;
     }
 
     public ExceptionLogger makeLogger(Class<?> clazz) {

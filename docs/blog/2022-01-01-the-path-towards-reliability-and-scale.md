@@ -8,7 +8,8 @@ author_image_url: https://github.com/mathgladiator.png?size=96
 tags: [adama, scale, saas]
 ---
 
-As I have burned the bridge and committed towards an open source SaaS, I am designing how to handle the failure modes. Today, I'm looking at the path towards launch and asking if there is an opportunity to provide trade-offs to the future consumer as this unfolds along with the related business model.
+As I have committed towards an open source SaaS, I am designing how to handle the failure modes since I like sleep.
+I'll have much to say about the role of design on great sleep, but today I'm looking at the path towards launch and asking if there is an opportunity to provide trade-offs to the future consumer as this unfolds along with the related business model.
 
 For clarity, each diagram here represents a single cluster within a single region under a single DNS name.
 

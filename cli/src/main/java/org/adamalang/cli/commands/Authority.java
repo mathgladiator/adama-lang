@@ -4,7 +4,7 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 
 public class Authority {
-    public static void execute(Config config, String[] args) {
+    public static void execute(Config config, String[] args) throws Exception {
         if (args.length == 0) {
             authorityHelp();
             return;
@@ -12,10 +12,25 @@ public class Authority {
         String command = Util.normalize(args[0]);
         String[] next = Util.tail(args);
         switch (command) {
+            case "create":
+                authorityCreate(config, args);
+                return;
+            case "list":
+                return;
+            case "get":
+                return;
             case "help":
                 authorityHelp();
                 return;
         }
+    }
+
+    public static void authorityCreate(Config config, String[] args) {
+        // TODO: read identity
+        // TODO: read endpoint
+        // TODO: create WebSocket connection
+        // TODO: build JSON for "authority create" (consider auto-generating a client stub)
+        // TODO: send JSON
     }
 
     public static void authorityHelp() {
@@ -30,9 +45,10 @@ public class Authority {
         System.out.println(Util.prefix("AUTHORITYSUBCOMMAND:", Util.ANSI.Yellow));
         System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Creates a new authority");
         System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List authorities this developer owns");
-        System.out.println("    " + Util.prefix("download", Util.ANSI.Green) + "          Download the keystore");
-        System.out.println("    " + Util.prefix("upload", Util.ANSI.Green) + "            Upload the keystore");
-        System.out.println("    " + Util.prefix("destroy", Util.ANSI.Green) + "           Destroy an authority");
-        System.out.println("    " + Util.prefix("manual", Util.ANSI.Green) + "            Show expanded help which illustrates how the above is used internally");
+        System.out.println("    " + Util.prefix("get", Util.ANSI.Green) + "               Get/download the keystore");
+        System.out.println("    " + Util.prefix("set", Util.ANSI.Green) + "               Set/upload the keystore");
+        System.out.println("    " + Util.prefix("destroy", Util.ANSI.Green) + "           Destroy an authority " + Util.prefix ("(WARNING)", Util.ANSI.Red));
+        System.out.println("    " + Util.prefix("make-keystore", Util.ANSI.Green) + "     Make a new keystore");
+        System.out.println("    " + Util.prefix("append-keystore", Util.ANSI.Green) + "   Generate a new key and append it to an existing keystore and auto expire old keys");
     }
 }

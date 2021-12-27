@@ -81,15 +81,25 @@ public class TestForge {
       files.add(testFile);
     }
     files.sort(Comparator.comparing(File::getName));
+    String lastClazz = "";
     for (final File testFile : files) {
       final var test = TestFile.fromFilename(testFile.getName());
-      System.out.println(test.clazz + "-->" + test.name + ":" + test.success);
+      if (!lastClazz.equals(test.clazz)) {
+        System.out.println("\u001b[34mSuite: " + test.clazz + "\u001b[0m");
+        lastClazz = test.clazz;
+      }
+      System.out.print("  " + test.name);
+      for (int pad = test.name.length(); pad < 45; pad++) {
+        System.out.print(" ");
+      }
+      System.out.print("... ");
       var testClass = classMap.get(test.clazz);
       if (testClass == null) {
         testClass = new TestClass(test.clazz);
         classMap.put(test.clazz, testClass);
       }
-      testClass.addTest(test);
+      boolean result = testClass.addTest(test);
+      System.out.println((test.success == result) ? "\u001b[32mGOOD\u001b[0m" : "\u001b[31mBAD\u001b[0m");
     }
     return classMap;
   }

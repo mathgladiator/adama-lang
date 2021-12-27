@@ -11,6 +11,7 @@ public class Config {
     public final String[] argsForTool;
     public final String configPath;
     public final boolean requestingHelp;
+    private ObjectNode cache;
 
     public Config(String[] args) throws Exception {
         ArrayList<String> argsToUse = new ArrayList<>();
@@ -38,8 +39,11 @@ public class Config {
             Files.writeString(_configFile.toPath(), defaultConfig.toPrettyString());
         }
 
-        ObjectNode config = Util.parseJsonObject(Files.readString(_configFile.toPath()));
-        // TODO: fun things
+        this.cache = Util.parseJsonObject(Files.readString(_configFile.toPath()));
+    }
+
+    public ObjectNode read() {
+        return cache;
     }
 
     public void manipulate(Consumer<ObjectNode> manipulator) throws Exception {
@@ -47,5 +51,6 @@ public class Config {
         ObjectNode config = Util.parseJsonObject(Files.readString(_configFile.toPath()));
         manipulator.accept(config);
         Files.writeString(_configFile.toPath(), config.toPrettyString());
+        this.cache = config;
     }
 }

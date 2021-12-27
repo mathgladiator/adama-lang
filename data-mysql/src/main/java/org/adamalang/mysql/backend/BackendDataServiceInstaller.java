@@ -1,22 +1,22 @@
 package org.adamalang.mysql.backend;
 
-import org.adamalang.mysql.Base;
+import org.adamalang.mysql.DataBase;
 
 import java.sql.Connection;
 
 /** handy-dany installer to setup the tables */
-public class DataServiceInstaller {
-    public final Base base;
+public class BackendDataServiceInstaller {
+    public final DataBase dataBase;
 
-    public DataServiceInstaller(Base base) {
-        this.base = base;
+    public BackendDataServiceInstaller(DataBase dataBase) {
+        this.dataBase = dataBase;
     }
 
     public void install() throws Exception {
-        String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + base.databaseName + "`";
+        String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
 
         String createIndexTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `").append(base.databaseName).append("`.`index` (") //
+            .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`index` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `space` VARCHAR(128) NOT NULL,") //
             .append("  `key` VARCHAR(512) NOT NULL,") //
@@ -32,7 +32,7 @@ public class DataServiceInstaller {
             .toString();
 
         String createDeltasTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `").append(base.databaseName).append("`.`deltas` (") //
+            .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`deltas` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `parent` INT(4) UNSIGNED NOT NULL,") //
             .append("  `seq_begin` INT(4) UNSIGNED NOT NULL,") //
@@ -49,22 +49,22 @@ public class DataServiceInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
-        Connection connection = base.pool.getConnection();
+        Connection connection = dataBase.pool.getConnection();
         try {
-            Base.execute(connection, createDatabaseSQL);
-            Base.execute(connection, createIndexTableSQL);
-            Base.execute(connection, createDeltasTableSQL);
+            DataBase.execute(connection, createDatabaseSQL);
+            DataBase.execute(connection, createIndexTableSQL);
+            DataBase.execute(connection, createDeltasTableSQL);
         } finally {
             connection.close();
         }
     }
 
     public void uninstall() throws Exception {
-        Connection connection = base.pool.getConnection();
+        Connection connection = dataBase.pool.getConnection();
         try {
-            Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`deltas`;").toString());
-            Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`index`;").toString());
-            Base.execute(connection, new StringBuilder("DROP DATABASE `").append(base.databaseName).append("`;").toString());
+            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`deltas`;").toString());
+            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`index`;").toString());
+            DataBase.execute(connection, new StringBuilder("DROP DATABASE `").append(dataBase.databaseName).append("`;").toString());
         } finally {
             connection.close();
         }

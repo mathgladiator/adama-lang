@@ -1,9 +1,9 @@
 package org.adamalang.mysql.backend;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.mysql.Base;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.BaseConfig;
-import org.adamalang.mysql.BaseConfigTests;
+import org.adamalang.mysql.DataBaseConfigTests;
 import org.adamalang.mysql.mocks.MockActiveKeyStream;
 import org.adamalang.mysql.mocks.SimpleDataCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
@@ -20,13 +20,13 @@ public class BlockingDataServiceTests {
 
     @Test
     public void flow_1() throws Exception {
-        BaseConfig baseConfig = BaseConfigTests.getLocalIntegrationConfig();
-        try (Base base = new Base(baseConfig)) {
-            DataServiceInstaller installer = new DataServiceInstaller(base);
+        BaseConfig baseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+        try (DataBase dataBase = new DataBase(baseConfig)) {
+            BackendDataServiceInstaller installer = new BackendDataServiceInstaller(dataBase);
             try {
                 // make sure the database and tables are all proper and set
                 installer.install();
-                BlockingDataService service = new BlockingDataService(base);
+                BlockingDataService service = new BlockingDataService(dataBase);
 
                 // create the key the first time, should work
                 SimpleMockCallback cb1 = new SimpleMockCallback();
@@ -98,16 +98,20 @@ public class BlockingDataServiceTests {
                 Assert.assertEquals("{\"x\":2}", cb11.value);
 
                 SimpleDataCallback cb12 = new SimpleDataCallback();
-                service.compute(KEY_1, null, 1, cb12);
-                cb12.assertFailure(656396);
+                service.compute(KEY_1, DataService.ComputeMethod.Patch, 200, cb12);
+                cb12.assertFailure(602115);
 
-                SimpleMockCallback cb13 = new SimpleMockCallback();
-                service.delete(KEY_1, cb13);
-                cb13.assertSuccess();
+                SimpleDataCallback cb13 = new SimpleDataCallback();
+                service.compute(KEY_1, null, 1, cb13);
+                cb13.assertFailure(656396);
 
                 SimpleMockCallback cb14 = new SimpleMockCallback();
                 service.delete(KEY_1, cb14);
-                cb14.assertFailure(625676);
+                cb14.assertSuccess();
+
+                SimpleMockCallback cb15 = new SimpleMockCallback();
+                service.delete(KEY_1, cb15);
+                cb15.assertFailure(625676);
 
                 {
                     MockActiveKeyStream aks = new MockActiveKeyStream();

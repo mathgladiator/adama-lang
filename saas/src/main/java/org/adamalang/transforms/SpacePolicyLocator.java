@@ -2,7 +2,7 @@ package org.adamalang.transforms;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.mysql.Base;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.runtime.contracts.ExceptionLogger;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
@@ -15,13 +15,13 @@ import java.util.concurrent.Executor;
 
 public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
     public final Executor executor;
-    public final Base base;
+    public final DataBase dataBase;
     private final ExceptionLogger logger;
     public final ConcurrentHashMap<String, SpacePolicy> policies;
 
     public SpacePolicyLocator(Executor executor, ExternNexus nexus) {
         this.executor = executor;
-        this.base = nexus.base;
+        this.dataBase = nexus.dataBase;
         this.policies = new ConcurrentHashMap<>();
         this.logger = nexus.makeLogger(SpacePolicyLocator.class);
     }
@@ -36,7 +36,7 @@ public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
         }
         executor.execute(() -> {
             try {
-                Spaces.Space space = Spaces.getSpaceId(base, spaceName);
+                Spaces.Space space = Spaces.getSpaceId(dataBase, spaceName);
                 policies.putIfAbsent(spaceName, new SpacePolicy(space));
                 callback.success(policies.get(spaceName));
             } catch (Exception ex) {

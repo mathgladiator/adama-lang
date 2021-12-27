@@ -4,7 +4,7 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 
 public class Space {
-    public static void execute(Config config, String[] args) {
+    public static void execute(Config config, String[] args) throws Exception {
         if (args.length == 0) {
             spaceHelp();
             return;

@@ -22,7 +22,7 @@ for arg in sys.argv:
     if arg == "jar" or arg == "all":
         jar = True
 
-os.system("mkdir release")
+os.system("mkdir release -p")
 
 if clean:
     os.system("mvn clean")
@@ -45,14 +45,12 @@ if jar:
     if os.system(" ".join(args)) == 0:
        made_jar = True
 
+if made_jar:
+    args = ["cp", "./cli/target/cli-0.2-jar-with-dependencies.jar", "./release/adama.jar"]
+    os.system(" ".join(args))
+
 if generate:
     cwd = os.getcwd()
     os.chdir("core")
-    os.system("java -jar ./target/core-0.2-jar-with-dependencies.jar generate-tests")
+    os.system("java -jar ../release/adama.jar contrib generate")
     os.chdir(cwd)
-
-if made_jar:
-    args = ["cp", "./saas/target/saas-0.2-jar-with-dependencies.jar", "./release/saas.jar"]
-    os.system(" ".join(args))
-    args = ["cp", "./cli/target/cli-0.2-jar-with-dependencies.jar", "./release/cli.jar"]
-    os.system(" ".join(args))

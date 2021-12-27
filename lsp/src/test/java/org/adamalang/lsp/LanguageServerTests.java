@@ -49,7 +49,7 @@ public class LanguageServerTests {
         Thread t = new Thread(() -> {
             try {
                 started.countDown();
-                LanguageServer.main(new String[]{});
+                LanguageServer.singleThread(2423);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -76,7 +76,7 @@ public class LanguageServerTests {
         Thread t = new Thread(() -> {
             try {
                 started.countDown();
-                LanguageServer.main(new String[]{});
+                LanguageServer.singleThread(2423);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

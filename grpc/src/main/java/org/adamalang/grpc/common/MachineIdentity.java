@@ -9,11 +9,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 public class MachineIdentity {
+    private final String ip;
     private final String trust;
     private final String cert;
     private final String key;
 
     public MachineIdentity(String json) throws Exception {
+        String _ip = null;
         String _trust = null;
         String _cert = null;
         String _key = null;
@@ -25,6 +27,9 @@ public class MachineIdentity {
                     case "trust":
                         _trust = reader.readString();
                         break;
+                    case "ip":
+                        _ip = reader.readString();
+                        break;
                     case "cert":
                         _cert = reader.readString();
                         break;
@@ -33,6 +38,9 @@ public class MachineIdentity {
                         break;
                 }
             }
+        }
+        if (_ip == null) {
+            throw new Exception("ip was not found in json object");
         }
         if (_key == null) {
             throw new Exception("key was not found in json object");
@@ -43,6 +51,7 @@ public class MachineIdentity {
         if (_trust == null) {
             throw new Exception("trust was not found in json object");
         }
+        ip = _ip;
         key = _key;
         cert = _cert;
         trust = _trust;
@@ -60,9 +69,11 @@ public class MachineIdentity {
         return new ByteArrayInputStream(cert.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String convertToJson(File trust, File cert, File key) throws Exception {
+    public static String convertToJson(String ip, File trust, File cert, File key) throws Exception {
         JsonStreamWriter writer = new JsonStreamWriter();
         writer.beginObject();
+        writer.writeObjectFieldIntro("ip");
+        writer.writeString(ip);
         writer.writeObjectFieldIntro("trust");
         writer.writeString(Files.readString(trust.toPath()));
         writer.writeObjectFieldIntro("cert");

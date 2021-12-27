@@ -1,7 +1,7 @@
 package org.adamalang.mysql.backend;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.mysql.Base;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
@@ -13,11 +13,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /** Implements the DataService while blocking the caller's thread */
 public class BlockingDataService implements DataService {
-    private final Base base;
+    private final DataBase dataBase;
     private final SimpleDateFormat dateFormat;
 
-    public BlockingDataService(final Base base) {
-        this.base = base;
+    public BlockingDataService(final DataBase dataBase) {
+        this.dataBase = dataBase;
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
@@ -36,7 +36,7 @@ public class BlockingDataService implements DataService {
     }
 
     public LookupResult lookup(Connection connection, Key key) throws SQLException, ErrorCodeException {
-        PreparedStatement statement = connection.prepareStatement(new StringBuilder("SELECT `id`, `head_seq` FROM `").append(base.databaseName).append("`.`index` WHERE `space`=? AND `key`=? LIMIT 1").toString());
+        PreparedStatement statement = connection.prepareStatement(new StringBuilder("SELECT `id`, `head_seq` FROM `").append(dataBase.databaseName).append("`.`index` WHERE `space`=? AND `key`=? LIMIT 1").toString());
         try {
             statement.setString(1, key.space);
             statement.setString(2, key.key);
@@ -60,7 +60,7 @@ public class BlockingDataService implements DataService {
     /** internal: insert a delta */
     private void insertDelta(Connection connection, int parent, RemoteDocumentUpdate patch) throws SQLException {
         String insertDeltaSQL = new StringBuilder() //
-                .append("INSERT INTO `").append(base.databaseName).append("`.`deltas` (") //
+                .append("INSERT INTO `").append(dataBase.databaseName).append("`.`deltas` (") //
                 .append("`parent`, `seq_begin`, `seq_end`, `who_agent`, `who_authority`, `request`, `redo`, `undo`, `history_ptr`) VALUES (") //
                 .append(parent).append(", '").append(patch.seq).append("', '").append(patch.seq).append("', ") //
                 .append("?, ?, ?, ?, ?, '')") //
@@ -82,9 +82,9 @@ public class BlockingDataService implements DataService {
     @Override
     public void scan(ActiveKeyStream stream) {
         try {
-            String scanSQL = new StringBuilder("SELECT `space`, `key`, `when` FROM `").append(base.databaseName).append("`.`index` WHERE `invalidate` = 1").toString();
-            try (Connection connection = base.pool.getConnection() ) {
-                Base.walk(connection, (rs) -> {
+            String scanSQL = new StringBuilder("SELECT `space`, `key`, `when` FROM `").append(dataBase.databaseName).append("`.`index` WHERE `invalidate` = 1").toString();
+            try (Connection connection = dataBase.pool.getConnection() ) {
+                DataBase.walk(connection, (rs) -> {
                     Key key = new Key(rs.getString(1), rs.getString(2));
                     long absolute = rs.getDate(3).getTime();
                     long now = System.currentTimeMillis();
@@ -101,12 +101,12 @@ public class BlockingDataService implements DataService {
 
     @Override
     public void get(Key key, Callback<LocalDocumentChange> callback) {
-        base.transact((connection) -> {
+        dataBase.transact((connection) -> {
             // look up the index to get the id
             LookupResult lookup = lookup(connection, key);
-            String walkRedoSQL = new StringBuilder("SELECT `redo` FROM `").append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id).append(" ORDER BY `seq_begin`").toString();
+            String walkRedoSQL = new StringBuilder("SELECT `redo` FROM `").append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id).append(" ORDER BY `seq_begin`").toString();
             AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
-            Base.walk(connection, (rs) -> {
+            DataBase.walk(connection, (rs) -> {
                 merge.next(rs.getString(1));
             }, walkRedoSQL);
             return new LocalDocumentChange(merge.finish());
@@ -115,10 +115,10 @@ public class BlockingDataService implements DataService {
 
     @Override
     public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-        base.transact((connection) -> {
+        dataBase.transact((connection) -> {
             // build the sql into insert
             String insertIndexSQL = new StringBuilder() //
-                .append("INSERT INTO `").append(base.databaseName).append("`.`index` (") //
+                .append("INSERT INTO `").append(dataBase.databaseName).append("`.`index` (") //
                 .append("`space`, `key`, `head_seq`, `invalidate`, `when`) VALUES (?, ?, ") //
                 .append("'").append(patch.seq).append("', ") //
                 .append("'").append(patch.requiresFutureInvalidation ? "1" : "0").append("', ") //
@@ -133,7 +133,7 @@ public class BlockingDataService implements DataService {
                 statementInsertIndex.execute();
 
                 // insert the delta
-                int parent = Base.getInsertId(statementInsertIndex);
+                int parent = DataBase.getInsertId(statementInsertIndex);
                 insertDelta(connection, parent, patch);
             } finally {
                 statementInsertIndex.close();
@@ -145,7 +145,7 @@ public class BlockingDataService implements DataService {
 
     @Override
     public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-        base.transact((connection) -> {
+        dataBase.transact((connection) -> {
             // read the index
             LookupResult lookup = lookup(connection, key);
             if (lookup.head_seq + 1 != patch.seq) {
@@ -154,12 +154,12 @@ public class BlockingDataService implements DataService {
 
             // update the index
             String updateIndexSQL = new StringBuilder() //
-              .append("UPDATE `").append(base.databaseName).append("`.`index` ") //
+              .append("UPDATE `").append(dataBase.databaseName).append("`.`index` ") //
               .append("SET `head_seq`=").append(patch.seq) //
               .append(", `invalidate`=").append(patch.requiresFutureInvalidation ? 1 : 0) //
               .append(", `when`='").append(whenOf(patch)) //
               .append("' WHERE `id`=").append(lookup.id).toString();
-            Base.execute(connection, updateIndexSQL);
+            DataBase.execute(connection, updateIndexSQL);
 
             // insert delta
             insertDelta(connection, lookup.id, patch);
@@ -169,32 +169,32 @@ public class BlockingDataService implements DataService {
 
     @Override
     public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
-        base.transact((connection) -> {
+        dataBase.transact((connection) -> {
             // look up the index to get the id
             LookupResult lookup = lookup(connection, key);
 
             if (method == ComputeMethod.Patch) {
                 String walkUndoSQL = new StringBuilder("SELECT `redo` FROM `") //
-                        .append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                        .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
                         .append(" AND `seq_begin` > ").append(seq) //
                         .append(" ORDER BY `seq_begin` DESC").toString();
                 AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
-                Base.walk(connection, (rs) -> {
+                DataBase.walk(connection, (rs) -> {
                     redo.next(rs.getString(1));
                 }, walkUndoSQL);
                 if (redo.empty()) {
-                    throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_REWIND);
+                    throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_PATCH);
                 }
                 return new LocalDocumentChange(redo.finish());
             }
 
             if (method == ComputeMethod.Rewind) {
                 String walkUndoSQL = new StringBuilder("SELECT `undo` FROM `") //
-                        .append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                        .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
                         .append(" AND `seq_begin` >= ").append(seq) //
                         .append(" ORDER BY `seq_begin` DESC").toString();
                 AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
-                Base.walk(connection, (rs) -> {
+                DataBase.walk(connection, (rs) -> {
                     undo.next(rs.getString(1));
                 }, walkUndoSQL);
                 if (undo.empty()) {
@@ -205,18 +205,18 @@ public class BlockingDataService implements DataService {
 
             if (method == ComputeMethod.Unsend) {
                 String getUndoSQL = new StringBuilder("SELECT `undo` FROM `") //
-                        .append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                        .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
                         .append(" AND `seq_begin` = ").append(seq) //
                         .append(" AND `seq_end` = ").append(seq).toString();
 
                 String walkRedoSQL = new StringBuilder("SELECT `redo` FROM `") //
-                        .append(base.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                        .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
                         .append(" AND `seq_begin` > ").append(seq) //
                         .append(" ORDER BY `seq_begin` ASC").toString();
                 AtomicReference<AutoMorphicAccumulator<String>> unsend = new AtomicReference<>();
-                int count = Base.walk(connection, (rs1) -> {
+                int count = DataBase.walk(connection, (rs1) -> {
                     unsend.set(JsonAlgebra.rollUndoForwardAccumulator(rs1.getString(1)));
-                    Base.walk(connection, (rs2) -> {
+                    DataBase.walk(connection, (rs2) -> {
                         unsend.get().next(rs2.getString(1));
                     }, walkRedoSQL);
                 }, getUndoSQL);
@@ -231,19 +231,19 @@ public class BlockingDataService implements DataService {
 
     @Override
     public void delete(Key key, Callback<Void> callback) {
-        base.transact((connection) -> {
+        dataBase.transact((connection) -> {
             // read the index
             LookupResult lookup = lookup(connection, key);
             // update the index
             String deleteIndexSQL = new StringBuilder() //
-                    .append("DELETE FROM `").append(base.databaseName).append("`.`index` ") //
+                    .append("DELETE FROM `").append(dataBase.databaseName).append("`.`index` ") //
                     .append("WHERE `id`=").append(lookup.id).toString();
-            Base.execute(connection, deleteIndexSQL);
+            DataBase.execute(connection, deleteIndexSQL);
             // build a list of all the history pointers and put them into a garbage collection queue
             String deleteDeltasSQL = new StringBuilder() //
-                    .append("DELETE FROM `").append(base.databaseName).append("`.`deltas` ") //
+                    .append("DELETE FROM `").append(dataBase.databaseName).append("`.`deltas` ") //
                     .append("WHERE `parent`=").append(lookup.id).toString();
-            Base.execute(connection, deleteDeltasSQL);
+            DataBase.execute(connection, deleteDeltasSQL);
             return null;
         }, callback, ErrorCodes.DELETE_FAILURE);
     }

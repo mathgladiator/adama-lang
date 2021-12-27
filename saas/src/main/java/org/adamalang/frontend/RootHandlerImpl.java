@@ -6,7 +6,6 @@ import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.mysql.Base;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
@@ -67,7 +66,7 @@ public class RootHandlerImpl implements RootHandler {
                         KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
                         String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
                         try {
-                            Users.addKey(nexus.base, startRequest.userId, publicKey, new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60));
+                            Users.addKey(nexus.dataBase, startRequest.userId, publicKey, new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60));
                         } catch (Exception ex) {
                             responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_GENERATE_UNKNOWN_EXCEPTION, ex, logger));
                             return;
@@ -85,7 +84,7 @@ public class RootHandlerImpl implements RootHandler {
             public void handle(InitRevokeAllRequest request, SimpleResponder responder) {
                 if (generatedCode.equals(request.code)) {
                     try {
-                        Users.removeAllKeys(nexus.base, startRequest.userId);
+                        Users.removeAllKeys(nexus.dataBase, startRequest.userId);
                     } catch (Exception ex) {
                         responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION, ex, logger));
                         return;
@@ -106,7 +105,7 @@ public class RootHandlerImpl implements RootHandler {
         String authority = UUID.randomUUID().toString();
         try {
             if (request.who.source == AuthenticatedUser.Source.Adama) {
-                Authorities.createAuthority(nexus.base, request.who.id, authority);
+                Authorities.createAuthority(nexus.dataBase, request.who.id, authority);
                 responder.complete(authority);
             } else {
                 responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
@@ -121,7 +120,7 @@ public class RootHandlerImpl implements RootHandler {
         try {
             if (request.who.source == AuthenticatedUser.Source.Adama) {
                 // NOTE: setKeystore validates ownership
-                Authorities.setKeystore(nexus.base, request.who.id, request.authority, request.keyStore.toString());
+                Authorities.setKeystore(nexus.dataBase, request.who.id, request.authority, request.keyStore.toString());
                 responder.complete();
             } else {
                 responder.error(new ErrorCodeException(ErrorCodes.API_SET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
@@ -136,7 +135,7 @@ public class RootHandlerImpl implements RootHandler {
         try {
             if (request.who.source == AuthenticatedUser.Source.Adama) {
                 // NOTE: changeOwner validates ownership
-                Authorities.changeOwner(nexus.base, request.authority, request.who.id, request.userId);
+                Authorities.changeOwner(nexus.dataBase, request.authority, request.who.id, request.userId);
                 responder.complete();
             } else {
                 responder.error(new ErrorCodeException(ErrorCodes.API_TRANSFER_OWNER_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
@@ -150,7 +149,7 @@ public class RootHandlerImpl implements RootHandler {
     public void handle(AuthorityListRequest request, AuthorityListingResponder responder) {
         try {
             if (request.who.source == AuthenticatedUser.Source.Adama) {
-                for (String authority : Authorities.list(nexus.base, request.who.id)) {
+                for (String authority : Authorities.list(nexus.dataBase, request.who.id)) {
                     responder.next(authority);
                 }
                 responder.finish();
@@ -167,7 +166,7 @@ public class RootHandlerImpl implements RootHandler {
         try {
             if (request.who.source == AuthenticatedUser.Source.Adama) {
                 // NOTE: deleteAuthority validates ownership
-                Authorities.deleteAuthority(nexus.base, request.who.id, request.authority);
+                Authorities.deleteAuthority(nexus.dataBase, request.who.id, request.authority);
             } else {
                 responder.error(new ErrorCodeException(ErrorCodes.API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
             }
@@ -179,7 +178,7 @@ public class RootHandlerImpl implements RootHandler {
     @Override
     public void handle(SpaceCreateRequest request, SimpleResponder responder) {
         try {
-            Spaces.createSpace(nexus.base, request.who.id, request.space);
+            Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
             responder.complete();
         } catch (Exception ex) {
             responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex, logger));
@@ -190,7 +189,7 @@ public class RootHandlerImpl implements RootHandler {
     public void handle(SpaceGetRequest request, PlanResponder responder) {
         try {
             if (request.policy.canUserGetPlan(request.who)) {
-                responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.base, request.policy.id)));
+                responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.dataBase, request.policy.id)));
             } else {
                 responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE));
             }
@@ -203,7 +202,7 @@ public class RootHandlerImpl implements RootHandler {
     public void handle(SpaceSetRequest request, SimpleResponder responder) {
         try {
             if (request.policy.canUserSetPlan(request.who)) {
-                Spaces.setPlan(nexus.base, request.policy.id, request.plan.toString());
+                Spaces.setPlan(nexus.dataBase, request.policy.id, request.plan.toString());
                 responder.complete();
             } else {
                 throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
@@ -224,7 +223,7 @@ public class RootHandlerImpl implements RootHandler {
         try {
             Role role = Role.from(request.role);
             if (request.policy.canUserSetRole(request.who)) {
-                Spaces.setRole(nexus.base, request.policy.id, request.userId, role);
+                Spaces.setRole(nexus.dataBase, request.policy.id, request.userId, role);
                 responder.complete();
             } else {
                 throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE);
@@ -238,7 +237,7 @@ public class RootHandlerImpl implements RootHandler {
     public void handle(SpaceOwnerSetRequest request, SimpleResponder responder) {
         try {
             if (request.policy.canUserChangeOwner(request.who)) {
-                Spaces.changePrimaryOwner(nexus.base, request.policy.id, request.policy.owner, request.userId);
+                Spaces.changePrimaryOwner(nexus.dataBase, request.policy.id, request.policy.owner, request.userId);
                 responder.complete();
             } else {
                 throw new ErrorCodeException(ErrorCodes.API_SPACE_CHANGE_OWNER_NO_PERMISSION_TO_EXECUTE);
@@ -260,7 +259,7 @@ public class RootHandlerImpl implements RootHandler {
     public void handle(SpaceListRequest request, SpaceListingResponder responder) {
         try {
             if (request.who.source == AuthenticatedUser.Source.Adama) {
-                for (Spaces.Item item : Spaces.list(nexus.base, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
+                for (Spaces.Item item : Spaces.list(nexus.dataBase, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
                     responder.next(item.name, item.callerRole, item.billing, item.created);
                 }
                 responder.finish();

@@ -2,11 +2,11 @@ package org.adamalang;
 
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.mysql.Base;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.BaseConfig;
-import org.adamalang.mysql.frontend.ManagementInstaller;
+import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.saas.Frontend;
+import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
@@ -18,7 +18,6 @@ import org.junit.Assert;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -32,16 +31,16 @@ public class TestFrontEnd implements AutoCloseable, Email {
     public final ServiceBase frontend;
     public final ConnectionContext context;
     public final ServiceConnection connection;
-    public final ManagementInstaller installer;
+    public final FrontendManagementInstaller installer;
 
     public TestFrontEnd() throws Exception {
         codesSentToEmail = new ConcurrentHashMap<>();
         String config = Files.readString(new File("./test.mysql.json").toPath());
-        Base base = new Base(new BaseConfig(config));
-        this.installer = new ManagementInstaller(base);
+        DataBase dataBase = new DataBase(new BaseConfig(config, "any"));
+        this.installer = new FrontendManagementInstaller(dataBase);
         installer.install();
-        this.nexus = new ExternNexus(this, base);
-        this.frontend = Frontend.makeService(nexus);
+        this.nexus = new ExternNexus(this, dataBase);
+        this.frontend = BootstrapFrontend.make(nexus);
         this.context = new ConnectionContext("home", "ip", "agent");
         connection = this.frontend.establish(context);
         emailLatch = new ConcurrentHashMap<>();
@@ -121,7 +120,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     @Override
     public void close() throws Exception {
         installer.uninstall();
-        nexus.base.close();
+        nexus.dataBase.close();
     }
 
     public Runnable latchOnEmail(String email) {

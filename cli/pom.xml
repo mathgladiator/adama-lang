@@ -21,6 +21,21 @@
             <version>0.2</version>
         </dependency>
         <dependency>
+            <groupId>org.adamalang</groupId>
+            <artifactId>saas</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.adamalang</groupId>
+            <artifactId>apikit</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.adamalang</groupId>
+            <artifactId>lsp</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.30</version>

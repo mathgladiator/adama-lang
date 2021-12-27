@@ -14,9 +14,8 @@ import java.net.Socket;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LanguageServer {
-    public static void main(String[] args) throws Exception {
+    public static void singleThread(int port) throws Exception {
         AtomicInteger classNameId = new AtomicInteger();
-        int port = 2423;
         ServerSocket server = new ServerSocket(port);
         while (true) {
             Socket client = server.accept();

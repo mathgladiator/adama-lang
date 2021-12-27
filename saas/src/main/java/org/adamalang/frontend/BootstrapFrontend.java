@@ -1,4 +1,4 @@
-package org.adamalang.saas;
+package org.adamalang.frontend;
 
 import org.adamalang.api.ConnectionNexus;
 import org.adamalang.api.ConnectionRouter;
@@ -18,9 +18,12 @@ import org.adamalang.web.service.ServiceRunnable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Frontend {
-    public static ServiceBase makeService(ExternNexus extern) throws Exception {
-        // TODO: make multiple of these
+public class BootstrapFrontend {
+
+    // TODO: add config
+    public static ServiceBase make(ExternNexus extern) throws Exception {
+
+        // TODO: make multiple of these, pull nThreads from config
         ExecutorService executor = Executors.newSingleThreadExecutor();
         RootHandlerImpl handler = new RootHandlerImpl(extern);
         SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(Executors.newSingleThreadExecutor(), extern);
@@ -51,15 +54,5 @@ public class Frontend {
                 router.disconnect();
             }
         };
-    }
-
-    public static void execute(ExternNexus extern, String config) throws Exception {
-        WebConfig webConfig = new WebConfig(Json.parseJsonObject(config));
-        ServiceBase serviceBase = makeService(extern);
-        final var runnable = new ServiceRunnable(webConfig, serviceBase);
-        final var thread = new Thread(runnable);
-        thread.start();
-        runnable.waitForReady(1000);
-        thread.join();
     }
 }

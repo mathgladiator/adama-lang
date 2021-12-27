@@ -1,21 +1,21 @@
 package org.adamalang.mysql.frontend;
 
-import org.adamalang.mysql.Base;
+import org.adamalang.mysql.DataBase;
 
 import java.sql.Connection;
 
-public class ManagementInstaller {
-    public final Base base;
+public class FrontendManagementInstaller {
+    public final DataBase dataBase;
 
-    public ManagementInstaller(Base base) {
-        this.base = base;
+    public FrontendManagementInstaller(DataBase dataBase) {
+        this.dataBase = dataBase;
     }
 
     public void install() throws Exception {
-        String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + base.databaseName + "`";
+        String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
 
         String createEmailsTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `" + base.databaseName + "`.`emails` (") //
+            .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`emails` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `email` VARCHAR(128) NOT NULL,") //
             .append("  PRIMARY KEY (`id`),") //
@@ -25,7 +25,7 @@ public class ManagementInstaller {
             .toString();
 
         String createAccessKeysTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `" + base.databaseName + "`.`email_keys` (") //
+            .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`email_keys` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `user` INT(4) UNSIGNED NOT NULL,") //
             .append("  `public_key` TEXT NOT NULL,") //
@@ -38,7 +38,7 @@ public class ManagementInstaller {
             .toString();
 
         String createSpaceTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `" + base.databaseName + "`.`spaces` (") //
+            .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`spaces` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
             .append("  `name` VARCHAR(128) NOT NULL,") //
@@ -54,7 +54,7 @@ public class ManagementInstaller {
             .toString();
 
         String createGrantTableSQL  = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `" + base.databaseName + "`.`grants` (") //
+            .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`grants` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `space` INT(4) UNSIGNED NOT NULL,") //
             .append("  `user` INT(4) UNSIGNED NOT NULL,") //
@@ -66,7 +66,7 @@ public class ManagementInstaller {
             .toString();
 
         String createAuthoritiesTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `" + base.databaseName + "`.`authorities` (") //
+            .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`authorities` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
             .append("  `authority` VARCHAR(64) NOT NULL,") //
@@ -80,28 +80,28 @@ public class ManagementInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
-        Connection connection = base.pool.getConnection();
+        Connection connection = dataBase.pool.getConnection();
         try {
-            Base.execute(connection, createDatabaseSQL);
-            Base.execute(connection, createEmailsTableSQL);
-            Base.execute(connection, createAccessKeysTableSQL);
-            Base.execute(connection, createSpaceTableSQL);
-            Base.execute(connection, createGrantTableSQL);
-            Base.execute(connection, createAuthoritiesTableSQL);
+            DataBase.execute(connection, createDatabaseSQL);
+            DataBase.execute(connection, createEmailsTableSQL);
+            DataBase.execute(connection, createAccessKeysTableSQL);
+            DataBase.execute(connection, createSpaceTableSQL);
+            DataBase.execute(connection, createGrantTableSQL);
+            DataBase.execute(connection, createAuthoritiesTableSQL);
         } finally {
             connection.close();
         }
     }
 
     public void uninstall() throws Exception {
-        Connection connection = base.pool.getConnection();
+        Connection connection = dataBase.pool.getConnection();
         try {
-            Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`emails`;").toString());
-            Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`email_keys`;").toString());
-            Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`spaces`;").toString());
-            Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`grants`;").toString());
-            Base.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(base.databaseName).append("`.`authorities`;").toString());
-            Base.execute(connection, new StringBuilder("DROP DATABASE `").append(base.databaseName).append("`;").toString());
+            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`emails`;").toString());
+            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`email_keys`;").toString());
+            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`spaces`;").toString());
+            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`grants`;").toString());
+            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`authorities`;").toString());
+            DataBase.execute(connection, new StringBuilder("DROP DATABASE `").append(dataBase.databaseName).append("`;").toString());
         } finally {
             connection.close();
         }

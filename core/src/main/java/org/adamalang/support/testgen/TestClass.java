@@ -46,7 +46,7 @@ public class TestClass {
     outputFile.append(String.format("public class Generated%sTests extends GeneratedBase {\n", clazz));
   }
 
-  public void addTest(final TestFile test) throws IOException {
+  public boolean addTest(final TestFile test) throws IOException {
     testId++;
     final var varName = test.name + "_" + testId;
     outputFile.append("  private String cached_" + varName + " = null;\n");
@@ -107,6 +107,7 @@ public class TestClass {
     }
     outputFile.append("    assertStable(live, gold);\n");
     outputFile.append("  }\n");
+    return gold.endsWith("Success\n");
   }
 
   public void finish(final File root) throws IOException {

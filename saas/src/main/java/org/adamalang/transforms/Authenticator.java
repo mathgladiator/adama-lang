@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.frontend.Authorities;
@@ -22,8 +21,6 @@ import java.util.Base64;
 import java.util.regex.Pattern;
 
 import org.adamalang.web.io.Json;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Authenticator implements AsyncTransform<String, AuthenticatedUser> {
     public final ExternNexus nexus;
@@ -43,7 +40,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
             ParsedToken parsedToken = new ParsedToken(identity);
             if ("adama".equals(parsedToken.iss)) {
                 int userId = Integer.parseInt(parsedToken.sub);
-                for (String publicKey64 : Users.listKeys(nexus.base, userId)) {
+                for (String publicKey64 : Users.listKeys(nexus.dataBase, userId)) {
                     byte[] publicKey = Base64.getDecoder().decode(publicKey64);
                     X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
                     KeyFactory kf = KeyFactory.getInstance("EC");
@@ -57,7 +54,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
                 }
                 callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
             } else {
-                ObjectNode keystore = Json.parseJsonObject(Authorities.getKeystoreInternal(nexus.base, parsedToken.iss));
+                ObjectNode keystore = Json.parseJsonObject(Authorities.getKeystoreInternal(nexus.dataBase, parsedToken.iss));
                 // TODO: cache the lookup, parsing, teardown
                 // TODO: decode the authority
                 // TODO: for each public key, test the given token
