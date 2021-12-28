@@ -1,35 +1,59 @@
 package org.adamalang.gossip;
 
+import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.TimeSource;
 import org.junit.Test;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class EngineTests {
     @Test
     public void convergence10() throws Exception {
         ArrayList<Engine> engines = new ArrayList<>();
-        TimeSource time = new TimeSource() {
-            @Override
-            public long now() {
-                return System.currentTimeMillis();
-            }
-        };
         MockMetrics metrics = new MockMetrics();
 
         HashSet<String> initial = new HashSet<>();
         initial.add("127.0.0.1:20000");
         initial.add("127.0.0.1:20009");
+        MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
 
         for (int k = 0; k < 10; k++) {
-            Engine engine = new Engine(time, initial, "127.0.0.1", 20000 + k, metrics);
+            Engine engine = new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, metrics);
             engines.add(engine);
             engine.start();
         }
-        Thread.sleep(5000);
+        for (int k = 0; k < 25; k++) {
+            HashSet<String> versions = new HashSet<>();
+            CountDownLatch latch = new CountDownLatch(engines.size());
+            for (Engine engine : engines) {
+                engine.hash((hash) -> {
+                    versions.add(hash);
+                    latch.countDown();
+                });
+            }
+            latch.await(5000, TimeUnit.MILLISECONDS);
+            Thread.sleep(1000);
+            System.err.println("ROUND:" + versions.size());
+        }
         for (Engine engine : engines) {
             engine.close();
         }
         // TODO: test that all the engines have the same hash
+    }
+
+    private String prefixForLocalhost() {
+        for (String search : new String[] { "./", "../", "./grpc/"}) {
+            String candidate = search + "localhost.identity";
+            File file = new File(candidate);
+            if (file.exists()) {
+                return candidate;
+            }
+        }
+        throw new NullPointerException("could not find identity.localhost");
     }
 }

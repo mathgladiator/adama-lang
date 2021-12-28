@@ -38,7 +38,7 @@ public class InstanceSetChainTests extends CommonTest {
         Assert.assertEquals("1B2M2Y8AsgTpgAmY7PhCfg==", chain.current().hash());
         time.currentTime = 10000;
         chain.ingest(ENDPOINTS(A(), B()), Collections.emptySet());
-        chain.current().ingest(counters(1000, 1000), time.now());
+        chain.current().ingest(counters(1000, 1000), time.nowMilliseconds());
         Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
         time.currentTime = 25000;
         Assert.assertEquals(10000, chain.scan());
@@ -59,7 +59,7 @@ public class InstanceSetChainTests extends CommonTest {
         chain.ingest(ENDPOINTS(A(), B()), Collections.emptySet());
         time.currentTime = 10000;
         Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
-        chain.current().ingest(counters(1000, 1000), time.now());
+        chain.current().ingest(counters(1000, 1000), time.nowMilliseconds());
         Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
         time.currentTime = 15000;
         chain.ingest(ENDPOINTS(), Collections.singleton("id-a"));

@@ -1,5 +1,6 @@
 package org.adamalang.gossip;
 
+import org.adamalang.common.TimeSource;
 import org.adamalang.gossip.proto.Endpoint;
 
 import java.util.*;
@@ -16,7 +17,7 @@ public class InstanceSetChain {
         this.time = time;
         this.primary = new HashMap<>();
         this.history = new GarbageMap<>();
-        this.current = new InstanceSet(new TreeSet<>(), time.now());
+        this.current = new InstanceSet(new TreeSet<>(), time.nowMilliseconds());
         this.recentlyLearnedAbout = new GarbageMap<>();
         this.recentlyDeleted = new GarbageMap<>();
     }
@@ -42,7 +43,7 @@ public class InstanceSetChain {
     }
 
     public long now() {
-        return time.now();
+        return time.nowMilliseconds();
     }
 
     public Collection<Endpoint> missing(InstanceSet set) {
@@ -56,14 +57,14 @@ public class InstanceSetChain {
     public Runnable pick(String id) {
         Instance instance = primary.get(id);
         if (instance != null) {
-            return () -> instance.bump(time.now());
+            return () -> instance.bump(time.nowMilliseconds());
         } else {
             return null;
         }
     }
 
     public long scan() {
-        long now = time.now();
+        long now = time.nowMilliseconds();
         long min = now;
         TreeSet<Instance> clone = null;
         Iterator<Map.Entry<String, Instance>> iterator = primary.entrySet().iterator();
@@ -90,14 +91,14 @@ public class InstanceSetChain {
     }
 
     public void gc() {
-        long now = time.now();
+        long now = time.nowMilliseconds();
         history.gc(now);
         recentlyDeleted.gc(now);
         recentlyLearnedAbout.gc(now);
     }
 
     public void ingest(Collection<Endpoint> endpoints, Set<String> deletes) {
-        long now = time.now();
+        long now = time.nowMilliseconds();
 
         TreeSet<Instance> clone = null;
         for (Endpoint ep : endpoints) {
