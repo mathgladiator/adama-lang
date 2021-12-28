@@ -7,13 +7,8 @@ option java_outer_classname = "GossipService";
 package gossip_service;
 
 service Gossip {
-  /** bootstrap the host */
-  rpc Bootstrap(BootstrapRequest) returns (BootstrapResponse) {}
-
   /** engage in a gossipy conversation */
   rpc Exchange(stream GossipForward) returns (stream GossipReverse) {}
-
-  rpc Optimistic(Endpoint) returns (Endpoint) {}
 }
 
 message Endpoint {
@@ -22,14 +17,6 @@ message Endpoint {
   int32 port = 3;
   int32 counter = 4;
   string role = 5;
-}
-
-message BootstrapRequest {
-  Endpoint endpoint = 1;
-}
-
-message BootstrapResponse {
-  repeated Endpoint endpoints = 1;
 }
 
 // client initiates gossip by sending its hash along with an optimistic list of endpoints

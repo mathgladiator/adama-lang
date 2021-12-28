@@ -68,4 +68,14 @@ public class InstanceSet {
     public String hash() {
         return hash;
     }
+
+    public ArrayList<String> targetsFor(String role) {
+        ArrayList<String> targets = new ArrayList<>();
+        for(Instance instance : instances) {
+            if (role.equals(instance.role())) {
+                targets.add(instance.target());
+            }
+        }
+        return targets;
+    }
 }

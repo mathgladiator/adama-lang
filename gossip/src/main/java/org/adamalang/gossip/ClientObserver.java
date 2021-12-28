@@ -14,14 +14,19 @@ public class ClientObserver implements StreamObserver<GossipReverse> {
     private final Metrics metrics;
     private StreamObserver<GossipForward> forward;
     private InstanceSet current;
+    private boolean done;
 
     public ClientObserver(Executor executor, InstanceSetChain chain, Metrics metrics) {
         this.executor = executor;
         this.chain = chain;
         this.metrics = metrics;
         this.forward = null;
+        this.done = false;
     }
 
+    public boolean isDone() {
+        return done;
+    }
 
     public void initiate(StreamObserver<GossipForward> forward) {
         this.forward = forward;
@@ -42,7 +47,6 @@ public class ClientObserver implements StreamObserver<GossipReverse> {
                     current = chain.find(reverse.getHash());
                     if (current != null) {
                         forward.onNext(GossipForward.newBuilder().setFoundReverse(ReverseHashFound.newBuilder().addAllCounters(current.counters()).addAllMissingEndpoints(chain.missing(current)).build()).build());
-                        forward.onCompleted();
                     } else {
                         forward.onNext(GossipForward.newBuilder().setSlowGossip(SlowGossip.newBuilder().addAllAllEndpoints(chain.all()).build()).build());
                     }
@@ -83,5 +87,6 @@ public class ClientObserver implements StreamObserver<GossipReverse> {
 
     @Override
     public void onCompleted() {
+        done = true;
     }
 }

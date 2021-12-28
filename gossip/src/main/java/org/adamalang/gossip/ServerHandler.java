@@ -8,29 +8,26 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.TreeSet;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerHandler extends GossipGrpc.GossipImplBase {
     private final Executor executor;
     private final InstanceSetChain chain;
     private final Metrics metrics;
+    private AtomicBoolean alive;
 
-    public ServerHandler(Executor executor, InstanceSetChain chain, Metrics metrics) {
+    public ServerHandler(Executor executor, InstanceSetChain chain, AtomicBoolean alive, Metrics metrics) {
         this.executor = executor;
         this.chain = chain;
         this.metrics = metrics;
-    }
-
-    @Override
-    public void bootstrap(BootstrapRequest request, StreamObserver<BootstrapResponse> responseObserver) {
-        executor.execute(() -> {
-            chain.ingest(Collections.singleton(request.getEndpoint()), Collections.emptySet());
-            responseObserver.onNext(BootstrapResponse.newBuilder().addAllEndpoints(chain.all()).build());
-            responseObserver.onCompleted();
-        });
+        this.alive = alive;
     }
 
     @Override
     public StreamObserver<GossipForward> exchange(StreamObserver<GossipReverse> responseObserver) {
+        if (!alive.get()) {
+            responseObserver.onError(new Exception("shutting-down"));
+        }
         return new StreamObserver<>() {
             private InstanceSet set = null;
 
@@ -57,7 +54,6 @@ public class ServerHandler extends GossipGrpc.GossipImplBase {
                             set.ingest(reverseHashFound.getCountersList(), chain.now());
                             chain.ingest(reverseHashFound.getMissingEndpointsList(), Collections.emptySet());
                             responseObserver.onNext(GossipReverse.newBuilder().setTurnTables(ReverseHashFound.newBuilder().addAllCounters(set.counters()).addAllMissingEndpoints(chain.missing(set)).build()).build());
-                            responseObserver.onCompleted();
                             return;
                         }
                         case QUICK_GOSSIP: {

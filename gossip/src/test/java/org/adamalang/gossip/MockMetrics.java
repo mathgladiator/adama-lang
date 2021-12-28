@@ -10,50 +10,54 @@ public class MockMetrics implements Metrics {
         this.seq = new StringBuilder();
     }
 
+    public synchronized void dump() {
+        System.err.println(seq);
+    }
+
     @Override
-    public void bump_sad_return() {
+    public synchronized void bump_sad_return() {
         seq.append("[SR]");
     }
 
     @Override
-    public void bump_complement() {
+    public synchronized void bump_complement() {
         seq.append("[COMP]");
     }
 
     @Override
-    public void bump_optimistic_return() {
+    public synchronized void bump_optimistic_return() {
         seq.append("[OPRET]");
     }
 
     @Override
-    public void bump_turn_tables() {
+    public synchronized void bump_turn_tables() {
         seq.append("[TT]");
     }
 
     @Override
-    public void bump_start() {
+    public synchronized void bump_start() {
         seq.append("[BS]");
     }
 
     @Override
-    public void bump_found_reverse() {
+    public synchronized void bump_found_reverse() {
         seq.append("[FR]");
     }
 
     @Override
-    public void bump_quick_gossip() {
+    public synchronized void bump_quick_gossip() {
         seq.append("[QG]");
     }
 
     @Override
-    public void bump_slow_gossip() {
+    public synchronized void bump_slow_gossip() {
         seq.append("[SG]");
     }
 
     @Override
     public void log_error(Throwable cause) {
         seq.append("[LOG-ERROR]");
-        cause.printStackTrace();
+        // cause.printStackTrace();
     }
 
     public void assertFlow(String expected) {

@@ -4,12 +4,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientServerExchangeTests extends CommonTest {
 
     private void exchange(InstanceSetChain X, InstanceSetChain Y, Metrics M) {
         ClientObserver observer = new ClientObserver((r) -> r.run(), X, M);
-        ServerHandler serverHandler = new ServerHandler((r) -> r.run(), Y, M);
+        ServerHandler serverHandler = new ServerHandler((r) -> r.run(), Y, new AtomicBoolean(true), M);
         observer.initiate(serverHandler.exchange(observer));
     }
 
@@ -19,7 +20,7 @@ public class ClientServerExchangeTests extends CommonTest {
         MockTime timeX = new MockTime();
         InstanceSetChain X = new InstanceSetChain(timeX);
         ClientObserver observer = new ClientObserver((r) -> r.run(), X, metrics);
-        ServerHandler serverHandler = new ServerHandler((r) -> r.run(), X, metrics);
+        ServerHandler serverHandler = new ServerHandler((r) -> r.run(), X, new AtomicBoolean(true), metrics);
         observer.initiate(serverHandler.exchange(observer));
         serverHandler.exchange(observer).onError(new RuntimeException());
         observer.onError(new RuntimeException());

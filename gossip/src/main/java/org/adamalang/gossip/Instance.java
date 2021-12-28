@@ -21,6 +21,14 @@ public class Instance implements Comparable<Instance> {
         this.witness = now;
     }
 
+    public String role() {
+        return role;
+    }
+
+    public String target() {
+        return ip + ":" + port;
+    }
+
     public int counter() {
         return this.counter;
     }
