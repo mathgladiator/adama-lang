@@ -1,7 +1,7 @@
 package org.adamalang.web.io;
 
-import org.adamalang.runtime.contracts.Callback;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 
 /** this wraps a callback to call into a BulkLatch. This acts as a ref which is triggers a cascade on the bulk latch */
 public class LatchRefCallback<T> implements Callback<T> {

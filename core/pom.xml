@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>errors</artifactId>
+            <artifactId>common</artifactId>
             <version>0.2</version>
         </dependency>
         <dependency>

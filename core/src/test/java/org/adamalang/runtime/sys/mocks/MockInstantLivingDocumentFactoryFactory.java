@@ -1,9 +1,9 @@
 package org.adamalang.runtime.sys.mocks;
 
-import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 public class MockInstantLivingDocumentFactoryFactory implements LivingDocumentFactoryFactory {

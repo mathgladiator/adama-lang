@@ -2,7 +2,7 @@ package org.adamalang.grpc.client.contracts;
 
 import io.grpc.stub.StreamObserver;
 import org.adamalang.grpc.proto.CreateResponse;
-import org.adamalang.runtime.contracts.ExceptionLogger;
+import org.adamalang.common.ExceptionLogger;
 import org.junit.Assert;
 import org.junit.Test;
 

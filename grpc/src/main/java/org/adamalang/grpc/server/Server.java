@@ -3,9 +3,9 @@ package org.adamalang.grpc.server;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
-import org.adamalang.grpc.common.ExceptionRunnable;
-import org.adamalang.grpc.common.ExceptionSupplier;
-import org.adamalang.grpc.common.MachineIdentity;
+import org.adamalang.common.ExceptionRunnable;
+import org.adamalang.common.ExceptionSupplier;
+import org.adamalang.common.MachineIdentity;
 import org.adamalang.runtime.sys.CoreService;
 
 import java.io.IOException;

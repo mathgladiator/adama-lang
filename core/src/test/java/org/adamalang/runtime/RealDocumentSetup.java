@@ -9,8 +9,9 @@
 */
 package org.adamalang.runtime;
 
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.contracts.*;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.mocks.MockTime;

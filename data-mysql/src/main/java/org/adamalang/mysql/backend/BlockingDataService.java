@@ -1,9 +1,10 @@
 package org.adamalang.mysql.backend;
 
 import org.adamalang.ErrorCodes;
+import org.adamalang.common.Callback;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.contracts.*;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
 
 import java.sql.*;

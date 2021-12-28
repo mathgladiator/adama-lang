@@ -9,7 +9,7 @@
 */
 package org.adamalang.runtime.mocks;
 
-import org.adamalang.runtime.contracts.TimeSource;
+import org.adamalang.common.TimeSource;
 
 public class MockTime implements TimeSource {
   public long time;

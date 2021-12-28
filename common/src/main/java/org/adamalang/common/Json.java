@@ -7,8 +7,9 @@
  * 
  * (c) 2020 - 2021 by Jeffrey M. Barber (http://jeffrey.io)
 */
-package org.adamalang.web.io;
+package org.adamalang.common;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -32,5 +33,13 @@ public class Json {
     final var node = MAPPER.readTree(json);
     if (node instanceof ObjectNode) { return (ObjectNode) node; }
     throw new Exception("given json is not an ObjectNode at root");
+  }
+
+  public static String readString(ObjectNode tree, String field) {
+    JsonNode node = tree.get(field);
+    if (node == null || node.isNull()) {
+      return null;
+    }
+    return node.textValue();
   }
 }

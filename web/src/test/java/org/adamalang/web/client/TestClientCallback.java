@@ -11,7 +11,7 @@ package org.adamalang.web.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.web.io.Json;
+import org.adamalang.common.Json;
 import org.junit.Assert;
 
 import java.util.ArrayList;

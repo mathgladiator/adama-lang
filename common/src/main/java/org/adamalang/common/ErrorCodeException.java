@@ -7,9 +7,7 @@
  * 
  * (c) 2020 - 2021 by Jeffrey M. Barber (http://jeffrey.io)
 */
-package org.adamalang.runtime.exceptions;
-
-import org.adamalang.runtime.contracts.ExceptionLogger;
+package org.adamalang.common;
 
 /** an error happened related to an error code that we can present to the public */
 public class ErrorCodeException extends Exception {

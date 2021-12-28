@@ -1,7 +1,7 @@
 package org.adamalang.mysql.mocks;
 
-import org.adamalang.runtime.contracts.Callback;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 
 public class SimpleMockCallback implements Callback<Void> {

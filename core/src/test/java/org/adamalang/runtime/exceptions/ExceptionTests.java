@@ -9,7 +9,8 @@
 */
 package org.adamalang.runtime.exceptions;
 
-import org.adamalang.runtime.contracts.ExceptionLogger;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;

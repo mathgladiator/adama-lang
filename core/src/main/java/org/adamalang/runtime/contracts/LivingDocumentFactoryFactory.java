@@ -9,6 +9,7 @@
 */
 package org.adamalang.runtime.contracts;
 
+import org.adamalang.common.Callback;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 /** This represents where scripts live such that deployments can pull versions based on the key */

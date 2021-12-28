@@ -10,10 +10,10 @@ import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
-import org.adamalang.runtime.contracts.ExceptionLogger;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.transforms.results.AuthenticatedUser;
-import org.adamalang.web.io.Json;
+import org.adamalang.common.Json;
 
 import java.security.KeyPair;
 import java.security.SecureRandom;

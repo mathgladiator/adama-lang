@@ -1,6 +1,6 @@
 package org.adamalang.extern;
 
-import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.natives.NtAsset;
 
 import java.io.File;

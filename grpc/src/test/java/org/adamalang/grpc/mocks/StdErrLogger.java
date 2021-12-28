@@ -1,6 +1,6 @@
 package org.adamalang.grpc.mocks;
 
-import org.adamalang.runtime.contracts.ExceptionLogger;
+import org.adamalang.common.ExceptionLogger;
 
 public class StdErrLogger implements ExceptionLogger {
     @Override

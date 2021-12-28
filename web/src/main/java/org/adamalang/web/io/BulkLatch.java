@@ -1,7 +1,7 @@
 package org.adamalang.web.io;
 
-import org.adamalang.runtime.contracts.Callback;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;

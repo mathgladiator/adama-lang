@@ -2,10 +2,10 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.contracts.ActiveKeyStream;
-import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;

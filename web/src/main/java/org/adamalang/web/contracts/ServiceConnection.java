@@ -1,6 +1,5 @@
 package org.adamalang.web.contracts;
 
-import org.adamalang.runtime.exceptions.ErrorCodeException;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 

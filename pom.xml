@@ -27,6 +27,7 @@
         <module>saas</module>
         <module>errors</module>
         <module>gossip</module>
+        <module>common</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

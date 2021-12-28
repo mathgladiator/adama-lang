@@ -9,7 +9,7 @@
 */
 package org.adamalang.translator.jvm;
 
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 

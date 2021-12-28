@@ -1,11 +1,11 @@
-package org.adamalang.grpc.common;
+package org.adamalang.common;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 public class ExceptionRunnableTests {
     @Test
-    public void coverage() {
+    public void coverageSad() {
         ExceptionRunnable runnable = new ExceptionRunnable() {
             @Override
             public void run() throws Exception {
@@ -18,5 +18,15 @@ public class ExceptionRunnableTests {
             Assert.fail();
         } catch (RuntimeException re) {
         }
+    }
+
+    @Test
+    public void coverageHappy() {
+        ExceptionRunnable runnable = new ExceptionRunnable() {
+            @Override
+            public void run() throws Exception {
+            }
+        };
+        ExceptionRunnable.TO_RUNTIME(runnable).run();
     }
 }

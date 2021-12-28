@@ -1,6 +1,6 @@
 package org.adamalang.runtime.sys;
 
-import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;

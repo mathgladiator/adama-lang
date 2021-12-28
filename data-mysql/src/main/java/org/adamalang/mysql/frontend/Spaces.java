@@ -2,7 +2,7 @@ package org.adamalang.mysql.frontend;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package org.adamalang.runtime.contracts;
 
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 
 /** When a process starts, Adama needs to pull from the data store all keys which may have a temporal state machine */
 public interface ActiveKeyStream {

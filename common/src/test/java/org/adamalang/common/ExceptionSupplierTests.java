@@ -1,5 +1,6 @@
-package org.adamalang.grpc.common;
+package org.adamalang.common;
 
+import org.adamalang.common.ExceptionSupplier;
 import org.junit.Assert;
 import org.junit.Test;
 

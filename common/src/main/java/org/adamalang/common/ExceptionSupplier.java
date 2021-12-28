@@ -1,4 +1,4 @@
-package org.adamalang.grpc.common;
+package org.adamalang.common;
 
 import java.util.function.Supplier;
 

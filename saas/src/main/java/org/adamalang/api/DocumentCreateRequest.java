@@ -1,8 +1,8 @@
 package org.adamalang.api;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.contracts.Callback;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateKey;

@@ -1,18 +1,15 @@
 package org.adamalang.grpc;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import org.adamalang.grpc.common.MachineIdentity;
+import org.adamalang.common.MachineIdentity;
 import org.adamalang.grpc.server.Server;
-import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
-import org.adamalang.runtime.contracts.TimeSource;
+import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.translator.env.CompilerOptions;
@@ -22,12 +19,10 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
-import org.checkerframework.checker.nullness.compatqual.NullableDecl;
-import org.junit.Assert;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestBed implements AutoCloseable {
     public final ScheduledExecutorService clientExecutor;
@@ -92,9 +87,19 @@ public class TestBed implements AutoCloseable {
                 new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
                 TimeSource.REAL_TIME, 2);
 
-        this.identity = MachineIdentity.fromFile("localhost.identity");
+        this.identity = MachineIdentity.fromFile(prefixForLocalhost());
         this.server = new Server(identity, service, port);
+    }
 
+    private String prefixForLocalhost() {
+        for (String search : new String[] { "./", "../", "./grpc/"}) {
+            String candidate = search + "localhost.identity";
+            File file = new File(candidate);
+            if (file.exists()) {
+                return candidate;
+            }
+        }
+        throw new NullPointerException("could not find identity.localhost");
     }
 
     public void startServer() throws Exception {

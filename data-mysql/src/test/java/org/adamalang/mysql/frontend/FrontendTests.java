@@ -3,7 +3,7 @@ package org.adamalang.mysql.frontend;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.BaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 

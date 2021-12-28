@@ -9,6 +9,7 @@
 */
 package org.adamalang.runtime.contracts;
 
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.natives.NtClient;
 
 /** the contract for the data service */

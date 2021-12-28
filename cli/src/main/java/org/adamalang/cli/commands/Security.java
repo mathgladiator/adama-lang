@@ -2,7 +2,7 @@ package org.adamalang.cli.commands;
 
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
-import org.adamalang.grpc.common.MachineIdentity;
+import org.adamalang.common.MachineIdentity;
 
 import java.io.File;
 import java.nio.file.Files;

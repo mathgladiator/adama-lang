@@ -2,7 +2,7 @@ package org.adamalang.mysql.mocks;
 
 import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.Key;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 
 import java.util.HashMap;

@@ -1,6 +1,6 @@
 package org.adamalang.runtime.contracts;
 
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.sys.CoreStream;
 
 /** This is like a callback, but for an infinite stream. */

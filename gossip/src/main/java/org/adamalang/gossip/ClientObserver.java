@@ -1,6 +1,5 @@
 package org.adamalang.gossip;
 
-import com.google.protobuf.ProtocolStringList;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.gossip.proto.*;
 

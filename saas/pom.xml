@@ -13,6 +13,11 @@
     <dependencies>
         <dependency>
             <groupId>org.adamalang</groupId>
+            <artifactId>common</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.adamalang</groupId>
             <artifactId>web</artifactId>
             <version>0.2</version>
         </dependency>

@@ -1,6 +1,6 @@
 package org.adamalang.mysql.contracts;
 
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 
 import java.sql.Connection;
 import java.sql.SQLException;

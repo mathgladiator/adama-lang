@@ -10,7 +10,7 @@
 package org.adamalang.web.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.web.io.Json;
+import org.adamalang.common.Json;
 import org.junit.Assert;
 import org.junit.Test;
 

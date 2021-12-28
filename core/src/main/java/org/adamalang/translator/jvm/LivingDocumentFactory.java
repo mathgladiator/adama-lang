@@ -21,7 +21,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.runtime.natives.NtCreateContext;
 import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.contracts.DocumentMonitor;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;

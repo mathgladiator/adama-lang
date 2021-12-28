@@ -1,7 +1,7 @@
 package org.adamalang.web.io;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.ErrorCodes;
 
 /** a thin wrapper for easy access to a JSON request */

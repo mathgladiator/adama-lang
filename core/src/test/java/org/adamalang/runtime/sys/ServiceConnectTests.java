@@ -1,7 +1,8 @@
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.LivingDocumentTests;
-import org.adamalang.runtime.RealDocumentSetup;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockTime;

@@ -7,7 +7,7 @@
  * 
  * (c) 2020 - 2021 by Jeffrey M. Barber (http://jeffrey.io)
 */
-package org.adamalang.runtime.contracts;
+package org.adamalang.common;
 
 /** time is not a function, so we make it a function */
 public interface TimeSource {

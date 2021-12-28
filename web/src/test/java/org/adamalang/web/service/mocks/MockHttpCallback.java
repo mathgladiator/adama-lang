@@ -11,8 +11,8 @@ package org.adamalang.web.service.mocks;
 
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import org.adamalang.runtime.contracts.Callback;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 
 import java.util.concurrent.CountDownLatch;

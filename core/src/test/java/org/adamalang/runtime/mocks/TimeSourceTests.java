@@ -9,7 +9,7 @@
 */
 package org.adamalang.runtime.mocks;
 
-import org.adamalang.runtime.contracts.TimeSource;
+import org.adamalang.common.TimeSource;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,6 +1,6 @@
 package org.adamalang.web.io;
 
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 
 /** a simple interface for responding to JsonRequest */
 public interface JsonResponder {

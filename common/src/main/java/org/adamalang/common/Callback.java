@@ -7,9 +7,7 @@
  * 
  * (c) 2020 - 2021 by Jeffrey M. Barber (http://jeffrey.io)
 */
-package org.adamalang.runtime.contracts;
-
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+package org.adamalang.common;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;

@@ -1,8 +1,7 @@
 package org.adamalang.runtime.sys.mocks;
 
 import org.adamalang.runtime.contracts.Streamback;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
-import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.sys.CoreStream;
 import org.junit.Assert;
 

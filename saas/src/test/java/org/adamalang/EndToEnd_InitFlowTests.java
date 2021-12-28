@@ -1,6 +1,6 @@
 package org.adamalang;
 
-import org.adamalang.web.io.Json;
+import org.adamalang.common.Json;
 import org.junit.Assert;
 import org.junit.Test;
 

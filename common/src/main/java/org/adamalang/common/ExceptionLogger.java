@@ -1,4 +1,4 @@
-package org.adamalang.runtime.contracts;
+package org.adamalang.common;
 
 /** allows exceptions to be monitored externally */
 public interface ExceptionLogger {

@@ -1,6 +1,6 @@
 package org.adamalang.validators;
 
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 
 public class ValidateKey {
     public static void validate(String key) throws ErrorCodeException {

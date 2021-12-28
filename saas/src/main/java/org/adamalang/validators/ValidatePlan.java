@@ -1,9 +1,9 @@
 package org.adamalang.validators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.contracts.ExceptionLogger;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.deploy.DeploymentPlan;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 
 public class ValidatePlan {
     public static void validate(ObjectNode node) throws ErrorCodeException {

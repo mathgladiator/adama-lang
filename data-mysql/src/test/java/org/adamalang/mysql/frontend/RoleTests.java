@@ -1,6 +1,6 @@
 package org.adamalang.mysql.frontend;
 
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 

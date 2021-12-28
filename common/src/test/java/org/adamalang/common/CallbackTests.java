@@ -7,9 +7,10 @@
  * 
  * (c) 2020 - 2021 by Jeffrey M. Barber (http://jeffrey.io)
 */
-package org.adamalang.runtime.contracts;
+package org.adamalang.common;
 
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 

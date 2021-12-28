@@ -1,6 +1,6 @@
 package org.adamalang.web.io;
 
-import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.common.Callback;
 
 /** An AsyncTransform transforms an input into an output over time */
 

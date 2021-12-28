@@ -12,13 +12,12 @@ package org.adamalang.support.testgen;
 import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.sys.DurableLivingDocument;
-import org.adamalang.runtime.contracts.Callback;
+import org.adamalang.common.Callback;
 import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.exceptions.ErrorCodeException;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.json.JsonAlgebra;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
-import org.adamalang.runtime.natives.NtClient;
 
 import java.util.HashMap;
 import java.util.HashSet;
