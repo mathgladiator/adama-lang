@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.adamalang.gossip.proto";
+option java_outer_classname = "GossipService";
+
+package gossip_service;
+
+service Gossip {
+  /** bootstrap the host */
+  rpc Bootstrap(BootstrapRequest) returns (BootstrapResponse) {}
+
+  /** engage in a gossipy conversation */
+  rpc Exchange(stream GossipForward) returns (stream GossipReverse) {}
+
+  rpc Optimistic(Endpoint) returns (Endpoint) {}
+}
+
+message Endpoint {
+  string id = 1;
+  string ip = 2;
+  int32 port = 3;
+  int32 counter = 4;
+  string role = 5;
+}
+
+message BootstrapRequest {
+  Endpoint endpoint = 1;
+}
+
+message BootstrapResponse {
+  repeated Endpoint endpoints = 1;
+}
+
+// client initiates gossip by sending its hash along with an optimistic list of endpoints
+message BeginGossip {
+  string hash = 1;
+  repeated Endpoint recent_endpoints = 2;
+}
+
+// server found the hash and knows how to respond to a quick gossip
+message HashFoundRequestForwardQuickGossip {
+  repeated int32 counters = 1;
+  repeated Endpoint recent_endpoints = 2;
+}
+
+// server found the hash or client found the reverse hash
+message ForwardQuickGossip {
+  repeated int32 counters = 1;
+}
+
+// server couldn't find hash, so it sends its recent endpoints along with its hash
+message HashNotFoundReverseConversation {
+  string hash = 1;
+  repeated Endpoint recent_endpoints = 2;
+}
+
+// client is learning that a hash wasn't found, but it found the related hash
+message ReverseHashFound {
+  repeated int32 counters = 1;
+  repeated Endpoint missing_endpoints = 2;
+}
+
+// client didn't find the reverse hash
+message SlowGossip {
+  repeated Endpoint all_endpoints = 1;
+}
+
+
+
+/**
+ client picks a random known host
+ (1) sends a BeginGossip with its most recent hash of its endpoint set along with a handful of recent endpoints learned about
+ (2) server seeing BeginGossip will
+     (a) integrate the recent endpoints
+     (b) look the provided hash within the HashSetChain
+         (i) if the Set was found within the server's HashSetChain
+              (x) send client a HashFound with the counters and a recent set of endpoints  (completed exchange)
+              (y) the client will then integrate the counters for the Set used
+              (z) the client will integrate the recent endpoints if there are any
+              (w) the client will then send a QuickGossip to complete the exchange
+        (ii) if the Set was not found
+              (x) send client a HashNotFoundReverseConversation with the most recent hash serer knows about along with recent endpoints
+              (y) the client will integrate the recent endpoints if there are any
+              (z) the client will search its HashSetChain for the hash
+                  (u) if the Set was found within the client's HashSetChain, then send a ReverseHashFound (completed exchange)
+                  (v) if the Set was not found, then send a SlowGossip and stop (breaking asymmetry)
+ */
+message GossipForward {
+  oneof Chatter {
+    BeginGossip start = 1;
+    ReverseHashFound found_reverse = 2;
+    ForwardQuickGossip quick_gossip = 3;
+    SlowGossip slow_gossip = 4;
+  }
+}
+
+message GossipReverse {
+  oneof Chatter {
+    HashNotFoundReverseConversation sad_return = 1;
+    HashFoundRequestForwardQuickGossip optimistic_return = 2;
+    ReverseHashFound turn_tables = 3;
+  }
+}
+
