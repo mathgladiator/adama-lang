@@ -36,12 +36,14 @@ message BootstrapResponse {
 message BeginGossip {
   string hash = 1;
   repeated Endpoint recent_endpoints = 2;
+  repeated string recent_deletes = 3;
 }
 
 // server found the hash and knows how to respond to a quick gossip
 message HashFoundRequestForwardQuickGossip {
   repeated int32 counters = 1;
-  repeated Endpoint recent_endpoints = 2;
+  repeated Endpoint missing_endpoints = 2;
+  repeated string recent_deletes = 3;
 }
 
 // server found the hash or client found the reverse hash
@@ -53,6 +55,7 @@ message ForwardQuickGossip {
 message HashNotFoundReverseConversation {
   string hash = 1;
   repeated Endpoint recent_endpoints = 2;
+  repeated string recent_deletes = 3;
 }
 
 // client is learning that a hash wasn't found, but it found the related hash
@@ -66,7 +69,9 @@ message SlowGossip {
   repeated Endpoint all_endpoints = 1;
 }
 
-
+message SlowGossipComplement {
+  repeated Endpoint missing_endpoints = 1;
+}
 
 /**
  client picks a random known host
@@ -100,6 +105,6 @@ message GossipReverse {
     HashNotFoundReverseConversation sad_return = 1;
     HashFoundRequestForwardQuickGossip optimistic_return = 2;
     ReverseHashFound turn_tables = 3;
+    SlowGossipComplement complement = 4;
   }
 }
-
