@@ -31,7 +31,9 @@ public class Json {
 
   public static ObjectNode parseJsonObjectThrows(final String json) throws Exception {
     final var node = MAPPER.readTree(json);
-    if (node instanceof ObjectNode) { return (ObjectNode) node; }
+    if (node instanceof ObjectNode) {
+      return (ObjectNode) node;
+    }
     throw new Exception("given json is not an ObjectNode at root");
   }
 

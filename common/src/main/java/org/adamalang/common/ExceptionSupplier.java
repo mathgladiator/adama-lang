@@ -14,15 +14,15 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface ExceptionSupplier<T> {
 
-    public T get() throws Exception;
+  static <T> Supplier<T> TO_RUNTIME(ExceptionSupplier<T> supplier) {
+    return () -> {
+      try {
+        return supplier.get();
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    };
+  }
 
-    public static <T> Supplier<T> TO_RUNTIME(ExceptionSupplier<T> supplier) {
-        return () -> {
-            try {
-                return supplier.get();
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        };
-    }
+  T get() throws Exception;
 }

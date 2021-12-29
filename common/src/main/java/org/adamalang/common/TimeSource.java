@@ -11,8 +11,8 @@ package org.adamalang.common;
 
 /** time is not a function, so we make it a function */
 public interface TimeSource {
-  public static final TimeSource REAL_TIME = System::currentTimeMillis;
+  TimeSource REAL_TIME = System::currentTimeMillis;
 
   /** get the current time */
-  public long nowMilliseconds();
+  long nowMilliseconds();
 }

@@ -11,6 +11,6 @@ package org.adamalang.common;
 
 /** allows exceptions to be monitored externally */
 public interface ExceptionLogger {
-
-    public void convertedToErrorCode(Throwable t, int errorCode);
+  /** an issue emerged which was not understood by an error code, and was returned to use as the given error code */
+  void convertedToErrorCode(Throwable t, int errorCode);
 }

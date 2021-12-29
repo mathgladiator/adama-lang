@@ -12,16 +12,33 @@ package org.adamalang.common;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;
 
-/** This callback interface is used by DataService such that actions not only succeed/fail, but provide
- * progress notifications which could relate to a state diagram. */
+/**
+ * This callback interface is used by DataService such that actions not only succeed/fail, but
+ * provide progress notifications which could relate to a state diagram.
+ */
 public interface Callback<T> {
-  /** the action happened successfully, and the result is value */
-  public void success(T value);
+  Callback<Integer> DONT_CARE_INTEGER =
+      new Callback<Integer>() {
+        @Override
+        public void success(Integer value) {}
 
-  /** the action failed outright, and the reason is the exception */
-  public void failure(ErrorCodeException ex);
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+        }
+      };
+  Callback<Void> DONT_CARE_VOID =
+      new Callback<Void>() {
+        @Override
+        public void success(Void value) {}
 
-  public static <In, Out> Callback<In> transform(Callback<Out> output, int exceptionErrorCode, Function<In, Out> f) {
+        @Override
+        public void failure(ErrorCodeException ex) {
+          ex.printStackTrace();
+        }
+      };
+
+  static <In, Out> Callback<In> transform(Callback<Out> output, int exceptionErrorCode, Function<In, Out> f) {
     return new Callback<>() {
       @Override
       public void success(In value) {
@@ -31,6 +48,7 @@ public interface Callback<T> {
           output.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex));
         }
       }
+
       @Override
       public void failure(ErrorCodeException ex) {
         output.failure(ex);
@@ -38,29 +56,37 @@ public interface Callback<T> {
     };
   }
 
-  public static <T> Callback<T> bind(ScheduledExecutorService service, int exceptionErrorCode, Callback<T> next) {
+  /** the action happened successfully, and the result is value */
+  void success(T value);
+
+  /** the action failed outright, and the reason is the exception */
+  void failure(ErrorCodeException ex);
+
+  static <T> Callback<T> bind(ScheduledExecutorService service, int exceptionErrorCode, Callback<T> next) {
     return new Callback<T>() {
       @Override
       public void success(T value) {
-        service.execute(() -> {
-          try {
-            next.success(value);
-          } catch (Throwable ex) {
-            next.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex));
-          }
-        });
+        service.execute(
+            () -> {
+              try {
+                next.success(value);
+              } catch (Throwable ex) {
+                next.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex));
+              }
+            });
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        service.execute(() -> {
-          next.failure(ex);
-        });
+        service.execute(
+            () -> {
+              next.failure(ex);
+            });
       }
     };
   }
 
-  public static <T> Callback<Void> handoff(Callback<T> next, int exceptionErrorCode, Runnable success) {
+  static <T> Callback<Void> handoff(Callback<T> next, int exceptionErrorCode, Runnable success) {
     return new Callback<>() {
       @Override
       public void success(Void value) {
@@ -77,28 +103,4 @@ public interface Callback<T> {
       }
     };
   }
-
-  public static final Callback<Integer> DONT_CARE_INTEGER = new Callback<Integer>() {
-    @Override
-    public void success(Integer value) {
-
-    }
-
-    @Override
-    public void failure(ErrorCodeException ex) {
-      ex.printStackTrace();
-    }
-  };
-
-  public static final Callback<Void> DONT_CARE_VOID = new Callback<Void>() {
-    @Override
-    public void success(Void value) {
-
-    }
-
-    @Override
-    public void failure(ErrorCodeException ex) {
-      ex.printStackTrace();
-    }
-  };
 }
