@@ -1,9 +1,22 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE'
+ * The 'LICENSE' file is in the root directory of the repository. Hint: it is MIT.
+ * 
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ * 
+ * See http://www.adama-lang.org/ for more information.
+ * 
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+*/
 package org.adamalang.cli.commands;
 
 import org.adamalang.apikit.Tool;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.support.GenerateLanguageTests;
+
+import java.io.File;
+import java.nio.file.Files;
 
 public class Contrib {
     public static void execute(Config config, String[] args) throws Exception {
@@ -20,6 +33,9 @@ public class Contrib {
             case "make-api":
                 // TODO: needs a lot of love and testing
                 Tool.build();
+                return;
+            case "copyright":
+                copyright();
                 return;
             case "help":
                 contribHelp();
@@ -39,5 +55,42 @@ public class Contrib {
         System.out.println(Util.prefix("CONTRIBSUBCOMMAND:", Util.ANSI.Yellow));
         System.out.println("    " + Util.prefix("generate", Util.ANSI.Green) + "          Generates the core test files from scripts.");
         System.out.println("    " + Util.prefix("make-api", Util.ANSI.Green) + "          Produces api files for SaaS and documentation for the WebSocket low level API.");
+        System.out.println("    " + Util.prefix("copyright", Util.ANSI.Green) + "         Sprinkle Jeff's name everywhere.");
+    }
+
+    public static final String NEW_COPYRIGHT_MESSAGE = "/*\n" +
+            " * This file is subject to the terms and conditions outlined in the file 'LICENSE'\n" +
+            " * The 'LICENSE' file is in the root directory of the repository. Hint: it is MIT.\n" +
+            " * \n" +
+            " * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.\n" +
+            " * \n" +
+            " * See http://www.adama-lang.org/ for more information.\n" +
+            " * \n" +
+            " * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)\n" +
+            "*/\n";
+
+    private static void scan(File root) throws Exception {
+        for(File f : root.listFiles()) {
+            if (f.isDirectory()) {
+                scan(f);
+            } else {
+                if(f.getName().endsWith(".java")) {
+                    String code = Files.readString(f.toPath());
+                    int start = code.indexOf("/*");
+                    int end = code.indexOf("*/");
+                    if (start >= 0 && start <= 5 && end > start) {
+                        String newCode = NEW_COPYRIGHT_MESSAGE + code.substring(end + 2).trim() + "\n";
+                        Files.writeString(f.toPath(), newCode);
+                    } else {
+                        String newCode = NEW_COPYRIGHT_MESSAGE + code.trim() + "\n";
+                        Files.writeString(f.toPath(), newCode);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void copyright() throws Exception {
+        scan(new File("."));
     }
 }
