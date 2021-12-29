@@ -9,8 +9,8 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.parser.token.Token;
 import org.junit.Test;
 
 import java.util.function.Consumer;

@@ -9,12 +9,13 @@
  */
 package org.adamalang.runtime.delta;
 
-import java.util.function.Function;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.function.Function;
 
 public class DRecordListTests {
   @Test

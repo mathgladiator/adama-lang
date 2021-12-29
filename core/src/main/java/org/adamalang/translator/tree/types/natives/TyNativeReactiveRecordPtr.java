@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -21,6 +19,8 @@ import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
+
+import java.util.function.Consumer;
 
 public class TyNativeReactiveRecordPtr extends TyType implements //
     AssignmentViaNative, //

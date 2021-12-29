@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.statements.control;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -17,6 +16,8 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
+
+import java.util.function.Consumer;
 
 /** invoke a state machine's state; useful for dynamic behavior */
 public class InvokeStateMachine extends Statement {

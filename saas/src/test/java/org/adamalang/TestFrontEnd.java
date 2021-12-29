@@ -9,17 +9,17 @@
  */
 package org.adamalang;
 
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.BaseConfig;
-import org.adamalang.mysql.frontend.FrontendManagementInstaller;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.frontend.BootstrapFrontend;
+import org.adamalang.mysql.BaseConfig;
+import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
-import org.adamalang.common.Json;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 import org.junit.Assert;

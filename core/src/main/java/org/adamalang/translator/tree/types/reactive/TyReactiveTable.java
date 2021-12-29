@@ -9,9 +9,6 @@
  */
 package org.adamalang.translator.tree.types.reactive;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -26,6 +23,9 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class TyReactiveTable extends TyType implements //
     DetailContainsAnEmbeddedType, //

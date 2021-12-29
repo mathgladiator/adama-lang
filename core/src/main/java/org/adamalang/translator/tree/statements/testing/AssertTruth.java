@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.statements.testing;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -17,6 +16,8 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
+
+import java.util.function.Consumer;
 
 /** Asserts a true statement. This is useful for testing, but also measuring
  * quality as things go bump in the night. */

@@ -9,24 +9,17 @@
  */
 package org.adamalang.translator.codegen;
 
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.natives.TyNativeArray;
-import org.adamalang.translator.tree.types.natives.TyNativeInteger;
-import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.natives.TyNativeLong;
-import org.adamalang.translator.tree.types.natives.TyNativeMap;
-import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
-import org.adamalang.translator.tree.types.natives.TyNativeMessage;
-import org.adamalang.translator.tree.types.natives.TyNativeStateMachineRef;
-import org.adamalang.translator.tree.types.natives.TyNativeString;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
+
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CodeGenMessage {
   public static void generateJsonReaders(final String name, final StructureStorage storage, final StringBuilderWithTabs sb, final Environment environment) {

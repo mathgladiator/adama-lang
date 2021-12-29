@@ -9,14 +9,6 @@
  */
 package org.adamalang.runtime.reactives;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
-import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.contracts.WhereClause;
@@ -25,6 +17,11 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.lists.SelectorRxObjectList;
+import org.adamalang.runtime.sys.LivingDocument;
+
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 /** a reactive table */
 public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iterable<Ty>, RxParent, RxChild {

@@ -9,10 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.Consumer;
 import org.adamalang.translator.codegen.CodeGenFunctions;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
@@ -28,6 +24,11 @@ import org.adamalang.translator.tree.types.natives.TyNativeVoid;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Consumer;
 
 /** functional application. This applies arguments to the given expression, and
  * the expectation is that the expression is a function of some sorts */

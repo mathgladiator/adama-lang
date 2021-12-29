@@ -9,7 +9,6 @@
  */
 package org.adamalang.runtime.natives.lists;
 
-import java.util.Random;
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -22,6 +21,8 @@ import org.adamalang.runtime.reactives.RxLazy;
 import org.adamalang.runtime.reactives.RxTable;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Random;
 
 public class SelectoRxTObjectListTests {
   private MockLivingDocument doc(int keyStart) {

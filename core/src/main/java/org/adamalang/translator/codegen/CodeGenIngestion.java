@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.codegen;
 
-import java.util.Map;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -25,6 +24,8 @@ import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.IsStructure;
+
+import java.util.Map;
 
 /** responsible for the recursive "ingestion operator" (<-) which is how data
  * gets into the tables or objects */

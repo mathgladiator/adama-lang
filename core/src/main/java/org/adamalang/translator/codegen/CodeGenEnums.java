@@ -9,14 +9,15 @@
  */
 package org.adamalang.translator.codegen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineDispatcher;
 import org.adamalang.translator.tree.definitions.FunctionArg;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /** generates the code to support enumerations */
 public class CodeGenEnums {

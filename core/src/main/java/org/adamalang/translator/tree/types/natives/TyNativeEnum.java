@@ -9,11 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenEnums;
 import org.adamalang.translator.env.Environment;
@@ -38,6 +33,11 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailSpecialReactiveRefResolve;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class TyNativeEnum extends TySimpleNative implements IsNativeValue, DetailHasDeltaType, //
     CanBeMapDomain, //

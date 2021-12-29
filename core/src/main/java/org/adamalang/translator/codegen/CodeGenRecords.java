@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.codegen;
 
-import java.util.Map;
-
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -19,7 +17,7 @@ import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.*;
+import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.reactive.*;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.DefineMethod;
@@ -29,6 +27,8 @@ import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
+
+import java.util.Map;
 
 /** responsible for writing the code for records */
 public class CodeGenRecords {

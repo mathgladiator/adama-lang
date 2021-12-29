@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.privacy;
 
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -18,6 +16,8 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
+
+import java.util.function.Consumer;
 
 /** defines a policy for field records */
 public abstract class Policy extends DocumentPosition {

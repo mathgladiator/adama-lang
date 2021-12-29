@@ -9,6 +9,8 @@
  */
 package org.adamalang.translator.jvm;
 
+import javax.tools.*;
+import javax.tools.JavaFileObject.Kind;
 import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -18,12 +20,6 @@ import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-import javax.tools.FileObject;
-import javax.tools.ForwardingJavaFileManager;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
-import javax.tools.JavaFileObject.Kind;
-import javax.tools.SimpleJavaFileObject;
 
 /** responsible for capturing results from the java compiler */
 @SuppressWarnings("unchecked")

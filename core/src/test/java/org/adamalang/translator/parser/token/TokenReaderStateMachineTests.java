@@ -9,9 +9,10 @@
  */
 package org.adamalang.translator.parser.token;
 
-import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 public class TokenReaderStateMachineTests {
   @Test

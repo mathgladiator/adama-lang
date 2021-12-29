@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.statements;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.codegen.CodeGenIngestion;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
@@ -23,6 +22,8 @@ import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
+
+import java.util.function.Consumer;
 
 /** left {=,+=,*=,-=,<-} right */
 public class Assignment extends Statement {

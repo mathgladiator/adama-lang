@@ -9,11 +9,12 @@
  */
 package org.adamalang.runtime.reactives;
 
-import java.util.ArrayList;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+
+import java.util.ArrayList;
 
 /** the base class of any reactive object */
 public abstract class RxBase {

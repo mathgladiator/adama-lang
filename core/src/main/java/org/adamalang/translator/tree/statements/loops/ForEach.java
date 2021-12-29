@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.statements.loops;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -20,6 +19,8 @@ import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
+
+import java.util.function.Consumer;
 
 /** a modern and safe foreach(V in EXPR) code */
 public class ForEach extends Statement {

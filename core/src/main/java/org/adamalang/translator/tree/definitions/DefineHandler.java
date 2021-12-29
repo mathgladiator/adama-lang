@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
@@ -20,6 +19,8 @@ import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeChannel;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
 import org.adamalang.translator.tree.types.traits.IsStructure;
+
+import java.util.function.Consumer;
 
 /** A handler is called when the document receives a message from a client.
  * There are a variety of actions the document can take. For instance, the

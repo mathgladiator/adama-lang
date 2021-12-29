@@ -9,9 +9,10 @@
  */
 package org.adamalang.runtime.ops;
 
+import org.adamalang.runtime.contracts.DocumentMonitor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.adamalang.runtime.contracts.DocumentMonitor;
 
 /** a monitor which dumps fun information out to stdout */
 public class StdOutDocumentMonitor implements DocumentMonitor {

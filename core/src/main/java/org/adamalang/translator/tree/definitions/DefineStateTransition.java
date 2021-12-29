@@ -9,10 +9,11 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
+
+import java.util.function.Consumer;
 
 /** A document is in a variety of states, and as such we need code to run in
  * each state; this is a state transition that maps which code to run in a

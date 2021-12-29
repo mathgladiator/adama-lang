@@ -10,8 +10,11 @@
 package org.adamalang.runtime;
 
 import org.adamalang.common.Callback;
-import org.adamalang.runtime.contracts.*;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.DocumentMonitor;
+import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.contracts.SimpleExecutor;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.mocks.MockTime;
@@ -19,7 +22,6 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
-import org.adamalang.runtime.contracts.SimpleExecutor;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;

@@ -14,13 +14,11 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
-import org.adamalang.translator.tree.expressions.constants.NoOneClientConstant;
 import org.adamalang.translator.tree.expressions.constants.NothingAssetConstant;
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeAsset;
-import org.adamalang.translator.tree.types.natives.TyNativeClient;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
 public class TyReactiveAsset extends TySimpleReactive implements IsOrderable {

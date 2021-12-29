@@ -9,9 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -20,6 +17,9 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class TyNativeFunctional extends TyType {
   public final String name;

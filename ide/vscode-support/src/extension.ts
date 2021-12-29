@@ -4,14 +4,10 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as net from 'net';
-import { workspace, ExtensionContext, window } from 'vscode';
+import {ExtensionContext, workspace} from 'vscode';
 
 
-import {
-	LanguageClient,
-	LanguageClientOptions,
-	StreamInfo
-} from 'vscode-languageclient';
+import {LanguageClient, LanguageClientOptions, StreamInfo} from 'vscode-languageclient';
 
 let client: LanguageClient;
 

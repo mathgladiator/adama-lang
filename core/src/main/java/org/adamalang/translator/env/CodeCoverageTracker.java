@@ -9,8 +9,9 @@
  */
 package org.adamalang.translator.env;
 
-import java.util.ArrayList;
 import org.adamalang.translator.tree.common.DocumentPosition;
+
+import java.util.ArrayList;
 
 /** This tracks code coverage within blocks. Each position in the document is
  * associated to an integer, and integers get registered as code executes. This

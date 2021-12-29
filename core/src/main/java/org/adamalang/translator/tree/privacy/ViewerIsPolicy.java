@@ -9,14 +9,14 @@
  */
 package org.adamalang.translator.tree.privacy;
 
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
+
+import java.util.function.Consumer;
 
 /** a policy that enables the field to be visible if another field is the
  * viewer */

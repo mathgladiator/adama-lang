@@ -12,8 +12,8 @@ package org.adamalang.cli.commands;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
-import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.BaseConfig;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.backend.BackendDataServiceInstaller;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 

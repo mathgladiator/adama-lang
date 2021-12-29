@@ -9,10 +9,11 @@
  */
 package org.adamalang.translator.codegen;
 
-import java.util.Map;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineStateTransition;
+
+import java.util.Map;
 
 /** responsible for writing the state machine stepper */
 public class CodeGenStateMachine {

@@ -15,13 +15,12 @@ import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
-
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.web.contracts.ServiceConnection;
-import org.adamalang.web.contracts.ServiceBase;
-import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.common.Json;
+import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.contracts.ServiceConnection;
+import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 

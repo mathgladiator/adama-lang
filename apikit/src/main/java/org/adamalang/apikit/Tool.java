@@ -11,12 +11,23 @@ package org.adamalang.apikit;
 
 import org.adamalang.apikit.codegen.*;
 import org.adamalang.apikit.docgen.AssembleAPIDocs;
-import org.adamalang.apikit.model.*;
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import java.io.*;
+import org.adamalang.apikit.model.FieldDefinition;
+import org.adamalang.apikit.model.Method;
+import org.adamalang.apikit.model.ParameterDefinition;
+import org.adamalang.apikit.model.Responder;
+import org.adamalang.common.DefaultCopyright;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Tool {
 
@@ -71,7 +82,7 @@ public class Tool {
         // write out the nexus
 
         for (Map.Entry<String, String> request : apiOutput.entrySet()) {
-            Files.writeString(new File(outputPath, request.getKey()).toPath(), request.getValue());
+            Files.writeString(new File(outputPath, request.getKey()).toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
         }
         // TODO: move to Schema
         Files.writeString(new File("apikit/docs/src/reference.md").toPath(), AssembleAPIDocs.docify(methods));

@@ -9,25 +9,8 @@
  */
 package org.adamalang.translator.tree;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.translator.codegen.CodeGenConstructor;
-import org.adamalang.translator.codegen.CodeGenDocument;
-import org.adamalang.translator.codegen.CodeGenEventHandlers;
-import org.adamalang.translator.codegen.CodeGenFunctions;
-import org.adamalang.translator.codegen.CodeGenMessageHandling;
-import org.adamalang.translator.codegen.CodeGenRecords;
-import org.adamalang.translator.codegen.CodeGenStateMachine;
-import org.adamalang.translator.codegen.CodeGenTests;
+import org.adamalang.translator.codegen.*;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.parser.Parser;
@@ -57,6 +40,11 @@ import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class Document implements TopLevelDocumentHandler {
   private int autoClassId;

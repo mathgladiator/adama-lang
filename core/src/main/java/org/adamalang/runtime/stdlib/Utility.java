@@ -9,9 +9,10 @@
  */
 package org.adamalang.runtime.stdlib;
 
+import org.adamalang.runtime.natives.NtMaybe;
+
 import java.util.ArrayList;
 import java.util.function.Function;
-import org.adamalang.runtime.natives.NtMaybe;
 
 /** some runtime exposed to the living document */
 public class Utility {

@@ -9,12 +9,13 @@
  */
 package org.adamalang.translator.tree.expressions.linq;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
+
+import java.util.function.Consumer;
 
 /** begin a linq query to convert a table into a list which may be filtered,
  * ordered, limited */

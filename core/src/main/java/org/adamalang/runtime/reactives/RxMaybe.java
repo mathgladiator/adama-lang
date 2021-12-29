@@ -9,14 +9,15 @@
  */
 package org.adamalang.runtime.reactives;
 
-import java.util.Comparator;
-import java.util.function.Function;
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtMaybe;
+
+import java.util.Comparator;
+import java.util.function.Function;
 
 /** a reactive maybe */
 public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxChild {

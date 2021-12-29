@@ -9,8 +9,8 @@
  */
 package org.adamalang.extern;
 
-import org.adamalang.mysql.DataBase;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.mysql.DataBase;
 
 public class ExternNexus {
 

@@ -9,13 +9,13 @@
  */
 package org.adamalang.translator.tree.types.checking.ruleset;
 
-import java.util.Map;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
-import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsStructure;
+
+import java.util.Map;
 
 public class RuleSetStructures {
   // can type A project into type B, that is B is the new type, and A may have

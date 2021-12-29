@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.natives;
 
-import java.util.ArrayList;
-import java.util.function.Supplier;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
+
+import java.util.ArrayList;
+import java.util.function.Supplier;
 
 /** a table defined within code */
 public class NtTable<Ty extends NtMessageBase> implements RxChild {

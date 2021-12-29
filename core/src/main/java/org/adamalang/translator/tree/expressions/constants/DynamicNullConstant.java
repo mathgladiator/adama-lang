@@ -9,14 +9,14 @@
  */
 package org.adamalang.translator.tree.expressions.constants;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.natives.TyNativeDynamic;
+
+import java.util.function.Consumer;
 
 /** A null dynamic value. */
 public class DynamicNullConstant extends Expression {

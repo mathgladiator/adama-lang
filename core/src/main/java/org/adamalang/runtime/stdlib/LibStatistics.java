@@ -15,7 +15,6 @@ import org.adamalang.translator.reflect.Extension;
 import org.adamalang.translator.reflect.HiddenType;
 import org.adamalang.translator.reflect.UseName;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /** very simple statistics */

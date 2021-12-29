@@ -9,9 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -24,13 +21,10 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNativeOnlyForSet;
-import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
-import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
-import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
-import org.adamalang.translator.tree.types.traits.details.DetailIndexLookup;
-import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
-import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
-import org.adamalang.translator.tree.types.traits.details.IndexLookupStyle;
+import org.adamalang.translator.tree.types.traits.details.*;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType, //
     DetailNativeDeclarationIsNotStandard, //

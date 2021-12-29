@@ -9,17 +9,12 @@
  */
 package org.adamalang.translator.codegen;
 
-import java.util.ArrayList;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.privacy.PrivatePolicy;
 import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
-import org.adamalang.translator.tree.types.natives.TyNativeArray;
-import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.natives.TyNativeMap;
-import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
-import org.adamalang.translator.tree.types.natives.TyNativeMessage;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
 import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
@@ -29,6 +24,8 @@ import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+
+import java.util.ArrayList;
 
 /** generates the serialization code to emit deltas */
 public class CodeGenDeltaClass {

@@ -9,15 +9,6 @@
  */
 package org.adamalang.support;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.support.testgen.TestClass;
@@ -28,6 +19,15 @@ import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentPosition;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 public class GenerateLanguageTests {
   private static boolean isValid(String path) {

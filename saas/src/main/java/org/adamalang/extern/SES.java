@@ -9,10 +9,7 @@
  */
 package org.adamalang.extern;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceAsync;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceAsyncClientBuilder;
 import com.amazonaws.services.simpleemail.model.*;
 
 import java.util.Collections;

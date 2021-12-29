@@ -9,11 +9,11 @@
  */
 package org.adamalang.support;
 
-import java.io.File;
-import java.nio.file.Files;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.File;
+import java.nio.file.Files;
 
 public class GenerateLanguageTestsTests {
   @Test

@@ -9,9 +9,10 @@
  */
 package org.adamalang.translator.tree.types.structures;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+
+import java.util.function.Consumer;
 
 public abstract class StructureComponent extends DocumentPosition {
   public abstract void emit(Consumer<Token> yielder);

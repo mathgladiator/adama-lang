@@ -9,9 +9,10 @@
  */
 package org.adamalang.translator.jvm;
 
-import java.util.TreeMap;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.TreeMap;
 
 public class ByteArrayClassLoaderTests {
   @Test

@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.types.checking.ruleset;
 
-import java.util.Map;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
@@ -26,6 +25,8 @@ import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
+
+import java.util.Map;
 
 public class RuleSetCommon {
   static boolean AreBothChannelTypesCompatible(final Environment environment, final TyType typeA, final TyType typeB) {

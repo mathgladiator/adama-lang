@@ -9,11 +9,12 @@
  */
 package org.adamalang.translator.parser.token;
 
+import org.adamalang.translator.parser.exceptions.AdamaLangException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.function.Function;
-import org.adamalang.translator.parser.exceptions.AdamaLangException;
 
 /** a way of iterating a buffer of tokens; this allows peeking into the
  * future */

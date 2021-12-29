@@ -9,6 +9,8 @@
  */
 package org.adamalang.support.testgen;
 
+import org.adamalang.common.DefaultCopyright;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,15 +34,7 @@ public class TestClass {
     testId = 0;
     this.clazz = clazz;
     outputFile = new StringBuilder();
-    outputFile.append("/*\n" +
-            " * This file is subject to the terms and conditions outlined in the file 'LICENSE'\n" +
-            " * which is in the root directory of the repository. This file is part of the 'Adama'\n" +
-            " * project which is a programming language and document store for board games.\n" +
-            " * \n" +
-            " * See http://www.adama-lang.org/ for more information.\n" +
-            " * \n" +
-            " * (c) 2020 - 2021 by Jeffrey M. Barber (http://jeffrey.io)\n" +
-            "*/\n");
+    outputFile.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
     outputFile.append("package org.adamalang.translator;\n\n");
     outputFile.append("import org.junit.Test;\n\n");
     outputFile.append(String.format("public class Generated%sTests extends GeneratedBase {\n", clazz));

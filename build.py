@@ -54,3 +54,4 @@ if generate:
     os.chdir("core")
     os.system("java -jar ../release/adama.jar contrib generate")
     os.chdir(cwd)
+    os.system("java -jar release/adama.jar contrib make-api")

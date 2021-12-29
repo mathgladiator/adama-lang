@@ -10,13 +10,7 @@
 package org.adamalang.web.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 public class WebConfig {
   public final String healthCheckPath;

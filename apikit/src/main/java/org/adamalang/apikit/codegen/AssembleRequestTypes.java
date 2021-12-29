@@ -9,7 +9,9 @@
  */
 package org.adamalang.apikit.codegen;
 
-import org.adamalang.apikit.model.*;
+import org.adamalang.apikit.model.Method;
+import org.adamalang.apikit.model.ParameterDefinition;
+import org.adamalang.apikit.model.Transform;
 
 import java.util.Map;
 import java.util.TreeMap;

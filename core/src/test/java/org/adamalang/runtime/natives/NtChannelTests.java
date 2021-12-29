@@ -14,7 +14,6 @@ import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.async.Sink;
 import org.adamalang.runtime.exceptions.ComputeBlockedException;
 import org.adamalang.runtime.reactives.RxInt32;
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -9,13 +9,13 @@
  */
 package org.adamalang.runtime.async;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.exceptions.RetryProgressException;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AsyncTaskTests {
   @Test

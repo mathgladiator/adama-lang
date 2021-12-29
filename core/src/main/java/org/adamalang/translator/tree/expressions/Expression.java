@@ -9,12 +9,13 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.types.TyType;
+
+import java.util.function.Consumer;
 
 public abstract class Expression extends DocumentPosition {
   protected TyType cachedType = null;

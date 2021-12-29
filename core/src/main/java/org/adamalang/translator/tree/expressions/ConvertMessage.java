@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.Map;
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
@@ -18,6 +16,9 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
+
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class ConvertMessage extends Expression {
   public final Token closeParen;

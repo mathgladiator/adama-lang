@@ -9,13 +9,14 @@
  */
 package org.adamalang.translator.tree.expressions.constants;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
+
+import java.util.function.Consumer;
 
 /** The only built-in client constant */
 public class NoOneClientConstant extends Expression {

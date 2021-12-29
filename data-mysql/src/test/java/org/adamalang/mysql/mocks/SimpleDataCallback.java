@@ -10,8 +10,8 @@
 package org.adamalang.mysql.mocks;
 
 import org.adamalang.common.Callback;
-import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.DataService;
 import org.junit.Assert;
 
 public class SimpleDataCallback implements Callback<DataService.LocalDocumentChange> {

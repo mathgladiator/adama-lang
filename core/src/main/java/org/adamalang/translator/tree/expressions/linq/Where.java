@@ -9,10 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions.linq;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -35,6 +31,11 @@ import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Consumer;
 
 /** performs a filter on an sql statemeent ($sql) where (expr) */
 public class Where extends LinqExpression implements LatentCodeSnippet {

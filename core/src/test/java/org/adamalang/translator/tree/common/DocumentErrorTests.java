@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.common;
 
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 

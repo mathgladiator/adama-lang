@@ -9,12 +9,13 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Supplier;
-import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
 /** a list of records that will respect privacy and sends state to client only on changes */
 public class DRecordList<dRecordTy> {

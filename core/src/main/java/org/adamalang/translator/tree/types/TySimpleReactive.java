@@ -9,13 +9,14 @@
  */
 package org.adamalang.translator.tree.types;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.traits.IsReactiveValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
+
+import java.util.function.Consumer;
 
 public abstract class TySimpleReactive extends TyType implements DetailComputeRequiresGet, //
     IsReactiveValue, //

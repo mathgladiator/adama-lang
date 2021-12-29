@@ -9,10 +9,11 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
+
+import java.util.function.Consumer;
 
 public abstract class InjectExpression extends Expression {
   public final TyType type;

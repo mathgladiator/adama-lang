@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions.linq;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
@@ -24,6 +22,9 @@ import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
 import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 import org.adamalang.translator.tree.types.traits.IsStructure;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /** order the given sql expression result by the list of keys */
 public class OrderBy extends LinqExpression implements LatentCodeSnippet {

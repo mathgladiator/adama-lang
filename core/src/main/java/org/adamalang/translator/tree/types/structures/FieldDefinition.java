@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.types.structures;
 
-import java.util.LinkedHashSet;
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -19,6 +17,9 @@ import org.adamalang.translator.tree.privacy.Policy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.reactive.TyReactiveLazy;
+
+import java.util.LinkedHashSet;
+import java.util.function.Consumer;
 
 /** the definition for a field */
 public class FieldDefinition extends StructureComponent {

@@ -9,9 +9,9 @@
  */
 package org.adamalang.runtime.ops;
 
-import java.util.HashMap;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
+
+import java.util.HashMap;
 
 /** a fun way to build test reports */
 public class TestReportBuilder {

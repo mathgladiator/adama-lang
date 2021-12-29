@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.index;
 
-import java.util.TreeSet;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.TreeSet;
 
 public class ReactiveIndexTests {
   @Test

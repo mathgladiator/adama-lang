@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.parser;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
@@ -18,6 +17,8 @@ import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsStructure;
+
+import java.util.function.Consumer;
 
 public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDocumentHandler {
   public final StringBuilder builder = new StringBuilder();

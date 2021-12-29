@@ -24,8 +24,8 @@ public class AssembleConnectionRouter {
         StringBuilder router = new StringBuilder();
         router.append("package ").append(packageName).append(";\n\n");
         router.append("\n");
-        router.append("import org.adamalang.runtime.contracts.Callback;\n");
-        router.append("import org.adamalang.runtime.exceptions.ErrorCodeException;\n");
+        router.append("import org.adamalang.common.Callback;\n");
+        router.append("import org.adamalang.common.ErrorCodeException;\n");
         router.append("import org.adamalang.web.io.*;\n");
         router.append("\n");
         router.append("import java.util.HashMap;\n");

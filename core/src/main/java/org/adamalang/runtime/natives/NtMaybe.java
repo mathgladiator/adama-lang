@@ -11,7 +11,6 @@ package org.adamalang.runtime.natives;
 
 import java.util.Comparator;
 import java.util.function.Consumer;
-import org.adamalang.runtime.reactives.RxMaybe;
 
 /** a maybe for a boxed java type (i.e. Integer) */
 public class NtMaybe<T> {

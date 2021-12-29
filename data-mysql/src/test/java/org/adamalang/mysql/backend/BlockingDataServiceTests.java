@@ -10,8 +10,8 @@
 package org.adamalang.mysql.backend;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.BaseConfig;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfigTests;
 import org.adamalang.mysql.mocks.MockActiveKeyStream;
 import org.adamalang.mysql.mocks.SimpleDataCallback;

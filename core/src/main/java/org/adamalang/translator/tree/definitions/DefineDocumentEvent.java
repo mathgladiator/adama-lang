@@ -9,20 +9,17 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.expressions.Expression;
-import org.adamalang.translator.tree.privacy.Policy;
-import org.adamalang.translator.tree.privacy.PublicPolicy;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
-import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
+
+import java.util.function.Consumer;
 
 /** defines an event for when connected or not */
 public class DefineDocumentEvent extends Definition {

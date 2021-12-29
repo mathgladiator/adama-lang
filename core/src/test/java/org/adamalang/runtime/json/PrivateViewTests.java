@@ -11,7 +11,6 @@ package org.adamalang.runtime.json;
 
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 

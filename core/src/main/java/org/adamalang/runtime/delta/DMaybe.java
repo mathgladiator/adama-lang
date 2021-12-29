@@ -9,8 +9,9 @@
  */
 package org.adamalang.runtime.delta;
 
-import java.util.function.Supplier;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
+
+import java.util.function.Supplier;
 
 /** a maybe wrapper that will respect privacy and sends state to client only on changes */
 public class DMaybe<dTy> {

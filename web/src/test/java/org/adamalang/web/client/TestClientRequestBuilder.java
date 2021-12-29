@@ -25,7 +25,6 @@ import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.CharsetUtil;
 
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 
 public class TestClientRequestBuilder {
   public static TestClientRequestBuilder start(final EventLoopGroup workerGroup) {

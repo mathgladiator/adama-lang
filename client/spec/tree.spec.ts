@@ -1,4 +1,4 @@
-import { Tree } from './../src/tree';
+import {Tree} from './../src/tree';
 
 describe("tree updates", function () {
   it("merge in values", function () {

@@ -10,10 +10,10 @@
 package org.adamalang.mysql;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.adamalang.mysql.contracts.SQLConsumer;
-import org.adamalang.mysql.contracts.SQLTransact;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.mysql.contracts.SQLConsumer;
+import org.adamalang.mysql.contracts.SQLTransact;
 
 import java.sql.*;
 

@@ -9,10 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenDeltaClass;
 import org.adamalang.translator.codegen.CodeGenMessage;
@@ -34,6 +30,10 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class TyNativeMessage extends TyType implements IsStructure, //
     DetailTypeProducesRootLevelCode, //

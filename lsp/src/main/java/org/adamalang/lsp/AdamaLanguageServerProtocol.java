@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -25,7 +24,6 @@ import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentError;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 

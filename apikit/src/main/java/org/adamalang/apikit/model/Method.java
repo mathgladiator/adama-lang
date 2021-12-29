@@ -47,9 +47,9 @@ public class Method {
 
     public TreeSet<String> imports() {
         TreeSet<String> set = new TreeSet<>();
-        set.add("org.adamalang.runtime.exceptions.ErrorCodeException");
+        set.add("org.adamalang.common.ErrorCodeException");
         set.add("org.adamalang.web.io.*");
-        set.add("org.adamalang.runtime.contracts.Callback");
+        set.add("org.adamalang.common.Callback");
         for (ParameterDefinition parameter : parameters) {
             Transform transform = parameter.getTransform(this.name);
             if (transform != null) {

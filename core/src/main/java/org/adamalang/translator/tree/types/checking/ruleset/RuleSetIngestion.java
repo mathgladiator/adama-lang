@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.types.checking.ruleset;
 
-import java.util.Map;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
@@ -18,6 +17,8 @@ import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.IsStructure;
+
+import java.util.Map;
 
 public class RuleSetIngestion {
   public static boolean CanAIngestB(final Environment environment, final TyType originalTypeA, final TyType originalTypeB, final boolean silent) {

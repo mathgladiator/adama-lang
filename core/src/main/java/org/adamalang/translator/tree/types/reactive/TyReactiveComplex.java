@@ -15,7 +15,6 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.constants.ComplexConstant;
-
 import org.adamalang.translator.tree.types.TySimpleReactive;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;

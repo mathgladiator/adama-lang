@@ -9,12 +9,13 @@
  */
 package org.adamalang.translator.tree.statements.control;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
+
+import java.util.function.Consumer;
 
 public class AlterControlFlow extends Statement {
   public final AlterControlFlowMode how;

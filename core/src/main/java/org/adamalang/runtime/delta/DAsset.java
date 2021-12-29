@@ -11,7 +11,6 @@ package org.adamalang.runtime.delta;
 
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.stdlib.IdCodec;
 
 /** an asset that will respect privacy and sends state to client only on changes */
 public class DAsset {

@@ -9,11 +9,12 @@
  */
 package org.adamalang.support.testgen;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.adamalang.translator.parser.Parser;
 import org.adamalang.translator.parser.StringBuilderDocumentHandler;
 import org.adamalang.translator.parser.token.TokenEngine;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class PhaseEmission {
   public static void go(final String filename, final Path path, final StringBuilder outputFile) throws Exception {

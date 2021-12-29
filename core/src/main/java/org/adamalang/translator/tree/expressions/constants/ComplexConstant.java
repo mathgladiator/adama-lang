@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions.constants;
 
-import org.adamalang.runtime.stdlib.LibMath;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;

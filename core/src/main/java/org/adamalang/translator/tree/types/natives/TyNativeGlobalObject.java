@@ -9,9 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.HashMap;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -19,6 +16,9 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
+
+import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods {
   public final HashMap<String, TyNativeFunctional> functions;

@@ -9,8 +9,9 @@
  */
 package org.adamalang.runtime.mocks;
 
-import java.util.function.Consumer;
 import org.adamalang.runtime.contracts.CanGetAndSet;
+
+import java.util.function.Consumer;
 
 public class MockCanGetAndSet<T> implements CanGetAndSet<T>, Consumer<T> {
   private T value;

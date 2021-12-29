@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions.constants;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.codegen.CodeGenEnums;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -20,6 +19,8 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.shared.EnumStorage;
+
+import java.util.function.Consumer;
 
 public class EnumValuesArray extends Expression implements LatentCodeSnippet {
   public final Token colonsToken;

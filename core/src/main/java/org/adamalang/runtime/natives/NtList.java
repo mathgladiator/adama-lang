@@ -9,11 +9,12 @@
  */
 package org.adamalang.runtime.natives;
 
+import org.adamalang.runtime.contracts.WhereClause;
+
 import java.util.Comparator;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.adamalang.runtime.contracts.WhereClause;
 
 /** the core list abstraction */
 public interface NtList<Ty> extends Iterable<Ty> {

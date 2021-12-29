@@ -9,14 +9,15 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /** a dispatcher is a function attached to enum such that the enum controls the
  * destiny of which function gets called */

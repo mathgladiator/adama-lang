@@ -9,13 +9,14 @@
  */
 package org.adamalang.translator.codegen;
 
-import java.util.ArrayList;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.definitions.DefineFunction;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+
+import java.util.ArrayList;
 
 /** responsible for writing all document level functions */
 public class CodeGenFunctions {

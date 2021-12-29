@@ -9,18 +9,19 @@
  */
 package org.adamalang.runtime.natives.lists;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMap;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.runtime.reactives.RxRecordBase;
 import org.adamalang.runtime.reactives.RxTable;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /** adapts a table to a list; the birthplace for the query optimized stuff */
 public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList<Ty> {

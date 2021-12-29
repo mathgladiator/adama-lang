@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -19,6 +17,8 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.CanBeNativeArray;
 import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
+
+import java.util.function.Consumer;
 
 public class TyNativeRef extends TyType implements //
     CanBeNativeArray, //

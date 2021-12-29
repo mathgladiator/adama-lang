@@ -9,11 +9,12 @@
  */
 package org.adamalang.translator.parser.token;
 
-import java.util.HashMap;
-import java.util.function.Consumer;
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.exceptions.ScanException;
 import org.adamalang.translator.tree.common.DocumentPosition;
+
+import java.util.HashMap;
+import java.util.function.Consumer;
 
 /** the state machine for handling codepoints one at a time; this produces
  * output against a consumer */

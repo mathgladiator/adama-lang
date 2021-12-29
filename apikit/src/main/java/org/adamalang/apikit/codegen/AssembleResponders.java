@@ -10,7 +10,6 @@
 package org.adamalang.apikit.codegen;
 
 import org.adamalang.apikit.model.FieldDefinition;
-import org.adamalang.apikit.model.Method;
 import org.adamalang.apikit.model.Responder;
 import org.adamalang.apikit.model.Type;
 

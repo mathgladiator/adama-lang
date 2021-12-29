@@ -9,11 +9,11 @@
  */
 package org.adamalang.support.testgen;
 
+import org.adamalang.translator.jvm.LivingDocumentFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.regex.Pattern;
-
-import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 public class PhaseCompile {
   public static LivingDocumentFactory go(final String className, final String java, final StringBuilder outputFile) throws Exception {

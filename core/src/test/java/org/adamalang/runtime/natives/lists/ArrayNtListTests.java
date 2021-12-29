@@ -9,14 +9,15 @@
  */
 package org.adamalang.runtime.natives.lists;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ArrayNtListTests {
   @Test

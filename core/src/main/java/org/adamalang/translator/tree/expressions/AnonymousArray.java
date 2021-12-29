@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
@@ -22,6 +20,9 @@ import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.SupportsTwoPhaseTyping;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /** an anonymous array of items [item1, item2, ..., itemN] */
 public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping {

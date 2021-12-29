@@ -9,11 +9,6 @@
  */
 package org.adamalang.runtime.mocks;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.adamalang.runtime.sys.LivingDocument;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
@@ -24,6 +19,11 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
+import org.adamalang.runtime.sys.LivingDocument;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MockLivingDocument extends LivingDocument {
   public final ArrayList<NtClient> connects;

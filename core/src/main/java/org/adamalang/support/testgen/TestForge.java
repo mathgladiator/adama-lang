@@ -9,6 +9,9 @@
  */
 package org.adamalang.support.testgen;
 
+import org.adamalang.runtime.ops.SilentDocumentMonitor;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +22,6 @@ import java.util.Comparator;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
-import org.adamalang.runtime.ops.SilentDocumentMonitor;
-import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 public class TestForge {
   public static String forge(final boolean emission, final String className, final Path path, final Path inputRoot) {

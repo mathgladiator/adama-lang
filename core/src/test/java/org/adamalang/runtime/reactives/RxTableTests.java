@@ -9,7 +9,6 @@
  */
 package org.adamalang.runtime.reactives;
 
-import java.util.ArrayList;
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.contracts.WhereClause;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -18,6 +17,8 @@ import org.adamalang.runtime.mocks.MockLivingDocument;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 public class RxTableTests {
   @Test

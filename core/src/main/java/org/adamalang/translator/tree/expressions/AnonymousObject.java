@@ -9,10 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.privacy.PrivatePolicy;
@@ -25,6 +21,11 @@ import org.adamalang.translator.tree.types.structures.StorageSpecialization;
 import org.adamalang.translator.tree.types.structures.StructureStorage;
 import org.adamalang.translator.tree.types.traits.SupportsTwoPhaseTyping;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Consumer;
 
 /** an anonymous is an instance of an object that has no defined type.
  * <p>

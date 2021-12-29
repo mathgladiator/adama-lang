@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.natives;
 
-import java.util.ArrayList;
 import org.adamalang.runtime.mocks.MockCanGetAndSet;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 public class NtMaybeTests {
   @Test

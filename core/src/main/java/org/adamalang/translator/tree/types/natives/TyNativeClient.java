@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -23,6 +21,8 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+
+import java.util.function.Consumer;
 
 public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType, //
     DetailEqualityTestingRequiresWrapping, //

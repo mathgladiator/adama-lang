@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.statements.loops;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -18,6 +17,8 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
+
+import java.util.function.Consumer;
 
 /** classic do {} while (cond); loop */
 public class DoWhile extends Statement {

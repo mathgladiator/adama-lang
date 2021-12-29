@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.function.Supplier;
-import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
 /** a map that will respect privacy and sends state to client only on changes */
 public class DMap<TyIn, dTyOut> {

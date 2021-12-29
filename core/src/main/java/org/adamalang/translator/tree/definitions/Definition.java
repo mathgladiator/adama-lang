@@ -9,10 +9,11 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+
+import java.util.function.Consumer;
 
 /** provides a common framework for all Definitions */
 public abstract class Definition extends DocumentPosition {

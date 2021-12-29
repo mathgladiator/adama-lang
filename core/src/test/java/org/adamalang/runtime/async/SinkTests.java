@@ -10,7 +10,6 @@
 package org.adamalang.runtime.async;
 
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 

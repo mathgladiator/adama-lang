@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.types.reactive;
 
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -22,6 +20,8 @@ import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
+
+import java.util.function.Consumer;
 
 public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedType, //
     DetailComputeRequiresGet, //

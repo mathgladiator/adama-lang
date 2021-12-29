@@ -9,15 +9,16 @@
  */
 package org.adamalang.translator.codegen;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineHandler;
 import org.adamalang.translator.tree.definitions.MessageHandlerBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.traits.IsStructure;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 /** responsible for writing all channel and message handlers */
 public class CodeGenMessageHandling {

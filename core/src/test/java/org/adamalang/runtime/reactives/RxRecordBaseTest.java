@@ -12,7 +12,6 @@ package org.adamalang.runtime.reactives;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.adamalang.runtime.mocks.MockRxChild;
-import org.adamalang.runtime.stdlib.Utility;
 import org.junit.Assert;
 import org.junit.Test;
 

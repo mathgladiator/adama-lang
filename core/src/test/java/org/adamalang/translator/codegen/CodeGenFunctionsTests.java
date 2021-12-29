@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.codegen;
 
-import java.util.ArrayList;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
@@ -19,6 +18,8 @@ import org.adamalang.translator.tree.types.natives.TyNativeVoid;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 public class CodeGenFunctionsTests {
   @Test

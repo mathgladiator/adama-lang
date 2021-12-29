@@ -11,9 +11,9 @@ package org.adamalang.grpc.client.contracts;
 
 import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
-import org.adamalang.grpc.proto.CreateResponse;
-import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
+import org.adamalang.grpc.proto.CreateResponse;
 
 /** asking for a document to be created is either success or not (with a code) */
 public interface CreateCallback {

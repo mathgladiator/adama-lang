@@ -9,8 +9,9 @@
  */
 package org.adamalang.translator.tree.types.natives.functions;
 
-import java.util.ArrayList;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
+
+import java.util.ArrayList;
 
 // this is.. SUPER strange, and this exists be life is strange
 public class TyNativeFunctionInternalFieldReplacement extends TyNativeFunctional {

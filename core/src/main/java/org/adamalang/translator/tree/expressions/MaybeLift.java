@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -17,6 +16,8 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
+
+import java.util.function.Consumer;
 
 public class MaybeLift extends Expression {
   public final Token closeParen;

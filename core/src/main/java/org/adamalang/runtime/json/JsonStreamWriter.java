@@ -9,15 +9,15 @@
  */
 package org.adamalang.runtime.json;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
-
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 /** Very fast Json stream writer. */
 public class JsonStreamWriter {

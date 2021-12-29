@@ -9,12 +9,9 @@
  */
 package org.adamalang.runtime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -34,6 +31,9 @@ import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LivingDocumentTests {
   private static NtClient A = new NtClient("A", "TEST");

@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions.linq;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -21,6 +19,9 @@ import org.adamalang.translator.tree.types.natives.TyNativeMap;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class Reduce extends LinqExpression {
   public final Token fieldToken;

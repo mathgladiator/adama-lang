@@ -9,9 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -26,6 +23,9 @@ import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbedd
 import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
 import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class TyNativeTable extends TyType implements //
     AssignmentViaSetter, //

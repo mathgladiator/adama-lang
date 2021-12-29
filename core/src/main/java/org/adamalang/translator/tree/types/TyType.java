@@ -9,12 +9,12 @@
  */
 package org.adamalang.translator.tree.types;
 
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+
+import java.util.function.Consumer;
 
 public abstract class TyType extends DocumentPosition {
   public final TypeBehavior behavior;

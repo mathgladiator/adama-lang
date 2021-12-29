@@ -9,11 +9,12 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
+
+import java.util.function.Consumer;
 
 /** look up a variable in the current environment and then extract its value */
 public class Lookup extends Expression {

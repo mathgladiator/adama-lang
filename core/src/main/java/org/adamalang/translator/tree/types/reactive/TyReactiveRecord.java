@@ -9,9 +9,6 @@
  */
 package org.adamalang.translator.tree.types.reactive;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.codegen.CodeGenDeltaClass;
 import org.adamalang.translator.codegen.CodeGenRecords;
@@ -32,6 +29,9 @@ import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRootLevelCode;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class TyReactiveRecord extends TyType implements IsStructure, //
     DetailHasDeltaType, //

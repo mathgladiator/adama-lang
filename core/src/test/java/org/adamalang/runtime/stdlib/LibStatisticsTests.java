@@ -9,11 +9,12 @@
  */
 package org.adamalang.runtime.stdlib;
 
-import java.util.ArrayList;
 import org.adamalang.runtime.natives.lists.ArrayNtList;
 import org.adamalang.runtime.natives.lists.EmptyNtList;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 public class LibStatisticsTests {
   @Test

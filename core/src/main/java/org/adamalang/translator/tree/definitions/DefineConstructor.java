@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
@@ -17,6 +16,8 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
+
+import java.util.function.Consumer;
 
 /** defines a constructor which runs when the document is created */
 public class DefineConstructor extends Definition {

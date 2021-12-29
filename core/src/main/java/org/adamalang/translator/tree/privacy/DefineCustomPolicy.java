@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.privacy;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
@@ -18,6 +17,8 @@ import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
+
+import java.util.function.Consumer;
 
 /** used within a record to define a custom policy */
 public class DefineCustomPolicy extends DocumentPosition {

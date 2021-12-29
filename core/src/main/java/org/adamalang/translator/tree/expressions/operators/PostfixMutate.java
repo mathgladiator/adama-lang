@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions.operators;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -18,6 +17,8 @@ import org.adamalang.translator.tree.operands.PostfixMutateOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanBumpResult;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
+
+import java.util.function.Consumer;
 
 /** postfix mutation ($e--, $e++) */
 public class PostfixMutate extends Expression {

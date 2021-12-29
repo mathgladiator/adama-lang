@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.statements;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -25,6 +24,8 @@ import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
+
+import java.util.function.Consumer;
 
 /** type var = expr; */
 public class DefineVariable extends Statement {

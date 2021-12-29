@@ -9,14 +9,16 @@
  */
 package org.adamalang.grpc.client;
 
-import io.grpc.*;
+import io.grpc.ChannelCredentials;
+import io.grpc.ManagedChannel;
+import io.grpc.TlsChannelCredentials;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
-import org.adamalang.grpc.client.contracts.*;
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.grpc.proto.*;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.MachineIdentity;
+import org.adamalang.grpc.client.contracts.*;
+import org.adamalang.grpc.proto.*;
 
 import java.util.HashMap;
 import java.util.Random;

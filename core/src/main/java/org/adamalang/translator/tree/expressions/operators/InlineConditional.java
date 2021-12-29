@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions.operators;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -17,6 +16,8 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.WrapInstruction;
 import org.adamalang.translator.tree.types.traits.SupportsTwoPhaseTyping;
+
+import java.util.function.Consumer;
 
 /** ternary operator / inline condition (bool ? tExpr : fExpr) */
 public class InlineConditional extends Expression implements SupportsTwoPhaseTyping {

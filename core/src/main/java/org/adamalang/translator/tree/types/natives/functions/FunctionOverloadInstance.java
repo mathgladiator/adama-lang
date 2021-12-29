@@ -9,11 +9,12 @@
  */
 package org.adamalang.translator.tree.types.natives.functions;
 
-import java.util.ArrayList;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
+
+import java.util.ArrayList;
 
 /** a function overload instance is set of arguments bound to the same name such
  * that the types of parameters decide which function to use. */

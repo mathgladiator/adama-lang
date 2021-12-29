@@ -14,12 +14,13 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.Json;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Users;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.AsyncTransform;
@@ -28,8 +29,6 @@ import java.security.KeyFactory;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.regex.Pattern;
-
-import org.adamalang.common.Json;
 
 public class Authenticator implements AsyncTransform<String, AuthenticatedUser> {
     public final ExternNexus nexus;

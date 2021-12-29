@@ -9,8 +9,8 @@
  */
 package org.adamalang.runtime.sys.mocks;
 
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.common.Callback;
+import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.junit.Assert;

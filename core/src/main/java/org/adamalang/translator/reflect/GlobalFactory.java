@@ -9,16 +9,16 @@
  */
 package org.adamalang.translator.reflect;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.*;
-
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /** has the job of turning static methods on a class into a format that can be
  * consumed by Adama */

@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.statements.control;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -18,6 +17,8 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
+
+import java.util.function.Consumer;
 
 /** return from the current function (and maybe with a value) */
 public class Return extends Statement {

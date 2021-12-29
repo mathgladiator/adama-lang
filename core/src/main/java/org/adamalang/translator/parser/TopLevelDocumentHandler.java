@@ -12,7 +12,6 @@ package org.adamalang.translator.parser;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.*;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
-import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.structures.BubbleDefinition;
 import org.adamalang.translator.tree.types.structures.FieldDefinition;
 import org.adamalang.translator.tree.types.traits.IsEnum;

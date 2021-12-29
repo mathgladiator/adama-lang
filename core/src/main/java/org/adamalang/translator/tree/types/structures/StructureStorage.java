@@ -9,9 +9,6 @@
  */
 package org.adamalang.translator.tree.types.structures;
 
-import java.util.*;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -23,6 +20,9 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
 import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
 import org.adamalang.translator.tree.types.reactive.TyReactiveInteger;
+
+import java.util.*;
+import java.util.function.Consumer;
 
 public class StructureStorage extends DocumentPosition {
   public final boolean anonymous;

@@ -9,10 +9,11 @@
  */
 package org.adamalang.support.testgen;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PhaseTest {
   public static void go(final LivingDocumentFactory factory, final DocumentMonitor monitor, final AtomicBoolean passedTests, final StringBuilder outputFile) throws Exception {

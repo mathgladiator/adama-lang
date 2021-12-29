@@ -9,9 +9,6 @@
  */
 package org.adamalang.translator.env;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TreeSet;
 import org.adamalang.runtime.stdlib.LibMath;
 import org.adamalang.runtime.stdlib.LibStatistics;
 import org.adamalang.runtime.stdlib.LibString;
@@ -21,6 +18,10 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.TreeSet;
 
 /** a pool of global objects like Math, Random, String */
 public class GlobalObjectPool {

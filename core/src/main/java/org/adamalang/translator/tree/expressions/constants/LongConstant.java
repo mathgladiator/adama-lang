@@ -9,13 +9,14 @@
  */
 package org.adamalang.translator.tree.expressions.constants;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeLong;
+
+import java.util.function.Consumer;
 
 /** an integral constant that is really big (9,223,372,036,854,775,807) */
 public class LongConstant extends Expression {

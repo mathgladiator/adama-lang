@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.async;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMaybe;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /** A sink is basically a queue for multiple users to contribute to. */
 public class Sink<T> {

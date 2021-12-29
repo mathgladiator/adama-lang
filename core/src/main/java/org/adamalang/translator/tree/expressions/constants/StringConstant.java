@@ -9,13 +9,14 @@
  */
 package org.adamalang.translator.tree.expressions.constants;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeString;
+
+import java.util.function.Consumer;
 
 /** utf-8 strings constant ("ninja") */
 public class StringConstant extends Expression {

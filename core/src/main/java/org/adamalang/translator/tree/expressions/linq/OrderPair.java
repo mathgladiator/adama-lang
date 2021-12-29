@@ -9,9 +9,10 @@
  */
 package org.adamalang.translator.tree.expressions.linq;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+
+import java.util.function.Consumer;
 
 public class OrderPair extends DocumentPosition {
   public final boolean asc;

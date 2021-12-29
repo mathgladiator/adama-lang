@@ -34,9 +34,9 @@ public class Responder {
 
     public TreeSet<String> imports() {
         TreeSet<String> set = new TreeSet<>();
-        set.add("org.adamalang.runtime.exceptions.ErrorCodeException");
+        set.add("org.adamalang.common.ErrorCodeException");
         set.add("org.adamalang.web.io.*");
-        set.add("org.adamalang.runtime.contracts.Callback");
+        set.add("org.adamalang.common.Callback");
         set.add("com.fasterxml.jackson.databind.node.ObjectNode");
         set.add("com.fasterxml.jackson.databind.json.JsonMapper");
         return set;

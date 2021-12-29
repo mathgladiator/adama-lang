@@ -1,6 +1,6 @@
 import WebSocket from 'isomorphic-ws';
 
-import { Tree } from './tree';
+import {Tree} from './tree';
 
 export function MakeTree(): Tree {
   return new Tree();

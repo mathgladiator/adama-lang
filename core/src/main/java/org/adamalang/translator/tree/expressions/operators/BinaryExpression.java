@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions.operators;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -22,6 +21,8 @@ import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.traits.details.DetailComparisonTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailSpecialMultiplyOp;
+
+import java.util.function.Consumer;
 
 /** binary operation (left $OP right) */
 public class BinaryExpression extends Expression {

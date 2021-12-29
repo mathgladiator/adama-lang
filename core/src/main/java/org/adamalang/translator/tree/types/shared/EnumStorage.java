@@ -9,14 +9,6 @@
  */
 package org.adamalang.translator.tree.types.shared;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -26,6 +18,9 @@ import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
+
+import java.util.*;
+import java.util.function.Consumer;
 
 public class EnumStorage extends DocumentPosition {
   private String defaultLabel;

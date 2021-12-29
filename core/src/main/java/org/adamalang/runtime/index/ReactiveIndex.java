@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.index;
 
+import org.adamalang.runtime.reactives.RxRecordBase;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeSet;
-import org.adamalang.runtime.reactives.RxRecordBase;
 
 /** an index of a single column of data */
 public class ReactiveIndex<Ty extends RxRecordBase> {

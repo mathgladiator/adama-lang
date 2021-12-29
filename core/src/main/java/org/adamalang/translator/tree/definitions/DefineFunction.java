@@ -9,8 +9,6 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
@@ -19,6 +17,9 @@ import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /** defines a function */
 public class DefineFunction extends Definition {

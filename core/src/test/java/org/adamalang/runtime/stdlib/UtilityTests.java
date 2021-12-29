@@ -9,11 +9,12 @@
  */
 package org.adamalang.runtime.stdlib;
 
-import java.util.ArrayList;
-import java.util.function.Function;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.function.Function;
 
 public class UtilityTests {
   @Test

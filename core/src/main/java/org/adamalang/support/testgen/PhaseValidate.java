@@ -9,16 +9,15 @@
  */
 package org.adamalang.support.testgen;
 
-import java.nio.file.Path;
-import java.util.regex.Pattern;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.stdlib.Utility;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
 import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.DocumentPosition;
+
+import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 public class PhaseValidate {
   public static class ValidationResults {

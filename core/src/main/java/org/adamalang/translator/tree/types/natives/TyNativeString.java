@@ -9,10 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -27,11 +23,10 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.CanBeMapDomain;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.DetailComparisonTestingRequiresWrapping;
-import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
-import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
-import org.adamalang.translator.tree.types.traits.details.DetailSpecialMultiplyOp;
-import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
+import org.adamalang.translator.tree.types.traits.details.*;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /** The type representing a utf-8 encoded string. This uses the native 'String'
  * java type. */

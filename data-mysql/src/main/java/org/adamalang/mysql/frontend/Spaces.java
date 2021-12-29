@@ -10,8 +10,8 @@
 package org.adamalang.mysql.frontend;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.mysql.DataBase;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.mysql.DataBase;
 
 import java.sql.*;
 import java.util.ArrayList;

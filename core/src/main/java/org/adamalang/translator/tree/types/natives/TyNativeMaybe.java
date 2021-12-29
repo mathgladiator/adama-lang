@@ -9,9 +9,6 @@
  */
 package org.adamalang.translator.tree.types.natives;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -24,12 +21,10 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
-import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
-import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
-import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
-import org.adamalang.translator.tree.types.traits.details.DetailNativeDeclarationIsNotStandard;
-import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveCall;
-import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
+import org.adamalang.translator.tree.types.traits.details.*;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedType, //
     DetailNativeDeclarationIsNotStandard, //

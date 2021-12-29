@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
@@ -17,14 +16,14 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
-import org.adamalang.translator.tree.types.natives.TyNativeMessage;
-import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
+
+import java.util.function.Consumer;
 
 /** field/method look up ($e.field) */
 public class FieldLookup extends Expression {

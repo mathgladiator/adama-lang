@@ -9,11 +9,12 @@
  */
 package org.adamalang.runtime.reactives;
 
-import java.util.function.Supplier;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+
+import java.util.function.Supplier;
 
 /** a reactive lazy formula which is computed on demand */
 public class RxLazy<Ty> extends RxBase implements RxChild {

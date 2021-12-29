@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.expressions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -25,6 +24,8 @@ import org.adamalang.translator.tree.types.traits.IsMap;
 import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailIndexLookup;
 import org.adamalang.translator.tree.types.traits.details.IndexLookupStyle;
+
+import java.util.function.Consumer;
 
 /** return a maybe type from an index lookup. The maybe forces a range check, so
  * it is always valid. */

@@ -9,15 +9,16 @@
  */
 package org.adamalang.runtime.natives.lists;
 
+import org.adamalang.runtime.contracts.WhereClause;
+import org.adamalang.runtime.natives.NtList;
+import org.adamalang.runtime.natives.NtMap;
+import org.adamalang.runtime.natives.NtMaybe;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.adamalang.runtime.contracts.WhereClause;
-import org.adamalang.runtime.natives.NtList;
-import org.adamalang.runtime.natives.NtMap;
-import org.adamalang.runtime.natives.NtMaybe;
 
 /** a list backed by nothing */
 public class EmptyNtList<T> implements NtList<T> {

@@ -9,7 +9,6 @@
  */
 package org.adamalang.translator.tree.statements.testing;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
@@ -18,6 +17,8 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
+
+import java.util.function.Consumer;
 
 /** inject a message into a channel; this made sense in the old type system.
  * This should be a function exposed to channel<T>, and only available within a

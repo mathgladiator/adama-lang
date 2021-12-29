@@ -12,6 +12,7 @@ package org.adamalang.cli.commands;
 import org.adamalang.apikit.Tool;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.common.DefaultCopyright;
 import org.adamalang.support.GenerateLanguageTests;
 
 import java.io.File;
@@ -57,16 +58,6 @@ public class Contrib {
         System.out.println("    " + Util.prefix("copyright", Util.ANSI.Green) + "         Sprinkle Jeff's name everywhere.");
     }
 
-    public static final String NEW_COPYRIGHT_MESSAGE = "/*\n" +
-            " * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.\n" +
-            " *\n" +
-            " * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.\n" +
-            " *\n" +
-            " * See http://www.adama-lang.org/ for more information.\n" +
-            " *\n" +
-            " * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)\n" +
-            " */\n";
-
     private static void scan(File root) throws Exception {
         for(File f : root.listFiles()) {
             if (f.isDirectory()) {
@@ -77,10 +68,10 @@ public class Contrib {
                     int start = code.indexOf("/*");
                     int end = code.indexOf("*/");
                     if (start >= 0 && start <= 5 && end > start) {
-                        String newCode = NEW_COPYRIGHT_MESSAGE + code.substring(end + 2).trim() + "\n";
+                        String newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.substring(end + 2).trim() + "\n";
                         Files.writeString(f.toPath(), newCode);
                     } else {
-                        String newCode = NEW_COPYRIGHT_MESSAGE + code.trim() + "\n";
+                        String newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.trim() + "\n";
                         Files.writeString(f.toPath(), newCode);
                     }
                 }

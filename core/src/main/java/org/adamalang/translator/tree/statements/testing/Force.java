@@ -9,12 +9,13 @@
  */
 package org.adamalang.translator.tree.statements.testing;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.statements.Statement;
+
+import java.util.function.Consumer;
 
 /** Force a behavior of the document (like making progress) */
 public class Force extends Statement {

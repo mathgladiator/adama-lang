@@ -9,9 +9,10 @@
  */
 package org.adamalang.translator.tree.definitions;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+
+import java.util.function.Consumer;
 
 /** imports a document into the given document */
 public class ImportDocument extends DocumentPosition {

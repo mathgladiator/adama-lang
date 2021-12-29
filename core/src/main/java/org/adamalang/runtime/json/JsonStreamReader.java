@@ -9,15 +9,14 @@
  */
 package org.adamalang.runtime.json;
 
-import java.util.*;
-
 import org.adamalang.runtime.json.token.JsonToken;
 import org.adamalang.runtime.json.token.JsonTokenType;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtDynamic;
-import org.adamalang.translator.parser.token.Token;
+
+import java.util.*;
 
 public class JsonStreamReader {
   private int index;

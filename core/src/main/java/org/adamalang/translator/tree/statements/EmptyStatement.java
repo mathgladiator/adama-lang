@@ -9,10 +9,11 @@
  */
 package org.adamalang.translator.tree.statements;
 
-import java.util.function.Consumer;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
+
+import java.util.function.Consumer;
 
 /** ; */
 public class EmptyStatement extends Statement {
