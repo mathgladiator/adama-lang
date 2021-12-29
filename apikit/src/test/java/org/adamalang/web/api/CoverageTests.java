@@ -9,5 +9,4 @@
  */
 package org.adamalang.web.api;
 
-public class CoverageTests {
-}
+public class CoverageTests {}
