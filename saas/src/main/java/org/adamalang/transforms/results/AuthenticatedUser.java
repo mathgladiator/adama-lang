@@ -15,6 +15,7 @@ public class AuthenticatedUser {
   public final Source source;
   public final int id;
   public final NtClient who;
+
   public AuthenticatedUser(Source source, int id, NtClient who) {
     this.source = source;
     this.id = id;

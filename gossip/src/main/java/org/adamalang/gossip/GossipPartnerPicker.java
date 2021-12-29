@@ -17,8 +17,8 @@ public class GossipPartnerPicker {
   private final HashSet<String> initial;
   private final ArrayList<String> peers;
   private final Random rng;
-  private String cachedPeersHash;
   private final HashMap<String, Integer> counts;
+  private String cachedPeersHash;
 
   public GossipPartnerPicker(InstanceSetChain chain, HashSet<String> initial, Random rng) {
     this.chain = chain;

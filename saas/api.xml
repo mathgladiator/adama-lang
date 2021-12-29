@@ -2,48 +2,54 @@
 <api output-path="./saas/src/main/java/org/adamalang/api" package="org.adamalang.api">
     <parameter-definition name="identity" type="string" missing-error="458759">
         <documentation>
-            Identity is a token passed to the Authenticator which has the job of producing an agent (i.e. who is this person) and an authority (who vouches for this person).
+            Identity is a token passed to the Authenticator which has the job of producing an agent (i.e. who is this
+            person) and an authority (who vouches for this person).
             This is an opaque string for most of the system, but a common convention is to use JWT.
 
-            This parameter may also be prefixed with "FB/" or "GOOGLE/" for usage of common social media validation. TODO: flush out social media login.
+            This parameter may also be prefixed with "FB/" or "GOOGLE/" for usage of common social media validation.
+            TODO: flush out social media login.
         </documentation>
         <transform service="org.adamalang.transforms.Authenticator"
-                output-name="who"
-                output-java-type="org.adamalang.transforms.results.AuthenticatedUser"
-                error-code="444420" />
+                   output-name="who"
+                   output-java-type="org.adamalang.transforms.results.AuthenticatedUser"
+                   error-code="444420"/>
     </parameter-definition>
 
     <parameter-definition name="space" type="string" missing-error="461828">
         <documentation>
-            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to denote the name of that collection.
+            A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
+            denote the name of that collection.
 
             Spaces are case insensitive using the regex a-z[a-z0-9\.]* to validation.
         </documentation>
         <transform service="org.adamalang.transforms.SpacePolicyLocator"
-                output-name="policy"
-                output-java-type="org.adamalang.transforms.results.SpacePolicy"
-                error-code="454658" />
-        <skip-transform on="space/create" />
+                   output-name="policy"
+                   output-java-type="org.adamalang.transforms.results.SpacePolicy"
+                   error-code="454658"/>
+        <skip-transform on="space/create"/>
     </parameter-definition>
 
     <parameter-definition name="key" type="string" missing-error="466947">
         <documentation>
-            Within a space, documents are organized within a map and the 'key' parameter will uniquely identify documents.
+            Within a space, documents are organized within a map and the 'key' parameter will uniquely identify
+            documents.
 
             Keys are case insensitive using the regex [a-z0-9\.-_]* for validation
         </documentation>
-        <validate service="org.adamalang.validators.ValidateKey" />
+        <validate service="org.adamalang.validators.ValidateKey"/>
     </parameter-definition>
 
     <parameter-definition name="entropy" type="string" optional="true">
         <documentation>
-            Each document has a random number generator. When 'entropy' is present, it will seed the random number generate such that the randomness is now deterministic.
+            Each document has a random number generator. When 'entropy' is present, it will seed the random number
+            generate such that the randomness is now deterministic.
         </documentation>
     </parameter-definition>
 
     <parameter-definition name="arg" type="json-object" missing-error="461826">
         <documentation>
-            Documents are constructed with a message argument per the @construct event. The 'arg' is an object which is deserialized within the constructor's message type.
+            Documents are constructed with a message argument per the @construct event. The 'arg' is an object which is
+            deserialized within the constructor's message type.
         </documentation>
     </parameter-definition>
 
@@ -51,7 +57,7 @@
         <documentation>
             'channel' is a identifier within a document used for communication
         </documentation>
-        <validate service="org.adamalang.validators.ValidateChannel" />
+        <validate service="org.adamalang.validators.ValidateChannel"/>
     </parameter-definition>
 
     <parameter-definition name="message" type="json-object" missing-error="425987">
@@ -64,7 +70,8 @@
         <documentation>
             'connection' is a key to locate a sub-stream within a connection
 
-            This parameter originates as the id sent during the method 'init/start' since the initiation requires an active connection between the client and the server.
+            This parameter originates as the id sent during the method 'init/start' since the initiation requires an
+            active connection between the client and the server.
         </documentation>
     </parameter-definition>
 
@@ -81,7 +88,7 @@
         <transform service="org.adamalang.transforms.UserIdResolver"
                    output-name="userId"
                    output-java-type="Integer"
-                   error-code="460815" />
+                   error-code="460815"/>
     </parameter-definition>
 
     <parameter-definition name="plan" type="json-object" missing-error="425999">
@@ -90,7 +97,8 @@
 
             These rules allow for a migration to happen slowly on your schedule.
 
-            Note: this method will validate that the scripts are valid, compile, and will not have any major regressions during role out.
+            Note: this method will validate that the scripts are valid, compile, and will not have any major regressions
+            during role out.
         </documentation>
     </parameter-definition>
 
@@ -102,11 +110,10 @@
 
     <parameter-definition name="marker" type="string" optional="true">
         <documentation>
-            'marker' is a key to skip ahead a listing. When iterating, value will be returned that are after marker. To paginate an entire list, then
+            'marker' is a key to skip ahead a listing. When iterating, value will be returned that are after marker. To
+            paginate an entire list, then
         </documentation>
     </parameter-definition>
-
-
 
 
     <parameter-definition name="name" type="string" missing-error="453647">
@@ -119,7 +126,7 @@
         <documentation>
             'key-store' is a collection of public keys used to validate an authority
         </documentation>
-        <validate service="org.adamalang.validators.ValidateKeystore" />
+        <validate service="org.adamalang.validators.ValidateKeystore"/>
     </parameter-definition>
 
     <parameter-definition name="authority" type="string" missing-error="430095">
@@ -191,7 +198,8 @@
 
     <field-definition name="plan" type="json-object">
         <documentation>
-            A plan is a predictable mapping of keys to implementation. The core reason for having multiple concurrent implementations is to have a smooth and orderly deployment.
+            A plan is a predictable mapping of keys to implementation. The core reason for having multiple concurrent
+            implementations is to have a smooth and orderly deployment.
         </documentation>
     </field-definition>
 
@@ -238,66 +246,66 @@
     </field-definition>
 
 
-
     <responder name="space-listing" stream="true">
-        <field name="space" />
-        <field name="role" />
-        <field name="billing" />
-        <field name="created" />
+        <field name="space"/>
+        <field name="role"/>
+        <field name="billing"/>
+        <field name="created"/>
     </responder>
 
     <responder name="space-listing" stream="true">
-        <field name="space" />
-        <field name="role" />
-        <field name="billing" />
-        <field name="created" />
+        <field name="space"/>
+        <field name="role"/>
+        <field name="billing"/>
+        <field name="created"/>
     </responder>
 
     <responder name="authority-listing" stream="true">
-        <field name="authority" />
+        <field name="authority"/>
     </responder>
 
     <responder name="simple">
     </responder>
 
     <responder name="plan">
-        <field name="plan" />
+        <field name="plan"/>
     </responder>
 
     <responder name="reflection">
-        <field name="reflection" />
+        <field name="reflection"/>
     </responder>
 
     <responder name="claim-result">
-        <field name="authority" />
+        <field name="authority"/>
     </responder>
 
     <responder name="data" stream="true">
-        <field name="delta" />
+        <field name="delta"/>
     </responder>
 
     <responder name="initiation">
-        <field name="identity" />
+        <field name="identity"/>
     </responder>
 
 
-
-
-
     <method name="init/start" responder="simple" create="waiting-for-email">
-        <parameter name="email" />
+        <parameter name="email"/>
         <documentation>
-            This establishes a developer machine via email verification. The expectation is that while the email is being sent, the socket is held open for the developer to complete the operation by providing the generated code.
+            This establishes a developer machine via email verification. The expectation is that while the email is
+            being sent, the socket is held open for the developer to complete the operation by providing the generated
+            code.
 
-            The generated code is securely randomized and tied to the socket to provide a secure way to validate the email on the other end.
+            The generated code is securely randomized and tied to the socket to provide a secure way to validate the
+            email on the other end.
 
             Developer accounts are keyed off of email.
         </documentation>
     </method>
 
-    <method name="init/revoke-all" responder="simple" handler="waiting-for-email" find-by="connection" error-find-by="441361">
-        <parameter name="connection" />
-        <parameter name="code" />
+    <method name="init/revoke-all" responder="simple" handler="waiting-for-email" find-by="connection"
+            error-find-by="441361">
+        <parameter name="connection"/>
+        <parameter name="code"/>
         <documentation>
             When the developer receives an email, this method is invoked to revoke all existing public keys.
 
@@ -305,189 +313,192 @@
         </documentation>
     </method>
 
-    <method name="init/generate-identity" responder="initiation" handler="waiting-for-email" find-by="connection" error-find-by="454673" destroy="true">
-        <parameter name="connection" />
-        <parameter name="code" />
+    <method name="init/generate-identity" responder="initiation" handler="waiting-for-email" find-by="connection"
+            error-find-by="454673" destroy="true">
+        <parameter name="connection"/>
+        <parameter name="code"/>
         <documentation>
             When the developer receives an email, this method is invoked to complete the hand-shake.
 
-            The server will generate a key-pair and send the secret to the client to stash within their config, and the public key will be stored to validate future requests made by this developer machine.
+            The server will generate a key-pair and send the secret to the client to stash within their config, and the
+            public key will be stored to validate future requests made by this developer machine.
 
             A public key will be held onto for 30 days.
         </documentation>
     </method>
 
     <method name="probe" responder="simple">
-        <parameter name="identity" />
+        <parameter name="identity"/>
         <documentation>
             This is useful to validate an identity without executing anything
         </documentation>
     </method>
 
 
-
     <method name="authority/create" responder="claim-result">
-        <parameter name="identity" />
+        <parameter name="identity"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="authority/set" responder="simple">
-        <parameter name="identity" />
-        <parameter name="authority" />
-        <parameter name="key-store" />
+        <parameter name="identity"/>
+        <parameter name="authority"/>
+        <parameter name="key-store"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="authority/transfer" responder="simple">
-        <parameter name="identity" />
-        <parameter name="authority" />
-        <parameter name="email" />
+        <parameter name="identity"/>
+        <parameter name="authority"/>
+        <parameter name="email"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="authority/list" responder="authority-listing">
-        <parameter name="identity" />
+        <parameter name="identity"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="authority/destroy" responder="simple">
-        <parameter name="identity" />
-        <parameter name="authority" />
+        <parameter name="identity"/>
+        <parameter name="authority"/>
         <documentation>
         </documentation>
     </method>
 
 
-
     <method name="space/create" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="space/get" responder="plan">
-        <parameter name="identity" />
-        <parameter name="space" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="space/set" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="plan" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="plan"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="space/delete" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="space/set-role" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="email" />
-        <parameter name="role" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="email"/>
+        <parameter name="role"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="space/owner/set" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="email" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="email"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="space/reflect" responder="reflection">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="key" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="space/list" responder="space-listing">
-        <parameter name="identity" />
-        <parameter name="marker" />
-        <parameter name="limit" />
+        <parameter name="identity"/>
+        <parameter name="marker"/>
+        <parameter name="limit"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="document/create" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="key" />
-        <parameter name="entropy" />
-        <parameter name="arg" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="entropy"/>
+        <parameter name="arg"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="document/list" responder="simple">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="limit" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="limit"/>
         <documentation>
         </documentation>
     </method>
 
     <method name="connection/create" responder="data" create="document-stream">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="key" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
         <documentation>
         </documentation>
     </method>
 
-    <method name="connection/send" responder="simple" handler="document-stream" find-by="connection" error-find-by="457745">
-        <parameter name="connection" />
-        <parameter name="channel" />
-        <parameter name="message" />
+    <method name="connection/send" responder="simple" handler="document-stream" find-by="connection"
+            error-find-by="457745">
+        <parameter name="connection"/>
+        <parameter name="channel"/>
+        <parameter name="message"/>
         <documentation>
         </documentation>
     </method>
 
-    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection" error-find-by="474128" destroy="true">
-        <parameter name="connection" />
+    <method name="connection/end" responder="simple" handler="document-stream" find-by="connection"
+            error-find-by="474128" destroy="true">
+        <parameter name="connection"/>
         <documentation>
         </documentation>
     </method>
-
 
 
     <method name="attachment/start" responder="simple" create="attachment-upload">
-        <parameter name="identity" />
-        <parameter name="space" />
-        <parameter name="key" />
-        <parameter name="filename" />
-        <parameter name="content-type" />
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="key"/>
+        <parameter name="filename"/>
+        <parameter name="content-type"/>
         <documentation>
         </documentation>
     </method>
 
-    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201">
-        <parameter name="upload" />
-        <parameter name="chunk-md5" />
-        <parameter name="base64-bytes" />
+    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload"
+            error-find-by="477201">
+        <parameter name="upload"/>
+        <parameter name="chunk-md5"/>
+        <parameter name="base64-bytes"/>
         <documentation>
         </documentation>
     </method>
 
-    <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="478227">
-        <parameter name="upload" />
-        <parameter name="md5" />
+    <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload"
+            error-find-by="478227">
+        <parameter name="upload"/>
+        <parameter name="md5"/>
         <documentation>
         </documentation>
     </method>

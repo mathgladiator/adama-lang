@@ -53,14 +53,6 @@ public class MockEvents implements Events {
     write("DELTA:" + data);
   }
 
-  private synchronized void write(String x) {
-    System.err.println("MOCK:" + x);
-    history.add(x);
-    for (CountDownLatch latch : latches) {
-      latch.countDown();
-    }
-  }
-
   @Override
   public void error(int code) {
     write("ERROR:" + code);
@@ -69,5 +61,13 @@ public class MockEvents implements Events {
   @Override
   public void disconnected() {
     write("DISCONNECTED");
+  }
+
+  private synchronized void write(String x) {
+    System.err.println("MOCK:" + x);
+    history.add(x);
+    for (CountDownLatch latch : latches) {
+      latch.countDown();
+    }
   }
 }

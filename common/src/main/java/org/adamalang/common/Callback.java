@@ -38,7 +38,8 @@ public interface Callback<T> {
         }
       };
 
-  static <In, Out> Callback<In> transform(Callback<Out> output, int exceptionErrorCode, Function<In, Out> f) {
+  static <In, Out> Callback<In> transform(
+      Callback<Out> output, int exceptionErrorCode, Function<In, Out> f) {
     return new Callback<>() {
       @Override
       public void success(In value) {
@@ -62,7 +63,8 @@ public interface Callback<T> {
   /** the action failed outright, and the reason is the exception */
   void failure(ErrorCodeException ex);
 
-  static <T> Callback<T> bind(ScheduledExecutorService service, int exceptionErrorCode, Callback<T> next) {
+  static <T> Callback<T> bind(
+      ScheduledExecutorService service, int exceptionErrorCode, Callback<T> next) {
     return new Callback<T>() {
       @Override
       public void success(T value) {

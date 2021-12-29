@@ -14,7 +14,10 @@ import org.adamalang.gossip.proto.Endpoint;
 
 import java.util.*;
 
-/** This consolidates all the instances and provides a historical chain of history so updates can flow reasonably */
+/**
+ * This consolidates all the instances and provides a historical chain of history so updates can
+ * flow reasonably
+ */
 public class InstanceSetChain {
   private final TimeSource time;
   private final HashMap<String, Instance> primary;
