@@ -15,5 +15,5 @@ import java.sql.SQLException;
 /** for walking a result set or executing on a single row */
 @FunctionalInterface
 public interface SQLConsumer {
-    public void accept(ResultSet rs) throws SQLException;
+  void accept(ResultSet rs) throws SQLException;
 }

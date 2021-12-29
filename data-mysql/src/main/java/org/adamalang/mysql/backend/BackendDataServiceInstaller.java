@@ -15,22 +15,26 @@ import java.sql.Connection;
 
 /** handy-dany installer to setup the tables */
 public class BackendDataServiceInstaller {
-    public final DataBase dataBase;
+  public final DataBase dataBase;
 
-    public BackendDataServiceInstaller(DataBase dataBase) {
-        this.dataBase = dataBase;
-    }
+  public BackendDataServiceInstaller(DataBase dataBase) {
+    this.dataBase = dataBase;
+  }
 
-    public void install() throws Exception {
-        String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
+  public void install() throws Exception {
+    String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
 
-        String createIndexTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`index` (") //
+    String createIndexTableSQL =
+        new StringBuilder() //
+            .append("CREATE TABLE IF NOT EXISTS `")
+            .append(dataBase.databaseName)
+            .append("`.`index` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `space` VARCHAR(128) NOT NULL,") //
             .append("  `key` VARCHAR(512) NOT NULL,") //
             .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
-            .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
+            .append(
+                "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
             .append("  `head_seq` INT(4) UNSIGNED NOT NULL,") //
             .append("  `invalidate` BOOLEAN NOT NULL,") //
             .append("  `when` DATETIME NOT NULL,") //
@@ -40,8 +44,11 @@ public class BackendDataServiceInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
-        String createDeltasTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`deltas` (") //
+    String createDeltasTableSQL =
+        new StringBuilder() //
+            .append("CREATE TABLE IF NOT EXISTS `")
+            .append(dataBase.databaseName)
+            .append("`.`deltas` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `parent` INT(4) UNSIGNED NOT NULL,") //
             .append("  `seq_begin` INT(4) UNSIGNED NOT NULL,") //
@@ -58,24 +65,39 @@ public class BackendDataServiceInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
-        Connection connection = dataBase.pool.getConnection();
-        try {
-            DataBase.execute(connection, createDatabaseSQL);
-            DataBase.execute(connection, createIndexTableSQL);
-            DataBase.execute(connection, createDeltasTableSQL);
-        } finally {
-            connection.close();
-        }
+    Connection connection = dataBase.pool.getConnection();
+    try {
+      DataBase.execute(connection, createDatabaseSQL);
+      DataBase.execute(connection, createIndexTableSQL);
+      DataBase.execute(connection, createDeltasTableSQL);
+    } finally {
+      connection.close();
     }
+  }
 
-    public void uninstall() throws Exception {
-        Connection connection = dataBase.pool.getConnection();
-        try {
-            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`deltas`;").toString());
-            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`index`;").toString());
-            DataBase.execute(connection, new StringBuilder("DROP DATABASE `").append(dataBase.databaseName).append("`;").toString());
-        } finally {
-            connection.close();
-        }
+  public void uninstall() throws Exception {
+    Connection connection = dataBase.pool.getConnection();
+    try {
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP TABLE IF EXISTS `")
+              .append(dataBase.databaseName)
+              .append("`.`deltas`;")
+              .toString());
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP TABLE IF EXISTS `")
+              .append(dataBase.databaseName)
+              .append("`.`index`;")
+              .toString());
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP DATABASE `")
+              .append(dataBase.databaseName)
+              .append("`;")
+              .toString());
+    } finally {
+      connection.close();
     }
+  }
 }

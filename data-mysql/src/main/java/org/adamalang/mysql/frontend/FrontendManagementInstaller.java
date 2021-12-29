@@ -14,16 +14,17 @@ import org.adamalang.mysql.DataBase;
 import java.sql.Connection;
 
 public class FrontendManagementInstaller {
-    public final DataBase dataBase;
+  public final DataBase dataBase;
 
-    public FrontendManagementInstaller(DataBase dataBase) {
-        this.dataBase = dataBase;
-    }
+  public FrontendManagementInstaller(DataBase dataBase) {
+    this.dataBase = dataBase;
+  }
 
-    public void install() throws Exception {
-        String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
+  public void install() throws Exception {
+    String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
 
-        String createEmailsTableSQL = new StringBuilder() //
+    String createEmailsTableSQL =
+        new StringBuilder() //
             .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`emails` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `email` VARCHAR(128) NOT NULL,") //
@@ -33,7 +34,8 @@ public class FrontendManagementInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
-        String createAccessKeysTableSQL = new StringBuilder() //
+    String createAccessKeysTableSQL =
+        new StringBuilder() //
             .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`email_keys` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `user` INT(4) UNSIGNED NOT NULL,") //
@@ -46,7 +48,8 @@ public class FrontendManagementInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
-        String createSpaceTableSQL = new StringBuilder() //
+    String createSpaceTableSQL =
+        new StringBuilder() //
             .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`spaces` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
@@ -54,7 +57,8 @@ public class FrontendManagementInstaller {
             .append("  `billing` VARCHAR(16) NOT NULL,") //
             .append("  `plan` TEXT NOT NULL,") //
             .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
-            .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
+            .append(
+                "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
             .append("  PRIMARY KEY (`id`),") //
             .append("  UNIQUE `u` (`name`),") //
             .append("  INDEX `c` (`owner`))") //
@@ -62,7 +66,8 @@ public class FrontendManagementInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
-        String createGrantTableSQL  = new StringBuilder() //
+    String createGrantTableSQL =
+        new StringBuilder() //
             .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`grants` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `space` INT(4) UNSIGNED NOT NULL,") //
@@ -74,8 +79,10 @@ public class FrontendManagementInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
-        String createAuthoritiesTableSQL = new StringBuilder() //
-            .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`authorities` (") //
+    String createAuthoritiesTableSQL =
+        new StringBuilder() //
+            .append(
+                "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`authorities` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
             .append("  `authority` VARCHAR(64) NOT NULL,") //
@@ -89,30 +96,60 @@ public class FrontendManagementInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
-        Connection connection = dataBase.pool.getConnection();
-        try {
-            DataBase.execute(connection, createDatabaseSQL);
-            DataBase.execute(connection, createEmailsTableSQL);
-            DataBase.execute(connection, createAccessKeysTableSQL);
-            DataBase.execute(connection, createSpaceTableSQL);
-            DataBase.execute(connection, createGrantTableSQL);
-            DataBase.execute(connection, createAuthoritiesTableSQL);
-        } finally {
-            connection.close();
-        }
+    Connection connection = dataBase.pool.getConnection();
+    try {
+      DataBase.execute(connection, createDatabaseSQL);
+      DataBase.execute(connection, createEmailsTableSQL);
+      DataBase.execute(connection, createAccessKeysTableSQL);
+      DataBase.execute(connection, createSpaceTableSQL);
+      DataBase.execute(connection, createGrantTableSQL);
+      DataBase.execute(connection, createAuthoritiesTableSQL);
+    } finally {
+      connection.close();
     }
+  }
 
-    public void uninstall() throws Exception {
-        Connection connection = dataBase.pool.getConnection();
-        try {
-            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`emails`;").toString());
-            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`email_keys`;").toString());
-            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`spaces`;").toString());
-            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`grants`;").toString());
-            DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`authorities`;").toString());
-            DataBase.execute(connection, new StringBuilder("DROP DATABASE `").append(dataBase.databaseName).append("`;").toString());
-        } finally {
-            connection.close();
-        }
+  public void uninstall() throws Exception {
+    Connection connection = dataBase.pool.getConnection();
+    try {
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP TABLE IF EXISTS `")
+              .append(dataBase.databaseName)
+              .append("`.`emails`;")
+              .toString());
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP TABLE IF EXISTS `")
+              .append(dataBase.databaseName)
+              .append("`.`email_keys`;")
+              .toString());
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP TABLE IF EXISTS `")
+              .append(dataBase.databaseName)
+              .append("`.`spaces`;")
+              .toString());
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP TABLE IF EXISTS `")
+              .append(dataBase.databaseName)
+              .append("`.`grants`;")
+              .toString());
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP TABLE IF EXISTS `")
+              .append(dataBase.databaseName)
+              .append("`.`authorities`;")
+              .toString());
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP DATABASE `")
+              .append(dataBase.databaseName)
+              .append("`;")
+              .toString());
+    } finally {
+      connection.close();
     }
+  }
 }

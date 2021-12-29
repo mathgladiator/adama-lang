@@ -17,5 +17,5 @@ import java.sql.SQLException;
 /** for executing a transaction */
 @FunctionalInterface
 public interface SQLTransact<R> {
-    public R execute(Connection c) throws SQLException, ErrorCodeException;
+  R execute(Connection c) throws SQLException, ErrorCodeException;
 }
