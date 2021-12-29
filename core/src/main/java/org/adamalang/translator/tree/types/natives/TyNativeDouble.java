@@ -26,14 +26,17 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.function.Consumer;
 
-/** represents a double precision floating point number. For instance, 3.14 is a
- * floating point number. This uses the native 'double' java type. */
-public class TyNativeDouble extends TySimpleNative implements //
-    IsNativeValue, //
-    DetailHasDeltaType, //
-    DetailTypeHasMethods, //
-    DetailEqualityTestingRequiresWrapping, //
-    AssignmentViaNative //
+/**
+ * represents a double precision floating point number. For instance, 3.14 is a floating point
+ * number. This uses the native 'double' java type.
+ */
+public class TyNativeDouble extends TySimpleNative
+    implements //
+        IsNativeValue, //
+        DetailHasDeltaType, //
+        DetailTypeHasMethods, //
+        DetailEqualityTestingRequiresWrapping, //
+        AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
@@ -59,6 +62,22 @@ public class TyNativeDouble extends TySimpleNative implements //
   }
 
   @Override
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeDouble(newBehavior, readonlyToken, token).withPosition(position);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_value");
+    writer.writeObjectFieldIntro("type");
+    writer.writeString("double");
+    writer.endObject();
+  }
+
+  @Override
   public String getDeltaType(final Environment environment) {
     return "DDouble";
   }
@@ -71,21 +90,6 @@ public class TyNativeDouble extends TySimpleNative implements //
   @Override
   public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
     return new DoubleConstant(Token.WRAP("0.0"), 0.0).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeDouble(newBehavior, readonlyToken, token).withPosition(position);
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("native_value");
-    writer.writeObjectFieldIntro("type");
-    writer.writeString("double");
-    writer.endObject();
   }
 
   @Override

@@ -26,16 +26,22 @@ import org.adamalang.translator.tree.types.traits.details.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedType, //
-    DetailNativeDeclarationIsNotStandard, //
-    DetailHasDeltaType, //
-    DetailInventDefaultValueExpression, AssignmentViaSetter, //
-    DetailTypeHasMethods {
+public class TyNativeMaybe extends TyType
+    implements DetailContainsAnEmbeddedType, //
+        DetailNativeDeclarationIsNotStandard, //
+        DetailHasDeltaType, //
+        DetailInventDefaultValueExpression,
+        AssignmentViaSetter, //
+        DetailTypeHasMethods {
   public final Token maybeToken;
   public final Token readonlyToken;
   public final TokenizedItem<TyType> tokenElementType;
 
-  public TyNativeMaybe(final TypeBehavior behavior, final Token readonlyToken, final Token maybeToken, final TokenizedItem<TyType> tokenElementType) {
+  public TyNativeMaybe(
+      final TypeBehavior behavior,
+      final Token readonlyToken,
+      final Token maybeToken,
+      final TokenizedItem<TyType> tokenElementType) {
     super(behavior);
     this.readonlyToken = readonlyToken;
     this.maybeToken = maybeToken;
@@ -61,9 +67,14 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
   }
 
   @Override
-  public String getDeltaType(final Environment environment) {
-    final var resolvedType = environment.rules.Resolve(tokenElementType.item, true);
-    return "DMaybe<" + ((DetailHasDeltaType) resolvedType).getDeltaType(environment) + ">";
+  public String getJavaBoxType(final Environment environment) {
+    final var resolved = getEmbeddedType(environment);
+    return String.format("NtMaybe<%s>", resolved.getJavaBoxType(environment));
+  }
+
+  @Override
+  public String getJavaConcreteType(final Environment environment) {
+    return getJavaBoxType(environment);
   }
 
   @Override
@@ -76,14 +87,37 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
   }
 
   @Override
-  public String getJavaBoxType(final Environment environment) {
-    final var resolved = getEmbeddedType(environment);
-    return String.format("NtMaybe<%s>", resolved.getJavaBoxType(environment));
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeMaybe(
+            newBehavior,
+            readonlyToken,
+            maybeToken,
+            new TokenizedItem<>(
+                tokenElementType.item.makeCopyWithNewPosition(position, newBehavior)))
+        .withPosition(position);
   }
 
   @Override
-  public String getJavaConcreteType(final Environment environment) {
-    return getJavaBoxType(environment);
+  public void typing(final Environment environment) {
+    tokenElementType.item.typing(environment);
+    environment.rules.Resolve(tokenElementType.item, false);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_maybe");
+    writer.writeObjectFieldIntro("type");
+    tokenElementType.item.writeTypeReflectionJson(writer);
+    writer.endObject();
+  }
+
+  @Override
+  public String getDeltaType(final Environment environment) {
+    final var resolvedType = environment.rules.Resolve(tokenElementType.item, true);
+    return "DMaybe<" + ((DetailHasDeltaType) resolvedType).getDeltaType(environment) + ">";
   }
 
   @Override
@@ -108,35 +142,33 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
 
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
-    if ("delete".equals(name)) { return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", null, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs); }
-    if ("has".equals(name)) { return new TyNativeFunctional("has", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("has", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs); }
+    if ("delete".equals(name)) {
+      return new TyNativeFunctional(
+          "delete",
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance("size", null, new ArrayList<>(), false)),
+          FunctionStyleJava.ExpressionThenArgs);
+    }
+    if ("has".equals(name)) {
+      return new TyNativeFunctional(
+          "has",
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance(
+                  "has",
+                  new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null),
+                  new ArrayList<>(),
+                  false)),
+          FunctionStyleJava.ExpressionThenArgs);
+    }
     if ("getOrDefaultTo".equals(name)) {
       ArrayList<TyType> args = new ArrayList<>();
       args.add(tokenElementType.item);
-      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional(
+          "getOrDefaultTo",
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, false)),
+          FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeMaybe(newBehavior, readonlyToken, maybeToken, new TokenizedItem<>(tokenElementType.item.makeCopyWithNewPosition(position, newBehavior))).withPosition(position);
-  }
-
-  @Override
-  public void typing(final Environment environment) {
-    tokenElementType.item.typing(environment);
-    environment.rules.Resolve(tokenElementType.item, false);
-  }
-
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("native_maybe");
-    writer.writeObjectFieldIntro("type");
-    tokenElementType.item.writeTypeReflectionJson(writer);
-    writer.endObject();
   }
 }

@@ -61,6 +61,16 @@ public class RxDouble extends RxBase implements Comparable<RxDouble>, CanGetAndS
     }
   }
 
+  @Override
+  public long __memory() {
+    return super.__memory() + 16;
+  }
+
+  public void set(final double value) {
+    this.value = value;
+    __raiseDirty();
+  }
+
   public double bumpDownPost() {
     final var result = value--;
     __raiseDirty();
@@ -95,6 +105,11 @@ public class RxDouble extends RxBase implements Comparable<RxDouble>, CanGetAndS
     return value;
   }
 
+  @Override
+  public void set(final Double value) {
+    set(value.doubleValue());
+  }
+
   public double opAddTo(final double incoming) {
     value += incoming;
     __raiseDirty();
@@ -113,23 +128,8 @@ public class RxDouble extends RxBase implements Comparable<RxDouble>, CanGetAndS
     return value;
   }
 
-  public void set(final double value) {
-    this.value = value;
-    __raiseDirty();
-  }
-
-  @Override
-  public void set(final Double value) {
-    set(value.doubleValue());
-  }
-
   public void set(final int value) {
     this.value = value;
     __raiseDirty();
-  }
-
-  @Override
-  public long __memory() {
-    return super.__memory() + 16;
   }
 }

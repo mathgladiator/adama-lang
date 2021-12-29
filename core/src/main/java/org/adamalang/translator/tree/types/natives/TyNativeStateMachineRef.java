@@ -25,18 +25,22 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
 
-/** The type representing a valid reference in the state machine; this uses the
- * native 'String' java type */
-public class TyNativeStateMachineRef extends TySimpleNative implements //
-    IsNativeValue, //
-    DetailHasDeltaType, //
-    DetailEqualityTestingRequiresWrapping, //
-    AssignmentViaNative //
+/**
+ * The type representing a valid reference in the state machine; this uses the native 'String' java
+ * type
+ */
+public class TyNativeStateMachineRef extends TySimpleNative
+    implements //
+        IsNativeValue, //
+        DetailHasDeltaType, //
+        DetailEqualityTestingRequiresWrapping, //
+        AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeStateMachineRef(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+  public TyNativeStateMachineRef(
+      final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "String", "String");
     this.readonlyToken = readonlyToken;
     this.token = token;
@@ -57,6 +61,22 @@ public class TyNativeStateMachineRef extends TySimpleNative implements //
   }
 
   @Override
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeStateMachineRef(newBehavior, readonlyToken, token).withPosition(position);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_value");
+    writer.writeObjectFieldIntro("type");
+    writer.writeString("label");
+    writer.endObject();
+  }
+
+  @Override
   public String getDeltaType(final Environment environment) {
     return "DFastString";
   }
@@ -69,20 +89,5 @@ public class TyNativeStateMachineRef extends TySimpleNative implements //
   @Override
   public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
     return new StateMachineConstant(Token.WRAP("#")).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeStateMachineRef(newBehavior, readonlyToken, token).withPosition(position);
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("native_value");
-    writer.writeObjectFieldIntro("type");
-    writer.writeString("label");
-    writer.endObject();
   }
 }

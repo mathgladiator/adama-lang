@@ -20,7 +20,12 @@ import java.util.ArrayList;
 
 /** responsible for writing all document level functions */
 public class CodeGenFunctions {
-  public static void writeArgsJava(final StringBuilder sb, final Environment environment, final boolean firstSeed, final ArrayList<TokenizedItem<Expression>> args, final FunctionOverloadInstance functionInstance) {
+  public static void writeArgsJava(
+      final StringBuilder sb,
+      final Environment environment,
+      final boolean firstSeed,
+      final ArrayList<TokenizedItem<Expression>> args,
+      final FunctionOverloadInstance functionInstance) {
     var first = firstSeed;
     for (final TokenizedItem<Expression> arg : args) {
       if (!first) {
@@ -40,7 +45,8 @@ public class CodeGenFunctions {
     }
   }
 
-  public static void writeFunctionsJava(final StringBuilderWithTabs sb, final Environment environment) {
+  public static void writeFunctionsJava(
+      final StringBuilderWithTabs sb, final Environment environment) {
     for (final DefineFunction df : environment.document.functionDefinitions) {
       df.writeFunctionJava(sb, df.prepareEnvironment(environment));
     }

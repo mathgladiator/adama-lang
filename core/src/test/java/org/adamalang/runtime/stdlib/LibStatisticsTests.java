@@ -60,7 +60,7 @@ public class LibStatisticsTests {
     lngs.add(100L);
     final var list = new ArrayNtList<>(lngs);
     Assert.assertEquals(-25, (long) LibStatistics.minLongs(list).get());
-    Assert.assertEquals(450, (long)LibStatistics.maxLongs(list).get());
+    Assert.assertEquals(450, (long) LibStatistics.maxLongs(list).get());
   }
 
   @Test

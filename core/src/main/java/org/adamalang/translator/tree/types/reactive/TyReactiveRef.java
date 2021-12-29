@@ -52,15 +52,9 @@ public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveRef(refToken).withPosition(position);
-  }
-
-  @Override
-  public TyType resolve(final Environment environment) {
-    final var type = environment.document.types.get(ref);
-    if (type instanceof DetailSpecialReactiveRefResolve) { return ((DetailSpecialReactiveRefResolve) type).typeAfterReactiveRefResolve(environment); }
-    return type;
   }
 
   @Override
@@ -76,5 +70,14 @@ public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
     writer.writeObjectFieldIntro("ref");
     writer.writeString(ref);
     writer.endObject();
+  }
+
+  @Override
+  public TyType resolve(final Environment environment) {
+    final var type = environment.document.types.get(ref);
+    if (type instanceof DetailSpecialReactiveRefResolve) {
+      return ((DetailSpecialReactiveRefResolve) type).typeAfterReactiveRefResolve(environment);
+    }
+    return type;
   }
 }

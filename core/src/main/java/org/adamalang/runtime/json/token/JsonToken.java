@@ -21,9 +21,6 @@ public class JsonToken {
 
   @Override
   public String toString() {
-    return "JsonToken{" +
-            "data='" + data + '\'' +
-            ", type=" + type +
-            '}';
+    return "JsonToken{" + "data='" + data + '\'' + ", type=" + type + '}';
   }
 }

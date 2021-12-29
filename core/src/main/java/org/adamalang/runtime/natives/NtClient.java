@@ -21,23 +21,25 @@ public class NtClient implements Comparable<NtClient> {
   }
 
   @Override
+  public int hashCode() {
+    return agent.hashCode() * 31 + authority.hashCode();
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (o instanceof NtClient) {
+      return compareTo((NtClient) o) == 0;
+    }
+    return false;
+  }
+
+  @Override
   public int compareTo(final NtClient other) {
     var result = authority.compareTo(other.authority);
     if (result == 0) {
       result = agent.compareTo(other.agent);
     }
     return result;
-  }
-
-  @Override
-  public boolean equals(final Object o) {
-    if (o instanceof NtClient) { return compareTo((NtClient) o) == 0; }
-    return false;
-  }
-
-  @Override
-  public int hashCode() {
-    return agent.hashCode() * 31 + authority.hashCode();
   }
 
   @Override

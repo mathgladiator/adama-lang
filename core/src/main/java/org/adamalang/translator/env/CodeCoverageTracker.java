@@ -13,10 +13,11 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 
 import java.util.ArrayList;
 
-/** This tracks code coverage within blocks. Each position in the document is
- * associated to an integer, and integers get registered as code executes. This
- * also provides the ability to do some limited remote debugging by being able
- * to step through each statement. */
+/**
+ * This tracks code coverage within blocks. Each position in the document is associated to an
+ * integer, and integers get registered as code executes. This also provides the ability to do some
+ * limited remote debugging by being able to step through each statement.
+ */
 public class CodeCoverageTracker {
   public final ArrayList<DocumentPosition> positions;
 
@@ -24,10 +25,12 @@ public class CodeCoverageTracker {
     positions = new ArrayList<>();
   }
 
-  /** track the given position and associate to an integer for tracking purposes
+  /**
+   * track the given position and associate to an integer for tracking purposes
    *
    * @param position the position to register
-   * @return the index to track */
+   * @return the index to track
+   */
   public int register(final DocumentPosition position) {
     final var idx = positions.size();
     positions.add(position);

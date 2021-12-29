@@ -15,9 +15,9 @@ import org.adamalang.translator.tree.types.TyType;
 
 /** argument pair for the tuple (type, name) */
 public class FunctionArg {
-  public String argName;
   public final Token argNameToken;
   public final Token commaToken;
+  public String argName;
   public TyType type;
 
   public FunctionArg(final Token commaToken, final TyType type, final Token argNameToken) {

@@ -21,97 +21,97 @@ import java.util.concurrent.TimeUnit;
 
 public class MockStreamback implements Streamback {
 
-    private ErrorCodeException failure;
-    private CoreStream stream;
-    private final CountDownLatch began;
-    private final CountDownLatch failed;
-    private ArrayList<String> dataList;
-    private final ArrayList<CountDownLatch> latches;
+  private final CountDownLatch began;
+  private final CountDownLatch failed;
+  private final ArrayList<CountDownLatch> latches;
+  private ErrorCodeException failure;
+  private CoreStream stream;
+  private ArrayList<String> dataList;
 
-    public MockStreamback() {
-        this.began = new CountDownLatch(1);
-        this.failure = null;
-        this.failed = new CountDownLatch(1);
-        this.dataList = new ArrayList<>();
-        this.latches = new ArrayList<>();
-    }
+  public MockStreamback() {
+    this.began = new CountDownLatch(1);
+    this.failure = null;
+    this.failed = new CountDownLatch(1);
+    this.dataList = new ArrayList<>();
+    this.latches = new ArrayList<>();
+  }
 
-    public CoreStream get() {
-        return stream;
-    }
+  public CoreStream get() {
+    return stream;
+  }
 
-    @Override
-    public void onSetupComplete(CoreStream stream) {
-        this.stream = stream;
-        if (began.getCount() == 0) {
-            Assert.fail();
-        }
-        began.countDown();
+  @Override
+  public void onSetupComplete(CoreStream stream) {
+    this.stream = stream;
+    if (began.getCount() == 0) {
+      Assert.fail();
     }
+    began.countDown();
+  }
 
-    public void await_began() {
-        try {
-            Assert.assertTrue(began.await(2000, TimeUnit.MILLISECONDS));
-        } catch (InterruptedException ie) {
-            Assert.fail();
-        }
-    }
+  @Override
+  public void status(StreamStatus status) {
+    next("STATUS:" + status);
+  }
 
-    public synchronized String get(int k) {
-        return dataList.get(k);
+  @Override
+  public synchronized void next(String data) {
+    this.dataList.add(data);
+    Iterator<CountDownLatch> it = latches.iterator();
+    while (it.hasNext()) {
+      CountDownLatch latch = it.next();
+      latch.countDown();
+      if (latch.getCount() == 0) {
+        it.remove();
+      }
     }
+  }
 
-    public synchronized Runnable latchAt(int count) {
-        CountDownLatch latch = new CountDownLatch(count);
-        latches.add(latch);
-        return () -> {
-            try {
-                Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
-            } catch (InterruptedException ie) {
-                Assert.fail();
-            }
-        };
-    }
+  @Override
+  public void failure(ErrorCodeException exception) {
+    failure = exception;
+    failed.countDown();
+  }
 
-    @Override
-    public void status(StreamStatus status) {
-        next("STATUS:" + status);
+  public void await_began() {
+    try {
+      Assert.assertTrue(began.await(2000, TimeUnit.MILLISECONDS));
+    } catch (InterruptedException ie) {
+      Assert.fail();
     }
+  }
 
-    @Override
-    public synchronized void next(String data) {
-        this.dataList.add(data);
-        Iterator<CountDownLatch> it = latches.iterator();
-        while (it.hasNext()) {
-            CountDownLatch latch = it.next();
-            latch.countDown();
-            if (latch.getCount() == 0) {
-                it.remove();
-            }
-        }
-    }
+  public synchronized String get(int k) {
+    return dataList.get(k);
+  }
 
-    @Override
-    public void failure(ErrorCodeException exception) {
-        failure = exception;
-        failed.countDown();
-    }
+  public synchronized Runnable latchAt(int count) {
+    CountDownLatch latch = new CountDownLatch(count);
+    latches.add(latch);
+    return () -> {
+      try {
+        Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
+      } catch (InterruptedException ie) {
+        Assert.fail();
+      }
+    };
+  }
 
-    public void await_failure(int code) {
-        try {
-            Assert.assertTrue(failed.await(2000, TimeUnit.MILLISECONDS));
-            Assert.assertEquals(code, failure.code);
-        } catch (InterruptedException ie) {
-            Assert.fail();
-        }
+  public void await_failure(int code) {
+    try {
+      Assert.assertTrue(failed.await(2000, TimeUnit.MILLISECONDS));
+      Assert.assertEquals(code, failure.code);
+    } catch (InterruptedException ie) {
+      Assert.fail();
     }
+  }
 
-    public void await_any_failure() {
-        try {
-            Assert.assertTrue(failed.await(2000, TimeUnit.MILLISECONDS));
-            Assert.assertTrue(failure.code >= 1);
-        } catch (InterruptedException ie) {
-            Assert.fail();
-        }
+  public void await_any_failure() {
+    try {
+      Assert.assertTrue(failed.await(2000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(failure.code >= 1);
+    } catch (InterruptedException ie) {
+      Assert.fail();
     }
+  }
 }

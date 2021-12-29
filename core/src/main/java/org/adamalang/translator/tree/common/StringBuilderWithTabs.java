@@ -11,9 +11,10 @@ package org.adamalang.translator.tree.common;
 
 import java.util.ArrayList;
 
-/** this is the janky way we do build code, and it brings great shame. Fixing
- * this will require a massive overhaul, and the problem is just how hard it is
- * to make a reasonable formatted code. */
+/**
+ * this is the janky way we do build code, and it brings great shame. Fixing this will require a
+ * massive overhaul, and the problem is just how hard it is to make a reasonable formatted code.
+ */
 public class StringBuilderWithTabs {
   private final StringBuilder builder;
   private int tabs;

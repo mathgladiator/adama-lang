@@ -21,8 +21,17 @@ import java.util.regex.Pattern;
 
 /** a basic string library */
 public class LibString {
+  public static @HiddenTypes2(class1 = NtList.class, class2 = String.class) NtMaybe<NtList<String>>
+      split(final @HiddenType(clazz = String.class) NtMaybe<String> sentence, final String word) {
+    if (sentence.has()) {
+      return new NtMaybe<>(split(sentence.get(), word));
+    }
+    return new NtMaybe<>();
+  }
+
   @Extension
-  public static @HiddenType(clazz = String.class) NtList<String> split(final String sentence, final String word) {
+  public static @HiddenType(clazz = String.class) NtList<String> split(
+      final String sentence, final String word) {
     ArrayList<String> list = new ArrayList<>();
     for (String part : sentence.split(Pattern.quote(word))) {
       list.add(part);
@@ -30,21 +39,18 @@ public class LibString {
     return new ArrayNtList<>(list);
   }
 
-  public static @HiddenTypes2(class1 = NtList.class, class2 = String.class ) NtMaybe<NtList<String>> split(final @HiddenType(clazz = String.class) NtMaybe<String> sentence, final String word) {
-    if (sentence.has()) {
-      return new NtMaybe<>(split(sentence.get(), word));
-    }
-    return new NtMaybe<>();
-  }
-
-  public static @HiddenTypes2(class1 = NtList.class, class2 = String.class ) NtMaybe<NtList<String>> split(final String sentence, final @HiddenType(clazz = String.class) NtMaybe<String> word) {
+  public static @HiddenTypes2(class1 = NtList.class, class2 = String.class) NtMaybe<NtList<String>>
+      split(final String sentence, final @HiddenType(clazz = String.class) NtMaybe<String> word) {
     if (word.has()) {
       return new NtMaybe<>(split(sentence, word.get()));
     }
     return new NtMaybe<>();
   }
 
-  public static @HiddenTypes2(class1 = NtList.class, class2 = String.class ) NtMaybe<NtList<String>> split(final @HiddenType(clazz = String.class) NtMaybe<String> sentence, final @HiddenType(clazz = String.class) NtMaybe<String> word) {
+  public static @HiddenTypes2(class1 = NtList.class, class2 = String.class) NtMaybe<NtList<String>>
+      split(
+          final @HiddenType(clazz = String.class) NtMaybe<String> sentence,
+          final @HiddenType(clazz = String.class) NtMaybe<String> word) {
     if (sentence.has() && word.has()) {
       return new NtMaybe<>(split(sentence.get(), word.get()));
     }
@@ -57,7 +63,8 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = Boolean.class) NtMaybe<Boolean> contains(final @HiddenType(clazz = String.class) NtMaybe<String> haystack, String needle) {
+  public static @HiddenType(clazz = Boolean.class) NtMaybe<Boolean> contains(
+      final @HiddenType(clazz = String.class) NtMaybe<String> haystack, String needle) {
     if (haystack.has()) {
       return new NtMaybe<>(haystack.get().contains(needle));
     }
@@ -65,7 +72,8 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = Boolean.class) NtMaybe<Boolean> contains(final String haystack, final @HiddenType(clazz = String.class) NtMaybe<String> needle) {
+  public static @HiddenType(clazz = Boolean.class) NtMaybe<Boolean> contains(
+      final String haystack, final @HiddenType(clazz = String.class) NtMaybe<String> needle) {
     if (needle.has()) {
       return new NtMaybe<>(haystack.contains(needle.get()));
     }
@@ -73,7 +81,9 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = Boolean.class) NtMaybe<Boolean> contains(final @HiddenType(clazz = String.class) NtMaybe<String> haystack, final @HiddenType(clazz = String.class) NtMaybe<String> needle) {
+  public static @HiddenType(clazz = Boolean.class) NtMaybe<Boolean> contains(
+      final @HiddenType(clazz = String.class) NtMaybe<String> haystack,
+      final @HiddenType(clazz = String.class) NtMaybe<String> needle) {
     if (haystack.has() && needle.has()) {
       return new NtMaybe<>(haystack.get().contains(needle.get()));
     }
@@ -81,7 +91,17 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> indexOf(final String haystack, String needle) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> indexOf(
+      final @HiddenType(clazz = String.class) NtMaybe<String> haystack, String needle) {
+    if (haystack.has()) {
+      return indexOf(haystack.get(), needle);
+    }
+    return new NtMaybe<>();
+  }
+
+  @Extension
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> indexOf(
+      final String haystack, String needle) {
     int value = haystack.indexOf(needle);
     if (value < 0) {
       return new NtMaybe<>();
@@ -91,15 +111,8 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> indexOf(final @HiddenType(clazz = String.class) NtMaybe<String> haystack, String needle) {
-    if (haystack.has()) {
-      return indexOf(haystack.get(), needle);
-    }
-    return new NtMaybe<>();
-  }
-
-  @Extension
-  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> indexOf(final String haystack, final @HiddenType(clazz = String.class) NtMaybe<String> needle) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> indexOf(
+      final String haystack, final @HiddenType(clazz = String.class) NtMaybe<String> needle) {
     if (needle.has()) {
       return indexOf(haystack, needle.get());
     }
@@ -107,7 +120,9 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> indexOf(final @HiddenType(clazz = String.class) NtMaybe<String> haystack, final @HiddenType(clazz = String.class) NtMaybe<String> needle) {
+  public static @HiddenType(clazz = Integer.class) NtMaybe<Integer> indexOf(
+      final @HiddenType(clazz = String.class) NtMaybe<String> haystack,
+      final @HiddenType(clazz = String.class) NtMaybe<String> needle) {
     if (haystack.has() && needle.has()) {
       return indexOf(haystack.get(), needle.get());
     }
@@ -120,7 +135,8 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> trim(final @HiddenType(clazz = String.class) NtMaybe<String> s) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> trim(
+      final @HiddenType(clazz = String.class) NtMaybe<String> s) {
     if (s.has()) {
       return new NtMaybe<>(s.get().strip());
     }
@@ -133,7 +149,8 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> trimLeft(final @HiddenType(clazz = String.class) NtMaybe<String> s) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> trimLeft(
+      final @HiddenType(clazz = String.class) NtMaybe<String> s) {
     if (s.has()) {
       return new NtMaybe<>(s.get().stripLeading());
     }
@@ -146,7 +163,8 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> trimRight(final @HiddenType(clazz = String.class) NtMaybe<String> s) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> trimRight(
+      final @HiddenType(clazz = String.class) NtMaybe<String> s) {
     if (s.has()) {
       return new NtMaybe<>(s.get().stripTrailing());
     }
@@ -159,7 +177,8 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> upper(final @HiddenType(clazz = String.class) NtMaybe<String> s) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> upper(
+      final @HiddenType(clazz = String.class) NtMaybe<String> s) {
     if (s.has()) {
       return new NtMaybe<>(s.get().toUpperCase());
     }
@@ -172,7 +191,8 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> lower(final @HiddenType(clazz = String.class) NtMaybe<String> s) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> lower(
+      final @HiddenType(clazz = String.class) NtMaybe<String> s) {
     if (s.has()) {
       return new NtMaybe<>(s.get().toLowerCase());
     }
@@ -180,7 +200,17 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> mid(String s, final int start, int num_chars) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> mid(
+      final @HiddenType(clazz = String.class) NtMaybe<String> s, int start, int num_chars) {
+    if (s.has()) {
+      return mid(s.get(), start, num_chars);
+    }
+    return s;
+  }
+
+  @Extension
+  public static @HiddenType(clazz = String.class) NtMaybe<String> mid(
+      String s, final int start, int num_chars) {
     int begin = start - 1;
     if (begin < 0 || begin >= s.length() || num_chars < 0) {
       return new NtMaybe<>();
@@ -190,15 +220,17 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> mid(final @HiddenType(clazz = String.class) NtMaybe<String> s, int start, int num_chars) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> substr(
+      final @HiddenType(clazz = String.class) NtMaybe<String> s, int start, int end) {
     if (s.has()) {
-      return mid(s.get(), start, num_chars);
+      return substr(s.get(), start, end);
     }
     return s;
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> substr(String s, final int start, int end) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> substr(
+      String s, final int start, int end) {
     if (start < 0 || start > s.length() || end < 0 || end > s.length() || end < start) {
       return new NtMaybe<>();
     }
@@ -206,9 +238,10 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> substr(final @HiddenType(clazz = String.class) NtMaybe<String> s, int start, int end) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> left(
+      @HiddenType(clazz = String.class) final NtMaybe<String> s, int n) {
     if (s.has()) {
-      return substr(s.get(), start, end);
+      return left(s.get(), n);
     }
     return s;
   }
@@ -222,9 +255,10 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> left(@HiddenType(clazz = String.class) final NtMaybe<String> s, int n) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> right(
+      @HiddenType(clazz = String.class) final NtMaybe<String> s, int n) {
     if (s.has()) {
-      return left(s.get(), n);
+      return right(s.get(), n);
     }
     return s;
   }
@@ -239,26 +273,37 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> right(@HiddenType(clazz = String.class) final NtMaybe<String> s, int n) {
-    if (s.has()) {
-      return right(s.get(), n);
-    }
-    return s;
-  }
-
-  @Extension
   public static int compare(final String a, final String b) {
-    if (a == null && b == null) { return 0; }
-    if (a == null && b != null) { return -1; }
-    if (a != null && b == null) { return 1; }
+    if (a == null && b == null) {
+      return 0;
+    }
+    if (a == null && b != null) {
+      return -1;
+    }
+    if (a != null && b == null) {
+      return 1;
+    }
     return a.compareTo(b);
   }
 
   @Extension
   public static boolean equality(final String a, final String b) {
-    if (a == null && b == null) { return true; }
-    if (a == null || b == null) { return false; }
+    if (a == null && b == null) {
+      return true;
+    }
+    if (a == null || b == null) {
+      return false;
+    }
     return a.equals(b);
+  }
+
+  @Extension
+  public static @HiddenType(clazz = String.class) NtMaybe<String> multiply(
+      final @HiddenType(clazz = String.class) NtMaybe<String> input, final int count) {
+    if (input.has()) {
+      return new NtMaybe<>(multiply(input.get(), count));
+    }
+    return input;
   }
 
   @Extension
@@ -271,11 +316,12 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> multiply(final @HiddenType(clazz = String.class) NtMaybe<String> input, final int count) {
-    if (input.has()) {
-      return new NtMaybe<>(multiply(input.get(), count));
+  public static @HiddenType(clazz = String.class) NtMaybe<String> reverse(
+      final @HiddenType(clazz = String.class) NtMaybe<String> x) {
+    if (x.has()) {
+      return new NtMaybe<>(reverse(x.get()));
     }
-    return input;
+    return x;
   }
 
   @Extension
@@ -286,20 +332,13 @@ public class LibString {
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> reverse(final @HiddenType(clazz = String.class) NtMaybe<String> x) {
-    if (x.has()) {
-      return new NtMaybe<>(reverse(x.get()));
-    }
-    return x;
-  }
-
-  @Extension
   public static String charOf(int x) {
     return Character.toString(x);
   }
 
   @Extension
-  public static @HiddenType(clazz = String.class) NtMaybe<String> charOf(@HiddenType(clazz = Integer.class) NtMaybe<Integer> x) {
+  public static @HiddenType(clazz = String.class) NtMaybe<String> charOf(
+      @HiddenType(clazz = Integer.class) NtMaybe<Integer> x) {
     if (x.has()) {
       return new NtMaybe<>(Character.toString(x.get()));
     }

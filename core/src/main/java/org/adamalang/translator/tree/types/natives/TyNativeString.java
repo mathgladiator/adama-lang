@@ -28,15 +28,16 @@ import org.adamalang.translator.tree.types.traits.details.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-/** The type representing a utf-8 encoded string. This uses the native 'String'
- * java type. */
-public class TyNativeString extends TySimpleNative implements IsNativeValue, DetailHasDeltaType, //
-    CanBeMapDomain, //
-    DetailTypeHasMethods, //
-    DetailSpecialMultiplyOp, //
-    DetailEqualityTestingRequiresWrapping, //
-    DetailComparisonTestingRequiresWrapping, //
-    AssignmentViaNative //
+/** The type representing a utf-8 encoded string. This uses the native 'String' java type. */
+public class TyNativeString extends TySimpleNative
+    implements IsNativeValue,
+        DetailHasDeltaType, //
+        CanBeMapDomain, //
+        DetailTypeHasMethods, //
+        DetailSpecialMultiplyOp, //
+        DetailEqualityTestingRequiresWrapping, //
+        DetailComparisonTestingRequiresWrapping, //
+        AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
@@ -59,6 +60,22 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
   @Override
   public String getAdamaType() {
     return "string";
+  }
+
+  @Override
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeString(newBehavior, readonlyToken, token).withPosition(position);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_value");
+    writer.writeObjectFieldIntro("type");
+    writer.writeString("string");
+    writer.endObject();
   }
 
   @Override
@@ -89,30 +106,22 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("length".equals(name)) {
-      return new TyNativeFunctional("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true)),
+      return new TyNativeFunctional(
+          "length",
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance(
+                  "size",
+                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token)
+                      .withPosition(this),
+                  new ArrayList<>(),
+                  true)),
           FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeString(newBehavior, readonlyToken, token).withPosition(position);
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("native_value");
-    writer.writeObjectFieldIntro("type");
-    writer.writeString("string");
-    writer.endObject();
-  }
-
-  @Override
   public String getRxStringCodexName() {
     return "RxMap.StringCodec";
   }
-
 }

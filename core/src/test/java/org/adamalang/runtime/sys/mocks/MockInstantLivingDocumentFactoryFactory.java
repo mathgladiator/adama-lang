@@ -16,22 +16,22 @@ import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 public class MockInstantLivingDocumentFactoryFactory implements LivingDocumentFactoryFactory {
-    private LivingDocumentFactory factory;
+  private LivingDocumentFactory factory;
 
-    public MockInstantLivingDocumentFactoryFactory(LivingDocumentFactory factory) {
-        this.factory = factory;
-    }
+  public MockInstantLivingDocumentFactoryFactory(LivingDocumentFactory factory) {
+    this.factory = factory;
+  }
 
-    public synchronized void set(LivingDocumentFactory factory) {
-        this.factory = factory;
-    }
+  public synchronized void set(LivingDocumentFactory factory) {
+    this.factory = factory;
+  }
 
-    @Override
-    public synchronized void fetch(Key key, Callback<LivingDocumentFactory> callback) {
-        if (factory != null) {
-            callback.success(factory);
-        } else {
-            callback.failure(new ErrorCodeException(999));
-        }
+  @Override
+  public synchronized void fetch(Key key, Callback<LivingDocumentFactory> callback) {
+    if (factory != null) {
+      callback.success(factory);
+    } else {
+      callback.failure(new ErrorCodeException(999));
     }
+  }
 }

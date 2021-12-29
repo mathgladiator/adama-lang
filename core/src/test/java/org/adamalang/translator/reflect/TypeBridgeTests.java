@@ -36,7 +36,8 @@ public class TypeBridgeTests {
     try {
       TypeBridge.getAdamaType(NtList.class, null);
       worked = true;
-    } catch (final RuntimeException re) {}
+    } catch (final RuntimeException re) {
+    }
     Assert.assertFalse(worked);
   }
 
@@ -46,7 +47,8 @@ public class TypeBridgeTests {
     try {
       TypeBridge.getAdamaType(NtMaybe.class, null);
       worked = true;
-    } catch (final RuntimeException re) {}
+    } catch (final RuntimeException re) {
+    }
     Assert.assertFalse(worked);
   }
 
@@ -62,7 +64,8 @@ public class TypeBridgeTests {
     try {
       TypeBridge.getAdamaType(TypeBridgeTests.class, null);
       worked = true;
-    } catch (final RuntimeException re) {}
+    } catch (final RuntimeException re) {
+    }
     Assert.assertFalse(worked);
   }
 }

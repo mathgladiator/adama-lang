@@ -62,6 +62,11 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
     }
   }
 
+  @Override
+  public long __memory() {
+    return super.__memory() + 16;
+  }
+
   public long bumpDownPost() {
     final var result = value--;
     __raiseDirty();
@@ -98,6 +103,14 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
   }
 
   @Override
+  public void set(final Long value) {
+    if (this.value != value) {
+      this.value = value;
+      __raiseDirty();
+    }
+  }
+
+  @Override
   public int getIndexValue() {
     return (int) value;
   }
@@ -125,18 +138,5 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
       this.value = value;
       __raiseDirty();
     }
-  }
-
-  @Override
-  public void set(final Long value) {
-    if (this.value != value) {
-      this.value = value;
-      __raiseDirty();
-    }
-  }
-
-  @Override
-  public long __memory() {
-    return super.__memory() + 16;
   }
 }

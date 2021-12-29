@@ -19,14 +19,17 @@ import org.adamalang.translator.tree.statements.Statement;
 
 import java.util.function.Consumer;
 
-/** Asserts a true statement. This is useful for testing, but also measuring
- * quality as things go bump in the night. */
+/**
+ * Asserts a true statement. This is useful for testing, but also measuring quality as things go
+ * bump in the night.
+ */
 public class AssertTruth extends Statement {
   public final Token assertToken;
   public final Expression expression;
   public final Token semiColonToken;
 
-  public AssertTruth(final Token assertToken, final Expression expression, final Token semiColonToken) {
+  public AssertTruth(
+      final Token assertToken, final Expression expression, final Token semiColonToken) {
     this.assertToken = assertToken;
     this.expression = expression;
     this.semiColonToken = semiColonToken;
@@ -44,7 +47,8 @@ public class AssertTruth extends Statement {
 
   @Override
   public ControlFlow typing(final Environment environment) {
-    final var expressionType = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+    final var expressionType =
+        expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     environment.rules.IsBoolean(expressionType, false);
     return ControlFlow.Open;
   }

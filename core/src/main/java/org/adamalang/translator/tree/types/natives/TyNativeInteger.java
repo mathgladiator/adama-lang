@@ -27,19 +27,20 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.function.Consumer;
 
-/** Represents the integral with 32 bits of storage; this uses the 'int' java
- * type */
-public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
-    CanBeMapDomain, //
-    DetailHasDeltaType, //
-    DetailTypeHasMethods, //
-    IsOrderable, //
-    AssignmentViaNative //
+/** Represents the integral with 32 bits of storage; this uses the 'int' java type */
+public class TyNativeInteger extends TySimpleNative
+    implements IsNativeValue, //
+        CanBeMapDomain, //
+        DetailHasDeltaType, //
+        DetailTypeHasMethods, //
+        IsOrderable, //
+        AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeInteger(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+  public TyNativeInteger(
+      final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "int", "Integer");
     this.readonlyToken = readonlyToken;
     this.token = token;
@@ -60,17 +61,8 @@ public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
   }
 
   @Override
-  public String getDeltaType(final Environment environment) {
-    return "DInt32";
-  }
-
-  @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition position) {
-    return new IntegerConstant(Token.WRAP("0"), 0).withPosition(position);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeInteger(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -82,6 +74,16 @@ public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
     writer.writeObjectFieldIntro("type");
     writer.writeString("int");
     writer.endObject();
+  }
+
+  @Override
+  public String getDeltaType(final Environment environment) {
+    return "DInt32";
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition position) {
+    return new IntegerConstant(Token.WRAP("0"), 0).withPosition(position);
   }
 
   @Override

@@ -25,16 +25,18 @@ public enum BinaryOp {
   NotEqual("!="), // &&
   Subtract("-"); // ||
 
-  public static BinaryOp fromText(final String txt) {
-    for (final BinaryOp op : BinaryOp.values()) {
-      if (op.javaOp.equals(txt)) { return op; }
-    }
-    return null;
-  }
-
   public final String javaOp;
 
   BinaryOp(final String js) {
     javaOp = js;
+  }
+
+  public static BinaryOp fromText(final String txt) {
+    for (final BinaryOp op : BinaryOp.values()) {
+      if (op.javaOp.equals(txt)) {
+        return op;
+      }
+    }
+    return null;
   }
 }

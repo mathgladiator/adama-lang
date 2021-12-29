@@ -21,11 +21,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /** a reactive map */
-public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<Map.Entry<DomainTy, RangeTy>>, RxParent, RxChild {
-  private final LinkedHashMap<DomainTy, RangeTy> objects;
+public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase
+    implements Iterable<Map.Entry<DomainTy, RangeTy>>, RxParent, RxChild {
   public final Codec<DomainTy, RangeTy> codec;
   public final LinkedHashMap<DomainTy, RangeTy> deleted;
   public final HashSet<DomainTy> created;
+  private final LinkedHashMap<DomainTy, RangeTy> objects;
 
   public RxMap(final RxParent owner, final Codec<DomainTy, RangeTy> codec) {
     super(owner);
@@ -33,14 +34,6 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     this.objects = new LinkedHashMap<>();
     this.deleted = new LinkedHashMap<>();
     this.created = new HashSet<>();
-  }
-
-  public static interface Codec<DomainTy, RangeTy extends RxBase> {
-    public RangeTy make(RxParent maker);
-
-    public String toStr(DomainTy key);
-
-    public DomainTy fromStr(String key);
   }
 
   @Override
@@ -118,9 +111,34 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     }
   }
 
+  @Override
+  public void __revert() {
+    if (__isDirty()) {
+      for (final Map.Entry<DomainTy, RangeTy> entry : deleted.entrySet()) {
+        objects.put(entry.getKey(), entry.getValue());
+      }
+      for (final DomainTy axe : created) {
+        objects.remove(axe);
+      }
+      for (final Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
+        entry.getValue().__revert();
+      }
+      created.clear();
+      deleted.clear();
+      __lowerDirtyRevert();
+    }
+  }
 
-  public NtMaybe<RangeTy> lookup(DomainTy key) {
-    return new NtMaybe<>(objects.get(key));
+  @Override
+  public long __memory() {
+    long sum = super.__memory() + 128;
+    for (Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
+      sum += entry.getValue().__memory() + 20;
+      if (entry.getKey() instanceof String) {
+        sum += ((String) entry.getKey()).length() * 2;
+      }
+    }
+    return sum;
   }
 
   public RangeTy getOrCreate(DomainTy key) {
@@ -152,28 +170,14 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     }
   }
 
+  public NtMaybe<RangeTy> lookup(DomainTy key) {
+    return new NtMaybe<>(objects.get(key));
+  }
+
   @Override
   public boolean __raiseInvalid() {
     __raiseDirty();
     return true;
-  }
-
-  @Override
-  public void __revert() {
-    if (__isDirty()) {
-      for (final Map.Entry<DomainTy, RangeTy> entry : deleted.entrySet()) {
-        objects.put(entry.getKey(), entry.getValue());
-      }
-      for (final DomainTy axe : created) {
-        objects.remove(axe);
-      }
-      for (final Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
-        entry.getValue().__revert();
-      }
-      created.clear();
-      deleted.clear();
-      __lowerDirtyRevert();
-    }
   }
 
   @Override
@@ -185,19 +189,15 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     return objects.size();
   }
 
-  @Override
-  public long __memory() {
-    long sum = super.__memory() + 128;
-    for (Map.Entry<DomainTy, RangeTy> entry : objects.entrySet()) {
-      sum += entry.getValue().__memory() + 20;
-      if (entry.getKey() instanceof String) {
-        sum += ((String) entry.getKey()).length() * 2;
-      }
-    }
-    return sum;
+  public static interface Codec<DomainTy, RangeTy extends RxBase> {
+    public RangeTy make(RxParent maker);
+
+    public String toStr(DomainTy key);
+
+    public DomainTy fromStr(String key);
   }
 
-  public static abstract class IntegerCodec<R extends RxBase> implements Codec<Integer, R> {
+  public abstract static class IntegerCodec<R extends RxBase> implements Codec<Integer, R> {
     public String toStr(Integer key) {
       return "" + key;
     }
@@ -207,7 +207,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     }
   }
 
-  public static abstract class LongCodec<R extends RxBase> implements Codec<Long, R> {
+  public abstract static class LongCodec<R extends RxBase> implements Codec<Long, R> {
     public String toStr(Long key) {
       return "" + key;
     }
@@ -217,7 +217,7 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements I
     }
   }
 
-  public static abstract class StringCodec<R extends RxBase> implements Codec<String, R> {
+  public abstract static class StringCodec<R extends RxBase> implements Codec<String, R> {
     public String toStr(String key) {
       return key;
     }

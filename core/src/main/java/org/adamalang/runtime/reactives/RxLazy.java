@@ -18,8 +18,8 @@ import java.util.function.Supplier;
 
 /** a reactive lazy formula which is computed on demand */
 public class RxLazy<Ty> extends RxBase implements RxChild {
-  private Ty cached;
   private final Supplier<Ty> formula;
+  private Ty cached;
   private int generation;
   private boolean invalid;
 
@@ -32,12 +32,10 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   }
 
   @Override
-  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
-  }
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {}
 
   @Override
-  public void __dump(final JsonStreamWriter writer) {
-  }
+  public void __dump(final JsonStreamWriter writer) {}
 
   @Override
   public void __insert(final JsonStreamReader reader) {
@@ -50,22 +48,18 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   }
 
   @Override
+  public void __revert() {}
+
+  @Override
   public boolean __raiseInvalid() {
     invalid = true;
     __invalidateSubscribers();
     return true;
   }
 
-  @Override
-  public void __revert() {
-  }
-
-  protected boolean checkInvalidAndLower() {
-    if (invalid) {
-      invalid = false;
-      return true;
-    }
-    return false;
+  public Ty get() {
+    ensureCacheValid();
+    return cached;
   }
 
   private void ensureCacheValid() {
@@ -75,9 +69,12 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
     }
   }
 
-  public Ty get() {
-    ensureCacheValid();
-    return cached;
+  protected boolean checkInvalidAndLower() {
+    if (invalid) {
+      invalid = false;
+      return true;
+    }
+    return false;
   }
 
   public int getGeneration() {

@@ -19,19 +19,28 @@ public class RuleSetTable {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, true);
-      if (tyType != null && tyType instanceof TyNativeTable) { return true; }
+      if (tyType != null && tyType instanceof TyNativeTable) {
+        return true;
+      }
     }
     return false;
   }
 
-  public static boolean IsTable(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsTable(
+      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);
-      if (tyType != null && (tyType instanceof TyNativeTable || tyType instanceof TyReactiveTable)) {
+      if (tyType != null
+          && (tyType instanceof TyNativeTable || tyType instanceof TyReactiveTable)) {
         return true;
       } else if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must have a type of 'table<?>', but got a type of '%s'.", tyTypeOriginal.getAdamaType()), "TypeCheckReferences");
+        environment.document.createError(
+            tyTypeOriginal,
+            String.format(
+                "Type check failure: must have a type of 'table<?>', but got a type of '%s'.",
+                tyTypeOriginal.getAdamaType()),
+            "TypeCheckReferences");
       }
     }
     return false;

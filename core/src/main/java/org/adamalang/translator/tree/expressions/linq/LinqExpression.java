@@ -13,8 +13,8 @@ import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.expressions.operators.Parentheses;
 
 public abstract class LinqExpression extends Expression {
-  protected boolean intermediateExpression;
   public final Expression sql;
+  protected boolean intermediateExpression;
 
   public LinqExpression(final Expression sql) {
     intermediateExpression = false;

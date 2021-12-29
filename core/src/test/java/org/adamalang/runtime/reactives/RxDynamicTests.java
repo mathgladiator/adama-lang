@@ -109,5 +109,4 @@ public class RxDynamicTests {
     c.set(B);
     child.assertInvalidateCount(3);
   }
-
 }

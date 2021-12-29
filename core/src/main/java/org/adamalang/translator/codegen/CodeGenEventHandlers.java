@@ -16,7 +16,8 @@ import org.adamalang.translator.tree.definitions.DocumentEvent;
 
 /** responsible for writing event handlers */
 public class CodeGenEventHandlers {
-  public static void writeEventHandlers(final StringBuilderWithTabs sb, final Environment environment) {
+  public static void writeEventHandlers(
+      final StringBuilderWithTabs sb, final Environment environment) {
     // there can be multiple connected and disconnected handlers, we iterate them
     var connectCount = 0;
     var disconnectCount = 0;
@@ -25,23 +26,52 @@ public class CodeGenEventHandlers {
     var askCreationCount = 0;
     for (final DefineDocumentEvent dce : environment.document.connectionEvents) {
       if (dce.which == DocumentEvent.ClientConnected) {
-        sb.append("public boolean __onConnected__" + connectCount + "(NtClient " + dce.clientVarToken.text + ")");
+        sb.append(
+            "public boolean __onConnected__"
+                + connectCount
+                + "(NtClient "
+                + dce.clientVarToken.text
+                + ")");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         connectCount++;
       } else if (dce.which == DocumentEvent.ClientDisconnected) {
-        sb.append("public void __onDisconnected__" + disconnectCount + "(NtClient " + dce.clientVarToken.text + ") ");
+        sb.append(
+            "public void __onDisconnected__"
+                + disconnectCount
+                + "(NtClient "
+                + dce.clientVarToken.text
+                + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         disconnectCount++;
       } else if (dce.which == DocumentEvent.AskCreation) {
-        sb.append("public static boolean __onCanCreate__" + askCreationCount + "(NtClient " + dce.clientVarToken.text + ", NtCreateContext " + dce.parameterNameToken.text + ") ");
+        sb.append(
+            "public static boolean __onCanCreate__"
+                + askCreationCount
+                + "(NtClient "
+                + dce.clientVarToken.text
+                + ", NtCreateContext "
+                + dce.parameterNameToken.text
+                + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askCreationCount++;
       } else if (dce.which == DocumentEvent.AskAssetAttachment) {
-        sb.append("public boolean __onCanAssetAttached__" + askAssetAttachCount + "(NtClient " + dce.clientVarToken.text + ") ");
+        sb.append(
+            "public boolean __onCanAssetAttached__"
+                + askAssetAttachCount
+                + "(NtClient "
+                + dce.clientVarToken.text
+                + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askAssetAttachCount++;
       } else if (dce.which == DocumentEvent.AssetAttachment) {
-        sb.append("public void __onAssetAttached__" + disconnectCount + "(NtClient " + dce.clientVarToken.text + ", NtAsset " + dce.parameterNameToken.text + ") ");
+        sb.append(
+            "public void __onAssetAttached__"
+                + disconnectCount
+                + "(NtClient "
+                + dce.clientVarToken.text
+                + ", NtAsset "
+                + dce.parameterNameToken.text
+                + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         assetAttachCount++;
       }
@@ -90,7 +120,9 @@ public class CodeGenEventHandlers {
     sb.append("}").writeNewline();
 
     // inject the can create policy
-    sb.append("public static boolean __onCanCreate(NtClient __client, NtCreateContext __context) {").tabUp().writeNewline();
+    sb.append("public static boolean __onCanCreate(NtClient __client, NtCreateContext __context) {")
+        .tabUp()
+        .writeNewline();
     if (askCreationCount > 0) {
       sb.append("boolean __result = false;").writeNewline();
       for (var k = 0; k < askCreationCount; k++) {
@@ -110,9 +142,12 @@ public class CodeGenEventHandlers {
     // join the disconnected handlers into one
     sb.append("@Override").writeNewline();
     if (assetAttachCount == 0) {
-      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}").writeNewline();
+      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}")
+          .writeNewline();
     } else {
-      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {").tabUp().writeNewline();
+      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {")
+          .tabUp()
+          .writeNewline();
       for (var k = 0; k < assetAttachCount; k++) {
         sb.append("__onAssetAttached__" + k + "(__cvalue, __asset);");
         if (k == assetAttachCount - 1) {

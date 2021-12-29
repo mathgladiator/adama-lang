@@ -9,8 +9,7 @@
  */
 package org.adamalang.translator.tree.common;
 
-/** Represents a code snippet which is integrated during a second phase of
- * building Java code. */
+/** Represents a code snippet which is integrated during a second phase of building Java code. */
 public interface LatentCodeSnippet {
   public void writeLatentJava(StringBuilderWithTabs sb);
 }

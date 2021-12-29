@@ -63,6 +63,11 @@ public class RxAsset extends RxBase implements Comparable<RxAsset>, CanGetAndSet
   }
 
   @Override
+  public long __memory() {
+    return super.__memory() + backup.memory() + value.memory() + 16;
+  }
+
+  @Override
   public int compareTo(final RxAsset other) {
     return value.compareTo(other.value);
   }
@@ -78,10 +83,5 @@ public class RxAsset extends RxBase implements Comparable<RxAsset>, CanGetAndSet
       this.value = value;
       __raiseDirty();
     }
-  }
-
-  @Override
-  public long __memory() {
-    return super.__memory() + backup.memory() + value.memory() + 16;
   }
 }

@@ -12,7 +12,6 @@ package org.adamalang.translator.parser.token;
 import org.junit.Test;
 
 public class TokenEngineTests {
-    @Test
-    public void coverage() {
-    }
+  @Test
+  public void coverage() {}
 }

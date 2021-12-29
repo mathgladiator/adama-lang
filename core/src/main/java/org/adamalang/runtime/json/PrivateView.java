@@ -29,8 +29,11 @@ public abstract class PrivateView {
     this.lastWrittenFutures = DEFAULT_FUTURES;
   }
 
-  /** a new private view was created on a different document which is usurping the existing document.
-   * Since private views leak outside the document, this creates a proxy link for the client to kill both views. */
+  /**
+   * a new private view was created on a different document which is usurping the existing document.
+   * Since private views leak outside the document, this creates a proxy link for the client to kill
+   * both views.
+   */
   public void usurp(PrivateView usurper) {
     this.usurper = usurper;
   }

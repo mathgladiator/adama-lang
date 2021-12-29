@@ -69,15 +69,24 @@ public class BinaryExpression extends Expression {
         case GreaterThan:
         case GreaterThanOrEqual:
         case LessThanOrEqual:
-          if (typingResult.compare()) { return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this); }
+          if (typingResult.compare()) {
+            return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken)
+                .withPosition(this);
+          }
           return null;
         case Equal:
         case NotEqual:
-          if (typingResult.equals()) { return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this); }
+          if (typingResult.equals()) {
+            return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken)
+                .withPosition(this);
+          }
           return null;
         case LogicalAnd:
         case LogicalOr:
-          if (typingResult.logic()) { return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this); }
+          if (typingResult.logic()) {
+            return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken)
+                .withPosition(this);
+          }
       }
     }
     return null;
@@ -93,39 +102,91 @@ public class BinaryExpression extends Expression {
     if (typingResult.typeLeft instanceof DetailEqualityTestingRequiresWrapping) {
       switch (op) {
         case Equal:
-          sb.append(String.format("%s", String.format(((DetailEqualityTestingRequiresWrapping) typeLeft).getEqualityTestingBinaryPattern(), leftStr.toString(), rightStr.toString())));
+          sb.append(
+              String.format(
+                  "%s",
+                  String.format(
+                      ((DetailEqualityTestingRequiresWrapping) typeLeft)
+                          .getEqualityTestingBinaryPattern(),
+                      leftStr.toString(),
+                      rightStr.toString())));
           return;
         case NotEqual:
-          sb.append(String.format("!%s", String.format(((DetailEqualityTestingRequiresWrapping) typeLeft).getEqualityTestingBinaryPattern(), leftStr.toString(), rightStr.toString())));
+          sb.append(
+              String.format(
+                  "!%s",
+                  String.format(
+                      ((DetailEqualityTestingRequiresWrapping) typeLeft)
+                          .getEqualityTestingBinaryPattern(),
+                      leftStr.toString(),
+                      rightStr.toString())));
           return;
       }
     }
     if (typingResult.typeLeft instanceof DetailComparisonTestingRequiresWrapping) {
       switch (op) {
         case LessThan:
-          sb.append(String.format("%s < 0", String.format(((DetailComparisonTestingRequiresWrapping) typeLeft).getComparisonTestingBinaryPattern(), leftStr.toString(), rightStr.toString())));
+          sb.append(
+              String.format(
+                  "%s < 0",
+                  String.format(
+                      ((DetailComparisonTestingRequiresWrapping) typeLeft)
+                          .getComparisonTestingBinaryPattern(),
+                      leftStr.toString(),
+                      rightStr.toString())));
           return;
         case LessThanOrEqual:
-          sb.append(String.format("%s <= 0", String.format(((DetailComparisonTestingRequiresWrapping) typeLeft).getComparisonTestingBinaryPattern(), leftStr.toString(), rightStr.toString())));
+          sb.append(
+              String.format(
+                  "%s <= 0",
+                  String.format(
+                      ((DetailComparisonTestingRequiresWrapping) typeLeft)
+                          .getComparisonTestingBinaryPattern(),
+                      leftStr.toString(),
+                      rightStr.toString())));
           return;
         case GreaterThan:
-          sb.append(String.format("%s > 0", String.format(((DetailComparisonTestingRequiresWrapping) typeLeft).getComparisonTestingBinaryPattern(), leftStr.toString(), rightStr.toString())));
+          sb.append(
+              String.format(
+                  "%s > 0",
+                  String.format(
+                      ((DetailComparisonTestingRequiresWrapping) typeLeft)
+                          .getComparisonTestingBinaryPattern(),
+                      leftStr.toString(),
+                      rightStr.toString())));
           return;
         case GreaterThanOrEqual:
-          sb.append(String.format("%s >= 0", String.format(((DetailComparisonTestingRequiresWrapping) typeLeft).getComparisonTestingBinaryPattern(), leftStr.toString(), rightStr.toString())));
+          sb.append(
+              String.format(
+                  "%s >= 0",
+                  String.format(
+                      ((DetailComparisonTestingRequiresWrapping) typeLeft)
+                          .getComparisonTestingBinaryPattern(),
+                      leftStr.toString(),
+                      rightStr.toString())));
           return;
       }
     }
     switch (op) {
       case Multiply:
-        if (typingResult.mathResult == CanMathResult.YesAndResultIsStringRepetitionUsingSpecialMultiplyOp && typeLeft instanceof DetailSpecialMultiplyOp) {
-          sb.append(String.format(((DetailSpecialMultiplyOp) typeLeft).getSpecialMultiplyOpPatternForBinary(), leftStr.toString(), rightStr.toString()));
+        if (typingResult.mathResult
+                == CanMathResult.YesAndResultIsStringRepetitionUsingSpecialMultiplyOp
+            && typeLeft instanceof DetailSpecialMultiplyOp) {
+          sb.append(
+              String.format(
+                  ((DetailSpecialMultiplyOp) typeLeft).getSpecialMultiplyOpPatternForBinary(),
+                  leftStr.toString(),
+                  rightStr.toString()));
           return;
         }
         break;
       default:
         // generic
     }
-    sb.append(leftStr.toString()).append(" ").append(op.javaOp).append(" ").append(rightStr.toString());
+    sb.append(leftStr.toString())
+        .append(" ")
+        .append(op.javaOp)
+        .append(" ")
+        .append(rightStr.toString());
   }
 }

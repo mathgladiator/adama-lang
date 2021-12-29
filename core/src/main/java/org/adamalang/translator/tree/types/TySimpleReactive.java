@@ -18,10 +18,11 @@ import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultVal
 
 import java.util.function.Consumer;
 
-public abstract class TySimpleReactive extends TyType implements DetailComputeRequiresGet, //
-    IsReactiveValue, //
-    DetailInventDefaultValueExpression, //
-    AssignmentViaSetter //
+public abstract class TySimpleReactive extends TyType
+    implements DetailComputeRequiresGet, //
+        IsReactiveValue, //
+        DetailInventDefaultValueExpression, //
+        AssignmentViaSetter //
 {
   public final String reactiveTreeType;
   public final Token token;
@@ -49,6 +50,5 @@ public abstract class TySimpleReactive extends TyType implements DetailComputeRe
   }
 
   @Override
-  public void typing(final Environment environment) {
-  }
+  public void typing(final Environment environment) {}
 }

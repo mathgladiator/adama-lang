@@ -13,12 +13,13 @@ import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
-/** a condition to learn if changes have occured. This is like a Lazy, but gives
- * people the ability to learn if changes have happened since the last time a
- * commited happened */
+/**
+ * a condition to learn if changes have occured. This is like a Lazy, but gives people the ability
+ * to learn if changes have happened since the last time a commited happened
+ */
 public class RxGuard extends RxBase implements RxChild {
-  private int generation;
   boolean invalid;
+  private int generation;
 
   public RxGuard() {
     super(null);
@@ -32,23 +33,13 @@ public class RxGuard extends RxBase implements RxChild {
   }
 
   @Override
-  public void __dump(final JsonStreamWriter writer) {
-  }
+  public void __dump(final JsonStreamWriter writer) {}
 
   @Override
-  public void __insert(final JsonStreamReader reader) {
-  }
+  public void __insert(final JsonStreamReader reader) {}
 
   @Override
-  public void __patch(JsonStreamReader reader) {
-  }
-
-  @Override
-  public boolean __raiseInvalid() {
-    generation++;
-    invalid = true;
-    return true;
-  }
+  public void __patch(JsonStreamReader reader) {}
 
   @Override
   public void __revert() {
@@ -56,6 +47,13 @@ public class RxGuard extends RxBase implements RxChild {
       generation++;
       invalid = false;
     }
+  }
+
+  @Override
+  public boolean __raiseInvalid() {
+    generation++;
+    invalid = true;
+    return true;
   }
 
   public int getGeneration() {

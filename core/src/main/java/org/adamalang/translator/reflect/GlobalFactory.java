@@ -20,66 +20,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
-/** has the job of turning static methods on a class into a format that can be
- * consumed by Adama */
+/** has the job of turning static methods on a class into a format that can be consumed by Adama */
 public class GlobalFactory {
-  public static FunctionOverloadInstance convertMethodToFunctionOverload(final Class<?> clazz, final Method method) {
-    final var args = new ArrayList<TyType>();
-    final var params = method.getParameterTypes();
-    for (var k = 0; k < params.length; k++) {
-      if (shouldDeny(params[k])) { return null; }
-      args.add(TypeBridge.getAdamaType(params[k], extractHiddenTypes(method.getParameterAnnotations()[k])));
-    }
-    return new FunctionOverloadInstance(clazz.getSimpleName() + "." + method.getName(), TypeBridge.getAdamaType(method.getReturnType(), extractHiddenTypes(method.getAnnotations())), args, true);
-  }
-
-  private static Class<?>[] extractHiddenTypes(final Annotation[] annotations) {
-    for (final Annotation at : annotations) {
-      if (at instanceof HiddenType) { return new Class<?>[] { ((HiddenType) at).clazz() }; }
-      if (at instanceof HiddenTypes2) { return new Class<?>[] { ((HiddenTypes2) at).class1(), ((HiddenTypes2) at).class2() }; }
-    }
-    return null;
-  }
-
-  private static String getMethodName(final Method method) {
-    for (final Annotation at : method.getAnnotations()) {
-      if (at instanceof UseName) { return ((UseName) at).name(); }
-    }
-    return method.getName();
-  }
-
-  private static boolean isExtension(final Method method) {
-    for (final Annotation at : method.getAnnotations()) {
-      if (at instanceof Extension) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  private static TreeMap<String, ArrayList<Method>> indexMethods(final Class<?> clazz, final String[] methodsToGet) {
-    final var indexedMethods = new TreeMap<String, ArrayList<Method>>();
-    final var methods = new TreeSet<String>();
-    for (final String method : methodsToGet) {
-      methods.add(method);
-      indexedMethods.put(method, new ArrayList<>());
-    }
-    for (final Method method : clazz.getMethods()) {
-      final var isStatic = Modifier.isStatic(method.getModifiers());
-      final var isPublic = Modifier.isPublic(method.getModifiers());
-      final var nameToUse = getMethodName(method);
-      if (isPublic && isStatic) {
-        final var arr = indexedMethods.get(nameToUse);
-        if (arr != null) {
-          arr.add(method);
-        }
-      }
-    }
-    return indexedMethods;
-  }
-
   /** we iterate all public static methods within a class */
-  public static TyNativeGlobalObject makeGlobal(final String name, final Class<?> clazz, HashMap<String, HashMap<String, TyNativeFunctional>> extensions) {
+  public static TyNativeGlobalObject makeGlobal(
+      final String name,
+      final Class<?> clazz,
+      HashMap<String, HashMap<String, TyNativeFunctional>> extensions) {
     final var methods = new TreeSet<String>();
     for (final Method method : clazz.getMethods()) {
       final var isStatic = Modifier.isStatic(method.getModifiers());
@@ -89,16 +36,37 @@ public class GlobalFactory {
         methods.add(nameToUse);
       }
     }
-    return makeGlobalExplicit(name, clazz, extensions, false, methods.toArray(new String[methods.size()]));
+    return makeGlobalExplicit(
+        name, clazz, extensions, false, methods.toArray(new String[methods.size()]));
   }
 
-  public static TyNativeGlobalObject makeGlobalExplicit(final String name, final Class<?> clazz, HashMap<String, HashMap<String, TyNativeFunctional>> extensions, boolean forceException, final String... methodsToGet) {
-    final var object = new TyNativeGlobalObject(name, clazz.getPackageName() + "." + clazz.getSimpleName(), true);
+  private static String getMethodName(final Method method) {
+    for (final Annotation at : method.getAnnotations()) {
+      if (at instanceof UseName) {
+        return ((UseName) at).name();
+      }
+    }
+    return method.getName();
+  }
+
+  public static TyNativeGlobalObject makeGlobalExplicit(
+      final String name,
+      final Class<?> clazz,
+      HashMap<String, HashMap<String, TyNativeFunctional>> extensions,
+      boolean forceException,
+      final String... methodsToGet) {
+    final var object =
+        new TyNativeGlobalObject(name, clazz.getPackageName() + "." + clazz.getSimpleName(), true);
     mergeInto(object, clazz, extensions, forceException, methodsToGet);
     return object;
   }
 
-  public static void mergeInto(final TyNativeGlobalObject object, final Class<?> clazz, HashMap<String, HashMap<String, TyNativeFunctional>> extensions, boolean forceException, final String... methodsToGet) {
+  public static void mergeInto(
+      final TyNativeGlobalObject object,
+      final Class<?> clazz,
+      HashMap<String, HashMap<String, TyNativeFunctional>> extensions,
+      boolean forceException,
+      final String... methodsToGet) {
     final var index = indexMethods(clazz, methodsToGet);
     for (final Map.Entry<String, ArrayList<Method>> entry : index.entrySet()) { // for each method
       final var overloads = new ArrayList<FunctionOverloadInstance>();
@@ -126,34 +94,118 @@ public class GlobalFactory {
                 newOverloads = new ArrayList<>();
                 byFirstParameterType.put(key, newOverloads);
               }
-              newOverloads.add(new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, fo.pure));
+              newOverloads.add(
+                  new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, fo.pure));
             }
           }
         }
       }
 
       if (overloads.size() > 0) {
-        object.functions.put(entry.getKey(), new TyNativeFunctional(entry.getKey(), overloads, FunctionStyleJava.InjectNameThenArgs));
-        for (Map.Entry<String, ArrayList<FunctionOverloadInstance>> firstParamKey : byFirstParameterType.entrySet()) {
-          HashMap<String, TyNativeFunctional> extensionByFirstParam = extensions.get(firstParamKey.getKey());
+        object.functions.put(
+            entry.getKey(),
+            new TyNativeFunctional(
+                entry.getKey(), overloads, FunctionStyleJava.InjectNameThenArgs));
+        for (Map.Entry<String, ArrayList<FunctionOverloadInstance>> firstParamKey :
+            byFirstParameterType.entrySet()) {
+          HashMap<String, TyNativeFunctional> extensionByFirstParam =
+              extensions.get(firstParamKey.getKey());
           if (extensionByFirstParam == null) {
             extensionByFirstParam = new HashMap<>();
             extensions.put(firstParamKey.getKey(), extensionByFirstParam);
           }
-          extensionByFirstParam.put(entry.getKey(), new TyNativeFunctional(entry.getKey(), firstParamKey.getValue(), FunctionStyleJava.InjectNameThenExpressionAndArgs));
+          extensionByFirstParam.put(
+              entry.getKey(),
+              new TyNativeFunctional(
+                  entry.getKey(),
+                  firstParamKey.getValue(),
+                  FunctionStyleJava.InjectNameThenExpressionAndArgs));
         }
       } else {
         try {
           final var fld = clazz.getField(entry.getKey());
-          overloads.add(new FunctionOverloadInstance(clazz.getSimpleName() + "." + entry.getKey(), TypeBridge.getAdamaType(fld.getType(), null), new ArrayList<>(), true));
-          object.functions.put(entry.getKey(), new TyNativeFunctional(entry.getKey(), overloads, FunctionStyleJava.InjectName));
-        } catch (final NoSuchFieldException nsfe) {}
+          overloads.add(
+              new FunctionOverloadInstance(
+                  clazz.getSimpleName() + "." + entry.getKey(),
+                  TypeBridge.getAdamaType(fld.getType(), null),
+                  new ArrayList<>(),
+                  true));
+          object.functions.put(
+              entry.getKey(),
+              new TyNativeFunctional(entry.getKey(), overloads, FunctionStyleJava.InjectName));
+        } catch (final NoSuchFieldException nsfe) {
+        }
       }
     }
   }
 
-  public static boolean shouldDeny(final Class<?> x) {
-    if (float.class == x || Float.class == x) { return true; }
+  private static TreeMap<String, ArrayList<Method>> indexMethods(
+      final Class<?> clazz, final String[] methodsToGet) {
+    final var indexedMethods = new TreeMap<String, ArrayList<Method>>();
+    final var methods = new TreeSet<String>();
+    for (final String method : methodsToGet) {
+      methods.add(method);
+      indexedMethods.put(method, new ArrayList<>());
+    }
+    for (final Method method : clazz.getMethods()) {
+      final var isStatic = Modifier.isStatic(method.getModifiers());
+      final var isPublic = Modifier.isPublic(method.getModifiers());
+      final var nameToUse = getMethodName(method);
+      if (isPublic && isStatic) {
+        final var arr = indexedMethods.get(nameToUse);
+        if (arr != null) {
+          arr.add(method);
+        }
+      }
+    }
+    return indexedMethods;
+  }
+
+  public static FunctionOverloadInstance convertMethodToFunctionOverload(
+      final Class<?> clazz, final Method method) {
+    final var args = new ArrayList<TyType>();
+    final var params = method.getParameterTypes();
+    for (var k = 0; k < params.length; k++) {
+      if (shouldDeny(params[k])) {
+        return null;
+      }
+      args.add(
+          TypeBridge.getAdamaType(
+              params[k], extractHiddenTypes(method.getParameterAnnotations()[k])));
+    }
+    return new FunctionOverloadInstance(
+        clazz.getSimpleName() + "." + method.getName(),
+        TypeBridge.getAdamaType(
+            method.getReturnType(), extractHiddenTypes(method.getAnnotations())),
+        args,
+        true);
+  }
+
+  private static boolean isExtension(final Method method) {
+    for (final Annotation at : method.getAnnotations()) {
+      if (at instanceof Extension) {
+        return true;
+      }
+    }
     return false;
+  }
+
+  public static boolean shouldDeny(final Class<?> x) {
+    if (float.class == x || Float.class == x) {
+      return true;
+    }
+    return false;
+  }
+
+  private static Class<?>[] extractHiddenTypes(final Annotation[] annotations) {
+    for (final Annotation at : annotations) {
+      if (at instanceof HiddenType) {
+        return new Class<?>[] {((HiddenType) at).clazz()};
+      }
+      if (at instanceof HiddenTypes2) {
+        return new Class<?>[] {((HiddenTypes2) at).class1(), ((HiddenTypes2) at).class2()};
+      }
+    }
+    return null;
   }
 }

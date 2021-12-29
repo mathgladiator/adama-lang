@@ -24,9 +24,10 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
 
-public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType, //
-    DetailEqualityTestingRequiresWrapping, //
-    AssignmentViaNative //
+public class TyNativeClient extends TySimpleNative
+    implements DetailHasDeltaType, //
+        DetailEqualityTestingRequiresWrapping, //
+        AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
@@ -52,6 +53,22 @@ public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType
   }
 
   @Override
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeClient(newBehavior, readonlyToken, token).withPosition(position);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_value");
+    writer.writeObjectFieldIntro("type");
+    writer.writeString("client");
+    writer.endObject();
+  }
+
+  @Override
   public String getDeltaType(final Environment environment) {
     return "DClient";
   }
@@ -64,20 +81,5 @@ public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType
   @Override
   public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
     return new NoOneClientConstant(Token.WRAP("@no_one")).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeClient(newBehavior, readonlyToken, token).withPosition(position);
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("native_value");
-    writer.writeObjectFieldIntro("type");
-    writer.writeString("client");
-    writer.endObject();
   }
 }

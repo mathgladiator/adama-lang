@@ -19,7 +19,9 @@ public class RuleSetMap {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, true);
-      if (tyType != null && (tyType instanceof TyNativeMap || tyType instanceof TyReactiveMap)) { return true; }
+      if (tyType != null && (tyType instanceof TyNativeMap || tyType instanceof TyReactiveMap)) {
+        return true;
+      }
     }
     return false;
   }
@@ -28,7 +30,9 @@ public class RuleSetMap {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, true);
-      if (tyType != null && (tyType instanceof TyNativeMap)) { return true; }
+      if (tyType != null && (tyType instanceof TyNativeMap)) {
+        return true;
+      }
     }
     return false;
   }
@@ -37,7 +41,9 @@ public class RuleSetMap {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, true);
-      if (tyType != null && (tyType instanceof TyReactiveMap)) { return true; }
+      if (tyType != null && (tyType instanceof TyReactiveMap)) {
+        return true;
+      }
     }
     return false;
   }

@@ -19,16 +19,10 @@ import org.adamalang.runtime.reactives.RxString;
 import org.adamalang.runtime.reactives.RxTable;
 
 public class MockRecord extends RxRecordBase<MockRecord> {
-  public static MockRecord make(final int id) {
-    final var mr = new MockRecord(null);
-    mr.id = id;
-    return mr;
-  }
-
   public final RxString data;
-  public int id;
   public final RxInt32 index;
   public final ReactiveIndexInvalidator<MockRecord> inv;
+  public int id;
 
   @SuppressWarnings("unchecked")
   public MockRecord(final RxParent p) {
@@ -38,19 +32,27 @@ public class MockRecord extends RxRecordBase<MockRecord> {
     index = new RxInt32(this, 0);
     if (p instanceof RxTable) {
       final var table = (RxTable<MockRecord>) p;
-      inv = new ReactiveIndexInvalidator<>(table.getIndex((short) 0), this) {
-        @Override
-        public int pullValue() {
-          return index.get();
-        }
-      };
+      inv =
+          new ReactiveIndexInvalidator<>(table.getIndex((short) 0), this) {
+            @Override
+            public int pullValue() {
+              return index.get();
+            }
+          };
     } else {
       inv = null;
     }
   }
 
+  public static MockRecord make(final int id) {
+    final var mr = new MockRecord(null);
+    mr.id = id;
+    return mr;
+  }
+
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer, final JsonStreamWriter reverse) {
+  public void __commit(
+      final String name, final JsonStreamWriter writer, final JsonStreamWriter reverse) {
     if (__isDirty()) {
       writer.writeObjectFieldIntro(name);
       writer.beginObject();
@@ -72,28 +74,6 @@ public class MockRecord extends RxRecordBase<MockRecord> {
     writer.writeObjectFieldIntro("index");
     index.__dump(writer);
     writer.endObject();
-  }
-
-  @Override
-  public void __deindex() {
-    if (inv != null) {
-      inv.deindex();
-    }
-  }
-
-  @Override
-  public String[] __getIndexColumns() {
-    return new String[] { "index" };
-  }
-
-  @Override
-  public int[] __getIndexValues() {
-    return new int[] { index.get() };
-  }
-
-  @Override
-  public int __id() {
-    return id;
   }
 
   @Override
@@ -124,6 +104,33 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   }
 
   @Override
+  public void __revert() {
+    if (__isDirty()) {
+      __isDying = false;
+      data.__revert();
+      index.__revert();
+      __lowerDirtyRevert();
+    }
+  }
+
+  @Override
+  public void __deindex() {
+    if (inv != null) {
+      inv.deindex();
+    }
+  }
+
+  @Override
+  public String[] __getIndexColumns() {
+    return new String[] {"index"};
+  }
+
+  @Override
+  public int[] __getIndexValues() {
+    return new int[] {index.get()};
+  }
+
+  @Override
   public String __name() {
     return null;
   }
@@ -136,17 +143,12 @@ public class MockRecord extends RxRecordBase<MockRecord> {
   }
 
   @Override
-  public void __revert() {
-    if (__isDirty()) {
-      __isDying = false;
-      data.__revert();
-      index.__revert();
-      __lowerDirtyRevert();
-    }
+  public void __setId(final int __id, final boolean __useForce) {
+    id = __id;
   }
 
   @Override
-  public void __setId(final int __id, final boolean __useForce) {
-    id = __id;
+  public int __id() {
+    return id;
   }
 }

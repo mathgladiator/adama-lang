@@ -12,8 +12,7 @@ package org.adamalang.runtime.stdlib;
 import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.translator.reflect.Extension;
 
-/** a very simple math library which extends some of the already exposed Math
- * calls */
+/** a very simple math library which extends some of the already exposed Math calls */
 public class LibMath {
   public static double SQRT2 = 1.4142135623730950488016887242097;
 
@@ -36,14 +35,14 @@ public class LibMath {
   }
 
   @Extension
-  public static boolean near(final double a, final double b) {
-    final var diff = Math.abs(a - b);
-    return diff < 0.0000001;
+  public static boolean near(final NtComplex a, final NtComplex b) {
+    return near(a.real, b.real) && near(a.imaginary, b.imaginary);
   }
 
   @Extension
-  public static boolean near(final NtComplex a, final NtComplex b) {
-    return near(a.real, b.real) && near(a.imaginary, b.imaginary);
+  public static boolean near(final double a, final double b) {
+    final var diff = Math.abs(a - b);
+    return diff < 0.0000001;
   }
 
   @Extension

@@ -28,7 +28,8 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyReactiveMap extends TyType implements//
+public class TyReactiveMap extends TyType
+    implements //
         DetailTypeHasMethods, //
         IsMap, //
         DetailHasDeltaType {
@@ -39,7 +40,13 @@ public class TyReactiveMap extends TyType implements//
   public final Token openThing;
   public final TyType rangeType;
 
-  public TyReactiveMap(final Token mapToken, final Token openThing, final TyType domainType, final Token commaToken, final TyType rangeType, final Token closeThing) {
+  public TyReactiveMap(
+      final Token mapToken,
+      final Token openThing,
+      final TyType domainType,
+      final Token commaToken,
+      final TyType rangeType,
+      final Token closeThing) {
     super(TypeBehavior.ReadWriteWithSetGet);
     this.mapToken = mapToken;
     this.openThing = openThing;
@@ -68,7 +75,11 @@ public class TyReactiveMap extends TyType implements//
 
   @Override
   public String getJavaBoxType(Environment environment) {
-    return "RxMap<" + getDomainType(environment).getJavaBoxType(environment) + "," + getRangeType(environment).getJavaBoxType(environment) + ">";
+    return "RxMap<"
+        + getDomainType(environment).getJavaBoxType(environment)
+        + ","
+        + getRangeType(environment).getJavaBoxType(environment)
+        + ">";
   }
 
   @Override
@@ -77,8 +88,10 @@ public class TyReactiveMap extends TyType implements//
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing).withPosition(position);
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyReactiveMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing)
+        .withPosition(position);
   }
 
   @Override
@@ -87,7 +100,11 @@ public class TyReactiveMap extends TyType implements//
     rangeType.typing(environment);
     final var resolvedDomainType = environment.rules.Resolve(domainType, false);
     if (resolvedDomainType != null && !(resolvedDomainType instanceof CanBeMapDomain)) {
-      environment.document.createError(this, String.format("The domain type '%s' is not an appropriate.", resolvedDomainType.getAdamaType()), "TyNativeMap");
+      environment.document.createError(
+          this,
+          String.format(
+              "The domain type '%s' is not an appropriate.", resolvedDomainType.getAdamaType()),
+          "TyNativeMap");
     }
   }
 
@@ -116,8 +133,16 @@ public class TyReactiveMap extends TyType implements//
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true)),
-              FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional(
+          "size",
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance(
+                  "size",
+                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken)
+                      .withPosition(this),
+                  new ArrayList<>(),
+                  true)),
+          FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

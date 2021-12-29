@@ -19,11 +19,43 @@ import java.util.function.Supplier;
 
 /** a list of records that will respect privacy and sends state to client only on changes */
 public class DRecordList<dRecordTy> {
+  public final HashMap<Integer, dRecordTy> cache;
+  public final ArrayList<Integer> order;
+
+  public DRecordList() {
+    this.order = new ArrayList<>();
+    this.cache = new HashMap<>();
+  }
+
+  /** start walking the records */
+  public Walk begin() {
+    return new Walk();
+  }
+
+  /** get the cached item */
+  public dRecordTy getPrior(final int id, final Supplier<dRecordTy> maker) {
+    var prior = cache.get(id);
+    if (prior == null) {
+      prior = maker.get();
+      cache.put(id, prior);
+    }
+    return prior;
+  }
+
+  /** the list of records is no longer visible (was made private) */
+  public void hide(final PrivateLazyDeltaWriter writer) {
+    if (cache.size() > 0) {
+      order.clear();
+      cache.clear();
+      writer.writeNull();
+    }
+  }
+
   public class Walk {
     private final ArrayList<Integer> newOrdering;
     private final Iterator<Integer> oldOrderingIt;
-    private boolean orderingUnchanged;
     private final HashSet<Integer> seen;
+    private boolean orderingUnchanged;
 
     private Walk() {
       newOrdering = new ArrayList<>();
@@ -110,38 +142,6 @@ public class DRecordList<dRecordTy> {
           }
         }
       }
-    }
-  }
-
-  public final HashMap<Integer, dRecordTy> cache;
-  public final ArrayList<Integer> order;
-
-  public DRecordList() {
-    this.order = new ArrayList<>();
-    this.cache = new HashMap<>();
-  }
-
-  /** start walking the records */
-  public Walk begin() {
-    return new Walk();
-  }
-
-  /** get the cached item */
-  public dRecordTy getPrior(final int id, final Supplier<dRecordTy> maker) {
-    var prior = cache.get(id);
-    if (prior == null) {
-      prior = maker.get();
-      cache.put(id, prior);
-    }
-    return prior;
-  }
-
-  /** the list of records is no longer visible (was made private) */
-  public void hide(final PrivateLazyDeltaWriter writer) {
-    if (cache.size() > 0) {
-      order.clear();
-      cache.clear();
-      writer.writeNull();
     }
   }
 }

@@ -16,15 +16,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.function.Function;
 
-/** a way of iterating a buffer of tokens; this allows peeking into the
- * future */
+/** a way of iterating a buffer of tokens; this allows peeking into the future */
 public class TokenEngine {
   private final LinkedList<Token> buffer;
   private final Iterator<Integer> codepointIterator;
+  private final TokenReaderStateMachine stateMachine;
   private Token currentToken;
   private Token lastTokenIfAvailable = null;
   private ArrayList<Token> nonsemanticForwardingTokens;
-  private final TokenReaderStateMachine stateMachine;
 
   public TokenEngine(final String sourceName, final Iterator<Integer> codepointIterator) {
     this.codepointIterator = codepointIterator;
@@ -34,27 +33,23 @@ public class TokenEngine {
     nonsemanticForwardingTokens = null;
   }
 
-  private void ensureBufferFilled(final int size) throws AdamaLangException {
-    // we are already filled
-    if (buffer.size() > size) { return; }
-    // read the document until the end
-    while (codepointIterator.hasNext()) {
-      // consume a codepoint
-      final int codepoint = codepointIterator.next();
-      stateMachine.consume(codepoint);
-      // the buffer got filled via magic, coo
-      if (buffer.size() > size) { return; }
-    }
-    // we have reached the end of the file, if we have any forwarding tokens, append
-    // them to the most recent token
-    if (nonsemanticForwardingTokens != null && currentToken != null) {
-      for (final Token forward : nonsemanticForwardingTokens) {
-        currentToken.addHiddenTokenAfter(forward);
+  private void witness(final Token token) {
+    if (token.majorType.hidden) {
+      if (currentToken != null
+          && nonsemanticForwardingTokens == null
+          && (token.minorType == MinorTokenType.CommentEndOfLine || token.minorType == null)) {
+        currentToken.addHiddenTokenAfter(token);
+      } else {
+        forwardToken(token);
       }
-      nonsemanticForwardingTokens = null;
+    } else {
+      if (nonsemanticForwardingTokens != null) {
+        token.nonSemanticTokensPrior = nonsemanticForwardingTokens;
+        nonsemanticForwardingTokens = null;
+      }
+      currentToken = token;
+      buffer.add(token);
     }
-    stateMachine.consume(0);
-    return;
   }
 
   private void forwardToken(final Token token) {
@@ -72,17 +67,19 @@ public class TokenEngine {
     return nonsemanticForwardingTokens;
   }
 
-  public Token peek() throws AdamaLangException {
-    return peek(0);
+  public Token popIf(final Function<Token, Boolean> condition) throws AdamaLangException {
+    final var candidate = peek();
+    if (candidate != null) {
+      final var result = condition.apply(candidate);
+      if (result != null && result) {
+        return pop();
+      }
+    }
+    return null;
   }
 
-  public Token peek(final int future) throws AdamaLangException {
-    ensureBufferFilled(future + 1);
-    if (future < buffer.size()) {
-      return buffer.get(future);
-    } else {
-      return null;
-    }
+  public Token peek() throws AdamaLangException {
+    return peek(0);
   }
 
   public Token pop() throws AdamaLangException {
@@ -99,22 +96,57 @@ public class TokenEngine {
     return null;
   }
 
-  public Token popIf(final Function<Token, Boolean> condition) throws AdamaLangException {
-    final var candidate = peek();
-    if (candidate != null) {
-      final var result = condition.apply(candidate);
-      if (result != null && result) { return pop(); }
+  public Token peek(final int future) throws AdamaLangException {
+    ensureBufferFilled(future + 1);
+    if (future < buffer.size()) {
+      return buffer.get(future);
+    } else {
+      return null;
     }
-    return null;
   }
 
-  public Token popNextAdjSymbolPairIf(final Function<Token, Boolean> condition) throws AdamaLangException {
+  private void ensureBufferFilled(final int size) throws AdamaLangException {
+    // we are already filled
+    if (buffer.size() > size) {
+      return;
+    }
+    // read the document until the end
+    while (codepointIterator.hasNext()) {
+      // consume a codepoint
+      final int codepoint = codepointIterator.next();
+      stateMachine.consume(codepoint);
+      // the buffer got filled via magic, coo
+      if (buffer.size() > size) {
+        return;
+      }
+    }
+    // we have reached the end of the file, if we have any forwarding tokens, append
+    // them to the most recent token
+    if (nonsemanticForwardingTokens != null && currentToken != null) {
+      for (final Token forward : nonsemanticForwardingTokens) {
+        currentToken.addHiddenTokenAfter(forward);
+      }
+      nonsemanticForwardingTokens = null;
+    }
+    stateMachine.consume(0);
+    return;
+  }
+
+  public Token popNextAdjSymbolPairIf(final Function<Token, Boolean> condition)
+      throws AdamaLangException {
     final var candidate1 = peek(0);
     final var candidate2 = peek(1);
-    if (candidate1 != null && candidate2 != null && candidate1.isSymbol() && candidate2.isSymbol()) {
+    if (candidate1 != null
+        && candidate2 != null
+        && candidate1.isSymbol()
+        && candidate2.isSymbol()) {
       // whitespace (or a comment) exists between the tokens, so don't merge them
-      if (candidate1.nonSemanticTokensAfter != null || candidate2.nonSemanticTokensPrior != null) { return null; }
-      final var merge = Token.mergeAdjacentTokens(candidate1, candidate2, candidate1.majorType, candidate1.minorType);
+      if (candidate1.nonSemanticTokensAfter != null || candidate2.nonSemanticTokensPrior != null) {
+        return null;
+      }
+      final var merge =
+          Token.mergeAdjacentTokens(
+              candidate1, candidate2, candidate1.majorType, candidate1.minorType);
       final var result = condition.apply(merge);
       if (result != null && result) {
         pop();
@@ -123,22 +155,5 @@ public class TokenEngine {
       }
     }
     return null;
-  }
-
-  private void witness(final Token token) {
-    if (token.majorType.hidden) {
-      if (currentToken != null && nonsemanticForwardingTokens == null && (token.minorType == MinorTokenType.CommentEndOfLine || token.minorType == null)) {
-        currentToken.addHiddenTokenAfter(token);
-      } else {
-        forwardToken(token);
-      }
-    } else {
-      if (nonsemanticForwardingTokens != null) {
-        token.nonSemanticTokensPrior = nonsemanticForwardingTokens;
-        nonsemanticForwardingTokens = null;
-      }
-      currentToken = token;
-      buffer.add(token);
-    }
   }
 }

@@ -30,52 +30,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class GenerateLanguageTests {
-  private static boolean isValid(String path) {
-    File p = new File(path);
-    return p.exists() && p.isDirectory();
-  }
-
-  public static void writeErrorCSV(String inputRootPath, String outputErrorFile) throws Exception {
-    ByteArrayOutputStream memory = new ByteArrayOutputStream();
-    PrintWriter writer = new PrintWriter(memory);
-    final var options = CompilerOptions.start().make();
-    final var globals = GlobalObjectPool.createPoolWithStdLib();
-    final var state = new EnvironmentState(globals, options);
-    final var root = new File(inputRootPath);
-    writer.println("file,start_line,start_character,end_line,end_character,message");
-    for (final File testFile : root.listFiles()) {
-      final var test = TestFile.fromFilename(testFile.getName());
-      if (!test.success) {
-        final var document = new Document();
-        document.addSearchPath(root);
-        document.importFile(testFile.toString(), DocumentPosition.ZERO);
-        document.setClassName("XClass");
-        document.check(state);
-        final var issues = (ArrayList<HashMap<String, Object>>) new JsonStreamReader(document.errorsJson()).readJavaTree();
-        for (int j = 0; j < issues.size(); j++) {
-          writer.print(testFile.toString().replaceAll(Pattern.quote("\\"), "/"));
-          HashMap<String, Object> node = issues.get(j);
-          HashMap<String, HashMap<String, Object>> range = (HashMap<String, HashMap<String, Object>>) node.get("range");
-          writer.print(",");
-          writer.print(range.get("start").get("line").toString());
-          writer.print(",");
-          writer.print(range.get("start").get("character").toString());
-          writer.print(",");
-          writer.print(range.get("end").get("line").toString());
-          writer.print(",");
-          writer.print(range.get("end").get("character").toString());
-          writer.print(",");
-          JsonStreamWriter escaped = new JsonStreamWriter();
-          escaped.writeString(node.get("message").toString().replaceAll(Pattern.quote("\\"), "/"));
-          writer.print(escaped);
-          writer.println();
-        }
-      }
-    }
-    writer.flush();
-    Files.writeString(new File(outputErrorFile).toPath(), new String(memory.toByteArray()));
-  }
-
   public static void generate(int argOffset, final String[] args) throws Exception {
     String inputRootPath = "./test_code";
     String outputJavaPath = "./src/test/java/org/adamalang/translator";
@@ -101,5 +55,54 @@ public class GenerateLanguageTests {
       }
       writeErrorCSV(inputRootPath, outputErrorFile);
     }
+  }
+
+  private static boolean isValid(String path) {
+    File p = new File(path);
+    return p.exists() && p.isDirectory();
+  }
+
+  public static void writeErrorCSV(String inputRootPath, String outputErrorFile) throws Exception {
+    ByteArrayOutputStream memory = new ByteArrayOutputStream();
+    PrintWriter writer = new PrintWriter(memory);
+    final var options = CompilerOptions.start().make();
+    final var globals = GlobalObjectPool.createPoolWithStdLib();
+    final var state = new EnvironmentState(globals, options);
+    final var root = new File(inputRootPath);
+    writer.println("file,start_line,start_character,end_line,end_character,message");
+    for (final File testFile : root.listFiles()) {
+      final var test = TestFile.fromFilename(testFile.getName());
+      if (!test.success) {
+        final var document = new Document();
+        document.addSearchPath(root);
+        document.importFile(testFile.toString(), DocumentPosition.ZERO);
+        document.setClassName("XClass");
+        document.check(state);
+        final var issues =
+            (ArrayList<HashMap<String, Object>>)
+                new JsonStreamReader(document.errorsJson()).readJavaTree();
+        for (int j = 0; j < issues.size(); j++) {
+          writer.print(testFile.toString().replaceAll(Pattern.quote("\\"), "/"));
+          HashMap<String, Object> node = issues.get(j);
+          HashMap<String, HashMap<String, Object>> range =
+              (HashMap<String, HashMap<String, Object>>) node.get("range");
+          writer.print(",");
+          writer.print(range.get("start").get("line").toString());
+          writer.print(",");
+          writer.print(range.get("start").get("character").toString());
+          writer.print(",");
+          writer.print(range.get("end").get("line").toString());
+          writer.print(",");
+          writer.print(range.get("end").get("character").toString());
+          writer.print(",");
+          JsonStreamWriter escaped = new JsonStreamWriter();
+          escaped.writeString(node.get("message").toString().replaceAll(Pattern.quote("\\"), "/"));
+          writer.print(escaped);
+          writer.println();
+        }
+      }
+    }
+    writer.flush();
+    Files.writeString(new File(outputErrorFile).toPath(), new String(memory.toByteArray()));
   }
 }

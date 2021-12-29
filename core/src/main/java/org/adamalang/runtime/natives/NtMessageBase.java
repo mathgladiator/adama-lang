@@ -13,10 +13,11 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** the base contract which messages must obey */
 public interface NtMessageBase /* extends CanConvertToObject */ {
-  public NtMessageBase NULL = writer -> {
-    writer.beginObject();
-    writer.endObject();
-  };
+  public NtMessageBase NULL =
+      writer -> {
+        writer.beginObject();
+        writer.endObject();
+      };
 
   public void __writeOut(JsonStreamWriter writer);
 }

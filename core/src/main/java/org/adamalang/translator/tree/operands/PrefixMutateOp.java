@@ -15,13 +15,6 @@ public enum PrefixMutateOp {
   NegateBool("!", ".negate()", false), // !
   NegateNumber("-", ".negate()", false); // -
 
-  public static PrefixMutateOp fromText(final String txt) {
-    for (final PrefixMutateOp op : PrefixMutateOp.values()) {
-      if (op.javaOp.equals(txt)) { return op; }
-    }
-    return null;
-  }
-
   public final String functionCall;
   public final String javaOp;
   public final boolean requiresAssignment;
@@ -30,5 +23,14 @@ public enum PrefixMutateOp {
     this.javaOp = javaOp;
     this.functionCall = functionCall;
     this.requiresAssignment = requiresAssignment;
+  }
+
+  public static PrefixMutateOp fromText(final String txt) {
+    for (final PrefixMutateOp op : PrefixMutateOp.values()) {
+      if (op.javaOp.equals(txt)) {
+        return op;
+      }
+    }
+    return null;
   }
 }

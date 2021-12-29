@@ -82,7 +82,6 @@ public class RxInt64Tests {
     Assert.assertEquals(42, (long) d.get());
   }
 
-
   @Test
   public void patch1() {
     final var d = new RxInt64(null, 1);

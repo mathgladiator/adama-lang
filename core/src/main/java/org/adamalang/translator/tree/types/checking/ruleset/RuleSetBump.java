@@ -16,14 +16,19 @@ import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 
 public class RuleSetBump {
-  public static CanBumpResult CanBumpBool(final Environment environment, final TyType typeOriginal, final boolean silent) {
+  public static CanBumpResult CanBumpBool(
+      final Environment environment, final TyType typeOriginal, final boolean silent) {
     final var type = RuleSetCommon.Resolve(environment, typeOriginal, silent);
     if (type != null) {
-      if (RuleSetCommon.IsBoolean(environment, type, true)) { return CanBumpResult.YesWithNative; }
+      if (RuleSetCommon.IsBoolean(environment, type, true)) {
+        return CanBumpResult.YesWithNative;
+      }
       if (type instanceof TyNativeList) {
         final var elementType = RuleSetCommon.ExtractEmbeddedType(environment, type, silent);
         if (elementType != null) {
-          if (RuleSetCommon.IsBoolean(environment, elementType, silent)) { return CanBumpResult.YesWithListTransformNative; }
+          if (RuleSetCommon.IsBoolean(environment, elementType, silent)) {
+            return CanBumpResult.YesWithListTransformNative;
+          }
         }
         return CanBumpResult.No;
       }
@@ -34,10 +39,14 @@ public class RuleSetBump {
     return CanBumpResult.No;
   }
 
-  public static CanBumpResult CanBumpNumeric(final Environment environment, final TyType typeOriginal, final boolean silent) {
-    final var type = typeOriginal;// RuleSetCommon.ResolvePastLazy(environment, typeOriginal, silent);
+  public static CanBumpResult CanBumpNumeric(
+      final Environment environment, final TyType typeOriginal, final boolean silent) {
+    final var type =
+        typeOriginal; // RuleSetCommon.ResolvePastLazy(environment, typeOriginal, silent);
     if (type != null) {
-      if (RuleSetCommon.IsInteger(environment, type, true) || RuleSetCommon.IsLong(environment, type, true) || RuleSetCommon.IsDouble(environment, type, true)) {
+      if (RuleSetCommon.IsInteger(environment, type, true)
+          || RuleSetCommon.IsLong(environment, type, true)
+          || RuleSetCommon.IsDouble(environment, type, true)) {
         if (type instanceof IsNativeValue) {
           return CanBumpResult.YesWithNative;
         } else {
@@ -47,7 +56,9 @@ public class RuleSetBump {
       if (type instanceof TyNativeList) {
         final var elementType = RuleSetCommon.ExtractEmbeddedType(environment, type, silent);
         if (elementType != null) {
-          if (RuleSetCommon.IsInteger(environment, elementType, true) || RuleSetCommon.IsLong(environment, elementType, true) || RuleSetCommon.IsDouble(environment, elementType, true)) {
+          if (RuleSetCommon.IsInteger(environment, elementType, true)
+              || RuleSetCommon.IsLong(environment, elementType, true)
+              || RuleSetCommon.IsDouble(environment, elementType, true)) {
             if (elementType instanceof IsNativeValue) {
               return CanBumpResult.YesWithListTransformNative;
             } else {
@@ -57,7 +68,11 @@ public class RuleSetBump {
         }
       }
       if (!silent) {
-        environment.document.createError(typeOriginal, String.format("Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got '%s'", typeOriginal.getAdamaType()),
+        environment.document.createError(
+            typeOriginal,
+            String.format(
+                "Type check failure: Must have a type of 'int', 'long', 'double', 'list<int>', 'list<long>', 'list<double>'; instead got '%s'",
+                typeOriginal.getAdamaType()),
             "CanBumpNumeric");
       }
     }

@@ -25,18 +25,21 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.function.Consumer;
 
-/** Represents the type for a boolean value (true/false); this uses the native
- * 'boolean' java type */
-public class TyNativeBoolean extends TySimpleNative implements //
-    DetailHasDeltaType, //
-    DetailTypeHasMethods, //
-    IsNativeValue, //
-    AssignmentViaNative //
+/**
+ * Represents the type for a boolean value (true/false); this uses the native 'boolean' java type
+ */
+public class TyNativeBoolean extends TySimpleNative
+    implements //
+        DetailHasDeltaType, //
+        DetailTypeHasMethods, //
+        IsNativeValue, //
+        AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeBoolean(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+  public TyNativeBoolean(
+      final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "boolean", "Boolean");
     this.token = token;
     this.readonlyToken = readonlyToken;
@@ -57,17 +60,8 @@ public class TyNativeBoolean extends TySimpleNative implements //
   }
 
   @Override
-  public String getDeltaType(final Environment environment) {
-    return "DBoolean";
-  }
-
-  @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new BooleanConstant(Token.WRAP("false"), false).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeBoolean(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -79,6 +73,16 @@ public class TyNativeBoolean extends TySimpleNative implements //
     writer.writeObjectFieldIntro("type");
     writer.writeString("bool");
     writer.endObject();
+  }
+
+  @Override
+  public String getDeltaType(final Environment environment) {
+    return "DBoolean";
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
+    return new BooleanConstant(Token.WRAP("false"), false).withPosition(forWhatExpression);
   }
 
   @Override

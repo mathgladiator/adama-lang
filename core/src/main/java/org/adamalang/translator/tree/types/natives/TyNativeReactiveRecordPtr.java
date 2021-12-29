@@ -22,9 +22,11 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.function.Consumer;
 
-public class TyNativeReactiveRecordPtr extends TyType implements //
-    AssignmentViaNative, //
-    DetailTypeHasMethods, DetailContainsAnEmbeddedType //
+public class TyNativeReactiveRecordPtr extends TyType
+    implements //
+        AssignmentViaNative, //
+        DetailTypeHasMethods,
+        DetailContainsAnEmbeddedType //
 {
   public final TyReactiveRecord source;
 
@@ -45,11 +47,6 @@ public class TyNativeReactiveRecordPtr extends TyType implements //
   }
 
   @Override
-  public TyType getEmbeddedType(final Environment environment) {
-    return source;
-  }
-
-  @Override
   public String getJavaBoxType(final Environment environment) {
     return source.getJavaBoxType(environment);
   }
@@ -60,12 +57,8 @@ public class TyNativeReactiveRecordPtr extends TyType implements //
   }
 
   @Override
-  public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
-    return source.lookupMethod(name, environment);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeReactiveRecordPtr(newBehavior, source).withPosition(position);
   }
 
@@ -80,5 +73,15 @@ public class TyNativeReactiveRecordPtr extends TyType implements //
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_reactive_ptr");
     writer.endObject();
+  }
+
+  @Override
+  public TyType getEmbeddedType(final Environment environment) {
+    return source;
+  }
+
+  @Override
+  public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
+    return source.lookupMethod(name, environment);
   }
 }

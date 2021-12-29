@@ -17,8 +17,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeList;
 
 import java.util.function.Consumer;
 
-/** begin a linq query to convert a table into a list which may be filtered,
- * ordered, limited */
+/** begin a linq query to convert a table into a list which may be filtered, ordered, limited */
 public class Iterate extends LinqExpression {
   public final Expression expression;
   public final Token selectToken;
@@ -42,7 +41,9 @@ public class Iterate extends LinqExpression {
     final var exprType = expression.typing(environment, null /* no suggestion makes sense */);
     if (exprType != null && environment.rules.IsTable(exprType, false)) {
       final var recordType = environment.rules.ExtractEmbeddedType(exprType, false);
-      if (recordType != null) { return TyNativeList.WRAP(recordType).withPosition(this); }
+      if (recordType != null) {
+        return TyNativeList.WRAP(recordType).withPosition(this);
+      }
     }
     return null;
   }

@@ -18,10 +18,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class NtChannelTests {
-  public static final NtMessageBase DEMO = writer -> {
-    writer.beginObject();
-    writer.endObject();
-  };
+  public static final NtMessageBase DEMO =
+      writer -> {
+        writer.beginObject();
+        writer.endObject();
+      };
 
   @Test
   public void flow1() {
@@ -61,7 +62,7 @@ public class NtChannelTests {
     final var sink = new Sink<String>("channel");
     sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "X");
     final var channel = new NtChannel<>(futures, sink);
-    final var future = channel.choose(NtClient.NO_ONE, new NtMessageBase[] { DEMO, DEMO }, 2);
+    final var future = channel.choose(NtClient.NO_ONE, new NtMessageBase[] {DEMO, DEMO}, 2);
     future.await();
   }
 
@@ -71,11 +72,12 @@ public class NtChannelTests {
     final var futures = new OutstandingFutureTracker(key);
     final var sink = new Sink<String>("channel");
     final var channel = new NtChannel<>(futures, sink);
-    final var future = channel.choose(NtClient.NO_ONE, new NtMessageBase[] { DEMO, DEMO }, 2);
+    final var future = channel.choose(NtClient.NO_ONE, new NtMessageBase[] {DEMO, DEMO}, 2);
     try {
       future.await();
       Assert.fail();
-    } catch (final ComputeBlockedException cbe) {}
+    } catch (final ComputeBlockedException cbe) {
+    }
   }
 
   @Test
@@ -94,7 +96,7 @@ public class NtChannelTests {
     final var sink = new Sink<String>("channel");
     sink.enqueue(new AsyncTask(0, NtClient.NO_ONE, "channel", 0, "message"), "X");
     final var channel = new NtChannel<>(futures, sink);
-    final var future = channel.decide(NtClient.NO_ONE, new NtMessageBase[] { DEMO, DEMO });
+    final var future = channel.decide(NtClient.NO_ONE, new NtMessageBase[] {DEMO, DEMO});
     future.await();
   }
 
@@ -104,11 +106,12 @@ public class NtChannelTests {
     final var futures = new OutstandingFutureTracker(key);
     final var sink = new Sink<String>("channel");
     final var channel = new NtChannel<>(futures, sink);
-    final var future = channel.decide(NtClient.NO_ONE, new NtMessageBase[] { DEMO, DEMO });
+    final var future = channel.decide(NtClient.NO_ONE, new NtMessageBase[] {DEMO, DEMO});
     try {
       future.await();
       Assert.fail();
-    } catch (final ComputeBlockedException cbe) {}
+    } catch (final ComputeBlockedException cbe) {
+    }
   }
 
   @Test
@@ -122,6 +125,7 @@ public class NtChannelTests {
     try {
       future.await();
       Assert.fail();
-    } catch (final ComputeBlockedException bce) {}
+    } catch (final ComputeBlockedException bce) {
+    }
   }
 }

@@ -29,6 +29,7 @@ public class SimpleFutureTests {
     try {
       sf.await();
       Assert.fail();
-    } catch (final ComputeBlockedException cbe) {}
+    } catch (final ComputeBlockedException cbe) {
+    }
   }
 }

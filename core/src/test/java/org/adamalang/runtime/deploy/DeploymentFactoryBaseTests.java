@@ -17,19 +17,21 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class DeploymentFactoryBaseTests {
-    @Test
-    public void notFound() {
-        DeploymentFactoryBase base = new DeploymentFactoryBase();
-        base.fetch(new Key("space", "key"), new Callback<LivingDocumentFactory>() {
-            @Override
-            public void success(LivingDocumentFactory value) {
-                Assert.fail();
-            }
+  @Test
+  public void notFound() {
+    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    base.fetch(
+        new Key("space", "key"),
+        new Callback<LivingDocumentFactory>() {
+          @Override
+          public void success(LivingDocumentFactory value) {
+            Assert.fail();
+          }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-                Assert.assertEquals(134214, ex.code);
-            }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.assertEquals(134214, ex.code);
+          }
         });
-    }
+  }
 }

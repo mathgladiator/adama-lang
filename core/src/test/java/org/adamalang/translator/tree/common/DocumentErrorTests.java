@@ -18,15 +18,18 @@ public class DocumentErrorTests {
     try {
       new DocumentError(null, "hi", null);
       Assert.fail();
-    } catch (final NullPointerException npe) {}
+    } catch (final NullPointerException npe) {
+    }
     try {
       new DocumentError(new DocumentPosition(), null, null);
       Assert.fail();
-    } catch (final NullPointerException npe) {}
+    } catch (final NullPointerException npe) {
+    }
     try {
       new DocumentError(null, null, null);
       Assert.fail();
-    } catch (final NullPointerException npe) {}
+    } catch (final NullPointerException npe) {
+    }
   }
 
   @Test

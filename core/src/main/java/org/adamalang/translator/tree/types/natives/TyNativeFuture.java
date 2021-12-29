@@ -25,13 +25,18 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedType, DetailTypeHasMethods, AssignmentViaNative {
+public class TyNativeFuture extends TyType
+    implements DetailContainsAnEmbeddedType, DetailTypeHasMethods, AssignmentViaNative {
   public final Token futureToken;
   public final Token readonlyToken;
   public final TyType resultType;
   public final TokenizedItem<TyType> tokenResultType;
 
-  public TyNativeFuture(final TypeBehavior behavior, final Token readonlyToken, final Token futureToken, final TokenizedItem<TyType> tokenResultType) {
+  public TyNativeFuture(
+      final TypeBehavior behavior,
+      final Token readonlyToken,
+      final Token futureToken,
+      final TokenizedItem<TyType> tokenResultType) {
     super(behavior);
     this.readonlyToken = readonlyToken;
     this.futureToken = futureToken;
@@ -58,13 +63,9 @@ public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedTy
   }
 
   @Override
-  public TyType getEmbeddedType(final Environment environment) {
-    return environment.rules.Resolve(resultType, false);
-  }
-
-  @Override
   public String getJavaBoxType(final Environment environment) {
-    return String.format("SimpleFuture<%s>", getEmbeddedType(environment).getJavaBoxType(environment));
+    return String.format(
+        "SimpleFuture<%s>", getEmbeddedType(environment).getJavaBoxType(environment));
   }
 
   @Override
@@ -73,18 +74,19 @@ public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedTy
   }
 
   @Override
-  public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
-    if ("await".equals(name)) {
-      var returnType = environment.rules.Resolve(resultType, false);
-      returnType = returnType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
-      return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", returnType, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
-    }
-    return null;
+  public TyType getEmbeddedType(final Environment environment) {
+    return environment.rules.Resolve(resultType, false);
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeFuture(newBehavior, readonlyToken, futureToken, new TokenizedItem<>(resultType.makeCopyWithNewPosition(position, newBehavior))).withPosition(position);
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeFuture(
+            newBehavior,
+            readonlyToken,
+            futureToken,
+            new TokenizedItem<>(resultType.makeCopyWithNewPosition(position, newBehavior)))
+        .withPosition(position);
   }
 
   @Override
@@ -98,5 +100,19 @@ public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedTy
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_future");
     writer.endObject();
+  }
+
+  @Override
+  public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
+    if ("await".equals(name)) {
+      var returnType = environment.rules.Resolve(resultType, false);
+      returnType = returnType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
+      return new TyNativeFunctional(
+          "await",
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance("await", returnType, new ArrayList<>(), false)),
+          FunctionStyleJava.ExpressionThenArgs);
+    }
+    return null;
   }
 }

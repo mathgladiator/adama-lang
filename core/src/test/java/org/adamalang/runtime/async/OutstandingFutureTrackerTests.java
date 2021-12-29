@@ -51,7 +51,11 @@ public class OutstandingFutureTrackerTests {
     final var viewB = new JsonStreamWriter();
     futures.dump(viewA, A);
     futures.dump(viewB, B);
-    Assert.assertEquals("\"outstanding\":[{\"a\":1},{\"a\":2},{\"a\":3}],\"blockers\":[{\"agent\":\"b\",\"authority\":\"local\"},{\"agent\":\"a\",\"authority\":\"local\"}]", viewA.toString());
-    Assert.assertEquals("\"outstanding\":[{\"b\":1},{\"b\":2},{\"b\":3}],\"blockers\":[{\"agent\":\"b\",\"authority\":\"local\"},{\"agent\":\"a\",\"authority\":\"local\"}]", viewB.toString());
+    Assert.assertEquals(
+        "\"outstanding\":[{\"a\":1},{\"a\":2},{\"a\":3}],\"blockers\":[{\"agent\":\"b\",\"authority\":\"local\"},{\"agent\":\"a\",\"authority\":\"local\"}]",
+        viewA.toString());
+    Assert.assertEquals(
+        "\"outstanding\":[{\"b\":1},{\"b\":2},{\"b\":3}],\"blockers\":[{\"agent\":\"b\",\"authority\":\"local\"},{\"agent\":\"a\",\"authority\":\"local\"}]",
+        viewB.toString());
   }
 }

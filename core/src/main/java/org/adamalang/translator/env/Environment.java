@@ -22,25 +22,21 @@ import java.util.function.Function;
 
 /** Defines the environment within */
 public class Environment {
-  /** construct an environment that is fresh */
-  public static Environment fresh(final Document document, final EnvironmentState state) {
-    return new Environment(document, state, null);
-  }
-
   public final CodeCoverageTracker codeCoverageTracker;
   public final Document document;
-  private final Environment parent;
-  private final HashSet<String> readonly;
-  private TyType returnType;
-  private boolean returnTypeSet;
   public final Rules rules;
   public final EnvironmentState state;
-  private Function<String, TyType> trap = null;
-  private final HashMap<String, TyType> variables;
-  private Consumer<String> watch = null;
   public final HashSet<String> interns;
+  private final Environment parent;
+  private final HashSet<String> readonly;
+  private final HashMap<String, TyType> variables;
+  private TyType returnType;
+  private boolean returnTypeSet;
+  private Function<String, TyType> trap = null;
+  private Consumer<String> watch = null;
 
-  private Environment(final Document document, final EnvironmentState state, final Environment parent) {
+  private Environment(
+      final Document document, final EnvironmentState state, final Environment parent) {
     this.document = document;
     this.state = state;
     variables = new HashMap<>();
@@ -64,9 +60,19 @@ public class Environment {
     }
   }
 
+  /** construct an environment that is fresh */
+  public static Environment fresh(final Document document, final EnvironmentState state) {
+    return new Environment(document, state, null);
+  }
+
   /** get the root environment for the document; this is for static methods like @can_create */
   public Environment staticPolicy() {
     return new Environment(document, state, null).scopeAsReadOnlyBoundary();
+  }
+
+  /** create a new environment which enforces a readonly barrier to all mutations prior it */
+  public Environment scopeAsReadOnlyBoundary() {
+    return new Environment(document, state, new Environment(document, state.scopeReadonly(), this));
   }
 
   /** when we need to create a variable, let's make it globally unique */
@@ -75,13 +81,19 @@ public class Environment {
   }
 
   /** define a variable within the environment */
-  public Environment define(final String name, final TyType type, final boolean isReadonly, final DocumentPosition position) {
+  public Environment define(
+      final String name,
+      final TyType type,
+      final boolean isReadonly,
+      final DocumentPosition position) {
     if (variables.containsKey(name)) {
-      document.createError(position, String.format("Variable '%s' was already defined", name), "EnvironmentDefine");
+      document.createError(
+          position, String.format("Variable '%s' was already defined", name), "EnvironmentDefine");
       return this;
     }
     if (type == null) {
-      document.createError(position, String.format("Variable '%s' has no backing type", name), "EnvironmentDefine");
+      document.createError(
+          position, String.format("Variable '%s' has no backing type", name), "EnvironmentDefine");
     }
     variables.put(name, type);
     if (isReadonly) {
@@ -92,13 +104,21 @@ public class Environment {
 
   /** @return the most recent return type. */
   public TyType getMostRecentReturnType() {
-    if (returnTypeSet) { return returnType; }
-    if (parent != null) { return parent.getMostRecentReturnType(); }
+    if (returnTypeSet) {
+      return returnType;
+    }
+    if (parent != null) {
+      return parent.getMostRecentReturnType();
+    }
     return null;
   }
 
   /** look up the type of the given variable; will throw issues */
-  public TyType lookup(final String name, final boolean compute, final DocumentPosition position, final boolean silent) {
+  public TyType lookup(
+      final String name,
+      final boolean compute,
+      final DocumentPosition position,
+      final boolean silent) {
     // something is watching what flows pass this
     if (watch != null) {
       watch.accept(name);
@@ -107,8 +127,11 @@ public class Environment {
     var result = variables.get(name);
     if (result != null) {
       // is the current environment
-      if (!compute && (readonly.contains(name) || result.behavior == TypeBehavior.ReadOnlyNativeValue) && !silent) {
-        document.createError(position, String.format("The variable '%s' is readonly", name), "VariableLookup");
+      if (!compute
+          && (readonly.contains(name) || result.behavior == TypeBehavior.ReadOnlyNativeValue)
+          && !silent) {
+        document.createError(
+            position, String.format("The variable '%s' is readonly", name), "VariableLookup");
       }
       return result;
     }
@@ -120,13 +143,18 @@ public class Environment {
     if (result == null && parent != null) {
       result = parent.lookup(name, compute, position, silent);
       if (result != null && !compute && state.isReadonly() && !silent) {
-        document.createError(position, String.format("The variable '%s' is readonly due to the environment", name), "VariableLookup");
+        document.createError(
+            position,
+            String.format("The variable '%s' is readonly due to the environment", name),
+            "VariableLookup");
       }
     }
     // then it must be a function
     if (result == null) {
       final var func = document.functionTypes.get(name);
-      if (func != null) { return func; }
+      if (func != null) {
+        return func;
+      }
     }
     return result;
   }
@@ -139,15 +167,12 @@ public class Environment {
   /** assert the environment must be a compute environment */
   public Environment mustBeComputeContext(final DocumentPosition position) {
     if (!state.isContextComputation()) {
-      document.createError(position, String.format("Expression expected to be computed, rather than assigned to"), "Environment");
+      document.createError(
+          position,
+          String.format("Expression expected to be computed, rather than assigned to"),
+          "Environment");
     }
     return this;
-  }
-
-  /** create a new environment which allows new variables to override previous
-   * variables */
-  public Environment scope() {
-    return new Environment(document, state, this);
   }
 
   /** create a new environment just for message handler */
@@ -160,16 +185,9 @@ public class Environment {
     return new Environment(document, state.scopeNoCost(), this);
   }
 
-  /** create a new environment for the same document that is fresh for pure
-   * functions */
+  /** create a new environment for the same document that is fresh for pure functions */
   public Environment scopeAsPureFunction() {
     return new Environment(document, state.scopePure(), null);
-  }
-
-  /** create a new environment which enforces a readonly barrier to all mutations
-   * prior it */
-  public Environment scopeAsReadOnlyBoundary() {
-    return new Environment(document, state, new Environment(document, state.scopeReadonly(), this));
   }
 
   /** create a new environment which is for state machine transitions */
@@ -211,8 +229,12 @@ public class Environment {
     return next;
   }
 
-  /** create a new environment (scoped) that will watch for variables that
-   * escape */
+  /** create a new environment which allows new variables to override previous variables */
+  public Environment scope() {
+    return new Environment(document, state, this);
+  }
+
+  /** create a new environment (scoped) that will watch for variables that escape */
   public Environment watch(final Consumer<String> watch) {
     final var next = scope();
     next.watch = watch;

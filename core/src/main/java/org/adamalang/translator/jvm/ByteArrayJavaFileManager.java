@@ -24,6 +24,58 @@ import java.util.TreeMap;
 /** responsible for capturing results from the java compiler */
 @SuppressWarnings("unchecked")
 public class ByteArrayJavaFileManager extends ForwardingJavaFileManager {
+  private Map<String, byte[]> classes;
+
+  public ByteArrayJavaFileManager(final JavaFileManager fileManager) {
+    super(fileManager);
+    classes = new TreeMap<>();
+  }
+
+  public static ArrayList<JavaFileObject> turnIntoCompUnits(
+      final String fileName, final String code) {
+    final var compUnits = new ArrayList<JavaFileObject>();
+    compUnits.add(new SingleSourceJavaObject(fileName, code));
+    return compUnits;
+  }
+
+  public Map<String, byte[]> getClasses() {
+    return classes;
+  }
+
+  @Override
+  public JavaFileObject getJavaFileForOutput(
+      final JavaFileManager.Location location,
+      final String className,
+      final Kind kind,
+      final FileObject sibling)
+      throws IOException {
+    return new ClassByteArrayOutputBuffer(className);
+  }
+
+  @Override
+  public void flush() throws IOException {}
+
+  @Override
+  public void close() throws IOException {
+    classes = null;
+  }
+
+  private static class SingleSourceJavaObject extends SimpleJavaFileObject {
+    final String source;
+
+    SingleSourceJavaObject(final String fileName, final String code) {
+      super(
+          URI.create(new StringBuilder().append("code:///").append(fileName).toString()),
+          Kind.SOURCE);
+      source = code;
+    }
+
+    @Override
+    public CharBuffer getCharContent(final boolean ignoreEncodingErrors) {
+      return CharBuffer.wrap(source);
+    }
+  }
+
   private class ClassByteArrayOutputBuffer extends SimpleJavaFileObject {
     private final String name;
 
@@ -43,49 +95,5 @@ public class ByteArrayJavaFileManager extends ForwardingJavaFileManager {
         }
       };
     }
-  }
-  private static class SingleSourceJavaObject extends SimpleJavaFileObject {
-    final String source;
-
-    SingleSourceJavaObject(final String fileName, final String code) {
-      super(URI.create(new StringBuilder().append("code:///").append(fileName).toString()), Kind.SOURCE);
-      source = code;
-    }
-
-    @Override
-    public CharBuffer getCharContent(final boolean ignoreEncodingErrors) {
-      return CharBuffer.wrap(source);
-    }
-  }
-
-  public static ArrayList<JavaFileObject> turnIntoCompUnits(final String fileName, final String code) {
-    final var compUnits = new ArrayList<JavaFileObject>();
-    compUnits.add(new SingleSourceJavaObject(fileName, code));
-    return compUnits;
-  }
-
-  private Map<String, byte[]> classes;
-
-  public ByteArrayJavaFileManager(final JavaFileManager fileManager) {
-    super(fileManager);
-    classes = new TreeMap<>();
-  }
-
-  @Override
-  public void close() throws IOException {
-    classes = null;
-  }
-
-  @Override
-  public void flush() throws IOException {
-  }
-
-  public Map<String, byte[]> getClasses() {
-    return classes;
-  }
-
-  @Override
-  public JavaFileObject getJavaFileForOutput(final JavaFileManager.Location location, final String className, final Kind kind, final FileObject sibling) throws IOException {
-    return new ClassByteArrayOutputBuffer(className);
   }
 }

@@ -23,8 +23,7 @@ public abstract class InjectExpression extends Expression {
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
-  }
+  public void emit(final Consumer<Token> yielder) {}
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {

@@ -13,9 +13,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class TablesTests {
-    @Test
-    public void coverage() {
-        Assert.assertEquals(256, Tables.BOOLEAN_TABLES_SIZE);
-        new Tables();
-    }
+  @Test
+  public void coverage() {
+    Assert.assertEquals(256, Tables.BOOLEAN_TABLES_SIZE);
+    new Tables();
+  }
 }

@@ -20,19 +20,13 @@ import java.nio.file.Path;
 import java.util.regex.Pattern;
 
 public class PhaseValidate {
-  public static class ValidationResults {
-    public final String java;
-    public final boolean passedValidation;
-    public final String reflection;
-
-    public ValidationResults(final boolean passedValidation, final String java, String reflection) {
-      this.passedValidation = passedValidation;
-      this.java = java;
-      this.reflection = reflection;
-    }
-  }
-
-  public static ValidationResults go(final Path inputRoot, final Path path, final String className, final boolean emission, final StringBuilder outputFile) throws Exception {
+  public static ValidationResults go(
+      final Path inputRoot,
+      final Path path,
+      final String className,
+      final boolean emission,
+      final StringBuilder outputFile)
+      throws Exception {
     final var options = CompilerOptions.start().enableCodeCoverage().make();
     final var globals = GlobalObjectPool.createPoolWithStdLib();
     final var state = new EnvironmentState(globals, options);
@@ -44,7 +38,10 @@ public class PhaseValidate {
     JsonStreamWriter writer = new JsonStreamWriter();
     document.writeTypeReflectionJson(writer);
     String reflection = writer.toString();
-    outputFile.append("Path:").append(path.getFileName().toString().replaceAll(Pattern.quote("\\"), "/")).append("\n");
+    outputFile
+        .append("Path:")
+        .append(path.getFileName().toString().replaceAll(Pattern.quote("\\"), "/"))
+        .append("\n");
     if (emission) {
       PhaseEmission.go(path.toString(), path, outputFile);
     }
@@ -55,5 +52,17 @@ public class PhaseValidate {
     outputFile.append("--JAVA---------------------------------------------").append("\n");
     outputFile.append(java).append("\n");
     return new ValidationResults(issues.equals("[]") && !document.hasErrors(), java, reflection);
+  }
+
+  public static class ValidationResults {
+    public final String java;
+    public final boolean passedValidation;
+    public final String reflection;
+
+    public ValidationResults(final boolean passedValidation, final String java, String reflection) {
+      this.passedValidation = passedValidation;
+      this.java = java;
+      this.reflection = reflection;
+    }
   }
 }

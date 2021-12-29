@@ -15,13 +15,14 @@ public enum MajorTokenType {
   Comment(true),
   /** identifiers: [A-Za-z_][A-Za-z_0-9]* */
   Identifer(false),
-  /** special identifiers which are keywords in the language like for, while, do,
-   * if, etc... */
+  /** special identifiers which are keywords in the language like for, while, do, if, etc... */
   Keyword(false),
   /** a state machine label identifier: '#' [A-Za-z_0-9]* */
   Label(false),
-  /** a 'rough' number literal of integers, hex encoded integers, floating point,
-   * scientific floating point */
+  /**
+   * a 'rough' number literal of integers, hex encoded integers, floating point, scientific floating
+   * point
+   */
   NumberLiteral(false),
   /** a double quoted string literal */
   StringLiteral(false),

@@ -25,35 +25,31 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 public class PhaseRun {
-  public static Perspective wrap(Consumer<String> consumer) {
-    return new Perspective() {
-      @Override
-      public void data(String data) {
-        consumer.accept(data);
-      }
-
-      @Override
-      public void disconnect() {
-
-      }
-    };
-  }
-
-  public static void mustBeTrue(boolean v, String ex) {
-    if (!v) {
-      throw new RuntimeException(ex);
-    }
-  }
-
-  public static void go(final LivingDocumentFactory factory, final DocumentMonitor monitor, final AtomicBoolean passedTests, final StringBuilder outputFile) throws Exception {
+  public static void go(
+      final LivingDocumentFactory factory,
+      final DocumentMonitor monitor,
+      final AtomicBoolean passedTests,
+      final StringBuilder outputFile)
+      throws Exception {
     final var testTime = new AtomicLong(0);
     final var time = (TimeSource) () -> testTime.get();
     outputFile.append("--JAVA RUNNING-------------------------------------").append("\n");
-    DumbDataService dds = new DumbDataService((patch) -> {
-      outputFile.append(patch.request.toString() + "-->" + patch.redo.toString() + " need:" + patch.requiresFutureInvalidation + " in:" + patch.whenToInvalidateMilliseconds + "\n");
-      testTime.addAndGet(Math.max(patch.whenToInvalidateMilliseconds / 2, 25));
-    });
-    DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
+    DumbDataService dds =
+        new DumbDataService(
+            (patch) -> {
+              outputFile.append(
+                  patch.request.toString()
+                      + "-->"
+                      + patch.redo.toString()
+                      + " need:"
+                      + patch.requiresFutureInvalidation
+                      + " in:"
+                      + patch.whenToInvalidateMilliseconds
+                      + "\n");
+              testTime.addAndGet(Math.max(patch.whenToInvalidateMilliseconds / 2, 25));
+            });
+    DumbDataService.DumbDurableLivingDocumentAcquire acquire =
+        new DumbDataService.DumbDurableLivingDocumentAcquire();
     try {
       Key key = new Key("0", "0");
       DocumentThreadBase base = new DocumentThreadBase(dds, SimpleExecutor.NOW, time);
@@ -61,18 +57,26 @@ public class PhaseRun {
       DurableLivingDocument doc = acquire.get();
       outputFile.append("CPU:").append(doc.getCodeCost()).append("\n");
       outputFile.append("MEMORY:").append(doc.getMemoryBytes()).append("\n");
-      doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
-        outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
-      }), DumbDataService.NOOPPrivateView);
+      doc.createPrivateView(
+          NtClient.NO_ONE,
+          wrap(
+              str -> {
+                outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
+              }),
+          DumbDataService.NOOPPrivateView);
       try {
         doc.connect(NtClient.NO_ONE, DumbDataService.NOOPINT);
       } catch (final RuntimeException e) {
         outputFile.append("NO_ONE was DENIED\n");
       }
       final var rando = new NtClient("rando", "random-place");
-      doc.createPrivateView(rando, wrap(str -> {
-        outputFile.append("+ RANDO DELTA:").append(str).append("\n");
-      }), DumbDataService.NOOPPrivateView);
+      doc.createPrivateView(
+          rando,
+          wrap(
+              str -> {
+                outputFile.append("+ RANDO DELTA:").append(str).append("\n");
+              }),
+          DumbDataService.NOOPPrivateView);
       try {
         doc.connect(rando, DumbDataService.NOOPINT);
       } catch (final RuntimeException e) {
@@ -85,7 +89,8 @@ public class PhaseRun {
       final var json = doc.json();
       dds.setData(json);
       outputFile.append(json).append("\n");
-      DumbDataService.DumbDurableLivingDocumentAcquire acquire2 = new DumbDataService.DumbDurableLivingDocumentAcquire();
+      DumbDataService.DumbDurableLivingDocumentAcquire acquire2 =
+          new DumbDataService.DumbDurableLivingDocumentAcquire();
       DurableLivingDocument.load(key, factory, monitor, base, acquire2);
       DurableLivingDocument doc2 = acquire2.get();
       outputFile.append(doc2.json()).append("\n");
@@ -100,6 +105,24 @@ public class PhaseRun {
         }
       }
       outputFile.append("RuntimeException:" + gee.getMessage()).append("!!!\n!!!\n");
+    }
+  }
+
+  public static Perspective wrap(Consumer<String> consumer) {
+    return new Perspective() {
+      @Override
+      public void data(String data) {
+        consumer.accept(data);
+      }
+
+      @Override
+      public void disconnect() {}
+    };
+  }
+
+  public static void mustBeTrue(boolean v, String ex) {
+    if (!v) {
+      throw new RuntimeException(ex);
     }
   }
 }

@@ -14,13 +14,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 /** properties about the environment */
 public class EnvironmentState {
   public final AtomicInteger autoId;
-  private ComputeContext computationContext;
   public final GlobalObjectPool globals;
+  public final CompilerOptions options;
+  private ComputeContext computationContext;
   private boolean isMessageHandler;
   private boolean isNoCost;
   private boolean isStateMachineTransition;
   private boolean isStatic;
-  public final CompilerOptions options;
   private boolean pure;
   private boolean reactiveExpression;
   private boolean readonly;

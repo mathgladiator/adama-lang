@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LivingDocumentTests {
+  private static final NtAsset EXAMPLE =
+      new NtAsset("42", "file.png", "image/png", 1024, "some hash", "a better hash");
   private static NtClient A = new NtClient("A", "TEST");
   private static NtClient B = new NtClient("B", "TEST");
   private static HashMap<String, LivingDocumentFactory> compilerCache = new HashMap<>();
@@ -64,7 +66,9 @@ public class LivingDocumentTests {
   @Test
   public void bad_json() throws Exception {
     try {
-      new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }", "");
+      new RealDocumentSetup(
+          "@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }",
+          "");
       Assert.fail();
     } catch (RuntimeException re) {
     }
@@ -73,26 +77,50 @@ public class LivingDocumentTests {
   @Test
   @SuppressWarnings("unchecked")
   public void accept_array_message() throws Exception {
-    final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }");
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    Assert.assertEquals(0, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t")));
-    setup.document.send(NtClient.NO_ONE, null, "chan", "[{\"v\":1000},{\"v\":100000},{\"v\":1}]", new RealDocumentSetup.AssertInt(5));
-    Assert.assertEquals(101001, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t")));
+    Assert.assertEquals(
+        0,
+        ((int)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("t")));
+    setup.document.send(
+        NtClient.NO_ONE,
+        null,
+        "chan",
+        "[{\"v\":1000},{\"v\":100000},{\"v\":1}]",
+        new RealDocumentSetup.AssertInt(5));
+    Assert.assertEquals(
+        101001,
+        ((int)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("t")));
   }
 
   @Test
   public void blocking_test() throws Exception {
-    final var setup = new RealDocumentSetup("@construct { transition #foo; } #foo { block; } test ZOO { @step; assert @blocked; }");
+    final var setup =
+        new RealDocumentSetup(
+            "@construct { transition #foo; } #foo { block; } test ZOO { @step; assert @blocked; }");
     final var report = new TestReportBuilder();
     setup.factory.populateTestReport(report, new StdOutDocumentMonitor(), "42");
-    Assert.assertEquals("TEST[ZOO] = 100.0%\n" + "...DUMP:{\"__blocked\":true}\n", report.toString());
+    Assert.assertEquals(
+        "TEST[ZOO] = 100.0%\n" + "...DUMP:{\"__blocked\":true}\n", report.toString());
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void preempt() throws Exception {
-    final var setup = new RealDocumentSetup("public int v; @construct { v = 1; transition #foo; } #foo { v = 2; preempt #zoo; block; } #zoo { v = 3; } ");
-    Assert.assertEquals(3, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("v")));
+    final var setup =
+        new RealDocumentSetup(
+            "public int v; @construct { v = 1; transition #foo; } #foo { v = 2; preempt #zoo; block; } #zoo { v = 3; } ");
+    Assert.assertEquals(
+        3,
+        ((int)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("v")));
   }
 
   @Test
@@ -128,39 +156,67 @@ public class LivingDocumentTests {
   @Test
   @SuppressWarnings("unchecked")
   public void futures_blocked() throws Exception {
-    final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
-    Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
+    Assert.assertTrue(
+        (Boolean)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__blocked"));
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void futures_blocked_still_blocked_wrong_user() throws Exception {
-    final var setup = new RealDocumentSetup("@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
-    Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
+    Assert.assertTrue(
+        (Boolean)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__blocked"));
     setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
     setup.document.send(A, null, "chan", "{\"v\":74}", new RealDocumentSetup.AssertInt(5));
-    Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+    Assert.assertTrue(
+        (Boolean)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__blocked"));
     setup.assertCompare();
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void futures_blocked_then_unblocked() throws Exception {
-    final var setup = new RealDocumentSetup("@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
-    Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
+    Assert.assertTrue(
+        (Boolean)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__blocked"));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, null, "chan", "{\"v\":74}", new RealDocumentSetup.AssertInt(5));
-    Assert.assertFalse((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+    setup.document.send(
+        NtClient.NO_ONE, null, "chan", "{\"v\":74}", new RealDocumentSetup.AssertInt(5));
+    Assert.assertFalse(
+        (Boolean)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__blocked"));
     setup.assertCompare();
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void futures_hydrate_missing_data() throws Exception {
-    final var setup = new RealDocumentSetup(
-            "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }", "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"nope\":true,\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"message\":{\"v\":50}}},\"__message_id\":1}");
-    setup.document.send(NtClient.NO_ONE, null, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
-    Assert.assertFalse((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }",
+            "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"nope\":true,\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"message\":{\"v\":50}}},\"__message_id\":1}");
+    setup.document.send(
+        NtClient.NO_ONE, null, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
+    Assert.assertFalse(
+        (Boolean)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__blocked"));
     setup.assertCompare();
   }
 
@@ -169,17 +225,33 @@ public class LivingDocumentTests {
   public void futures_out_of_order_rehydrate() throws Exception {
     String persist;
     {
-      final var setup = new RealDocumentSetup("@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }");
+      final var setup =
+          new RealDocumentSetup(
+              "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }");
       setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-      setup.document.send(NtClient.NO_ONE, null, "chb", "{\"v\":50}", new RealDocumentSetup.AssertInt(5));
+      setup.document.send(
+          NtClient.NO_ONE, null, "chb", "{\"v\":50}", new RealDocumentSetup.AssertInt(5));
       persist = setup.document.json();
       setup.assertCompare();
-      Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+      Assert.assertTrue(
+          (Boolean)
+              ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                  .get("__blocked"));
     }
-    final var setup = new RealDocumentSetup("@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }", persist);
-    Assert.assertTrue((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
-    setup.document.send(NtClient.NO_ONE, null, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
-    Assert.assertFalse((Boolean) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__blocked"));
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }",
+            persist);
+    Assert.assertTrue(
+        (Boolean)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__blocked"));
+    setup.document.send(
+        NtClient.NO_ONE, null, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
+    Assert.assertFalse(
+        (Boolean)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__blocked"));
 
     setup.assertCompare();
   }
@@ -232,20 +304,21 @@ public class LivingDocumentTests {
     final var setup = new RealDocumentSetup("public int x;");
     RealDocumentSetup.GotView gv = new RealDocumentSetup.GotView();
     ArrayList<String> list = new ArrayList<>();
-    Perspective linked = new Perspective() {
-      @Override
-      public void data(String data) {
-        list.add(data);
-      }
+    Perspective linked =
+        new Perspective() {
+          @Override
+          public void data(String data) {
+            list.add(data);
+          }
 
-      @Override
-      public void disconnect() {
-
-      }
-    };
+          @Override
+          public void disconnect() {}
+        };
     setup.document.createPrivateView(NtClient.NO_ONE, linked, gv);
     setup.document.apply(NtClient.NO_ONE, "{\"x\":4242}", new RealDocumentSetup.AssertInt(3));
-    setup.document.deploy(new RealDocumentSetup("public formula x = 50;").factory, new RealDocumentSetup.AssertInt(4));
+    setup.document.deploy(
+        new RealDocumentSetup("public formula x = 50;").factory,
+        new RealDocumentSetup.AssertInt(4));
     Assert.assertEquals(3, list.size());
     Assert.assertEquals("{\"data\":{\"x\":0},\"seq\":2}", list.get(0));
     Assert.assertEquals("{\"data\":{\"x\":4242},\"seq\":3}", list.get(1));
@@ -256,9 +329,12 @@ public class LivingDocumentTests {
   public void infinite_loop_bubble() throws Exception {
     var gotIt = false;
     try {
-      final var setup = new RealDocumentSetup("@connected(who) { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();");
+      final var setup =
+          new RealDocumentSetup(
+              "@connected(who) { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();");
       setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-      setup.document.createPrivateView(NtClient.NO_ONE, Perspective.DEAD, new RealDocumentSetup.GotView());
+      setup.document.createPrivateView(
+          NtClient.NO_ONE, Perspective.DEAD, new RealDocumentSetup.GotView());
       setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
       Assert.fail();
     } catch (final RuntimeException yay) {
@@ -277,9 +353,14 @@ public class LivingDocumentTests {
   public void infinite_loop_bubble_no_monitor() throws Exception {
     var gotIt = false;
     try {
-      final var setup = new RealDocumentSetup("@connected(who) { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();", null, false);
+      final var setup =
+          new RealDocumentSetup(
+              "@connected(who) { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();",
+              null,
+              false);
       setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-      setup.document.createPrivateView(NtClient.NO_ONE, Perspective.DEAD, new RealDocumentSetup.GotView());
+      setup.document.createPrivateView(
+          NtClient.NO_ONE, Perspective.DEAD, new RealDocumentSetup.GotView());
       setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
       Assert.fail();
     } catch (final RuntimeException yay) {
@@ -297,12 +378,29 @@ public class LivingDocumentTests {
   @Test
   @SuppressWarnings("unchecked")
   public void invoke_random() throws Exception {
-    final var setup = new RealDocumentSetup("double d1; double d2; int i1; int i2; long l; int z; @construct { d1 = Random.genDouble(); d2 = Random.getDoubleGaussian() * 6; i1 = Random.genInt(); i2 = Random.genBoundInt(50); l = Random.genLong(); z = Random.genBoundInt(-1); }");
-    String d1 = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("d1").toString();
-    String d2 = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("d2").toString();
-    String i1 = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("i1").toString();
-    String i2 = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("i2").toString();
-    String l = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("l").toString();
+    final var setup =
+        new RealDocumentSetup(
+            "double d1; double d2; int i1; int i2; long l; int z; @construct { d1 = Random.genDouble(); d2 = Random.getDoubleGaussian() * 6; i1 = Random.genInt(); i2 = Random.genBoundInt(50); l = Random.genLong(); z = Random.genBoundInt(-1); }");
+    String d1 =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("d1")
+            .toString();
+    String d2 =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("d2")
+            .toString();
+    String i1 =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("i1")
+            .toString();
+    String i2 =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("i2")
+            .toString();
+    String l =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("l")
+            .toString();
     Assert.assertEquals("0.7231742029971469", d1);
     Assert.assertEquals("2.6429286547789945", d2);
     Assert.assertEquals("-535098017", i1);
@@ -314,10 +412,18 @@ public class LivingDocumentTests {
   @Test
   @SuppressWarnings("unchecked")
   public void invoke_time() throws Exception {
-    final var setup = new RealDocumentSetup("long x; @construct { x = Time.now(); }", null, true, new MockTime(450));
+    final var setup =
+        new RealDocumentSetup(
+            "long x; @construct { x = Time.now(); }", null, true, new MockTime(450));
     setup.document.invalidate(new RealDocumentSetup.AssertInt(2));
-    String x = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString();
-    String __time = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__time").toString();
+    String x =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("x")
+            .toString();
+    String __time =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("__time")
+            .toString();
     Assert.assertEquals("450", __time);
     Assert.assertEquals("450", x);
     setup.assertCompare();
@@ -326,87 +432,143 @@ public class LivingDocumentTests {
   @Test
   @SuppressWarnings("unchecked")
   public void message_cause_rewind() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }", null, false);
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }",
+            null,
+            false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(5));
-    String x = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString();
+    String x =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("x")
+            .toString();
     Assert.assertEquals("1000", x);
     setup.assertCompare();
   }
 
   @Test
   public void message_cause_rewind_failure() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }", null, false);
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }",
+            null,
+            false);
     ((DumbDataService) setup.document.base.service).computesWork = false;
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(23456));
+    setup.document.send(
+        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(23456));
   }
 
   @Test
   public void message_cause_self_destruct() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }", null, false);
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }",
+            null,
+            false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(134195));
-    Assert.assertTrue(((DumbDataService) setup.document.base.service).deleted.contains(new Key("space", "0")));
+    setup.document.send(
+        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(134195));
+    Assert.assertTrue(
+        ((DumbDataService) setup.document.base.service).deleted.contains(new Key("space", "0")));
   }
 
   @Test
   public void message_cause_self_destruct_but_fails() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }", null, false);
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }",
+            null,
+            false);
     ((DumbDataService) setup.document.base.service).deletesWork = false;
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(1234567));
+    setup.document.send(
+        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(1234567));
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void message_abort() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x = 100; abort; }", null, false);
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x = 100; abort; }",
+            null,
+            false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(6));
-    String x = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString();
+    String x =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("x")
+            .toString();
     Assert.assertEquals("42", x);
     setup.assertCompare();
   }
 
   @Test
   public void message_dedupe() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(5));
     setup.assertCompare();
-    String x = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString();
+    String x =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("x")
+            .toString();
     Assert.assertEquals("142", x);
     try {
-      setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(6));
+      setup.document.send(
+          NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(6));
       Assert.fail();
     } catch (RuntimeException ece) {
       Assert.assertEquals(143407, ((ErrorCodeException) ece.getCause()).code);
     }
-    String z = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString();
+    String z =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("x")
+            .toString();
     Assert.assertEquals("142", z);
   }
 
   @Test
   public void message_expire_single() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(5));
-    Assert.assertEquals("142", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString());
-    HashMap<String, Object> mapSend1 = ((HashMap<String, Object>) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__dedupe"));
+    Assert.assertEquals(
+        "142",
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("x")
+            .toString());
+    HashMap<String, Object> mapSend1 =
+        ((HashMap<String, Object>)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__dedupe"));
     Assert.assertEquals(1, mapSend1.size());
     setup.time.time += 1000;
     setup.document.expire(2000, new RealDocumentSetup.AssertInt(7));
-    HashMap<String, Object> mapSend2 = ((HashMap<String, Object>) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__dedupe"));
+    HashMap<String, Object> mapSend2 =
+        ((HashMap<String, Object>)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__dedupe"));
     Assert.assertEquals(1, mapSend1.size());
     setup.document.expire(500, new RealDocumentSetup.AssertInt(9));
-    HashMap<String, Object> mapSend3 = ((HashMap<String, Object>) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__dedupe"));
+    HashMap<String, Object> mapSend3 =
+        ((HashMap<String, Object>)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("__dedupe"));
     Assert.assertNull(mapSend3);
   }
 
   @Test
   public void message_expire_negative_limit() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(5));
     try {
@@ -419,18 +581,27 @@ public class LivingDocumentTests {
 
   @Test
   public void message_expire_multi() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(5));
     setup.time.time += 250;
     setup.document.send(NtClient.NO_ONE, "send2", "foo", "{}", new RealDocumentSetup.AssertInt(7));
     setup.time.time += 250;
     setup.document.send(NtClient.NO_ONE, "send3", "foo", "{}", new RealDocumentSetup.AssertInt(9));
-    Assert.assertEquals("342", ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x").toString());
+    Assert.assertEquals(
+        "342",
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("x")
+            .toString());
 
     int[] size = new int[] {3, 3, 3, 2, 2, 2, 1, 1, 0, 0};
     for (int k = 0; k < size.length; k++) {
-      HashMap<String, Object> send = ((HashMap<String, Object>) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__dedupe"));
+      HashMap<String, Object> send =
+          ((HashMap<String, Object>)
+              ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                  .get("__dedupe"));
       if (size[k] == 0) {
         Assert.assertNull(send);
       } else {
@@ -443,7 +614,9 @@ public class LivingDocumentTests {
 
   @Test
   public void test_invoke() throws Exception {
-    final var setup = new RealDocumentSetup("int x = 0; #whoop { x = 123; } test ZOO { invoke #whoop; assert x == 123; }");
+    final var setup =
+        new RealDocumentSetup(
+            "int x = 0; #whoop { x = 123; } test ZOO { invoke #whoop; assert x == 123; }");
     final var report = new TestReportBuilder();
     setup.factory.populateTestReport(report, new StdOutDocumentMonitor(), "42");
     Assert.assertEquals("TEST[ZOO] = 100.0%\n" + "...DUMP:{\"x\":123}\n", report.toString());
@@ -452,7 +625,9 @@ public class LivingDocumentTests {
 
   @Test
   public void test_invoke_no_monitor() throws Exception {
-    final var setup = new RealDocumentSetup("int x = 0; #whoop { x = 123; } test ZOO { invoke #whoop; assert x == 123; }");
+    final var setup =
+        new RealDocumentSetup(
+            "int x = 0; #whoop { x = 123; } test ZOO { invoke #whoop; assert x == 123; }");
     final var report = new TestReportBuilder();
     setup.factory.populateTestReport(report, null, "42");
     Assert.assertEquals("TEST[ZOO] = 100.0%\n" + "...DUMP:{\"x\":123}\n", report.toString());
@@ -461,7 +636,9 @@ public class LivingDocumentTests {
 
   @Test
   public void pump_abort_rollback() throws Exception {
-    final var setup = new RealDocumentSetup("message M { int z; } int x = 0; channel foo(M m) { x = m.z; abort; } test ZOO { @pump {z:123} into foo; @step; assert x == 0; }");
+    final var setup =
+        new RealDocumentSetup(
+            "message M { int z; } int x = 0; channel foo(M m) { x = m.z; abort; } test ZOO { @pump {z:123} into foo; @step; assert x == 0; }");
     final var report = new TestReportBuilder();
     setup.factory.populateTestReport(report, new StdOutDocumentMonitor(), "42");
     Assert.assertEquals("TEST[ZOO] = 100.0%\n", report.toString());
@@ -470,7 +647,9 @@ public class LivingDocumentTests {
 
   @Test
   public void pump_test() throws Exception {
-    final var setup = new RealDocumentSetup("message M { int z; } int x = 0; channel foo(M m) { x = m.z; } test ZOO { @pump {z:123} into foo; @step; assert x == 123; }");
+    final var setup =
+        new RealDocumentSetup(
+            "message M { int z; } int x = 0; channel foo(M m) { x = m.z; } test ZOO { @pump {z:123} into foo; @step; assert x == 123; }");
     final var report = new TestReportBuilder();
     setup.factory.populateTestReport(report, new StdOutDocumentMonitor(), "42");
     Assert.assertEquals("TEST[ZOO] = 100.0%\n", report.toString());
@@ -479,17 +658,24 @@ public class LivingDocumentTests {
 
   @Test
   public void run_tests() throws Exception {
-    final var setup = new RealDocumentSetup("test FOO {} test GOO { assert true; } test ZOO { @step; assert false; }");
+    final var setup =
+        new RealDocumentSetup(
+            "test FOO {} test GOO { assert true; } test ZOO { @step; assert false; }");
     final var report = new TestReportBuilder();
     setup.factory.populateTestReport(report, new StdOutDocumentMonitor(), "42");
-    Assert.assertEquals("TEST[FOO] HAS NO ASSERTS\n" + "TEST[GOO] = 100.0%\n" + "TEST[ZOO] = 0.0% (HAS FAILURES)\n", report.toString());
+    Assert.assertEquals(
+        "TEST[FOO] HAS NO ASSERTS\n" + "TEST[GOO] = 100.0%\n" + "TEST[ZOO] = 0.0% (HAS FAILURES)\n",
+        report.toString());
     setup.assertCompare();
   }
 
   @Test
   public void send_must_be_connected() throws Exception {
-    final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; } message M {} channel<M> foo;");
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(143373));
+    final var setup =
+        new RealDocumentSetup(
+            "@construct {} @connected(who) { return true; } message M {} channel<M> foo;");
+    setup.document.send(
+        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(143373));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(5));
     setup.assertCompare();
@@ -497,7 +683,9 @@ public class LivingDocumentTests {
 
   @Test
   public void multi_views() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @construct { x = 123; } @connected (who) { x++; return true; }");
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @construct { x = 123; } @connected (who) { x++; return true; }");
 
     RealDocumentSetup.GotView pv1 = new RealDocumentSetup.GotView();
     RealDocumentSetup.GotView pv2 = new RealDocumentSetup.GotView();
@@ -575,16 +763,28 @@ public class LivingDocumentTests {
   @Test
   @SuppressWarnings("unchecked")
   public void state_machine_progress() throws Exception {
-    final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}");
-    String t = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString();
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}");
+    String t =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("t")
+            .toString();
     Assert.assertEquals("10", t);
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void state_machine_progress_no_monitor() throws Exception {
-    final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}", null, false);
-    String t = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString();
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}",
+            null,
+            false);
+    String t =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("t")
+            .toString();
     setup.document.invalidate(new RealDocumentSetup.AssertInt(12));
     Assert.assertEquals("10", t);
   }
@@ -592,24 +792,34 @@ public class LivingDocumentTests {
   @Test
   @SuppressWarnings("unchecked")
   public void state_machine_progress_over_time() throws Exception {
-    final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
     for (int k = 0; k < 26; k++) {
       setup.time.time += 100;
       setup.document.invalidate(new RealDocumentSetup.AssertInt(2 + k));
-      String state = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("__state").toString();
+      String state =
+          ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+              .get("__state")
+              .toString();
       System.err.println(state + "@" + k);
       Assert.assertEquals("next", state);
     }
     setup.document.invalidate(new RealDocumentSetup.AssertInt(28));
     setup.time.time += 100;
     setup.document.invalidate(new RealDocumentSetup.AssertInt(30));
-    String t = ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("t").toString();
+    String t =
+        ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+            .get("t")
+            .toString();
     Assert.assertEquals("10", t);
   }
 
   @Test
   public void construct_over_time() throws Exception {
-    final var setup = new RealDocumentSetup("@connected(who) { return who == @no_one; } @construct { transition #next in 0.25; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
+    final var setup =
+        new RealDocumentSetup(
+            "@connected(who) { return who == @no_one; } @construct { transition #next in 0.25; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
     Integer bumpTimeMs;
     int k = 2;
     while ((bumpTimeMs = setup.document.getAndCleanRequiresInvalidateMilliseconds()) != null) {
@@ -652,8 +862,6 @@ public class LivingDocumentTests {
     setup.assertCompare();
   }
 
-  private static final NtAsset EXAMPLE = new NtAsset("42", "file.png", "image/png", 1024, "some hash", "a better hash");
-
   @Test
   public void attach_requires_connection() throws Exception {
     final var setup = new RealDocumentSetup("@construct {}");
@@ -674,15 +882,21 @@ public class LivingDocumentTests {
 
   @Test
   public void attach_default() throws Exception {
-    final var setup = new RealDocumentSetup(" public int x = 0; public asset f; @connected(who) { x++; return true; } @construct {} @attached (who, a) { x++; f = a; }");
+    final var setup =
+        new RealDocumentSetup(
+            " public int x = 0; public asset f; @connected(who) { x++; return true; } @construct {} @attached (who, a) { x++; f = a; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new RealDocumentSetup.GotView());
     Assert.assertEquals(1, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":1,\"f\":{\"id\":\"\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}},\"seq\":4}", deNO_ONE.datum.get(0).toString());
+    Assert.assertEquals(
+        "{\"data\":{\"x\":1,\"f\":{\"id\":\"\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}},\"seq\":4}",
+        deNO_ONE.datum.get(0).toString());
     setup.document.attach(NtClient.NO_ONE, EXAMPLE, new RealDocumentSetup.AssertInt(6));
     Assert.assertEquals(2, deNO_ONE.datum.size());
-    Assert.assertEquals("{\"data\":{\"x\":2,\"f\":{\"id\":\"42\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"}},\"seq\":6}", deNO_ONE.datum.get(1).toString());
+    Assert.assertEquals(
+        "{\"data\":{\"x\":2,\"f\":{\"id\":\"42\",\"size\":\"1024\",\"type\":\"image/png\",\"md5\":\"some hash\",\"sha384\":\"a better hash\"}},\"seq\":6}",
+        deNO_ONE.datum.get(1).toString());
     setup.assertCompare();
   }
 
@@ -735,7 +949,8 @@ public class LivingDocumentTests {
       setup.assertCompare();
     }
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }", prior);
+      final var setup =
+          new RealDocumentSetup("@construct {} @connected(who) { return true; }", prior);
       final var document = setup.factory.create(new StdOutDocumentMonitor());
       document.__insert(new JsonStreamReader(prior.toString()));
       final var writer = setup.document.forge("construct", A);
@@ -762,7 +977,8 @@ public class LivingDocumentTests {
       setup.assertCompare();
     }
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }", prior);
+      final var setup =
+          new RealDocumentSetup("@construct {} @connected(who) { return true; }", prior);
       setup.document.connect(A, new RealDocumentSetup.AssertFailure(115724));
       setup.document.connect(B, new RealDocumentSetup.AssertInt(5));
     }
@@ -816,7 +1032,9 @@ public class LivingDocumentTests {
 
   @Test
   public void views() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @construct { x = 123; } @connected (who) { x++; return true; }");
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @construct { x = 123; } @connected (who) { x++; return true; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new RealDocumentSetup.GotView());
@@ -835,7 +1053,11 @@ public class LivingDocumentTests {
 
   @Test
   public void views_no_monitor() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @construct { x = 123; } @connected (who) { x++; return true; }", null, false);
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @construct { x = 123; } @connected (who) { x++; return true; }",
+            null,
+            false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new RealDocumentSetup.GotView());
@@ -855,12 +1077,28 @@ public class LivingDocumentTests {
   @Test
   @SuppressWarnings("unchecked")
   public void cant_connect_twice() throws Exception {
-    final var setup = new RealDocumentSetup("public int x; @construct { x = 123; } @connected (who) { x++; return true; }", null, false);
-    Assert.assertEquals(123, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @construct { x = 123; } @connected (who) { x++; return true; }",
+            null,
+            false);
+    Assert.assertEquals(
+        123,
+        ((int)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("x")));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    Assert.assertEquals(124, ((int)( (HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
+    Assert.assertEquals(
+        124,
+        ((int)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("x")));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertFailure(115724));
-    Assert.assertEquals(124, ((int) ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree()).get("x")));
+    Assert.assertEquals(
+        124,
+        ((int)
+            ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
+                .get("x")));
     setup.assertCompare();
     Assert.assertEquals(0, setup.document.getCodeCost());
   }

@@ -24,11 +24,18 @@ public abstract class TyType extends DocumentPosition {
   }
 
   public abstract void emit(Consumer<Token> yielder);
+
   public abstract String getAdamaType();
+
   public abstract String getJavaBoxType(Environment environment);
+
   public abstract String getJavaConcreteType(Environment environment);
-  public abstract TyType makeCopyWithNewPosition(DocumentPosition position, TypeBehavior newBehavior);
+
+  public abstract TyType makeCopyWithNewPosition(
+      DocumentPosition position, TypeBehavior newBehavior);
+
   public abstract void typing(Environment environment);
+
   public abstract void writeTypeReflectionJson(JsonStreamWriter writer);
 
   public TyType withPosition(final DocumentPosition position) {

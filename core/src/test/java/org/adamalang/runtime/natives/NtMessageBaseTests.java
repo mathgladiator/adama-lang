@@ -13,8 +13,8 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.junit.Test;
 
 public class NtMessageBaseTests {
-    @Test
-    public void coverage() {
-        NtMessageBase.NULL.__writeOut(new JsonStreamWriter());
-    }
+  @Test
+  public void coverage() {
+    NtMessageBase.NULL.__writeOut(new JsonStreamWriter());
+  }
 }

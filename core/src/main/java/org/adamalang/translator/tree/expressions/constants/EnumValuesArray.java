@@ -26,15 +26,21 @@ public class EnumValuesArray extends Expression implements LatentCodeSnippet {
   public final Token colonsToken;
   public final String enumTypeName;
   public final Token enumTypeNameToken;
-  private int prefixCachedID;
   public final Token prefixToken;
   public final Token starToken;
+  private int prefixCachedID;
   private EnumStorage storage;
 
-  /** The enumeration value
+  /**
+   * The enumeration value
    *
-   * @param enumTypeNameToken the token for the type */
-  public EnumValuesArray(final Token enumTypeNameToken, final Token colonsToken, final Token prefixToken, final Token starToken) {
+   * @param enumTypeNameToken the token for the type
+   */
+  public EnumValuesArray(
+      final Token enumTypeNameToken,
+      final Token colonsToken,
+      final Token prefixToken,
+      final Token starToken) {
     this.enumTypeNameToken = enumTypeNameToken;
     this.colonsToken = colonsToken;
     this.prefixToken = prefixToken;
@@ -66,7 +72,8 @@ public class EnumValuesArray extends Expression implements LatentCodeSnippet {
         storage = isEnum.storage();
         environment.document.add(this);
       }
-      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) isEnum, null).withPosition(this);
+      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) isEnum, null)
+          .withPosition(this);
     }
     return null;
   }
@@ -76,12 +83,17 @@ public class EnumValuesArray extends Expression implements LatentCodeSnippet {
     if (prefixToken == null) {
       sb.append("__ALL_VALUES_").append(enumTypeName);
     } else {
-      sb.append("__").append(prefixToken.text).append(prefixCachedID).append("_").append(enumTypeName);
+      sb.append("__")
+          .append(prefixToken.text)
+          .append(prefixCachedID)
+          .append("_")
+          .append(enumTypeName);
     }
   }
 
   @Override
   public void writeLatentJava(final StringBuilderWithTabs sb) {
-    CodeGenEnums.writeEnumArray(sb, enumTypeName, prefixToken.text + prefixCachedID, prefixToken.text, storage);
+    CodeGenEnums.writeEnumArray(
+        sb, enumTypeName, prefixToken.text + prefixCachedID, prefixToken.text, storage);
   }
 }

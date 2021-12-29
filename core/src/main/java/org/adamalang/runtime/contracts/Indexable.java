@@ -11,5 +11,6 @@ package org.adamalang.runtime.contracts;
 
 /** indicates a common way to extract the index value from a data type */
 public interface Indexable {
+  /** get the value to index the item on */
   int getIndexValue();
 }

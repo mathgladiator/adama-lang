@@ -18,5 +18,6 @@ import java.util.function.Consumer;
 /** provides a common framework for all Definitions */
 public abstract class Definition extends DocumentPosition {
   public abstract void emit(Consumer<Token> yielder);
+
   public abstract void typing(Environment environment);
 }

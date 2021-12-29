@@ -18,9 +18,9 @@ import java.util.function.Consumer;
 
 /** look up a variable in the current environment and then extract its value */
 public class Lookup extends Expression {
+  public final Token variableToken;
   private boolean addGet;
   private boolean hide;
-  public final Token variableToken;
 
   /** the variable to look up */
   public Lookup(final Token variableToken) {
@@ -37,16 +37,23 @@ public class Lookup extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    var type = environment.lookup(variableToken.text, environment.state.isContextComputation(), this, false);
+    var type =
+        environment.lookup(
+            variableToken.text, environment.state.isContextComputation(), this, false);
     if (type == null) {
       final var globalObject = environment.state.globals.get(variableToken.text);
       if (globalObject != null) {
         hide = true;
         return globalObject;
       }
-      environment.document.createError(this, String.format("The variable '%s' was not defined", variableToken.text), "VariableLookup");
+      environment.document.createError(
+          this,
+          String.format("The variable '%s' was not defined", variableToken.text),
+          "VariableLookup");
     }
-    if (type != null && environment.state.isContextComputation() && type instanceof DetailComputeRequiresGet) {
+    if (type != null
+        && environment.state.isContextComputation()
+        && type instanceof DetailComputeRequiresGet) {
       addGet = true;
       type = ((DetailComputeRequiresGet) type).typeAfterGet(environment);
       if (type != null) {
@@ -56,8 +63,10 @@ public class Lookup extends Expression {
     return type;
   }
 
-  /** note: the context matters here. If we are assigning, then we must return a
-   * relevant mode of assignment to the underlying variable. */
+  /**
+   * note: the context matters here. If we are assigning, then we must return a relevant mode of
+   * assignment to the underlying variable.
+   */
   @Override
   // move the context into the environment
   public void writeJava(final StringBuilder sb, final Environment environment) {

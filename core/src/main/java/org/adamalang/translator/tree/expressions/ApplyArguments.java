@@ -30,24 +30,29 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
-/** functional application. This applies arguments to the given expression, and
- * the expectation is that the expression is a function of some sorts */
+/**
+ * functional application. This applies arguments to the given expression, and the expectation is
+ * that the expression is a function of some sorts
+ */
 public class ApplyArguments extends Expression implements LatentCodeSnippet {
-  private TyType aggregateInputType;
-  private TyType aggregateOutputType;
   private final ArrayList<TokenizedItem<Expression>> args;
   private final Token closeParenToken;
-  private TreeMap<String, TyType> closureTyTypes;
   private final Expression expression;
+  private final Token openParenToken;
+  private TyType aggregateInputType;
+  private TyType aggregateOutputType;
+  private TreeMap<String, TyType> closureTyTypes;
   private FunctionOverloadInstance functionInstance;
   private FunctionStyleJava functionStyle;
   private boolean isAggregate;
   private ArrayList<String> latentLines;
-  private final Token openParenToken;
 
-  /** @param expression the expression that must be something that is or contains
-   *                   a function */
-  public ApplyArguments(final Expression expression, final Token openParenToken, final ArrayList<TokenizedItem<Expression>> args, final Token closeParenToken) {
+  /** @param expression the expression that must be something that is or contains a function */
+  public ApplyArguments(
+      final Expression expression,
+      final Token openParenToken,
+      final ArrayList<TokenizedItem<Expression>> args,
+      final Token closeParenToken) {
     this.expression = expression;
     this.openParenToken = openParenToken;
     this.args = args;
@@ -58,57 +63,6 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
     functionInstance = null;
     closureTyTypes = null;
     latentLines = null;
-  }
-
-  private int buildLatentApplyClassInstance(final Environment environment) {
-    final var id = environment.autoVariable();
-    final var sb = new StringBuilderWithTabs();
-    if (aggregateOutputType != null) {
-      sb.append("private class __CLOSURE_Apply").append("_" + id).append(" implements Function<").append(aggregateInputType.getJavaBoxType(environment)).append(",").append(aggregateOutputType.getJavaBoxType(environment)).append("> {")
-          .tabUp().writeNewline();
-    } else {
-      sb.append("private class __CLOSURE_Apply").append("_" + id).append(" implements Consumer<").append(aggregateInputType.getJavaBoxType(environment)).append("> {").tabUp().writeNewline();
-    }
-    for (final Map.Entry<String, TyType> entry : closureTyTypes.entrySet()) {
-      sb.append("private ").append(entry.getValue().getJavaConcreteType(environment)).append(" ").append(entry.getKey()).append(";").writeNewline();
-    }
-    sb.append("private __CLOSURE_Apply").append("_" + id + "(");
-    var first = true;
-    for (final Map.Entry<String, TyType> entry : closureTyTypes.entrySet()) {
-      if (first) {
-        first = false;
-      } else {
-        sb.append(", ");
-      }
-      sb.append(entry.getValue().getJavaConcreteType(environment)).append(" ").append(entry.getKey());
-    }
-    sb.append(") {").writeNewline();
-    for (final Map.Entry<String, TyType> entry : closureTyTypes.entrySet()) {
-      sb.append("this.").append(entry.getKey()).append(" = ").append(entry.getKey()).append(";").writeNewline();
-    }
-    sb.append("}").writeNewline();
-    sb.append("@Override").writeNewline();
-    if (aggregateOutputType != null) {
-      sb.append("public ").append(aggregateOutputType.getJavaBoxType(environment)).append(" apply(").append(aggregateInputType.getJavaBoxType(environment)).append(" __item) {").tabUp().writeNewline();
-      sb.append("return __item.").append(functionInstance.javaFunction);
-      sb.append("(");
-      final var temp = new StringBuilder();
-      CodeGenFunctions.writeArgsJava(temp, environment, true, args, functionInstance);
-      sb.append(temp.toString());
-      sb.append(");").tabDown().writeNewline();
-    } else {
-      sb.append("public void accept(").append(aggregateInputType.getJavaBoxType(environment)).append(" __item) {").tabUp().writeNewline();
-      sb.append("__item.").append(functionInstance.javaFunction);
-      sb.append("(");
-      final var temp = new StringBuilder();
-      CodeGenFunctions.writeArgsJava(temp, environment, true, args, functionInstance);
-      sb.append(temp.toString());
-      sb.append(");").tabDown().writeNewline();
-    }
-    sb.append("}").tabDown().writeNewline();
-    sb.append("}").writeNewline();
-    latentLines = sb.toLines();
-    return id;
   }
 
   @Override
@@ -132,28 +86,39 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
       var environmentToUse = environmentX;
       if (isAggregate) {
         closureTyTypes = new TreeMap<>();
-        environmentToUse = environmentX.watch(name -> {
-          if (!closureTyTypes.containsKey(name)) {
-            final var ty = environmentX.lookup(name, true, this, false);
-            if (ty != null) {
-              closureTyTypes.put(name, ty);
-            }
-          }
-        });
+        environmentToUse =
+            environmentX.watch(
+                name -> {
+                  if (!closureTyTypes.containsKey(name)) {
+                    final var ty = environmentX.lookup(name, true, this, false);
+                    if (ty != null) {
+                      closureTyTypes.put(name, ty);
+                    }
+                  }
+                });
         environmentToUse.document.add(this);
       }
       final var argTypes = new ArrayList<TyType>();
       for (final TokenizedItem<Expression> arg : args) {
-        argTypes.add(arg.item.typing(environmentToUse.scopeWithComputeContext(ComputeContext.Computation), null));
+        argTypes.add(
+            arg.item.typing(
+                environmentToUse.scopeWithComputeContext(ComputeContext.Computation), null));
       }
       exprType.typing(environmentToUse);
       functionStyle = ((TyNativeFunctional) exprType).style;
-      functionInstance = ((TyNativeFunctional) exprType).find(expression, argTypes, environmentToUse);
+      functionInstance =
+          ((TyNativeFunctional) exprType).find(expression, argTypes, environmentToUse);
       if (environmentToUse.state.isPure() && !functionInstance.pure) {
-        environmentToUse.document.createError(expression, String.format("Pure functions can only call other pure functions"), "FunctionInvoke");
+        environmentToUse.document.createError(
+            expression,
+            String.format("Pure functions can only call other pure functions"),
+            "FunctionInvoke");
       }
       if (environmentToUse.state.isReactiveExpression() && !functionInstance.pure) {
-        environmentToUse.document.createError(expression, String.format("Reactive expressions can only invoke pure functions"), "FunctionInvoke");
+        environmentToUse.document.createError(
+            expression,
+            String.format("Reactive expressions can only invoke pure functions"),
+            "FunctionInvoke");
       }
       var returnType = functionInstance.returnType;
       if (isAggregate) {
@@ -164,12 +129,15 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
         returnType = new TyNativeVoid();
       }
       if (isAggregate) {
-        return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(returnType)).withPosition(this);
+        return new TyNativeList(
+                TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(returnType))
+            .withPosition(this);
       } else {
         return returnType.makeCopyWithNewPosition(this, returnType.behavior);
       }
     }
-    environmentX.document.createError(expression, String.format("Expression is not a function"), "FunctionInvoke");
+    environmentX.document.createError(
+        expression, String.format("Expression is not a function"), "FunctionInvoke");
     return null;
   }
 
@@ -197,14 +165,18 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
               }
               sb.append(")");
             } else if (functionInstance.returnType != null) {
-              sb.append(method).append("((__item) -> __item.").append(functionInstance.javaFunction);
+              sb.append(method)
+                  .append("((__item) -> __item.")
+                  .append(functionInstance.javaFunction);
               sb.append("(");
               final var temp = new StringBuilder();
               CodeGenFunctions.writeArgsJava(temp, childEnv, true, args, functionInstance);
               sb.append(temp.toString());
               sb.append(")");
             } else {
-              sb.append(method).append("((__item) -> { __item.").append(functionInstance.javaFunction);
+              sb.append(method)
+                  .append("((__item) -> { __item.")
+                  .append(functionInstance.javaFunction);
               sb.append("(");
               final var temp = new StringBuilder();
               CodeGenFunctions.writeArgsJava(temp, childEnv, true, args, functionInstance);
@@ -243,6 +215,92 @@ public class ApplyArguments extends Expression implements LatentCodeSnippet {
           break;
       }
     }
+  }
+
+  private int buildLatentApplyClassInstance(final Environment environment) {
+    final var id = environment.autoVariable();
+    final var sb = new StringBuilderWithTabs();
+    if (aggregateOutputType != null) {
+      sb.append("private class __CLOSURE_Apply")
+          .append("_" + id)
+          .append(" implements Function<")
+          .append(aggregateInputType.getJavaBoxType(environment))
+          .append(",")
+          .append(aggregateOutputType.getJavaBoxType(environment))
+          .append("> {")
+          .tabUp()
+          .writeNewline();
+    } else {
+      sb.append("private class __CLOSURE_Apply")
+          .append("_" + id)
+          .append(" implements Consumer<")
+          .append(aggregateInputType.getJavaBoxType(environment))
+          .append("> {")
+          .tabUp()
+          .writeNewline();
+    }
+    for (final Map.Entry<String, TyType> entry : closureTyTypes.entrySet()) {
+      sb.append("private ")
+          .append(entry.getValue().getJavaConcreteType(environment))
+          .append(" ")
+          .append(entry.getKey())
+          .append(";")
+          .writeNewline();
+    }
+    sb.append("private __CLOSURE_Apply").append("_" + id + "(");
+    var first = true;
+    for (final Map.Entry<String, TyType> entry : closureTyTypes.entrySet()) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(", ");
+      }
+      sb.append(entry.getValue().getJavaConcreteType(environment))
+          .append(" ")
+          .append(entry.getKey());
+    }
+    sb.append(") {").writeNewline();
+    for (final Map.Entry<String, TyType> entry : closureTyTypes.entrySet()) {
+      sb.append("this.")
+          .append(entry.getKey())
+          .append(" = ")
+          .append(entry.getKey())
+          .append(";")
+          .writeNewline();
+    }
+    sb.append("}").writeNewline();
+    sb.append("@Override").writeNewline();
+    if (aggregateOutputType != null) {
+      sb.append("public ")
+          .append(aggregateOutputType.getJavaBoxType(environment))
+          .append(" apply(")
+          .append(aggregateInputType.getJavaBoxType(environment))
+          .append(" __item) {")
+          .tabUp()
+          .writeNewline();
+      sb.append("return __item.").append(functionInstance.javaFunction);
+      sb.append("(");
+      final var temp = new StringBuilder();
+      CodeGenFunctions.writeArgsJava(temp, environment, true, args, functionInstance);
+      sb.append(temp.toString());
+      sb.append(");").tabDown().writeNewline();
+    } else {
+      sb.append("public void accept(")
+          .append(aggregateInputType.getJavaBoxType(environment))
+          .append(" __item) {")
+          .tabUp()
+          .writeNewline();
+      sb.append("__item.").append(functionInstance.javaFunction);
+      sb.append("(");
+      final var temp = new StringBuilder();
+      CodeGenFunctions.writeArgsJava(temp, environment, true, args, functionInstance);
+      sb.append(temp.toString());
+      sb.append(");").tabDown().writeNewline();
+    }
+    sb.append("}").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    latentLines = sb.toLines();
+    return id;
   }
 
   @Override

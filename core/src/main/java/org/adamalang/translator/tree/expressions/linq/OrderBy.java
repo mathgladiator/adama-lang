@@ -29,13 +29,17 @@ import java.util.function.Consumer;
 /** order the given sql expression result by the list of keys */
 public class OrderBy extends LinqExpression implements LatentCodeSnippet {
   public final Token byToken;
-  private String comparatorName;
-  private final ArrayList<String> compareLines;
-  private IsStructure elementType;
   public final ArrayList<OrderPair> keys;
   public final Token orderToken;
+  private final ArrayList<String> compareLines;
+  private String comparatorName;
+  private IsStructure elementType;
 
-  public OrderBy(final Expression sql, final Token orderToken, final Token byToken, final ArrayList<OrderPair> keys) {
+  public OrderBy(
+      final Expression sql,
+      final Token orderToken,
+      final Token byToken,
+      final ArrayList<OrderPair> keys) {
     super(sql);
     this.orderToken = orderToken;
     this.byToken = byToken;
@@ -82,10 +86,20 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
               fieldType = environment.rules.ExtractEmbeddedType(fieldType, false);
             }
             if (!(fieldType instanceof IsOrderable)) {
-              environment.document.createError(key, String.format("Typing issue: the structure '%s' has field '%s' but it is not orderable..", element.getAdamaType(), key.name), "RuleSetStructures");
+              environment.document.createError(
+                  key,
+                  String.format(
+                      "Typing issue: the structure '%s' has field '%s' but it is not orderable..",
+                      element.getAdamaType(), key.name),
+                  "RuleSetStructures");
             }
           } else {
-            environment.document.createError(key, String.format("Field not found: the structure '%s' does not contain the field '%s'.", element.getAdamaType(), key.name), "RuleSetStructures");
+            environment.document.createError(
+                key,
+                String.format(
+                    "Field not found: the structure '%s' does not contain the field '%s'.",
+                    element.getAdamaType(), key.name),
+                "RuleSetStructures");
           }
         }
       }
@@ -113,24 +127,57 @@ public class OrderBy extends LinqExpression implements LatentCodeSnippet {
           compareType = RuleSetCommon.Resolve(environment, compareType, false);
         }
         if (compareType instanceof TyReactiveMaybe || compareType instanceof TyNativeMaybe) {
-          cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "").append(".compareValues(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(", (__x, __y) -> __x.compareTo(__y))");
+          cmpLine
+              .append(key.asc ? "" : "-")
+              .append("__a.")
+              .append(key.name)
+              .append(addLazyGet ? ".get()" : "")
+              .append(".compareValues(__b.")
+              .append(key.name)
+              .append(addLazyGet ? ".get()" : "")
+              .append(", (__x, __y) -> __x.compareTo(__y))");
         } else {
-          cmpLine.append(key.asc ? "" : "-").append("__a.").append(key.name).append(addLazyGet ? ".get()" : "").append(".compareTo(__b.").append(key.name).append(addLazyGet ? ".get()" : "").append(")");
+          cmpLine
+              .append(key.asc ? "" : "-")
+              .append("__a.")
+              .append(key.name)
+              .append(addLazyGet ? ".get()" : "")
+              .append(".compareTo(__b.")
+              .append(key.name)
+              .append(addLazyGet ? ".get()" : "")
+              .append(")");
         }
         compareLines.add(cmpLine.toString());
       }
     }
     comparatorName = comparatorNameBuilder.toString();
-    sb.append(".orderBy(").append(intermediateExpression ? "false, " : "true, ").append(comparatorName).append(")");
+    sb.append(".orderBy(")
+        .append(intermediateExpression ? "false, " : "true, ")
+        .append(comparatorName)
+        .append(")");
     environment.document.add(comparatorName, this);
   }
 
   @Override
   public void writeLatentJava(final StringBuilderWithTabs sb) {
     if (elementType != null) {
-      sb.append("private final static Comparator<RTx").append(elementType.name()).append("> ").append(comparatorName).append(" = new Comparator<RTx").append(elementType.name()).append(">() {").tabUp().writeNewline();
+      sb.append("private final static Comparator<RTx")
+          .append(elementType.name())
+          .append("> ")
+          .append(comparatorName)
+          .append(" = new Comparator<RTx")
+          .append(elementType.name())
+          .append(">() {")
+          .tabUp()
+          .writeNewline();
       sb.append("@Override").writeNewline();
-      sb.append("public int compare(RTx").append(elementType.name()).append(" __a, RTx").append(elementType.name()).append(" __b) {").tabUp().writeNewline();
+      sb.append("public int compare(RTx")
+          .append(elementType.name())
+          .append(" __a, RTx")
+          .append(elementType.name())
+          .append(" __b) {")
+          .tabUp()
+          .writeNewline();
       var first = true;
       var n = keys.size();
       for (final String compareLine : compareLines) {

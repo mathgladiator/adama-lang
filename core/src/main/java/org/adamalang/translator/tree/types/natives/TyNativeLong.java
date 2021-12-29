@@ -27,14 +27,14 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.function.Consumer;
 
-/** Represents the integral with 64 bits of storage; this uses the 'long' java
- * type */
-public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
-    CanBeMapDomain, //
-    DetailHasDeltaType, //
-    DetailTypeHasMethods, //
-    IsOrderable, //
-    AssignmentViaNative //
+/** Represents the integral with 64 bits of storage; this uses the 'long' java type */
+public class TyNativeLong extends TySimpleNative
+    implements IsNativeValue, //
+        CanBeMapDomain, //
+        DetailHasDeltaType, //
+        DetailTypeHasMethods, //
+        IsOrderable, //
+        AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
@@ -60,17 +60,8 @@ public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
   }
 
   @Override
-  public String getDeltaType(final Environment environment) {
-    return "DInt64";
-  }
-
-  @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition position) {
-    return new LongConstant(Token.WRAP("0L"), 0).withPosition(position);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeLong(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -82,6 +73,16 @@ public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
     writer.writeObjectFieldIntro("type");
     writer.writeString("long");
     writer.endObject();
+  }
+
+  @Override
+  public String getDeltaType(final Environment environment) {
+    return "DInt64";
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition position) {
+    return new LongConstant(Token.WRAP("0L"), 0).withPosition(position);
   }
 
   @Override

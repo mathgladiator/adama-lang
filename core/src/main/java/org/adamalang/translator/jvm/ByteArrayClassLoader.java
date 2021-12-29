@@ -13,8 +13,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Map;
 
-/** responsible for converting a bunch of compiled bytecode into classes
- * discoverable by the JVM */
+/** responsible for converting a bunch of compiled bytecode into classes discoverable by the JVM */
 public class ByteArrayClassLoader extends URLClassLoader {
   private final Map<String, byte[]> classes;
 

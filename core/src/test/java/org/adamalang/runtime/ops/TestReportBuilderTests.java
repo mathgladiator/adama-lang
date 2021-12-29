@@ -27,7 +27,8 @@ public class TestReportBuilderTests {
     trb.begin("t2");
     trb.end(new AssertionStats(50, 4));
     Assert.assertEquals(4, trb.getFailures());
-    Assert.assertEquals("TEST[xyz] = 100.0%\n" + "TEST[t2] = 92.0% (HAS FAILURES)\n", trb.toString());
+    Assert.assertEquals(
+        "TEST[xyz] = 100.0%\n" + "TEST[t2] = 92.0% (HAS FAILURES)\n", trb.toString());
   }
 
   @Test
@@ -37,8 +38,11 @@ public class TestReportBuilderTests {
     trb.begin("xyz");
     trb.end(new AssertionStats(0, 0));
     trb.begin("zx");
-    trb.annotate("dump", (HashMap<String, Object>) new JsonStreamReader("{\"x\":true}").readJavaTree());
+    trb.annotate(
+        "dump", (HashMap<String, Object>) new JsonStreamReader("{\"x\":true}").readJavaTree());
     trb.end(new AssertionStats(0, 0));
-    Assert.assertEquals("TEST[xyz] HAS NO ASSERTS\n" + "TEST[zx]...DUMP:{\"x\":true}\n" + " HAS NO ASSERTS\n", trb.toString());
+    Assert.assertEquals(
+        "TEST[xyz] HAS NO ASSERTS\n" + "TEST[zx]...DUMP:{\"x\":true}\n" + " HAS NO ASSERTS\n",
+        trb.toString());
   }
 }

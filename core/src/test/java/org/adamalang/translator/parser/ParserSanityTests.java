@@ -9,5 +9,4 @@
  */
 package org.adamalang.translator.parser;
 
-public class ParserSanityTests {
-}
+public class ParserSanityTests {}

@@ -21,7 +21,6 @@ import java.util.function.Consumer;
 
 /** defines a constructor which runs when the document is created */
 public class DefineConstructor extends Definition {
-  public TyNativeClient clientType;
   public final Token clientTypeToken;
   public final Token clientVarToken;
   public final Block code;
@@ -31,11 +30,20 @@ public class DefineConstructor extends Definition {
   public final Token messageNameToken;
   public final Token messageTypeToken;
   public final Token openParenToken;
+  public TyNativeClient clientType;
   public TyType unifiedMessageType;
   public String unifiedMessageTypeNameToUse;
 
-  public DefineConstructor(final Token constructToken, final Token openParenToken, final Token clientTypeToken, final Token clientVarToken, final Token commaToken, final Token messageTypeToken, final Token messageNameToken,
-      final Token endParenToken, final Block code) {
+  public DefineConstructor(
+      final Token constructToken,
+      final Token openParenToken,
+      final Token clientTypeToken,
+      final Token clientVarToken,
+      final Token commaToken,
+      final Token messageTypeToken,
+      final Token messageNameToken,
+      final Token endParenToken,
+      final Block code) {
     this.constructToken = constructToken;
     this.openParenToken = openParenToken;
     this.clientTypeToken = clientTypeToken;

@@ -16,7 +16,11 @@ import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 public class CodeGenDocument {
   public static void writePrelude(final StringBuilderWithTabs sb, final Environment environment) {
     if (environment.state.options.packageName != null) {
-      sb.append("package ").append(environment.state.options.packageName).append(";").writeNewline().writeNewline();
+      sb.append("package ")
+          .append(environment.state.options.packageName)
+          .append(";")
+          .writeNewline()
+          .writeNewline();
     }
     sb.append("import org.adamalang.runtime.async.*;").writeNewline();
     sb.append("import org.adamalang.runtime.contracts.*;").writeNewline();

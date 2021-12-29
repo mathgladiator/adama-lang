@@ -21,8 +21,7 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeDynamic;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-public class TyReactiveDynamic extends TySimpleReactive implements
-        IsOrderable {
+public class TyReactiveDynamic extends TySimpleReactive implements IsOrderable {
   public TyReactiveDynamic(final Token token) {
     super(token, "RxDynamic");
   }
@@ -33,18 +32,9 @@ public class TyReactiveDynamic extends TySimpleReactive implements
   }
 
   @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new DynamicNullConstant(token);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveDynamic(token).withPosition(position);
-  }
-
-  @Override
-  public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 
   @Override
@@ -55,5 +45,15 @@ public class TyReactiveDynamic extends TySimpleReactive implements
     writer.writeObjectFieldIntro("type");
     writer.writeString("dynamic");
     writer.endObject();
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
+    return new DynamicNullConstant(token);
+  }
+
+  @Override
+  public TyType typeAfterGet(final Environment environment) {
+    return new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 }

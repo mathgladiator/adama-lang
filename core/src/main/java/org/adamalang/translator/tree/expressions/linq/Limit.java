@@ -24,7 +24,12 @@ public class Limit extends LinqExpression {
   public final Expression offset;
   public final Token offsetToken;
 
-  public Limit(final Expression sql, final Token limitToken, final Expression limit, final Token offsetToken, final Expression offset) {
+  public Limit(
+      final Expression sql,
+      final Token limitToken,
+      final Expression limit,
+      final Token offsetToken,
+      final Expression offset) {
     super(sql);
     this.limitToken = limitToken;
     this.limit = limit;

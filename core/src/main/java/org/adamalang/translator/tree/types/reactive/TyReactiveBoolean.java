@@ -21,8 +21,10 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-/** Represents the reactive type for a boolean value (true/false); this uses the
- * reactive 'TBoolean' java type */
+/**
+ * Represents the reactive type for a boolean value (true/false); this uses the reactive 'TBoolean'
+ * java type
+ */
 public class TyReactiveBoolean extends TySimpleReactive implements IsOrderable //
 {
   public TyReactiveBoolean(final Token token) {
@@ -35,18 +37,9 @@ public class TyReactiveBoolean extends TySimpleReactive implements IsOrderable /
   }
 
   @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new BooleanConstant(Token.WRAP("false"), false).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveBoolean(token).withPosition(position);
-  }
-
-  @Override
-  public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 
   @Override
@@ -57,5 +50,15 @@ public class TyReactiveBoolean extends TySimpleReactive implements IsOrderable /
     writer.writeObjectFieldIntro("type");
     writer.writeString("bool");
     writer.endObject();
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
+    return new BooleanConstant(Token.WRAP("false"), false).withPosition(forWhatExpression);
+  }
+
+  @Override
+  public TyType typeAfterGet(final Environment environment) {
+    return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 }

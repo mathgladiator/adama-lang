@@ -26,11 +26,16 @@ public class ExceptionTests {
     new ErrorCodeException(14, "Nope");
 
     ErrorCodeException eee = new ErrorCodeException(14, "Nope");
-    Assert.assertTrue(eee == ErrorCodeException.detectOrWrap(5400, eee, new ExceptionLogger() {
-      @Override
-      public void convertedToErrorCode(Throwable t, int errorCode) {
-        t.printStackTrace();
-      }
-    }));
+    Assert.assertTrue(
+        eee
+            == ErrorCodeException.detectOrWrap(
+                5400,
+                eee,
+                new ExceptionLogger() {
+                  @Override
+                  public void convertedToErrorCode(Throwable t, int errorCode) {
+                    t.printStackTrace();
+                  }
+                }));
   }
 }

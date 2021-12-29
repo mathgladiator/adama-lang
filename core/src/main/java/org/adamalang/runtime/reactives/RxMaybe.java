@@ -92,12 +92,6 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
   }
 
   @Override
-  public boolean __raiseInvalid() {
-    __invalidateSubscribers();
-    return true;
-  }
-
-  @Override
   public void __revert() {
     if (__isDirty()) {
       value = priorValue;
@@ -108,6 +102,36 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
       }
       __lowerDirtyRevert();
     }
+  }
+
+  @Override
+  public long __memory() {
+    return super.__memory()
+        + 24
+        + (value != null ? value.__memory() : 0)
+        + (priorValue != null ? priorValue.__memory() : 0);
+  }
+
+  public Ty make() {
+    if (value == null) {
+      value = maker.apply(this);
+      value.__subscribe(this);
+      value.__raiseDirty();
+    }
+    return value;
+  }
+
+  public void delete() {
+    if (value != null) {
+      value = null;
+      __raiseDirty();
+    }
+  }
+
+  @Override
+  public boolean __raiseInvalid() {
+    __invalidateSubscribers();
+    return true;
   }
 
   public int compareValues(final RxMaybe<Ty> other, final Comparator<Ty> test) {
@@ -123,13 +147,6 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
       } else {
         return test.compare(value, other.value);
       }
-    }
-  }
-
-  public void delete() {
-    if (value != null) {
-      value = null;
-      __raiseDirty();
     }
   }
 
@@ -150,15 +167,6 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
     return value != null;
   }
 
-  public Ty make() {
-    if (value == null) {
-      value = maker.apply(this);
-      value.__subscribe(this);
-      value.__raiseDirty();
-    }
-    return value;
-  }
-
   @SuppressWarnings("unchecked")
   public void set(final NtMaybe other) {
     if (other.has()) {
@@ -167,10 +175,5 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
       delete();
     }
     __raiseDirty();
-  }
-
-  @Override
-  public long __memory() {
-    return super.__memory() + 24 + (value != null ? value.__memory() : 0) + (priorValue != null ? priorValue.__memory() :  0);
   }
 }

@@ -21,8 +21,7 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeString;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-/** The type representing a utf-8 encoded string. This uses the reactive
- * 'RxString' java type. */
+/** The type representing a utf-8 encoded string. This uses the reactive 'RxString' java type. */
 public class TyReactiveString extends TySimpleReactive implements IsOrderable //
 {
   public TyReactiveString(final Token token) {
@@ -35,18 +34,9 @@ public class TyReactiveString extends TySimpleReactive implements IsOrderable //
   }
 
   @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new StringConstant(Token.WRAP("\"\"")).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveString(token).withPosition(position);
-  }
-
-  @Override
-  public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 
   @Override
@@ -57,5 +47,15 @@ public class TyReactiveString extends TySimpleReactive implements IsOrderable //
     writer.writeObjectFieldIntro("type");
     writer.writeString("string");
     writer.endObject();
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
+    return new StringConstant(Token.WRAP("\"\"")).withPosition(forWhatExpression);
+  }
+
+  @Override
+  public TyType typeAfterGet(final Environment environment) {
+    return new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 }

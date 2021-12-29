@@ -23,8 +23,9 @@ import org.adamalang.translator.tree.types.shared.EnumStorage;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
-    IsEnum //
+public class TyReactiveEnum extends TySimpleReactive
+    implements IsOrderable, //
+        IsEnum //
 {
   public final String name;
   public final EnumStorage storage;
@@ -41,13 +42,26 @@ public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
   }
 
   @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new EnumConstant(Token.WRAP(name), Token.WRAP("::"), Token.WRAP(storage.getDefaultLabel())).withPosition(forWhatExpression);
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyReactiveEnum(token, storage).withPosition(position);
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyReactiveEnum(token, storage).withPosition(position);
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("reactive_enum");
+    writer.writeObjectFieldIntro("type");
+    writer.writeString(name);
+    writer.endObject();
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
+    return new EnumConstant(
+            Token.WRAP(name), Token.WRAP("::"), Token.WRAP(storage.getDefaultLabel()))
+        .withPosition(forWhatExpression);
   }
 
   @Override
@@ -62,16 +76,7 @@ public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
 
   @Override
   public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeEnum(TypeBehavior.ReadOnlyNativeValue, token, token, token, storage, token).withPosition(this);
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("reactive_enum");
-    writer.writeObjectFieldIntro("type");
-    writer.writeString(name);
-    writer.endObject();
+    return new TyNativeEnum(TypeBehavior.ReadOnlyNativeValue, token, token, token, storage, token)
+        .withPosition(this);
   }
 }

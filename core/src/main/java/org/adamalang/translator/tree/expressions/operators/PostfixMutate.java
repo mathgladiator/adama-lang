@@ -22,10 +22,10 @@ import java.util.function.Consumer;
 
 /** postfix mutation ($e--, $e++) */
 public class PostfixMutate extends Expression {
-  private CanBumpResult bumpResult;
   public final Expression expression;
   public final PostfixMutateOp op;
   public final Token opToken;
+  private CanBumpResult bumpResult;
 
   public PostfixMutate(final Expression expression, final Token opToken) {
     this.expression = expression;
@@ -44,10 +44,19 @@ public class PostfixMutate extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    final var result = expression.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null /* no suggestion makes sense */);
+    final var result =
+        expression.typing(
+            environment.scopeWithComputeContext(ComputeContext.Assignment),
+            null /* no suggestion makes sense */);
     bumpResult = environment.rules.CanBumpNumeric(result, false);
-    if (bumpResult == CanBumpResult.No) { return null; }
-    if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) { return ((DetailComputeRequiresGet) result).typeAfterGet(environment).makeCopyWithNewPosition(this, result.behavior); }
+    if (bumpResult == CanBumpResult.No) {
+      return null;
+    }
+    if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) {
+      return ((DetailComputeRequiresGet) result)
+          .typeAfterGet(environment)
+          .makeCopyWithNewPosition(this, result.behavior);
+    }
     return result.makeCopyWithNewPosition(this, result.behavior);
   }
 

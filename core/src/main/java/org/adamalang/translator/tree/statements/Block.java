@@ -18,9 +18,9 @@ import java.util.function.Consumer;
 
 /** {statements*} */
 public class Block extends Statement {
-  private Token closeBraceToken;
-  private final Token openBraceToken;
   public final ArrayList<Statement> statements;
+  private final Token openBraceToken;
+  private Token closeBraceToken;
 
   public Block(final Token openBraceToken) {
     this.openBraceToken = openBraceToken;
@@ -50,12 +50,31 @@ public class Block extends Statement {
     }
   }
 
-  public void end(final Token closeBraceToken) {
-    this.closeBraceToken = closeBraceToken;
-    ingest(closeBraceToken);
+  @Override
+  public ControlFlow typing(final Environment environment) {
+    var flow = ControlFlow.Open;
+    for (final Statement stmt : statements) {
+      // check that it must be Open
+      if (flow == ControlFlow.Returns) {
+        environment.document.createError(stmt, String.format("This code is unreachable."), "Block");
+      }
+      if (stmt.typing(environment) == ControlFlow.Returns) {
+        flow = ControlFlow.Returns;
+      }
+    }
+    return flow;
   }
 
-  public void specialWriteJava(final StringBuilderWithTabs sb, final Environment environment, final boolean brace, final boolean tabDownOnEnd) {
+  @Override
+  public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
+    specialWriteJava(sb, environment, true, true);
+  }
+
+  public void specialWriteJava(
+      final StringBuilderWithTabs sb,
+      final Environment environment,
+      final boolean brace,
+      final boolean tabDownOnEnd) {
     final var child = environment.scope();
     final var n = statements.size();
     if (n == 0 && brace) {
@@ -87,23 +106,8 @@ public class Block extends Statement {
     }
   }
 
-  @Override
-  public ControlFlow typing(final Environment environment) {
-    var flow = ControlFlow.Open;
-    for (final Statement stmt : statements) {
-      // check that it must be Open
-      if (flow == ControlFlow.Returns) {
-        environment.document.createError(stmt, String.format("This code is unreachable."), "Block");
-      }
-      if (stmt.typing(environment) == ControlFlow.Returns) {
-        flow = ControlFlow.Returns;
-      }
-    }
-    return flow;
-  }
-
-  @Override
-  public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
-    specialWriteJava(sb, environment, true, true);
+  public void end(final Token closeBraceToken) {
+    this.closeBraceToken = closeBraceToken;
+    ingest(closeBraceToken);
   }
 }

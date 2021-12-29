@@ -17,18 +17,8 @@ import java.util.HashMap;
 
 /** A sink is basically a queue for multiple users to contribute to. */
 public class Sink<T> {
-  /** a queue for a particular user */
-  private class ClientChannelQueue {
-    private final ArrayList<T> queue;
-
-    private ClientChannelQueue() {
-      this.queue = new ArrayList<>();
-    }
-  }
-
   /** the communication channel for the sink */
   public final String channel;
-
   /** the various queues per users */
   private final HashMap<NtClient, ClientChannelQueue> queues;
 
@@ -53,6 +43,17 @@ public class Sink<T> {
     return new SimpleFuture<>(channel, who, value);
   }
 
+  /** get the queue for the particular user */
+  private ClientChannelQueue queueFor(final NtClient value) {
+    var queue = queues.get(value);
+    if (queue == null) {
+      /** create on-demand */
+      queue = new ClientChannelQueue();
+      queues.put(value, queue);
+    }
+    return queue;
+  }
+
   /** dequeue a message for a particular user; the future may not have a value */
   public SimpleFuture<NtMaybe<T>> dequeueMaybe(final NtClient who) {
     final var queue = queueFor(who);
@@ -68,14 +69,12 @@ public class Sink<T> {
     queueFor(task.who).queue.add(message);
   }
 
-  /** get the queue for the particular user */
-  private ClientChannelQueue queueFor(final NtClient value) {
-    var queue = queues.get(value);
-    if (queue == null) {
-      /** create on-demand */
-      queue = new ClientChannelQueue();
-      queues.put(value, queue);
+  /** a queue for a particular user */
+  private class ClientChannelQueue {
+    private final ArrayList<T> queue;
+
+    private ClientChannelQueue() {
+      this.queue = new ArrayList<>();
     }
-    return queue;
   }
 }

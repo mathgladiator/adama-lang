@@ -35,13 +35,17 @@ public class Shuffle extends LinqExpression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     final var type = sql.typing(environment, null);
-    if (environment.rules.IsNativeListOfStructure(type, false)) { return type; }
+    if (environment.rules.IsNativeListOfStructure(type, false)) {
+      return type;
+    }
     return null;
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
     sql.writeJava(sb, environment);
-    sb.append(".shuffle(").append(intermediateExpression ? "false, " : "true, ").append("__random)");
+    sb.append(".shuffle(")
+        .append(intermediateExpression ? "false, " : "true, ")
+        .append("__random)");
   }
 }

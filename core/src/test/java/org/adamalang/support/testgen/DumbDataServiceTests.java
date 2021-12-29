@@ -21,64 +21,66 @@ public class DumbDataServiceTests {
   @Test
   public void coverage() {
     DumbDataService dds = new DumbDataService((t) -> {});
-    dds.scan(new ActiveKeyStream() {
-      @Override
-      public void schedule(Key key, long time) {
+    dds.scan(
+        new ActiveKeyStream() {
+          @Override
+          public void schedule(Key key, long time) {}
 
-      }
+          @Override
+          public void finish() {}
 
-      @Override
-      public void finish() {
+          @Override
+          public void error(ErrorCodeException failure) {}
+        });
+    dds.get(
+        new Key("0", "0"),
+        new Callback<DataService.LocalDocumentChange>() {
+          @Override
+          public void success(DataService.LocalDocumentChange value) {
+            Assert.fail();
+          }
 
-      }
-
-      @Override
-      public void error(ErrorCodeException failure) {
-      }
-    });
-    dds.get(new Key("0", "0"), new Callback<DataService.LocalDocumentChange>() {
-      @Override
-      public void success(DataService.LocalDocumentChange value) {
-        Assert.fail();
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-      }
-
-    });
+          @Override
+          public void failure(ErrorCodeException ex) {}
+        });
     Key key = new Key("?", "1");
-    dds.delete(key, new Callback<Void>() {
-      @Override
-      public void success(Void value) {
+    dds.delete(
+        key,
+        new Callback<Void>() {
+          @Override
+          public void success(Void value) {}
 
-      }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.fail();
+          }
+        });
+    dds.compute(
+        key,
+        DataService.ComputeMethod.Rewind,
+        1,
+        new Callback<DataService.LocalDocumentChange>() {
+          @Override
+          public void success(DataService.LocalDocumentChange value) {
+            Assert.assertEquals("{\"x\":1000}", value.patch);
+          }
 
-      @Override
-      public void failure(ErrorCodeException ex) {
-        Assert.fail();
-      }
-    });
-    dds.compute(key, DataService.ComputeMethod.Rewind, 1, new Callback<DataService.LocalDocumentChange>() {
-      @Override
-      public void success(DataService.LocalDocumentChange value) {
-        Assert.assertEquals("{\"x\":1000}", value.patch);
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        Assert.fail();
-      }
-    });
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.fail();
+          }
+        });
     try {
       dds.compute(key, DataService.ComputeMethod.Unsend, 1, null);
       Assert.fail();
-    } catch (UnsupportedOperationException uoe) {}
+    } catch (UnsupportedOperationException uoe) {
+    }
   }
 
   @Test
   public void acquire() {
-    DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
+    DumbDataService.DumbDurableLivingDocumentAcquire acquire =
+        new DumbDataService.DumbDurableLivingDocumentAcquire();
     try {
       acquire.get();
       Assert.fail();
@@ -87,7 +89,8 @@ public class DumbDataServiceTests {
     try {
       acquire.failure(new ErrorCodeException(0, new Exception()));
       Assert.fail();
-    } catch (RuntimeException re) {}
+    } catch (RuntimeException re) {
+    }
   }
 
   @Test
@@ -95,7 +98,8 @@ public class DumbDataServiceTests {
     try {
       DumbDataService.NOOPINT.failure(new ErrorCodeException(0, new Exception()));
       Assert.fail();
-    } catch (RuntimeException re) {}
+    } catch (RuntimeException re) {
+    }
   }
 
   @Test
@@ -103,6 +107,7 @@ public class DumbDataServiceTests {
     try {
       DumbDataService.NOOPPrivateView.failure(new ErrorCodeException(0, new Exception()));
       Assert.fail();
-    } catch (RuntimeException re) {}
+    } catch (RuntimeException re) {
+    }
   }
 }

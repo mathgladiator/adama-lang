@@ -30,7 +30,14 @@ public class DoWhile extends Statement {
   public final Token openParen;
   public final Token whileToken;
 
-  public DoWhile(final Token doToken, final Block code, final Token whileToken, final Token openParen, final Expression condition, final Token closeParen, final Token endToken) {
+  public DoWhile(
+      final Token doToken,
+      final Block code,
+      final Token whileToken,
+      final Token openParen,
+      final Expression condition,
+      final Token closeParen,
+      final Token endToken) {
     this.doToken = doToken;
     this.code = code;
     this.whileToken = whileToken;
@@ -56,7 +63,8 @@ public class DoWhile extends Statement {
   @Override
   public ControlFlow typing(final Environment environment) {
     final var flow = code.typing(environment);
-    final var conditionType = condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+    final var conditionType =
+        condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     environment.rules.IsBoolean(conditionType, false);
     return flow;
   }

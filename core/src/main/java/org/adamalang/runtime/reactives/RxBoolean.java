@@ -62,6 +62,11 @@ public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAn
   }
 
   @Override
+  public long __memory() {
+    return super.__memory() + 2;
+  }
+
+  @Override
   public int compareTo(final RxBoolean other) {
     return Boolean.compare(value, other.value);
   }
@@ -77,10 +82,5 @@ public class RxBoolean extends RxBase implements Comparable<RxBoolean>, CanGetAn
       this.value = value;
       __raiseDirty();
     }
-  }
-
-  @Override
-  public long __memory() {
-    return super.__memory() + 2;
   }
 }

@@ -35,19 +35,24 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class TyNativeMessage extends TyType implements IsStructure, //
-    DetailTypeProducesRootLevelCode, //
-    DetailHasDeltaType, //
-    DetailInventDefaultValueExpression, //
-    CanBeNativeArray, //
-    DetailNativeDeclarationIsNotStandard, //
-    AssignmentViaNativeOnlyForSet {
+public class TyNativeMessage extends TyType
+    implements IsStructure, //
+        DetailTypeProducesRootLevelCode, //
+        DetailHasDeltaType, //
+        DetailInventDefaultValueExpression, //
+        CanBeNativeArray, //
+        DetailNativeDeclarationIsNotStandard, //
+        AssignmentViaNativeOnlyForSet {
   public Token messageToken;
   public String name;
   public Token nameToken;
   public StructureStorage storage;
 
-  public TyNativeMessage(final TypeBehavior behavior, final Token messageToken, final Token nameToken, final StructureStorage storage) {
+  public TyNativeMessage(
+      final TypeBehavior behavior,
+      final Token messageToken,
+      final Token nameToken,
+      final StructureStorage storage) {
     super(behavior);
     this.messageToken = messageToken;
     this.nameToken = nameToken;
@@ -64,23 +69,33 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
       fields.add(e.getValue());
     }
-    sb.append("private static class RTx" + name + " implements NtMessageBase {").tabUp().writeNewline();
+    sb.append("private static class RTx" + name + " implements NtMessageBase {")
+        .tabUp()
+        .writeNewline();
     for (final FieldDefinition fd : fields) {
-      sb.append("private ").append(fd.type.getJavaConcreteType(environment)).append(" ").append(fd.name);
+      sb.append("private ")
+          .append(fd.type.getJavaConcreteType(environment))
+          .append(" ")
+          .append(fd.name);
       final var fieldType = environment.rules.Resolve(fd.type, false);
       if (fieldType instanceof DetailNativeDeclarationIsNotStandard) {
-        sb.append(" = ").append(((DetailNativeDeclarationIsNotStandard) fieldType).getStringWhenValueNotProvided(environment));
+        sb.append(" = ")
+            .append(
+                ((DetailNativeDeclarationIsNotStandard) fieldType)
+                    .getStringWhenValueNotProvided(environment));
       } else {
         Expression defaultValueToUse = null;
         if (fieldType instanceof DetailInventDefaultValueExpression) {
-          defaultValueToUse = ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(this);
+          defaultValueToUse =
+              ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(this);
         }
         if (fd.defaultValueOverride != null) {
           defaultValueToUse = fd.defaultValueOverride;
         }
         if (defaultValueToUse != null) {
           sb.append(" = ");
-          defaultValueToUse.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+          defaultValueToUse.writeJava(
+              sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         }
       }
       sb.append(";").writeNewline();
@@ -99,7 +114,9 @@ public class TyNativeMessage extends TyType implements IsStructure, //
             sb.append(", ");
           }
           firstArg = false;
-          sb.append(e.getValue().type.getJavaConcreteType(environment)).append(" ").append(e.getKey());
+          sb.append(e.getValue().type.getJavaConcreteType(environment))
+              .append(" ")
+              .append(e.getKey());
         }
         sb.append(") {").tabUp().writeNewline();
         var countDownUntilTab = storage.fields.size();
@@ -130,11 +147,6 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   }
 
   @Override
-  public String getDeltaType(final Environment environment) {
-    return "DeltaRTx" + name;
-  }
-
-  @Override
   public String getJavaBoxType(final Environment environment) {
     return String.format("RTx%s", name);
   }
@@ -142,6 +154,37 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   @Override
   public String getJavaConcreteType(final Environment environment) {
     return String.format("RTx%s", name);
+  }
+
+  @Override
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeMessage(newBehavior, messageToken, nameToken, storage)
+        .withPosition(position);
+  }
+
+  @Override
+  public void typing(final Environment environment) {
+    storage.typing(environment.scope());
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_message");
+    writer.writeObjectFieldIntro("name");
+    writer.writeString(name);
+    writer.writeObjectFieldIntro("anonymous");
+    writer.writeBoolean(storage.anonymous);
+    writer.writeObjectFieldIntro("fields");
+    storage.writeTypeReflectionJson(writer);
+    writer.endObject();
+  }
+
+  @Override
+  public String getDeltaType(final Environment environment) {
+    return "DeltaRTx" + name;
   }
 
   @Override
@@ -165,12 +208,9 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   }
 
   public TyNativeMessage makeAnonymousCopy() {
-    return (TyNativeMessage) (new TyNativeMessage(behavior, messageToken, nameToken, storage.makeAnonymousCopy()).withPosition(this));
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeMessage(newBehavior, messageToken, nameToken, storage).withPosition(position);
+    return (TyNativeMessage)
+        (new TyNativeMessage(behavior, messageToken, nameToken, storage.makeAnonymousCopy())
+            .withPosition(this));
   }
 
   @Override
@@ -181,24 +221,5 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   @Override
   public StructureStorage storage() {
     return storage;
-  }
-
-  @Override
-  public void typing(final Environment environment) {
-    storage.typing(environment.scope());
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("native_message");
-    writer.writeObjectFieldIntro("name");
-    writer.writeString(name);
-    writer.writeObjectFieldIntro("anonymous");
-    writer.writeBoolean(storage.anonymous);
-    writer.writeObjectFieldIntro("fields");
-    storage.writeTypeReflectionJson(writer);
-    writer.endObject();
   }
 }

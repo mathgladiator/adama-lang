@@ -35,7 +35,8 @@ public class DList<dTy> {
 
   /** get the prior value at the given index using the supplier to fill in holes */
   public dTy getPrior(final int k, final Supplier<dTy> maker) {
-    // Note: this function is called by generated code (See CodeGenDeltaClass) for each item in the array, and the value
+    // Note: this function is called by generated code (See CodeGenDeltaClass) for each item in the
+    // array, and the value
     // will be written out per item if there is something.
     while (cachedDeltas.size() <= k) {
       cachedDeltas.add(maker.get());

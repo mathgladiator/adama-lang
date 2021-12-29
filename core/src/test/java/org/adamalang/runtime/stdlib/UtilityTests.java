@@ -21,7 +21,7 @@ public class UtilityTests {
   public void convert_array() {
     final Function<Integer, Integer[]> makeArray = (final Integer n) -> new Integer[n];
     final Function<String, Integer> conv = (final String s) -> Integer.parseInt(s);
-    final var data = new String[] { "123", "42" };
+    final var data = new String[] {"123", "42"};
     final var arr = Utility.convertMultiple(data, makeArray, conv);
     Assert.assertEquals(123, (int) arr[0]);
     Assert.assertEquals(42, (int) arr[1]);
@@ -45,12 +45,14 @@ public class UtilityTests {
     Assert.assertFalse(Utility.convertMaybe(ms, (final String s) -> Integer.parseInt(s)).has());
     ms.set("123");
     Assert.assertTrue(Utility.convertMaybe(ms, (final String s) -> Integer.parseInt(s)).has());
-    Assert.assertEquals(123, (int) Utility.convertMaybe(ms, (final String s) -> Integer.parseInt(s)).get());
+    Assert.assertEquals(
+        123, (int) Utility.convertMaybe(ms, (final String s) -> Integer.parseInt(s)).get());
   }
 
   @Test
   public void convert_single() {
-    Assert.assertEquals(123, (int) Utility.convertSingle("123", (final String s) -> Integer.parseInt(s)));
+    Assert.assertEquals(
+        123, (int) Utility.convertSingle("123", (final String s) -> Integer.parseInt(s)));
   }
 
   @Test
@@ -61,7 +63,7 @@ public class UtilityTests {
 
   @Test
   public void lookup() {
-    final var X = new Integer[] { 1, 3, 5 };
+    final var X = new Integer[] {1, 3, 5};
     Assert.assertEquals(1, (int) Utility.lookup(X, 0).get());
     Assert.assertEquals(3, (int) Utility.lookup(X, 1).get());
     Assert.assertEquals(5, (int) Utility.lookup(X, 2).get());

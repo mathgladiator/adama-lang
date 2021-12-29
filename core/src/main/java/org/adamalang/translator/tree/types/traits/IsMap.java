@@ -14,5 +14,6 @@ import org.adamalang.translator.tree.types.TyType;
 
 public interface IsMap {
   TyType getDomainType(Environment environment);
+
   TyType getRangeType(Environment environment);
 }

@@ -9,7 +9,6 @@
  */
 package org.adamalang.runtime.reactives;
 
-
 import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -64,6 +63,11 @@ public class RxDynamic extends RxBase implements Comparable<RxDynamic>, CanGetAn
   }
 
   @Override
+  public long __memory() {
+    return super.__memory() + backup.memory() + value.memory() + 16;
+  }
+
+  @Override
   public int compareTo(final RxDynamic other) {
     return value.compareTo(other.value);
   }
@@ -79,10 +83,5 @@ public class RxDynamic extends RxBase implements Comparable<RxDynamic>, CanGetAn
       this.value = value;
       __raiseDirty();
     }
-  }
-
-  @Override
-  public long __memory() {
-    return super.__memory() + backup.memory() + value.memory() + 16;
   }
 }

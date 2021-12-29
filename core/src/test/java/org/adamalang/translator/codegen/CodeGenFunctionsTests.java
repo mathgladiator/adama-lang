@@ -25,8 +25,13 @@ public class CodeGenFunctionsTests {
   @Test
   public void multiargway1() {
     final var sb = new StringBuilder();
-    final var env = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
-    final var foi = new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false);
+    final var env =
+        Environment.fresh(
+            new Document(),
+            new EnvironmentState(
+                GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+    final var foi =
+        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false);
     CodeGenFunctions.writeArgsJava(sb, env, false, new ArrayList<>(), foi);
     Assert.assertEquals("", sb.toString());
   }
@@ -34,8 +39,13 @@ public class CodeGenFunctionsTests {
   @Test
   public void multiargway2() {
     final var sb = new StringBuilder();
-    final var env = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
-    final var foi = new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false);
+    final var env =
+        Environment.fresh(
+            new Document(),
+            new EnvironmentState(
+                GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+    final var foi =
+        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false);
     foi.hiddenSuffixArgs.add("X");
     CodeGenFunctions.writeArgsJava(sb, env, false, new ArrayList<>(), foi);
     Assert.assertEquals(", X", sb.toString());
@@ -44,8 +54,13 @@ public class CodeGenFunctionsTests {
   @Test
   public void multiargway3() {
     final var sb = new StringBuilder();
-    final var env = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
-    final var foi = new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false);
+    final var env =
+        Environment.fresh(
+            new Document(),
+            new EnvironmentState(
+                GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+    final var foi =
+        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false);
     foi.hiddenSuffixArgs.add("X");
     CodeGenFunctions.writeArgsJava(sb, env, true, new ArrayList<>(), foi);
     Assert.assertEquals("X", sb.toString());

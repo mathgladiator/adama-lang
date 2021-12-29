@@ -23,24 +23,34 @@ import java.util.function.Consumer;
 
 public class DefineMethod extends StructureComponent {
   public final ArrayList<FunctionArg> args;
-  private FunctionOverloadInstance cachedInstance;
   public final Token closeParen;
   /** code that defines the function */
   public final Block code;
-  private int functionId;
   /** return type of the function */
   public final Token introduceReturnToken;
   /** the name of the function */
   public final Token methodToken;
+
   public final String name;
   public final Token nameToken;
   /** arguments of the function */
   public final Token openParen;
-  public TyType returnType;
+
   public final Token tokenReadonly;
+  public TyType returnType;
+  private FunctionOverloadInstance cachedInstance;
+  private int functionId;
 
   /** construct the function of a type with a name */
-  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final Token tokenReadonly,
+  public DefineMethod(
+      final Token methodToken,
+      final Token nameToken,
+      final Token openParen,
+      final ArrayList<FunctionArg> args,
+      final Token closeParen,
+      final Token introduceReturnToken,
+      final TyType returnType,
+      final Token tokenReadonly,
       final Block code) {
     this.methodToken = methodToken;
     this.nameToken = nameToken;
@@ -83,19 +93,6 @@ public class DefineMethod extends StructureComponent {
     code.emit(yielder);
   }
 
-  /** prepare the environment for execution */
-  private Environment prepareEnvironment(final Environment environment) {
-    var toUse = environment.scope();
-    if (tokenReadonly != null) {
-      toUse = environment.scopeAsReadOnlyBoundary();
-    }
-    for (final FunctionArg arg : args) {
-      toUse.define(arg.argName, arg.type, true, arg.type);
-    }
-    toUse.setReturnType(returnType);
-    return toUse;
-  }
-
   public FunctionOverloadInstance typing(final Environment environment) {
     if (cachedInstance == null) {
       functionId = environment.autoVariable();
@@ -107,12 +104,30 @@ public class DefineMethod extends StructureComponent {
       }
       final var flow = code.typing(prepareEnvironment(environment));
       if (returnType != null && flow == ControlFlow.Open) {
-        environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text), "MethodDefine");
+        environment.document.createError(
+            this,
+            String.format("Function '%s' does not return in all cases", nameToken.text),
+            "MethodDefine");
       }
-      cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null);
+      cachedInstance =
+          new FunctionOverloadInstance(
+              "__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null);
       cachedInstance.ingest(this);
     }
     return cachedInstance;
+  }
+
+  /** prepare the environment for execution */
+  private Environment prepareEnvironment(final Environment environment) {
+    var toUse = environment.scope();
+    if (tokenReadonly != null) {
+      toUse = environment.scopeAsReadOnlyBoundary();
+    }
+    for (final FunctionArg arg : args) {
+      toUse.define(arg.argName, arg.type, true, arg.type);
+    }
+    toUse.setReturnType(returnType);
+    return toUse;
   }
 
   /** write the java for the function/procedure */

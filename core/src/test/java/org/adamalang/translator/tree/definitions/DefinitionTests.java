@@ -16,16 +16,15 @@ import org.junit.Test;
 import java.util.function.Consumer;
 
 public class DefinitionTests {
-    @Test
-    public void coverage() {
-        Definition df = new Definition() {
-            @Override
-            public void emit(Consumer<Token> yielder) {
-            }
+  @Test
+  public void coverage() {
+    Definition df =
+        new Definition() {
+          @Override
+          public void emit(Consumer<Token> yielder) {}
 
-            @Override
-            public void typing(Environment environment) {
-            }
+          @Override
+          public void typing(Environment environment) {}
         };
-    }
+  }
 }

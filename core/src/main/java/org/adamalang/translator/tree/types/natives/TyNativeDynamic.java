@@ -24,14 +24,16 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
 
-public class TyNativeDynamic extends TySimpleNative implements DetailHasDeltaType, //
+public class TyNativeDynamic extends TySimpleNative
+    implements DetailHasDeltaType, //
         DetailEqualityTestingRequiresWrapping, //
         AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeDynamic(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+  public TyNativeDynamic(
+      final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "NtDynamic", "NtDynamic");
     this.readonlyToken = readonlyToken;
     this.token = token;
@@ -52,6 +54,22 @@ public class TyNativeDynamic extends TySimpleNative implements DetailHasDeltaTyp
   }
 
   @Override
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeDynamic(newBehavior, readonlyToken, token).withPosition(position);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_value");
+    writer.writeObjectFieldIntro("type");
+    writer.writeString("dynamic");
+    writer.endObject();
+  }
+
+  @Override
   public String getDeltaType(final Environment environment) {
     return "DDynamic";
   }
@@ -64,20 +82,5 @@ public class TyNativeDynamic extends TySimpleNative implements DetailHasDeltaTyp
   @Override
   public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
     return new DynamicNullConstant(Token.WRAP("null")).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeDynamic(newBehavior, readonlyToken, token).withPosition(position);
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("native_value");
-    writer.writeObjectFieldIntro("type");
-    writer.writeString("dynamic");
-    writer.endObject();
   }
 }

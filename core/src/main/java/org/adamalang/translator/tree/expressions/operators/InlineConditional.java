@@ -28,14 +28,21 @@ public class InlineConditional extends Expression implements SupportsTwoPhaseTyp
   public final Expression trueValue;
   private WrapInstruction wrapInstruction;
 
-  /** ternary operator (https://en.wikipedia.org/wiki/%3F:)
+  /**
+   * ternary operator (https://en.wikipedia.org/wiki/%3F:)
    *
-   * @param condition     the condition to check
+   * @param condition the condition to check
    * @param questionToken the token for the ?
-   * @param trueValue     value when condition is true
-   * @param colonToken    the token for the :
-   * @param falseValue    value when condition is false */
-  public InlineConditional(final Expression condition, final Token questionToken, final Expression trueValue, final Token colonToken, final Expression falseValue) {
+   * @param trueValue value when condition is true
+   * @param colonToken the token for the :
+   * @param falseValue value when condition is false
+   */
+  public InlineConditional(
+      final Expression condition,
+      final Token questionToken,
+      final Expression trueValue,
+      final Token colonToken,
+      final Expression falseValue) {
     this.condition = condition;
     this.questionToken = questionToken;
     this.trueValue = trueValue;
@@ -57,17 +64,37 @@ public class InlineConditional extends Expression implements SupportsTwoPhaseTyp
   }
 
   @Override
-  public TyType estimateType(final Environment environment) {
-    return typingReal(environment, null, false);
-  }
-
-  @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     return typingReal(environment, suggestion, true);
   }
 
-  protected TyType typingReal(final Environment environment, final TyType suggestion, final boolean commit) {
-    final var conditionType = condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+  @Override
+  public void writeJava(final StringBuilder sb, final Environment environment) {
+    sb.append("(");
+    condition.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+    sb.append(" ? ");
+    if (wrapInstruction == WrapInstruction.WrapAWithMaybe) {
+      sb.append("new NtMaybe<>(");
+      trueValue.writeJava(sb, environment);
+      sb.append(")");
+    } else {
+      trueValue.writeJava(sb, environment);
+    }
+    sb.append(" : ");
+    if (wrapInstruction == WrapInstruction.WrapBWithMaybe) {
+      sb.append("new NtMaybe<>(");
+      falseValue.writeJava(sb, environment);
+      sb.append(")");
+    } else {
+      falseValue.writeJava(sb, environment);
+    }
+    sb.append(")");
+  }
+
+  protected TyType typingReal(
+      final Environment environment, final TyType suggestion, final boolean commit) {
+    final var conditionType =
+        condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     environment.rules.IsBoolean(conditionType, false);
     TyType trueType;
     TyType falseType;
@@ -97,6 +124,11 @@ public class InlineConditional extends Expression implements SupportsTwoPhaseTyp
   }
 
   @Override
+  public TyType estimateType(final Environment environment) {
+    return typingReal(environment, null, false);
+  }
+
+  @Override
   public void upgradeType(final Environment environment, final TyType newType) {
     cachedType = newType;
     if (trueValue instanceof SupportsTwoPhaseTyping) {
@@ -105,28 +137,5 @@ public class InlineConditional extends Expression implements SupportsTwoPhaseTyp
     if (falseValue instanceof SupportsTwoPhaseTyping) {
       ((SupportsTwoPhaseTyping) falseValue).upgradeType(environment, newType);
     }
-  }
-
-  @Override
-  public void writeJava(final StringBuilder sb, final Environment environment) {
-    sb.append("(");
-    condition.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
-    sb.append(" ? ");
-    if (wrapInstruction == WrapInstruction.WrapAWithMaybe) {
-      sb.append("new NtMaybe<>(");
-      trueValue.writeJava(sb, environment);
-      sb.append(")");
-    } else {
-      trueValue.writeJava(sb, environment);
-    }
-    sb.append(" : ");
-    if (wrapInstruction == WrapInstruction.WrapBWithMaybe) {
-      sb.append("new NtMaybe<>(");
-      falseValue.writeJava(sb, environment);
-      sb.append(")");
-    } else {
-      falseValue.writeJava(sb, environment);
-    }
-    sb.append(")");
   }
 }

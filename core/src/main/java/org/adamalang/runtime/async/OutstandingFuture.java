@@ -11,22 +11,25 @@ package org.adamalang.runtime.async;
 
 import org.adamalang.runtime.natives.NtClient;
 
-/** This represents a future which has been vended to the runtime.
+/**
+ * This represents a future which has been vended to the runtime.
  *
- * A future which has been vended, and it is assigned a unique id. Given how the
- * async element works within Adama, it is vital that order of futures vended be
- * stable. */
+ * <p>A future which has been vended, and it is assigned a unique id. Given how the async element
+ * works within Adama, it is vital that order of futures vended be stable.
+ */
 public class OutstandingFuture {
   public final String channel;
-  private boolean claimed;
   public final int id;
-  public String json;
-  private boolean taken;
   public final NtClient who;
+  public String json;
+  private boolean claimed;
+  private boolean taken;
 
-  /** @param id  the unique id of the future (for client's reference)
+  /**
+   * @param id the unique id of the future (for client's reference)
    * @param channel the channel for the future to wait on
-   * @param who     the client we are waiting on */
+   * @param who the client we are waiting on
+   */
   public OutstandingFuture(final int id, final String channel, final NtClient who) {
     this.id = id;
     this.channel = channel;
@@ -51,8 +54,7 @@ public class OutstandingFuture {
     taken = true;
   }
 
-  /** does this future match the given channel and person; that is, can this
-   * future pair up */
+  /** does this future match the given channel and person; that is, can this future pair up */
   public boolean test(final String testChannel, final NtClient testClientId) {
     if (channel.equals(testChannel) && who.equals(testClientId) && !claimed) {
       claimed = true;

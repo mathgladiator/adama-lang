@@ -16,19 +16,26 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMessageBase;
 
-/** a task is a wrapper around a message, it is used to track the lifecycle of
- * the message and delay executing code from the living document. */
+/**
+ * a task is a wrapper around a message, it is used to track the lifecycle of the message and delay
+ * executing code from the living document.
+ */
 public class AsyncTask {
-  private boolean aborted;
-  private AsyncAction action;
   public final String channel;
   public final Object message;
   public final int messageId;
   public final long timestamp;
   public final NtClient who;
+  private boolean aborted;
+  private AsyncAction action;
 
   /** Construct the task around a message */
-  public AsyncTask(final int messageId, final NtClient who, final String channel, final long timestamp, final Object message) {
+  public AsyncTask(
+      final int messageId,
+      final NtClient who,
+      final String channel,
+      final long timestamp,
+      final Object message) {
     this.messageId = messageId;
     this.who = who;
     this.channel = channel;
@@ -75,8 +82,10 @@ public class AsyncTask {
     }
   }
 
-  /** associate code to run on this task. This is done within the generated code
-   * to invert the execution flow. */
+  /**
+   * associate code to run on this task. This is done within the generated code to invert the
+   * execution flow.
+   */
   public void setAction(final AsyncAction action) {
     this.action = action;
   }

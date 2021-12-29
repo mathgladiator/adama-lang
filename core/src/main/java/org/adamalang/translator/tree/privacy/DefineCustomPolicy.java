@@ -31,7 +31,13 @@ public class DefineCustomPolicy extends DocumentPosition {
   public final Token openParen;
   public final TyNativeBoolean policyType;
 
-  public DefineCustomPolicy(final Token definePolicy, final Token name, final Token openParen, final Token clientVar, final Token endParen, final Block code) {
+  public DefineCustomPolicy(
+      final Token definePolicy,
+      final Token name,
+      final Token openParen,
+      final Token clientVar,
+      final Token endParen,
+      final Block code) {
     this.definePolicy = definePolicy;
     this.name = name;
     this.openParen = openParen;
@@ -56,9 +62,17 @@ public class DefineCustomPolicy extends DocumentPosition {
   }
 
   public void typeCheck(final Environment environment) {
-    final var flow = code.typing(environment.scope().define(clientVar.text, clientType, true, clientType).setReturnType(policyType));
+    final var flow =
+        code.typing(
+            environment
+                .scope()
+                .define(clientVar.text, clientType, true, clientType)
+                .setReturnType(policyType));
     if (flow == ControlFlow.Open) {
-      environment.document.createError(this, String.format("Policy '%s' does not return in all cases", name.text), "PolicyDefine");
+      environment.document.createError(
+          this,
+          String.format("Policy '%s' does not return in all cases", name.text),
+          "PolicyDefine");
     }
   }
 }

@@ -32,33 +32,33 @@ import java.util.*;
 
 /** The central class for a living document (i.e. a tiny VM) */
 public abstract class LivingDocument implements RxParent {
-  protected int __assertionFailures = 0;
-  protected int __assertionTotal = 0;
+  public final DocumentMonitor __monitor;
+  public final LivingDocument __self;
   protected final RxInt32 __auto_future_id;
   protected final RxInt32 __auto_table_row_id;
   protected final RxBoolean __blocked;
-  private final TreeMap<NtClient, Integer> __clients;
-  protected int __code_cost;
   protected final RxInt32 __connection_id;
   protected final RxBoolean __constructed;
   protected final RxString __entropy;
   protected final OutstandingFutureTracker __futures;
-  protected int __goodwillBudget;
-  protected int __goodwillLimitOfBudget;
   protected final RxInt32 __message_id;
-  public final DocumentMonitor __monitor;
   protected final RxInt64 __next_time;
   protected final RxInt64 __last_expire_time;
-  private String __preemptedStateOnNextComputeBlocked = null;
   protected final ArrayList<AsyncTask> __queue;
-  protected Random __random;
-  public final LivingDocument __self;
   protected final RxInt32 __seq;
   protected final RxString __state;
   protected final RxInt64 __time;
-  protected ArrayList<Integer> __trace;
+  private final TreeMap<NtClient, Integer> __clients;
   private final HashMap<NtClient, ArrayList<PrivateView>> __trackedViews;
   private final HashMap<String, Long> __dedupe;
+  protected int __assertionFailures = 0;
+  protected int __assertionTotal = 0;
+  protected int __code_cost;
+  protected int __goodwillBudget;
+  protected int __goodwillLimitOfBudget;
+  protected Random __random;
+  protected ArrayList<Integer> __trace;
+  private String __preemptedStateOnNextComputeBlocked = null;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -93,21 +93,29 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** exposed: assert something as truth */
-  protected void __assert_truth(final boolean value, final int startLine, final int startPosition, final int endLine, final int endLinePosition) {
+  protected void __assert_truth(
+      final boolean value,
+      final int startLine,
+      final int startPosition,
+      final int endLine,
+      final int endLinePosition) {
     __assertionTotal++;
     if (!value) {
       __assertionFailures++;
       if (__monitor != null) {
-        __monitor.assertFailureAt(startLine, startPosition, endLine, endLinePosition, __assertionTotal, __assertionFailures);
+        __monitor.assertFailureAt(
+            startLine,
+            startPosition,
+            endLine,
+            endLinePosition,
+            __assertionTotal,
+            __assertionFailures);
       }
     }
   }
 
   /** code generate: get strings that are part of the document */
   public abstract Set<String> __get_intern_strings();
-
-  /** code generated: commit the tree, and push data into the given delta */
-  public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
 
   private LivingDocumentChange __commit_trailer(NtClient who, final String request) {
     final var forward = new JsonStreamWriter();
@@ -126,30 +134,24 @@ public abstract class LivingDocument implements RxParent {
     __queue.clear();
     __reset_future_queues();
 
-    __commit(null, forward,reverse);
+    __commit(null, forward, reverse);
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    DataService.RemoteDocumentUpdate update = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()));
+    DataService.RemoteDocumentUpdate update =
+        new DataService.RemoteDocumentUpdate(
+            __seq.get(),
+            who,
+            request,
+            forward.toString(),
+            reverse.toString(),
+            __state.has(),
+            (int) (__next_time.get() - __time.get()));
     return new LivingDocumentChange(update, broadcasts);
   }
 
   /** code generated: what happens when the document is constructed */
   protected abstract void __construct_intern(NtClient who, NtMessageBase message);
-
-  /** code generated: create a private view for the given person */
-  public abstract PrivateView __createPrivateView(NtClient __who, Perspective __perspective);
-
-  public PrivateView __createView(final NtClient __who, final Perspective perspective) {
-    final var view = __createPrivateView(__who, perspective);
-    var viewsForWho = __trackedViews.get(__who);
-    if (viewsForWho == null) {
-      viewsForWho = new ArrayList<>();
-      __trackedViews.put(__who, viewsForWho);
-    }
-    viewsForWho.add(view);
-    return view;
-  }
 
   public void __usurp(LivingDocument usurpingDocument) {
     for (Map.Entry<NtClient, ArrayList<PrivateView>> existing : __trackedViews.entrySet()) {
@@ -162,10 +164,25 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
+  public PrivateView __createView(final NtClient __who, final Perspective perspective) {
+    final var view = __createPrivateView(__who, perspective);
+    var viewsForWho = __trackedViews.get(__who);
+    if (viewsForWho == null) {
+      viewsForWho = new ArrayList<>();
+      __trackedViews.put(__who, viewsForWho);
+    }
+    viewsForWho.add(view);
+    return view;
+  }
+
+  /** code generated: create a private view for the given person */
+  public abstract PrivateView __createPrivateView(NtClient __who, Perspective __perspective);
+
   /** internal: we compute per client */
   private synchronized ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastList() {
     final var startedTime = System.nanoTime();
-    // note: this estimate is assuming that consumers are 1:1 correspondence, growth happens when that is violated
+    // note: this estimate is assuming that consumers are 1:1 correspondence, growth happens when
+    // that is violated
     ArrayList<LivingDocumentChange.Broadcast> broadcasts = new ArrayList<>(__trackedViews.size());
     final var itTrackedViews = __trackedViews.entrySet().iterator();
     while (itTrackedViews.hasNext()) {
@@ -252,7 +269,9 @@ public abstract class LivingDocument implements RxParent {
   /** garbage collect the views for the given client; return the number of views for that user */
   public int __garbageCollectViews(final NtClient __who) {
     final var views = __trackedViews.get(__who);
-    if (views == null) { return 0; }
+    if (views == null) {
+      return 0;
+    }
     var count = 0;
     final var it = views.iterator();
     while (it.hasNext()) {
@@ -300,7 +319,7 @@ public abstract class LivingDocument implements RxParent {
   public List<NtClient> __reconcileClientsToForceDisconnect() {
     ArrayList<NtClient> clientsToDisconnect = new ArrayList<>();
     for (NtClient connected : __clients.keySet()) {
-      if(!__trackedViews.containsKey(connected)) {
+      if (!__trackedViews.containsKey(connected)) {
         clientsToDisconnect.add(connected);
       }
     }
@@ -316,7 +335,8 @@ public abstract class LivingDocument implements RxParent {
   public abstract String[] __getTests();
 
   /** exposed: this allows the child object to see if it can still do stuff */
-  protected boolean __goodwill(final int startLine, final int startPosition, final int endLine, final int endLinePosition) {
+  protected boolean __goodwill(
+      final int startLine, final int startPosition, final int endLine, final int endLinePosition) {
     if (__goodwillBudget > 0) {
       __goodwillBudget--;
       if (__goodwillBudget == 0) {
@@ -329,6 +349,9 @@ public abstract class LivingDocument implements RxParent {
     }
     return true;
   }
+
+  /** code generated: revert the tree, all changes revert back */
+  public abstract void __revert();
 
   protected void __hydrateDeduper(final JsonStreamReader reader) {
     if (reader.startObject()) {
@@ -412,6 +435,9 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
+  /** parse the message for the channel, and cache the result */
+  protected abstract Object __parse_message2(String channel, JsonStreamReader reader);
+
   /** code generated: insert data */
   public abstract void __insert(JsonStreamReader __reader);
 
@@ -444,16 +470,18 @@ public abstract class LivingDocument implements RxParent {
 
   /** code generated: allow the document to accept/reject the client */
   public abstract boolean __onConnected(NtClient clientValue);
+
   /** code generated: let the document know of a disconnected client */
   public abstract void __onDisconnected(NtClient clientValue);
+
   /** code generate: let the document know an asset was uploaded */
   public abstract void __onAssetAttached(NtClient __cvalue, NtAsset __asset);
+
   /** code generate: can the client even attach any data */
   public abstract boolean __onCanAssetAttached(NtClient __cvalue);
+
   /** code generated: convert the reader into a constructor arg */
   protected abstract NtMessageBase __parse_construct_arg(JsonStreamReader reader);
-  /** parse the message for the channel, and cache the result */
-  protected abstract Object __parse_message2(String channel, JsonStreamReader reader);
 
   /** exposed: preempty the state machine */
   protected void __preemptStateMachine(final String next) {
@@ -462,15 +490,17 @@ public abstract class LivingDocument implements RxParent {
 
   /** artifact: from RxParent */
   @Override
-  public void __raiseDirty() {
-  }
+  public void __raiseDirty() {}
 
   /** the code will vomit up a signal to destroy itself. This must be caught at a higher level. */
   protected void __destroyDocument() {
     throw new PerformDocumentDeleteException();
   }
 
-  /** this code will vomit up a signal to rewind to a prior state. This must be caught at a higher level */
+  /**
+   * this code will vomit up a signal to rewind to a prior state. This must be caught at a higher
+   * level
+   */
   protected void __rewindDocument(int seq) {
     // restore the document state
     __revert();
@@ -479,7 +509,9 @@ public abstract class LivingDocument implements RxParent {
 
   /** exposed: random number between 0 and n exclusive */
   protected int __randomBoundInt(final int n) {
-    if (n < 0) { return 0; }
+    if (n < 0) {
+      return 0;
+    }
     return __random.nextInt(n);
   }
 
@@ -505,13 +537,13 @@ public abstract class LivingDocument implements RxParent {
 
   /** code generated: reset internal queues */
   protected abstract void __reset_future_queues();
-  /** code generated: revert the tree, all changes revert back */
-  public abstract void __revert();
+
   /** code generated: route the given message */
   protected abstract void __route(AsyncTask task);
 
-  /** available to the test runner... me thinks this can be done... mucho better
-   * (requires precommit) */
+  /**
+   * available to the test runner... me thinks this can be done... mucho better (requires precommit)
+   */
   public String __run_test(final TestReportBuilder report, final String testName) {
     __test(report, testName);
     final var writer = new JsonStreamWriter();
@@ -523,6 +555,9 @@ public abstract class LivingDocument implements RxParent {
 
   /** code generated: run the test for the given test name */
   public abstract void __test(TestReportBuilder report, String testName);
+
+  /** code generated: commit the tree, and push data into the given delta */
+  public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
 
   public long __memory() {
     return 384;
@@ -626,12 +661,17 @@ public abstract class LivingDocument implements RxParent {
             arg = __parse_construct_arg(reader);
             break;
           default:
-            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
+            throw new ErrorCodeException(
+                ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
         }
       }
     }
-    if (command == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND); }
-    if (timestamp == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP); }
+    if (command == null) {
+      throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND);
+    }
+    if (timestamp == null) {
+      throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP);
+    }
     __time.set(timestamp);
     switch (command) {
       case "invalidate":
@@ -641,38 +681,65 @@ public abstract class LivingDocument implements RxParent {
           return __transaction_invalidate_body(who, requestJson);
         }
       case "construct":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
-        if (__constructed.get()) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED); }
-        if (arg == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG); }
+        if (who == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+        }
+        if (__constructed.get()) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED);
+        }
+        if (arg == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG);
+        }
         return __transaction_construct(requestJson, who, arg, entropy);
       case "connect":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
+        if (who == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+        }
         return __transaction_connect(requestJson, who);
       case "disconnect":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
+        if (who == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+        }
         return __transaction_disconnect(requestJson, who);
       case "attach":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
-        if (asset == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ASSET); }
+        if (who == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+        }
+        if (asset == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ASSET);
+        }
         return __transaction_attach(requestJson, who, asset);
       case "send":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
-        if (channel == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL); }
-        if (message == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE); }
+        if (who == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+        }
+        if (channel == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL);
+        }
+        if (message == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE);
+        }
         return __transaction_send(requestJson, who, marker, channel, timestamp, message);
       case "expire":
-        if (limit == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT); }
+        if (limit == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT);
+        }
         return __transaction_expire(requestJson, limit);
       case "apply":
-        if (who == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO); }
-        if (patch == null) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PATCH); }
+        if (who == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+        }
+        if (patch == null) {
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PATCH);
+        }
         return __transaction_apply_patch(requestJson, who, patch);
     }
     throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND);
   }
 
   /** transaction: a person connects to document */
-  private LivingDocumentChange __transaction_attach(final String request, final NtClient who, final NtAsset asset) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_attach(
+      final String request, final NtClient who, final NtAsset asset) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -680,13 +747,17 @@ public abstract class LivingDocument implements RxParent {
     }
     try {
       __random = new Random(Long.parseLong(__entropy.get()));
-      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED); }
+      if (!__clients.containsKey(who)) {
+        throw new ErrorCodeException(
+            ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED);
+      }
 
       // execute the attachment
       __onAssetAttached(who, asset);
       __seq.bumpUpPre();
 
-      // this has no undo as assets will be stored until a future garbage collector comes in and audits the state of the document
+      // this has no undo as assets will be stored until a future garbage collector comes in and
+      // audits the state of the document
       final var reverse = new JsonStreamWriter();
       reverse.beginObject();
       reverse.endObject();
@@ -696,7 +767,9 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
 
-      final var update = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+      final var update =
+          new DataService.RemoteDocumentUpdate(
+              __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
       exception = false;
       return new LivingDocumentChange(update, null);
     } finally {
@@ -707,7 +780,8 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: a person connects to document */
-  private LivingDocumentChange __transaction_connect(final String request, final NtClient who) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_connect(final String request, final NtClient who)
+      throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -715,7 +789,9 @@ public abstract class LivingDocument implements RxParent {
     }
     try {
       __random = new Random(Long.parseLong(__entropy.get()));
-      if (__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED); }
+      if (__clients.containsKey(who)) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED);
+      }
       if (__onConnected(who)) {
         // user was accepted, so let's commit it
         // generate a connection id for the user
@@ -742,7 +818,9 @@ public abstract class LivingDocument implements RxParent {
         reverse.writeNull();
         reverse.endObject();
         reverse.endObject();
-        final var result = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+        final var result =
+            new DataService.RemoteDocumentUpdate(
+                __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
         exception = false;
         return new LivingDocumentChange(result, null);
       } else {
@@ -758,7 +836,9 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: construct the document */
-  private LivingDocumentChange __transaction_construct(final String request, final NtClient who, final NtMessageBase arg, final String entropy) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_construct(
+      final String request, final NtClient who, final NtMessageBase arg, final String entropy)
+      throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -769,7 +849,9 @@ public abstract class LivingDocument implements RxParent {
         __entropy.set(entropy);
       }
       __random = new Random(Long.parseLong(__entropy.get()));
-      if (__constructed.get()) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED); }
+      if (__constructed.get()) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED);
+      }
       __construct_intern(who, arg);
       __constructed.set(true);
       final var forward = new JsonStreamWriter();
@@ -779,7 +861,10 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);;
+      final var result =
+          new DataService.RemoteDocumentUpdate(
+              __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+      ;
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -790,7 +875,8 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: a person disconnects from the document */
-  private LivingDocumentChange __transaction_disconnect(final String request, final NtClient who) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_disconnect(final String request, final NtClient who)
+      throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -798,7 +884,10 @@ public abstract class LivingDocument implements RxParent {
     }
     try {
       __random = new Random(Long.parseLong(__entropy.get()));
-      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_DISCONNECT_DUE_TO_NOT_CONNECTED); }
+      if (!__clients.containsKey(who)) {
+        throw new ErrorCodeException(
+            ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_DISCONNECT_DUE_TO_NOT_CONNECTED);
+      }
       // disconnect them
       __onDisconnected(who);
       // stop tracking them
@@ -821,7 +910,10 @@ public abstract class LivingDocument implements RxParent {
       reverse.writeNtClient(who);
       reverse.endObject();
       reverse.endObject();
-      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);;
+      final var result =
+          new DataService.RemoteDocumentUpdate(
+              __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+      ;
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -832,7 +924,8 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: apply a data patch to the document */
-  private LivingDocumentChange __transaction_apply_patch(final String request, final NtClient who, String patch) {
+  private LivingDocumentChange __transaction_apply_patch(
+      final String request, final NtClient who, String patch) {
     __patch(new JsonStreamReader(patch));
     return __commit_trailer(who, request);
   }
@@ -885,7 +978,10 @@ public abstract class LivingDocument implements RxParent {
         __commit(null, forward, reverse);
         forward.endObject();
         reverse.endObject();
-        return new LivingDocumentChange(new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), false, 0), broadcasts);
+        return new LivingDocumentChange(
+            new DataService.RemoteDocumentUpdate(
+                __seq.get(), who, request, forward.toString(), reverse.toString(), false, 0),
+            broadcasts);
       }
     } catch (final RetryProgressException rpe) {
       __futures.restore();
@@ -909,12 +1005,16 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      return new LivingDocumentChange(new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0), null);
+      return new LivingDocumentChange(
+          new DataService.RemoteDocumentUpdate(
+              __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0),
+          null);
     }
   }
 
   /** transaction: an invalidation is happening on the document (use monitor) */
-  private LivingDocumentChange __transaction_invalidate_monitored(final NtClient who, final String request) {
+  private LivingDocumentChange __transaction_invalidate_monitored(
+      final NtClient who, final String request) {
     var exception = true;
     final var startedTime = System.nanoTime();
     __monitor.push("TransactionInvalidate");
@@ -928,7 +1028,8 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
-  private LivingDocumentChange __transaction_expire(final String request, final long limit) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_expire(final String request, final long limit)
+      throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -936,7 +1037,8 @@ public abstract class LivingDocument implements RxParent {
     }
     try {
       if (limit < 0) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_EXPIRE_LIMIT_MUST_BE_POSITIVE);
+        throw new ErrorCodeException(
+            ErrorCodes.LIVING_DOCUMENT_TRANSACTION_EXPIRE_LIMIT_MUST_BE_POSITIVE);
       }
       // create the delta
       final var forward = new JsonStreamWriter();
@@ -969,7 +1071,16 @@ public abstract class LivingDocument implements RxParent {
       forward.endObject();
       reverse.endObject();
 
-      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), NtClient.NO_ONE, request, forward.toString(), reverse.toString(), true, 0);;
+      final var result =
+          new DataService.RemoteDocumentUpdate(
+              __seq.get(),
+              NtClient.NO_ONE,
+              request,
+              forward.toString(),
+              reverse.toString(),
+              true,
+              0);
+      ;
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -980,7 +1091,14 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: a person is sending the document a message */
-  private LivingDocumentChange __transaction_send(final String request, final NtClient who, final String marker, final String channel, final long timestamp, final Object message) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send(
+      final String request,
+      final NtClient who,
+      final String marker,
+      final String channel,
+      final long timestamp,
+      final Object message)
+      throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -996,7 +1114,10 @@ public abstract class LivingDocument implements RxParent {
       }
       __random = new Random(Long.parseLong(__entropy.get()));
       // they must be connected
-      if (!__clients.containsKey(who)) { throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED); }
+      if (!__clients.containsKey(who)) {
+        throw new ErrorCodeException(
+            ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
+      }
       // create the delta
       final var forward = new JsonStreamWriter();
       final var reverse = new JsonStreamWriter();
@@ -1037,7 +1158,10 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);;
+      final var result =
+          new DataService.RemoteDocumentUpdate(
+              __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+      ;
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -1053,10 +1177,12 @@ public abstract class LivingDocument implements RxParent {
     __next_time.set((long) (__time.get() + timeToTransitionSeconds * 1000.0));
   }
 
-  /** get the current number of assertion failures, then return the prior number
-   * of assertion failures.
+  /**
+   * get the current number of assertion failures, then return the prior number of assertion
+   * failures.
    *
-   * @return the number of assertion failures */
+   * @return the number of assertion failures
+   */
   @Deprecated
   public AssertionStats getAndResetAssertions() {
     final var stats = new AssertionStats(__assertionTotal, __assertionFailures);

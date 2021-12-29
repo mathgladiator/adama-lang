@@ -15,13 +15,14 @@ import org.adamalang.translator.tree.statements.Block;
 
 import java.util.function.Consumer;
 
-/** A document is in a variety of states, and as such we need code to run in
- * each state; this is a state transition that maps which code to run in a
- * specific state. */
+/**
+ * A document is in a variety of states, and as such we need code to run in each state; this is a
+ * state transition that maps which code to run in a specific state.
+ */
 public class DefineStateTransition extends Definition {
-  public Block code;
   public final String name;
   public final Token nameToken;
+  public Block code;
 
   public DefineStateTransition(final Token nameToken, final Block code) {
     this.nameToken = nameToken;

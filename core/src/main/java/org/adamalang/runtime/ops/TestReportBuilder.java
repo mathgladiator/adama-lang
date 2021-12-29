@@ -16,9 +16,9 @@ import java.util.HashMap;
 /** a fun way to build test reports */
 public class TestReportBuilder {
   private final HashMap<String, Object> dumps;
-  private int failures;
   private final StringBuilder report;
   private final long started;
+  private int failures;
 
   public TestReportBuilder() {
     report = new StringBuilder();
@@ -41,7 +41,10 @@ public class TestReportBuilder {
 
   public void end(final AssertionStats stats) {
     if (stats.total > 0) {
-      report.append(" = ").append(Math.round((stats.total - stats.failures) * 1000.0 / stats.total) / 10.0).append("%");
+      report
+          .append(" = ")
+          .append(Math.round((stats.total - stats.failures) * 1000.0 / stats.total) / 10.0)
+          .append("%");
       if (stats.failures > 0) {
         report.append(" (HAS FAILURES)");
       }

@@ -15,7 +15,10 @@ import java.util.ArrayList;
 
 // this is.. SUPER strange, and this exists be life is strange
 public class TyNativeFunctionInternalFieldReplacement extends TyNativeFunctional {
-  public TyNativeFunctionInternalFieldReplacement(final String name, final ArrayList<FunctionOverloadInstance> overloads, final FunctionStyleJava style) {
+  public TyNativeFunctionInternalFieldReplacement(
+      final String name,
+      final ArrayList<FunctionOverloadInstance> overloads,
+      final FunctionStyleJava style) {
     super(name, overloads, style);
   }
 }

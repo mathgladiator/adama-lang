@@ -21,12 +21,13 @@ public class ReactiveIndexInvalidatorTests {
     final var unknowns = new TreeSet<MockRecord>();
     final var index = new ReactiveIndex<>(unknowns);
     unknowns.add(MockRecord.make(123));
-    final ReactiveIndexInvalidator<MockRecord> inv = new ReactiveIndexInvalidator<>(index, MockRecord.make(123)) {
-      @Override
-      public int pullValue() {
-        return 42;
-      }
-    };
+    final ReactiveIndexInvalidator<MockRecord> inv =
+        new ReactiveIndexInvalidator<>(index, MockRecord.make(123)) {
+          @Override
+          public int pullValue() {
+            return 42;
+          }
+        };
     inv.reindex();
     unknowns.clear();
     Assert.assertEquals(0, unknowns.size());
@@ -41,12 +42,13 @@ public class ReactiveIndexInvalidatorTests {
     final var unknowns = new TreeSet<MockRecord>();
     final var index = new ReactiveIndex<>(unknowns);
     unknowns.add(MockRecord.make(123));
-    final ReactiveIndexInvalidator<MockRecord> inv = new ReactiveIndexInvalidator<>(index, MockRecord.make(123)) {
-      @Override
-      public int pullValue() {
-        return 42;
-      }
-    };
+    final ReactiveIndexInvalidator<MockRecord> inv =
+        new ReactiveIndexInvalidator<>(index, MockRecord.make(123)) {
+          @Override
+          public int pullValue() {
+            return 42;
+          }
+        };
     inv.reindex();
     unknowns.clear();
     inv.deindex();
@@ -58,12 +60,13 @@ public class ReactiveIndexInvalidatorTests {
     final var unknowns = new TreeSet<MockRecord>();
     final var index = new ReactiveIndex<>(unknowns);
     unknowns.add(MockRecord.make(123));
-    final ReactiveIndexInvalidator<MockRecord> inv = new ReactiveIndexInvalidator<>(index, MockRecord.make(123)) {
-      @Override
-      public int pullValue() {
-        return 42;
-      }
-    };
+    final ReactiveIndexInvalidator<MockRecord> inv =
+        new ReactiveIndexInvalidator<>(index, MockRecord.make(123)) {
+          @Override
+          public int pullValue() {
+            return 42;
+          }
+        };
     Assert.assertEquals(1, unknowns.size());
     inv.deindex();
     Assert.assertEquals(0, unknowns.size());

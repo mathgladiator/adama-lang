@@ -24,7 +24,8 @@ public class Parentheses extends Expression implements SupportsTwoPhaseTyping {
   public final Token rightParentheses;
 
   /** @param expression the expression to wrap */
-  public Parentheses(final Token leftParentheses, final Expression expression, final Token rightParentheses) {
+  public Parentheses(
+      final Token leftParentheses, final Expression expression, final Token rightParentheses) {
     this.leftParentheses = leftParentheses;
     this.expression = expression;
     this.rightParentheses = rightParentheses;
@@ -41,25 +42,8 @@ public class Parentheses extends Expression implements SupportsTwoPhaseTyping {
   }
 
   @Override
-  public TyType estimateType(final Environment environment) {
-    if (expression instanceof SupportsTwoPhaseTyping) {
-      return ((SupportsTwoPhaseTyping) expression).estimateType(environment);
-    } else {
-      return expression.typing(environment, null);
-    }
-  }
-
-  @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     return expression.typing(environment, suggestion);
-  }
-
-  @Override
-  public void upgradeType(final Environment environment, final TyType newType) {
-    if (expression instanceof SupportsTwoPhaseTyping) {
-      ((SupportsTwoPhaseTyping) expression).upgradeType(environment, newType);
-    }
-    cachedType = newType;
   }
 
   @Override
@@ -72,5 +56,22 @@ public class Parentheses extends Expression implements SupportsTwoPhaseTyping {
       expression.writeJava(sb, environment);
       sb.append(")");
     }
+  }
+
+  @Override
+  public TyType estimateType(final Environment environment) {
+    if (expression instanceof SupportsTwoPhaseTyping) {
+      return ((SupportsTwoPhaseTyping) expression).estimateType(environment);
+    } else {
+      return expression.typing(environment, null);
+    }
+  }
+
+  @Override
+  public void upgradeType(final Environment environment, final TyType newType) {
+    if (expression instanceof SupportsTwoPhaseTyping) {
+      ((SupportsTwoPhaseTyping) expression).upgradeType(environment, newType);
+    }
+    cachedType = newType;
   }
 }

@@ -36,19 +36,23 @@ public class Rules {
   }
 
   /** FROM: RuleSetAssignment */
-  public CanAssignResult CanAssignWithAdd(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
+  public CanAssignResult CanAssignWithAdd(
+      final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetAssignment.CanAssignWithAdd(environment, tyTypeA, tyTypeB, silent);
   }
 
-  public CanAssignResult CanAssignWithMult(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
+  public CanAssignResult CanAssignWithMult(
+      final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetAssignment.CanAssignWithMult(environment, tyTypeA, tyTypeB, silent);
   }
 
-  public CanAssignResult CanAssignWithSet(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
+  public CanAssignResult CanAssignWithSet(
+      final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetAssignment.CanAssignWithSet(environment, tyTypeA, tyTypeB, silent);
   }
 
-  public CanAssignResult CanAssignWithSubtract(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
+  public CanAssignResult CanAssignWithSubtract(
+      final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetAssignment.CanAssignWithSubtract(environment, tyTypeA, tyTypeB, silent);
   }
 
@@ -77,26 +81,32 @@ public class Rules {
   }
 
   /** FROM: RuleSetMultiply */
-  public CanMathResult CanMultiply(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
+  public CanMathResult CanMultiply(
+      final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetMultiply.CanMultiply(environment, tyTypeA, tyTypeB, silent);
   }
 
   /** FROM: RuleSetStructures */
-  public boolean CanStructureAProjectIntoStructureB(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetStructures.CanStructureAProjectIntoStructureB(environment, tyTypeA, tyTypeB, silent);
+  public boolean CanStructureAProjectIntoStructureB(
+      final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
+    return RuleSetStructures.CanStructureAProjectIntoStructureB(
+        environment, tyTypeA, tyTypeB, silent);
   }
 
   /** FROM: RuleSetSubtract */
-  public CanMathResult CanSubstract(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
+  public CanMathResult CanSubstract(
+      final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetSubtract.CanSubstract(environment, tyTypeA, tyTypeB, silent);
   }
 
   /** FROM: RuleSetEquality */
-  public CanTestEqualityResult CanTestEquality(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
+  public CanTestEqualityResult CanTestEquality(
+      final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetEquality.CanTestEquality(environment, tyTypeA, tyTypeB, silent);
   }
 
-  public boolean CanTypeAStoreTypeB(final TyType tyTypeA, final TyType tyTypeB, final StorageTweak result, final boolean silent) {
+  public boolean CanTypeAStoreTypeB(
+      final TyType tyTypeA, final TyType tyTypeB, final StorageTweak result, final boolean silent) {
     return RuleSetAssignment.CanTypeAStoreTypeB(environment, tyTypeA, tyTypeB, result, silent);
   }
 
@@ -115,17 +125,20 @@ public class Rules {
   }
 
   /** FROM: RuleSetEnums */
-  public IsEnum FindEnumType(final String search, final DocumentPosition position, final boolean silent) {
+  public IsEnum FindEnumType(
+      final String search, final DocumentPosition position, final boolean silent) {
     return RuleSetEnums.FindEnumType(environment, search, position, silent);
   }
 
   /** FROM: RuleSetMessages */
-  public TyNativeMessage FindMessageStructure(final String search, final DocumentPosition position, final boolean silent) {
+  public TyNativeMessage FindMessageStructure(
+      final String search, final DocumentPosition position, final boolean silent) {
     return RuleSetMessages.FindMessageStructure(environment, search, position, silent);
   }
 
   /** FROM: RuleSetStateMachine */
-  public DefineStateTransition FindStateMachineStep(final String search, final DocumentPosition position, final boolean silent) {
+  public DefineStateTransition FindStateMachineStep(
+      final String search, final DocumentPosition position, final boolean silent) {
     return RuleSetStateMachine.FindStateMachineStep(environment, search, position, silent);
   }
 
@@ -133,7 +146,8 @@ public class Rules {
     return RuleSetCommon.GetMaxType(environment, tyTypeA, tyTypeB, silent);
   }
 
-  public WrapInstruction GetMaxTypeBasedWrappingInstruction(final TyType tyTypeA, final TyType tyTypeB) {
+  public WrapInstruction GetMaxTypeBasedWrappingInstruction(
+      final TyType tyTypeA, final TyType tyTypeB) {
     return RuleSetCommon.GetMaxTypeBasedWrappingInstruction(environment, tyTypeA, tyTypeB);
   }
 
@@ -150,7 +164,8 @@ public class Rules {
   }
 
   /** FROM: RuleSetMath */
-  public TyType InventMathType(final TyType tyTypeA, final TyType tyTypeB, final CanMathResult result) {
+  public TyType InventMathType(
+      final TyType tyTypeA, final TyType tyTypeB, final CanMathResult result) {
     return RuleSetMath.InventMathType(environment, tyTypeA, tyTypeB, result);
   }
 

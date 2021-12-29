@@ -27,20 +27,23 @@ import java.util.function.Consumer;
 
 /** field/method look up ($e.field) */
 public class FieldLookup extends Expression {
-  private boolean addGet;
-  private TyType aggregateType;
   public final Token dotToken;
   public final Expression expression;
   public final String fieldName;
   public final Token fieldNameToken;
+  private boolean addGet;
+  private TyType aggregateType;
   private boolean isGlobalObject;
   private boolean makeReactiveList;
   private boolean onlyExpression;
   private String overrideFieldName;
 
-  /** @param expression the expression to evaluate
-   * @param fieldNameToken the field to look up */
-  public FieldLookup(final Expression expression, final Token dotToken, final Token fieldNameToken) {
+  /**
+   * @param expression the expression to evaluate
+   * @param fieldNameToken the field to look up
+   */
+  public FieldLookup(
+      final Expression expression, final Token dotToken, final Token fieldNameToken) {
     this.expression = expression;
     this.dotToken = dotToken;
     this.fieldNameToken = fieldNameToken;
@@ -70,29 +73,44 @@ public class FieldLookup extends Expression {
         isGlobalObject = true;
         final var func = ((TyNativeGlobalObject) eType).lookupMethod(fieldName, environment);
         if (func == null) {
-          environment.document.createError(this, String.format("Global '%s' lacks '%s'", ((TyNativeGlobalObject) eType).globalName, fieldName), "GlobalLookup");
+          environment.document.createError(
+              this,
+              String.format(
+                  "Global '%s' lacks '%s'", ((TyNativeGlobalObject) eType).globalName, fieldName),
+              "GlobalLookup");
           return null;
         }
       }
       if (eType instanceof TyNativeList) {
-        final var elementType = environment.rules.ResolvePtr(((TyNativeList) eType).getEmbeddedType(environment), false);
+        final var elementType =
+            environment.rules.ResolvePtr(
+                ((TyNativeList) eType).getEmbeddedType(environment), false);
         if (elementType != null && elementType instanceof TyReactiveRecord) {
           final var fd = ((TyReactiveRecord) elementType).storage.fields.get(fieldName);
           if (fd != null) {
             aggregateType = fd.type;
             makeReactiveList = true;
-            if (aggregateType instanceof DetailComputeRequiresGet && environment.state.isContextComputation()) {
+            if (aggregateType instanceof DetailComputeRequiresGet
+                && environment.state.isContextComputation()) {
               addGet = true;
               aggregateType = ((DetailComputeRequiresGet) aggregateType).typeAfterGet(environment);
             }
-            return new TyNativeList(TypeBehavior.ReadWriteWithSetGet, null, null, new TokenizedItem<>(aggregateType.makeCopyWithNewPosition(this, aggregateType.behavior))).withPosition(this);
+            return new TyNativeList(
+                    TypeBehavior.ReadWriteWithSetGet,
+                    null,
+                    null,
+                    new TokenizedItem<>(
+                        aggregateType.makeCopyWithNewPosition(this, aggregateType.behavior)))
+                .withPosition(this);
           }
         }
       }
       if (eType instanceof DetailTypeHasMethods) {
         final var functional = ((DetailTypeHasMethods) eType).lookupMethod(fieldName, environment);
         if (functional != null) {
-          onlyExpression = functional instanceof TyNativeAggregateFunctional || functional.style.useOnlyExpressionInLookup;
+          onlyExpression =
+              functional instanceof TyNativeAggregateFunctional
+                  || functional.style.useOnlyExpressionInLookup;
           if (functional instanceof TyNativeFunctionInternalFieldReplacement) {
             overrideFieldName = functional.name;
           }
@@ -100,15 +118,20 @@ public class FieldLookup extends Expression {
         }
       }
       if (eType instanceof IsStructure) {
-        if (!environment.state.isContextComputation() && eType.behavior == TypeBehavior.ReadOnlyNativeValue) {
-          environment.document.createError(this, String.format("The field '%s' is on a readonly message", fieldName), "FieldLookup");
+        if (!environment.state.isContextComputation()
+            && eType.behavior == TypeBehavior.ReadOnlyNativeValue) {
+          environment.document.createError(
+              this,
+              String.format("The field '%s' is on a readonly message", fieldName),
+              "FieldLookup");
         }
         final var hrs = (IsStructure) eType;
         final var fd = hrs.storage().fields.get(fieldName);
         if (fd != null) {
           final var actualType = environment.rules.Resolve(fd.type, false);
           if (actualType != null) {
-            if (actualType instanceof DetailComputeRequiresGet && environment.state.isContextComputation()) {
+            if (actualType instanceof DetailComputeRequiresGet
+                && environment.state.isContextComputation()) {
               addGet = true;
               return ((DetailComputeRequiresGet) actualType).typeAfterGet(environment);
             } else {
@@ -117,7 +140,10 @@ public class FieldLookup extends Expression {
           }
         }
       }
-      environment.document.createError(this, String.format("Record '%s' lacks field '%s'", eType.getAdamaType(), fieldName), "FieldLookup");
+      environment.document.createError(
+          this,
+          String.format("Record '%s' lacks field '%s'", eType.getAdamaType(), fieldName),
+          "FieldLookup");
     }
     return null;
   }
@@ -126,7 +152,9 @@ public class FieldLookup extends Expression {
   public void writeJava(final StringBuilder sb, final Environment environment) {
     if (passedTypeChecking() && !isGlobalObject) {
       expression.writeJava(sb, environment);
-      if (onlyExpression) { return; }
+      if (onlyExpression) {
+        return;
+      }
       sb.append(".");
       var fieldNameToUse = fieldName;
       if (overrideFieldName != null) {

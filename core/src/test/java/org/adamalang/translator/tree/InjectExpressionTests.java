@@ -17,11 +17,11 @@ import org.junit.Test;
 public class InjectExpressionTests {
   @Test
   public void coverage() {
-    final InjectExpression ie = new InjectExpression(new TyNativeVoid()) {
-      @Override
-      public void writeJava(final StringBuilder sb, final Environment environment) {
-      }
-    };
+    final InjectExpression ie =
+        new InjectExpression(new TyNativeVoid()) {
+          @Override
+          public void writeJava(final StringBuilder sb, final Environment environment) {}
+        };
     ie.typing(null, null);
     ie.emit(null);
     ie.writeJava((StringBuilder) null, null);

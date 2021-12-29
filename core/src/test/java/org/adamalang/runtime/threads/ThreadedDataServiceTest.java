@@ -24,83 +24,87 @@ import java.util.concurrent.TimeUnit;
 
 public class ThreadedDataServiceTest {
 
-    @Test
-    public void coverage() throws Exception {
-        MockInstantDataService dataService = new MockInstantDataService();
-        ThreadedDataService ds = new ThreadedDataService(1, () -> dataService);
-        Key key = new Key("space", "key");
-        DataService.RemoteDocumentUpdate update = new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, "", "", "", false, 1);
-        CountDownLatch latch = new CountDownLatch(6);
-        ds.scan(new ActiveKeyStream() {
-            @Override
-            public void schedule(Key key, long time) {
+  @Test
+  public void coverage() throws Exception {
+    MockInstantDataService dataService = new MockInstantDataService();
+    ThreadedDataService ds = new ThreadedDataService(1, () -> dataService);
+    Key key = new Key("space", "key");
+    DataService.RemoteDocumentUpdate update =
+        new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, "", "", "", false, 1);
+    CountDownLatch latch = new CountDownLatch(6);
+    ds.scan(
+        new ActiveKeyStream() {
+          @Override
+          public void schedule(Key key, long time) {}
 
-            }
+          @Override
+          public void finish() {
+            latch.countDown();
+          }
 
-            @Override
-            public void finish() {
-                latch.countDown();
-            }
-
-            @Override
-            public void error(ErrorCodeException failure) {
-
-            }
+          @Override
+          public void error(ErrorCodeException failure) {}
         });
-        ds.get(key, new Callback<DataService.LocalDocumentChange>() {
-            @Override
-            public void success(DataService.LocalDocumentChange value) {
+    ds.get(
+        key,
+        new Callback<DataService.LocalDocumentChange>() {
+          @Override
+          public void success(DataService.LocalDocumentChange value) {}
 
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-                latch.countDown();
-            }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            latch.countDown();
+          }
         });
-        ds.initialize(key, update, new Callback<Void>() {
-            @Override
-            public void success(Void value) {
-                latch.countDown();
-            }
+    ds.initialize(
+        key,
+        update,
+        new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            latch.countDown();
+          }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-            }
+          @Override
+          public void failure(ErrorCodeException ex) {}
         });
-        ds.patch(key, update, new Callback<Void>() {
-            @Override
-            public void success(Void value) {
-                latch.countDown();
-            }
+    ds.patch(
+        key,
+        update,
+        new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            latch.countDown();
+          }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-            }
+          @Override
+          public void failure(ErrorCodeException ex) {}
         });
-        ds.compute(key, DataService.ComputeMethod.Rewind, 1, new Callback<DataService.LocalDocumentChange>() {
-            @Override
-            public void success(DataService.LocalDocumentChange value) {
-                latch.countDown();
-            }
+    ds.compute(
+        key,
+        DataService.ComputeMethod.Rewind,
+        1,
+        new Callback<DataService.LocalDocumentChange>() {
+          @Override
+          public void success(DataService.LocalDocumentChange value) {
+            latch.countDown();
+          }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-
-            }
+          @Override
+          public void failure(ErrorCodeException ex) {}
         });
-        ds.delete(key, new Callback<Void>() {
-            @Override
-            public void success(Void value) {
-                latch.countDown();
-            }
+    ds.delete(
+        key,
+        new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            latch.countDown();
+          }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-
-            }
+          @Override
+          public void failure(ErrorCodeException ex) {}
         });
-        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
-        Assert.assertTrue(ds.shutdown().await(1000, TimeUnit.MILLISECONDS));
-    }
+    Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+    Assert.assertTrue(ds.shutdown().await(1000, TimeUnit.MILLISECONDS));
+  }
 }

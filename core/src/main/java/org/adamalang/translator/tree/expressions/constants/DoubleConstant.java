@@ -37,7 +37,8 @@ public class DoubleConstant extends Expression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     environment.mustBeComputeContext(this);
-    return new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, token).makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
+    return new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, token)
+        .makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
   }
 
   @Override

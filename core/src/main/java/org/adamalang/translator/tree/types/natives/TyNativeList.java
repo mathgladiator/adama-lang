@@ -26,23 +26,24 @@ import org.adamalang.translator.tree.types.traits.details.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType, //
-    DetailNativeDeclarationIsNotStandard, //
-    AssignmentViaNativeOnlyForSet, //
-    DetailHasDeltaType, //
-    DetailIndexLookup, //
-    DetailComputeRequiresGet, //
-    DetailTypeHasMethods {
-  public static TyNativeList WRAP(final TyType type) {
-    return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(type));
-  }
-
+public class TyNativeList extends TyType
+    implements DetailContainsAnEmbeddedType, //
+        DetailNativeDeclarationIsNotStandard, //
+        AssignmentViaNativeOnlyForSet, //
+        DetailHasDeltaType, //
+        DetailIndexLookup, //
+        DetailComputeRequiresGet, //
+        DetailTypeHasMethods {
   public final TyType elementType;
   public final Token listToken;
   public final Token readonlyToken;
   public final TokenizedItem<TyType> tokenElementType;
 
-  public TyNativeList(final TypeBehavior behavior, final Token readonlyToken, final Token listToken, final TokenizedItem<TyType> tokenElementType) {
+  public TyNativeList(
+      final TypeBehavior behavior,
+      final Token readonlyToken,
+      final Token listToken,
+      final TokenizedItem<TyType> tokenElementType) {
     super(behavior);
     this.readonlyToken = readonlyToken;
     this.listToken = listToken;
@@ -50,6 +51,11 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
     this.tokenElementType = tokenElementType;
     ingest(listToken);
     ingest(elementType);
+  }
+
+  public static TyNativeList WRAP(final TyType type) {
+    return new TyNativeList(
+        TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(type));
   }
 
   @Override
@@ -69,18 +75,6 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
   }
 
   @Override
-  public String getDeltaType(final Environment environment) {
-    final var resolved = getEmbeddedType(environment);
-    if (resolved instanceof TyReactiveRecord) { return "DRecordList<" + ((TyReactiveRecord) resolved).getDeltaType(environment) + ">"; }
-    return "DList<" + ((DetailHasDeltaType) resolved).getDeltaType(environment) + ">";
-  }
-
-  @Override
-  public TyType getEmbeddedType(final Environment environment) {
-    return environment.rules.Resolve(elementType, false);
-  }
-
-  @Override
   public String getJavaBoxType(final Environment environment) {
     final var resolved = getEmbeddedType(environment);
     return String.format("NtList<%s>", resolved.getJavaBoxType(environment));
@@ -89,6 +83,46 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
   @Override
   public String getJavaConcreteType(final Environment environment) {
     return getJavaBoxType(environment);
+  }
+
+  @Override
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeList(
+            newBehavior,
+            readonlyToken,
+            listToken,
+            new TokenizedItem<>(elementType.makeCopyWithNewPosition(position, newBehavior)))
+        .withPosition(position);
+  }
+
+  @Override
+  public void typing(final Environment environment) {
+    elementType.typing(environment);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_list");
+    writer.writeObjectFieldIntro("type");
+    elementType.writeTypeReflectionJson(writer);
+    writer.endObject();
+  }
+
+  @Override
+  public TyType getEmbeddedType(final Environment environment) {
+    return environment.rules.Resolve(elementType, false);
+  }
+
+  @Override
+  public String getDeltaType(final Environment environment) {
+    final var resolved = getEmbeddedType(environment);
+    if (resolved instanceof TyReactiveRecord) {
+      return "DRecordList<" + ((TyReactiveRecord) resolved).getDeltaType(environment) + ">";
+    }
+    return "DList<" + ((DetailHasDeltaType) resolved).getDeltaType(environment) + ">";
   }
 
   @Override
@@ -110,18 +144,37 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, listToken).withPosition(this), new ArrayList<>(), true)),
+      return new TyNativeFunctional(
+          "size",
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance(
+                  "size",
+                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, listToken)
+                      .withPosition(this),
+                  new ArrayList<>(),
+                  true)),
           FunctionStyleJava.ExpressionThenArgs);
     }
     if ("toArray".equals(name)) {
-      final var foi = new FunctionOverloadInstance("toArray", new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, tokenElementType.item, null).withPosition(this), new ArrayList<>(), true);
+      final var foi =
+          new FunctionOverloadInstance(
+              "toArray",
+              new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, tokenElementType.item, null)
+                  .withPosition(this),
+              new ArrayList<>(),
+              true);
       TyType elementType = environment.rules.Resolve(tokenElementType.item, true);
       if (elementType != null) {
-        foi.hiddenSuffixArgs.add("(Integer __n) -> (Object) (new " + elementType.getJavaConcreteType(environment) + "[__n])");
+        foi.hiddenSuffixArgs.add(
+            "(Integer __n) -> (Object) (new "
+                + elementType.getJavaConcreteType(environment)
+                + "[__n])");
       }
-      return new TyNativeFunctional("toArray", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional(
+          "toArray", FunctionOverloadInstance.WRAP(foi), FunctionStyleJava.ExpressionThenArgs);
     }
-    TyNativeFunctional extensionBeforeAggregate = environment.state.globals.findExtension(this, name);
+    TyNativeFunctional extensionBeforeAggregate =
+        environment.state.globals.findExtension(this, name);
     if (extensionBeforeAggregate != null) {
       return extensionBeforeAggregate;
     }
@@ -136,31 +189,15 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeList(newBehavior, readonlyToken, listToken, new TokenizedItem<>(elementType.makeCopyWithNewPosition(position, newBehavior))).withPosition(position);
-  }
-
-  @Override
   public TyType typeAfterGet(final Environment environment) {
     if (elementType instanceof DetailComputeRequiresGet) {
-      return new TyNativeList(behavior, readonlyToken, listToken, new TokenizedItem<>(((DetailComputeRequiresGet) elementType).typeAfterGet(environment)));
+      return new TyNativeList(
+          behavior,
+          readonlyToken,
+          listToken,
+          new TokenizedItem<>(((DetailComputeRequiresGet) elementType).typeAfterGet(environment)));
     } else {
       return this;
     }
-  }
-
-  @Override
-  public void typing(final Environment environment) {
-    elementType.typing(environment);
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("native_list");
-    writer.writeObjectFieldIntro("type");
-    elementType.writeTypeReflectionJson(writer);
-    writer.endObject();
   }
 }

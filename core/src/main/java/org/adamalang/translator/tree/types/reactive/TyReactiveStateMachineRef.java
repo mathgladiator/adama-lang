@@ -21,8 +21,10 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeStateMachineRef;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-/** The type representing a valid reference in the state machine; this uses the
- * reactive 'RxString' java type */
+/**
+ * The type representing a valid reference in the state machine; this uses the reactive 'RxString'
+ * java type
+ */
 public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrderable //
 {
   public TyReactiveStateMachineRef(final Token token) {
@@ -35,18 +37,9 @@ public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrd
   }
 
   @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new StateMachineConstant(Token.WRAP("#")).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveStateMachineRef(token).withPosition(position);
-  }
-
-  @Override
-  public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 
   @Override
@@ -57,5 +50,15 @@ public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrd
     writer.writeObjectFieldIntro("type");
     writer.writeString("label");
     writer.endObject();
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
+    return new StateMachineConstant(Token.WRAP("#")).withPosition(forWhatExpression);
+  }
+
+  @Override
+  public TyType typeAfterGet(final Environment environment) {
+    return new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 }

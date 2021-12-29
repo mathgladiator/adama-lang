@@ -20,6 +20,23 @@ public class DMap<TyIn, dTyOut> {
   // cache of all the items in the map
   private final HashMap<TyIn, dTyOut> cache;
 
+  public DMap() {
+    this.cache = new HashMap<>();
+  }
+
+  /** start walking items; the generated code in CodeGenDeltaClass is related */
+  public DMap.Walk begin() {
+    return new DMap.Walk();
+  }
+
+  /** the map is no longer visible (was made private) */
+  public void hide(final PrivateLazyDeltaWriter writer) {
+    if (cache.size() > 0) {
+      cache.clear();
+      writer.writeNull();
+    }
+  }
+
   public class Walk {
     private final HashSet<TyIn> seen;
 
@@ -48,24 +65,6 @@ public class DMap<TyIn, dTyOut> {
           parent.planField("" + entry.getKey()).writeNull();
         }
       }
-    }
-  }
-
-
-  public DMap() {
-    this.cache = new HashMap<>();
-  }
-
-  /** start walking items; the generated code in CodeGenDeltaClass is related */
-  public DMap.Walk begin() {
-    return new DMap.Walk();
-  }
-
-  /** the map is no longer visible (was made private) */
-  public void hide(final PrivateLazyDeltaWriter writer) {
-    if (cache.size() > 0) {
-      cache.clear();
-      writer.writeNull();
     }
   }
 }

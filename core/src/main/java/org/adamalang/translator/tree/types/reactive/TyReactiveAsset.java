@@ -32,18 +32,9 @@ public class TyReactiveAsset extends TySimpleReactive implements IsOrderable {
   }
 
   @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new NothingAssetConstant(Token.WRAP("@nothing")).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveAsset(token).withPosition(position);
-  }
-
-  @Override
-  public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 
   @Override
@@ -54,5 +45,15 @@ public class TyReactiveAsset extends TySimpleReactive implements IsOrderable {
     writer.writeObjectFieldIntro("type");
     writer.writeString("asset");
     writer.endObject();
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
+    return new NothingAssetConstant(Token.WRAP("@nothing")).withPosition(forWhatExpression);
+  }
+
+  @Override
+  public TyType typeAfterGet(final Environment environment) {
+    return new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 }

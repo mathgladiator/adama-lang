@@ -16,20 +16,21 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-/** the state machine for handling codepoints one at a time; this produces
- * output against a consumer */
+/**
+ * the state machine for handling codepoints one at a time; this produces output against a consumer
+ */
 class TokenReaderStateMachine {
+  private final StringBuilder currentTokenBuffer;
+  private final HashMap<String, String> deduper;
+  private final Consumer<Token> output;
+  private final String sourceName;
   private int currentCharNo;
   private int currentLineNo;
   private MajorTokenType currentMajorTokenType;
   private MinorTokenType currentMinorTokenType;
-  private final StringBuilder currentTokenBuffer;
-  private final HashMap<String, String> deduper;
   private int escapeHexCharsLeft;
   private int lastCodePoint;
-  private final Consumer<Token> output;
   private ScannerState scanState;
-  private final String sourceName;
   private int startCharNo;
   private int startLineNo;
 
@@ -85,10 +86,24 @@ class TokenReaderStateMachine {
               scanState = ScannerState.ScanStringLiteral;
               currentMajorTokenType = MajorTokenType.StringLiteral;
             } else {
-              throw new ScanException("Failed to understand codepoint:" + codepoint + "('" + Character.toString(codepoint) + "')", position());
+              throw new ScanException(
+                  "Failed to understand codepoint:"
+                      + codepoint
+                      + "('"
+                      + Character.toString(codepoint)
+                      + "')",
+                  position());
             }
           } else {
-            throw new ScanException("Codepoint fell outside of valid range:" + codepoint + "('" + Character.toString(codepoint) + "') is outside of [0, " + Tables.BOOLEAN_TABLES_SIZE + ")", position());
+            throw new ScanException(
+                "Codepoint fell outside of valid range:"
+                    + codepoint
+                    + "('"
+                    + Character.toString(codepoint)
+                    + "') is outside of [0, "
+                    + Tables.BOOLEAN_TABLES_SIZE
+                    + ")",
+                position());
           }
           break;
         case ScanIdentifer:
@@ -159,18 +174,31 @@ class TokenReaderStateMachine {
           break;
         case ScanStringLiteralEscape:
           scanState = ScannerState.ScanStringLiteral;
-          if (codepoint < Tables.SINGLE_CHAR_ESCAPE_SCANNER.length && Tables.SINGLE_CHAR_ESCAPE_SCANNER[codepoint]) {
+          if (codepoint < Tables.SINGLE_CHAR_ESCAPE_SCANNER.length
+              && Tables.SINGLE_CHAR_ESCAPE_SCANNER[codepoint]) {
             // cool beans, it is valid
           } else if (codepoint == 'u') {
             scanState = ScannerState.ScanStringLiteralUnicodeHexEscape;
             escapeHexCharsLeft = 4;
           } else {
-            throw new ScanException("Unrecognized string escape value:" + codepoint + "('" + Character.toString(codepoint) + "')", position());
+            throw new ScanException(
+                "Unrecognized string escape value:"
+                    + codepoint
+                    + "('"
+                    + Character.toString(codepoint)
+                    + "')",
+                position());
           }
           break;
         case ScanStringLiteralUnicodeHexEscape:
           if (!(codepoint < Tables.HEX_SCANNER.length && Tables.HEX_SCANNER[codepoint])) {
-            throw new ScanException("Unrecognized hex value within the unicode escape value:" + codepoint + "('" + Character.toString(codepoint) + "')", position());
+            throw new ScanException(
+                "Unrecognized hex value within the unicode escape value:"
+                    + codepoint
+                    + "('"
+                    + Character.toString(codepoint)
+                    + "')",
+                position());
           }
           escapeHexCharsLeft--;
           if (escapeHexCharsLeft <= 0) {
@@ -215,17 +243,41 @@ class TokenReaderStateMachine {
     if (currentMajorTokenType == MajorTokenType.Symbol && text.length() > 1) {
       for (var k = 0; k < text.length(); k++) {
         final var symbol = dedupe(text.substring(k, k + 1), currentMajorTokenType);
-        output.accept(new Token(sourceName, symbol, currentMajorTokenType, currentMinorTokenType, startLineNo, startCharNo + k, startLineNo, startCharNo + k + symbol.length()));
+        output.accept(
+            new Token(
+                sourceName,
+                symbol,
+                currentMajorTokenType,
+                currentMinorTokenType,
+                startLineNo,
+                startCharNo + k,
+                startLineNo,
+                startCharNo + k + symbol.length()));
       }
     } else {
       text = dedupe(text, currentMajorTokenType);
-      output.accept(new Token(sourceName, text, currentMajorTokenType, currentMinorTokenType, startLineNo, startCharNo, currentLineNo, currentCharNo));
+      output.accept(
+          new Token(
+              sourceName,
+              text,
+              currentMajorTokenType,
+              currentMinorTokenType,
+              startLineNo,
+              startCharNo,
+              currentLineNo,
+              currentCharNo));
     }
     startLineNo = currentLineNo;
     startCharNo = currentCharNo;
     currentTokenBuffer.setLength(0);
     currentMajorTokenType = null;
     currentMinorTokenType = null;
+  }
+
+  public DocumentPosition position() {
+    final var position = new DocumentPosition();
+    position.ingest(currentLineNo, currentCharNo);
+    return position;
   }
 
   public String dedupe(final String text, final MajorTokenType tokenType) {
@@ -244,11 +296,5 @@ class TokenReaderStateMachine {
       default:
         return text;
     }
-  }
-
-  public DocumentPosition position() {
-    final var position = new DocumentPosition();
-    position.ingest(currentLineNo, currentCharNo);
-    return position;
   }
 }

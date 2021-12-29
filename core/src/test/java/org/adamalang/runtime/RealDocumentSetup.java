@@ -34,6 +34,60 @@ public class RealDocumentSetup {
   public final DurableLivingDocument document;
   private DurableLivingDocument mirror;
 
+  public RealDocumentSetup(final String code) throws Exception {
+    this(code, null);
+  }
+
+  public RealDocumentSetup(final String code, final String json) throws Exception {
+    this(code, json, true);
+  }
+
+  public RealDocumentSetup(final String code, final String json, final boolean stdout)
+      throws Exception {
+    this(code, json, stdout, new MockTime());
+  }
+
+  public RealDocumentSetup(
+      final String code, final String json, final boolean stdout, MockTime time) throws Exception {
+    this.time = time;
+    DumbDataService dds =
+        new DumbDataService(
+            (update) -> {
+              if (stdout) {
+                System.out.println(" REQ :" + update.request);
+                System.out.println("FORWARD:" + update.redo);
+                System.out.println("REVERSE:" + update.undo);
+              }
+              if (mirror != null) {
+                mirror.document().__insert(new JsonStreamReader(update.redo));
+              }
+            });
+    DocumentThreadBase base = new DocumentThreadBase(dds, SimpleExecutor.NOW, time);
+    dds.setData(json);
+    factory = LivingDocumentTests.compile(code);
+    DumbDataService.DumbDurableLivingDocumentAcquire acquireReal =
+        new DumbDataService.DumbDurableLivingDocumentAcquire();
+    DumbDataService.DumbDurableLivingDocumentAcquire acquireMirror =
+        new DumbDataService.DumbDurableLivingDocumentAcquire();
+    DocumentMonitor monitor = stdout ? new StdOutDocumentMonitor() : null;
+    Key key = new Key("space", "0");
+    if (json == null) {
+      DurableLivingDocument.fresh(
+          key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireReal);
+      DurableLivingDocument.fresh(
+          key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireMirror);
+    } else {
+      DurableLivingDocument.load(key, factory, monitor, base, acquireReal);
+      DurableLivingDocument.load(key, factory, monitor, base, acquireMirror);
+    }
+    document = acquireReal.get();
+    mirror = acquireMirror.get();
+  }
+
+  public void assertCompare() {
+    Assert.assertEquals(mirror.json(), document.json());
+  }
+
   public static class GotView implements Callback<PrivateView> {
 
     public PrivateView view = null;
@@ -65,14 +119,15 @@ public class RealDocumentSetup {
     public void failure(ErrorCodeException ex) {
       throw new RuntimeException(ex);
     }
-
   }
 
   public static class AssertFailure implements Callback<Integer> {
     private int codeToExpect;
+
     public AssertFailure(int codeToExpect) {
       this.codeToExpect = codeToExpect;
     }
+
     @Override
     public void success(Integer actual) {
       throw new RuntimeException("should have failed");
@@ -97,54 +152,6 @@ public class RealDocumentSetup {
     }
 
     @Override
-    public void disconnect() {
-
-    }
-  }
-
-  public RealDocumentSetup(final String code) throws Exception {
-    this(code, null);
-  }
-
-  public RealDocumentSetup(final String code, final String json) throws Exception {
-    this(code, json, true);
-  }
-
-  public RealDocumentSetup(final String code, final String json, final boolean stdout) throws Exception {
-    this(code, json, stdout, new MockTime());
-  }
-
-  public RealDocumentSetup(final String code, final String json, final boolean stdout, MockTime time) throws Exception {
-    this.time = time;
-    DumbDataService dds = new DumbDataService((update) -> {
-      if (stdout) {
-        System.out.println(" REQ :" + update.request);
-        System.out.println("FORWARD:" + update.redo);
-        System.out.println("REVERSE:" + update.undo);
-      }
-      if (mirror != null) {
-        mirror.document().__insert(new JsonStreamReader(update.redo));
-      }
-    });
-    DocumentThreadBase base = new DocumentThreadBase(dds, SimpleExecutor.NOW, time);
-    dds.setData(json);
-    factory = LivingDocumentTests.compile(code);
-    DumbDataService.DumbDurableLivingDocumentAcquire acquireReal = new DumbDataService.DumbDurableLivingDocumentAcquire();
-    DumbDataService.DumbDurableLivingDocumentAcquire acquireMirror = new DumbDataService.DumbDurableLivingDocumentAcquire();
-    DocumentMonitor monitor = stdout ? new StdOutDocumentMonitor() : null;
-    Key key = new Key("space", "0");
-    if (json == null) {
-      DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireReal);
-      DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "123", monitor, base, acquireMirror);
-    } else {
-      DurableLivingDocument.load(key, factory, monitor, base, acquireReal);
-      DurableLivingDocument.load(key, factory, monitor, base, acquireMirror);
-    }
-    document = acquireReal.get();
-    mirror = acquireMirror.get();
-  }
-
-  public void assertCompare() {
-    Assert.assertEquals(mirror.json(), document.json());
+    public void disconnect() {}
   }
 }

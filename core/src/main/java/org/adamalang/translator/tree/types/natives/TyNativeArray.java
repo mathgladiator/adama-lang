@@ -27,19 +27,21 @@ import org.adamalang.translator.tree.types.traits.details.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeArray extends TyType implements //
-    AssignmentViaNative, //
-    DetailContainsAnEmbeddedType, //
-    DetailHasDeltaType, //
-    DetailIndexLookup, //
-    DetailInventDefaultValueExpression, //
-    DetailNativeDeclarationIsNotStandard, //
-    DetailTypeHasMethods //
+public class TyNativeArray extends TyType
+    implements //
+        AssignmentViaNative, //
+        DetailContainsAnEmbeddedType, //
+        DetailHasDeltaType, //
+        DetailIndexLookup, //
+        DetailInventDefaultValueExpression, //
+        DetailNativeDeclarationIsNotStandard, //
+        DetailTypeHasMethods //
 {
   public final Token arrayToken;
   public final TyType elementType;
 
-  public TyNativeArray(final TypeBehavior behavior, final TyType elementType, final Token arrayToken) {
+  public TyNativeArray(
+      final TypeBehavior behavior, final TyType elementType, final Token arrayToken) {
     super(behavior);
     this.elementType = elementType;
     this.arrayToken = arrayToken;
@@ -59,18 +61,6 @@ public class TyNativeArray extends TyType implements //
   }
 
   @Override
-  public String getDeltaType(final Environment environment) {
-    final var resolved = getEmbeddedType(environment);
-    if (resolved instanceof TyReactiveRecord) { return "DRecordList<" + ((TyReactiveRecord) resolved).getDeltaType(environment) + ">"; }
-    return "DList<" + ((DetailHasDeltaType) resolved).getDeltaType(environment) + ">";
-  }
-
-  @Override
-  public TyType getEmbeddedType(final Environment environment) {
-    return environment.rules.Resolve(elementType, true);
-  }
-
-  @Override
   public String getJavaBoxType(final Environment environment) {
     return String.format("%s[]", getEmbeddedType(environment).getJavaConcreteType(environment));
   }
@@ -78,6 +68,43 @@ public class TyNativeArray extends TyType implements //
   @Override
   public String getJavaConcreteType(final Environment environment) {
     return getJavaBoxType(environment);
+  }
+
+  @Override
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeArray(
+            newBehavior, elementType.makeCopyWithNewPosition(position, newBehavior), arrayToken)
+        .withPosition(position);
+  }
+
+  @Override
+  public void typing(final Environment environment) {
+    elementType.typing(environment);
+  }
+
+  @Override
+  public void writeTypeReflectionJson(JsonStreamWriter writer) {
+    writer.beginObject();
+    writer.writeObjectFieldIntro("nature");
+    writer.writeString("native_array");
+    writer.writeObjectFieldIntro("type");
+    elementType.writeTypeReflectionJson(writer);
+    writer.endObject();
+  }
+
+  @Override
+  public String getDeltaType(final Environment environment) {
+    final var resolved = getEmbeddedType(environment);
+    if (resolved instanceof TyReactiveRecord) {
+      return "DRecordList<" + ((TyReactiveRecord) resolved).getDeltaType(environment) + ">";
+    }
+    return "DList<" + ((DetailHasDeltaType) resolved).getDeltaType(environment) + ">";
+  }
+
+  @Override
+  public TyType getEmbeddedType(final Environment environment) {
+    return environment.rules.Resolve(elementType, true);
   }
 
   @Override
@@ -108,29 +135,17 @@ public class TyNativeArray extends TyType implements //
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("length",
-          FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("length", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, arrayToken).withPosition(this), new ArrayList<>(), false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement(
+          "length",
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance(
+                  "length",
+                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, arrayToken)
+                      .withPosition(this),
+                  new ArrayList<>(),
+                  false)),
+          FunctionStyleJava.None);
     }
     return environment.state.globals.findExtension(this, name);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeArray(newBehavior, elementType.makeCopyWithNewPosition(position, newBehavior), arrayToken).withPosition(position);
-  }
-
-  @Override
-  public void typing(final Environment environment) {
-    elementType.typing(environment);
-  }
-
-  @Override
-  public void writeTypeReflectionJson(JsonStreamWriter writer) {
-    writer.beginObject();
-    writer.writeObjectFieldIntro("nature");
-    writer.writeString("native_array");
-    writer.writeObjectFieldIntro("type");
-    elementType.writeTypeReflectionJson(writer);
-    writer.endObject();
   }
 }

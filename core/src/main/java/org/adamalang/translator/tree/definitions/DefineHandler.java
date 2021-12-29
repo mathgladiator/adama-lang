@@ -22,31 +22,32 @@ import org.adamalang.translator.tree.types.traits.IsStructure;
 
 import java.util.function.Consumer;
 
-/** A handler is called when the document receives a message from a client.
- * There are a variety of actions the document can take. For instance, the
- * document could simply drop it. These behaviors are explain in the
- * MessageHandlerBehavior. */
+/**
+ * A handler is called when the document receives a message from a client. There are a variety of
+ * actions the document can take. For instance, the document could simply drop it. These behaviors
+ * are explain in the MessageHandlerBehavior.
+ */
 public class DefineHandler extends Definition {
-  public MessageHandlerBehavior behavior;
   public final String channel;
   private final Token channelNameToken;
   private final Token channelToken;
+  public MessageHandlerBehavior behavior;
   public String client;
+  public Block code;
+  public boolean isArray;
+  public String messageVar;
+  public String typeName;
   private Token clientTypeToken = null;
   private Token clientVarToken = null;
-  public Block code;
   private Token commaToken = null;
   private Token endParenToken = null;
   private Token endType = null;
-  public boolean isArray;
   private Token messageTypeArrayToken = null;
   private Token messageTypeToken = null;
-  public String messageVar;
   private Token messageVarToken = null;
   private Token openParenToken = null;
   private Token openType = null;
   private Token semicolonToken = null;
-  public String typeName;
 
   public DefineHandler(final Token channelToken, final Token channelNameToken) {
     this.channelToken = channelToken;
@@ -95,29 +96,67 @@ public class DefineHandler extends Definition {
     }
   }
 
-  /** make the handler operate on arrays */
-  public DefineHandler makeArray() {
-    isArray = true;
-    return this;
+  @Override
+  public void typing(final Environment environment) {
+    final IsStructure messageType = environment.rules.FindMessageStructure(typeName, this, false);
+    if (messageType == null) {
+      return;
+    }
+    final var next = prepareEnv(environment, messageType);
+    if (code != null) {
+      code.typing(next);
+    }
+    if (behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
+      final var nativeChannel =
+          new TyNativeChannel(
+                  TypeBehavior.ReadOnlyNativeValue,
+                  null,
+                  null,
+                  new TokenizedItem<>(
+                      isArray
+                          ? new TyNativeArray(
+                              TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null)
+                          : (TyType) messageType))
+              .withPosition(this);
+      environment.define(channel, nativeChannel, false, nativeChannel);
+    }
   }
 
   public Environment prepareEnv(final Environment environment, final IsStructure messageType) {
     final var next = environment.scopeAsMessageHandler();
     if (messageVar != null) {
       if (isArray) {
-        next.define(messageVar, new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, messageTypeArrayToken), true, this);
+        next.define(
+            messageVar,
+            new TyNativeArray(
+                TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, messageTypeArrayToken),
+            true,
+            this);
       } else {
         next.define(messageVar, (TyType) messageType, true, this);
       }
     }
     if (client != null) {
-      next.define(client, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientTypeToken).withPosition(this), true, this);
+      next.define(
+          client,
+          new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientTypeToken)
+              .withPosition(this),
+          true,
+          this);
     }
     return next;
   }
 
-  public void setFullHandler(final Token openParenToken, final Token clientTypeToken, final Token clientVarToken, final Token commaToken, final Token messageTypeToken, final Token messageTypeArrayToken, final Token messageVarToken,
-      final Token endParenToken, final Block code) {
+  public void setFullHandler(
+      final Token openParenToken,
+      final Token clientTypeToken,
+      final Token clientVarToken,
+      final Token commaToken,
+      final Token messageTypeToken,
+      final Token messageTypeArrayToken,
+      final Token messageVarToken,
+      final Token endParenToken,
+      final Block code) {
     this.openParenToken = openParenToken;
     this.clientTypeToken = clientTypeToken;
     this.clientVarToken = clientVarToken;
@@ -137,7 +176,18 @@ public class DefineHandler extends Definition {
     ingest(code);
   }
 
-  public void setFuture(final Token openType, final Token messageTypeToken, final Token messageTypeArrayToken, final Token endType, final Token semicolonToken) {
+  /** make the handler operate on arrays */
+  public DefineHandler makeArray() {
+    isArray = true;
+    return this;
+  }
+
+  public void setFuture(
+      final Token openType,
+      final Token messageTypeToken,
+      final Token messageTypeArrayToken,
+      final Token endType,
+      final Token semicolonToken) {
     this.openType = openType;
     this.messageTypeToken = messageTypeToken;
     this.messageTypeArrayToken = messageTypeArrayToken;
@@ -153,7 +203,13 @@ public class DefineHandler extends Definition {
     ingest(semicolonToken);
   }
 
-  public void setMessageOnlyHandler(final Token openParenToken, final Token messageTypeToken, final Token messageTypeArrayToken, final Token messageVarToken, final Token endParenToken, final Block code) {
+  public void setMessageOnlyHandler(
+      final Token openParenToken,
+      final Token messageTypeToken,
+      final Token messageTypeArrayToken,
+      final Token messageVarToken,
+      final Token endParenToken,
+      final Block code) {
     this.openParenToken = openParenToken;
     this.messageTypeToken = messageTypeToken;
     this.messageTypeArrayToken = messageTypeArrayToken;
@@ -167,20 +223,5 @@ public class DefineHandler extends Definition {
     behavior = MessageHandlerBehavior.ExecuteAssociatedCode;
     this.code = code;
     ingest(code);
-  }
-
-  @Override
-  public void typing(final Environment environment) {
-    final IsStructure messageType = environment.rules.FindMessageStructure(typeName, this, false);
-    if (messageType == null) { return; }
-    final var next = prepareEnv(environment, messageType);
-    if (code != null) {
-      code.typing(next);
-    }
-    if (behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
-      final var nativeChannel = new TyNativeChannel(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(isArray ? new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null) : (TyType) messageType))
-          .withPosition(this);
-      environment.define(channel, nativeChannel, false, nativeChannel);
-    }
   }
 }

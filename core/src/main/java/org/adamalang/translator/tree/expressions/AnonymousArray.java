@@ -26,9 +26,14 @@ import java.util.function.Consumer;
 
 /** an anonymous array of items [item1, item2, ..., itemN] */
 public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping {
-  private static final TyNativeMessage EMPTY_MESSAGE = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__EmptyMessageNoArgs_"), new StructureStorage(StorageSpecialization.Message, true, null));
-  public Token closeBracketToken;
+  private static final TyNativeMessage EMPTY_MESSAGE =
+      new TyNativeMessage(
+          TypeBehavior.ReadOnlyNativeValue,
+          null,
+          Token.WRAP("__EmptyMessageNoArgs_"),
+          new StructureStorage(StorageSpecialization.Message, true, null));
   public final ArrayList<TokenizedItem<Expression>> elements;
+  public Token closeBracketToken;
   public Token openBracketToken;
 
   public AnonymousArray(final Token openBracketToken) {
@@ -52,45 +57,6 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
       element.emitAfter(yielder);
     }
     yielder.accept(closeBracketToken);
-  }
-
-  public void end(final Token closeBracketToken) {
-    this.closeBracketToken = closeBracketToken;
-    ingest(closeBracketToken);
-  }
-
-  @Override
-  public TyType estimateType(final Environment environment) {
-    return estimateType(environment, null);
-  }
-
-  public TyType estimateType(final Environment environment, final TyType suggestion) {
-    TyType proposal = null;
-    if (elements.size() > 0) {
-      final var firstExpr = elements.get(0).item;
-      if (firstExpr instanceof SupportsTwoPhaseTyping) {
-        proposal = ((SupportsTwoPhaseTyping) firstExpr).estimateType(environment);
-      } else {
-        proposal = firstExpr.typing(environment, suggestion instanceof TyNativeArray ? environment.rules.ExtractEmbeddedType(suggestion, false) : null);
-      }
-    }
-    if (proposal == null) {
-      proposal = EMPTY_MESSAGE;
-    }
-    for (final TokenizedItem<Expression> elementExpr : elements) {
-      TyType candidate = null;
-      if (elementExpr.item instanceof SupportsTwoPhaseTyping) {
-        candidate = ((SupportsTwoPhaseTyping) elementExpr.item).estimateType(environment);
-      } else {
-        candidate = elementExpr.item.typing(environment, null);
-      }
-      proposal = environment.rules.GetMaxType(proposal, candidate, false);
-    }
-    if (proposal != null) {
-      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, proposal.withPosition(this), null).withPosition(this);
-    } else {
-      return null;
-    }
   }
 
   @Override
@@ -117,19 +83,6 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
   }
 
   @Override
-  public void upgradeType(final Environment environment, final TyType proposalArray) {
-    cachedType = proposalArray.withPosition(this);
-    if (proposalArray != null && proposalArray instanceof TyNativeArray) {
-      final var proposalElement = ((TyNativeArray) proposalArray).getEmbeddedType(environment);
-      for (final TokenizedItem<Expression> elementExpr : elements) {
-        if (elementExpr.item instanceof SupportsTwoPhaseTyping) {
-          ((SupportsTwoPhaseTyping) elementExpr.item).upgradeType(environment, proposalElement);
-        }
-      }
-    }
-  }
-
-  @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
     final var me = (TyNativeArray) cachedType;
     if (me != null) {
@@ -144,6 +97,64 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
         element.item.writeJava(sb, environment);
       }
       sb.append("}");
+    }
+  }
+
+  public TyType estimateType(final Environment environment, final TyType suggestion) {
+    TyType proposal = null;
+    if (elements.size() > 0) {
+      final var firstExpr = elements.get(0).item;
+      if (firstExpr instanceof SupportsTwoPhaseTyping) {
+        proposal = ((SupportsTwoPhaseTyping) firstExpr).estimateType(environment);
+      } else {
+        proposal =
+            firstExpr.typing(
+                environment,
+                suggestion instanceof TyNativeArray
+                    ? environment.rules.ExtractEmbeddedType(suggestion, false)
+                    : null);
+      }
+    }
+    if (proposal == null) {
+      proposal = EMPTY_MESSAGE;
+    }
+    for (final TokenizedItem<Expression> elementExpr : elements) {
+      TyType candidate = null;
+      if (elementExpr.item instanceof SupportsTwoPhaseTyping) {
+        candidate = ((SupportsTwoPhaseTyping) elementExpr.item).estimateType(environment);
+      } else {
+        candidate = elementExpr.item.typing(environment, null);
+      }
+      proposal = environment.rules.GetMaxType(proposal, candidate, false);
+    }
+    if (proposal != null) {
+      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, proposal.withPosition(this), null)
+          .withPosition(this);
+    } else {
+      return null;
+    }
+  }
+
+  public void end(final Token closeBracketToken) {
+    this.closeBracketToken = closeBracketToken;
+    ingest(closeBracketToken);
+  }
+
+  @Override
+  public TyType estimateType(final Environment environment) {
+    return estimateType(environment, null);
+  }
+
+  @Override
+  public void upgradeType(final Environment environment, final TyType proposalArray) {
+    cachedType = proposalArray.withPosition(this);
+    if (proposalArray != null && proposalArray instanceof TyNativeArray) {
+      final var proposalElement = ((TyNativeArray) proposalArray).getEmbeddedType(environment);
+      for (final TokenizedItem<Expression> elementExpr : elements) {
+        if (elementExpr.item instanceof SupportsTwoPhaseTyping) {
+          ((SupportsTwoPhaseTyping) elementExpr.item).upgradeType(environment, proposalElement);
+        }
+      }
     }
   }
 }

@@ -42,11 +42,6 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
   }
 
   @Override
-  public Iterator<Ty> iterator() {
-    return list.iterator();
-  }
-
-  @Override
   public NtMaybe<Ty> lookup(final int k) {
     final var result = new NtMaybe<Ty>();
     if (0 <= k && k < list.size()) {
@@ -69,7 +64,8 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
   }
 
   @Override
-  public <TIn, TOut> NtMap<TIn, TOut> reduce(final Function<Ty, TIn> domainExtract, final Function<NtList<Ty>, TOut> reducer) {
+  public <TIn, TOut> NtMap<TIn, TOut> reduce(
+      final Function<Ty, TIn> domainExtract, final Function<NtList<Ty>, TOut> reducer) {
     final var map = new NtMap<TIn, TOut>();
     final var shredded = new TreeMap<TIn, ArrayList<Ty>>();
     for (final Ty item : list) {
@@ -117,6 +113,11 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
       next.add(it.next());
     }
     return new ArrayNtList<>(next);
+  }
+
+  @Override
+  public Iterator<Ty> iterator() {
+    return list.iterator();
   }
 
   @Override

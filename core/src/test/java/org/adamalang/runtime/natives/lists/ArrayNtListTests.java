@@ -48,26 +48,28 @@ public class ArrayNtListTests {
     Assert.assertEquals("y", s.get(0));
     Assert.assertEquals("z", s.get(1));
     Assert.assertEquals("x", s.get(2));
-    final var filtered = list.where(true, new WhereClause<String>() {
-      @Override
-      public int[] getIndices() {
-        return new int[0];
-      }
+    final var filtered =
+        list.where(
+            true,
+            new WhereClause<String>() {
+              @Override
+              public int[] getIndices() {
+                return new int[0];
+              }
 
-      @Override
-      public Integer getPrimaryKey() {
-        return null;
-      }
+              @Override
+              public Integer getPrimaryKey() {
+                return null;
+              }
 
-      @Override
-      public void scopeByIndicies(final IndexQuerySet __set) {
-      }
+              @Override
+              public void scopeByIndicies(final IndexQuerySet __set) {}
 
-      @Override
-      public boolean test(final String item) {
-        return item.equals("x");
-      }
-    });
+              @Override
+              public boolean test(final String item) {
+                return item.equals("x");
+              }
+            });
     Assert.assertEquals(1, filtered.size());
     Assert.assertEquals(2, list.skipAndLimit(true, 1, 50).size());
     Assert.assertEquals(2, list.skipAndLimit(true, 0, 2).size());
@@ -97,9 +99,10 @@ public class ArrayNtListTests {
     Assert.assertEquals("yy", r.lookup(2).get());
     Assert.assertEquals("z", r.lookup(1).get());
     final var counter = new AtomicInteger(0);
-    list.map(zzz -> {
-      counter.incrementAndGet();
-    });
+    list.map(
+        zzz -> {
+          counter.incrementAndGet();
+        });
     Assert.assertEquals(4, counter.get());
   }
 

@@ -14,23 +14,15 @@ import java.util.Objects;
 
 /** a granular unit of a file, a string sequence */
 public class Token implements Comparable<Token> {
-  /** helper for merging two adjacent tokens */
-  public static Token mergeAdjacentTokens(final Token left, final Token right, final MajorTokenType newMajorType, final MinorTokenType newMinorType) {
-    final var token = new Token(left.sourceName, left.text + right.text, newMajorType, newMinorType, left.lineStart, left.charStart, right.lineEnd, right.charEnd);
-    token.nonSemanticTokensPrior = left.nonSemanticTokensPrior;
-    token.nonSemanticTokensAfter = right.nonSemanticTokensAfter;
-    return token;
-  }
-
-  public static Token WRAP(final String text) {
-    return new Token(null, text, null, null, 0, 0, 0, 0);
-  }
-
-  /** 0-offset character within the source indicating the end character within the
-   * ending line of the token */
+  /**
+   * 0-offset character within the source indicating the end character within the ending line of the
+   * token
+   */
   public final int charEnd;
-  /** 0-offset character within the source indicating the start character within
-   * the starting line of the token */
+  /**
+   * 0-offset character within the source indicating the start character within the starting line of
+   * the token
+   */
   public final int charStart;
   /** 0-offset line within the source indicating the end of the token */
   public final int lineEnd;
@@ -40,17 +32,24 @@ public class Token implements Comparable<Token> {
   public final MajorTokenType majorType;
   /** the minor type of the token (if available) */
   public final MinorTokenType minorType;
-  /** hidden tokens which are after (i.e. right) this token (if available) */
-  public ArrayList<Token> nonSemanticTokensAfter;
-  /** hidden tokens which are prior (i.e. left) of this token (if available) */
-  public ArrayList<Token> nonSemanticTokensPrior;
   /** the source of the token */
   public final String sourceName;
   /** the backing string of the token */
   public final String text;
-
+  /** hidden tokens which are after (i.e. right) this token (if available) */
+  public ArrayList<Token> nonSemanticTokensAfter;
+  /** hidden tokens which are prior (i.e. left) of this token (if available) */
+  public ArrayList<Token> nonSemanticTokensPrior;
   /** construct a token */
-  public Token(final String sourceName, final String text, final MajorTokenType majorType, final MinorTokenType minorType, final int lineStart, final int charStart, final int lineEnd, final int charEnd) {
+  public Token(
+      final String sourceName,
+      final String text,
+      final MajorTokenType majorType,
+      final MinorTokenType minorType,
+      final int lineStart,
+      final int charStart,
+      final int lineEnd,
+      final int charEnd) {
     this.sourceName = sourceName;
     this.text = text;
     this.majorType = majorType;
@@ -63,9 +62,35 @@ public class Token implements Comparable<Token> {
     nonSemanticTokensAfter = null;
   }
 
+  /** helper for merging two adjacent tokens */
+  public static Token mergeAdjacentTokens(
+      final Token left,
+      final Token right,
+      final MajorTokenType newMajorType,
+      final MinorTokenType newMinorType) {
+    final var token =
+        new Token(
+            left.sourceName,
+            left.text + right.text,
+            newMajorType,
+            newMinorType,
+            left.lineStart,
+            left.charStart,
+            right.lineEnd,
+            right.charEnd);
+    token.nonSemanticTokensPrior = left.nonSemanticTokensPrior;
+    token.nonSemanticTokensAfter = right.nonSemanticTokensAfter;
+    return token;
+  }
+
+  public static Token WRAP(final String text) {
+    return new Token(null, text, null, null, 0, 0, 0, 0);
+  }
+
   /** clone the token with new text */
   public Token cloneWithNewText(String newText) {
-    return new Token(sourceName, newText, majorType, minorType, lineStart, charStart, lineEnd, charEnd);
+    return new Token(
+        sourceName, newText, majorType, minorType, lineStart, charStart, lineEnd, charEnd);
   }
 
   /** internal: adds a hidden token after this token */
@@ -81,17 +106,11 @@ public class Token implements Comparable<Token> {
     var test = text.compareTo(token.text);
     if (test == 0) {
       test = Integer.compare(lineStart, token.lineStart);
-      if (test == 0) { return Integer.compare(lineEnd, token.lineEnd); }
+      if (test == 0) {
+        return Integer.compare(lineEnd, token.lineEnd);
+      }
     }
     return test;
-  }
-
-  @Override
-  public boolean equals(final Object o) {
-    if (this == o) { return true; }
-    if (o == null || getClass() != o.getClass()) { return false; }
-    final var token = (Token) o;
-    return lineStart == token.lineStart && lineEnd == token.lineEnd && charStart == token.charStart && charEnd == token.charEnd && Objects.equals(sourceName, token.sourceName) && Objects.equals(text, token.text);
   }
 
   @Override
@@ -99,12 +118,38 @@ public class Token implements Comparable<Token> {
     return Objects.hash(sourceName, text, lineStart, lineEnd, charStart, charEnd);
   }
 
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final var token = (Token) o;
+    return lineStart == token.lineStart
+        && lineEnd == token.lineEnd
+        && charStart == token.charStart
+        && charEnd == token.charEnd
+        && Objects.equals(sourceName, token.sourceName)
+        && Objects.equals(text, token.text);
+  }
+
+  @Override
+  public String toString() {
+    return text;
+  }
+
   /** helper: is the token an identifier of one of the givens */
   public boolean isIdentifier(final String... ids) {
     if (majorType == MajorTokenType.Identifer) {
-      if (ids == null || ids.length == 0) { return true; }
+      if (ids == null || ids.length == 0) {
+        return true;
+      }
       for (final String id : ids) {
-        if (id.equals(text)) { return true; }
+        if (id.equals(text)) {
+          return true;
+        }
       }
     }
     return false;
@@ -113,9 +158,13 @@ public class Token implements Comparable<Token> {
   /** helper: is the token a keyword of one of the givens */
   public boolean isKeyword(final String... kws) {
     if (majorType == MajorTokenType.Keyword) {
-      if (kws == null || kws.length == 0) { return true; }
+      if (kws == null || kws.length == 0) {
+        return true;
+      }
       for (final String id : kws) {
-        if (id.equals(text)) { return true; }
+        if (id.equals(text)) {
+          return true;
+        }
       }
     }
     return false;
@@ -150,7 +199,9 @@ public class Token implements Comparable<Token> {
   public boolean isSymbolWithTextEq(final String... candidates) {
     if (majorType == MajorTokenType.Symbol) {
       for (final String candidate : candidates) {
-        if (text.equals(candidate)) { return true; }
+        if (text.equals(candidate)) {
+          return true;
+        }
       }
     }
     return false;
@@ -159,16 +210,22 @@ public class Token implements Comparable<Token> {
   /** helpful to indicate where in a file (0-indexed) an issue happened */
   public String toExceptionMessageTrailer() {
     final var str = new StringBuilder();
-    str.append(" {Token: `").append(text).append("` @ (").append(lineStart).append(",").append(charStart).append(") -> (").append(lineEnd).append(",").append(charEnd).append("): ").append(majorType);
+    str.append(" {Token: `")
+        .append(text)
+        .append("` @ (")
+        .append(lineStart)
+        .append(",")
+        .append(charStart)
+        .append(") -> (")
+        .append(lineEnd)
+        .append(",")
+        .append(charEnd)
+        .append("): ")
+        .append(majorType);
     if (minorType != null) {
       str.append(":").append(minorType);
     }
     str.append("}");
     return str.toString();
-  }
-
-  @Override
-  public String toString() {
-    return text;
   }
 }

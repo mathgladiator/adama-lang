@@ -22,11 +22,11 @@ import java.util.function.Consumer;
 
 /** prefix mutation ($e--, $e++) and prefix change (!, -) */
 public class PrefixMutate extends Expression {
-  private final boolean addGet;
-  private CanBumpResult bumpResult;
   public final Expression expression;
   public final PrefixMutateOp op;
   public final Token opToken;
+  private final boolean addGet;
+  private CanBumpResult bumpResult;
 
   public PrefixMutate(final Expression expression, final Token opToken) {
     this.expression = expression;
@@ -46,7 +46,8 @@ public class PrefixMutate extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    final var newContext = op.requiresAssignment ? ComputeContext.Assignment : ComputeContext.Computation;
+    final var newContext =
+        op.requiresAssignment ? ComputeContext.Assignment : ComputeContext.Computation;
     TyType result = null;
     if (op == PrefixMutateOp.BumpUp || op == PrefixMutateOp.BumpDown) {
       result = expression.typing(environment.scopeWithComputeContext(newContext), null);
@@ -58,14 +59,21 @@ public class PrefixMutate extends Expression {
       result = expression.typing(environment.scopeWithComputeContext(newContext), null);
       bumpResult = environment.rules.CanBumpBool(result, false);
     }
-    if (bumpResult == CanBumpResult.No) { return null; }
-    if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) { return ((DetailComputeRequiresGet) result).typeAfterGet(environment).makeCopyWithNewPosition(this, result.behavior); }
+    if (bumpResult == CanBumpResult.No) {
+      return null;
+    }
+    if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) {
+      return ((DetailComputeRequiresGet) result)
+          .typeAfterGet(environment)
+          .makeCopyWithNewPosition(this, result.behavior);
+    }
     return result.makeCopyWithNewPosition(this, result.behavior);
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    final var newContext = op.requiresAssignment ? ComputeContext.Assignment : ComputeContext.Computation;
+    final var newContext =
+        op.requiresAssignment ? ComputeContext.Assignment : ComputeContext.Computation;
     switch (bumpResult) {
       case YesWithNative:
         sb.append(op.javaOp);

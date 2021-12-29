@@ -19,10 +19,6 @@ import java.util.function.Consumer;
 
 /** Force a behavior of the document (like making progress) */
 public class Force extends Statement {
-  public enum Action {
-    Step
-  }
-
   public final Action action;
   public final Token semicolonToken;
   public final Token token;
@@ -44,7 +40,8 @@ public class Force extends Statement {
   @Override
   public ControlFlow typing(final Environment environment) {
     if (!environment.state.isTesting()) {
-      environment.document.createError(this, String.format("Forcing a step designed exclusively for testing"), "Testing");
+      environment.document.createError(
+          this, String.format("Forcing a step designed exclusively for testing"), "Testing");
     }
     return ControlFlow.Open;
   }
@@ -54,5 +51,9 @@ public class Force extends Statement {
     if (action == Action.Step) {
       sb.append("__test_progress();");
     }
+  }
+
+  public enum Action {
+    Step
   }
 }

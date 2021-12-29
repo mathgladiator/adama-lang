@@ -14,8 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-/** this allows us to wrap anything with tokens either before the item or
- * after. */
+/** this allows us to wrap anything with tokens either before the item or after. */
 public class TokenizedItem<T> {
   public final ArrayList<Token> after;
   public final ArrayList<Token> before;

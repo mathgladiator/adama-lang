@@ -11,7 +11,6 @@ package org.adamalang.runtime.contracts;
 
 /** the child of a reactive expression/data */
 public interface RxChild {
-
   /** return true if still alive */
   public boolean __raiseInvalid();
 }

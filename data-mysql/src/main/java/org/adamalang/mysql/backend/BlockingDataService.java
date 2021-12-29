@@ -186,7 +186,7 @@ public class BlockingDataService implements DataService {
             // look up the index to get the id
             LookupResult lookup = lookup(connection, key);
 
-            if (method == ComputeMethod.Patch) {
+            if (method == ComputeMethod.HeadPatch) {
                 String walkUndoSQL = new StringBuilder("SELECT `redo` FROM `") //
                         .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
                         .append(" AND `seq_begin` > ").append(seq) //

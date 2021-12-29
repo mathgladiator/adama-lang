@@ -62,6 +62,11 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
   }
 
   @Override
+  public long __memory() {
+    return super.__memory() + (backup.length() + value.length()) * 2 + 16;
+  }
+
+  @Override
   public int compareTo(final RxString other) {
     return value.compareTo(other.value);
   }
@@ -69,6 +74,12 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
   @Override
   public String get() {
     return value;
+  }
+
+  @Override
+  public void set(final String value) {
+    this.value = value;
+    __raiseDirty();
   }
 
   public boolean has() {
@@ -97,16 +108,5 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
     value += incoming;
     __raiseDirty();
     return value;
-  }
-
-  @Override
-  public void set(final String value) {
-    this.value = value;
-    __raiseDirty();
-  }
-
-  @Override
-  public long __memory() {
-    return super.__memory() + (backup.length() + value.length()) * 2 + 16;
   }
 }

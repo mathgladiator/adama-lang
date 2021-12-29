@@ -31,7 +31,14 @@ public class ConvertMessage extends Expression {
   public final Token openType;
   private MessageConversionStyle style;
 
-  public ConvertMessage(final Token convertToken, final Token openType, final Token newMessageTypeToken, final Token closeType, final Token openParen, final Expression expression, final Token closeParen) {
+  public ConvertMessage(
+      final Token convertToken,
+      final Token openType,
+      final Token newMessageTypeToken,
+      final Token closeType,
+      final Token openParen,
+      final Expression expression,
+      final Token closeParen) {
     this.convertToken = convertToken;
     this.openType = openType;
     this.newMessageTypeToken = newMessageTypeToken;
@@ -64,29 +71,50 @@ public class ConvertMessage extends Expression {
     if (preCopyType == null) {
       return null;
     }
-    final var idealType = preCopyType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
+    final var idealType =
+        preCopyType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
     if (environment.rules.IsNativeArrayOfStructure(exprType, true)) {
       // X{]
       style = MessageConversionStyle.Multiple;
-      if (environment.rules.CanStructureAProjectIntoStructureB(((DetailContainsAnEmbeddedType) exprType).getEmbeddedType(environment), idealType, false)) {
-        return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, idealType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue), null).withPosition(this);
+      if (environment.rules.CanStructureAProjectIntoStructureB(
+          ((DetailContainsAnEmbeddedType) exprType).getEmbeddedType(environment),
+          idealType,
+          false)) {
+        return new TyNativeArray(
+                TypeBehavior.ReadOnlyNativeValue,
+                idealType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue),
+                null)
+            .withPosition(this);
       }
     } else if (environment.rules.IsNativeListOfStructure(exprType, true)) {
       // list<X>
       style = MessageConversionStyle.Multiple;
-      if (environment.rules.CanStructureAProjectIntoStructureB(((DetailContainsAnEmbeddedType) exprType).getEmbeddedType(environment), idealType, false)) {
-        return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, idealType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue), null).withPosition(this);
+      if (environment.rules.CanStructureAProjectIntoStructureB(
+          ((DetailContainsAnEmbeddedType) exprType).getEmbeddedType(environment),
+          idealType,
+          false)) {
+        return new TyNativeArray(
+                TypeBehavior.ReadOnlyNativeValue,
+                idealType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue),
+                null)
+            .withPosition(this);
       }
     } else if (environment.rules.IsStructure(exprType, true)) {
       // X
       style = MessageConversionStyle.Single;
-      if (environment.rules.CanStructureAProjectIntoStructureB(exprType, idealType, false)) { return idealType; }
+      if (environment.rules.CanStructureAProjectIntoStructureB(exprType, idealType, false)) {
+        return idealType;
+      }
     } else if (environment.rules.IsMaybe(exprType, true)) {
-      final var subExpr = environment.rules.ResolvePtr(environment.rules.ExtractEmbeddedType(exprType, false), false);
+      final var subExpr =
+          environment.rules.ResolvePtr(
+              environment.rules.ExtractEmbeddedType(exprType, false), false);
       // maybe<X>
       if (subExpr != null && environment.rules.IsStructure(subExpr, false)) {
         style = MessageConversionStyle.Maybe;
-        if (environment.rules.CanStructureAProjectIntoStructureB(subExpr, idealType, false)) { return idealType; }
+        if (environment.rules.CanStructureAProjectIntoStructureB(subExpr, idealType, false)) {
+          return idealType;
+        }
       } else {
         environment.rules.SignalConversionIssue(exprType, false);
       }
@@ -121,7 +149,8 @@ public class ConvertMessage extends Expression {
     }
   }
 
-  private void writeNewMessage(final StringBuilder sb, final TyType elementType, final Environment environment) {
+  private void writeNewMessage(
+      final StringBuilder sb, final TyType elementType, final Environment environment) {
     final var idealType = environment.rules.FindMessageStructure(newMessageType, this, false);
     sb.append("new RTx").append(newMessageType).append("(");
     var first = true;
@@ -133,7 +162,8 @@ public class ConvertMessage extends Expression {
       } else {
         sb.append(", ");
       }
-      final var fieldLookup = new FieldLookup(new Lookup(Token.WRAP("__obj")), null, Token.WRAP(entry.getKey()));
+      final var fieldLookup =
+          new FieldLookup(new Lookup(Token.WRAP("__obj")), null, Token.WRAP(entry.getKey()));
       fieldLookup.typing(scoped, null);
       fieldLookup.writeJava(sb, scoped);
     }

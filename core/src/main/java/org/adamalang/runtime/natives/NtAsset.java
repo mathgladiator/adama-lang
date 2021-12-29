@@ -56,19 +56,25 @@ public class NtAsset implements Comparable<NtAsset> {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    NtAsset ntAsset = (NtAsset) o;
-    return id.equals(ntAsset.id) && size == ntAsset.size && Objects.equals(name, ntAsset.name) && Objects.equals(contentType, ntAsset.contentType) && Objects.equals(md5, ntAsset.md5) && Objects.equals(sha384, ntAsset.sha384);
-  }
-
-  @Override
   public int hashCode() {
     return Objects.hash(id, name, contentType, size, md5, sha384);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    NtAsset ntAsset = (NtAsset) o;
+    return id.equals(ntAsset.id)
+        && size == ntAsset.size
+        && Objects.equals(name, ntAsset.name)
+        && Objects.equals(contentType, ntAsset.contentType)
+        && Objects.equals(md5, ntAsset.md5)
+        && Objects.equals(sha384, ntAsset.sha384);
+  }
+
   public long memory() {
-    return (id.length() + name.length() + contentType.length() + md5.length() + sha384.length()) * 2 + 48;
+    return (id.length() + name.length() + contentType.length() + md5.length() + sha384.length()) * 2
+        + 48;
   }
 }

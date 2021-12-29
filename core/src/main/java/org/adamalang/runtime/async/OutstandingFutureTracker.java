@@ -16,13 +16,15 @@ import org.adamalang.runtime.reactives.RxInt32;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-/** this class has the job of trakcing futures which get created and assigning
- * them persistent ids. This is the class which buffers asks from the code such
- * that we can turn around and ask the people */
+/**
+ * this class has the job of trakcing futures which get created and assigning them persistent ids.
+ * This is the class which buffers asks from the code such that we can turn around and ask the
+ * people
+ */
 public class OutstandingFutureTracker {
   public final ArrayList<OutstandingFuture> created;
-  private int maxId;
   private final RxInt32 source;
+  private int maxId;
 
   public OutstandingFutureTracker(final RxInt32 source) {
     this.source = source;
@@ -38,8 +40,10 @@ public class OutstandingFutureTracker {
     created.clear();
   }
 
-  /** dump the viewer's data into the provide node; this is how people learn that
-   * they must make a decision */
+  /**
+   * dump the viewer's data into the provide node; this is how people learn that they must make a
+   * decision
+   */
   public void dump(final JsonStreamWriter writer, final NtClient who) {
     writer.writeObjectFieldIntro("outstanding");
     writer.beginArray();
@@ -63,12 +67,15 @@ public class OutstandingFutureTracker {
     writer.endArray();
   }
 
-  /** create a future for the given channel and client should the client not
-   * already know about one */
+  /**
+   * create a future for the given channel and client should the client not already know about one
+   */
   public OutstandingFuture make(final String channel, final NtClient client) {
     var newId = source.get() + 1;
     for (final OutstandingFuture exist : created) {
-      if (exist.test(channel, client)) { return exist; }
+      if (exist.test(channel, client)) {
+        return exist;
+      }
       if (exist.id >= newId) {
         newId = exist.id + 1;
       }

@@ -9,8 +9,10 @@
  */
 package org.adamalang.translator.parser.token;
 
-/** a token may have a subtype. This is it hint from the lexer to the parser as
- * to how the token must be parsed */
+/**
+ * a token may have a subtype. This is it hint from the lexer to the parser as to how the token must
+ * be parsed
+ */
 public enum MinorTokenType {
   /** comment is a block based (/* */
   CommentBlock,

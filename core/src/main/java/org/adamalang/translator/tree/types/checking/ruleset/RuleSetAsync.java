@@ -16,11 +16,18 @@ import org.adamalang.translator.tree.types.natives.TyNativeClient;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
 
 public class RuleSetAsync {
-  public static boolean IsClient(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsClient(
+      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = RuleSetCommon.Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
-      if (tyType instanceof TyNativeClient || tyType instanceof TyReactiveClient) { return true; }
-      RuleSetCommon.SignalTypeFailure(environment, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, null), tyTypeOriginal, silent);
+      if (tyType instanceof TyNativeClient || tyType instanceof TyReactiveClient) {
+        return true;
+      }
+      RuleSetCommon.SignalTypeFailure(
+          environment,
+          new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, null),
+          tyTypeOriginal,
+          silent);
     }
     return false;
   }

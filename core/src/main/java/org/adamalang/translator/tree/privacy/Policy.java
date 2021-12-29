@@ -22,7 +22,11 @@ import java.util.function.Consumer;
 /** defines a policy for field records */
 public abstract class Policy extends DocumentPosition {
   public abstract void emit(Consumer<Token> yielder);
+
   public abstract void typing(Environment environment, StructureStorage owningStructureStorage);
-  public abstract boolean writePrivacyCheckGuard(StringBuilderWithTabs sb, FieldDefinition field, Environment environment);
+
+  public abstract boolean writePrivacyCheckGuard(
+      StringBuilderWithTabs sb, FieldDefinition field, Environment environment);
+
   public abstract void writeTypeReflectionJson(JsonStreamWriter writer);
 }

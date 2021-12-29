@@ -42,12 +42,12 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  public void __commit(final String name, final JsonStreamWriter writer, final JsonStreamWriter reverse) {
+  public Set<String> __get_intern_strings() {
+    return new HashSet<>();
   }
 
   @Override
-  protected void __construct_intern(final NtClient who, final NtMessageBase message) {
-  }
+  protected void __construct_intern(final NtClient who, final NtMessageBase message) {}
 
   @Override
   public PrivateView __createPrivateView(final NtClient __who, final Perspective __perspective) {
@@ -55,8 +55,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  public void __dump(final JsonStreamWriter __writer) {
-  }
+  public void __dump(final JsonStreamWriter __writer) {}
 
   @Override
   public String[] __getTests() {
@@ -64,16 +63,21 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  public void __insert(final JsonStreamReader __reader) {
+  public void __revert() {}
+
+  @Override
+  protected Object __parse_message2(final String channel, final JsonStreamReader reader) {
+    return null;
   }
 
   @Override
-  public void __patch(JsonStreamReader __reader) {
-  }
+  public void __insert(final JsonStreamReader __reader) {}
 
   @Override
-  protected void __invoke_label(final String __new_state) {
-  }
+  public void __patch(JsonStreamReader __reader) {}
+
+  @Override
+  protected void __invoke_label(final String __new_state) {}
 
   @Override
   public boolean __onConnected(final NtClient clientValue) {
@@ -82,17 +86,16 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {
+  public void __onDisconnected(final NtClient clientValue) {
+    disconnects.add(clientValue);
   }
+
+  @Override
+  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}
 
   @Override
   public boolean __onCanAssetAttached(NtClient __cvalue) {
     return false;
-  }
-
-  @Override
-  public void __onDisconnected(final NtClient clientValue) {
-    disconnects.add(clientValue);
   }
 
   @Override
@@ -101,28 +104,15 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected Object __parse_message2(final String channel, final JsonStreamReader reader) {
-    return null;
-  }
+  protected void __reset_future_queues() {}
 
   @Override
-  protected void __reset_future_queues() {
-  }
+  protected void __route(final AsyncTask task) {}
 
   @Override
-  public void __revert() {
-  }
+  public void __test(final TestReportBuilder report, final String testName) {}
 
   @Override
-  protected void __route(final AsyncTask task) {
-  }
-
-  @Override
-  public void __test(final TestReportBuilder report, final String testName) {
-  }
-
-  @Override
-  public Set<String> __get_intern_strings() {
-    return new HashSet<>();
-  }
+  public void __commit(
+      final String name, final JsonStreamWriter writer, final JsonStreamWriter reverse) {}
 }

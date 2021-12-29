@@ -15,7 +15,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
+@Target({ElementType.METHOD})
 /** use on a method to extend the internal type for the first argument. */
-public @interface Extension {
-}
+public @interface Extension {}

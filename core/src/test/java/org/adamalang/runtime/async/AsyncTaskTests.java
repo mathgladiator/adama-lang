@@ -21,22 +21,25 @@ public class AsyncTaskTests {
   @Test
   public void abort_flow() {
     final var at = new AsyncTask(0, NtClient.NO_ONE, "ch", 0, "message");
-    at.setAction(() -> {
-      throw new AbortMessageException();
-    });
+    at.setAction(
+        () -> {
+          throw new AbortMessageException();
+        });
     try {
       at.execute();
       Assert.fail();
-    } catch (final RetryProgressException rpe) {}
+    } catch (final RetryProgressException rpe) {
+    }
   }
 
   @Test
   public void ideal_flow() throws Exception {
     final var at = new AsyncTask(0, NtClient.NO_ONE, "ch", 0, "message");
     final var ref = new AtomicInteger(0);
-    at.setAction(() -> {
-      ref.incrementAndGet();
-    });
+    at.setAction(
+        () -> {
+          ref.incrementAndGet();
+        });
     at.execute();
   }
 }

@@ -17,15 +17,19 @@ import org.adamalang.translator.tree.types.checking.properties.CanTestEqualityRe
 
 public class LocalTypeAlgebraResult {
   private final Environment environment;
-  CanTestEqualityResult equalityResult = CanTestEqualityResult.No;
   private final Expression left;
-  public CanMathResult mathResult = CanMathResult.No;
   private final Expression operation;
   private final Expression right;
+  public CanMathResult mathResult = CanMathResult.No;
   public TyType typeLeft = null;
   public TyType typeRight = null;
+  CanTestEqualityResult equalityResult = CanTestEqualityResult.No;
 
-  public LocalTypeAlgebraResult(final Environment environment, final Expression operation, final Expression left, final Expression right) {
+  public LocalTypeAlgebraResult(
+      final Environment environment,
+      final Expression operation,
+      final Expression left,
+      final Expression right) {
     this.environment = environment;
     this.operation = operation;
     this.left = left;
@@ -38,7 +42,9 @@ public class LocalTypeAlgebraResult {
     typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
     mathResult = environment.rules.CanAdd(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) { return environment.rules.InventMathType(typeLeft, typeRight, mathResult); }
+    if (mathResult != CanMathResult.No) {
+      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
+    }
     return null;
   }
 
@@ -56,7 +62,9 @@ public class LocalTypeAlgebraResult {
     typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
     mathResult = environment.rules.CanDivide(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) { return environment.rules.InventMathType(typeLeft, typeRight, mathResult); }
+    if (mathResult != CanMathResult.No) {
+      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
+    }
     return null;
   }
 
@@ -83,7 +91,9 @@ public class LocalTypeAlgebraResult {
     typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
     mathResult = environment.rules.CanMod(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) { return environment.rules.InventMathType(typeLeft, typeRight, mathResult); }
+    if (mathResult != CanMathResult.No) {
+      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
+    }
     return null;
   }
 
@@ -93,7 +103,9 @@ public class LocalTypeAlgebraResult {
     typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
     mathResult = environment.rules.CanMultiply(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) { return environment.rules.InventMathType(typeLeft, typeRight, mathResult); }
+    if (mathResult != CanMathResult.No) {
+      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
+    }
     return null;
   }
 
@@ -103,7 +115,9 @@ public class LocalTypeAlgebraResult {
     typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
     mathResult = environment.rules.CanSubstract(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) { return environment.rules.InventMathType(typeLeft, typeRight, mathResult); }
+    if (mathResult != CanMathResult.No) {
+      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
+    }
     return null;
   }
 }

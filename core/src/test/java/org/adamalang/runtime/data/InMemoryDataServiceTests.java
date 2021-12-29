@@ -25,193 +25,228 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryDataServiceTests {
 
-    public DataService.RemoteDocumentUpdate update(int seq, String redo, String undo) {
-        return new DataService.RemoteDocumentUpdate(seq, NtClient.NO_ONE, null, redo, undo, false, 0);
-    }
+  @Test
+  public void flow() {
+    MockTime time = new MockTime();
+    InMemoryDataService ds = new InMemoryDataService((t) -> t.run(), time);
+    AtomicInteger success = new AtomicInteger(0);
+    Key key = new Key("space", "key");
+    ds.initialize(key, update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"), bumpSuccess(success));
+    ds.patch(key, update(2, "{\"x\":2}", "{\"x\":1}"), bumpSuccess(success));
+    ds.patch(key, update(3, "{\"x\":3}", "{\"x\":2}"), bumpSuccess(success));
+    ds.get(
+        key,
+        new Callback<>() {
+          @Override
+          public void success(DataService.LocalDocumentChange value) {
+            success.getAndIncrement();
+            Assert.assertEquals("{\"x\":3}", value.patch);
+          }
 
-    public DataService.RemoteDocumentUpdate updateActive(int seq, String redo, String undo, int time) {
-        return new DataService.RemoteDocumentUpdate(seq, NtClient.NO_ONE, null, redo, undo, true, time);
-    }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.fail();
+          }
+        });
+    ds.patch(
+        key,
+        update(3, "{\"x\":3}", "{\"x\":2}"),
+        new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            Assert.fail();
+          }
 
-    private static Callback<Void> bumpSuccess(AtomicInteger success) {
-        return new Callback<Void>() {
-            @Override
-            public void success(Void value) {
-                success.getAndIncrement();
-            }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            success.getAndIncrement();
+            Assert.assertEquals(621580, ex.code);
+          }
+        });
+    ds.compute(
+        key,
+        DataService.ComputeMethod.Rewind,
+        1,
+        new Callback<DataService.LocalDocumentChange>() {
+          @Override
+          public void success(DataService.LocalDocumentChange value) {
+            success.getAndIncrement();
+            Assert.assertEquals("{\"x\":0,\"y\":0}", value.patch);
+          }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-                Assert.fail();
-            }
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.fail();
+          }
+        });
+    ds.compute(
+        key,
+        DataService.ComputeMethod.HeadPatch,
+        1,
+        new Callback<DataService.LocalDocumentChange>() {
+          @Override
+          public void success(DataService.LocalDocumentChange value) {
+            success.getAndIncrement();
+            Assert.assertEquals("{\"x\":3}", value.patch);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.fail();
+          }
+        });
+    ds.compute(
+        key,
+        DataService.ComputeMethod.HeadPatch,
+        10,
+        new Callback<DataService.LocalDocumentChange>() {
+          @Override
+          public void success(DataService.LocalDocumentChange value) {
+            Assert.fail();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            success.getAndIncrement();
+            Assert.assertEquals(120944, ex.code);
+          }
+        });
+    ds.compute(
+        key,
+        DataService.ComputeMethod.Unsend,
+        1,
+        new Callback<DataService.LocalDocumentChange>() {
+          @Override
+          public void success(DataService.LocalDocumentChange value) {
+            success.getAndIncrement();
+            Assert.assertEquals("{\"y\":0}", value.patch);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.fail();
+          }
+        });
+    ArrayList<Key> scanned = new ArrayList<>();
+    ActiveKeyStream addToScanned =
+        new ActiveKeyStream() {
+          @Override
+          public void schedule(Key key, long time) {
+            scanned.add(key);
+          }
+
+          @Override
+          public void finish() {
+            success.getAndIncrement();
+          }
+
+          @Override
+          public void error(ErrorCodeException failure) {
+            Assert.fail();
+          }
         };
-    }
+    ds.scan(addToScanned);
+    Assert.assertEquals(0, scanned.size());
+    ds.patch(key, updateActive(4, "{\"x\":4}", "{\"x\":3}", 42), bumpSuccess(success));
+    ds.scan(addToScanned);
+    Assert.assertEquals(1, scanned.size());
+    ds.delete(key, bumpSuccess(success));
+    Assert.assertEquals(13, success.get());
+  }
 
-    private static Callback<Void> bumpFailure(AtomicInteger failure, int expectedCode) {
-        return new Callback<Void>() {
-            @Override
-            public void success(Void value) {
-                Assert.fail();
-            }
+  public DataService.RemoteDocumentUpdate update(int seq, String redo, String undo) {
+    return new DataService.RemoteDocumentUpdate(seq, NtClient.NO_ONE, null, redo, undo, false, 0);
+  }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-                failure.getAndIncrement();
-                Assert.assertEquals(expectedCode, ex.code);
-            }
-        };
-    }
+  private static Callback<Void> bumpSuccess(AtomicInteger success) {
+    return new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        success.getAndIncrement();
+      }
 
-    private static Callback<DataService.LocalDocumentChange> bumpFailureDoc(AtomicInteger failure, int expectedCode) {
-        return new Callback<>() {
-            @Override
-            public void success(DataService.LocalDocumentChange value) {
-                Assert.fail();
-            }
+      @Override
+      public void failure(ErrorCodeException ex) {
+        Assert.fail();
+      }
+    };
+  }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-                failure.getAndIncrement();
-                Assert.assertEquals(expectedCode, ex.code);
-            }
-        };
-    }
+  public DataService.RemoteDocumentUpdate updateActive(
+      int seq, String redo, String undo, int time) {
+    return new DataService.RemoteDocumentUpdate(seq, NtClient.NO_ONE, null, redo, undo, true, time);
+  }
 
-    @Test
-    public void flow() {
-        MockTime time = new MockTime();
-        InMemoryDataService ds = new InMemoryDataService((t) -> t.run(), time);
-        AtomicInteger success = new AtomicInteger(0);
-        Key key = new Key("space", "key");
-        ds.initialize(key, update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"), bumpSuccess(success));
-        ds.patch(key, update(2, "{\"x\":2}", "{\"x\":1}"), bumpSuccess(success));
-        ds.patch(key, update(3, "{\"x\":3}", "{\"x\":2}"), bumpSuccess(success));
-        ds.get(key, new Callback<>() {
-            @Override
-            public void success(DataService.LocalDocumentChange value) {
-                success.getAndIncrement();
-                Assert.assertEquals("{\"x\":3}", value.patch);
-            }
+  @Test
+  public void notFound() {
+    MockTime time = new MockTime();
+    InMemoryDataService ds = new InMemoryDataService((t) -> t.run(), time);
+    Key key = new Key("space", "key");
+    AtomicInteger failure = new AtomicInteger(0);
+    ds.get(key, bumpFailureDoc(failure, 198705));
+    ds.patch(key, update(1, null, null), bumpFailure(failure, 144944));
+    ds.compute(key, null, 1, bumpFailureDoc(failure, 106546));
+    ds.delete(key, bumpFailure(failure, 117816));
+  }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-                Assert.fail();
-            }
-        });
-        ds.patch(key, update(3, "{\"x\":3}", "{\"x\":2}"), new Callback<Void>() {
-            @Override
-            public void success(Void value) {
-                Assert.fail();
-            }
+  private static Callback<DataService.LocalDocumentChange> bumpFailureDoc(
+      AtomicInteger failure, int expectedCode) {
+    return new Callback<>() {
+      @Override
+      public void success(DataService.LocalDocumentChange value) {
+        Assert.fail();
+      }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-                success.getAndIncrement();
-                Assert.assertEquals(621580, ex.code);
-            }
-        });
-        ds.compute(key, DataService.ComputeMethod.Rewind, 1, new Callback<DataService.LocalDocumentChange>() {
-            @Override
-            public void success(DataService.LocalDocumentChange value) {
-                success.getAndIncrement();
-                Assert.assertEquals("{\"x\":0,\"y\":0}", value.patch);
-            }
+      @Override
+      public void failure(ErrorCodeException ex) {
+        failure.getAndIncrement();
+        Assert.assertEquals(expectedCode, ex.code);
+      }
+    };
+  }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-                Assert.fail();
-            }
-        });
-        ds.compute(key, DataService.ComputeMethod.Patch, 1, new Callback<DataService.LocalDocumentChange>() {
-            @Override
-            public void success(DataService.LocalDocumentChange value) {
-                success.getAndIncrement();
-                Assert.assertEquals("{\"x\":3}", value.patch);
-            }
+  private static Callback<Void> bumpFailure(AtomicInteger failure, int expectedCode) {
+    return new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        Assert.fail();
+      }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-                Assert.fail();
-            }
-        });
-        ds.compute(key, DataService.ComputeMethod.Patch, 10, new Callback<DataService.LocalDocumentChange>() {
-            @Override
-            public void success(DataService.LocalDocumentChange value) {
-                Assert.fail();
-            }
+      @Override
+      public void failure(ErrorCodeException ex) {
+        failure.getAndIncrement();
+        Assert.assertEquals(expectedCode, ex.code);
+      }
+    };
+  }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-                success.getAndIncrement();
-                Assert.assertEquals(120944, ex.code);
-            }
-        });
-        ds.compute(key, DataService.ComputeMethod.Unsend, 1, new Callback<DataService.LocalDocumentChange>() {
-            @Override
-            public void success(DataService.LocalDocumentChange value) {
-                success.getAndIncrement();
-                Assert.assertEquals("{\"y\":0}", value.patch);
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-                Assert.fail();
-            }
-        });
-        ArrayList<Key> scanned = new ArrayList<>();
-        ActiveKeyStream addToScanned = new ActiveKeyStream() {
-            @Override
-            public void schedule(Key key, long time) {
-                scanned.add(key);
-            }
-
-            @Override
-            public void finish() {
-                success.getAndIncrement();
-            }
-
-            @Override
-            public void error(ErrorCodeException failure) {
-                Assert.fail();
-            }
-        };
-        ds.scan(addToScanned);
-        Assert.assertEquals(0, scanned.size());
-        ds.patch(key, updateActive(4, "{\"x\":4}", "{\"x\":3}", 42), bumpSuccess(success));
-        ds.scan(addToScanned);
-        Assert.assertEquals(1, scanned.size());
-        ds.delete(key, bumpSuccess(success));
-        Assert.assertEquals(13, success.get());
-    }
-
-    @Test
-    public void notFound() {
-        MockTime time = new MockTime();
-        InMemoryDataService ds = new InMemoryDataService((t) -> t.run(), time);
-        Key key = new Key("space", "key");
-        AtomicInteger failure = new AtomicInteger(0);
-        ds.get(key, bumpFailureDoc(failure, 198705));
-        ds.patch(key, update(1, null, null), bumpFailure(failure, 144944));
-        ds.compute(key, null, 1, bumpFailureDoc(failure, 106546));
-        ds.delete(key, bumpFailure(failure, 117816));
-    }
-
-    @Test
-    public void computeFailures() {
-        MockTime time = new MockTime();
-        InMemoryDataService ds = new InMemoryDataService((t) -> t.run(), time);
-        Key key = new Key("space", "key");
-        AtomicInteger failure = new AtomicInteger(0);
-        AtomicInteger success = new AtomicInteger(0);
-        ds.initialize(key, update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"), bumpSuccess(success));
-        ds.initialize(key, update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"), bumpFailure(failure, ErrorCodes.INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS));
-        ds.patch(key, update(2, "{\"x\":2}", "{\"x\":1}"), bumpSuccess(success));
-        ds.patch(key, update(3, "{\"x\":3}", "{\"x\":2}"), bumpSuccess(success));
-        ds.compute(key, null, 1, bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_INVALID_METHOD));
-        ds.compute(key, DataService.ComputeMethod.Rewind, 100, bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
-        ds.compute(key, DataService.ComputeMethod.Unsend, 100, bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_UNSEND_FAILED_TO_FIND));
-        Assert.assertEquals(3, success.get());
-        Assert.assertEquals(4, failure.get());
-    }
-
+  @Test
+  public void computeFailures() {
+    MockTime time = new MockTime();
+    InMemoryDataService ds = new InMemoryDataService((t) -> t.run(), time);
+    Key key = new Key("space", "key");
+    AtomicInteger failure = new AtomicInteger(0);
+    AtomicInteger success = new AtomicInteger(0);
+    ds.initialize(key, update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"), bumpSuccess(success));
+    ds.initialize(
+        key,
+        update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"),
+        bumpFailure(failure, ErrorCodes.INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS));
+    ds.patch(key, update(2, "{\"x\":2}", "{\"x\":1}"), bumpSuccess(success));
+    ds.patch(key, update(3, "{\"x\":3}", "{\"x\":2}"), bumpSuccess(success));
+    ds.compute(
+        key, null, 1, bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_INVALID_METHOD));
+    ds.compute(
+        key,
+        DataService.ComputeMethod.Rewind,
+        100,
+        bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
+    ds.compute(
+        key,
+        DataService.ComputeMethod.Unsend,
+        100,
+        bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_UNSEND_FAILED_TO_FIND));
+    Assert.assertEquals(3, success.get());
+    Assert.assertEquals(4, failure.get());
+  }
 }

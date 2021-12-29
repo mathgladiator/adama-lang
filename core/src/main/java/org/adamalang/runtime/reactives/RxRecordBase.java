@@ -13,9 +13,10 @@ import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 
 /** the base object for generated record types */
-public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, RxParent, RxChild {
-  private boolean __alive;
+public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase
+    implements Comparable<Ty>, RxParent, RxChild {
   protected boolean __isDying;
+  private boolean __alive;
 
   public RxRecordBase(final RxParent __owner) {
     super(__owner);
@@ -30,9 +31,19 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
     __raiseDirty();
   }
 
+  @Override
+  public void __raiseDirty() {
+    super.__raiseDirty();
+  }
+
+  @Override
+  public long __memory() {
+    return super.__memory() + 2;
+  }
+
   public abstract String[] __getIndexColumns();
+
   public abstract int[] __getIndexValues();
-  public abstract int __id();
 
   public boolean __isDying() {
     return __isDying;
@@ -46,17 +57,13 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   public abstract String __name();
 
   @Override
-  public void __raiseDirty() {
-    super.__raiseDirty();
-  }
-
-  @Override
   public boolean __raiseInvalid() {
     __invalidateSubscribers();
     return __alive;
   }
 
   public abstract void __reindex();
+
   public abstract void __setId(int __id, boolean __useForce);
 
   @Override
@@ -65,11 +72,7 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
     return __id() - o.__id();
   }
 
-  @Override
-  public boolean equals(final Object o) {
-    if (o instanceof RxRecordBase) { return __id() == ((RxRecordBase) o).__id(); }
-    return false;
-  }
+  public abstract int __id();
 
   @Override
   public int hashCode() {
@@ -77,7 +80,10 @@ public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase imple
   }
 
   @Override
-  public long __memory() {
-    return super.__memory() + 2;
+  public boolean equals(final Object o) {
+    if (o instanceof RxRecordBase) {
+      return __id() == ((RxRecordBase) o).__id();
+    }
+    return false;
   }
 }

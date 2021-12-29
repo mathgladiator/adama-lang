@@ -26,7 +26,10 @@ public class TyNativeFunctional extends TyType {
   public final ArrayList<FunctionOverloadInstance> overloads;
   public final FunctionStyleJava style;
 
-  public TyNativeFunctional(final String name, final ArrayList<FunctionOverloadInstance> overloads, final FunctionStyleJava style) {
+  public TyNativeFunctional(
+      final String name,
+      final ArrayList<FunctionOverloadInstance> overloads,
+      final FunctionStyleJava style) {
     super(TypeBehavior.ReadOnlyNativeValue);
     this.name = name;
     this.overloads = overloads;
@@ -36,21 +39,6 @@ public class TyNativeFunctional extends TyType {
   @Override
   public void emit(final Consumer<Token> yielder) {
     throw new UnsupportedOperationException();
-  }
-
-  /** find the right instance basedd on the given types */
-  public FunctionOverloadInstance find(final DocumentPosition position, final ArrayList<TyType> argTypes, final Environment environment) {
-    var result = overloads.get(0);
-    var score = (argTypes.size() + 1) * (argTypes.size() + 1);
-    for (final FunctionOverloadInstance candidate : overloads) {
-      final var testScore = candidate.score(environment, argTypes);
-      if (testScore < score) {
-        score = testScore;
-        result = candidate;
-      }
-    }
-    result.test(position, environment, argTypes);
-    return result;
   }
 
   @Override
@@ -69,7 +57,8 @@ public class TyNativeFunctional extends TyType {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeFunctional(name, overloads, style).withPosition(position);
   }
 
@@ -91,5 +80,23 @@ public class TyNativeFunctional extends TyType {
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_functional");
     writer.endObject();
+  }
+
+  /** find the right instance basedd on the given types */
+  public FunctionOverloadInstance find(
+      final DocumentPosition position,
+      final ArrayList<TyType> argTypes,
+      final Environment environment) {
+    var result = overloads.get(0);
+    var score = (argTypes.size() + 1) * (argTypes.size() + 1);
+    for (final FunctionOverloadInstance candidate : overloads) {
+      final var testScore = candidate.score(environment, argTypes);
+      if (testScore < score) {
+        score = testScore;
+        result = candidate;
+      }
+    }
+    result.test(position, environment, argTypes);
+    return result;
   }
 }

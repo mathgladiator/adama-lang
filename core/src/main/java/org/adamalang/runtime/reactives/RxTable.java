@@ -24,17 +24,23 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 /** a reactive table */
-public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iterable<Ty>, RxParent, RxChild {
-  private final LinkedHashMap<Integer, Ty> createdObjects;
+public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase
+    implements Iterable<Ty>, RxParent, RxChild {
   public final LivingDocument document;
-  private final ReactiveIndex<Ty>[] indices;
-  private final LinkedHashMap<Integer, Ty> itemsByKey;
   public final Function<RxParent, Ty> maker;
   public final String className;
+  private final LinkedHashMap<Integer, Ty> createdObjects;
+  private final ReactiveIndex<Ty>[] indices;
+  private final LinkedHashMap<Integer, Ty> itemsByKey;
   private final TreeSet<Ty> unknowns;
 
   @SuppressWarnings("unchecked")
-  public RxTable(final LivingDocument document, final RxParent owner, final String className, final Function<RxParent, Ty> maker, final int indicies) {
+  public RxTable(
+      final LivingDocument document,
+      final RxParent owner,
+      final String className,
+      final Function<RxParent, Ty> maker,
+      final int indicies) {
     super(owner);
     this.document = document;
     this.className = className;
@@ -116,39 +122,39 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
 
   @Override
   public void __insert(final JsonStreamReader reader) {
-      if (reader.startObject()) {
-        while (reader.notEndOfObject()) {
-          final var f2 = reader.fieldName();
-          if (reader.testLackOfNull()) {
-            final var key = Integer.parseInt(f2);
-            final var tyPrior = itemsByKey.get(key);
-            if (tyPrior == null) {
-              final var tyObj = maker.apply(this);
-              tyObj.__setId(key, true);
-              tyObj.__insert(reader);
-              itemsByKey.put(key, tyObj);
-              if (unknowns != null) {
-                tyObj.__reindex();
-              }
-              tyObj.__subscribe(this);
-            } else {
-              // it exists, so it is already subscribed
-              tyPrior.__insert(reader);
-              if (unknowns != null && !unknowns.contains(tyPrior)) {
-                tyPrior.__deindex();
-                unknowns.add(tyPrior);
-              }
+    if (reader.startObject()) {
+      while (reader.notEndOfObject()) {
+        final var f2 = reader.fieldName();
+        if (reader.testLackOfNull()) {
+          final var key = Integer.parseInt(f2);
+          final var tyPrior = itemsByKey.get(key);
+          if (tyPrior == null) {
+            final var tyObj = maker.apply(this);
+            tyObj.__setId(key, true);
+            tyObj.__insert(reader);
+            itemsByKey.put(key, tyObj);
+            if (unknowns != null) {
+              tyObj.__reindex();
             }
+            tyObj.__subscribe(this);
           } else {
-            final var key = Integer.parseInt(f2);
-            final var tyObject = itemsByKey.remove(key);
-            if (tyObject != null) {
-              tyObject.__delete();
-              tyObject.__deindex();
+            // it exists, so it is already subscribed
+            tyPrior.__insert(reader);
+            if (unknowns != null && !unknowns.contains(tyPrior)) {
+              tyPrior.__deindex();
+              unknowns.add(tyPrior);
             }
+          }
+        } else {
+          final var key = Integer.parseInt(f2);
+          final var tyObject = itemsByKey.remove(key);
+          if (tyObject != null) {
+            tyObject.__delete();
+            tyObject.__deindex();
           }
         }
       }
+    }
   }
 
   @Override
@@ -174,12 +180,6 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
   }
 
   @Override
-  public boolean __raiseInvalid() {
-    __raiseDirty();
-    return true;
-  }
-
-  @Override
   public void __revert() {
     if (__isDirty()) {
       // if we are commiting
@@ -198,27 +198,21 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     }
   }
 
-  public Ty getById(final int id) {
-    final var obj = itemsByKey.get(id);
-    if (obj != null) { return obj; }
-    return null;
-  }
-
-  public ReactiveIndex<Ty> getIndex(final short column) {
-    return indices[column];
-  }
-
-  public NtList<Ty> iterate(final boolean done) {
-    return new SelectorRxObjectList<>(this);
-  }
-
   @Override
-  public Iterator<Ty> iterator() {
-    return itemsByKey.values().iterator();
-  }
-
-  public Ty make() {
-    return make(document.__genNextAutoKey());
+  public long __memory() {
+    long sum = super.__memory() + 64 + className.length() * 2;
+    if (indices != null) {
+      for (ReactiveIndex<Ty> idx : indices) {
+        sum += idx.memory();
+      }
+    }
+    for (Ty value : itemsByKey.values()) {
+      sum += value.__memory() + 20;
+    }
+    if (unknowns != null) {
+      sum += unknowns.size() * 8;
+    }
+    return sum;
   }
 
   public Ty make(int key) {
@@ -235,31 +229,63 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     return result;
   }
 
+  @Override
+  public boolean __raiseInvalid() {
+    __raiseDirty();
+    return true;
+  }
+
+  public Ty getById(final int id) {
+    final var obj = itemsByKey.get(id);
+    if (obj != null) {
+      return obj;
+    }
+    return null;
+  }
+
+  public ReactiveIndex<Ty> getIndex(final short column) {
+    return indices[column];
+  }
+
+  @Override
+  public Iterator<Ty> iterator() {
+    return itemsByKey.values().iterator();
+  }
+
+  public Ty make() {
+    return make(document.__genNextAutoKey());
+  }
+
   public Iterable<Ty> scan(final WhereClause<Ty> filter) {
-    if (filter == null) { return this; }
+    if (filter == null) {
+      return this;
+    }
     final var prior = new AtomicReference<TreeSet<Ty>>(null);
-    filter.scopeByIndicies((column, value) -> {
-      final var specific = indices[column].of(value);
-      if (specific == null) { // no index available
-        prior.set(new TreeSet<>());
-        return;
-      }
-      if (prior.get() == null) {
-        // just use the index
-        prior.set(specific);
-      } else {
-        final var common = new TreeSet<Ty>();
-        if (specific != null) {
-          for (final Ty item : specific) {
-            if (prior.get().contains(item)) {
-              common.add(item);
-            }
+    filter.scopeByIndicies(
+        (column, value) -> {
+          final var specific = indices[column].of(value);
+          if (specific == null) { // no index available
+            prior.set(new TreeSet<>());
+            return;
           }
-        }
-        prior.set(common);
-      }
-    });
-    if (prior.get() == null) { return this; }
+          if (prior.get() == null) {
+            // just use the index
+            prior.set(specific);
+          } else {
+            final var common = new TreeSet<Ty>();
+            if (specific != null) {
+              for (final Ty item : specific) {
+                if (prior.get().contains(item)) {
+                  common.add(item);
+                }
+              }
+            }
+            prior.set(common);
+          }
+        });
+    if (prior.get() == null) {
+      return this;
+    }
     final var clone = new TreeSet<>(prior.get());
     clone.addAll(unknowns);
     return clone;
@@ -273,20 +299,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
     }
   }
 
-  @Override
-  public long __memory() {
-    long sum = super.__memory() + 64 + className.length() * 2;
-    if (indices != null) {
-      for (ReactiveIndex<Ty> idx : indices) {
-        sum += idx.memory();
-      }
-    }
-    for (Ty value : itemsByKey.values()) {
-      sum += value.__memory() + 20;
-    }
-    if (unknowns != null) {
-      sum += unknowns.size() * 8;
-    }
-    return sum;
+  public NtList<Ty> iterate(final boolean done) {
+    return new SelectorRxObjectList<>(this);
   }
 }

@@ -12,12 +12,14 @@ package org.adamalang.runtime.index;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.reactives.RxRecordBase;
 
-/** an index value must respond to change, and this enables that indexing to
- * occur reactively to data changes. */
+/**
+ * an index value must respond to change, and this enables that indexing to occur reactively to data
+ * changes.
+ */
 public abstract class ReactiveIndexInvalidator<Ty extends RxRecordBase<Ty>> implements RxChild {
   private final ReactiveIndex<Ty> index;
-  private Integer indexedAt;
   private final Ty item;
+  private Integer indexedAt;
 
   public ReactiveIndexInvalidator(final ReactiveIndex<Ty> index, final Ty item) {
     this.index = index;
@@ -43,6 +45,9 @@ public abstract class ReactiveIndexInvalidator<Ty extends RxRecordBase<Ty>> impl
     }
   }
 
+  /** pull the value to index on */
+  public abstract int pullValue();
+
   /** remove from all index */
   public void deindex() {
     if (indexedAt != null) {
@@ -52,7 +57,4 @@ public abstract class ReactiveIndexInvalidator<Ty extends RxRecordBase<Ty>> impl
       index.delete(item);
     }
   }
-
-  /** pull the value to index on */
-  public abstract int pullValue();
 }

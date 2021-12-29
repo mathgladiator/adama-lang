@@ -22,17 +22,25 @@ import java.util.function.Consumer;
 
 /** classical for(statement;condition;statement) block loop */
 public class For extends Statement {
-  public Statement advance;
-  public Block code;
-  public Expression condition;
   public final Token endConditionSemicolon;
   public final Token endParen;
   public final Token forToken;
-  public Statement initial;
   public final Token noInitialSemicolon;
   public final Token openParen;
+  public Statement advance;
+  public Block code;
+  public Expression condition;
+  public Statement initial;
 
-  public For(final Token forToken, final Token openParen, final Statement initial, final Token noInitialSemicolon, final Expression condition, final Token endConditionSemicolon, final Statement advance, final Token endParen,
+  public For(
+      final Token forToken,
+      final Token openParen,
+      final Statement initial,
+      final Token noInitialSemicolon,
+      final Expression condition,
+      final Token endConditionSemicolon,
+      final Statement advance,
+      final Token endParen,
       final Block code) {
     this.forToken = forToken;
     ingest(forToken);
@@ -74,7 +82,8 @@ public class For extends Statement {
       initial.typing(next);
     }
     if (condition != null) {
-      final var conditionType = condition.typing(next.scopeWithComputeContext(ComputeContext.Computation), null);
+      final var conditionType =
+          condition.typing(next.scopeWithComputeContext(ComputeContext.Computation), null);
       environment.rules.IsBoolean(conditionType, false);
     }
     if (advance != null) {

@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 /** the base class of any reactive object */
 public abstract class RxBase {
-  private boolean __dirty;
   private final RxParent __parent;
+  private boolean __dirty;
   private ArrayList<RxChild> __subscribers;
 
   protected RxBase(final RxParent __parent) {
@@ -33,13 +33,16 @@ public abstract class RxBase {
   }
 
   /** commit the changes to the object, and emit a delta */
-  public abstract void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta);
+  public abstract void __commit(
+      String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta);
   /** take a dump of the data */
   public abstract void __dump(JsonStreamWriter writer);
 
   /** how many children are subscribed to this item */
   public int __getSubscriberCount() {
-    if (__subscribers != null) { return __subscribers.size(); }
+    if (__subscribers != null) {
+      return __subscribers.size();
+    }
     return 0;
   }
 
@@ -48,18 +51,6 @@ public abstract class RxBase {
 
   /** patch the data */
   public abstract void __patch(JsonStreamReader reader);
-
-  /** tell all subscribers that they need to recompute */
-  protected void __invalidateSubscribers() {
-    if (__subscribers != null) {
-      final var it = __subscribers.iterator();
-      while (it.hasNext()) {
-        if (!it.next().__raiseInvalid()) {
-          it.remove();
-        }
-      }
-    }
-  }
 
   /** is the data dirty within this item */
   public boolean __isDirty() {
@@ -75,6 +66,18 @@ public abstract class RxBase {
   public void __lowerDirtyRevert() {
     __dirty = false;
     __invalidateSubscribers();
+  }
+
+  /** tell all subscribers that they need to recompute */
+  protected void __invalidateSubscribers() {
+    if (__subscribers != null) {
+      final var it = __subscribers.iterator();
+      while (it.hasNext()) {
+        if (!it.next().__raiseInvalid()) {
+          it.remove();
+        }
+      }
+    }
   }
 
   /** inform the object that it is dirty, which in turn will notify the parents */

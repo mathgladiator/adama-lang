@@ -19,12 +19,12 @@ import org.adamalang.runtime.natives.NtDynamic;
 import java.util.*;
 
 public class JsonStreamReader {
-  private int index;
   private final String json;
   private final int n;
-  ArrayDeque<JsonToken> tokens;
   private final HashMap<String, String> dedupeStrings;
   private final HashMap<NtClient, NtClient> dedupeClients;
+  ArrayDeque<JsonToken> tokens;
+  private int index;
 
   public JsonStreamReader(final String json) {
     this.json = json;
@@ -46,12 +46,16 @@ public class JsonStreamReader {
   }
 
   private void ensureQueueHappy(final int needs) {
-    if (tokens.size() > needs) { return; }
+    if (tokens.size() > needs) {
+      return;
+    }
     while (tokens.size() < 10 + needs) {
       if (index < n) {
         readToken();
       } else {
-        if (tokens.size() < needs) { throw new RuntimeException("Unable to satisfy minimum limit"); }
+        if (tokens.size() < needs) {
+          throw new RuntimeException("Unable to satisfy minimum limit");
+        }
         return;
       }
     }
@@ -305,7 +309,8 @@ public class JsonStreamReader {
             if (sb != null) {
               tokens.addLast(new JsonToken(JsonTokenType.StringLiteral, sb.toString()));
             } else {
-              tokens.addLast(new JsonToken(JsonTokenType.StringLiteral, json.substring(index + 1, j)));
+              tokens.addLast(
+                  new JsonToken(JsonTokenType.StringLiteral, json.substring(index + 1, j)));
             }
             index = j + 1;
             return;
@@ -327,38 +332,47 @@ public class JsonStreamReader {
       case '8':
       case '9':
       case '-':
-      case '+': {
-        boolean isDouble = false;
-        for (var j = index + 1; j < n; j++) {
-          final var ch2 = json.charAt(j);
-          switch (ch2) {
-            case 'E':
-            case 'e':
-            case '.':
-            case '-':
-            case '+':
-              isDouble = true;
-            case '0':
-            case '1':
-            case '2':
-            case '3':
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-              break;
-            default:
-              tokens.addLast(new JsonToken(isDouble ? JsonTokenType.NumberLiteralDouble : JsonTokenType.NumberLiteralInteger, json.substring(index, j)));
-              index = j;
-              return;
+      case '+':
+        {
+          boolean isDouble = false;
+          for (var j = index + 1; j < n; j++) {
+            final var ch2 = json.charAt(j);
+            switch (ch2) {
+              case 'E':
+              case 'e':
+              case '.':
+              case '-':
+              case '+':
+                isDouble = true;
+              case '0':
+              case '1':
+              case '2':
+              case '3':
+              case '4':
+              case '5':
+              case '6':
+              case '7':
+              case '8':
+              case '9':
+                break;
+              default:
+                tokens.addLast(
+                    new JsonToken(
+                        isDouble
+                            ? JsonTokenType.NumberLiteralDouble
+                            : JsonTokenType.NumberLiteralInteger,
+                        json.substring(index, j)));
+                index = j;
+                return;
+            }
           }
+          tokens.addLast(
+              new JsonToken(
+                  isDouble ? JsonTokenType.NumberLiteralDouble : JsonTokenType.NumberLiteralInteger,
+                  json.substring(index)));
+          index = n;
+          return;
         }
-        tokens.addLast(new JsonToken(isDouble ? JsonTokenType.NumberLiteralDouble : JsonTokenType.NumberLiteralInteger, json.substring(index)));
-        index = n;
-        return;
-      }
       case 'n':
         index += 4;
         tokens.addLast(new JsonToken(JsonTokenType.Null, null));
@@ -419,7 +433,8 @@ public class JsonStreamReader {
     } else {
       ensureQueueHappy(1);
       final var token = tokens.removeFirst();
-      if (token.type == JsonTokenType.NumberLiteralInteger || token.type == JsonTokenType.NumberLiteralDouble) {
+      if (token.type == JsonTokenType.NumberLiteralInteger
+          || token.type == JsonTokenType.NumberLiteralDouble) {
         writer.injectJson(token.data);
       } else if (token.type == JsonTokenType.StringLiteral) {
         writer.writeString(token.data);

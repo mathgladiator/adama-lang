@@ -14,14 +14,20 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeFunctional;
 
 public class RuleSetFunctions {
-  public static boolean IsFunction(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsFunction(
+      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);
       if (tyType != null && tyType instanceof TyNativeFunctional) {
         return true;
       } else if (!silent) {
-        environment.document.createError(tyTypeOriginal, String.format("Type check failure: The given type was expected to be a function: '%s'", tyTypeOriginal.getAdamaType()), "RuleSetFunctions");
+        environment.document.createError(
+            tyTypeOriginal,
+            String.format(
+                "Type check failure: The given type was expected to be a function: '%s'",
+                tyTypeOriginal.getAdamaType()),
+            "RuleSetFunctions");
       }
     }
     return false;

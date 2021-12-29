@@ -11,8 +11,10 @@ package org.adamalang.runtime.contracts;
 
 import org.adamalang.runtime.exceptions.AbortMessageException;
 
-/** this is a lazy way of associating code to run within a queue. It's basically
- * a runnable that can throw an abort */
+/**
+ * this is a lazy way of associating code to run within a queue. It's basically a runnable that can
+ * throw an abort
+ */
 @FunctionalInterface
 public interface AsyncAction {
   /** execute the given task, and maybe abort */

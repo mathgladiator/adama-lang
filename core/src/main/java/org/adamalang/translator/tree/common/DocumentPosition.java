@@ -12,8 +12,7 @@ package org.adamalang.translator.tree.common;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.parser.token.Token;
 
-/** Defines a position within a document. Usually, this is a construct within
- * the document */
+/** Defines a position within a document. Usually, this is a construct within the document */
 public class DocumentPosition {
   public static final DocumentPosition ZERO = new DocumentPosition().ingest(0, 0);
   private int endLineIndex;
@@ -66,9 +65,11 @@ public class DocumentPosition {
     return this;
   }
 
-  /** ingest the tokens and the bounds of the tokens
+  /**
+   * ingest the tokens and the bounds of the tokens
    *
-   * @param tokens an array of tokens */
+   * @param tokens an array of tokens
+   */
   public DocumentPosition ingest(final Token... tokens) {
     if (tokens != null) {
       for (final Token token : tokens) {

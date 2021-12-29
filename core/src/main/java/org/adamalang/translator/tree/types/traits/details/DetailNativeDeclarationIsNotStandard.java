@@ -13,5 +13,6 @@ import org.adamalang.translator.env.Environment;
 
 public interface DetailNativeDeclarationIsNotStandard {
   String getPatternWhenValueProvided(Environment environment);
+
   String getStringWhenValueNotProvided(Environment environment);
 }

@@ -10,8 +10,10 @@
 package org.adamalang.runtime.natives;
 
 /** a native data type to hide and hold an entire json tree */
-public class NtDynamic implements Comparable<NtDynamic>  {
+public class NtDynamic implements Comparable<NtDynamic> {
+  public static final NtDynamic NULL = new NtDynamic("null");
   public final String json;
+
   public NtDynamic(String json) {
     this.json = json;
   }
@@ -22,22 +24,22 @@ public class NtDynamic implements Comparable<NtDynamic>  {
   }
 
   @Override
-  public boolean equals(final Object o) {
-    if (o instanceof NtDynamic) { return ((NtDynamic) o).json.equals(json); }
-    return false;
+  public int hashCode() {
+    return json.hashCode();
   }
 
   @Override
-  public int hashCode() {
-    return json.hashCode();
+  public boolean equals(final Object o) {
+    if (o instanceof NtDynamic) {
+      return ((NtDynamic) o).json.equals(json);
+    }
+    return false;
   }
 
   @Override
   public String toString() {
     return json;
   }
-
-  public static final NtDynamic NULL = new NtDynamic("null");
 
   public long memory() {
     return json.length() * 2;

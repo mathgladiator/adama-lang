@@ -35,7 +35,14 @@ public class DefineRPC extends Definition {
   public final Token closeParen;
   public final Block code;
 
-  public DefineRPC(Token rpcToken, Token name, Token openParen, Token clientVar, List<FunctionArg> args, Token closeParen, Block code) {
+  public DefineRPC(
+      Token rpcToken,
+      Token name,
+      Token openParen,
+      Token clientVar,
+      List<FunctionArg> args,
+      Token closeParen,
+      Block code) {
     this.rpcToken = rpcToken;
     this.name = name;
     this.openParen = openParen;
@@ -60,38 +67,65 @@ public class DefineRPC extends Definition {
     code.emit(yielder);
   }
 
-  public String genMessageTypeName() {
-    return "__Gen" + name.text.toUpperCase();
+  @Override
+  public void typing(Environment environment) {
+    final var next = environment.scopeAsMessageHandler();
+    next.define(
+        clientVar.text,
+        new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVar).withPosition(this),
+        true,
+        this);
+    for (final FunctionArg arg : args) {
+      next.define(arg.argName, arg.type, true, arg.type);
+    }
+    code.typing(next);
   }
 
   public TyNativeMessage genTyNativeMessage() {
-    StructureStorage storage = new StructureStorage(StorageSpecialization.Message, false, openParen);
+    StructureStorage storage =
+        new StructureStorage(StorageSpecialization.Message, false, openParen);
     PublicPolicy policy = new PublicPolicy(null);
     policy.ingest(rpcToken);
     for (FunctionArg arg : args) {
-      storage.add(new FieldDefinition(policy, null, arg.type, arg.argNameToken, null, null, null, null));
+      storage.add(
+          new FieldDefinition(policy, null, arg.type, arg.argNameToken, null, null, null, null));
     }
-    return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, rpcToken, name.cloneWithNewText(genMessageTypeName()), storage);
+    return new TyNativeMessage(
+        TypeBehavior.ReadOnlyNativeValue,
+        rpcToken,
+        name.cloneWithNewText(genMessageTypeName()),
+        storage);
+  }
+
+  public String genMessageTypeName() {
+    return "__Gen" + name.text.toUpperCase();
   }
 
   public DefineHandler genHandler() {
     DefineHandler handler = new DefineHandler(rpcToken, name);
     Block codePrefix = new Block(openParen);
     for (FunctionArg arg : args) {
-      codePrefix.add(new DefineVariable(rpcToken, arg.argNameToken, arg.type, null, new FieldLookup(new Lookup(name.cloneWithNewText("__message")), null, arg.argNameToken), null));
+      codePrefix.add(
+          new DefineVariable(
+              rpcToken,
+              arg.argNameToken,
+              arg.type,
+              null,
+              new FieldLookup(
+                  new Lookup(name.cloneWithNewText("__message")), null, arg.argNameToken),
+              null));
     }
     codePrefix.add(code);
-    handler.setFullHandler(openParen, clientVar, clientVar, clientVar, name.cloneWithNewText(genMessageTypeName()), null, name.cloneWithNewText("__message"), closeParen, codePrefix);
+    handler.setFullHandler(
+        openParen,
+        clientVar,
+        clientVar,
+        clientVar,
+        name.cloneWithNewText(genMessageTypeName()),
+        null,
+        name.cloneWithNewText("__message"),
+        closeParen,
+        codePrefix);
     return handler;
-  }
-
-  @Override
-  public void typing(Environment environment) {
-    final var next = environment.scopeAsMessageHandler();
-    next.define(clientVar.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVar).withPosition(this), true, this);
-    for (final FunctionArg arg : args) {
-      next.define(arg.argName, arg.type, true, arg.type);
-    }
-    code.typing(next);
   }
 }

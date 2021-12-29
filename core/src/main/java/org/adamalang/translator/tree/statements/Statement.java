@@ -18,6 +18,8 @@ import java.util.function.Consumer;
 
 public abstract class Statement extends DocumentPosition {
   public abstract void emit(Consumer<Token> yielder);
+
   public abstract ControlFlow typing(Environment environment);
+
   public abstract void writeJava(StringBuilderWithTabs sb, Environment environment);
 }

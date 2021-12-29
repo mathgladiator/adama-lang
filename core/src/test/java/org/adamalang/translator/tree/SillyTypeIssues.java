@@ -30,7 +30,12 @@ import org.junit.Test;
 public class SillyTypeIssues {
   @Test
   public void channel() {
-    final var channel = new TyNativeChannel(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    final var channel =
+        new TyNativeChannel(
+            TypeBehavior.ReadOnlyNativeValue,
+            null,
+            null,
+            new TokenizedItem<>(new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
     channel.makeCopyWithNewPosition(channel, TypeBehavior.ReadOnlyNativeValue);
   }
 
@@ -42,22 +47,27 @@ public class SillyTypeIssues {
     try {
       functional.getJavaConcreteType(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     try {
       functional.getJavaBoxType(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     try {
       functional.emit(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     functional.makeCopyWithNewPosition(functional, TypeBehavior.ReadOnlyNativeValue);
   }
 
   @Test
   public void glob() {
     new TyNativeGlobalObject(null, null, true).typing(null);
-    new TyNativeGlobalObject(null, null, true).makeCopyWithNewPosition(new TyNativeGlobalObject(null, null, true), TypeBehavior.ReadOnlyNativeValue);
+    new TyNativeGlobalObject(null, null, true)
+        .makeCopyWithNewPosition(
+            new TyNativeGlobalObject(null, null, true), TypeBehavior.ReadOnlyNativeValue);
     new TyNativeGlobalObject(null, null, true).writeTypeReflectionJson(new JsonStreamWriter());
   }
 
@@ -67,29 +77,36 @@ public class SillyTypeIssues {
     try {
       ngo.emit(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     try {
       ngo.getJavaBoxType(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     try {
       ngo.getJavaConcreteType(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     try {
       ngo.getAdamaType();
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     ngo.makeCopyWithNewPosition(ngo, TypeBehavior.ReadOnlyNativeValue);
   }
 
   @Test
   public void lazy() {
-    final var lazy = new TyReactiveLazy(new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int")));
+    final var lazy =
+        new TyReactiveLazy(
+            new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int")));
     try {
       lazy.emit(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     lazy.getJavaConcreteType(null);
     lazy.getAdamaType();
     lazy.getJavaBoxType(null);
@@ -109,7 +126,9 @@ public class SillyTypeIssues {
 
   @Test
   public void nttable() {
-    final var tnt = new TyNativeTable(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(Token.WRAP("FOO")));
+    final var tnt =
+        new TyNativeTable(
+            TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(Token.WRAP("FOO")));
     tnt.makeCopyWithNewPosition(tnt, TypeBehavior.ReadOnlyNativeValue);
     Assert.assertEquals(tnt.getAdamaType(), "table<FOO>");
     tnt.writeTypeReflectionJson(new JsonStreamWriter());
@@ -123,7 +142,11 @@ public class SillyTypeIssues {
 
   @Test
   public void ptr() {
-    final var env = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+    final var env =
+        Environment.fresh(
+            new Document(),
+            new EnvironmentState(
+                GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
     final var ss = new StructureStorage(StorageSpecialization.Record, false, Token.WRAP("{"));
     ss.end(Token.WRAP("}"));
     final var record = new TyReactiveRecord(Token.WRAP("R"), Token.WRAP("X"), ss);
@@ -152,16 +175,31 @@ public class SillyTypeIssues {
     reactiveEnum.storage();
     final var reactiveStateMachineRef = new TyReactiveStateMachineRef(Token.WRAP("X"));
     reactiveStateMachineRef.getAdamaType();
-    reactiveStateMachineRef.makeCopyWithNewPosition(reactiveStateMachineRef, TypeBehavior.ReadOnlyNativeValue);
+    reactiveStateMachineRef.makeCopyWithNewPosition(
+        reactiveStateMachineRef, TypeBehavior.ReadOnlyNativeValue);
     reactiveStateMachineRef.writeTypeReflectionJson(new JsonStreamWriter());
-    final var reactiveMap = new TyReactiveMap(Token.WRAP("X"), Token.WRAP("X"), reactiveStateMachineRef, Token.WRAP("X"), reactiveStateMachineRef, Token.WRAP("X"));
+    final var reactiveMap =
+        new TyReactiveMap(
+            Token.WRAP("X"),
+            Token.WRAP("X"),
+            reactiveStateMachineRef,
+            Token.WRAP("X"),
+            reactiveStateMachineRef,
+            Token.WRAP("X"));
     reactiveMap.getAdamaType();
     reactiveMap.makeCopyWithNewPosition(reactiveClient, TypeBehavior.ReadWriteNative);
   }
 
   @Test
   public void native_enum() {
-    TyNativeEnum e = new TyNativeEnum(TypeBehavior.ReadWriteWithSetGet, null, Token.WRAP("E"), null, new EnumStorage("E"), null);
+    TyNativeEnum e =
+        new TyNativeEnum(
+            TypeBehavior.ReadWriteWithSetGet,
+            null,
+            Token.WRAP("E"),
+            null,
+            new EnumStorage("E"),
+            null);
     e.getRxStringCodexName();
   }
 
@@ -171,11 +209,13 @@ public class SillyTypeIssues {
     try {
       ref.getJavaBoxType(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     try {
       ref.getJavaConcreteType(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
   }
 
   @Test
@@ -184,11 +224,13 @@ public class SillyTypeIssues {
     try {
       ref.getJavaBoxType(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     try {
       ref.getJavaConcreteType(null);
       Assert.fail();
-    } catch (final UnsupportedOperationException uoe) {}
+    } catch (final UnsupportedOperationException uoe) {
+    }
     ref.makeCopyWithNewPosition(ref, TypeBehavior.ReadOnlyNativeValue);
     ref.writeTypeReflectionJson(new JsonStreamWriter());
   }
@@ -208,14 +250,19 @@ public class SillyTypeIssues {
   @Test
   public void ntclient() {
     new TyNativeClient(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
-    new TyNativeFuture(null, null, null, new TokenizedItem<>(new TyNativeVoid())).writeTypeReflectionJson(new JsonStreamWriter());
+    new TyNativeFuture(null, null, null, new TokenizedItem<>(new TyNativeVoid()))
+        .writeTypeReflectionJson(new JsonStreamWriter());
   }
 
   @Test
   public void ntcomplex() {
     new TyNativeComplex(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
     Assert.assertEquals("complex", new TyNativeComplex(null, null, null).getAdamaType());
-    Assert.assertEquals("complex", new TyReactiveComplex(null).makeCopyWithNewPosition(DocumentPosition.ZERO, TypeBehavior.ReadWriteWithSetGet).getAdamaType());
+    Assert.assertEquals(
+        "complex",
+        new TyReactiveComplex(null)
+            .makeCopyWithNewPosition(DocumentPosition.ZERO, TypeBehavior.ReadWriteWithSetGet)
+            .getAdamaType());
   }
 
   @Test
@@ -223,13 +270,15 @@ public class SillyTypeIssues {
     TyReactiveDynamic rdyn = new TyReactiveDynamic(Token.WRAP("dynamic"));
     rdyn.makeCopyWithNewPosition(rdyn, TypeBehavior.ReadWriteNative);
     rdyn.getAdamaType();
-    TyNativeDynamic ndyn = new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("dynamic"));
+    TyNativeDynamic ndyn =
+        new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("dynamic"));
     ndyn.getAdamaType();
   }
 
   @Test
   public void asset() {
-    TyNativeAsset na = new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("asset"));
+    TyNativeAsset na =
+        new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("asset"));
     TyReactiveAsset ra = new TyReactiveAsset(Token.WRAP("asset"));
     ra.makeCopyWithNewPosition(ra, TypeBehavior.ReadOnlyNativeValue);
     ra.getAdamaType();

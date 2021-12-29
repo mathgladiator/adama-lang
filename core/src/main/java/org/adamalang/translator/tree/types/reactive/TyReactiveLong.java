@@ -21,8 +21,7 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-/** Represents the integral with 64 bits of storage; this uses the 'RxInt64'
- * reactive java type */
+/** Represents the integral with 64 bits of storage; this uses the 'RxInt64' reactive java type */
 public class TyReactiveLong extends TySimpleReactive implements IsOrderable //
 {
   public TyReactiveLong(final Token token) {
@@ -35,18 +34,9 @@ public class TyReactiveLong extends TySimpleReactive implements IsOrderable //
   }
 
   @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition position) {
-    return new LongConstant(Token.WRAP("0L"), 0).withPosition(position);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveLong(token).withPosition(position);
-  }
-
-  @Override
-  public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 
   @Override
@@ -57,5 +47,15 @@ public class TyReactiveLong extends TySimpleReactive implements IsOrderable //
     writer.writeObjectFieldIntro("type");
     writer.writeString("long");
     writer.endObject();
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition position) {
+    return new LongConstant(Token.WRAP("0L"), 0).withPosition(position);
+  }
+
+  @Override
+  public TyType typeAfterGet(final Environment environment) {
+    return new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 }

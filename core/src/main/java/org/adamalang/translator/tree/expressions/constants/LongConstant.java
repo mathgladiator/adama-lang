@@ -23,8 +23,10 @@ public class LongConstant extends Expression {
   public final Token token;
   public final long value;
 
-  /** @param token the token containing the value along with prior/after
-   * @param value the value of the constant */
+  /**
+   * @param token the token containing the value along with prior/after
+   * @param value the value of the constant
+   */
   public LongConstant(final Token token, final long value) {
     this.token = token;
     this.value = value;

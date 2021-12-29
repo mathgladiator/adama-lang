@@ -17,7 +17,8 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
 
 /** a reactive client */
-public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndSet<NtClient>, Indexable {
+public class RxClient extends RxBase
+    implements Comparable<RxClient>, CanGetAndSet<NtClient>, Indexable {
   private NtClient backup;
   private NtClient value;
 
@@ -64,6 +65,11 @@ public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndS
   }
 
   @Override
+  public long __memory() {
+    return super.__memory() + backup.memory() + value.memory() + 16;
+  }
+
+  @Override
   public int compareTo(final RxClient other) {
     return value.compareTo(other.value);
   }
@@ -71,11 +77,6 @@ public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndS
   @Override
   public NtClient get() {
     return value;
-  }
-
-  @Override
-  public int getIndexValue() {
-    return value.hashCode();
   }
 
   @Override
@@ -87,7 +88,7 @@ public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndS
   }
 
   @Override
-  public long __memory() {
-    return super.__memory() + backup.memory() + value.memory() + 16;
+  public int getIndexValue() {
+    return value.hashCode();
   }
 }

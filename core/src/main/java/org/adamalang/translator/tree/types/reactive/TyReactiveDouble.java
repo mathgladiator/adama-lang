@@ -21,8 +21,10 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeDouble;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-/** represents a double precision floating point number. For instance, 3.14 is a
- * floating point number. This uses the reactive 'RxDouble' java type. */
+/**
+ * represents a double precision floating point number. For instance, 3.14 is a floating point
+ * number. This uses the reactive 'RxDouble' java type.
+ */
 public class TyReactiveDouble extends TySimpleReactive implements IsOrderable //
 {
   public TyReactiveDouble(final Token token) {
@@ -35,18 +37,9 @@ public class TyReactiveDouble extends TySimpleReactive implements IsOrderable //
   }
 
   @Override
-  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new DoubleConstant(Token.WRAP("0.0"), 0.0).withPosition(forWhatExpression);
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveDouble(token).withPosition(position);
-  }
-
-  @Override
-  public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 
   @Override
@@ -57,5 +50,15 @@ public class TyReactiveDouble extends TySimpleReactive implements IsOrderable //
     writer.writeObjectFieldIntro("type");
     writer.writeString("double");
     writer.endObject();
+  }
+
+  @Override
+  public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
+    return new DoubleConstant(Token.WRAP("0.0"), 0.0).withPosition(forWhatExpression);
+  }
+
+  @Override
+  public TyType typeAfterGet(final Environment environment) {
+    return new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, token);
   }
 }

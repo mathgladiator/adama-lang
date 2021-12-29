@@ -27,9 +27,10 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyReactiveTable extends TyType implements //
-    DetailContainsAnEmbeddedType, //
-    DetailTypeHasMethods {
+public class TyReactiveTable extends TyType
+    implements //
+        DetailContainsAnEmbeddedType, //
+        DetailTypeHasMethods {
   public final String recordName;
   public final TokenizedItem<Token> recordNameToken;
   public final Token tableToken;
@@ -57,15 +58,6 @@ public class TyReactiveTable extends TyType implements //
   }
 
   @Override
-  public TyType getEmbeddedType(final Environment environment) {
-    TyType subtype = new TyReactiveRef(recordNameToken.item);
-    while (subtype instanceof DetailRequiresResolveCall) {
-      subtype = ((DetailRequiresResolveCall) subtype).resolve(environment);
-    }
-    return subtype;
-  }
-
-  @Override
   public String getJavaBoxType(final Environment environment) {
     return String.format("RxTable<RTx%s>", recordName);
   }
@@ -76,16 +68,8 @@ public class TyReactiveTable extends TyType implements //
   }
 
   @Override
-  public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
-    if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, recordNameToken.item).withPosition(this), new ArrayList<>(), true)),
-          FunctionStyleJava.ExpressionThenArgs);
-    }
-    return null;
-  }
-
-  @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveTable(tableToken, recordNameToken).withPosition(position);
   }
 
@@ -102,5 +86,31 @@ public class TyReactiveTable extends TyType implements //
     writer.writeObjectFieldIntro("record_name");
     writer.writeString(recordName);
     writer.endObject();
+  }
+
+  @Override
+  public TyType getEmbeddedType(final Environment environment) {
+    TyType subtype = new TyReactiveRef(recordNameToken.item);
+    while (subtype instanceof DetailRequiresResolveCall) {
+      subtype = ((DetailRequiresResolveCall) subtype).resolve(environment);
+    }
+    return subtype;
+  }
+
+  @Override
+  public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
+    if ("size".equals(name)) {
+      return new TyNativeFunctional(
+          "size",
+          FunctionOverloadInstance.WRAP(
+              new FunctionOverloadInstance(
+                  "size",
+                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, recordNameToken.item)
+                      .withPosition(this),
+                  new ArrayList<>(),
+                  true)),
+          FunctionStyleJava.ExpressionThenArgs);
+    }
+    return null;
   }
 }

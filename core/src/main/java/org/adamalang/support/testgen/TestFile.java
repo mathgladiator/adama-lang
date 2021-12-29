@@ -12,11 +12,6 @@ package org.adamalang.support.testgen;
 import java.util.regex.Pattern;
 
 public class TestFile {
-  public static TestFile fromFilename(final String filename) {
-    final var parts = filename.split(Pattern.quote("_"));
-    return new TestFile(parts[0], parts[1], "success.a".equals(parts[2]));
-  }
-
   public final String clazz;
   public final String name;
   public final boolean success;
@@ -25,7 +20,14 @@ public class TestFile {
     this.clazz = clazz;
     this.name = name;
     this.success = success;
-    if (name.contains("_") || clazz.contains("_")) { throw new RuntimeException("name and class can not contain understore(_)"); }
+    if (name.contains("_") || clazz.contains("_")) {
+      throw new RuntimeException("name and class can not contain understore(_)");
+    }
+  }
+
+  public static TestFile fromFilename(final String filename) {
+    final var parts = filename.split(Pattern.quote("_"));
+    return new TestFile(parts[0], parts[1], "success.a".equals(parts[2]));
   }
 
   public String filename() {

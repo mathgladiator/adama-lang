@@ -18,15 +18,18 @@ import org.adamalang.translator.tree.types.structures.StructureStorage;
 
 import java.util.function.Consumer;
 
-/** a policy that enables the field to be visible if another field is the
- * viewer */
+/** a policy that enables the field to be visible if another field is the viewer */
 public class ViewerIsPolicy extends Policy {
   public final Token closeToken;
   public final Token fieldToken;
   public final Token openToken;
   public final Token viewerIsToken;
 
-  public ViewerIsPolicy(final Token viewerIsToken, final Token openToken, final Token fieldToken, final Token closeToken) {
+  public ViewerIsPolicy(
+      final Token viewerIsToken,
+      final Token openToken,
+      final Token fieldToken,
+      final Token closeToken) {
     this.viewerIsToken = viewerIsToken;
     this.openToken = openToken;
     this.fieldToken = fieldToken;
@@ -47,15 +50,23 @@ public class ViewerIsPolicy extends Policy {
   public void typing(final Environment environment, final StructureStorage owningStructureStorage) {
     final var fd = owningStructureStorage.fields.get(fieldToken.text);
     if (fd == null) {
-      environment.document.createError(this, String.format("Field '%s' was not defined within the record", fieldToken.text), "ViewerPolicy");
+      environment.document.createError(
+          this,
+          String.format("Field '%s' was not defined within the record", fieldToken.text),
+          "ViewerPolicy");
       return;
     }
     environment.rules.IsClient(fd.type, false);
   }
 
   @Override
-  public boolean writePrivacyCheckGuard(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
-    sb.append("if (__writer.who.equals(__item.").append(fieldToken.text).append(".get())) {").tabUp().writeNewline();
+  public boolean writePrivacyCheckGuard(
+      final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
+    sb.append("if (__writer.who.equals(__item.")
+        .append(fieldToken.text)
+        .append(".get())) {")
+        .tabUp()
+        .writeNewline();
     return true;
   }
 

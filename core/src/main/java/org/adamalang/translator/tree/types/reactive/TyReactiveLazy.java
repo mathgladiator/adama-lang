@@ -21,7 +21,8 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
 
-public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedType, DetailComputeRequiresGet // to get the native value
+public class TyReactiveLazy extends TyType
+    implements DetailContainsAnEmbeddedType, DetailComputeRequiresGet // to get the native value
 {
   public final TyType computedType;
 
@@ -41,11 +42,6 @@ public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedTy
   }
 
   @Override
-  public TyType getEmbeddedType(final Environment environment) {
-    return computedType;
-  }
-
-  @Override
   public String getJavaBoxType(final Environment environment) {
     return String.format("RxLazy<%s>", computedType.getJavaBoxType(environment));
   }
@@ -56,13 +52,9 @@ public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedTy
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveLazy(computedType).withPosition(position);
-  }
-
-  @Override
-  public TyType typeAfterGet(final Environment environment) {
-    return getEmbeddedType(environment);
   }
 
   @Override
@@ -70,13 +62,21 @@ public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedTy
     computedType.typing(environment);
     var typedAs = environment.rules.Resolve(computedType, false);
     if (!(typedAs instanceof DetailHasDeltaType)) {
-      environment.document.createError(this, String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()), "Lazy");
+      environment.document.createError(
+          this,
+          String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()),
+          "Lazy");
       return;
     }
     while (typedAs instanceof DetailContainsAnEmbeddedType) {
-      typedAs = environment.rules.Resolve(((DetailContainsAnEmbeddedType) typedAs).getEmbeddedType(environment), false);
+      typedAs =
+          environment.rules.Resolve(
+              ((DetailContainsAnEmbeddedType) typedAs).getEmbeddedType(environment), false);
       if (!(typedAs instanceof DetailHasDeltaType)) {
-        environment.document.createError(this, String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()), "Lazy");
+        environment.document.createError(
+            this,
+            String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()),
+            "Lazy");
         return;
       }
     }
@@ -85,5 +85,15 @@ public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedTy
   @Override
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     computedType.writeTypeReflectionJson(writer);
+  }
+
+  @Override
+  public TyType typeAfterGet(final Environment environment) {
+    return getEmbeddedType(environment);
+  }
+
+  @Override
+  public TyType getEmbeddedType(final Environment environment) {
+    return computedType;
   }
 }

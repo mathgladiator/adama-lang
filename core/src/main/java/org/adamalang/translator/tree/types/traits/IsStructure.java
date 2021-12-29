@@ -17,7 +17,10 @@ import java.util.function.Consumer;
 
 public interface IsStructure {
   void emit(Consumer<Token> yielder);
+
   String name();
+
   StructureStorage storage();
+
   void typing(Environment environment);
 }

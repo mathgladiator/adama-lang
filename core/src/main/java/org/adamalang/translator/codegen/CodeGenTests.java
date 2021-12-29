@@ -19,7 +19,11 @@ public class CodeGenTests {
     // generate test bodies
     if (!environment.state.options.removeTests) {
       for (final DefineTest test : environment.document.tests) {
-        sb.append("public void __test_").append(test.name).append("(TestReportBuilder report) {").tabUp().writeNewline();
+        sb.append("public void __test_")
+            .append(test.name)
+            .append("(TestReportBuilder report) {")
+            .tabUp()
+            .writeNewline();
         sb.append("report.begin(\"").append(test.name).append("\");").writeNewline();
         test.code.writeJava(sb, environment.scopeAsUnitTest());
         sb.writeNewline();
@@ -45,7 +49,9 @@ public class CodeGenTests {
     sb.append("}").writeNewline();
     sb.append("@Override").writeNewline();
     if (environment.document.tests.size() > 0 && !environment.state.options.removeTests) {
-      sb.append("public void __test(TestReportBuilder report, String testName) {").tabUp().writeNewline();
+      sb.append("public void __test(TestReportBuilder report, String testName) {")
+          .tabUp()
+          .writeNewline();
       sb.append("switch(testName) {").writeNewline();
       for (final DefineTest test : environment.document.tests) {
         sb.tab().append("case \"").append(test.name).append("\":").writeNewline();

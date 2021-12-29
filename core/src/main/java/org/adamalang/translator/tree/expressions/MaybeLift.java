@@ -26,7 +26,12 @@ public class MaybeLift extends Expression {
   public final TokenizedItem<TyType> type;
   public final Expression value;
 
-  public MaybeLift(final Token maybeToken, final TokenizedItem<TyType> type, final Token openParen, final Expression value, final Token closeParen) {
+  public MaybeLift(
+      final Token maybeToken,
+      final TokenizedItem<TyType> type,
+      final Token openParen,
+      final Expression value,
+      final Token closeParen) {
     this.maybeToken = maybeToken;
     this.type = type;
     this.openParen = openParen;
@@ -61,7 +66,8 @@ public class MaybeLift extends Expression {
       return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, maybeToken, type);
     } else {
       final var valueType = value.typing(environment, null);
-      return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, maybeToken, new TokenizedItem<>(valueType));
+      return new TyNativeMaybe(
+          TypeBehavior.ReadOnlyNativeValue, null, maybeToken, new TokenizedItem<>(valueType));
     }
   }
 

@@ -40,6 +40,7 @@ public class RxStringTests {
     d.__dump(writer);
     Assert.assertEquals("\"xyz\"", writer.toString());
   }
+
   @Test
   public void dirty_and_commit() {
     final var parent = new MockRxParent();

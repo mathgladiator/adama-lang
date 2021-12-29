@@ -24,8 +24,7 @@ public class TyNativeVoid extends TyType {
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
-  }
+  public void emit(final Consumer<Token> yielder) {}
 
   @Override
   public String getAdamaType() {
@@ -43,13 +42,13 @@ public class TyNativeVoid extends TyType {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return this;
   }
 
   @Override
-  public void typing(final Environment environment) {
-  }
+  public void typing(final Environment environment) {}
 
   @Override
   public void writeTypeReflectionJson(JsonStreamWriter writer) {

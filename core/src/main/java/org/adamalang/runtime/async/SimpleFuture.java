@@ -26,7 +26,9 @@ public class SimpleFuture<T> {
 
   /** the code is asking for it now */
   public T await() throws ComputeBlockedException {
-    if (value != null) { return value; }
+    if (value != null) {
+      return value;
+    }
     throw new ComputeBlockedException(who, channel);
   }
 

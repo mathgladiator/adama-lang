@@ -9,8 +9,7 @@
  */
 package org.adamalang.translator.parser.token;
 
-/** The scanner use a simple state machine, and this is the state of the
- * scanner */
+/** The scanner use a simple state machine, and this is the state of the scanner */
 enum ScannerState {
   /** scanner is scanning for an identifier */
   ScanIdentifer,
@@ -18,11 +17,11 @@ enum ScannerState {
   ScanNumberLiteral,
   /** scanner is scanning for a double quote to end the string */
   ScanStringLiteral,
-  /** scanner is scanning with a double quoted string, and is currently escaping a
-   * value */
+  /** scanner is scanning with a double quoted string, and is currently escaping a value */
   ScanStringLiteralEscape,
-  /** scanner is scanning with a double quoted string and is currently reading
-   * four unicode values */
+  /**
+   * scanner is scanning with a double quoted string and is currently reading four unicode values
+   */
   ScanStringLiteralUnicodeHexEscape,
   /** scanner is building a bundle of symbols */
   ScanSymbol,

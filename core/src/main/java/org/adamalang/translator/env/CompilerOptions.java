@@ -13,6 +13,34 @@ import java.util.ArrayList;
 
 /** compiler options to control anything */
 public class CompilerOptions {
+  public final String className;
+  public final boolean disableBillingCost; // G2G
+  public final int goodwillBudget; // G2G
+  public final String[] inputFiles;
+  public final String outputFile;
+  public final String packageName;
+  public final boolean produceCodeCoverage; // G2G
+  public final boolean removeTests;
+  public final String[] searchPaths;
+  public final boolean stderrLoggingCompiler; // G2G
+
+  private CompilerOptions(final Builder builder) {
+    stderrLoggingCompiler = builder.stderrLoggingCompiler;
+    produceCodeCoverage = builder.produceCodeCoverage;
+    disableBillingCost = builder.disableBillingCost;
+    removeTests = builder.removeTests;
+    goodwillBudget = builder.goodwillBudget;
+    packageName = builder.packageName;
+    className = builder.className;
+    outputFile = builder.outputFile;
+    searchPaths = builder.searchPaths.toArray(new String[builder.searchPaths.size()]);
+    inputFiles = builder.inputFiles.toArray(new String[builder.inputFiles.size()]);
+  }
+
+  public static Builder start() {
+    return new Builder();
+  }
+
   public static class Builder {
     public String className;
     public boolean disableBillingCost;
@@ -91,33 +119,5 @@ public class CompilerOptions {
       disableBillingCost = true;
       return this;
     }
-  }
-
-  public static Builder start() {
-    return new Builder();
-  }
-
-  public final String className;
-  public final boolean disableBillingCost; // G2G
-  public final int goodwillBudget; // G2G
-  public final String[] inputFiles;
-  public final String outputFile;
-  public final String packageName;
-  public final boolean produceCodeCoverage; // G2G
-  public final boolean removeTests;
-  public final String[] searchPaths;
-  public final boolean stderrLoggingCompiler; // G2G
-
-  private CompilerOptions(final Builder builder) {
-    stderrLoggingCompiler = builder.stderrLoggingCompiler;
-    produceCodeCoverage = builder.produceCodeCoverage;
-    disableBillingCost = builder.disableBillingCost;
-    removeTests = builder.removeTests;
-    goodwillBudget = builder.goodwillBudget;
-    packageName = builder.packageName;
-    className = builder.className;
-    outputFile = builder.outputFile;
-    searchPaths = builder.searchPaths.toArray(new String[builder.searchPaths.size()]);
-    inputFiles = builder.inputFiles.toArray(new String[builder.inputFiles.size()]);
   }
 }

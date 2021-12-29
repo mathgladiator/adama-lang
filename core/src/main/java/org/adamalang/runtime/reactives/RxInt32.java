@@ -16,7 +16,8 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 /** a reactive 32-bit integer (int) */
-public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet<Integer>, Indexable {
+public class RxInt32 extends RxBase
+    implements Comparable<RxInt32>, CanGetAndSet<Integer>, Indexable {
   private int backup;
   private int value;
 
@@ -62,6 +63,11 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
     }
   }
 
+  @Override
+  public long __memory() {
+    return super.__memory() + 8;
+  }
+
   public int bumpDownPost() {
     final var result = value--;
     __raiseDirty();
@@ -103,6 +109,14 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
   }
 
   @Override
+  public void set(final Integer value) {
+    if (this.value != value) {
+      this.value = value;
+      __raiseDirty();
+    }
+  }
+
+  @Override
   public int getIndexValue() {
     return value;
   }
@@ -123,18 +137,5 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
     value -= x;
     __raiseDirty();
     return value;
-  }
-
-  @Override
-  public void set(final Integer value) {
-    if (this.value != value) {
-      this.value = value;
-      __raiseDirty();
-    }
-  }
-
-  @Override
-  public long __memory() {
-    return super.__memory() + 8;
   }
 }

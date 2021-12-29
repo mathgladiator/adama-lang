@@ -20,9 +20,10 @@ import org.adamalang.translator.tree.types.traits.details.DetailRequiresResolveC
 
 import java.util.function.Consumer;
 
-public class TyNativeRef extends TyType implements //
-    CanBeNativeArray, //
-    DetailRequiresResolveCall //
+public class TyNativeRef extends TyType
+    implements //
+        CanBeNativeArray, //
+        DetailRequiresResolveCall //
 {
   public final Token readonlyToken;
   public final String ref;
@@ -60,15 +61,9 @@ public class TyNativeRef extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(
+      final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeRef(newBehavior, readonlyToken, refToken).withPosition(position);
-  }
-
-  @Override
-  public TyType resolve(final Environment environment) {
-    final var other = environment.document.types.get(ref);
-    if (other != null) { return other.makeCopyWithNewPosition(other, behavior); }
-    return null;
   }
 
   @Override
@@ -84,5 +79,14 @@ public class TyNativeRef extends TyType implements //
     writer.writeObjectFieldIntro("ref");
     writer.writeString(ref);
     writer.endObject();
+  }
+
+  @Override
+  public TyType resolve(final Environment environment) {
+    final var other = environment.document.types.get(ref);
+    if (other != null) {
+      return other.makeCopyWithNewPosition(other, behavior);
+    }
+    return null;
   }
 }

@@ -21,13 +21,18 @@ import java.util.function.Consumer;
 
 /** transition the state machine, and make sure we transact the current state */
 public class TransitionStateMachine extends Statement {
-  private final Expression evaluateIn;
   public final Token inToken;
   public final Expression next;
   public final Token semicolonToken;
   public final Token transitionToken;
+  private final Expression evaluateIn;
 
-  public TransitionStateMachine(final Token transitionToken, final Expression next, final Token inToken, final Expression evaluateIn, final Token semicolonToken) {
+  public TransitionStateMachine(
+      final Token transitionToken,
+      final Expression next,
+      final Token inToken,
+      final Expression evaluateIn,
+      final Token semicolonToken) {
     this.transitionToken = transitionToken;
     ingest(transitionToken);
     this.next = next;

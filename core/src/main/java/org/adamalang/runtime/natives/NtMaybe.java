@@ -65,7 +65,9 @@ public class NtMaybe<T> {
     return this.value;
   }
 
-  /** get the value if it is available, otherwise return the default value (appropriate for runtime) */
+  /**
+   * get the value if it is available, otherwise return the default value (appropriate for runtime)
+   */
   public T getOrDefaultTo(T defaultValue) {
     if (this.value != null) {
       return this.value;

@@ -44,11 +44,11 @@ public abstract class Expression extends DocumentPosition {
     return this;
   }
 
-  public abstract void writeJava(StringBuilder sb, Environment environment);
-
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
     final var child = new StringBuilder();
     writeJava(child, environment);
     sb.append(child.toString());
   }
+
+  public abstract void writeJava(StringBuilder sb, Environment environment);
 }

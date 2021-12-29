@@ -20,18 +20,24 @@ import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 
 import java.util.function.Consumer;
 
-/** inject a message into a channel; this made sense in the old type system.
- * This should be a function exposed to channel<T>, and only available within a
- * test. */
+/**
+ * inject a message into a channel; this made sense in the old type system. This should be a
+ * function exposed to channel<T>, and only available within a test.
+ */
 public class PumpMessage extends Statement {
   public final Token channelToken;
   public final Expression expression;
   public final Token intoToken;
-  private TyNativeMessage messageType;
   public final Token pumpToken;
   public final Token semiColonToken;
+  private TyNativeMessage messageType;
 
-  public PumpMessage(final Token pumpToken, final Expression expression, final Token intoToken, final Token channelToken, final Token semiColonToken) {
+  public PumpMessage(
+      final Token pumpToken,
+      final Expression expression,
+      final Token intoToken,
+      final Token channelToken,
+      final Token semiColonToken) {
     this.pumpToken = pumpToken;
     this.intoToken = intoToken;
     this.channelToken = channelToken;
@@ -55,25 +61,31 @@ public class PumpMessage extends Statement {
   public ControlFlow typing(final Environment environment) {
     final var next = environment.scopeWithComputeContext(ComputeContext.Computation);
     if (!next.state.isTesting()) {
-      environment.document.createError(this, String.format("Pumping a message is designed exclusively for testing"), "Testing");
+      environment.document.createError(
+          this, String.format("Pumping a message is designed exclusively for testing"), "Testing");
     }
     final var exprType = expression.typing(next, null /* ug */);
     environment.rules.IsNativeMessage(exprType, false);
     if (exprType != null) {
       final var messageNameType = next.document.channelToMessageType.get(channelToken.text);
       if (messageNameType == null) {
-        environment.document.createError(this, String.format("Channel '%s' does not exist", channelToken.text), "Testing");
+        environment.document.createError(
+            this, String.format("Channel '%s' does not exist", channelToken.text), "Testing");
         return ControlFlow.Open;
       }
       messageType = environment.rules.FindMessageStructure(messageNameType, this, false);
-      if (messageType == null) { return ControlFlow.Open; }
+      if (messageType == null) {
+        return ControlFlow.Open;
+      }
     }
     return ControlFlow.Open;
   }
 
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("__queue.add(new AsyncTask(0, NtClient.NO_ONE, \"").append(channelToken.text).append("\", 0, ");
+    sb.append("__queue.add(new AsyncTask(0, NtClient.NO_ONE, \"")
+        .append(channelToken.text)
+        .append("\", 0, ");
     expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
     sb.append("));");
   }

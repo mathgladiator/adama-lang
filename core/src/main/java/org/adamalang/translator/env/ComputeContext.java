@@ -9,8 +9,10 @@
  */
 package org.adamalang.translator.env;
 
-/** code runs within a compute context. Either the code is on the left side and
- * assignable, or on the right and is a native compute value */
+/**
+ * code runs within a compute context. Either the code is on the left side and assignable, or on the
+ * right and is a native compute value
+ */
 public enum ComputeContext {
   Assignment, // lvalue
   Computation, // rvalue

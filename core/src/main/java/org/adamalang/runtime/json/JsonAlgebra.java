@@ -72,10 +72,13 @@ public class JsonAlgebra {
     };
   }
 
-  /** Given an UNDO at a fixed point in time, and a REDO in the future; manipulate the UNDO such that the
-   * REDO will cancel out a change from UNDO; return true if the undo becomes empty */
+  /**
+   * Given an UNDO at a fixed point in time, and a REDO in the future; manipulate the UNDO such that
+   * the REDO will cancel out a change from UNDO; return true if the undo becomes empty
+   */
   @SuppressWarnings("unchecked")
-  public static boolean rollUndoForward(HashMap<String, Object> undo, HashMap<String, Object> futureRedo) {
+  public static boolean rollUndoForward(
+      HashMap<String, Object> undo, HashMap<String, Object> futureRedo) {
     Iterator<Map.Entry<String, Object>> it = undo.entrySet().iterator();
     while (it.hasNext()) {
       Map.Entry<String, Object> entry = it.next();
@@ -83,7 +86,9 @@ public class JsonAlgebra {
         Object other = futureRedo.get(entry.getKey());
         boolean remove = true;
         if (entry.getValue() instanceof HashMap && other instanceof HashMap) {
-          remove = rollUndoForward((HashMap<String, Object>) entry.getValue(), (HashMap<String, Object>) other);
+          remove =
+              rollUndoForward(
+                  (HashMap<String, Object>) entry.getValue(), (HashMap<String, Object>) other);
         }
         if (remove) {
           it.remove();
@@ -96,7 +101,8 @@ public class JsonAlgebra {
   /** an accumulator/fold version of rollUndoForward */
   public static AutoMorphicAccumulator<String> rollUndoForwardAccumulator(String undo) {
     return new AutoMorphicAccumulator<>() {
-      private HashMap<String, Object> state = (HashMap<String, Object>) new JsonStreamReader(undo).readJavaTree();
+      private HashMap<String, Object> state =
+          (HashMap<String, Object>) new JsonStreamReader(undo).readJavaTree();
 
       @Override
       public boolean empty() {

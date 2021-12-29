@@ -23,8 +23,10 @@ public class IntegerConstant extends Expression {
   public final Token token;
   public final int value;
 
-  /** @param token the token containing the value along with prior/after
-   * @param value the value of the constant */
+  /**
+   * @param token the token containing the value along with prior/after
+   * @param value the value of the constant
+   */
   public IntegerConstant(final Token token, final int value) {
     this.token = token;
     this.value = value;

@@ -16,7 +16,8 @@ import java.io.PrintStream;
 import java.util.regex.Pattern;
 
 public class PhaseCompile {
-  public static LivingDocumentFactory go(final String className, final String java, final StringBuilder outputFile) throws Exception {
+  public static LivingDocumentFactory go(
+      final String className, final String java, final StringBuilder outputFile) throws Exception {
     final var memoryResultsCompiler = new ByteArrayOutputStream();
     final var ps = new PrintStream(memoryResultsCompiler);
     final var oldErr = System.err;

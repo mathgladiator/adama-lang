@@ -13,18 +13,20 @@ public enum PostfixMutateOp {
   BumpDown("--", ".bumpDownPost()"), // ++
   BumpUp("++", ".bumpUpPost()"); // --
 
-  public static PostfixMutateOp fromText(final String txt) {
-    for (final PostfixMutateOp op : PostfixMutateOp.values()) {
-      if (op.javaOp.equals(txt)) { return op; }
-    }
-    return null;
-  }
-
   public final String functionCall;
   public final String javaOp;
 
   PostfixMutateOp(final String javaOp, final String functionCall) {
     this.javaOp = javaOp;
     this.functionCall = functionCall;
+  }
+
+  public static PostfixMutateOp fromText(final String txt) {
+    for (final PostfixMutateOp op : PostfixMutateOp.values()) {
+      if (op.javaOp.equals(txt)) {
+        return op;
+      }
+    }
+    return null;
   }
 }

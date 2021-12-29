@@ -25,7 +25,8 @@ public class InvokeStateMachine extends Statement {
   public final Token invokeToken;
   public final Token semicolonToken;
 
-  public InvokeStateMachine(final Token invokeToken, final Expression expression, final Token semicolonToken) {
+  public InvokeStateMachine(
+      final Token invokeToken, final Expression expression, final Token semicolonToken) {
     this.invokeToken = invokeToken;
     this.expression = expression;
     this.semicolonToken = semicolonToken;
@@ -43,7 +44,8 @@ public class InvokeStateMachine extends Statement {
 
   @Override
   public ControlFlow typing(final Environment environment) {
-    final var expressionType = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+    final var expressionType =
+        expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     environment.rules.IsStateMachineRef(expressionType, false);
     return ControlFlow.Open;
   }

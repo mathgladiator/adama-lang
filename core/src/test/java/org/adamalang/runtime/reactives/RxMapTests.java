@@ -29,12 +29,14 @@ public class RxMapTests {
   }
 
   private RxMap<Integer, RxInt32> map() {
-    return new RxMap<Integer, RxInt32>(new MockRxParent(), new RxMap.IntegerCodec<RxInt32>() {
-      @Override
-      public RxInt32 make(RxParent maker) {
-        return new RxInt32(maker, 0);
-      }
-    });
+    return new RxMap<Integer, RxInt32>(
+        new MockRxParent(),
+        new RxMap.IntegerCodec<RxInt32>() {
+          @Override
+          public RxInt32 make(RxParent maker) {
+            return new RxInt32(maker, 0);
+          }
+        });
   }
 
   @Test
@@ -170,7 +172,6 @@ public class RxMapTests {
     Assert.assertFalse(m.lookup(1000).has());
   }
 
-
   @Test
   public void patch() {
     final var m = map();
@@ -232,41 +233,55 @@ public class RxMapTests {
 
   @Test
   public void codec() {
-    Assert.assertEquals(123,  (int) new RxMap.IntegerCodec<RxInt32>() {
-      @Override
-      public RxInt32 make(RxParent maker) {
-        return null;
-      }
-    }.fromStr("123"));
-    Assert.assertEquals("123", new RxMap.IntegerCodec<RxInt32>() {
-      @Override
-      public RxInt32 make(RxParent maker) {
-        return null;
-      }
-    }.toStr(123));
-    Assert.assertEquals(123L,  (long) new RxMap.LongCodec<RxInt32>() {
-      @Override
-      public RxInt32 make(RxParent maker) {
-        return null;
-      }
-    }.fromStr("123"));
-    Assert.assertEquals("123", new RxMap.LongCodec<RxInt32>() {
-      @Override
-      public RxInt32 make(RxParent maker) {
-        return null;
-      }
-    }.toStr(123L));
-    Assert.assertEquals("123",  new RxMap.StringCodec<RxInt32>() {
-      @Override
-      public RxInt32 make(RxParent maker) {
-        return null;
-      }
-    }.fromStr("123"));
-    Assert.assertEquals("123", new RxMap.StringCodec<RxInt32>() {
-      @Override
-      public RxInt32 make(RxParent maker) {
-        return null;
-      }
-    }.toStr("123"));
+    Assert.assertEquals(
+        123,
+        (int)
+            new RxMap.IntegerCodec<RxInt32>() {
+              @Override
+              public RxInt32 make(RxParent maker) {
+                return null;
+              }
+            }.fromStr("123"));
+    Assert.assertEquals(
+        "123",
+        new RxMap.IntegerCodec<RxInt32>() {
+          @Override
+          public RxInt32 make(RxParent maker) {
+            return null;
+          }
+        }.toStr(123));
+    Assert.assertEquals(
+        123L,
+        (long)
+            new RxMap.LongCodec<RxInt32>() {
+              @Override
+              public RxInt32 make(RxParent maker) {
+                return null;
+              }
+            }.fromStr("123"));
+    Assert.assertEquals(
+        "123",
+        new RxMap.LongCodec<RxInt32>() {
+          @Override
+          public RxInt32 make(RxParent maker) {
+            return null;
+          }
+        }.toStr(123L));
+    Assert.assertEquals(
+        "123",
+        new RxMap.StringCodec<RxInt32>() {
+          @Override
+          public RxInt32 make(RxParent maker) {
+            return null;
+          }
+        }.fromStr("123"));
+    Assert.assertEquals(
+        "123",
+        new RxMap.StringCodec<RxInt32>() {
+          @Override
+          public RxInt32 make(RxParent maker) {
+            return null;
+          }
+        }.toStr("123"));
   }
 }

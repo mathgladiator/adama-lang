@@ -19,8 +19,10 @@ import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadIns
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-/** a dispatcher is a function attached to enum such that the enum controls the
- * destiny of which function gets called */
+/**
+ * a dispatcher is a function attached to enum such that the enum controls the destiny of which
+ * function gets called
+ */
 public class DefineDispatcher extends Definition {
   public final ArrayList<FunctionArg> args;
   public final Token closeParen;
@@ -31,14 +33,25 @@ public class DefineDispatcher extends Definition {
   public final Token functionName;
   public final Token introReturnType;
   public final Token openParen;
+  public final Token starToken;
+  public final Token valueToken;
   public int positionIndex;
   public TyType returnType;
   public int signatureId;
-  public final Token starToken;
-  public final Token valueToken;
 
-  public DefineDispatcher(final Token dispatchToken, final Token enumNameToken, final Token doubleColonToken, final Token valueToken, final Token starToken, final Token functionName, final Token openParen, final ArrayList<FunctionArg> args,
-      final Token closeParen, final Token introReturnType, final TyType returnType, final Block code) {
+  public DefineDispatcher(
+      final Token dispatchToken,
+      final Token enumNameToken,
+      final Token doubleColonToken,
+      final Token valueToken,
+      final Token starToken,
+      final Token functionName,
+      final Token openParen,
+      final ArrayList<FunctionArg> args,
+      final Token closeParen,
+      final Token introReturnType,
+      final TyType returnType,
+      final Block code) {
     this.dispatchToken = dispatchToken;
     this.enumNameToken = enumNameToken;
     this.doubleColonToken = doubleColonToken;
@@ -60,7 +73,8 @@ public class DefineDispatcher extends Definition {
     for (final FunctionArg arg : args) {
       types.add(arg.type);
     }
-    return new FunctionOverloadInstance(" __DISPATCH_" + signatureId + "_" + functionName.text, returnType, types, false);
+    return new FunctionOverloadInstance(
+        " __DISPATCH_" + signatureId + "_" + functionName.text, returnType, types, false);
   }
 
   @Override
@@ -91,6 +105,22 @@ public class DefineDispatcher extends Definition {
     code.emit(yielder);
   }
 
+  @Override
+  public void typing(final Environment environment) {
+    returnType = environment.rules.Resolve(returnType, false);
+    environment.rules.FindEnumType(enumNameToken.text, this, false);
+    for (final FunctionArg arg : args) {
+      arg.typing(environment);
+    }
+    final var flow = code.typing(prepareEnvironment(environment));
+    if (returnType != null && flow == ControlFlow.Open) {
+      environment.document.createError(
+          this,
+          String.format("Dispatch '%s' does not return in all cases", functionName.text),
+          "DefineDispatcher");
+    }
+  }
+
   public Environment prepareEnvironment(final Environment environment) {
     final var toUse = environment.scope();
     final var enumType = environment.document.types.get(enumNameToken.text);
@@ -108,18 +138,5 @@ public class DefineDispatcher extends Definition {
       sb.append("+").append(arg.type.getAdamaType());
     }
     return sb.toString();
-  }
-
-  @Override
-  public void typing(final Environment environment) {
-    returnType = environment.rules.Resolve(returnType, false);
-    environment.rules.FindEnumType(enumNameToken.text, this, false);
-    for (final FunctionArg arg : args) {
-      arg.typing(environment);
-    }
-    final var flow = code.typing(prepareEnvironment(environment));
-    if (returnType != null && flow == ControlFlow.Open) {
-      environment.document.createError(this, String.format("Dispatch '%s' does not return in all cases", functionName.text), "DefineDispatcher");
-    }
   }
 }

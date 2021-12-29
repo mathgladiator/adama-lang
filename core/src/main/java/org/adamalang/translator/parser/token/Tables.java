@@ -21,11 +21,15 @@ public class Tables {
   public static final boolean[] HEX_SCANNER = assembleBooleanTable("0123456789xabcdefABCDEF");
   /** used to promote identifiers into keywords which are reserved */
   public static final Set<String> KEYWORD_TABLE = buildKeywordTable();
-  public static final boolean[] PART_IDENTIFIER_SCANNER = assembleBooleanTable("qwertyuiopasdfghjklzxcvbnm_QWERTYUIOPASDFGHJKLZXCVBNM0123456789");
+
+  public static final boolean[] PART_IDENTIFIER_SCANNER =
+      assembleBooleanTable("qwertyuiopasdfghjklzxcvbnm_QWERTYUIOPASDFGHJKLZXCVBNM0123456789");
   public static final boolean[] SINGLE_CHAR_ESCAPE_SCANNER = assembleBooleanTable("btnrf\"\\");
-  public static final boolean[] START_IDENTIFIER_SCANNER = assembleBooleanTable("@#qwertyuiopasdfghjklzxcvbnm_QWERTYUIOPASDFGHJKLZXCVBNM");
+  public static final boolean[] START_IDENTIFIER_SCANNER =
+      assembleBooleanTable("@#qwertyuiopasdfghjklzxcvbnm_QWERTYUIOPASDFGHJKLZXCVBNM");
   /** various scanner tables */
   public static final boolean[] SYMBOL_SCANNER = assembleBooleanTable("~!$%^&*()-=+[]{}|;:.,?/<>");
+
   public static final boolean[] WHITESPACE_SCANNER = assembleBooleanTable(" \t\n\r");
 
   private static boolean[] assembleBooleanTable(final String str) {
@@ -34,9 +38,11 @@ public class Tables {
     for (var k = 0; k < table.length; k++) {
       table[k] = false;
     }
-    str.chars().forEach(x -> {
-      table[x] = true;
-    });
+    str.chars()
+        .forEach(
+            x -> {
+              table[x] = true;
+            });
     return table;
   }
 

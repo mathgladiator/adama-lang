@@ -28,14 +28,6 @@ public class RxMaybeTests {
     Assert.assertEquals(112, mi.__memory());
   }
 
-  private static void commitCheck(final RxMaybe<RxInt32> mi, String expectedForward, String expectedReverse) {
-    final var writer = new JsonStreamWriter();
-    final var reverse = new JsonStreamWriter();
-    mi.__commit("v", writer, reverse);
-    Assert.assertEquals(expectedForward, writer.toString());
-    Assert.assertEquals(expectedReverse, reverse.toString());
-  }
-
   @Test
   public void commit_flow() {
     final var parent = new MockRxParent();
@@ -58,6 +50,15 @@ public class RxMaybeTests {
     parent.assertDirtyCount(7);
     commitCheck(mi, "\"v\":50", "\"v\":null");
     mi.make().set(5000);
+  }
+
+  private static void commitCheck(
+      final RxMaybe<RxInt32> mi, String expectedForward, String expectedReverse) {
+    final var writer = new JsonStreamWriter();
+    final var reverse = new JsonStreamWriter();
+    mi.__commit("v", writer, reverse);
+    Assert.assertEquals(expectedForward, writer.toString());
+    Assert.assertEquals(expectedReverse, reverse.toString());
   }
 
   @Test
