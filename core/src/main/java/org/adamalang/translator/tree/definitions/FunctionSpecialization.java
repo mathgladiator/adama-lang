@@ -6,7 +6,7 @@
  * See http://www.adama-lang.org/ for more information.
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
-*/
+ */
 package org.adamalang.translator.tree.definitions;
 
 /** denote a specialization of a function. A pure function is one that requires

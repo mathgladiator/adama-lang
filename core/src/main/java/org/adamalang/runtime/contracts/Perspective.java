@@ -6,7 +6,7 @@
  * See http://www.adama-lang.org/ for more information.
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
-*/
+ */
 package org.adamalang.runtime.contracts;
 
 /** a perspective is a consumer of a stream of delta updates from the vantage point of a viewer on a device. */

@@ -6,7 +6,7 @@
  * See http://www.adama-lang.org/ for more information.
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
-*/
+ */
 package org.adamalang.cli.commands;
 
 import org.adamalang.apikit.Tool;
@@ -65,7 +65,7 @@ public class Contrib {
             " * See http://www.adama-lang.org/ for more information.\n" +
             " *\n" +
             " * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)\n" +
-            "*/\n";
+            " */\n";
 
     private static void scan(File root) throws Exception {
         for(File f : root.listFiles()) {

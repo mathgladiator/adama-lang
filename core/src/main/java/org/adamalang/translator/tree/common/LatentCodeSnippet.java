@@ -6,7 +6,7 @@
  * See http://www.adama-lang.org/ for more information.
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
-*/
+ */
 package org.adamalang.translator.tree.common;
 
 /** Represents a code snippet which is integrated during a second phase of

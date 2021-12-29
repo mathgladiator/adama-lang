@@ -6,7 +6,7 @@
  * See http://www.adama-lang.org/ for more information.
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
-*/
+ */
 package org.adamalang.common;
 
 /** time is not a function, so we make it a function */

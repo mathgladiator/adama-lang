@@ -6,7 +6,7 @@
  * See http://www.adama-lang.org/ for more information.
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
-*/
+ */
 package org.adamalang.grpc.client.contracts;
 
 /** various document operations (attach/send) result in a sequencer; these operations may also fail */

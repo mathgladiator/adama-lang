@@ -6,11 +6,12 @@
  * See http://www.adama-lang.org/ for more information.
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
-*/
+ */
 package org.adamalang.gossip;
 
 import java.util.*;
 
+/** pick a partner to gossip with */
 public class GossipPartnerPicker {
     private final InstanceSetChain chain;
     private final HashSet<String> initial;
@@ -42,6 +43,7 @@ public class GossipPartnerPicker {
             TreeSet<String> set = new TreeSet<>(initial);
             set.addAll(chain.current().targetsFor("gossip"));
             peers.addAll(set);
+            cachedPeersHash = chain.current().hash();
         }
         String a = peers.get(rng.nextInt(peers.size()));
         String b = peers.get(rng.nextInt(peers.size()));
