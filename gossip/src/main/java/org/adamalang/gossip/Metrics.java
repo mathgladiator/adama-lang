@@ -9,22 +9,23 @@
  */
 package org.adamalang.gossip;
 
+/** how to learn of events happening during the mysterious gossip protocol */
 public interface Metrics {
-    public void bump_sad_return();
+  void bump_sad_return();
 
-    public void bump_complement();
+  void bump_complement();
 
-    public void bump_optimistic_return();
+  void bump_optimistic_return();
 
-    public void bump_turn_tables();
+  void bump_turn_tables();
 
-    public void bump_start();
+  void bump_start();
 
-    public void bump_found_reverse();
+  void bump_found_reverse();
 
-    public void bump_quick_gossip();
+  void bump_quick_gossip();
 
-    public void bump_slow_gossip();
+  void bump_slow_gossip();
 
-    public void log_error(Throwable cause);
+  void log_error(Throwable cause);
 }
