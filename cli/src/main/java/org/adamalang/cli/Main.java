@@ -36,7 +36,7 @@ public class Main {
         Database.execute(config, next);
         return;
       case "init":
-        Init.execute(config);
+        Init.execute(config, next);
         return;
       case "security":
         Security.execute(config, next);
@@ -55,42 +55,21 @@ public class Main {
 
   public static void rootHelp() {
     System.out.println(Util.prefix("Interacts with the Adama Platform", Util.ANSI.Green));
-    System.out.println("");
+    System.out.println();
     System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println(
-        "    "
-            + Util.prefix("adama", Util.ANSI.Green)
-            + " "
-            + Util.prefix("[SUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println("");
+    System.out.println("    " + Util.prefix("adama", Util.ANSI.Green) + " " + Util.prefix("[SUBCOMMAND]", Util.ANSI.Magenta));
+    System.out.println();
     System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println(
-        "    "
-            + Util.prefix("--config", Util.ANSI.Green)
-            + "          Supplies a config file path other than the default (~/.adama)");
-    System.out.println("");
+    System.out.println( "    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
+    System.out.println();
     System.out.println(Util.prefix("SUBCOMMANDS:", Util.ANSI.Yellow));
-    System.out.println(
-        "    " + Util.prefix("authority", Util.ANSI.Green) + "         Manage authorities");
-    System.out.println(
-        "    " + Util.prefix("code", Util.ANSI.Green) + "              Local developer tools");
-    System.out.println(
-        "    "
-            + Util.prefix("contrib", Util.ANSI.Green)
-            + "           Open source contributor tools");
-    System.out.println(
-        "    " + Util.prefix("database", Util.ANSI.Green) + "          Prepare database for usage");
-    System.out.println(
-        "    "
-            + Util.prefix("init", Util.ANSI.Green)
-            + "              Initializes the config with a valid token");
-    System.out.println(
-        "    "
-            + Util.prefix("security", Util.ANSI.Green)
-            + "          Security tools for production usage");
-    System.out.println(
-        "    " + Util.prefix("service", Util.ANSI.Green) + "           Launch a service");
-    System.out.println(
-        "    " + Util.prefix("space", Util.ANSI.Green) + "             Manages spaces");
+    System.out.println("    " + Util.prefix("authority", Util.ANSI.Green) + "         Manage authorities");
+    System.out.println("    " + Util.prefix("code", Util.ANSI.Green) + "              Local developer tools");
+    System.out.println("    " + Util.prefix("contrib", Util.ANSI.Green) + "           Open source contributor tools");
+    System.out.println("    " + Util.prefix("database", Util.ANSI.Green) + "          Prepare database for usage");
+    System.out.println("    " + Util.prefix("init", Util.ANSI.Green) + "              Initializes the config with a valid token");
+    System.out.println("    " + Util.prefix("security", Util.ANSI.Green) + "          Security tools for production usage");
+    System.out.println("    " + Util.prefix("service", Util.ANSI.Green) + "           Launch a service");
+    System.out.println("    " + Util.prefix("space", Util.ANSI.Green) + "             Manages spaces");
   }
 }

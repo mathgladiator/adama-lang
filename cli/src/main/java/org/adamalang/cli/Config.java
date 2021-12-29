@@ -9,7 +9,9 @@
  */
 package org.adamalang.cli;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -43,23 +45,43 @@ public class Config {
     this.requestingHelp = _requestingHelp;
     File _configFile = new File(configPath);
     if (!_configFile.exists()) {
-      ObjectNode defaultConfig = Util.newJsonObject();
+      ObjectNode defaultConfig = Json.newJsonObject();
       // TODO: once I have a launch, make this use the default URL and ideal parameters
       Files.writeString(_configFile.toPath(), defaultConfig.toPrettyString());
     }
 
-    this.cache = Util.parseJsonObject(Files.readString(_configFile.toPath()));
+    this.cache = Json.parseJsonObject(Files.readString(_configFile.toPath()));
+  }
+
+  public void manipulate(Consumer<ObjectNode> manipulator) throws Exception {
+    File _configFile = new File(configPath);
+    ObjectNode config = Json.parseJsonObject(Files.readString(_configFile.toPath()));
+    manipulator.accept(config);
+    Files.writeString(_configFile.toPath(), config.toPrettyString());
+    this.cache = config;
+  }
+
+  public String get_string(String field, String defaultValue) {
+    JsonNode node = read().get(field);
+    if (node == null || node.isNull()) {
+      if (defaultValue == null) {
+        throw new NullPointerException("expected an '" + field + "' within the config");
+      } else {
+        return defaultValue;
+      }
+    }
+    return node.textValue();
   }
 
   public ObjectNode read() {
     return cache;
   }
 
-  public void manipulate(Consumer<ObjectNode> manipulator) throws Exception {
-    File _configFile = new File(configPath);
-    ObjectNode config = Util.parseJsonObject(Files.readString(_configFile.toPath()));
-    manipulator.accept(config);
-    Files.writeString(_configFile.toPath(), config.toPrettyString());
-    this.cache = config;
+  public int get_int(String field, int defaultValue) {
+    JsonNode node = read().get(field);
+    if (node == null || node.isNull() || !node.isInt()) {
+      return defaultValue;
+    }
+    return node.intValue();
   }
 }

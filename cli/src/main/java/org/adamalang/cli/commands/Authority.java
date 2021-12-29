@@ -11,6 +11,8 @@ package org.adamalang.cli.commands;
 
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.cli.remote.Connection;
+import org.adamalang.cli.remote.WebSocketClient;
 
 public class Authority {
     public static void execute(Config config, String[] args) throws Exception {
@@ -34,9 +36,13 @@ public class Authority {
         }
     }
 
-    public static void authorityCreate(Config config, String[] args) {
-        // TODO: read identity
-        // TODO: read endpoint
+    public static void authorityCreate(Config config, String[] args) throws Exception {
+        String identity = config.get_string("identity", null);
+        try (WebSocketClient client = new WebSocketClient(config)) {
+            try (Connection connection = client.open()) {
+
+            }
+        }
         // TODO: create WebSocket connection
         // TODO: build JSON for "authority create" (consider auto-generating a client stub)
         // TODO: send JSON
