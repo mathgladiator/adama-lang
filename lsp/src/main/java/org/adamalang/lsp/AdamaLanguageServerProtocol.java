@@ -34,13 +34,41 @@ public class AdamaLanguageServerProtocol {
     this.nameId = nameId;
   }
 
-  private ObjectNode craftResponse(ObjectNode request, boolean copyId) {
-    ObjectNode response = new JsonMapper().createObjectNode();
-    response.put("jsonrpc", "2.0");
-    if (copyId && request.has("id")) {
-      response.set("id", request.get("id"));
+  public void drive(InputStream input, OutputStream output) throws Exception {
+    BufferedReader reader =
+        new BufferedReader(new InputStreamReader(new BufferedInputStream(input)));
+    HashMap<String, String> headers = new HashMap<>();
+    String line;
+    while ((line = reader.readLine()) != null) {
+      line = line.trim();
+      if (line.equals("")) {
+        String lengthString = headers.get("content-length");
+        if (lengthString == null) {
+          System.err.println("Failed to Extract Content Length");
+          throw new IOException("failed to find a content-length");
+        }
+        int length = Integer.parseInt(lengthString);
+        char[] buffer = new char[length];
+        int readIn = 0;
+        while (readIn < buffer.length) {
+          readIn += reader.read(buffer, readIn, buffer.length - readIn);
+        }
+        ObjectNode request = (ObjectNode) new JsonMapper().readTree(new String(buffer));
+        ObjectNode response = handle(request);
+        if (response != null) {
+          output.write(encode(response));
+          output.flush();
+        }
+      } else {
+        int kColon = line.indexOf(":");
+        if (kColon > 0) {
+          headers.put(
+              line.substring(0, kColon).trim().toLowerCase(), line.substring(kColon + 1).trim());
+        } else {
+          throw new IOException("failed to read a colon in header");
+        }
+      }
     }
-    return response;
   }
 
   public ObjectNode handle(ObjectNode request) throws Exception {
@@ -59,16 +87,19 @@ public class AdamaLanguageServerProtocol {
 
     String method = request.get("method").textValue();
     switch (method) {
-      case "initialize": {
-        ObjectNode response = craftResponse(request, true);
-        ObjectNode sync = response.putObject("result").putObject("capabilities").putObject("textDocumentSync");
-        sync.put("openClose", true);
-        sync.put("change", 1);
-        return response;
-      }
-      case "initialized": {
-        return null;
-      }
+      case "initialize":
+        {
+          ObjectNode response = craftResponse(request, true);
+          ObjectNode sync =
+              response.putObject("result").putObject("capabilities").putObject("textDocumentSync");
+          sync.put("openClose", true);
+          sync.put("change", 1);
+          return response;
+        }
+      case "initialized":
+        {
+          return null;
+        }
       case "textDocument/didOpen":
       case "textDocument/didChange":
         ObjectNode response = craftResponse(request, true);
@@ -131,6 +162,24 @@ public class AdamaLanguageServerProtocol {
     return null;
   }
 
+  public static byte[] encode(ObjectNode json) throws Exception {
+    byte[] body = json.toString().getBytes();
+    byte[] header = ("Content-Length: " + body.length + "\r\n\r\n").getBytes();
+    ByteArrayOutputStream memory = new ByteArrayOutputStream();
+    memory.write(header);
+    memory.write(body);
+    return memory.toByteArray();
+  }
+
+  private ObjectNode craftResponse(ObjectNode request, boolean copyId) {
+    ObjectNode response = new JsonMapper().createObjectNode();
+    response.put("jsonrpc", "2.0");
+    if (copyId && request.has("id")) {
+      response.set("id", request.get("id"));
+    }
+    return response;
+  }
+
   private void code(String code, ArrayNode diagnostics) throws Exception {
     GlobalObjectPool globals = GlobalObjectPool.createPoolWithStdLib();
     CompilerOptions options = CompilerOptions.start().enableCodeCoverage().make();
@@ -160,49 +209,4 @@ public class AdamaLanguageServerProtocol {
       diagnostics.add(new JsonMapper().readTree(error.json()));
     }
   }
-
-  public static byte[] encode(ObjectNode json) throws Exception {
-    byte[] body = json.toString().getBytes();
-    byte[] header = ("Content-Length: " + body.length + "\r\n\r\n").getBytes();
-    ByteArrayOutputStream memory = new ByteArrayOutputStream();
-    memory.write(header);
-    memory.write(body);
-    return memory.toByteArray();
-  }
-
-  public void drive(InputStream input, OutputStream output) throws Exception {
-    BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(input)));
-    HashMap<String, String> headers = new HashMap<>();
-    String line;
-    while ((line = reader.readLine()) != null) {
-      line = line.trim();
-      if (line.equals("")) {
-        String lengthString = headers.get("content-length");
-        if (lengthString == null) {
-          System.err.println("Failed to Extract Content Length");
-          throw new IOException("failed to find a content-length");
-        }
-        int length = Integer.parseInt(lengthString);
-        char[] buffer = new char[length];
-        int readIn = 0;
-        while (readIn < buffer.length) {
-          readIn += reader.read(buffer, readIn, buffer.length - readIn);
-        }
-        ObjectNode request = (ObjectNode) new JsonMapper().readTree(new String(buffer));
-        ObjectNode response = handle(request);
-        if (response != null) {
-          output.write(encode(response));
-          output.flush();
-        }
-      } else {
-        int kColon = line.indexOf(":");
-        if (kColon > 0) {
-          headers.put(line.substring(0, kColon).trim().toLowerCase(), line.substring(kColon + 1).trim());
-        } else {
-          throw new IOException("failed to read a colon in header");
-        }
-      }
-    }
-  }
-
 }

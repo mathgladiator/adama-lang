@@ -17,44 +17,46 @@ import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 
 public class MockServiceBase implements ServiceBase {
-    @Override
-    public ServiceConnection establish(ConnectionContext context) {
-        return new ServiceConnection() {
-            boolean alive = true;
-            @Override
-            public void execute(JsonRequest request, JsonResponder responder) {
-                try {
-                    switch (request.method()) {
-                        case "cake": {
-                            responder.stream("{\"boss\":1}");
-                            responder.finish("{\"boss\":2}");
-                            return;
-                        }
-                        case "kill": {
-                            responder.stream("{\"death\":1}");
-                            alive = false;
-                            return;
-                        }
-                        case "ex": {
-                            responder.error(new ErrorCodeException(1234));
-                            return;
-                        }
-                    }
+  @Override
+  public ServiceConnection establish(ConnectionContext context) {
+    return new ServiceConnection() {
+      boolean alive = true;
 
-                } catch (ErrorCodeException ex) {
-                    responder.error(ex);
-                }
-            }
+      @Override
+      public void execute(JsonRequest request, JsonResponder responder) {
+        try {
+          switch (request.method()) {
+            case "cake":
+              {
+                responder.stream("{\"boss\":1}");
+                responder.finish("{\"boss\":2}");
+                return;
+              }
+            case "kill":
+              {
+                responder.stream("{\"death\":1}");
+                alive = false;
+                return;
+              }
+            case "ex":
+              {
+                responder.error(new ErrorCodeException(1234));
+                return;
+              }
+          }
 
-            @Override
-            public boolean keepalive() {
-                return alive;
-            }
+        } catch (ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      }
 
-            @Override
-            public void kill() {
+      @Override
+      public boolean keepalive() {
+        return alive;
+      }
 
-            }
-        };
-    }
+      @Override
+      public void kill() {}
+    };
+  }
 }

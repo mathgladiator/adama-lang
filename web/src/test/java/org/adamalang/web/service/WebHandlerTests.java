@@ -29,48 +29,72 @@ public class WebHandlerTests {
     try {
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", 52000).get("/x").execute(callback);
+        TestClientRequestBuilder.start(group)
+            .server("localhost", 52000)
+            .get("/x")
+            .execute(callback);
         callback.awaitFailedToConnect();
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/x").execute(callback);
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get("/x")
+            .execute(callback);
         callback.awaitFirst();
         callback.assertData("Bad Request");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/demo.html").execute(callback);
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get("/demo.html")
+            .execute(callback);
         callback.awaitFirst();
         callback.assertData("Bad Request");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).header("origin", "http://localhost").get("/demo.html").execute(callback);
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .header("origin", "http://localhost")
+            .get("/demo.html")
+            .execute(callback);
         callback.awaitFirst();
         callback.assertData("Bad Request");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get(webConfig.healthCheckPath).execute(callback);
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get(webConfig.healthCheckPath)
+            .execute(callback);
         callback.awaitFirst();
         callback.assertDataPrefix("HEALTHY:");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/ex_500").execute(callback);
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get("/ex_500")
+            .execute(callback);
         callback.awaitFirst();
         callback.assertData("Bad Request");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).header("origin", "http://localhost").junk().get("/demo.html").execute(callback);
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .header("origin", "http://localhost")
+            .junk()
+            .get("/demo.html")
+            .execute(callback);
         callback.awaitFailure();
       }
     } finally {

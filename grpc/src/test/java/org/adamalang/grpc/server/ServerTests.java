@@ -9,5 +9,4 @@
  */
 package org.adamalang.grpc.server;
 
-public class ServerTests {
-}
+public class ServerTests {}

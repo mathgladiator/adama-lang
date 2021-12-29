@@ -17,31 +17,34 @@ import org.adamalang.grpc.proto.CreateResponse;
 
 /** asking for a document to be created is either success or not (with a code) */
 public interface CreateCallback {
-    /** create was successful */
-    public void created();
+  public static StreamObserver<CreateResponse> WRAP(
+      CreateCallback callback, ExceptionLogger logger) {
+    return new StreamObserver<>() {
+      @Override
+      public void onNext(CreateResponse createResponse) {
+        if (createResponse.getSuccess()) {
+          callback.created();
+        } else {
+          callback.error(createResponse.getFailureReason());
+        }
+      }
 
-    /** create was not successful */
-    public void error(int code);
+      @Override
+      public void onError(Throwable throwable) {
+        callback.error(
+            ErrorCodeException.detectOrWrap(
+                    ErrorCodes.GRPC_CREATE_UNKNOWN_EXCEPTION, throwable, logger)
+                .code);
+      }
 
-    public static StreamObserver<CreateResponse> WRAP(CreateCallback callback, ExceptionLogger logger) {
-        return new StreamObserver<>() {
-            @Override
-            public void onNext(CreateResponse createResponse) {
-                if (createResponse.getSuccess()) {
-                    callback.created();
-                } else {
-                    callback.error(createResponse.getFailureReason());
-                }
-            }
+      @Override
+      public void onCompleted() {}
+    };
+  }
 
-            @Override
-            public void onError(Throwable throwable) {
-                callback.error(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_CREATE_UNKNOWN_EXCEPTION, throwable, logger).code);
-            }
+  /** create was successful */
+  public void created();
 
-            @Override
-            public void onCompleted() {
-            }
-        };
-    }
+  /** create was not successful */
+  public void error(int code);
 }

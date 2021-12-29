@@ -21,25 +21,29 @@ import org.adamalang.web.io.AsyncTransform;
 import java.util.concurrent.Executor;
 
 public class UserIdResolver implements AsyncTransform<String, Integer> {
-    private final Executor executor;
-    private final DataBase dataBase;
-    private final ExceptionLogger logger;
+  private final Executor executor;
+  private final DataBase dataBase;
+  private final ExceptionLogger logger;
 
-    public UserIdResolver(Executor executor, ExternNexus nexus) {
-        this.executor = executor;
-        this.dataBase = nexus.dataBase;
-        this.logger = nexus.makeLogger(UserIdResolver.class);
-    }
-    @Override
-    public void execute(String email, Callback<Integer> callback) {
-        executor.execute(() -> {
-            // TODO: validate the email (roughly, for quick rejects)
-            // https://stackoverflow.com/questions/624581/what-is-the-best-java-email-address-validation-method
-            try {
-                callback.success(Users.getOrCreateUserId(dataBase, email));
-            } catch (Exception ex) {
-                callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.USERID_RESOLVE_UNKNOWN_EXCEPTION, ex, logger));
-            }
+  public UserIdResolver(Executor executor, ExternNexus nexus) {
+    this.executor = executor;
+    this.dataBase = nexus.dataBase;
+    this.logger = nexus.makeLogger(UserIdResolver.class);
+  }
+
+  @Override
+  public void execute(String email, Callback<Integer> callback) {
+    executor.execute(
+        () -> {
+          // TODO: validate the email (roughly, for quick rejects)
+          // https://stackoverflow.com/questions/624581/what-is-the-best-java-email-address-validation-method
+          try {
+            callback.success(Users.getOrCreateUserId(dataBase, email));
+          } catch (Exception ex) {
+            callback.failure(
+                ErrorCodeException.detectOrWrap(
+                    ErrorCodes.USERID_RESOLVE_UNKNOWN_EXCEPTION, ex, logger));
+          }
         });
-    }
+  }
 }

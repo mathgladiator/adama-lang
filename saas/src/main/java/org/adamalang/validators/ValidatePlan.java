@@ -15,13 +15,13 @@ import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 
 public class ValidatePlan {
-    public static void validate(ObjectNode node) throws ErrorCodeException {
-        new DeploymentPlan(node.toString(), new ExceptionLogger() {
-            @Override
-            public void convertedToErrorCode(Throwable t, int errorCode) {
-
-            }
+  public static void validate(ObjectNode node) throws ErrorCodeException {
+    new DeploymentPlan(
+        node.toString(),
+        new ExceptionLogger() {
+          @Override
+          public void convertedToErrorCode(Throwable t, int errorCode) {}
         });
-        // TODO: validate everything compiles
-    }
+    // TODO: validate everything compiles
+  }
 }

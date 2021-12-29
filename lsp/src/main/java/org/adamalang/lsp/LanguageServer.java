@@ -14,29 +14,33 @@ import java.net.Socket;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LanguageServer {
-    public static void singleThread(int port) throws Exception {
-        AtomicInteger classNameId = new AtomicInteger();
-        ServerSocket server = new ServerSocket(port);
-        while (true) {
-            Socket client = server.accept();
-            System.err.println("connected");
-            Thread clientThread = new Thread(() -> {
+  public static void singleThread(int port) throws Exception {
+    AtomicInteger classNameId = new AtomicInteger();
+    ServerSocket server = new ServerSocket(port);
+    while (true) {
+      Socket client = server.accept();
+      System.err.println("connected");
+      Thread clientThread =
+          new Thread(
+              () -> {
                 try {
-                    new AdamaLanguageServerProtocol(classNameId).drive(client.getInputStream(), client.getOutputStream());
+                  new AdamaLanguageServerProtocol(classNameId)
+                      .drive(client.getInputStream(), client.getOutputStream());
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                  ex.printStackTrace();
                 }
                 forceClose(client);
-            });
-            clientThread.setName("lsp-client-thread-" + client.getLocalPort());
-            clientThread.start();
-        }
+              });
+      clientThread.setName("lsp-client-thread-" + client.getLocalPort());
+      clientThread.start();
     }
-    public static void forceClose(Socket socket) {
-        try {
-            socket.close();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+  }
+
+  public static void forceClose(Socket socket) {
+    try {
+      socket.close();
+    } catch (Exception ex) {
+      ex.printStackTrace();
     }
+  }
 }

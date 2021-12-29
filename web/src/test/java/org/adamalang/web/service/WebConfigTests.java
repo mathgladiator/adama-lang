@@ -15,6 +15,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class WebConfigTests {
+  public static WebConfig mockConfig(Scenario scenario) throws Exception {
+    ObjectNode configNode = Json.newJsonObject();
+    configNode.put("http_port", scenario.port);
+    configNode.put("websocket_heart_beat_ms", 250);
+    return new WebConfig(configNode);
+  }
+
   @Test
   public void defaults() {
     WebConfig webConfig = new WebConfig(Json.newJsonObject());
@@ -54,15 +61,9 @@ public class WebConfigTests {
     ProdScope(15006);
 
     public final int port;
+
     private Scenario(int port) {
       this.port = port;
     }
-  }
-
-  public static WebConfig mockConfig(Scenario scenario) throws Exception {
-    ObjectNode configNode = Json.newJsonObject();
-    configNode.put("http_port", scenario.port);
-    configNode.put("websocket_heart_beat_ms", 250);
-    return new WebConfig(configNode);
   }
 }

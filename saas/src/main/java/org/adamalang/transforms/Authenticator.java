@@ -31,76 +31,84 @@ import java.util.Base64;
 import java.util.regex.Pattern;
 
 public class Authenticator implements AsyncTransform<String, AuthenticatedUser> {
-    public final ExternNexus nexus;
-    private final ExceptionLogger logger;
+  public final ExternNexus nexus;
+  private final ExceptionLogger logger;
 
-    public Authenticator(ExternNexus nexus) {
-        this.nexus = nexus;
-        this.logger = nexus.makeLogger(Authenticator.class);
+  public Authenticator(ExternNexus nexus) {
+    this.nexus = nexus;
+    this.logger = nexus.makeLogger(Authenticator.class);
+  }
+
+  @Override
+  public void execute(String identity, Callback<AuthenticatedUser> callback) {
+    // TODO: think about caching and an implicit "@" for use the most recently authenticate key
+    try {
+      // TODO: check for Facebook Prefix
+      // TODO: check for Google Prefix
+      ParsedToken parsedToken = new ParsedToken(identity);
+      if ("adama".equals(parsedToken.iss)) {
+        int userId = Integer.parseInt(parsedToken.sub);
+        for (String publicKey64 : Users.listKeys(nexus.dataBase, userId)) {
+          byte[] publicKey = Base64.getDecoder().decode(publicKey64);
+          X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
+          KeyFactory kf = KeyFactory.getInstance("EC");
+          try {
+            Jwts.parserBuilder()
+                .setSigningKey(kf.generatePublic(spec))
+                .requireIssuer("adama")
+                .build()
+                .parseClaimsJws(identity);
+            callback.success(
+                new AuthenticatedUser(
+                    AuthenticatedUser.Source.Adama, userId, new NtClient("" + userId, "adama")));
+            return;
+          } catch (Exception ex) {
+            // move on
+          }
+        }
+        callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
+      } else {
+        ObjectNode keystore =
+            Json.parseJsonObject(Authorities.getKeystoreInternal(nexus.dataBase, parsedToken.iss));
+        // TODO: cache the lookup, parsing, teardown
+        // TODO: decode the authority
+        // TODO: for each public key, test the given token
+        callback.failure(new ErrorCodeException(-1));
+      }
+    } catch (Exception ex) {
+      callback.failure(
+          ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, logger));
     }
+  }
 
-    @Override
-    public void execute(String identity, Callback<AuthenticatedUser> callback) {
-        // TODO: think about caching and an implicit "@" for use the most recently authenticate key
+  /** a pre-validated parsed token; we parse to find which keys to look up */
+  public class ParsedToken {
+    public final String iss;
+    public final String sub;
+
+    public ParsedToken(String token) throws ErrorCodeException {
+      String[] parts = token.split(Pattern.quote("."));
+      if (parts.length == 3) {
+        String middle = new String(Base64.getDecoder().decode(parts[1]));
+        JsonMapper mapper = new JsonMapper();
         try {
-            // TODO: check for Facebook Prefix
-            // TODO: check for Google Prefix
-            ParsedToken parsedToken = new ParsedToken(identity);
-            if ("adama".equals(parsedToken.iss)) {
-                int userId = Integer.parseInt(parsedToken.sub);
-                for (String publicKey64 : Users.listKeys(nexus.dataBase, userId)) {
-                    byte[] publicKey = Base64.getDecoder().decode(publicKey64);
-                    X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
-                    KeyFactory kf = KeyFactory.getInstance("EC");
-                    try {
-                        Jwts.parserBuilder().setSigningKey(kf.generatePublic(spec)).requireIssuer("adama").build().parseClaimsJws(identity);
-                        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtClient("" + userId, "adama")));
-                        return;
-                    } catch (Exception ex) {
-                        // move on
-                    }
-                }
-                callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
-            } else {
-                ObjectNode keystore = Json.parseJsonObject(Authorities.getKeystoreInternal(nexus.dataBase, parsedToken.iss));
-                // TODO: cache the lookup, parsing, teardown
-                // TODO: decode the authority
-                // TODO: for each public key, test the given token
-                callback.failure(new ErrorCodeException(-1));
+          JsonNode tree = mapper.readTree(middle);
+          if (tree != null && tree.isObject()) {
+            JsonNode _iss = tree.get("iss");
+            JsonNode _sub = tree.get("sub");
+            if (_iss != null && _iss.isTextual() && _sub != null && _sub.isTextual()) {
+              this.iss = _iss.textValue();
+              this.sub = _sub.textValue();
+              return;
             }
+          }
+          throw new ErrorCodeException(ErrorCodes.AUTH_INVALID_TOKEN_JSON_COMPLETE);
         } catch (Exception ex) {
-            callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, logger));
+          throw new ErrorCodeException(ErrorCodes.AUTH_INVALID_TOKEN_JSON, ex);
         }
+      } else {
+        throw new ErrorCodeException(ErrorCodes.AUTH_INVALID_TOKEN_LAYOUT);
+      }
     }
-
-    /** a pre-validated parsed token; we parse to find which keys to look up */
-    public class ParsedToken {
-        public final String iss;
-        public final String sub;
-
-        public ParsedToken(String token) throws ErrorCodeException {
-            String[] parts = token.split(Pattern.quote("."));
-            if (parts.length == 3) {
-                String middle = new String(Base64.getDecoder().decode(parts[1]));
-                JsonMapper mapper = new JsonMapper();
-                try {
-                    JsonNode tree = mapper.readTree(middle);
-                    if (tree != null && tree.isObject()) {
-                        JsonNode _iss = tree.get("iss");
-                        JsonNode _sub = tree.get("sub");
-                        if (_iss != null && _iss.isTextual() && _sub != null && _sub.isTextual()) {
-                            this.iss = _iss.textValue();
-                            this.sub = _sub.textValue();
-                            return;
-                        }
-                    }
-                    throw new ErrorCodeException(ErrorCodes.AUTH_INVALID_TOKEN_JSON_COMPLETE);
-                } catch (Exception ex) {
-                    throw new ErrorCodeException(ErrorCodes.AUTH_INVALID_TOKEN_JSON, ex);
-                }
-            } else {
-                throw new ErrorCodeException(ErrorCodes.AUTH_INVALID_TOKEN_LAYOUT);
-            }
-        }
-    }
+  }
 }

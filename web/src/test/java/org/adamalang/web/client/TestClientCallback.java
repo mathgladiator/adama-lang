@@ -32,41 +32,6 @@ public class TestClientCallback {
   private ArrayList<String> writes;
   private HashMap<Integer, Mailbox> mailboxes;
 
-  public class Mailbox {
-    private final ArrayList<String> writes;
-    private final HashSet<CountDownLatch> arrivals;
-    private final CountDownLatch firstLatch;
-
-    public Mailbox() {
-      this.arrivals = new HashSet<>();
-      writes = new ArrayList<>();
-      this.firstLatch = new CountDownLatch(1);
-    }
-
-    public synchronized void deliver(String data) {
-      firstLatch.countDown();
-      writes.add(data);
-      for (CountDownLatch latch : arrivals) {
-        latch.countDown();
-      }
-    }
-
-    public synchronized CountDownLatch latch(int c) {
-      CountDownLatch latch = new CountDownLatch(c);
-      arrivals.add(latch);
-      return latch;
-    }
-
-    public void assertData(int at, String data) {
-      Assert.assertEquals(data, writes.get(at));
-    }
-
-    public void awaitFirst() throws Exception {
-      Assert.assertTrue(firstLatch.await(5000, TimeUnit.MILLISECONDS));
-    }
-  }
-
-
   public TestClientCallback() {
     this.closeLatch = new CountDownLatch(1);
     this.firstLatch = new CountDownLatch(1);
@@ -77,15 +42,6 @@ public class TestClientCallback {
     this.data = "";
     this.writes = new ArrayList<>();
     this.mailboxes = new HashMap<>();
-  }
-
-  public synchronized Mailbox getOrCreate(int id) {
-    Mailbox mailbox = mailboxes.get(id);
-    if (mailbox == null) {
-      mailbox = new Mailbox();
-      mailboxes.put(id, mailbox);
-    }
-    return mailbox;
   }
 
   public void awaitClosed() throws Exception {
@@ -99,9 +55,11 @@ public class TestClientCallback {
   public void awaitFailure() throws Exception {
     Assert.assertTrue(failureLatch.await(5000, TimeUnit.MILLISECONDS));
   }
+
   public void awaitFailedToConnect() throws Exception {
     Assert.assertTrue(failedToConnectLatch.await(5000, TimeUnit.MILLISECONDS));
   }
+
   public void awaitFirst() throws Exception {
     Assert.assertTrue(firstLatch.await(25000, TimeUnit.MILLISECONDS));
   }
@@ -177,6 +135,49 @@ public class TestClientCallback {
       }
     } catch (Exception ex) {
 
+    }
+  }
+
+  public synchronized Mailbox getOrCreate(int id) {
+    Mailbox mailbox = mailboxes.get(id);
+    if (mailbox == null) {
+      mailbox = new Mailbox();
+      mailboxes.put(id, mailbox);
+    }
+    return mailbox;
+  }
+
+  public class Mailbox {
+    private final ArrayList<String> writes;
+    private final HashSet<CountDownLatch> arrivals;
+    private final CountDownLatch firstLatch;
+
+    public Mailbox() {
+      this.arrivals = new HashSet<>();
+      writes = new ArrayList<>();
+      this.firstLatch = new CountDownLatch(1);
+    }
+
+    public synchronized void deliver(String data) {
+      firstLatch.countDown();
+      writes.add(data);
+      for (CountDownLatch latch : arrivals) {
+        latch.countDown();
+      }
+    }
+
+    public synchronized CountDownLatch latch(int c) {
+      CountDownLatch latch = new CountDownLatch(c);
+      arrivals.add(latch);
+      return latch;
+    }
+
+    public void assertData(int at, String data) {
+      Assert.assertEquals(data, writes.get(at));
+    }
+
+    public void awaitFirst() throws Exception {
+      Assert.assertTrue(firstLatch.await(5000, TimeUnit.MILLISECONDS));
     }
   }
 }

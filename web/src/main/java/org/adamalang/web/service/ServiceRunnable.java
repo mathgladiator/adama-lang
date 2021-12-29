@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServiceRunnable implements Runnable {
-  private Channel channel;
   private final WebConfig webConfig;
   private final ServiceBase base;
   private final CountDownLatch ready;
   private final AtomicBoolean started;
+  private Channel channel;
   private boolean stopped;
 
   public ServiceRunnable(final WebConfig webConfig, ServiceBase base) {
@@ -37,23 +37,8 @@ public class ServiceRunnable implements Runnable {
     ready = new CountDownLatch(1);
   }
 
-  private synchronized void channelRegistered(final Channel channel) {
-    this.channel = channel;
-    if (stopped) {
-      channel.close();
-    }
-    ready.countDown();
-  }
-
   public synchronized boolean isAccepting() {
     return channel != null;
-  }
-
-  public synchronized void shutdown() {
-    stopped = true;
-    if (channel != null) {
-      channel.close();
-    }
   }
 
   public boolean waitForReady(final int ms) throws InterruptedException {
@@ -69,7 +54,9 @@ public class ServiceRunnable implements Runnable {
           final EventLoopGroup workerGroup = new NioEventLoopGroup();
           try {
             final var b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, base));
+            b.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new Initializer(webConfig, base));
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             // TODO: log information out
@@ -84,6 +71,21 @@ public class ServiceRunnable implements Runnable {
       } finally {
         ready.countDown();
       }
+    }
+  }
+
+  private synchronized void channelRegistered(final Channel channel) {
+    this.channel = channel;
+    if (stopped) {
+      channel.close();
+    }
+    ready.countDown();
+  }
+
+  public synchronized void shutdown() {
+    stopped = true;
+    if (channel != null) {
+      channel.close();
     }
   }
 }

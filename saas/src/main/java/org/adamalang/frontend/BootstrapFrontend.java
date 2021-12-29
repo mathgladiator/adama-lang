@@ -25,39 +25,44 @@ import java.util.concurrent.Executors;
 
 public class BootstrapFrontend {
 
-    // TODO: add config
-    public static ServiceBase make(ExternNexus extern) throws Exception {
+  // TODO: add config
+  public static ServiceBase make(ExternNexus extern) throws Exception {
 
-        // TODO: make multiple of these, pull nThreads from config
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        RootHandlerImpl handler = new RootHandlerImpl(extern);
-        SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(Executors.newSingleThreadExecutor(), extern);
-        UserIdResolver userIdResolver = new UserIdResolver(Executors.newSingleThreadExecutor(), extern);
+    // TODO: make multiple of these, pull nThreads from config
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    RootHandlerImpl handler = new RootHandlerImpl(extern);
+    SpacePolicyLocator spacePolicyLocator =
+        new SpacePolicyLocator(Executors.newSingleThreadExecutor(), extern);
+    UserIdResolver userIdResolver = new UserIdResolver(Executors.newSingleThreadExecutor(), extern);
 
-        return context -> new ServiceConnection() {
-            // TODO: pick an executor (randomly? pick two and do the faster of the two?)
-            ConnectionNexus nexus = new ConnectionNexus(executor, //
-                    userIdResolver, //
-                    new Authenticator(extern), //
-                    spacePolicyLocator); //
-            ConnectionRouter router = new ConnectionRouter(nexus, handler);
-            @Override
-            public void execute(JsonRequest request, JsonResponder responder) {
-                router.route(request, responder);
-            }
+    return context ->
+        new ServiceConnection() {
+          // TODO: pick an executor (randomly? pick two and do the faster of the two?)
+          final ConnectionNexus nexus =
+              new ConnectionNexus(
+                  executor, //
+                  userIdResolver, //
+                  new Authenticator(extern), //
+                  spacePolicyLocator); //
+          final ConnectionRouter router = new ConnectionRouter(nexus, handler);
 
-            @Override
-            public boolean keepalive() {
-                // TODO: check with the nexus for some activity
-                // TODO: rule #1: there should be activity within the first 30 seconds of a connection
-                // TODO: rule #2: there should be activity within the last 5 minutes
-                return true;
-            }
+          @Override
+          public void execute(JsonRequest request, JsonResponder responder) {
+            router.route(request, responder);
+          }
 
-            @Override
-            public void kill() {
-                router.disconnect();
-            }
+          @Override
+          public boolean keepalive() {
+            // TODO: check with the nexus for some activity
+            // TODO: rule #1: there should be activity within the first 30 seconds of a connection
+            // TODO: rule #2: there should be activity within the last 5 minutes
+            return true;
+          }
+
+          @Override
+          public void kill() {
+            router.disconnect();
+          }
         };
-    }
+  }
 }

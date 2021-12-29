@@ -20,6 +20,7 @@ public class MockIntegerCallback implements Callback<Integer> {
   public Integer response;
   public ErrorCodeException ex;
   private CountDownLatch done;
+
   public MockIntegerCallback() {
     this.done = new CountDownLatch(1);
   }

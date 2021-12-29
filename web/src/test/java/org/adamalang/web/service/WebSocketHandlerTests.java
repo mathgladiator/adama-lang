@@ -37,14 +37,22 @@ public class WebSocketHandlerTests {
       runnable.waitForReady(1000);
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket().execute(callback);
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get("/s")
+            .withWebSocket()
+            .execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b =
+            TestClientRequestBuilder.start(group)
+                .server("localhost", webConfig.port)
+                .get("/s")
+                .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -61,7 +69,11 @@ public class WebSocketHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b =
+            TestClientRequestBuilder.start(group)
+                .server("localhost", webConfig.port)
+                .get("/s")
+                .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -77,7 +89,11 @@ public class WebSocketHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b =
+            TestClientRequestBuilder.start(group)
+                .server("localhost", webConfig.port)
+                .get("/s")
+                .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -90,12 +106,17 @@ public class WebSocketHandlerTests {
         Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
         box.assertData(0, "{\"deliver\":500,\"done\":false,\"response\":{\"death\":1}}");
         callback.awaitDisconnect();
-        callback.assertData("{\"status\":\"connected\"}{\"deliver\":500,\"done\":false,\"response\":{\"death\":1}}{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}");
+        callback.assertData(
+            "{\"status\":\"connected\"}{\"deliver\":500,\"done\":false,\"response\":{\"death\":1}}{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b =
+            TestClientRequestBuilder.start(group)
+                .server("localhost", webConfig.port)
+                .get("/s")
+                .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -103,12 +124,17 @@ public class WebSocketHandlerTests {
         callback.assertDataPrefix(1, "{\"ping\":");
         b.channel().writeAndFlush(new TextWebSocketFrame("{}"));
         callback.awaitDisconnect();
-        callback.assertData("{\"status\":\"connected\"}{\"status\":\"disconnected\",\"reason\":233120}");
+        callback.assertData(
+            "{\"status\":\"connected\"}{\"status\":\"disconnected\",\"reason\":233120}");
       }
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b =
+            TestClientRequestBuilder.start(group)
+                .server("localhost", webConfig.port)
+                .get("/s")
+                .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -116,13 +142,17 @@ public class WebSocketHandlerTests {
         callback.assertDataPrefix(1, "{\"ping\":");
         b.channel().writeAndFlush(new TextWebSocketFrame("{\"pong\":42}"));
         callback.awaitDisconnect();
-        callback.assertData("{\"status\":\"connected\"}{\"status\":\"disconnected\",\"reason\":295116}");
+        callback.assertData(
+            "{\"status\":\"connected\"}{\"status\":\"disconnected\",\"reason\":295116}");
       }
-
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b =
+            TestClientRequestBuilder.start(group)
+                .server("localhost", webConfig.port)
+                .get("/s")
+                .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
@@ -135,15 +165,21 @@ public class WebSocketHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder b = TestClientRequestBuilder.start(group).server("localhost", webConfig.port).get("/s").withWebSocket();
+        TestClientRequestBuilder b =
+            TestClientRequestBuilder.start(group)
+                .server("localhost", webConfig.port)
+                .get("/s")
+                .withWebSocket();
         b.execute(callback);
         callback.awaitFirst();
         callback.assertData("{\"status\":\"connected\"}");
         callback.awaitPing();
         callback.assertDataPrefix(1, "{\"ping\":");
-        b.channel().writeAndFlush(new BinaryWebSocketFrame(Unpooled.wrappedBuffer(new byte[] { 0x42 })));
+        b.channel()
+            .writeAndFlush(new BinaryWebSocketFrame(Unpooled.wrappedBuffer(new byte[] {0x42})));
         callback.awaitDisconnect();
-        callback.assertData("{\"status\":\"connected\"}{\"status\":\"disconnected\",\"reason\":213711}");
+        callback.assertData(
+            "{\"status\":\"connected\"}{\"status\":\"disconnected\",\"reason\":213711}");
       }
     } finally {
       runnable.shutdown();

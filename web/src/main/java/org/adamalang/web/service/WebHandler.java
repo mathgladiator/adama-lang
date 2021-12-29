@@ -18,7 +18,36 @@ import io.netty.handler.codec.http.*;
 import java.nio.charset.StandardCharsets;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
-  private static void sendWithKeepAlive(final WebConfig webConfig, final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
+  private final WebConfig webConfig;
+
+  public WebHandler(WebConfig webConfig) {
+    this.webConfig = webConfig;
+  }
+
+  @Override
+  protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req)
+      throws Exception {
+    // analyze the request
+    boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
+
+    // send the default response for bad or health checks
+    HttpResponseStatus status =
+        isHealthCheck ? HttpResponseStatus.OK : HttpResponseStatus.BAD_REQUEST;
+    final var content =
+        (isHealthCheck ? "HEALTHY:" + System.currentTimeMillis() : "Bad Request")
+            .getBytes(StandardCharsets.UTF_8);
+    final FullHttpResponse res =
+        new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
+    HttpUtil.setContentLength(res, content.length);
+    res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=UTF-8");
+    sendWithKeepAlive(webConfig, ctx, req, res);
+  }
+
+  private static void sendWithKeepAlive(
+      final WebConfig webConfig,
+      final ChannelHandlerContext ctx,
+      final FullHttpRequest req,
+      final FullHttpResponse res) {
     final var responseStatus = res.status();
     String origin = req.headers().get("origin");
     if (origin != null) {
@@ -30,25 +59,5 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     if (!keepAlive) {
       future.addListener(ChannelFutureListener.CLOSE);
     }
-  }
-
-  private final WebConfig webConfig;
-
-  public WebHandler(WebConfig webConfig) {
-    this.webConfig = webConfig;
-  }
-
-  @Override
-  protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
-    // analyze the request
-    boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
-
-    // send the default response for bad or health checks
-    HttpResponseStatus status = isHealthCheck ? HttpResponseStatus.OK : HttpResponseStatus.BAD_REQUEST;
-    final var content = (isHealthCheck ? "HEALTHY:" + System.currentTimeMillis() : "Bad Request").getBytes(StandardCharsets.UTF_8);
-    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
-    HttpUtil.setContentLength(res, content.length);
-    res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=UTF-8");
-    sendWithKeepAlive(webConfig, ctx, req, res);
   }
 }

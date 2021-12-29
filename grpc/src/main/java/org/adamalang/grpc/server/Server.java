@@ -22,42 +22,50 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+/** the server to handler requests and proxy to the core */
 public class Server implements AutoCloseable {
-    private final Supplier<io.grpc.Server> serverSupplier;
-    private io.grpc.Server server;
-    private final AtomicBoolean alive;
+  private final Supplier<io.grpc.Server> serverSupplier;
+  private final AtomicBoolean alive;
+  private io.grpc.Server server;
 
-    public Server(MachineIdentity identity, CoreService service, int port) throws Exception{
-        this.alive = new AtomicBoolean(false);
-        this.server = null;
-        this.serverSupplier = ExceptionSupplier.TO_RUNTIME(() ->
-            NettyServerBuilder.forPort(port).addService(new Handler(service))
-                    .sslContext(GrpcSslContexts //
+  public Server(MachineIdentity identity, CoreService service, int port) throws Exception {
+    this.alive = new AtomicBoolean(false);
+    this.server = null;
+    this.serverSupplier =
+        ExceptionSupplier.TO_RUNTIME(
+            () ->
+                NettyServerBuilder.forPort(port)
+                    .addService(new Handler(service))
+                    .sslContext(
+                        GrpcSslContexts //
                             .forServer(identity.getCert(), identity.getKey()) //
                             .trustManager(identity.getTrust()) //
                             .clientAuth(ClientAuth.REQUIRE) //
                             .build())
-                    .build()
-        );
-    }
+                    .build());
+  }
 
-    /** Start serving requests. */
-    public void start() throws IOException {
-        if (alive.compareAndExchange(false, true) == false) {
-            server = serverSupplier.get();
-            server.start();
-            Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(() -> {
-                Server.this.close();
-            })));
-        }
+  /** Start serving requests. */
+  public void start() throws IOException {
+    if (alive.compareAndExchange(false, true) == false) {
+      server = serverSupplier.get();
+      server.start();
+      Runtime.getRuntime()
+          .addShutdownHook(
+              new Thread(
+                  ExceptionRunnable.TO_RUNTIME(
+                      () -> {
+                        Server.this.close();
+                      })));
     }
+  }
 
-    /** Finish serving request */
-    @Override
-    public void close() throws InterruptedException {
-        if (alive.compareAndExchange(true, false) == true) {
-            server.shutdownNow().awaitTermination(2, TimeUnit.SECONDS);
-            server = null;
-        }
+  /** Finish serving request */
+  @Override
+  public void close() throws InterruptedException {
+    if (alive.compareAndExchange(true, false) == true) {
+      server.shutdownNow().awaitTermination(2, TimeUnit.SECONDS);
+      server = null;
     }
+  }
 }

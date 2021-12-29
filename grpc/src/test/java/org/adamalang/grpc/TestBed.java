@@ -36,94 +36,97 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class TestBed implements AutoCloseable {
-    public final ScheduledExecutorService clientExecutor;
-    private final Server server;
-    public final MachineIdentity identity;
+  public final ScheduledExecutorService clientExecutor;
+  public final MachineIdentity identity;
+  private final Server server;
 
-    public static class FiniteDocumentFactory implements LivingDocumentFactoryFactory {
-        public final HashMap<String, LivingDocumentFactory> factories;
+  public TestBed(int port, String code) throws Exception {
+    clientExecutor = Executors.newSingleThreadScheduledExecutor();
+    JsonStreamWriter planWriter = new JsonStreamWriter();
+    planWriter.beginObject();
+    planWriter.writeObjectFieldIntro("versions");
+    planWriter.beginObject();
+    planWriter.writeObjectFieldIntro("x");
+    planWriter.writeString(code);
+    planWriter.endObject();
+    planWriter.writeObjectFieldIntro("default");
+    planWriter.writeString("x");
+    ;
+    planWriter.endObject();
+    DeploymentPlan plan = new DeploymentPlan(planWriter.toString(), (t, errorCode) -> {});
 
-        public FiniteDocumentFactory() {
-            this.factories = new HashMap<>();
-        }
+    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    base.deploy("space", plan);
 
-        @Override
-        public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
-            LivingDocumentFactory factory = factories.get(key.space);
-            if (factory == null) {
-                callback.failure(new ErrorCodeException(12345));
-                return;
-            }
-            callback.success(factory);
-        }
+    ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
+
+    CoreService service =
+        new CoreService(
+            base, //
+            new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
+            TimeSource.REAL_TIME,
+            2);
+
+    this.identity = MachineIdentity.fromFile(prefixForLocalhost());
+    this.server = new Server(identity, service, port);
+  }
+
+  private String prefixForLocalhost() {
+    for (String search : new String[] {"./", "../", "./grpc/"}) {
+      String candidate = search + "localhost.identity";
+      File file = new File(candidate);
+      if (file.exists()) {
+        return candidate;
+      }
     }
+    throw new NullPointerException("could not find identity.localhost");
+  }
 
-    public static LivingDocumentFactory compile(final String code) throws Exception {
-        final var options = CompilerOptions.start().enableCodeCoverage().noCost().make();
-        final var globals = GlobalObjectPool.createPoolWithStdLib();
-        final var state = new EnvironmentState(globals, options);
-        final var document = new Document();
-        document.setClassName("MeCode");
-        final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
-        final var parser = new Parser(tokenEngine);
-        parser.document().accept(document);
-        if (!document.check(state)) {
-            throw new Exception("Failed to check:" + document.errorsJson());
-        }
-        final var java = document.compileJava(state);
-        return new LivingDocumentFactory("MeCode", java, "{}");
+  public static LivingDocumentFactory compile(final String code) throws Exception {
+    final var options = CompilerOptions.start().enableCodeCoverage().noCost().make();
+    final var globals = GlobalObjectPool.createPoolWithStdLib();
+    final var state = new EnvironmentState(globals, options);
+    final var document = new Document();
+    document.setClassName("MeCode");
+    final var tokenEngine = new TokenEngine("<direct code>", code.codePoints().iterator());
+    final var parser = new Parser(tokenEngine);
+    parser.document().accept(document);
+    if (!document.check(state)) {
+      throw new Exception("Failed to check:" + document.errorsJson());
     }
+    final var java = document.compileJava(state);
+    return new LivingDocumentFactory("MeCode", java, "{}");
+  }
 
-    public TestBed(int port, String code) throws Exception {
-        clientExecutor = Executors.newSingleThreadScheduledExecutor();
-        JsonStreamWriter planWriter = new JsonStreamWriter();
-        planWriter.beginObject();
-        planWriter.writeObjectFieldIntro("versions");
-        planWriter.beginObject();
-        planWriter.writeObjectFieldIntro("x");
-        planWriter.writeString(code);
-        planWriter.endObject();
-        planWriter.writeObjectFieldIntro("default");
-        planWriter.writeString("x");;
-        planWriter.endObject();
-        DeploymentPlan plan = new DeploymentPlan(planWriter.toString(), (t, errorCode) -> {
+  public void startServer() throws Exception {
+    server.start();
+  }
 
-        });
-        DeploymentFactoryBase base = new DeploymentFactoryBase();
-        base.deploy("space", plan);
+  public void stopServer() throws Exception {
+    server.close();
+  }
 
-        ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
+  @Override
+  public void close() throws Exception {
+    server.close();
+    clientExecutor.shutdown();
+  }
 
-        CoreService service = new CoreService(base, //
-                new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
-                TimeSource.REAL_TIME, 2);
+  public static class FiniteDocumentFactory implements LivingDocumentFactoryFactory {
+    public final HashMap<String, LivingDocumentFactory> factories;
 
-        this.identity = MachineIdentity.fromFile(prefixForLocalhost());
-        this.server = new Server(identity, service, port);
-    }
-
-    private String prefixForLocalhost() {
-        for (String search : new String[] { "./", "../", "./grpc/"}) {
-            String candidate = search + "localhost.identity";
-            File file = new File(candidate);
-            if (file.exists()) {
-                return candidate;
-            }
-        }
-        throw new NullPointerException("could not find identity.localhost");
-    }
-
-    public void startServer() throws Exception {
-        server.start();
-    }
-
-    public void stopServer() throws Exception {
-        server.close();
+    public FiniteDocumentFactory() {
+      this.factories = new HashMap<>();
     }
 
     @Override
-    public void close() throws Exception {
-        server.close();
-        clientExecutor.shutdown();
+    public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
+      LivingDocumentFactory factory = factories.get(key.space);
+      if (factory == null) {
+        callback.failure(new ErrorCodeException(12345));
+        return;
+      }
+      callback.success(factory);
     }
+  }
 }

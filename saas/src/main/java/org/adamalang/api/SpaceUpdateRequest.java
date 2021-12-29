@@ -18,7 +18,7 @@ import org.adamalang.web.io.BulkLatch;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.LatchRefCallback;
 
-/**  */
+/** */
 public class SpaceUpdateRequest {
   public final String identity;
   public final AuthenticatedUser who;
@@ -26,7 +26,12 @@ public class SpaceUpdateRequest {
   public final SpacePolicy policy;
   public final ObjectNode plan;
 
-  public SpaceUpdateRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final ObjectNode plan) {
+  public SpaceUpdateRequest(
+      final String identity,
+      final AuthenticatedUser who,
+      final String space,
+      final SpacePolicy policy,
+      final ObjectNode plan) {
     this.identity = identity;
     this.who = who;
     this.space = space;
@@ -34,7 +39,8 @@ public class SpaceUpdateRequest {
     this.plan = plan;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<SpaceUpdateRequest> callback) {
+  public static void resolve(
+      ConnectionNexus nexus, JsonRequest request, Callback<SpaceUpdateRequest> callback) {
     try {
       final BulkLatch<SpaceUpdateRequest> _latch = new BulkLatch<>(nexus.executor, 2, callback);
       final String identity = request.getString("identity", true, 458759);
@@ -46,9 +52,10 @@ public class SpaceUpdateRequest {
       nexus.identityService.execute(identity, who);
       nexus.spaceService.execute(space, policy);
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(() -> {
-        callback.failure(ece);
-      });
+      nexus.executor.execute(
+          () -> {
+            callback.failure(ece);
+          });
     }
   }
 }

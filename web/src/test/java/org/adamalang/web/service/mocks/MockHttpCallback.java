@@ -23,6 +23,7 @@ public class MockHttpCallback implements Callback<FullHttpResponse> {
   public FullHttpResponse response;
   public ErrorCodeException ex;
   private CountDownLatch done;
+
   public MockHttpCallback() {
     this.done = new CountDownLatch(1);
   }
@@ -46,7 +47,9 @@ public class MockHttpCallback implements Callback<FullHttpResponse> {
   public void assertBody(String body) {
     Assert.assertNull(ex);
     Assert.assertNotNull(response);
-    Assert.assertEquals(body.trim(), new String(response.content().array()).trim().replaceAll(Pattern.quote("\r"), ""));
+    Assert.assertEquals(
+        body.trim(),
+        new String(response.content().array()).trim().replaceAll(Pattern.quote("\r"), ""));
   }
 
   @Override

@@ -15,5 +15,5 @@ import org.adamalang.runtime.natives.NtAsset;
 import java.io.File;
 
 public interface AssetUploader {
-    public void upload(NtAsset asset, File localFile, Callback<Boolean> callback);
+  void upload(NtAsset asset, File localFile, Callback<Boolean> callback);
 }

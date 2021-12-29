@@ -17,31 +17,31 @@ import java.util.concurrent.TimeUnit;
 
 public class AssertCreateFailure implements CreateCallback {
 
-    private final CountDownLatch latch;
-    public int code;
+  private final CountDownLatch latch;
+  public int code;
 
-    public AssertCreateFailure() {
-        this.latch = new CountDownLatch(1);
-    }
+  public AssertCreateFailure() {
+    this.latch = new CountDownLatch(1);
+  }
 
-    @Override
-    public void created() {
-        latch.countDown();
-        Assert.fail();
-    }
+  @Override
+  public void created() {
+    latch.countDown();
+    Assert.fail();
+  }
 
-    @Override
-    public void error(int code) {
-        this.code = code;
-        latch.countDown();
-    }
+  @Override
+  public void error(int code) {
+    this.code = code;
+    latch.countDown();
+  }
 
-    public void await(int expectedCode) {
-        try {
-            Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
-            Assert.assertEquals(expectedCode, code);
-        } catch (InterruptedException ie) {
-            Assert.fail();
-        }
+  public void await(int expectedCode) {
+    try {
+      Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+      Assert.assertEquals(expectedCode, code);
+    } catch (InterruptedException ie) {
+      Assert.fail();
     }
+  }
 }

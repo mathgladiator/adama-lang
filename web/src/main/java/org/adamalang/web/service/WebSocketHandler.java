@@ -28,10 +28,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame>  {
-  private boolean ended;
+public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
   private final WebConfig webConfig;
   private final ServiceBase base;
+  private boolean ended;
   private ServiceConnection connection;
   private ScheduledFuture<?> future;
   private long created;
@@ -52,6 +52,14 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     end(ctx);
   }
 
+  private void end(ChannelHandlerContext ctx) {
+    final var connToKill = clean();
+    if (connToKill != null) {
+      connToKill.kill();
+    }
+    ctx.channel().close();
+  }
+
   private ServiceConnection clean() {
     if (ended) {
       return null;
@@ -70,65 +78,13 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   }
 
   @Override
-  protected void channelRead0(final ChannelHandlerContext ctx, final WebSocketFrame frame) throws Exception {
-      try {
-        if (!(frame instanceof TextWebSocketFrame)) {
-          throw new ErrorCodeException(ErrorCodes.ONLY_ACCEPTS_TEXT_FRAMES);
-        }
-        // parse the request
-        final var requestNode = Json.parseJsonObject(((TextWebSocketFrame) frame).text());
-        if (requestNode.has("pong")) {
-          latency.set(System.currentTimeMillis() - created - requestNode.get("ping").asLong());
-          return;
-        }
-
-        System.err.println("REQ:" + requestNode.toString());
-        JsonRequest request = new JsonRequest(requestNode);
-        final var id = request.id();
-
-        // tie a responder to the request
-        final JsonResponder responder = new JsonResponder() {
-          @Override
-          public void stream(String json) {
-            ctx.writeAndFlush(new TextWebSocketFrame("{\"deliver\":" + id + ",\"done\":false,\"response\":"+ json + "}"));
-          }
-
-          @Override
-          public void finish(String json) {
-            ctx.writeAndFlush(new TextWebSocketFrame("{\"deliver\":" + id + ",\"done\":true,\"response\":"+ json + "}"));
-          }
-
-          @Override
-          public void error(ErrorCodeException ex) {
-            ctx.writeAndFlush(new TextWebSocketFrame("{\"failure\":" + id + ",\"reason\":" + ex.code + "}"));
-          }
-        };
-
-        // execute the request
-        connection.execute(request, responder);
-
-      } catch (Exception ex) {
-        ErrorCodeException codedException = ErrorCodeException.detectOrWrap(ErrorCodes.UNCAUGHT_EXCEPTION_WEB_SOCKET, ex);
-        ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"disconnected\",\"reason\":"+codedException.code+"}"));
-        end(ctx);
-      }
-  }
-
-  private void end(ChannelHandlerContext ctx) {
-    final var connToKill = clean();
-    if (connToKill != null) {
-      connToKill.kill();
-    }
-    ctx.channel().close();
-  }
-
-  @Override
   public void userEventTriggered(final ChannelHandlerContext ctx, final Object evt) {
     if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
       // tell client all is ok
       ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\"}"));
 
-      HttpHeaders headers = ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
+      HttpHeaders headers =
+          ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
       String origin = headers.get("Origin");
       String ip = ctx.channel().remoteAddress().toString();
       String userAgent = headers.get("User-Agent");
@@ -138,18 +94,87 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       connection = base.establish(context);
 
       // start the heartbeat loop
-      Runnable heartbeatLoop = () -> {
-        if (connection != null && !connection.keepalive()) {
-          ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}"));
-          end(ctx);
-        } else {
-          ctx.writeAndFlush(new TextWebSocketFrame("{\"ping\":"+(System.currentTimeMillis() - created)+",\"latency\":\""+latency.get()+"\"}"));
-        }
-      };
+      Runnable heartbeatLoop =
+          () -> {
+            if (connection != null && !connection.keepalive()) {
+              ctx.writeAndFlush(
+                  new TextWebSocketFrame(
+                      "{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}"));
+              end(ctx);
+            } else {
+              ctx.writeAndFlush(
+                  new TextWebSocketFrame(
+                      "{\"ping\":"
+                          + (System.currentTimeMillis() - created)
+                          + ",\"latency\":\""
+                          + latency.get()
+                          + "\"}"));
+            }
+          };
 
       // schedule the heartbeat loop
-      future = ctx.executor().scheduleAtFixedRate(heartbeatLoop, webConfig.heartbeatTimeMilliseconds, webConfig.heartbeatTimeMilliseconds, TimeUnit.MILLISECONDS);
+      future =
+          ctx.executor()
+              .scheduleAtFixedRate(
+                  heartbeatLoop,
+                  webConfig.heartbeatTimeMilliseconds,
+                  webConfig.heartbeatTimeMilliseconds,
+                  TimeUnit.MILLISECONDS);
     }
   }
 
+  @Override
+  protected void channelRead0(final ChannelHandlerContext ctx, final WebSocketFrame frame)
+      throws Exception {
+    try {
+      if (!(frame instanceof TextWebSocketFrame)) {
+        throw new ErrorCodeException(ErrorCodes.ONLY_ACCEPTS_TEXT_FRAMES);
+      }
+      // parse the request
+      final var requestNode = Json.parseJsonObject(((TextWebSocketFrame) frame).text());
+      if (requestNode.has("pong")) {
+        latency.set(System.currentTimeMillis() - created - requestNode.get("ping").asLong());
+        return;
+      }
+
+      System.err.println("REQ:" + requestNode.toString());
+      JsonRequest request = new JsonRequest(requestNode);
+      final var id = request.id();
+
+      // tie a responder to the request
+      final JsonResponder responder =
+          new JsonResponder() {
+            @Override
+            public void stream(String json) {
+              ctx.writeAndFlush(
+                  new TextWebSocketFrame(
+                      "{\"deliver\":" + id + ",\"done\":false,\"response\":" + json + "}"));
+            }
+
+            @Override
+            public void finish(String json) {
+              ctx.writeAndFlush(
+                  new TextWebSocketFrame(
+                      "{\"deliver\":" + id + ",\"done\":true,\"response\":" + json + "}"));
+            }
+
+            @Override
+            public void error(ErrorCodeException ex) {
+              ctx.writeAndFlush(
+                  new TextWebSocketFrame("{\"failure\":" + id + ",\"reason\":" + ex.code + "}"));
+            }
+          };
+
+      // execute the request
+      connection.execute(request, responder);
+
+    } catch (Exception ex) {
+      ErrorCodeException codedException =
+          ErrorCodeException.detectOrWrap(ErrorCodes.UNCAUGHT_EXCEPTION_WEB_SOCKET, ex);
+      ctx.writeAndFlush(
+          new TextWebSocketFrame(
+              "{\"status\":\"disconnected\",\"reason\":" + codedException.code + "}"));
+      end(ctx);
+    }
+  }
 }
