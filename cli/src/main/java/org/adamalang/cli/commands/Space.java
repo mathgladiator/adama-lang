@@ -15,6 +15,7 @@ import org.adamalang.cli.Util;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
+import org.adamalang.common.Validators;
 
 public class Space {
   public static void execute(Config config, String[] args) throws Exception {
@@ -49,7 +50,10 @@ public class Space {
   private static void spaceCreate(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
-    // TODO: validate space is good
+    if (!Validators.simple(space, 127)) {
+      System.err.println("Space name `" + space + "` is not valid");
+      return;
+    }
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();

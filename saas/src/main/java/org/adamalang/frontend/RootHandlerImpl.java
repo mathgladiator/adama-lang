@@ -17,6 +17,7 @@ import org.adamalang.api.*;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
+import org.adamalang.common.Validators;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
@@ -205,6 +206,7 @@ public class RootHandlerImpl implements RootHandler {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: deleteAuthority validates ownership
         Authorities.deleteAuthority(nexus.dataBase, request.who.id, request.authority);
+        responder.complete();
       } else {
         responder.error(
             new ErrorCodeException(ErrorCodes.API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
@@ -219,8 +221,13 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(SpaceCreateRequest request, SimpleResponder responder) {
     try {
-      Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
-      responder.complete();
+      if (Validators.simple(request.space, 127)) {
+        Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
+        responder.complete();
+      } else {
+        responder.error(
+            new ErrorCodeException(ErrorCodes.API_SPACE_CREATE_INVALID_NAME));
+      }
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
@@ -332,8 +339,18 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(DocumentCreateRequest request, SimpleResponder responder) {
-    // TODO: find the appropriate Adama host
-    // TODO: send the create over and respond
+    try {
+      if (Validators.simple(request.key, 511)) {
+        // TODO: find the appropriate Adama host
+        // TODO: send the create over and respond
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_INVALID_KEY));
+      }
+    } catch (Exception ex) {
+      responder.error(
+          ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, logger));
+    }
+
   }
 
   @Override
