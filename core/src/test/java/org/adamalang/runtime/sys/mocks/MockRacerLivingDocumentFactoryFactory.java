@@ -16,9 +16,7 @@ import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +27,11 @@ public class MockRacerLivingDocumentFactoryFactory implements LivingDocumentFact
   public MockRacerLivingDocumentFactoryFactory() {
     this.calls = new HashMap<>();
     this.latches = new ArrayList<>();
+  }
+
+  @Override
+  public Collection<String> spacesAvailable() {
+    return Collections.singleton("space");
   }
 
   public synchronized Runnable latchAt(int count) {

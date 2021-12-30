@@ -60,10 +60,14 @@ public class Service {
         // TODO: pull threads from config
         ThreadedDataService dataService = new ThreadedDataService(16, () -> new BlockingDataService(dataBase) );
 
+        // TODO: transform the billing into a heat vector that is sent to all clients
+        // TODO: record the billing into a database (pick a random client to record bill)
+
         // TODO: pull service threads from config
         CoreService service = new CoreService(deploymentFactoryBase, //
-                dataService, //
-                TimeSource.REAL_TIME, 2);
+            (bill) -> {},
+            dataService, //
+            TimeSource.REAL_TIME, 2);
 
         // TODO: embed the identity into the config
         MachineIdentity identity = MachineIdentity.fromFile("me.identity");

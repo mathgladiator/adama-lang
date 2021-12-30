@@ -162,6 +162,7 @@ public abstract class LivingDocument implements RxParent {
         pv.usurp(usurper);
       }
     }
+    __code_cost = usurpingDocument.__code_cost;
   }
 
   public PrivateView __createView(final NtClient __who, final Perspective perspective) {
@@ -269,9 +270,7 @@ public abstract class LivingDocument implements RxParent {
   /** garbage collect the views for the given client; return the number of views for that user */
   public int __garbageCollectViews(final NtClient __who) {
     final var views = __trackedViews.get(__who);
-    if (views == null) {
-      return 0;
-    }
+    if (views == null) { return 0; }
     var count = 0;
     final var it = views.iterator();
     while (it.hasNext()) {
@@ -329,6 +328,11 @@ public abstract class LivingDocument implements RxParent {
   /** get how much the current code "costs" */
   public int __getCodeCost() {
     return __code_cost;
+  }
+
+  /** reset the cost */
+  public void __zeroOutCodeCost() {
+    __code_cost = 0;
   }
 
   /** code generated: get the tests for the document */
@@ -849,9 +853,6 @@ public abstract class LivingDocument implements RxParent {
         __entropy.set(entropy);
       }
       __random = new Random(Long.parseLong(__entropy.get()));
-      if (__constructed.get()) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED);
-      }
       __construct_intern(who, arg);
       __constructed.set(true);
       final var forward = new JsonStreamWriter();

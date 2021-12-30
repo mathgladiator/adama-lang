@@ -16,6 +16,7 @@ import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,6 +30,19 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
     this.spaces = new ConcurrentHashMap<>();
   }
 
+  @Override
+  public Collection<String> spacesAvailable() {
+    return spaces.keySet();
+  }
+
+  public String hashOf(String space) {
+    DeploymentFactory factory = this.spaces.get(space);
+    if (factory != null) {
+      return factory.plan.hash;
+    }
+    return null;
+  }
+
   public void deploy(String space, DeploymentPlan plan) throws ErrorCodeException {
     DeploymentFactory prior = spaces.get(space);
     StringBuilder spacePrefix = new StringBuilder().append("Space_");
@@ -40,7 +54,7 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
     }
     spacePrefix.append("_");
     DeploymentFactory newFactory =
-        new DeploymentFactory(spacePrefix.toString(), newClassId, prior, plan);
+        new DeploymentFactory(space, spacePrefix.toString(), newClassId, prior, plan);
     spaces.put(space, newFactory);
   }
 

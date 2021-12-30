@@ -12,6 +12,7 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.Hashing;
 import org.adamalang.runtime.json.JsonStreamReader;
 
 import java.nio.charset.StandardCharsets;
@@ -22,12 +23,16 @@ import java.util.HashMap;
 
 /** parses a deployment plan and constructs a safe plan which has yet to be compiled */
 public class DeploymentPlan {
+  public final String hash;
   public final HashMap<String, String> versions;
   public final ArrayList<Stage> stages;
   public final String defaultVersion;
 
   public DeploymentPlan(String json, ExceptionLogger logger) throws ErrorCodeException {
     try {
+      MessageDigest digest = Hashing.md5();
+      digest.update(json.getBytes(StandardCharsets.UTF_8));
+      this.hash = Hashing.finishAndEncode(digest);
       JsonStreamReader reader = new JsonStreamReader(json);
       versions = new HashMap<>();
       stages = new ArrayList<>();

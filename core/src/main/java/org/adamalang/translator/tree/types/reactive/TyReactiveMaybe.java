@@ -55,9 +55,7 @@ public class TyReactiveMaybe extends TyType
   @Override
   public String getJavaBoxType(final Environment environment) {
     final var elementTypeFixed = getEmbeddedType(environment);
-    return elementTypeFixed != null
-        ? String.format("RxMaybe<%s>", elementTypeFixed.getJavaBoxType(environment))
-        : "RxMaybe<? /* TODO */>";
+    return elementTypeFixed != null ? String.format("RxMaybe<%s>", elementTypeFixed.getJavaBoxType(environment)) : "RxMaybe<? /* TODO */>";
   }
 
   @Override

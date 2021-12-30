@@ -29,8 +29,6 @@ public class CompilerOptionsTests {
                 "no",
                 "--goodwill-budget",
                 "0",
-                "--package",
-                "org.foo",
                 "--class",
                 "ClassName")
             .make();
@@ -39,7 +37,6 @@ public class CompilerOptionsTests {
     Assert.assertFalse(options.removeTests);
     Assert.assertTrue(options.stderrLoggingCompiler);
     Assert.assertEquals(0, options.goodwillBudget);
-    Assert.assertEquals("org.foo", options.packageName);
     Assert.assertEquals("ClassName", options.className);
   }
 
@@ -59,8 +56,6 @@ public class CompilerOptionsTests {
                 "yes",
                 "--goodwill-budget",
                 "5000",
-                "--package",
-                "org.foo2",
                 "--class",
                 "ClassName2")
             .make();
@@ -69,7 +64,7 @@ public class CompilerOptionsTests {
     Assert.assertTrue(options.removeTests);
     Assert.assertFalse(options.stderrLoggingCompiler);
     Assert.assertEquals(5000, options.goodwillBudget);
-    Assert.assertEquals("org.foo2", options.packageName);
+    // Assert.assertEquals("org.foo2", options.packageName);
     Assert.assertEquals("ClassName2", options.className);
   }
 
@@ -131,7 +126,6 @@ public class CompilerOptionsTests {
     Assert.assertTrue(options.removeTests);
     Assert.assertFalse(options.stderrLoggingCompiler);
     Assert.assertEquals(5000, options.goodwillBudget);
-    Assert.assertEquals("org.foo2", options.packageName);
     Assert.assertEquals("ClassName2", options.className);
   }
 }

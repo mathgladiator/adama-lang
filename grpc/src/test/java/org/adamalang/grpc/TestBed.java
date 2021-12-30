@@ -30,6 +30,8 @@ import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,7 +53,6 @@ public class TestBed implements AutoCloseable {
     planWriter.endObject();
     planWriter.writeObjectFieldIntro("default");
     planWriter.writeString("x");
-    ;
     planWriter.endObject();
     DeploymentPlan plan = new DeploymentPlan(planWriter.toString(), (t, errorCode) -> {});
 
@@ -63,6 +64,7 @@ public class TestBed implements AutoCloseable {
     CoreService service =
         new CoreService(
             base, //
+            (bill) -> {}, //
             new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
             TimeSource.REAL_TIME,
             2);
@@ -127,6 +129,11 @@ public class TestBed implements AutoCloseable {
         return;
       }
       callback.success(factory);
+    }
+
+    @Override
+    public Collection<String> spacesAvailable() {
+      return factories.keySet();
     }
   }
 }

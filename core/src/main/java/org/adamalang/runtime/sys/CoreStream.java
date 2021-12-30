@@ -20,11 +20,13 @@ import org.adamalang.runtime.natives.NtClient;
  */
 public class CoreStream {
   private final NtClient who;
+  private final PredictiveInventory inventory;
   private final DurableLivingDocument document;
   private final PrivateView view;
 
-  public CoreStream(NtClient who, DurableLivingDocument document, PrivateView view) {
+  public CoreStream(NtClient who, PredictiveInventory inventory, DurableLivingDocument document, PrivateView view) {
     this.who = who;
+    this.inventory = inventory;
     this.document = document;
     this.view = view;
   }
@@ -33,6 +35,7 @@ public class CoreStream {
   public void send(String channel, String marker, String message, Callback<Integer> callback) {
     document.base.executor.execute(
         () -> {
+          inventory.message();
           document.send(who, marker, channel, message, callback);
         });
   }
@@ -40,6 +43,7 @@ public class CoreStream {
   public void canAttach(Callback<Boolean> callback) {
     document.base.executor.execute(
         () -> {
+          inventory.message();
           callback.success(document.canAttach(who));
         });
   }
@@ -47,6 +51,7 @@ public class CoreStream {
   public void attach(NtAsset asset, Callback<Integer> callback) {
     document.base.executor.execute(
         () -> {
+          inventory.message();
           document.attach(who, asset, callback);
         });
   }

@@ -9,6 +9,7 @@
  */
 package org.adamalang.gossip;
 
+import org.adamalang.common.Hashing;
 import org.adamalang.gossip.proto.Endpoint;
 
 import java.nio.charset.StandardCharsets;

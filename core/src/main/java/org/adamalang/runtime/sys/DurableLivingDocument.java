@@ -169,7 +169,6 @@ public class DurableLivingDocument {
         callback.success(seq);
         if (requiresInvalidateMilliseconds != null) {
           base.executor.schedule(
-              key,
               () -> {
                 invalidate(Callback.DONT_CARE_INTEGER);
               },
@@ -366,6 +365,10 @@ public class DurableLivingDocument {
     return document.__getCodeCost();
   }
 
+  public void zeroOutCodeCost() {
+    document.__zeroOutCodeCost();
+  }
+
   public long getMemoryBytes() {
     return document.__memory();
   }
@@ -404,7 +407,6 @@ public class DurableLivingDocument {
 
   public void scheduleCleanup() {
     base.executor.schedule(
-        key,
         () -> {
           if (document.__canRemoveFromMemory()) {
             base.map.remove(key);

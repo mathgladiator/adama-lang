@@ -15,6 +15,9 @@ import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class MockInstantLivingDocumentFactoryFactory implements LivingDocumentFactoryFactory {
   private LivingDocumentFactory factory;
 
@@ -33,5 +36,10 @@ public class MockInstantLivingDocumentFactoryFactory implements LivingDocumentFa
     } else {
       callback.failure(new ErrorCodeException(999));
     }
+  }
+
+  @Override
+  public Collection<String> spacesAvailable() {
+    return Collections.singleton("space");
   }
 }

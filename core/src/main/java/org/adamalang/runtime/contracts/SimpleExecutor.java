@@ -22,7 +22,7 @@ public interface SimpleExecutor {
         }
 
         @Override
-        public void schedule(Key key, Runnable command, long milliseconds) {
+        public void schedule(Runnable command, long milliseconds) {
           // no-op
         }
 
@@ -36,7 +36,7 @@ public interface SimpleExecutor {
   void execute(Runnable command);
 
   /** schedule the given command to run after some milliseconds within the executor */
-  void schedule(Key key, Runnable command, long milliseconds);
+  void schedule(Runnable command, long milliseconds);
 
   /** shutdown the executor */
   CountDownLatch shutdown();

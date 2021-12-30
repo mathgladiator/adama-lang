@@ -43,9 +43,7 @@ public class LocalTypeAssignmentResult {
   }
 
   public boolean bad() {
-    if (ltype == null || rtype == null) {
-      return true;
-    }
+    if (ltype == null || rtype == null) { return true; }
     return false;
   }
 

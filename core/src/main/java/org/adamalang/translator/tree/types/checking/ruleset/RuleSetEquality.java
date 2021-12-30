@@ -31,9 +31,7 @@ public class RuleSetEquality {
       }
       final var aLong = RuleSetCommon.IsLong(environment, typeA, true);
       final var bLong = RuleSetCommon.IsLong(environment, typeB, true);
-      if ((aInteger || aLong) && (bInteger || bLong)) {
-        return CanTestEqualityResult.Yes;
-      }
+      if ((aInteger || aLong) && (bInteger || bLong)) { return CanTestEqualityResult.Yes; }
       final var aNumber = RuleSetCommon.IsNumeric(environment, typeA, true);
       final var bNumber = RuleSetCommon.IsNumeric(environment, typeB, true);
       if (aNumber && bNumber) {

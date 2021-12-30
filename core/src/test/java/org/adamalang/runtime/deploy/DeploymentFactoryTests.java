@@ -9,9 +9,14 @@
  */
 package org.adamalang.runtime.deploy;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.contracts.Key;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DeploymentFactoryTests {
 
@@ -45,5 +50,27 @@ public class DeploymentFactoryTests {
     } catch (ErrorCodeException ex) {
       Assert.assertEquals(132157, ex.code);
     }
+  }
+
+  @Test
+  public void happy() throws Exception {
+    DeploymentPlan plan =
+        new DeploymentPlan(
+            "{\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
+            (t, errorCode) -> {});
+    DeploymentFactoryBase base = new DeploymentFactoryBase();
+    base.deploy("space", plan);
+    Assert.assertEquals("0w9NHaDbD2fTGSLlHuGyCQ==", base.hashOf("space"));
+  }
+
+  @Test
+  public void happyDirect() throws Exception {
+    DeploymentPlan plan =
+        new DeploymentPlan(
+            "{\"versions\":{\"x\":\"public int x = 123;\"},\"default\":\"x\",\"plan\":[{\"version\":\"x\",\"percent\":50,\"prefix\":\"k\",\"seed\":\"a2\"}]}",
+            (t, errorCode) -> {});
+    DeploymentFactory newFactory =
+        new DeploymentFactory("space", "Space_", new AtomicInteger(1000), null, plan);
+    Assert.assertEquals(1, newFactory.spacesAvailable().size());
   }
 }

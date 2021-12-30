@@ -18,7 +18,6 @@ public class CompilerOptions {
   public final int goodwillBudget; // G2G
   public final String[] inputFiles;
   public final String outputFile;
-  public final String packageName;
   public final boolean produceCodeCoverage; // G2G
   public final boolean removeTests;
   public final String[] searchPaths;
@@ -30,7 +29,6 @@ public class CompilerOptions {
     disableBillingCost = builder.disableBillingCost;
     removeTests = builder.removeTests;
     goodwillBudget = builder.goodwillBudget;
-    packageName = builder.packageName;
     className = builder.className;
     outputFile = builder.outputFile;
     searchPaths = builder.searchPaths.toArray(new String[builder.searchPaths.size()]);

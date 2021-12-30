@@ -44,11 +44,7 @@ public class CodeGenEnums {
     DefineDispatcher catchAll = null;
     for (final DefineDispatcher potential :
         storage.findFindingDispatchers(dispatchers, storage.getDefaultLabel(), true).values()) {
-      final var takeIt =
-          catchAll == null
-              || potential.valueToken != null
-                  && storage.getDefaultLabel().equals(potential.valueToken.text)
-                  && potential.starToken == null;
+      final var takeIt = catchAll == null || potential.valueToken != null && storage.getDefaultLabel().equals(potential.valueToken.text) && potential.starToken == null;
       if (takeIt) {
         catchAll = potential;
       }

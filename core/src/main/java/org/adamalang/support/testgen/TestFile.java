@@ -21,7 +21,7 @@ public class TestFile {
     this.name = name;
     this.success = success;
     if (name.contains("_") || clazz.contains("_")) {
-      throw new RuntimeException("name and class can not contain understore(_)");
+      throw new RuntimeException("name and class can not contain underscore(_)");
     }
   }
 

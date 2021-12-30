@@ -33,7 +33,7 @@ public class ServiceCreateTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, dataService, time, 3);
+    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);
@@ -50,7 +50,7 @@ public class ServiceCreateTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, dataService, time, 3);
+    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created1 = new NullCallbackLatch();
       NullCallbackLatch created2 = new NullCallbackLatch();
@@ -70,7 +70,7 @@ public class ServiceCreateTests {
         new MockRacerLivingDocumentFactoryFactory();
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, dataService, time, 3);
+    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created1 = new NullCallbackLatch();
       NullCallbackLatch created2 = new NullCallbackLatch();
@@ -92,7 +92,7 @@ public class ServiceCreateTests {
         new MockRacerLivingDocumentFactoryFactory();
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, dataService, time, 3);
+    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       Runnable latchAfter = factoryFactory.latchAt(1);

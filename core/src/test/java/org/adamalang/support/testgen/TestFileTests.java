@@ -32,4 +32,14 @@ public class TestFileTests {
     Assert.assertEquals("x", tst2.name);
     Assert.assertFalse(tst2.success);
   }
+
+  @Test
+  public void failure() {
+    try {
+      new TestFile("Z", "x_x", false);
+      Assert.fail();
+    } catch (Exception ex) {
+      Assert.assertTrue(ex.getMessage().contains("underscore"));
+    }
+  }
 }

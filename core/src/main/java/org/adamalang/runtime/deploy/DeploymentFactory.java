@@ -24,6 +24,8 @@ import org.adamalang.translator.parser.exceptions.AdamaLangException;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -33,9 +35,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  * in good order
  */
 public class DeploymentFactory implements LivingDocumentFactoryFactory {
-  private final DeploymentPlan plan;
+  public final String name;
+  public final DeploymentPlan plan;
   private final HashMap<String, LivingDocumentFactory> factories;
-  private final LivingDocumentFactory defaultFactory;
+
+  @Override
+  public Collection<String> spacesAvailable() {
+    return Collections.singleton(name);
+  }
 
   /**
    * @param spacePrefix - used for debugging by generating a relevant class name
@@ -44,9 +51,9 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
    * @param plan - the plan to compile
    * @throws ErrorCodeException
    */
-  public DeploymentFactory(
-      String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan)
+  public DeploymentFactory(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan)
       throws ErrorCodeException {
+    this.name = name;
     this.factories = new HashMap<>();
     for (Map.Entry<String, String> entry : plan.versions.entrySet()) {
       LivingDocumentFactory factory = null;
@@ -63,7 +70,6 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       factories.put(entry.getKey(), factory);
     }
     this.plan = plan;
-    this.defaultFactory = null;
   }
 
   public static LivingDocumentFactory compile(String className, final String code)

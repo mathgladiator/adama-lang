@@ -108,11 +108,7 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
         proposal = ((SupportsTwoPhaseTyping) firstExpr).estimateType(environment);
       } else {
         proposal =
-            firstExpr.typing(
-                environment,
-                suggestion instanceof TyNativeArray
-                    ? environment.rules.ExtractEmbeddedType(suggestion, false)
-                    : null);
+            firstExpr.typing(environment, suggestion instanceof TyNativeArray ? environment.rules.ExtractEmbeddedType(suggestion, false) : null);
       }
     }
     if (proposal == null) {

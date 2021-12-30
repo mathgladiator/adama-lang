@@ -9,12 +9,16 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.SimpleExecutor;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Consumer;
 
 /**
  * This defines the state required within a thread to run a document. As Documents run in isolated
@@ -27,14 +31,71 @@ public class DocumentThreadBase {
   public final TimeSource time;
   private int millisecondsForCleanupCheck;
   private int millisecondsAfterLoadForReconciliation;
+  private Random rng;
+  private final HashMap<String, PredictiveInventory> inventoryBySpace;
+  private int millisecondsToPerformInventory;
+  private int millisecondsToPerformInventoryJitter;
 
   public DocumentThreadBase(DataService service, SimpleExecutor executor, TimeSource time) {
     this.service = service;
     this.executor = executor;
     this.time = time;
     this.map = new HashMap<>();
+    this.inventoryBySpace = new HashMap<>();
     this.millisecondsForCleanupCheck = 2500;
     this.millisecondsAfterLoadForReconciliation = 2500;
+    this.rng = new Random();
+    this.millisecondsToPerformInventory = 30000;
+    this.millisecondsToPerformInventoryJitter = 15000;
+  }
+
+  public void kickOffInventory() {
+    executor.execute(this::performInventory);
+  }
+
+  public PredictiveInventory getOrCreateInventory(String space) {
+    PredictiveInventory inventory = inventoryBySpace.get(space);
+    if (inventory == null) {
+      inventory = new PredictiveInventory();
+      inventoryBySpace.put(space, inventory);
+    }
+    return inventory;
+  }
+
+  public void bill(Consumer<HashMap<String, PredictiveInventory.Billing>> callback) {
+    executor.execute(() -> {
+      HashMap<String, PredictiveInventory.Billing> result = new HashMap<>();
+      for (Map.Entry<String, PredictiveInventory> entry : inventoryBySpace.entrySet()) {
+        result.put(entry.getKey(), entry.getValue().toBill());
+      }
+      callback.accept(result);
+    });
+  }
+
+  public void performInventory() {
+    HashMap<String, PredictiveInventory.PreciseSnapshotAccumulator> accumulators = new HashMap<>(inventoryBySpace.size());
+    for (DurableLivingDocument document : map.values()) {
+      PredictiveInventory.PreciseSnapshotAccumulator accum = accumulators.get(document.key.space);
+      if (accum == null) {
+        accum = new PredictiveInventory.PreciseSnapshotAccumulator();
+        accumulators.put(document.key.space, accum);
+      }
+      accum.memory += document.getMemoryBytes();
+      accum.ticks += document.getCodeCost();
+      accum.count ++;
+      document.zeroOutCodeCost();
+    }
+    HashMap<String, PredictiveInventory> nextInventoryBySpace = new HashMap<>();
+    for (Map.Entry<String, PredictiveInventory.PreciseSnapshotAccumulator> entry : accumulators.entrySet()) {
+      PredictiveInventory inventory = getOrCreateInventory(entry.getKey());
+      inventory.accurate(entry.getValue());
+      nextInventoryBySpace.put(entry.getKey(), inventory);
+    }
+    inventoryBySpace.clear();
+    inventoryBySpace.putAll(nextInventoryBySpace);
+    executor.schedule(() -> {
+      performInventory();
+    }, millisecondsToPerformInventory + rng.nextInt(millisecondsToPerformInventoryJitter) + rng.nextInt(millisecondsToPerformInventoryJitter));
   }
 
   public int getMillisecondsForCleanupCheck() {
@@ -51,5 +112,10 @@ public class DocumentThreadBase {
 
   public void setMillisecondsAfterLoadForReconciliation(int ms) {
     this.millisecondsAfterLoadForReconciliation = ms;
+  }
+
+  public void setInventoryMillisecondsSchedule(int period, int jitter) {
+    this.millisecondsToPerformInventory = period;
+    this.millisecondsToPerformInventoryJitter = jitter;
   }
 }

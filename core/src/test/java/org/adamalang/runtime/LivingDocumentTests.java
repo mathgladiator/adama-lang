@@ -43,7 +43,9 @@ public class LivingDocumentTests {
   private static HashMap<String, LivingDocumentFactory> compilerCache = new HashMap<>();
 
   public static LivingDocumentFactory compile(final String code) throws Exception {
-    final var options = CompilerOptions.start().enableCodeCoverage().noCost().make();
+    CompilerOptions.Builder opts = CompilerOptions.start().enableCodeCoverage();
+    opts.packageName = "P";
+    final var options = opts.noCost().make();
     final var globals = GlobalObjectPool.createPoolWithStdLib();
     final var state = new EnvironmentState(globals, options);
     final var document = new Document();
@@ -721,6 +723,27 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void cant_double_construct() throws Exception {
+    String prior;
+    {
+      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
+      prior = setup.document.json();
+    }
+    final var setup = new RealDocumentSetup("@construct {}", prior);
+    final var writer = setup.document.forge("construct", A);
+    writer.writeObjectFieldIntro("arg");
+    writer.injectJson("{}");
+    writer.endObject();
+    try {
+      setup.document.document().__transact(writer.toString());
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(132111, drre.code);
+    }
+    setup.assertCompare();
+  }
+
+  @Test
   public void send_requirements_must_have_channel() throws Exception {
     String prior;
     {
@@ -756,6 +779,141 @@ public class LivingDocumentTests {
       setup.document.document().__transact(writer.toString());
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(184332, drre.code);
+    }
+    setup.assertCompare();
+  }
+
+  @Test
+  public void send_requirements_must_have_who() throws Exception {
+    String prior;
+    {
+      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
+      prior = setup.document.json();
+    }
+    final var setup = new RealDocumentSetup("@construct {}", prior);
+    final var writer = setup.document.forge("send", null);
+    writer.writeObjectFieldIntro("channel");
+    writer.writeFastString("foo");
+    writer.endObject();
+    try {
+      setup.document.document().__transact(writer.toString());
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(122896, drre.code);
+    }
+    setup.assertCompare();
+  }
+
+  @Test
+  public void connect_requirements_must_have_who() throws Exception {
+    String prior;
+    {
+      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
+      prior = setup.document.json();
+    }
+    final var setup = new RealDocumentSetup("@construct {}", prior);
+    final var writer = setup.document.forge("connect", null);
+    writer.endObject();
+    try {
+      setup.document.document().__transact(writer.toString());
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(122896, drre.code);
+    }
+    setup.assertCompare();
+  }
+
+  @Test
+  public void disconnect_requirements_must_have_who() throws Exception {
+    String prior;
+    {
+      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
+      prior = setup.document.json();
+    }
+    final var setup = new RealDocumentSetup("@construct {}", prior);
+    final var writer = setup.document.forge("disconnect", null);
+    writer.endObject();
+    try {
+      setup.document.document().__transact(writer.toString());
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(122896, drre.code);
+    }
+    setup.assertCompare();
+  }
+
+  @Test
+  public void attach_requirements_must_have_who() throws Exception {
+    String prior;
+    {
+      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
+      prior = setup.document.json();
+    }
+    final var setup = new RealDocumentSetup("@construct {}", prior);
+    final var writer = setup.document.forge("attach", null);
+    writer.endObject();
+    try {
+      setup.document.document().__transact(writer.toString());
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(122896, drre.code);
+    }
+    setup.assertCompare();
+  }
+
+  @Test
+  public void apply_requirements_must_have_who() throws Exception {
+    String prior;
+    {
+      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
+      prior = setup.document.json();
+    }
+    final var setup = new RealDocumentSetup("@construct {}", prior);
+    final var writer = setup.document.forge("apply", null);
+    writer.endObject();
+    try {
+      setup.document.document().__transact(writer.toString());
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(122896, drre.code);
+    }
+    setup.assertCompare();
+  }
+
+  @Test
+  public void expire_requirements_must_have_limit() throws Exception {
+    String prior;
+    {
+      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
+      prior = setup.document.json();
+    }
+    final var setup = new RealDocumentSetup("@construct {}", prior);
+    final var writer = setup.document.forge("expire", null);
+    writer.endObject();
+    try {
+      setup.document.document().__transact(writer.toString());
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(146448, drre.code);
+    }
+    setup.assertCompare();
+  }
+
+  @Test
+  public void apply_requirements_must_have_patch() throws Exception {
+    String prior;
+    {
+      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
+      prior = setup.document.json();
+    }
+    final var setup = new RealDocumentSetup("@construct {}", prior);
+    final var writer = setup.document.forge("apply", A);
+    writer.endObject();
+    try {
+      setup.document.document().__transact(writer.toString());
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(193055, drre.code);
     }
     setup.assertCompare();
   }

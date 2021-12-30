@@ -19,7 +19,9 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.threads.NamedThreadFactory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,6 +34,7 @@ public class CoreService {
   private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
   private final DocumentThreadBase[] bases;
   private final AtomicBoolean alive;
+  private final Random rng;
 
   /**
    * @param livingDocumentFactoryFactory a mapping of how living documents come into existence
@@ -41,6 +44,7 @@ public class CoreService {
    */
   public CoreService(
       LivingDocumentFactoryFactory livingDocumentFactoryFactory,
+      Consumer<HashMap<String, PredictiveInventory.Billing>> billing,
       DataService dataService,
       TimeSource time,
       int nThreads) {
@@ -58,7 +62,7 @@ public class CoreService {
             }
 
             @Override
-            public void schedule(Key key, Runnable command, long milliseconds) {
+            public void schedule(Runnable command, long milliseconds) {
               // register to pick up this key on restart
               realExecutorToUse.schedule(
                   () -> {
@@ -84,13 +88,30 @@ public class CoreService {
             }
           };
       bases[k] = new DocumentThreadBase(dataService, executor, time);
+      bases[k].kickOffInventory();
     }
+    rng = new Random();
+    Runnable doBilling = new Runnable() {
+      @Override
+      public void run() {
+        Runnable self = this;
+        BillingStateMachine.bill(bases, livingDocumentFactoryFactory, new Consumer<HashMap<String, PredictiveInventory.Billing>>() {
+          @Override
+          public void accept(HashMap<String, PredictiveInventory.Billing> bill) {
+            billing.accept(bill);
+            bases[rng.nextInt(bases.length)].executor.schedule(self, 1000);
+          }
+        });
+      }
+    };
+    doBilling.run();
+
+    /** BIG PROBLEM: TODO: SO, HERE is a problem. Scanning should happen post a deployment. This also really doesn't work if the database is shared. */
     dataService.scan(
         new ActiveKeyStream() {
           @Override
           public void schedule(Key key, long time) {
             bases[key.hashCode() % bases.length].executor.schedule(
-                key,
                 () -> {
                   // this not caring business works because the data service has the responsibility
                   // of priming an internal cache such that fetching doesn't fail
@@ -101,9 +122,7 @@ public class CoreService {
 
           @Override
           public void finish() {
-            // TODO: this is strange
-            // this is interesting from an operational perspective, but not so from a coverage
-            // perspective
+            doBilling.run();
           }
 
           @Override
@@ -157,7 +176,6 @@ public class CoreService {
                                 }
                                 callback.success(documentPut);
                                 base.executor.schedule(
-                                    key,
                                     documentPut::postLoadReconcile,
                                     base.getMillisecondsAfterLoadForReconciliation());
                               });
@@ -201,6 +219,8 @@ public class CoreService {
             callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED));
             return;
           }
+          // estimate the impact
+          base.getOrCreateInventory(key.space).grow();
           // fetch the factory
           livingDocumentFactoryFactory.fetch(
               key,
@@ -265,6 +285,7 @@ public class CoreService {
   /** internal: send connection to the document if not joined, then join */
   private void connectDirectMustBeInDocumentBase(
       NtClient who, DurableLivingDocument document, Streamback stream) {
+    PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
     Callback<Integer> onConnected =
         new Callback<>() {
           @Override
@@ -286,7 +307,7 @@ public class CoreService {
                 new Callback<>() {
                   @Override
                   public void success(PrivateView view) {
-                    CoreStream core = new CoreStream(who, document, view);
+                    CoreStream core = new CoreStream(who, inventory, document, view);
                     stream.onSetupComplete(core);
                   }
 

@@ -36,7 +36,7 @@ public class ServiceTemporalTests {
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, dataService, TimeSource.REAL_TIME, 3);
+    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, TimeSource.REAL_TIME, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);
@@ -95,7 +95,7 @@ public class ServiceTemporalTests {
     realDataService.ready(KEY);
     Runnable latchPrimed = realDataService.latchLogAt(10);
 
-    CoreService service = new CoreService(factoryFactory, dataService, TimeSource.REAL_TIME, 2);
+    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, TimeSource.REAL_TIME, 2);
     try {
       latchPrimed.run();
       dataService.pause();
@@ -115,7 +115,7 @@ public class ServiceTemporalTests {
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, dataService, new MockTime(), 3);
+    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, new MockTime(), 3);
     service.tune((base) -> base.setMillisecondsForCleanupCheck(5));
     try {
       Runnable latch = dataService.latchLogAt(9);

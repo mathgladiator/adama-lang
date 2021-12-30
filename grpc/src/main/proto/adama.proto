@@ -116,15 +116,30 @@ message StreamMessageClient {
 message Establish {
 }
 
+message InventoryRecord {
+  string id = 1;
+  string space = 2;
+  int64 memory_bytes = 3;
+  int64 cpu_ticks = 4;
+  int64 count = 5;
+  int64 messages = 6;
+  string plan_hash = 7;
+}
+
+message InventoryHeartbeat {
+  repeated InventoryRecord records = 1;
+}
+
 message StreamMessageServer {
   int64 id = 1;
   oneof ByType {
     Establish establish = 2;
-    StreamStatus status = 3;
-    StreamData data = 4;
-    StreamError error = 5;
-    StreamAskAttachmentResponse response = 6;
-    StreamSeqResult result = 7;
+    InventoryHeartbeat heartbeat = 3;
+    StreamStatus status = 4;
+    StreamData data = 5;
+    StreamError error = 6;
+    StreamAskAttachmentResponse response = 7;
+    StreamSeqResult result = 8;
   }
 }
 

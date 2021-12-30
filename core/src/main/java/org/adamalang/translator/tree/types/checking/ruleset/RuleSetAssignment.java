@@ -42,9 +42,7 @@ public class RuleSetAssignment {
 
   public static CanAssignResult CanAssignWithAdd(
       final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) {
-      return CanAssignResult.No;
-    }
+    if (left == null || right == null) { return CanAssignResult.No; }
     var result = TestAssignReactively(environment, left, right);
     if (result != CanAssignResult.No) {
       return result;
@@ -66,9 +64,7 @@ public class RuleSetAssignment {
 
   public static CanAssignResult CanAssignWithMult(
       final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) {
-      return CanAssignResult.No;
-    }
+    if (left == null || right == null) { return CanAssignResult.No; }
     var result = TestAssignReactively(environment, left, right);
     if (result != CanAssignResult.No) {
       return result;
@@ -114,9 +110,7 @@ public class RuleSetAssignment {
 
   public static CanAssignResult CanAssignWithSubtract(
       final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) {
-      return CanAssignResult.No;
-    }
+    if (left == null || right == null) { return CanAssignResult.No; }
     var result = TestAssignReactively(environment, left, right);
     if (result != CanAssignResult.No) {
       return result;

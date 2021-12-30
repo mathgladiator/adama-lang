@@ -66,9 +66,7 @@ public class Parser {
   public ArrayList<FunctionArg> arg_list() throws AdamaLangException {
     final var list = new ArrayList<FunctionArg>();
     final var peekCheck = tokens.peek();
-    if (peekCheck == null) {
-      return list;
-    }
+    if (peekCheck == null) { return list; }
     if (peekCheck.isSymbolWithTextEq(")")) {
       return list;
     }
@@ -101,9 +99,7 @@ public class Parser {
                 token,
                 newTail,
                 newTail.majorType,
-                newTail.minorType == MinorTokenType.NumberIsInteger
-                    ? MinorTokenType.NumberIsDouble
-                    : newTail.minorType);
+                newTail.minorType == MinorTokenType.NumberIsInteger ? MinorTokenType.NumberIsDouble : newTail.minorType);
       }
     }
     if (token.isLabel()) {
@@ -234,8 +230,7 @@ public class Parser {
           commaToken = current;
           current = tokens.pop();
         } else if (!current.isSymbolWithTextEq("}")) {
-          throw new ParseException(
-              "Parser expected a `}` or `,`, but instead got `" + current.text + "`", current);
+          throw new ParseException("Parser expected a `}` or `,`, but instead got `" + current.text + "`", current);
         }
       }
       if (current == null) {
@@ -270,9 +265,7 @@ public class Parser {
     } else if (token.isSymbolWithTextEq("(")) {
       final var expr = expression();
       final var endParen = tokens.pop();
-      if (endParen == null) {
-        throw new ParseException("Parser expected a ), but instead got end of stream.", token);
-      }
+      if (endParen == null) { throw new ParseException("Parser expected a ), but instead got end of stream.", token); }
       if (endParen.isSymbolWithTextEq(")")) {
         return new Parentheses(token, expr, endParen);
       } else {
@@ -802,9 +795,7 @@ public class Parser {
     final var handler = new DefineHandler(channelToken, name);
     final var openParen = consumeExpectedSymbol("(");
     final var nextType = tokens.pop();
-    if (nextType == null) {
-      throw new ParseException("Parser expected a type, but instead got end of stream", openParen);
-    }
+    if (nextType == null) { throw new ParseException("Parser expected a type, but instead got end of stream", openParen); }
     if ("client".equals(nextType.text)) {
       final var clientType = nextType;
       final var clientVar = id();
@@ -1042,10 +1033,10 @@ public class Parser {
 
   public Expression expression() throws AdamaLangException {
     Expression base;
-    final var selectToken = tokens.popIf(t -> t.isIdentifier("iterate", "select"));
-    if (selectToken != null) {
+    final var iterateToken = tokens.popIf(t -> t.isIdentifier("iterate"));
+    if (iterateToken != null) {
       // TODO: check for { and then introduce a View which must look a LOT like a record
-      base = new Iterate(selectToken, ternary());
+      base = new Iterate(iterateToken, ternary());
     } else {
       base = ternary();
     }
@@ -1363,10 +1354,7 @@ public class Parser {
           return new PostfixMutate(result, op);
         } else if (op.isSymbolWithTextEq(".")) {
           final var field = tokens.pop();
-          if (field == null) {
-            throw new ParseException(
-                "Parser was expecting an identifier, but instead got end of stream.", op);
-          }
+          if (field == null) { throw new ParseException("Parser was expecting an identifier, but instead got end of stream.", op); }
           result = new FieldLookup(result, op, field);
         } else if (op.isSymbolWithTextEq("[")) {
           final var arg = expression();
@@ -1641,9 +1629,7 @@ public class Parser {
       default:
         final var futureToken = tokens.peek(1);
         if (token.isIdentifier() && futureToken != null) {
-          if (futureToken.isIdentifier("select", "iterate")) {
-            return false;
-          }
+          if (futureToken.isIdentifier("iterate")) { return false; }
           if (futureToken.isIdentifier()) {
             return true;
           }

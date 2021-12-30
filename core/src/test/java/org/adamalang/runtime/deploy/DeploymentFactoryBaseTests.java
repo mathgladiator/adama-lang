@@ -33,5 +33,7 @@ public class DeploymentFactoryBaseTests {
             Assert.assertEquals(134214, ex.code);
           }
         });
+    Assert.assertEquals(0, base.spacesAvailable().size());
+    Assert.assertNull(base.hashOf("space"));
   }
 }

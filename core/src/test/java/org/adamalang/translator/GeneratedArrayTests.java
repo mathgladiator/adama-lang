@@ -1640,40 +1640,40 @@ public class GeneratedArrayTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4 = null;
-  private String get_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4() {
-    if (cached_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4 != null) {
-      return cached_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4;
+  private String cached_ParenthesisInvalidTypeDuringTPTC_4 = null;
+  private String get_ParenthesisInvalidTypeDuringTPTC_4() {
+    if (cached_ParenthesisInvalidTypeDuringTPTC_4 != null) {
+      return cached_ParenthesisInvalidTypeDuringTPTC_4;
     }
-    cached_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4 = generateTestOutput(false, "ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4", "./test_code/Array_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_failure.a");
-    return cached_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4;
+    cached_ParenthesisInvalidTypeDuringTPTC_4 = generateTestOutput(false, "ParenthesisInvalidTypeDuringTPTC_4", "./test_code/Array_ParenthesisInvalidTypeDuringTPTC_failure.a");
+    return cached_ParenthesisInvalidTypeDuringTPTC_4;
   }
 
   @Test
-  public void testParenthesisInvalidTypeDuringTwoPassTypeConstructionFailure() {
-    assertLiveFail(get_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4());
+  public void testParenthesisInvalidTypeDuringTPTCFailure() {
+    assertLiveFail(get_ParenthesisInvalidTypeDuringTPTC_4());
   }
 
   @Test
-  public void testParenthesisInvalidTypeDuringTwoPassTypeConstructionNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4());
+  public void testParenthesisInvalidTypeDuringTPTCNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ParenthesisInvalidTypeDuringTPTC_4());
   }
 
   @Test
-  public void testParenthesisInvalidTypeDuringTwoPassTypeConstructionExceptionFree() {
-    assertExceptionFree(get_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4());
+  public void testParenthesisInvalidTypeDuringTPTCExceptionFree() {
+    assertExceptionFree(get_ParenthesisInvalidTypeDuringTPTC_4());
   }
 
   @Test
-  public void testParenthesisInvalidTypeDuringTwoPassTypeConstructionTODOFree() {
-    assertTODOFree(get_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4());
+  public void testParenthesisInvalidTypeDuringTPTCTODOFree() {
+    assertTODOFree(get_ParenthesisInvalidTypeDuringTPTC_4());
   }
 
   @Test
-  public void stable_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4() {
-    String live = get_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_4();
+  public void stable_ParenthesisInvalidTypeDuringTPTC_4() {
+    String live = get_ParenthesisInvalidTypeDuringTPTC_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:Array_ParenthesisInvalidTypeDuringTwoPassTypeConstruction_failure.a");
+    gold.append("Path:Array_ParenthesisInvalidTypeDuringTPTC_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":19},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: The types 'AutoMaxRecord2' and 'bool' are not compatible for type unification (TypeCompatabilities)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");

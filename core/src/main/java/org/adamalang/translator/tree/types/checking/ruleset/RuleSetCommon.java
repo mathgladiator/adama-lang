@@ -92,12 +92,7 @@ public class RuleSetCommon {
   /** extract an embedded type */
   public static TyType ExtractEmbeddedType(
       final Environment environment, final TyType tyType, final boolean silent) {
-    return tyType != null
-        ? Resolve(
-            environment,
-            ((DetailContainsAnEmbeddedType) tyType).getEmbeddedType(environment),
-            silent)
-        : null;
+    return tyType != null ? Resolve(environment, ((DetailContainsAnEmbeddedType) tyType).getEmbeddedType(environment), silent) : null;
   }
 
   /** given two types, pick the better type */

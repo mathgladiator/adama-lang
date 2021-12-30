@@ -19,7 +19,7 @@ public class Validators {
     }
     for (int k = 0; k < str.length(); k++) {
       char ch = str.charAt(k);
-      boolean good = 'A' <= ch && ch <= 'Z' || 'a' <= ch && ch <= 'z' || '0' <= ch && ch <= '9' && k > 0 || ch == '.' || ch == '-' || ch == '_' || ch == '/' || ch == '#' || ch == '=' || ch == '+';
+      boolean good = 'A' <= ch && ch <= 'Z' || 'a' <= ch && ch <= 'z' || '0' <= ch && ch <= '9' || ch == '.' || ch == '-' || ch == '_' || ch == '/' || ch == '#' || ch == '=' || ch == '+';
       if (!good) {
         return false;
       }

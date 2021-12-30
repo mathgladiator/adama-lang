@@ -7,12 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.gossip;
+package org.adamalang.common;
 
 import java.security.MessageDigest;
 import java.util.Base64;
 
-/** how gossip uses hashes to determine chain */
+/** helpers for making hashing easy */
 public class Hashing {
   public static MessageDigest md5() {
     return forKnownAlgorithm("MD5");
