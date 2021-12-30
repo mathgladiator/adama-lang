@@ -22,4 +22,13 @@ public class Constants {
 
   /** item considered too old to be in the garbage collecting map */
   public static long MILLISECONDS_TO_SIT_IN_GARBAGE_MAP = 60000;
+
+  /** maximum new entries to hold onto for recent map */
+  public static int MAX_RECENT_ENTRIES = 100;
+
+  /** maximum delete entries to hold onto */
+  public static int MAX_DELETES = 50;
+
+  /** maximum history to hold onto */
+  public static int MAX_HISTORY = 25;
 }

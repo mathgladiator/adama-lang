@@ -10,25 +10,26 @@
 package org.adamalang.gossip;
 
 import io.grpc.ChannelCredentials;
+import io.grpc.ManagedChannel;
 import io.grpc.Server;
 import io.grpc.TlsChannelCredentials;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
+import io.grpc.netty.shaded.io.netty.channel.ChannelOption;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
+import io.grpc.stub.StreamObserver;
 import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.ExceptionSupplier;
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.TimeSource;
 import org.adamalang.gossip.proto.Endpoint;
 import org.adamalang.gossip.proto.GossipGrpc;
+import org.adamalang.gossip.proto.GossipReverse;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -45,13 +46,16 @@ public class Engine implements AutoCloseable {
   private final Metrics metrics;
   private final AtomicBoolean alive;
   private final Supplier<Server> serverSupplier;
-  private final HashMap<String, GossipGrpc.GossipStub> stubs;
+  private final HashMap<String, Link> links;
+
+  private final int _PORT;
   private io.grpc.Server server;
   private ScheduledFuture<?> gossiper = null;
 
   public Engine(
       MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, Metrics metrics)
       throws Exception {
+    this._PORT = port;
     this.credentials =
         TlsChannelCredentials.newBuilder() //
             .keyManager(identity.getCert(), identity.getKey()) //
@@ -76,7 +80,7 @@ public class Engine implements AutoCloseable {
     this.ip = identity.ip;
     this.metrics = metrics;
     this.alive = new AtomicBoolean(false);
-    this.stubs = new HashMap<>();
+    this.links = new HashMap<>();
     this.server = null;
     serverSupplier =
         ExceptionSupplier.TO_RUNTIME(
@@ -92,7 +96,6 @@ public class Engine implements AutoCloseable {
                     .build());
   }
 
-  // these require executor
   public void newApp(String role, int port, Consumer<Runnable> callback) {
     executor.execute(
         () -> {
@@ -126,10 +129,8 @@ public class Engine implements AutoCloseable {
       gossiper =
           executor.scheduleAtFixedRate(
               () -> {
-                try {
+                if (alive.get()) {
                   gossipInExecutor();
-                } catch (Exception failed) {
-                  metrics.log_error(failed);
                 }
               },
               jitter.nextInt(500) + 500,
@@ -145,22 +146,58 @@ public class Engine implements AutoCloseable {
     }
   }
 
+
+  public class Link {
+    private final String target;
+    private final ManagedChannel channel;
+    private final GossipGrpc.GossipStub stub;
+
+    public Link(String target) {
+      this.target = target;
+      this.channel = NettyChannelBuilder.forTarget(target, credentials).withOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 100).build();
+      this.stub = GossipGrpc.newStub(channel);
+    }
+  }
+
+
+  private Link pick() {
+    String target = picker.pick();
+    Link link = links.get(target);
+    if (link == null) {
+      link = new Link(target);
+      links.put(target, link);
+    }
+    return link;
+  }
+
   private void gossipInExecutor() {
     // heartbeat myself
     me.run();
     // pick a random partner
-    String target = picker.pick();
-    GossipGrpc.GossipStub stub = stubs.get(target);
-    if (stub == null) {
-      stub = GossipGrpc.newStub(NettyChannelBuilder.forTarget(target, credentials).build());
-      stubs.put(target, stub);
-    }
+    Link link = pick();
     ClientObserver observer = new ClientObserver(executor, chain, metrics);
-    observer.initiate(stub.exchange(observer));
+    observer.initiate(link.stub.exchange(new StreamObserver<GossipReverse>() {
+      @Override
+      public void onNext(GossipReverse gossipReverse) {
+        observer.onNext(gossipReverse);
+      }
+
+      @Override
+      public void onError(Throwable throwable) {
+        observer.onError(throwable);
+        link.channel.shutdown();
+        links.remove(link.target);
+      }
+
+      @Override
+      public void onCompleted() {
+        observer.onCompleted();
+      }
+    }));
     executor.schedule(
         () -> {
           if (!observer.isDone()) {
-            observer.onError(new RuntimeException("Gossip took too long"));
+            // observer.onError(new RuntimeException("Gossip took too long"));
           }
         },
         jitter.nextInt(1000) + 2000,
@@ -171,12 +208,31 @@ public class Engine implements AutoCloseable {
   @Override
   public void close() throws InterruptedException {
     if (alive.compareAndExchange(true, false) == true) {
-      gossiper.cancel(false);
-      server.shutdownNow().awaitTermination(4, TimeUnit.SECONDS);
-      executor.shutdown();
-      executor.awaitTermination(4, TimeUnit.SECONDS);
-      server = null;
-      gossiper = null;
+      // stop gossiping
+      CountDownLatch finished = new CountDownLatch(1);
+      executor.execute(ExceptionRunnable.TO_RUNTIME(
+          () -> {
+            if (gossiper != null) {
+              gossiper.cancel(false);
+              gossiper = null;
+            }
+
+            // close all connections
+            for (Link link : new ArrayList<>(links.values())) {
+              link.channel.shutdown().awaitTermination(1, TimeUnit.SECONDS);
+            }
+            // stop handling requests
+            server.shutdown().awaitTermination(4, TimeUnit.SECONDS);
+            executor.shutdown();
+            executor.awaitTermination(4, TimeUnit.SECONDS);
+            server = null;
+            gossiper = null;
+
+            finished.countDown();
+          }));
+      finished.await(5000, TimeUnit.MILLISECONDS);
+
+
     }
   }
 }

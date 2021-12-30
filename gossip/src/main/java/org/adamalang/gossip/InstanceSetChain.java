@@ -29,10 +29,10 @@ public class InstanceSetChain {
   public InstanceSetChain(TimeSource time) {
     this.time = time;
     this.primary = new HashMap<>();
-    this.history = new GarbageMap<>();
+    this.history = new GarbageMap<>(Constants.MAX_HISTORY);
     this.current = new InstanceSet(new TreeSet<>(), time.nowMilliseconds());
-    this.recentlyLearnedAbout = new GarbageMap<>();
-    this.recentlyDeleted = new GarbageMap<>();
+    this.recentlyLearnedAbout = new GarbageMap<>(Constants.MAX_RECENT_ENTRIES);
+    this.recentlyDeleted = new GarbageMap<>(Constants.MAX_DELETES);
   }
 
   public InstanceSet find(String hash) {

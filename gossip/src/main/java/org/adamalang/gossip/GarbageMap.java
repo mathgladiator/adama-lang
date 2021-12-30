@@ -9,18 +9,20 @@
  */
 package org.adamalang.gossip;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /** represents a map that cleans things up based on time */
 public class GarbageMap<T> implements Iterable<T> {
 
-  private final HashMap<String, AgingItem> items;
+  private final LinkedHashMap<String, AgingItem> items;
 
-  public GarbageMap() {
-    this.items = new HashMap<>();
+  public GarbageMap(int maxSize) {
+    this.items = new LinkedHashMap<>(maxSize, 0.75f, true) {
+      @Override
+      protected boolean removeEldestEntry(Map.Entry<String, AgingItem> eldest) {
+        return this.size() > maxSize;
+      }
+    };
   }
 
   public Collection<String> keys() {
@@ -61,6 +63,10 @@ public class GarbageMap<T> implements Iterable<T> {
       return item.item;
     }
     return null;
+  }
+
+  public int size() {
+    return items.size();
   }
 
   public int gc(long now) {

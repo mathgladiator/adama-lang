@@ -18,24 +18,43 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class EngineTests {
   @Test
   public void convergence10() throws Exception {
     ArrayList<Engine> engines = new ArrayList<>();
-    MockMetrics metrics = new MockMetrics();
 
     HashSet<String> initial = new HashSet<>();
     initial.add("127.0.0.1:20000");
     initial.add("127.0.0.1:20009");
     MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
 
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, new MockMetrics("app"));
+    engines.add(app);
+    app.start();
+
+    AtomicReference<Runnable> appHeartBeat = new AtomicReference<>();
+    CountDownLatch latchForSet = new CountDownLatch(1);
+    app.newApp("app", 4242, new Consumer<Runnable>() {
+      @Override
+      public void accept(Runnable runnable) {
+        appHeartBeat.set(runnable);
+        latchForSet.countDown();
+        runnable.run();
+      }
+    });
+
+    latchForSet.await(1000, TimeUnit.MILLISECONDS);
     for (int k = 0; k < 10; k++) {
-      Engine engine = new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, metrics);
+      Engine engine = new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, new MockMetrics("k:" + k));
       engines.add(engine);
       engine.start();
     }
-    for (int k = 0; k < 25; k++) {
+    int versionCount = 100;
+    for (int k = 0; k < 10 && versionCount > 1; k++) {
+      appHeartBeat.get().run();
       HashSet<String> versions = new HashSet<>();
       CountDownLatch latch = new CountDownLatch(engines.size());
       for (Engine engine : engines) {
@@ -46,13 +65,14 @@ public class EngineTests {
             });
       }
       latch.await(5000, TimeUnit.MILLISECONDS);
+      versionCount = versions.size();
       Thread.sleep(1000);
       System.err.println("ROUND:" + versions.size());
     }
+    // this shutdown is very noisy
     for (Engine engine : engines) {
       engine.close();
     }
-    // TODO: test that all the engines have the same hash
   }
 
   private String prefixForLocalhost() {

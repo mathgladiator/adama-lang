@@ -13,10 +13,15 @@ import org.junit.Assert;
 
 public class MockMetrics implements Metrics {
 
+  private final String name;
   private final StringBuilder seq;
 
-  public MockMetrics() {
+  public MockMetrics( String name ) {
+    this.name = name;
     this.seq = new StringBuilder();
+  }
+  public MockMetrics() {
+    this("no-name");
   }
 
   public synchronized void dump() {
@@ -66,7 +71,7 @@ public class MockMetrics implements Metrics {
   @Override
   public void log_error(Throwable cause) {
     seq.append("[LOG-ERROR]");
-    // cause.printStackTrace();
+    System.err.println(name + ":" + cause);
   }
 
   public void assertFlow(String expected) {

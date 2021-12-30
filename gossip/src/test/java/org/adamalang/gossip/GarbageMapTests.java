@@ -14,8 +14,16 @@ import org.junit.Test;
 
 public class GarbageMapTests {
   @Test
+  public void trim() {
+    GarbageMap<String> map = new GarbageMap<>(10);
+    for (int k = 0; k < 100; k++) {
+      map.put("k+" + k, "v:" + k, 0);
+    }
+  }
+
+  @Test
   public void flow() {
-    GarbageMap<String> map = new GarbageMap<>();
+    GarbageMap<String> map = new GarbageMap<>(10);
     Assert.assertEquals(0, map.keys().size());
     map.put("x", "f(x)", 0);
     Assert.assertEquals(1, map.keys().size());
