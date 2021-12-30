@@ -42,15 +42,20 @@ public class Service {
             case "frontend":
                 serviceFrontend(config);
                 return;
+            case "yolo":
+                return;
             case "help":
                 serviceHelp(next);
                 return;
         }
     }
 
+    public static void serviceYolo(Config config) {
+    }
+
     public static void serviceBackend(Config config) throws Exception {
         DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
-        DataBase dataBase = new DataBase(new DataBaseConfig(config.configPath, "backend"));
+        DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "backend"));
 
         // TODO: pull threads from config
         ThreadedDataService dataService = new ThreadedDataService(16, () -> new BlockingDataService(dataBase) );
@@ -71,12 +76,12 @@ public class Service {
     }
 
     public static void serviceFrontend(Config config) throws Exception {
-        DataBase dataBase = new DataBase(new DataBaseConfig(config.configPath, "frontend"));
+        DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "frontend"));
 
         ExternNexus nexus = new ExternNexus(new Email() {
             @Override
             public void sendCode(String email, String code) {
-
+                System.err.println("Email:" + email + " --> " + code);
             }
         }, dataBase);
 
@@ -104,6 +109,7 @@ public class Service {
         System.out.println(Util.prefix("SERVICESUBCOMMAND:", Util.ANSI.Yellow));
         System.out.println("    " + Util.prefix("frontend", Util.ANSI.Green) + "          Spin up a WebSocket front-end node");
         System.out.println("    " + Util.prefix("backend", Util.ANSI.Green) + "           Spin up a gRPC back-end node");
+        System.out.println("    " + Util.prefix("yolo", Util.ANSI.Green) + "              Spin up everything on a single node!");
     }
 
 }

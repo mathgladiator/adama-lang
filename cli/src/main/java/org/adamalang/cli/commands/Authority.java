@@ -9,10 +9,12 @@
  */
 package org.adamalang.cli.commands;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
+import org.adamalang.common.Json;
 
 public class Authority {
     public static void execute(Config config, String[] args) throws Exception {
@@ -27,6 +29,7 @@ public class Authority {
                 authorityCreate(config, args);
                 return;
             case "list":
+                authorityList(config, args);
                 return;
             case "get":
                 return;
@@ -40,7 +43,26 @@ public class Authority {
         String identity = config.get_string("identity", null);
         try (WebSocketClient client = new WebSocketClient(config)) {
             try (Connection connection = client.open()) {
+                ObjectNode request = Json.newJsonObject();
+                request.put("method", "authority/create");
+                request.put("identity", identity);
+                ObjectNode response = connection.execute(request);
+                System.err.println(response.toPrettyString());
+            }
+        }
+    }
 
+
+    public static void authorityList(Config config, String[] args) throws Exception {
+        String identity = config.get_string("identity", null);
+        try (WebSocketClient client = new WebSocketClient(config)) {
+            try (Connection connection = client.open()) {
+                ObjectNode request = Json.newJsonObject();
+                request.put("method", "authority/list");
+                request.put("identity", identity);
+                connection.stream(request, (item) -> {
+                    System.err.println(item.toPrettyString());
+                });
             }
         }
         // TODO: create WebSocket connection

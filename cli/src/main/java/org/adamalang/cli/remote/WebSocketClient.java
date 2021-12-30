@@ -81,18 +81,15 @@ public class WebSocketClient implements AutoCloseable {
 
                       @Override
                       public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                        System.err.println("connected");
                       }
 
                       @Override
                       public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-                        System.err.println("closed");
                       }
 
                       @Override
                       public void exceptionCaught(
                           final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-                        System.err.println("failure");
                         cause.printStackTrace();
                       }
 
@@ -100,7 +97,6 @@ public class WebSocketClient implements AutoCloseable {
                       protected void channelRead0(
                           final ChannelHandlerContext ctx, final TextWebSocketFrame frame)
                           throws Exception {
-                        System.err.println(frame.text());
                         ObjectNode node = Json.parseJsonObject(frame.text());
                         if (node.has("ping")) {
                           node.put("pong", true);
@@ -133,6 +129,8 @@ public class WebSocketClient implements AutoCloseable {
                             return;
                           }
                         }
+
+                        System.err.println("UNKNOWN:" + frame.text());
                       }
                     });
           }

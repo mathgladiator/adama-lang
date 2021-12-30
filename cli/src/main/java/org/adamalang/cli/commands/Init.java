@@ -63,15 +63,14 @@ public class Init {
         System.out.print(Util.prefix("    Code:", Util.ANSI.Yellow));
         String code = System.console().readLine();
 
-        ObjectNode requestGenerateNewKeyPair = Json.newJsonObject();
-        requestGenerateNewKeyPair.put("method", "init/generate-new-key-pair");
-        requestGenerateNewKeyPair.put("connection", initConnectionId);
-        requestGenerateNewKeyPair.put("code", code);
-        ObjectNode responseGenerateNewKeyPair = connection.execute(requestGenerateNewKeyPair);
-        System.err.println(responseGenerateNewKeyPair.toPrettyString());
-
+        ObjectNode requestGenerateIdentity = Json.newJsonObject();
+        requestGenerateIdentity.put("method", "init/generate-identity");
+        requestGenerateIdentity.put("connection", initConnectionId);
+        requestGenerateIdentity.put("code", code);
+        ObjectNode responseGenerateIdentity = connection.execute(requestGenerateIdentity);
         config.manipulate((node) -> {
           node.put("email", email);
+          node.set("identity", responseGenerateIdentity.get("identity"));
         });
       }
     }
@@ -93,7 +92,7 @@ public class Init {
         String code = System.console().readLine();
 
         ObjectNode requestRevoke = Json.newJsonObject();
-        requestRevoke.put("method", "init/generate-new-key-pair");
+        requestRevoke.put("method", "init/revoke-all");
         requestRevoke.put("connection", initConnectionId);
         requestRevoke.put("code", code);
         ObjectNode responseRevoke = connection.execute(requestRevoke);
