@@ -17,13 +17,15 @@ import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.grpc.server.Server;
-import org.adamalang.mysql.BaseConfig;
+import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.threads.ThreadedDataService;
 import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.service.ServiceRunnable;
+import org.adamalang.web.service.WebConfig;
 
 public class Service {
     public static void execute(Config config, String[] args) throws Exception {
@@ -48,7 +50,7 @@ public class Service {
 
     public static void serviceBackend(Config config) throws Exception {
         DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
-        DataBase dataBase = new DataBase(new BaseConfig(config.configPath, "backend"));
+        DataBase dataBase = new DataBase(new DataBaseConfig(config.configPath, "backend"));
 
         // TODO: pull threads from config
         ThreadedDataService dataService = new ThreadedDataService(16, () -> new BlockingDataService(dataBase) );
@@ -69,8 +71,7 @@ public class Service {
     }
 
     public static void serviceFrontend(Config config) throws Exception {
-        DataBase dataBase = new DataBase(new BaseConfig(config.configPath, "frontend"));
-
+        DataBase dataBase = new DataBase(new DataBaseConfig(config.configPath, "frontend"));
 
         ExternNexus nexus = new ExternNexus(new Email() {
             @Override
@@ -79,19 +80,16 @@ public class Service {
             }
         }, dataBase);
 
-        int port = 8000;
+        // TODO: link the gRPC stuff here for talking to Adama
 
         ServiceBase serviceBase = BootstrapFrontend.make(nexus);
 
-        /*
-        WebConfig webConfig = new WebConfig(config.read);
+        WebConfig webConfig = new WebConfig(config.get_or_create_child("web"));
         final var runnable = new ServiceRunnable(webConfig, serviceBase);
         final var thread = new Thread(runnable);
         thread.start();
         runnable.waitForReady(1000);
         thread.join();
-        */
-
     }
 
     public static void serviceHelp(String[] next) {

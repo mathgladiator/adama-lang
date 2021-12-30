@@ -10,7 +10,7 @@
 package org.adamalang.mysql.backend;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.mysql.BaseConfig;
+import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfigTests;
 import org.adamalang.mysql.mocks.MockActiveKeyStream;
@@ -33,8 +33,8 @@ public class BlockingDataServiceTests {
 
   @Test
   public void flow_1() throws Exception {
-    BaseConfig baseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(baseConfig)) {
+    DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
       BackendDataServiceInstaller installer = new BackendDataServiceInstaller(dataBase);
       try {
         // make sure the database and tables are all proper and set

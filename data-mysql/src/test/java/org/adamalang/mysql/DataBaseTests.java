@@ -18,8 +18,8 @@ import java.sql.SQLException;
 public class DataBaseTests {
   @Test
   public void failure_coverage() throws Exception {
-    BaseConfig baseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(baseConfig)) {
+    DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
       Connection connection = dataBase.pool.getConnection();
       try {
         DataBase.execute(connection, "INSERT");

@@ -10,7 +10,7 @@
 package org.adamalang.mysql.frontend;
 
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.mysql.BaseConfig;
+import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfigTests;
 import org.junit.Assert;
@@ -24,8 +24,8 @@ public class FrontendTests {
 
   @Test
   public void users() throws Exception {
-    BaseConfig baseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(baseConfig)) {
+    DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
         installer.install();
@@ -43,8 +43,8 @@ public class FrontendTests {
 
   @Test
   public void authorities() throws Exception {
-    BaseConfig baseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(baseConfig)) {
+    DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
         installer.install();
@@ -123,8 +123,8 @@ public class FrontendTests {
 
   @Test
   public void spaces() throws Exception {
-    BaseConfig baseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(baseConfig)) {
+    DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
         installer.install();

@@ -22,7 +22,7 @@ public class DataBase implements AutoCloseable {
   public final ComboPooledDataSource pool;
   public final String databaseName;
 
-  public DataBase(BaseConfig config) throws Exception {
+  public DataBase(DataBaseConfig config) throws Exception {
     this.pool = config.createComboPooledDataSource();
     this.databaseName = config.databaseName;
   }

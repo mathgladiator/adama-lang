@@ -14,7 +14,7 @@ import org.adamalang.common.Json;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.frontend.BootstrapFrontend;
-import org.adamalang.mysql.BaseConfig;
+import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.web.contracts.ServiceBase;
@@ -45,7 +45,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public TestFrontEnd() throws Exception {
     codesSentToEmail = new ConcurrentHashMap<>();
     String config = Files.readString(new File("./test.mysql.json").toPath());
-    DataBase dataBase = new DataBase(new BaseConfig(config, "frontend"));
+    DataBase dataBase = new DataBase(new DataBaseConfig(config, "frontend"));
     this.installer = new FrontendManagementInstaller(dataBase);
     installer.install();
     this.nexus = new ExternNexus(this, dataBase);

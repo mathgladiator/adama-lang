@@ -61,6 +61,10 @@ public class Config {
     this.cache = config;
   }
 
+  public ObjectNode read() {
+    return cache;
+  }
+
   public String get_string(String field, String defaultValue) {
     JsonNode node = read().get(field);
     if (node == null || node.isNull()) {
@@ -73,15 +77,19 @@ public class Config {
     return node.textValue();
   }
 
-  public ObjectNode read() {
-    return cache;
-  }
-
   public int get_int(String field, int defaultValue) {
     JsonNode node = read().get(field);
     if (node == null || node.isNull() || !node.isInt()) {
       return defaultValue;
     }
     return node.intValue();
+  }
+
+  public ObjectNode get_or_create_child(String field) {
+    JsonNode node = read().get(field);
+    if (node instanceof ObjectNode) {
+      return (ObjectNode) node;
+    }
+    return Json.newJsonObject();
   }
 }

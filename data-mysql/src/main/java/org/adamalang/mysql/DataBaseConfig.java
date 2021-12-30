@@ -16,17 +16,13 @@ import java.io.File;
 import java.nio.file.Files;
 
 /** defines the config for the mysql data service */
-public class BaseConfig {
+public class DataBaseConfig {
   public final String jdbcUrl;
   public final String user;
   public final String password;
   public final String databaseName;
 
-  public BaseConfig(File file, String role) throws Exception {
-    this(Files.readString(file.toPath()), role);
-  }
-
-  public BaseConfig(String json, String role) {
+  public DataBaseConfig(String json, String role) {
     JsonStreamReader reader = new JsonStreamReader(json);
     String _jdbcUrl = null;
     String _user = null;
