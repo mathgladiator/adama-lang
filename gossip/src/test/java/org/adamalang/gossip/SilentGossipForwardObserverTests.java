@@ -7,13 +7,16 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.common;
+package org.adamalang.gossip;
 
 import org.junit.Test;
 
-public class DefaultCopyrightTests {
+public class SilentGossipForwardObserverTests {
   @Test
   public void coverage() {
-    new DefaultCopyright();
+    SilentGossipForwardObserver so = new SilentGossipForwardObserver();
+    so.onNext(null);
+    so.onError(null);
+    so.onCompleted();
   }
 }

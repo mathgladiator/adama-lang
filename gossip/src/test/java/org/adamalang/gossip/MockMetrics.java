@@ -16,12 +16,13 @@ public class MockMetrics implements Metrics {
   private final String name;
   private final StringBuilder seq;
 
-  public MockMetrics( String name ) {
-    this.name = name;
-    this.seq = new StringBuilder();
-  }
   public MockMetrics() {
     this("no-name");
+  }
+
+  public MockMetrics(String name) {
+    this.name = name;
+    this.seq = new StringBuilder();
   }
 
   public synchronized void dump() {
@@ -71,7 +72,6 @@ public class MockMetrics implements Metrics {
   @Override
   public void log_error(Throwable cause) {
     seq.append("[LOG-ERROR]");
-    System.err.println(name + ":" + cause);
   }
 
   public void assertFlow(String expected) {

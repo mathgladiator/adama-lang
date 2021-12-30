@@ -37,18 +37,22 @@ public class EngineTests {
 
     AtomicReference<Runnable> appHeartBeat = new AtomicReference<>();
     CountDownLatch latchForSet = new CountDownLatch(1);
-    app.newApp("app", 4242, new Consumer<Runnable>() {
-      @Override
-      public void accept(Runnable runnable) {
-        appHeartBeat.set(runnable);
-        latchForSet.countDown();
-        runnable.run();
-      }
-    });
+    app.newApp(
+        "app",
+        4242,
+        new Consumer<Runnable>() {
+          @Override
+          public void accept(Runnable runnable) {
+            appHeartBeat.set(runnable);
+            latchForSet.countDown();
+            runnable.run();
+          }
+        });
 
     latchForSet.await(1000, TimeUnit.MILLISECONDS);
     for (int k = 0; k < 10; k++) {
-      Engine engine = new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, new MockMetrics("k:" + k));
+      Engine engine =
+          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, new MockMetrics("k:" + k));
       engines.add(engine);
       engine.start();
     }

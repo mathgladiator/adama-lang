@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -93,6 +94,7 @@ public class Engine implements AutoCloseable {
                             .trustManager(identity.getTrust()) //
                             .clientAuth(ClientAuth.REQUIRE) //
                             .build())
+                    .keepAliveTimeout(2500, TimeUnit.MILLISECONDS)
                     .build());
   }
 
@@ -126,16 +128,8 @@ public class Engine implements AutoCloseable {
     if (alive.compareAndExchange(false, true) == false) {
       server = serverSupplier.get();
       server.start();
-      gossiper =
-          executor.scheduleAtFixedRate(
-              () -> {
-                if (alive.get()) {
-                  gossipInExecutor();
-                }
-              },
-              jitter.nextInt(500) + 500,
-              500,
-              TimeUnit.MILLISECONDS);
+      scheduleGossip();
+
       Runtime.getRuntime()
           .addShutdownHook(
               new Thread(
@@ -146,19 +140,23 @@ public class Engine implements AutoCloseable {
     }
   }
 
-
-  public class Link {
-    private final String target;
-    private final ManagedChannel channel;
-    private final GossipGrpc.GossipStub stub;
-
-    public Link(String target) {
-      this.target = target;
-      this.channel = NettyChannelBuilder.forTarget(target, credentials).withOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 100).build();
-      this.stub = GossipGrpc.newStub(channel);
-    }
+  private void scheduleGossip() {
+    executor.execute(
+        () -> {
+          int wait = 100;
+          for (int k = 0; k < 4; k++) {
+            wait += jitter.nextInt(100);
+            ;
+          }
+          gossiper =
+              executor.schedule(
+                  () -> {
+                    gossipInExecutor();
+                  },
+                  wait,
+                  TimeUnit.MILLISECONDS);
+        });
   }
-
 
   private Link pick() {
     String target = picker.pick();
@@ -176,31 +174,49 @@ public class Engine implements AutoCloseable {
     // pick a random partner
     Link link = pick();
     ClientObserver observer = new ClientObserver(executor, chain, metrics);
-    observer.initiate(link.stub.exchange(new StreamObserver<GossipReverse>() {
-      @Override
-      public void onNext(GossipReverse gossipReverse) {
-        observer.onNext(gossipReverse);
-      }
+    StreamObserver<GossipReverse> interceptObserver =
+        new StreamObserver<GossipReverse>() {
+          boolean finished = false;
 
-      @Override
-      public void onError(Throwable throwable) {
-        observer.onError(throwable);
-        link.channel.shutdown();
-        links.remove(link.target);
-      }
+          @Override
+          public void onNext(GossipReverse gossipReverse) {
+            observer.onNext(gossipReverse);
+          }
 
-      @Override
-      public void onCompleted() {
-        observer.onCompleted();
-      }
-    }));
+          @Override
+          public void onError(Throwable throwable) {
+            executor.execute(
+                () -> {
+                  if (!finished) {
+                    observer.onError(throwable);
+                    link.channel.shutdown();
+                    links.remove(link.target);
+                    scheduleGossip();
+                    finished = true;
+                  }
+                });
+          }
+
+          @Override
+          public void onCompleted() {
+            executor.execute(
+                () -> {
+                  if (!finished) {
+                    observer.onCompleted();
+                    scheduleGossip();
+                    finished = true;
+                  }
+                });
+          }
+        };
+    observer.initiate(link.stub.exchange(interceptObserver));
     executor.schedule(
         () -> {
-          if (!observer.isDone()) {
-            // observer.onError(new RuntimeException("Gossip took too long"));
+          if (!observer.isDone() && alive.get()) {
+            interceptObserver.onError(new RuntimeException("Gossip Time out"));
           }
         },
-        jitter.nextInt(1000) + 2000,
+        jitter.nextInt(1000) + 2500,
         TimeUnit.MILLISECONDS);
   }
 
@@ -208,31 +224,39 @@ public class Engine implements AutoCloseable {
   @Override
   public void close() throws InterruptedException {
     if (alive.compareAndExchange(true, false) == true) {
-      // stop gossiping
       CountDownLatch finished = new CountDownLatch(1);
-      executor.execute(ExceptionRunnable.TO_RUNTIME(
-          () -> {
-            if (gossiper != null) {
-              gossiper.cancel(false);
-              gossiper = null;
-            }
-
-            // close all connections
-            for (Link link : new ArrayList<>(links.values())) {
-              link.channel.shutdown().awaitTermination(1, TimeUnit.SECONDS);
-            }
-            // stop handling requests
-            server.shutdown().awaitTermination(4, TimeUnit.SECONDS);
-            executor.shutdown();
-            executor.awaitTermination(4, TimeUnit.SECONDS);
-            server = null;
-            gossiper = null;
-
-            finished.countDown();
-          }));
+      executor.execute(
+          ExceptionRunnable.TO_RUNTIME(
+              () -> {
+                if (gossiper != null) {
+                  gossiper.cancel(false);
+                  gossiper = null;
+                }
+                for (Link link : new ArrayList<>(links.values())) {
+                  link.channel.shutdown();
+                }
+                server.shutdown();
+                server = null;
+                gossiper = null;
+                finished.countDown();
+              }));
       finished.await(5000, TimeUnit.MILLISECONDS);
+      executor.shutdown();
+    }
+  }
 
+  public class Link {
+    private final String target;
+    private final ManagedChannel channel;
+    private final GossipGrpc.GossipStub stub;
 
+    public Link(String target) {
+      this.target = target;
+      this.channel =
+          NettyChannelBuilder.forTarget(target, credentials)
+              .withOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 150)
+              .build();
+      this.stub = GossipGrpc.newStub(channel);
     }
   }
 }

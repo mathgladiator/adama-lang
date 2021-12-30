@@ -37,7 +37,8 @@ public class ServerHandler extends GossipGrpc.GossipImplBase {
   @Override
   public StreamObserver<GossipForward> exchange(StreamObserver<GossipReverse> responseObserver) {
     if (!alive.get()) {
-      responseObserver.onError(new Exception("shutting-down"));
+      responseObserver.onCompleted();
+      return new SilentGossipForwardObserver();
     }
     return new StreamObserver<>() {
       private InstanceSet set = null;
@@ -94,6 +95,7 @@ public class ServerHandler extends GossipGrpc.GossipImplBase {
                                     .addAllMissingEndpoints(chain.missing(set))
                                     .build())
                             .build());
+                    responseObserver.onCompleted();
                     return;
                   }
                 case QUICK_GOSSIP:

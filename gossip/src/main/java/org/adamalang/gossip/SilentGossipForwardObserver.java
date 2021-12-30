@@ -7,13 +7,19 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.common;
+package org.adamalang.gossip;
 
-import org.junit.Test;
+import io.grpc.stub.StreamObserver;
+import org.adamalang.gossip.proto.GossipForward;
 
-public class DefaultCopyrightTests {
-  @Test
-  public void coverage() {
-    new DefaultCopyright();
-  }
+/** used when the server is shutting down */
+public class SilentGossipForwardObserver implements StreamObserver<GossipForward> {
+  @Override
+  public void onNext(GossipForward gossipForward) {}
+
+  @Override
+  public void onError(Throwable throwable) {}
+
+  @Override
+  public void onCompleted() {}
 }

@@ -18,27 +18,24 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerTests {
   @Test
-  public void shutdownProducesOnError() {
+  public void shutdownProducesQuickComplete() {
     AtomicBoolean alive = new AtomicBoolean(false);
     ServerHandler handler = new ServerHandler((r) -> r.run(), null, alive, new MockMetrics());
 
-    AtomicBoolean error = new AtomicBoolean(false);
-    handler.exchange(new StreamObserver<GossipReverse>() {
-      @Override
-      public void onNext(GossipReverse gossipReverse) {
+    AtomicBoolean done = new AtomicBoolean(false);
+    handler.exchange(
+        new StreamObserver<GossipReverse>() {
+          @Override
+          public void onNext(GossipReverse gossipReverse) {}
 
-      }
+          @Override
+          public void onError(Throwable throwable) {}
 
-      @Override
-      public void onError(Throwable throwable) {
-        error.set(true);
-      }
-
-      @Override
-      public void onCompleted() {
-
-      }
-    });
-    Assert.assertTrue(error.get());
+          @Override
+          public void onCompleted() {
+            done.set(true);
+          }
+        });
+    Assert.assertTrue(done.get());
   }
 }
