@@ -20,6 +20,7 @@ import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.sys.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
@@ -40,7 +41,9 @@ import java.util.concurrent.ScheduledExecutorService;
 public class TestBed implements AutoCloseable {
   public final ScheduledExecutorService clientExecutor;
   public final MachineIdentity identity;
+  public final BillingPubSub billingPubSub;
   private final Server server;
+
 
   public TestBed(int port, String code) throws Exception {
     clientExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -70,7 +73,8 @@ public class TestBed implements AutoCloseable {
             2);
 
     this.identity = MachineIdentity.fromFile(prefixForLocalhost());
-    this.server = new Server(identity, service, port);
+    this.billingPubSub = new BillingPubSub(base);
+    this.server = new Server(identity, service, billingPubSub, port);
   }
 
   private String prefixForLocalhost() {

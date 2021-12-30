@@ -18,18 +18,23 @@ import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /** the handler to answer the client's call */
 public class Handler extends AdamaGrpc.AdamaImplBase {
 
   public final CoreService service;
+  public final BillingPubSub billingPubSub;
 
-  public Handler(CoreService service) {
+  public Handler(CoreService service,BillingPubSub billingPubSub) {
     this.service = service;
+    this.billingPubSub = billingPubSub;
   }
 
   @Override
@@ -77,8 +82,19 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   public StreamObserver<StreamMessageClient> multiplexedProtocol(
       StreamObserver<StreamMessageServer> responseObserver) {
     ConcurrentHashMap<Long, CoreStream> streams = new ConcurrentHashMap<>();
-    responseObserver.onNext(
-        StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
+    AtomicBoolean alive = new AtomicBoolean(true);
+    responseObserver.onNext(StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
+    billingPubSub.subscribe((bills) -> {
+      if (alive.get()) {
+        ArrayList<InventoryRecord> records = new ArrayList<>();
+        for (BillingPubSub.Bill bill : bills) {
+          records.add(InventoryRecord.newBuilder().setId(bill.id).setSpace(bill.space).setMemoryBytes(bill.memory).setCpuTicks(bill.cpu).setCount(bill.count).setMessages(bill.messages).setPlanHash(bill.hash).build());
+        }
+        // TODO: need to discover thread safty of this
+        responseObserver.onNext(StreamMessageServer.newBuilder().setHeartbeat(InventoryHeartbeat.newBuilder().addAllRecords(records).build()).build());
+      }
+      return alive.get();
+    });
     return new StreamObserver<>() {
       @Override
       public void onNext(StreamMessageClient payload) {
@@ -255,6 +271,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
       @Override
       public void onCompleted() {
+        alive.set(false);
         for (CoreStream stream : streams.values()) {
           stream.disconnect();
         }

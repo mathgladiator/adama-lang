@@ -13,6 +13,7 @@ import java.util.*;
 
 /** pick a partner to gossip with */
 public class GossipPartnerPicker {
+  private final String self;
   private final InstanceSetChain chain;
   private final HashSet<String> initial;
   private final ArrayList<String> peers;
@@ -20,13 +21,26 @@ public class GossipPartnerPicker {
   private final HashMap<String, Integer> counts;
   private String cachedPeersHash;
 
-  public GossipPartnerPicker(InstanceSetChain chain, HashSet<String> initial, Random rng) {
+  public GossipPartnerPicker(String self, InstanceSetChain chain, HashSet<String> initial, Random rng) {
+    this.self = self;
     this.chain = chain;
     this.initial = initial;
     this.rng = rng;
     this.peers = new ArrayList<>();
     this.counts = new HashMap<>();
     this.cachedPeersHash = "";
+  }
+
+  private String randomPeerNotSelf() {
+    int attempts = 0;
+    while (attempts < 4) {
+      String x = peers.get(rng.nextInt(peers.size()));
+      if (!self.equals(x)) {
+        return x;
+      }
+      attempts++;
+    }
+    return null;
   }
 
   public String pick() {
@@ -37,16 +51,23 @@ public class GossipPartnerPicker {
       peers.addAll(set);
       cachedPeersHash = chain.current().hash();
     }
-    String a = peers.get(rng.nextInt(peers.size()));
-    String b = peers.get(rng.nextInt(peers.size()));
-    int x = countOf(a);
-    int y = countOf(b);
-    if (x < y) {
-      counts.put(a, x + 1);
-      return a;
+    if (peers.size() > 0) {
+      String a = randomPeerNotSelf();
+      String b = randomPeerNotSelf();
+      if (a == null || b == null) {
+        return null;
+      }
+      int x = countOf(a);
+      int y = countOf(b);
+      if (x < y) {
+        counts.put(a, x + 1);
+        return a;
+      } else {
+        counts.put(b, y + 1);
+        return b;
+      }
     } else {
-      counts.put(b, y + 1);
-      return b;
+      return null;
     }
   }
 

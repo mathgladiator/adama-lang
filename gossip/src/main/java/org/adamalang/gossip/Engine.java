@@ -76,7 +76,7 @@ public class Engine implements AutoCloseable {
         Collections.emptySet());
     me = chain.pick(id);
     this.jitter = new Random();
-    this.picker = new GossipPartnerPicker(chain, initial, jitter);
+    this.picker = new GossipPartnerPicker(identity.ip + ":" + port, chain, initial, jitter);
     this.executor = Executors.newSingleThreadScheduledExecutor();
     this.ip = identity.ip;
     this.metrics = metrics;
@@ -160,12 +160,16 @@ public class Engine implements AutoCloseable {
 
   private Link pick() {
     String target = picker.pick();
-    Link link = links.get(target);
-    if (link == null) {
-      link = new Link(target);
-      links.put(target, link);
+    if (target != null) {
+      Link link = links.get(target);
+      if (link == null) {
+        link = new Link(target);
+        links.put(target, link);
+      }
+      return link;
+    } else {
+      return null;
     }
-    return link;
   }
 
   private void gossipInExecutor() {
@@ -173,6 +177,10 @@ public class Engine implements AutoCloseable {
     me.run();
     // pick a random partner
     Link link = pick();
+    if (link == null) {
+      scheduleGossip();
+      return;
+    }
     ClientObserver observer = new ClientObserver(executor, chain, metrics);
     StreamObserver<GossipReverse> interceptObserver =
         new StreamObserver<GossipReverse>() {

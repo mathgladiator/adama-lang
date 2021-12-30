@@ -14,9 +14,11 @@ import org.adamalang.grpc.client.contracts.AskAttachmentCallback;
 import org.adamalang.grpc.client.contracts.Lifecycle;
 import org.adamalang.grpc.client.contracts.SeqCallback;
 import org.adamalang.grpc.mocks.*;
+import org.adamalang.grpc.proto.InventoryRecord;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -97,6 +99,10 @@ public class InstanceClientTests {
                 }
 
                 @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
+                }
+
+                @Override
                 public void disconnected(InstanceClient client) {
                   lifecycle.disconnected(client);
                 }
@@ -169,6 +175,10 @@ public class InstanceClientTests {
                   success.await();
                   client.connect("nope", "test", "space", "1", events);
                   lifecycle.connected(client);
+                }
+
+                @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -251,6 +261,10 @@ public class InstanceClientTests {
                 }
 
                 @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
+                }
+
+                @Override
                 public void disconnected(InstanceClient client) {
                   lifecycle.disconnected(client);
                 }
@@ -313,6 +327,10 @@ public class InstanceClientTests {
                   success.await();
                   client.connect("nope", "test", "space", "1", events);
                   lifecycle.connected(client);
+                }
+
+                @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -395,6 +413,10 @@ public class InstanceClientTests {
                 }
 
                 @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
+                }
+
+                @Override
                 public void disconnected(InstanceClient client) {
                   lifecycle.disconnected(client);
                 }
@@ -472,6 +494,10 @@ public class InstanceClientTests {
                   success.await();
                   client.connect("nope", "test", "space", "1", events);
                   lifecycle.connected(client);
+                }
+
+                @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -556,6 +582,10 @@ public class InstanceClientTests {
                   success.await();
                   client.connect("nope", "test", "space", "1", events);
                   lifecycle.connected(client);
+                }
+
+                @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -646,6 +676,10 @@ public class InstanceClientTests {
                 }
 
                 @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
+                }
+
+                @Override
                 public void disconnected(InstanceClient client) {
                   lifecycle.disconnected(client);
                 }
@@ -730,6 +764,10 @@ public class InstanceClientTests {
                 }
 
                 @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
+                }
+
+                @Override
                 public void disconnected(InstanceClient client) {
                   lifecycle.disconnected(client);
                 }
@@ -777,6 +815,10 @@ public class InstanceClientTests {
                 public void connected(InstanceClient client) {
                   client.close();
                   client.connect("nope", "test", "space", "1", events);
+                }
+
+                @Override
+                public void heartbeat(Collection<InventoryRecord> records) {
                 }
 
                 @Override

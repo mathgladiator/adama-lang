@@ -16,16 +16,22 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.frontend.BootstrapFrontend;
+import org.adamalang.gossip.Engine;
+import org.adamalang.gossip.InstanceSetChain;
+import org.adamalang.gossip.Metrics;
 import org.adamalang.grpc.server.Server;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
+import org.adamalang.runtime.sys.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.threads.ThreadedDataService;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
+
+import java.util.HashSet;
 
 public class Service {
     public static void execute(Config config, String[] args) throws Exception {
@@ -53,7 +59,18 @@ public class Service {
     public static void serviceYolo(Config config) {
     }
 
+
+
     public static void serviceBackend(Config config) throws Exception {
+        // TODO: pull backend port from config
+        int port = 3281;
+
+        // TODO: embed the identity into the config?
+        MachineIdentity identity = MachineIdentity.fromFile("me.identity");
+
+        Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(), 20000, GOSSIP_METRICS);
+        engine.start();
+
         DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
         DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "backend"));
 
@@ -63,24 +80,39 @@ public class Service {
         // TODO: transform the billing into a heat vector that is sent to all clients
         // TODO: record the billing into a database (pick a random client to record bill)
 
+        BillingPubSub billingPubSub = new BillingPubSub(deploymentFactoryBase);
+
         // TODO: pull service threads from config
         CoreService service = new CoreService(deploymentFactoryBase, //
-            (bill) -> {},
+            billingPubSub.publisher(),
             dataService, //
             TimeSource.REAL_TIME, 2);
 
-        // TODO: embed the identity into the config
-        MachineIdentity identity = MachineIdentity.fromFile("me.identity");
+        billingPubSub.subscribe((bills) -> {
+            // TODO: submit to billing service
+            return true;
+        });
 
-        // TODO: pull backend port from config
-        int port = 3281;
+        engine.newApp("adama", port, (hb) -> {
+            billingPubSub.subscribe((bills) -> {
+                hb.run();
+                return true;
+            });
+        });
 
         // TODO: hold onto the Server reference and kill on a signal, need signal listener
-        new Server(identity, service, port).start();
+        new Server(identity, service, billingPubSub, port).start();
     }
 
     public static void serviceFrontend(Config config) throws Exception {
         DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "frontend"));
+
+        // TODO: embed the identity into the config?
+        MachineIdentity identity = MachineIdentity.fromFile("me.identity");
+
+        // TODO: pull gossip port from config
+        Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(), 20001, GOSSIP_METRICS);
+        engine.start();
 
         ExternNexus nexus = new ExternNexus(new Email() {
             @Override
@@ -116,4 +148,50 @@ public class Service {
         System.out.println("    " + Util.prefix("yolo", Util.ANSI.Green) + "              Spin up everything on a single node!");
     }
 
+    private static final Metrics GOSSIP_METRICS = new Metrics() {
+        @Override
+        public void bump_sad_return() {
+
+        }
+
+        @Override
+        public void bump_complement() {
+
+        }
+
+        @Override
+        public void bump_optimistic_return() {
+
+        }
+
+        @Override
+        public void bump_turn_tables() {
+
+        }
+
+        @Override
+        public void bump_start() {
+
+        }
+
+        @Override
+        public void bump_found_reverse() {
+
+        }
+
+        @Override
+        public void bump_quick_gossip() {
+
+        }
+
+        @Override
+        public void bump_slow_gossip() {
+
+        }
+
+        @Override
+        public void log_error(Throwable cause) {
+
+        }
+    };
 }

@@ -283,6 +283,11 @@ public class InstanceClient implements AutoCloseable {
                 lifecycle.connected(InstanceClient.this);
               });
           return;
+        case HEARTBEAT:
+          executor.execute(() -> {
+            lifecycle.heartbeat(message.getHeartbeat().getRecordsList());
+          });
+          return;
         case DATA:
           executor.execute(
               () -> {
