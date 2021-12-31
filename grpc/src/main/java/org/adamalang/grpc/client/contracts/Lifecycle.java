@@ -20,7 +20,7 @@ public interface Lifecycle {
   public void connected(InstanceClient client);
 
   /** the server sent an exceptionally useful heartbeat back */
-  public void heartbeat(Collection<InventoryRecord> records);
+  public void heartbeat(InstanceClient client, Collection<InventoryRecord> records);
 
   /** the given client is disconnected and not good to use */
   public void disconnected(InstanceClient client);

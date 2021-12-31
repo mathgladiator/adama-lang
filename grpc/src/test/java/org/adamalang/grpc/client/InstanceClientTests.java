@@ -99,7 +99,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -178,7 +178,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -261,7 +261,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -330,7 +330,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -413,7 +413,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -497,7 +497,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -585,7 +585,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -676,7 +676,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -764,7 +764,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override
@@ -818,7 +818,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
                 }
 
                 @Override

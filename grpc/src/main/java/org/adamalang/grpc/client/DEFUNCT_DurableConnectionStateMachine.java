@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-public class DurableConnectionStateMachine {
+public class DEFUNCT_DurableConnectionStateMachine {
   private final DurableClientBase base;
 
-  private final String agent;
-  private final String authority;
-  private final String space;
-  private final String key;
+  public final String agent;
+  public final String authority;
+  public final String space;
+  public final String key;
   private final SimpleEvents events;
 
   private boolean alive;
@@ -24,7 +24,7 @@ public class DurableConnectionStateMachine {
   private int backoff;
   private int lastSentNotice;
 
-  public DurableConnectionStateMachine(DurableClientBase base, String agent, String authority, String space, String key, SimpleEvents events) {
+  public DEFUNCT_DurableConnectionStateMachine(DurableClientBase base, String agent, String authority, String space, String key, SimpleEvents events) {
     this.base = base;
     this.agent = agent;
     this.authority = authority;
@@ -98,6 +98,18 @@ public class DurableConnectionStateMachine {
     }
   }
 
+  public void join(InstanceClient client) {
+    base.executor.execute(() -> {
+      signalHappyWhileInExecutor();
+      DEFUNCT_DurableConnectionStateMachine.this.remote = remote;
+      setRemoteWhileInExecutor(remote);
+      if (lastSentNotice != 1) {
+        events.connected();
+        lastSentNotice = 1;
+      }
+    });
+  }
+
   private void retry() {
     base.finder.find(space, key, new FoundInstanceCallback() {
       @Override
@@ -108,7 +120,7 @@ public class DurableConnectionStateMachine {
             // It may be useful to think about how queues work
             base.executor.execute(() -> {
               signalHappyWhileInExecutor();
-              DurableConnectionStateMachine.this.remote = remote;
+              DEFUNCT_DurableConnectionStateMachine.this.remote = remote;
               setRemoteWhileInExecutor(remote);
               if (lastSentNotice != 1) {
                 events.connected();

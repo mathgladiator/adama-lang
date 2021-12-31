@@ -13,6 +13,7 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.gossip.proto.Endpoint;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * This consolidates all the instances and provides a historical chain of history so updates can

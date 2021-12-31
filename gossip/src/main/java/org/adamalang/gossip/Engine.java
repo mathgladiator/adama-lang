@@ -48,8 +48,10 @@ public class Engine implements AutoCloseable {
   private final AtomicBoolean alive;
   private final Supplier<Server> serverSupplier;
   private final HashMap<String, Link> links;
-
+  private final HashMap<String, ArrayList<Consumer<Collection<String>>>> subscribersByApp;
   private final int _PORT;
+
+  private String broadcastHash;
   private io.grpc.Server server;
   private ScheduledFuture<?> gossiper = null;
 
@@ -82,6 +84,8 @@ public class Engine implements AutoCloseable {
     this.metrics = metrics;
     this.alive = new AtomicBoolean(false);
     this.links = new HashMap<>();
+    this.subscribersByApp = new HashMap<>();
+    this.broadcastHash = "";
     this.server = null;
     serverSupplier =
         ExceptionSupplier.TO_RUNTIME(
@@ -114,6 +118,19 @@ public class Engine implements AutoCloseable {
               Collections.emptySet());
           callback.accept(chain.pick(id));
         });
+  }
+
+
+  public void subscribe(String app, Consumer<Collection<String>> consumer) {
+    executor.execute(() -> {
+      ArrayList<Consumer<Collection<String>>> subscribers = subscribersByApp.get(app);
+      if (subscribers == null) {
+        subscribers = new ArrayList<>();
+        subscribersByApp.put(app, subscribers);
+      }
+      subscribers.add(consumer);
+      consumer.accept(chain.current().targetsFor(app));
+    });
   }
 
   public void hash(Consumer<String> callback) {
@@ -172,6 +189,20 @@ public class Engine implements AutoCloseable {
     }
   }
 
+  private void doBroadcast() {
+    executor.execute(() -> {
+      String testHash = chain.current().hash();
+      if (!broadcastHash.equals(testHash)) {
+        for (Map.Entry<String, ArrayList<Consumer<Collection<String>>>> entry : subscribersByApp.entrySet()) {
+          for (Consumer<Collection<String>> subscriber : entry.getValue()) {
+            subscriber.accept(chain.current().targetsFor(entry.getKey()));
+          }
+        }
+        broadcastHash = testHash;
+      }
+    });
+  }
+
   private void gossipInExecutor() {
     // heartbeat myself
     me.run();
@@ -211,6 +242,7 @@ public class Engine implements AutoCloseable {
                 () -> {
                   if (!finished) {
                     observer.onCompleted();
+                    doBroadcast();
                     scheduleGossip();
                     finished = true;
                   }

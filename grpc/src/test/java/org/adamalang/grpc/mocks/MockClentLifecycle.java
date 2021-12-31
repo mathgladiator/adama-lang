@@ -30,7 +30,7 @@ public class MockClentLifecycle implements Lifecycle {
   }
 
   @Override
-  public synchronized void heartbeat(Collection<InventoryRecord> records) {
+  public synchronized void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
     heartbeats.append("!");
   }
 

@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class InstanceClient implements AutoCloseable {
   public final ScheduledExecutorService executor;
   public final AdamaGrpc.AdamaStub stub;
+  public final String target;
   private final Lifecycle lifecycle;
   private final HashMap<Long, Events> documents;
   private final HashMap<Long, SeqCallback> outstanding;
@@ -59,6 +60,7 @@ public class InstanceClient implements AutoCloseable {
             .build();
     this.channel = NettyChannelBuilder.forTarget(target, credentials).build();
     this.stub = AdamaGrpc.newStub(channel);
+    this.target = target;
     this.rng = new Random();
     this.executor = executor;
     this.documents = new HashMap<>();
@@ -285,7 +287,7 @@ public class InstanceClient implements AutoCloseable {
           return;
         case HEARTBEAT:
           executor.execute(() -> {
-            lifecycle.heartbeat(message.getHeartbeat().getRecordsList());
+            lifecycle.heartbeat(InstanceClient.this, message.getHeartbeat().getRecordsList());
           });
           return;
         case DATA:
