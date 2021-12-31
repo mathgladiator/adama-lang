@@ -11,7 +11,6 @@ package org.adamalang.support.testgen;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.json.JsonAlgebra;
@@ -62,11 +61,6 @@ public class DumbDataService implements DataService {
 
   public void setData(String data) {
     this.data = data;
-  }
-
-  @Override
-  public void scan(ActiveKeyStream streamback) {
-    streamback.finish();
   }
 
   @Override

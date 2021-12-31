@@ -9,11 +9,9 @@
  */
 package org.adamalang.mysql.backend;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfigTests;
-import org.adamalang.mysql.mocks.MockActiveKeyStream;
 import org.adamalang.mysql.mocks.SimpleDataCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.runtime.contracts.DataService;
@@ -51,25 +49,10 @@ public class BlockingDataServiceTests {
         service.initialize(KEY_1, UPDATE_1, cb2);
         cb2.assertFailure(667658);
 
-        // the key was created in an inactive state, shouldn't scan as active
-        {
-          MockActiveKeyStream aks = new MockActiveKeyStream();
-          service.scan(aks);
-          aks.assertFinished(0);
-        }
-
         // update the key and put it in an active state
         SimpleMockCallback cb3 = new SimpleMockCallback();
         service.patch(KEY_1, UPDATE_2, cb3);
         cb3.assertSuccess();
-
-        // it should pop up of a scan now
-        {
-          MockActiveKeyStream aks = new MockActiveKeyStream();
-          service.scan(aks);
-          aks.assertFinished(1);
-          aks.assertHas(KEY_1);
-        }
 
         // patching with same sequencer should fail
         SimpleMockCallback cb4 = new SimpleMockCallback();
@@ -125,13 +108,6 @@ public class BlockingDataServiceTests {
         SimpleMockCallback cb15 = new SimpleMockCallback();
         service.delete(KEY_1, cb15);
         cb15.assertFailure(625676);
-
-        {
-          MockActiveKeyStream aks = new MockActiveKeyStream();
-          aks.crashFinish = true;
-          service.scan(aks);
-          aks.assertFailure(ErrorCodes.SCAN_FAILURE);
-        }
       } finally {
         installer.uninstall();
       }

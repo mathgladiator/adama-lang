@@ -71,32 +71,6 @@ public class ServiceCatastropheTests {
   }
 
   @Test
-  public void crash_scan() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
-    MockInstantLivingDocumentFactoryFactory factoryFactory =
-        new MockInstantLivingDocumentFactoryFactory(factory);
-    TimeSource time = new MockTime();
-    MockFailureDataService failureDataService = new MockFailureDataService();
-    failureDataService.crashScan = true;
-    try {
-      new CoreService(factoryFactory, (bill) -> {}, failureDataService, time, 3);
-      Assert.fail();
-    } catch (RuntimeException re) {
-      ErrorCodeException ece =
-          ErrorCodeException.detectOrWrap(
-              111,
-              re,
-              new ExceptionLogger() {
-                @Override
-                public void convertedToErrorCode(Throwable t, int errorCode) {
-                  t.printStackTrace();
-                }
-              });
-      Assert.assertEquals(231, ece.code);
-    }
-  }
-
-  @Test
   public void send_failure_disconnects_and_reconcile() throws Exception {
     LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
     MockInstantLivingDocumentFactoryFactory factoryFactory =

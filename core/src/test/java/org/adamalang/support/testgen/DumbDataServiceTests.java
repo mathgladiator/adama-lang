@@ -11,7 +11,6 @@ package org.adamalang.support.testgen;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.junit.Assert;
@@ -21,17 +20,6 @@ public class DumbDataServiceTests {
   @Test
   public void coverage() {
     DumbDataService dds = new DumbDataService((t) -> {});
-    dds.scan(
-        new ActiveKeyStream() {
-          @Override
-          public void schedule(Key key, long time) {}
-
-          @Override
-          public void finish() {}
-
-          @Override
-          public void error(ErrorCodeException failure) {}
-        });
     dds.get(
         new Key("0", "0"),
         new Callback<DataService.LocalDocumentChange>() {

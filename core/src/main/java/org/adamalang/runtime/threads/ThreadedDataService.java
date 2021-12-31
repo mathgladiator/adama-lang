@@ -10,7 +10,6 @@
 package org.adamalang.runtime.threads;
 
 import org.adamalang.common.Callback;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 
@@ -47,14 +46,6 @@ public class ThreadedDataService implements DataService {
           });
     }
     return latch;
-  }
-
-  @Override
-  public void scan(ActiveKeyStream stream) {
-    executors[0].execute(
-        () -> {
-          this.services[0].scan(stream);
-        });
   }
 
   @Override

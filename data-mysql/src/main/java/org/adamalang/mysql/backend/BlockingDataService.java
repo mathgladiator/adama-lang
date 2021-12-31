@@ -13,7 +13,6 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
@@ -32,33 +31,6 @@ public class BlockingDataService implements DataService {
   public BlockingDataService(final DataBase dataBase) {
     this.dataBase = dataBase;
     dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-  }
-
-  @Override
-  public void scan(ActiveKeyStream stream) {
-    try {
-      String scanSQL =
-          new StringBuilder("SELECT `space`, `key`, `when` FROM `")
-              .append(dataBase.databaseName)
-              .append("`.`index` WHERE `invalidate` = 1")
-              .toString();
-      try (Connection connection = dataBase.pool.getConnection()) {
-        DataBase.walk(
-            connection,
-            (rs) -> {
-              Key key = new Key(rs.getString(1), rs.getString(2));
-              long absolute = rs.getDate(3).getTime();
-              long now = System.currentTimeMillis();
-              long relative = absolute < now ? 0 : absolute - now;
-              stream.schedule(key, relative);
-            },
-            scanSQL);
-        stream.finish();
-      }
-    } catch (Exception ex) {
-      ex.printStackTrace(); // TODO: PROPER LOGGING
-      stream.error(ErrorCodeException.detectOrWrap(ErrorCodes.SCAN_FAILURE, ex));
-    }
   }
 
   @Override

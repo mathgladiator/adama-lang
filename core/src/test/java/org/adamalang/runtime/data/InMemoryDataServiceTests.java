@@ -12,7 +12,6 @@ package org.adamalang.runtime.data;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.mocks.MockTime;
@@ -20,7 +19,6 @@ import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryDataServiceTests {
@@ -127,31 +125,9 @@ public class InMemoryDataServiceTests {
             Assert.fail();
           }
         });
-    ArrayList<Key> scanned = new ArrayList<>();
-    ActiveKeyStream addToScanned =
-        new ActiveKeyStream() {
-          @Override
-          public void schedule(Key key, long time) {
-            scanned.add(key);
-          }
-
-          @Override
-          public void finish() {
-            success.getAndIncrement();
-          }
-
-          @Override
-          public void error(ErrorCodeException failure) {
-            Assert.fail();
-          }
-        };
-    ds.scan(addToScanned);
-    Assert.assertEquals(0, scanned.size());
     ds.patch(key, updateActive(4, "{\"x\":4}", "{\"x\":3}", 42), bumpSuccess(success));
-    ds.scan(addToScanned);
-    Assert.assertEquals(1, scanned.size());
     ds.delete(key, bumpSuccess(success));
-    Assert.assertEquals(13, success.get());
+    Assert.assertEquals(11, success.get());
   }
 
   public DataService.RemoteDocumentUpdate update(int seq, String redo, String undo) {

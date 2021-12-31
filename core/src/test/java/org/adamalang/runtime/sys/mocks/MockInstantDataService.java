@@ -12,7 +12,6 @@ package org.adamalang.runtime.sys.mocks;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.json.JsonAlgebra;
@@ -46,14 +45,6 @@ public class MockInstantDataService implements DataService {
 
   public void ready(Key key) {
     bootstrap.add(key);
-  }
-
-  @Override
-  public void scan(ActiveKeyStream streamback) {
-    for (Key key : bootstrap) {
-      streamback.schedule(key, 0);
-    }
-    streamback.finish();
   }
 
   @Override

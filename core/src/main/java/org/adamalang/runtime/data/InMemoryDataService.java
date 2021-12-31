@@ -13,7 +13,6 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
@@ -21,7 +20,6 @@ import org.adamalang.runtime.json.JsonAlgebra;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.Executor;
 
@@ -39,23 +37,6 @@ public class InMemoryDataService implements DataService {
     this.datum = new HashMap<>();
     this.executor = executor;
     this.time = time;
-  }
-
-  @Override
-  public void scan(ActiveKeyStream stream) {
-    executor.execute(
-        () -> {
-          for (Map.Entry<Key, InMemoryDocument> entry : datum.entrySet()) {
-            if (entry.getValue().active) {
-              long timeToWake = time.nowMilliseconds() - entry.getValue().timeToWake;
-              if (timeToWake < 0) {
-                timeToWake = 0;
-              }
-              stream.schedule(entry.getKey(), timeToWake);
-            }
-          }
-          stream.finish();
-        });
   }
 
   @Override

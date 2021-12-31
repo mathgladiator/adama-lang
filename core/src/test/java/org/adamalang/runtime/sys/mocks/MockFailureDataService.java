@@ -11,20 +11,11 @@ package org.adamalang.runtime.sys.mocks;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 
 public class MockFailureDataService implements DataService {
   public boolean crashScan = false;
-
-  @Override
-  public void scan(ActiveKeyStream streamback) {
-    streamback.finish();
-    if (crashScan) {
-      streamback.error(new ErrorCodeException(231));
-    }
-  }
 
   @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {

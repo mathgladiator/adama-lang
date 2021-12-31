@@ -105,32 +105,6 @@ public class CoreService {
       }
     };
     doBilling.run();
-
-    /** BIG PROBLEM: TODO: SO, HERE is a problem. Scanning should happen post a deployment. This also really doesn't work if the database is shared. */
-    dataService.scan(
-        new ActiveKeyStream() {
-          @Override
-          public void schedule(Key key, long time) {
-            bases[key.hashCode() % bases.length].executor.schedule(
-                () -> {
-                  // this not caring business works because the data service has the responsibility
-                  // of priming an internal cache such that fetching doesn't fail
-                  load(key, DurableLivingDocument.INVALIDATE_ON_SUCCESS);
-                },
-                time);
-          }
-
-          @Override
-          public void finish() {
-            doBilling.run();
-          }
-
-          @Override
-          public void error(ErrorCodeException failure) {
-            // TODO: log it, we are in a half dead-state
-            throw new RuntimeException(failure);
-          }
-        });
   }
 
   private void load(Key key, Callback<DurableLivingDocument> callback) {

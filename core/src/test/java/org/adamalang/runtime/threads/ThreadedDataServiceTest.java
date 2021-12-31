@@ -11,7 +11,6 @@ package org.adamalang.runtime.threads;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.natives.NtClient;
@@ -31,20 +30,7 @@ public class ThreadedDataServiceTest {
     Key key = new Key("space", "key");
     DataService.RemoteDocumentUpdate update =
         new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, "", "", "", false, 1);
-    CountDownLatch latch = new CountDownLatch(6);
-    ds.scan(
-        new ActiveKeyStream() {
-          @Override
-          public void schedule(Key key, long time) {}
-
-          @Override
-          public void finish() {
-            latch.countDown();
-          }
-
-          @Override
-          public void error(ErrorCodeException failure) {}
-        });
+    CountDownLatch latch = new CountDownLatch(5);
     ds.get(
         key,
         new Callback<DataService.LocalDocumentChange>() {

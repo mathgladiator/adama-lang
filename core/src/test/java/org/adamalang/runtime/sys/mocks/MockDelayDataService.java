@@ -10,7 +10,6 @@
 package org.adamalang.runtime.sys.mocks;
 
 import org.adamalang.common.Callback;
-import org.adamalang.runtime.contracts.ActiveKeyStream;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.junit.Assert;
@@ -63,11 +62,6 @@ public class MockDelayDataService implements DataService {
 
   private synchronized Runnable onceWithLock() {
     return actions.remove(0);
-  }
-
-  @Override
-  public synchronized void scan(ActiveKeyStream streamback) {
-    parent.scan(streamback);
   }
 
   @Override

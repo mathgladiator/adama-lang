@@ -15,9 +15,6 @@ import org.adamalang.runtime.natives.NtClient;
 /** the contract for the data service */
 public interface DataService {
 
-  /** scan for keys to bring in that have a time based component to them */
-  void scan(ActiveKeyStream stream);
-
   /** Download the entire object and return the entire json */
   void get(Key key, Callback<LocalDocumentChange> callback);
 

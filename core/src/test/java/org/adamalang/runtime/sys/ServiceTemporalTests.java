@@ -74,42 +74,6 @@ public class ServiceTemporalTests {
   }
 
   @Test
-  public void transitions_scan_process_start() throws Exception {
-    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_BOUNCER);
-    MockInstantLivingDocumentFactoryFactory factoryFactory =
-        new MockInstantLivingDocumentFactoryFactory(factory);
-    MockInstantDataService realDataService = new MockInstantDataService();
-    MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    MockFailureDataService failureDataService = new MockFailureDataService();
-
-    realDataService.initialize(
-        KEY,
-        ServiceConnectTests.wrap(
-            "{\"__state\":\"bounce\",\"__constructed\":true,\"__next_time\":\"1637878366533\",\"__time\":\"1637878366483\"}"),
-        Callback.DONT_CARE_VOID);
-    realDataService.patch(
-        KEY,
-        ServiceConnectTests.wrap(
-            "{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4776469697456872557\",\"__time\":\"1637878366498\"}"),
-        Callback.DONT_CARE_VOID);
-    realDataService.ready(KEY);
-    Runnable latchPrimed = realDataService.latchLogAt(10);
-
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, TimeSource.REAL_TIME, 2);
-    try {
-      latchPrimed.run();
-      dataService.pause();
-      dataService.set(failureDataService);
-      dataService.unpause();
-      MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, streamback);
-      streamback.await_any_failure();
-    } finally {
-      service.shutdown();
-    }
-  }
-
-  @Test
   public void load_after_create_pause() throws Exception {
     LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
