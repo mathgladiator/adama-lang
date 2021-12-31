@@ -141,7 +141,7 @@ public class InstanceClient implements AutoCloseable {
   }
 
   /** connect to a document */
-  public void connect(String agent, String authority, String space, String key, Events events) {
+  public long connect(String agent, String authority, String space, String key, Events events) {
     long docId = nextId.getAndIncrement();
     executor.execute(
         () -> {
@@ -162,6 +162,23 @@ public class InstanceClient implements AutoCloseable {
             events.disconnected();
           }
         });
+    return docId;
+  }
+
+  public void forceDisconnect(long docId) {
+    executor.execute(
+        () -> {
+          Events events = documents.remove(docId);
+          if (upstream != null && events != null) {
+            events.disconnected();
+            upstream.onNext(
+                StreamMessageClient.newBuilder()
+                                   .setId(nextId.getAndIncrement())
+                                   .setAct(docId)
+                                   .setDisconnect(StreamDisconnect.newBuilder().build())
+                                   .build());
+          }
+        });
   }
 
   @Override
@@ -175,13 +192,14 @@ public class InstanceClient implements AutoCloseable {
         });
   }
 
-  public class Remote {
+  public class InstanceRemote implements Remote {
     private final long docId;
 
-    public Remote(long docId) {
+    public InstanceRemote(long docId) {
       this.docId = docId;
     }
 
+    @Override
     public void canAttach(AskAttachmentCallback callback) {
       long askId = nextId.getAndIncrement();
       executor.execute(
@@ -200,6 +218,7 @@ public class InstanceClient implements AutoCloseable {
           });
     }
 
+    @Override
     public void attach(
         String id,
         String name,
@@ -233,6 +252,7 @@ public class InstanceClient implements AutoCloseable {
           });
     }
 
+    @Override
     public void send(String channel, String marker, String message, SeqCallback callback) {
       long sendId = nextId.getAndIncrement();
       executor.execute(
@@ -256,6 +276,7 @@ public class InstanceClient implements AutoCloseable {
           });
     }
 
+    @Override
     public void disconnect() {
       executor.execute(
           () -> {
@@ -347,7 +368,7 @@ public class InstanceClient implements AutoCloseable {
                 if (message.getStatus().getCode() == StreamStatusCode.Connected) {
                   Events events = documents.get(message.getId());
                   if (events != null) {
-                    events.connected(new Remote(message.getId()));
+                    events.connected(new InstanceRemote(message.getId()));
                   }
                 } else {
                   Events events = documents.remove(message.getId());

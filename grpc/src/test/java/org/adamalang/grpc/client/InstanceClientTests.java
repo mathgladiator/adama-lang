@@ -12,6 +12,7 @@ package org.adamalang.grpc.client;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.contracts.AskAttachmentCallback;
 import org.adamalang.grpc.client.contracts.Lifecycle;
+import org.adamalang.grpc.client.contracts.Remote;
 import org.adamalang.grpc.client.contracts.SeqCallback;
 import org.adamalang.grpc.mocks.*;
 import org.adamalang.grpc.proto.InventoryRecord;
@@ -142,7 +143,7 @@ public class InstanceClientTests {
       MockEvents events =
           new MockEvents() {
             @Override
-            public void connected(InstanceClient.Remote remote) {
+            public void connected(Remote remote) {
               remote.send(
                   "foo",
                   null,
@@ -211,10 +212,10 @@ public class InstanceClientTests {
       CountDownLatch latch = new CountDownLatch(1);
       MockEvents events =
           new MockEvents() {
-            InstanceClient.Remote remote = null;
+            Remote remote = null;
 
             @Override
-            public void connected(InstanceClient.Remote remote) {
+            public void connected(Remote remote) {
               this.remote = remote;
               super.connected(remote);
             }
@@ -295,7 +296,7 @@ public class InstanceClientTests {
       MockEvents events =
           new MockEvents() {
             @Override
-            public void connected(InstanceClient.Remote remote) {
+            public void connected(Remote remote) {
               remote.canAttach(
                   new AskAttachmentCallback() {
                     @Override
@@ -363,7 +364,7 @@ public class InstanceClientTests {
       MockEvents events =
           new MockEvents() {
             @Override
-            public void connected(InstanceClient.Remote remote) {
+            public void connected(Remote remote) {
               remote.canAttach(
                   new AskAttachmentCallback() {
                     @Override
@@ -447,10 +448,10 @@ public class InstanceClientTests {
       AtomicInteger error = new AtomicInteger(0);
       MockEvents events =
           new MockEvents() {
-            InstanceClient.Remote remote;
+            Remote remote;
 
             @Override
-            public void connected(InstanceClient.Remote remote) {
+            public void connected(Remote remote) {
               this.remote = remote;
               super.connected(remote);
             }
@@ -531,10 +532,10 @@ public class InstanceClientTests {
       AtomicInteger error = new AtomicInteger(0);
       MockEvents events =
           new MockEvents() {
-            InstanceClient.Remote remote;
+            Remote remote;
 
             @Override
-            public void connected(InstanceClient.Remote remote) {
+            public void connected(Remote remote) {
               this.remote = remote;
               super.connected(remote);
             }
@@ -619,10 +620,10 @@ public class InstanceClientTests {
       AtomicInteger error = new AtomicInteger(0);
       MockEvents events =
           new MockEvents() {
-            InstanceClient.Remote remote;
+            Remote remote;
 
             @Override
-            public void connected(InstanceClient.Remote remote) {
+            public void connected(Remote remote) {
               this.remote = remote;
               super.connected(remote);
             }
@@ -710,10 +711,10 @@ public class InstanceClientTests {
       CountDownLatch latch = new CountDownLatch(1);
       MockEvents events =
           new MockEvents() {
-            InstanceClient.Remote remote = null;
+            Remote remote = null;
 
             @Override
-            public void connected(InstanceClient.Remote remote) {
+            public void connected(Remote remote) {
               this.remote = remote;
               super.connected(remote);
             }
@@ -796,10 +797,10 @@ public class InstanceClientTests {
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       MockEvents events =
           new MockEvents() {
-            InstanceClient.Remote remote = null;
+            Remote remote = null;
 
             @Override
-            public void connected(InstanceClient.Remote remote) {
+            public void connected(Remote remote) {
               this.remote = remote;
               super.connected(remote);
             }
