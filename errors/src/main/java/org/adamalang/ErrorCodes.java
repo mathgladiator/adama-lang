@@ -187,9 +187,6 @@ public class ErrorCodes {
   public static final int API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION = 986120;
   public static final int API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE = 921607;
 
-  public static final int API_SPACE_CHANGE_OWNER_UNKNOWN_EXCEPTION = 941059;
-  public static final int API_SPACE_CHANGE_OWNER_NO_PERMISSION_TO_EXECUTE = 908291;
-
   public static final int API_SPACE_LIST_UNKNOWN_EXCEPTION = 941064;
   public static final int API_SPACE_LIST_NO_PERMISSION_TO_EXECUTE = 920576;
 
@@ -198,9 +195,6 @@ public class ErrorCodes {
 
   public static final int API_SET_AUTHORITY_UNKNOWN_EXCEPTION = 900098;
   public static final int API_SET_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 970780;
-
-  public static final int API_TRANSFER_OWNER_AUTHORITY_UNKNOWN_EXCEPTION = 968705;
-  public static final int API_TRANSFER_OWNER_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 933916;
 
   public static final int API_LIST_AUTHORITY_UNKNOWN_EXCEPTION = 998430;
   public static final int API_LIST_AUTHORITY_NO_PERMISSION_TO_EXECUTE = 904223;

@@ -163,25 +163,6 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(AuthorityTransferRequest request, SimpleResponder responder) {
-    try {
-      if (request.who.source == AuthenticatedUser.Source.Adama) {
-        // NOTE: changeOwner validates ownership
-        Authorities.changeOwner(nexus.dataBase, request.authority, request.who.id, request.userId);
-        responder.complete();
-      } else {
-        responder.error(
-            new ErrorCodeException(
-                ErrorCodes.API_TRANSFER_OWNER_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
-      }
-    } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_TRANSFER_OWNER_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
-    }
-  }
-
-  @Override
   public void handle(AuthorityListRequest request, AuthorityListingResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
@@ -287,24 +268,6 @@ public class RootHandlerImpl implements RootHandler {
       responder.error(
           ErrorCodeException.detectOrWrap(
               ErrorCodes.API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION, ex, logger));
-    }
-  }
-
-  @Override
-  public void handle(SpaceOwnerSetRequest request, SimpleResponder responder) {
-    try {
-      if (request.policy.canUserChangeOwner(request.who)) {
-        Spaces.changePrimaryOwner(
-            nexus.dataBase, request.policy.id, request.policy.owner, request.userId);
-        responder.complete();
-      } else {
-        throw new ErrorCodeException(ErrorCodes.API_SPACE_CHANGE_OWNER_NO_PERMISSION_TO_EXECUTE);
-      }
-
-    } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_CHANGE_OWNER_UNKNOWN_EXCEPTION, ex, logger));
     }
   }
 

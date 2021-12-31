@@ -16,6 +16,9 @@ import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
 
+import java.io.File;
+import java.nio.file.Files;
+
 public class Authority {
     public static void execute(Config config, String[] args) throws Exception {
         if (args.length == 0) {
@@ -28,15 +31,40 @@ public class Authority {
             case "create":
                 authorityCreate(config, args);
                 return;
+            case "set":
+                authoritySet(config, args);
+                return;
+            case "destroy":
+                authorityDestroy(config, args);
+                return;
             case "list":
                 authorityList(config, args);
                 return;
-            case "get":
+            case "make-keystore":
+                authorityMakeKeyStore(config, args);
+                return;
+            case "append-keystore":
+                authorityAppendKeyStore(config, args);
                 return;
             case "help":
                 authorityHelp();
                 return;
         }
+    }
+
+    public static void authorityMakeKeyStore(Config config, String[] args) throws Exception {
+        String identity = config.get_string("identity", null);
+        String authority = Util.extractOrCrash("--authority", "-a", args);
+        String keystoreFile = Util.extractOrCrash("--keystore", "-k", args);
+        // TODO: GENERATE A KEY and persist to keystore
+    }
+
+    public static void authorityAppendKeyStore(Config config, String[] args) throws Exception {
+        String identity = config.get_string("identity", null);
+        String authority = Util.extractOrCrash("--authority", "-a", args);
+        String keystoreFile = Util.extractOrCrash("--keystore", "-k", args);
+        // TODO: LOAD KEYSTORE
+        // TODO: GENERATE A KEY and _APPEND_ to keystore
     }
 
     public static void authorityCreate(Config config, String[] args) throws Exception {
@@ -52,6 +80,39 @@ public class Authority {
         }
     }
 
+    public static void authoritySet(Config config, String[] args) throws Exception {
+        String identity = config.get_string("identity", null);
+        String authority = Util.extractOrCrash("--authority", "-a", args);
+        String keystoreFile = Util.extractOrCrash("--keystore", "-k", args);
+        String keystoreJson = Files.readString(new File(keystoreFile).toPath());
+        // TODO: define keystore schema and validate
+        try (WebSocketClient client = new WebSocketClient(config)) {
+            try (Connection connection = client.open()) {
+                ObjectNode request = Json.newJsonObject();
+                request.put("method", "authority/set");
+                request.put("identity", identity);
+                request.put("authority", authority);
+                request.put("key-store", Json.parseJsonObject(keystoreJson));
+                ObjectNode response = connection.execute(request);
+                System.err.println(response.toPrettyString());
+            }
+        }
+    }
+
+    public static void authorityDestroy(Config config, String[] args) throws Exception {
+        String identity = config.get_string("identity", null);
+        String authority = Util.extractOrCrash("--authority", "-a", args);
+        try (WebSocketClient client = new WebSocketClient(config)) {
+            try (Connection connection = client.open()) {
+                ObjectNode request = Json.newJsonObject();
+                request.put("method", "authority/destroy");
+                request.put("identity", identity);
+                request.put("authority", authority);
+                ObjectNode response = connection.execute(request);
+                System.err.println(response.toPrettyString());
+            }
+        }
+    }
 
     public static void authorityList(Config config, String[] args) throws Exception {
         String identity = config.get_string("identity", null);
@@ -65,9 +126,6 @@ public class Authority {
                 });
             }
         }
-        // TODO: create WebSocket connection
-        // TODO: build JSON for "authority create" (consider auto-generating a client stub)
-        // TODO: send JSON
     }
 
     public static void authorityHelp() {
@@ -81,10 +139,9 @@ public class Authority {
         System.out.println("");
         System.out.println(Util.prefix("AUTHORITYSUBCOMMAND:", Util.ANSI.Yellow));
         System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Creates a new authority");
-        System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List authorities this developer owns");
-        System.out.println("    " + Util.prefix("get", Util.ANSI.Green) + "               Get/download the keystore");
-        System.out.println("    " + Util.prefix("set", Util.ANSI.Green) + "               Set/upload the keystore");
         System.out.println("    " + Util.prefix("destroy", Util.ANSI.Green) + "           Destroy an authority " + Util.prefix ("(WARNING)", Util.ANSI.Red));
+        System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List authorities this developer owns");
+        System.out.println("    " + Util.prefix("set", Util.ANSI.Green) + "               Set/upload the keystore");
         System.out.println("    " + Util.prefix("make-keystore", Util.ANSI.Green) + "     Make a new keystore");
         System.out.println("    " + Util.prefix("append-keystore", Util.ANSI.Green) + "   Generate a new key and append it to an existing keystore and auto expire old keys");
     }

@@ -32,9 +32,6 @@ This is useful to validate an identity without executing anything
 ## Method: authority/set
 
 
-## Method: authority/transfer
-
-
 ## Method: authority/list
 
 
@@ -54,9 +51,6 @@ This is useful to validate an identity without executing anything
 
 
 ## Method: space/set-role
-
-
-## Method: space/owner/set
 
 
 ## Method: space/reflect

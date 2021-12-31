@@ -137,18 +137,6 @@ public class ConnectionRouter {
               }
             });
           } return;
-          case "authority/transfer": {
-            AuthorityTransferRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(AuthorityTransferRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
           case "authority/list": {
             AuthorityListRequest.resolve(nexus, request, new Callback<>() {
               @Override
@@ -225,18 +213,6 @@ public class ConnectionRouter {
             SpaceSetRoleRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(SpaceSetRoleRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(responder));
-              }
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responder.error(ex);
-              }
-            });
-          } return;
-          case "space/owner/set": {
-            SpaceOwnerSetRequest.resolve(nexus, request, new Callback<>() {
-              @Override
-              public void success(SpaceOwnerSetRequest resolved) {
                 handler.handle(resolved, new SimpleResponder(responder));
               }
               @Override

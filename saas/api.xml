@@ -349,14 +349,6 @@
         </documentation>
     </method>
 
-    <method name="authority/transfer" responder="simple">
-        <parameter name="identity"/>
-        <parameter name="authority"/>
-        <parameter name="email"/>
-        <documentation>
-        </documentation>
-    </method>
-
     <method name="authority/list" responder="authority-listing">
         <parameter name="identity"/>
         <documentation>
@@ -405,14 +397,6 @@
         <parameter name="space"/>
         <parameter name="email"/>
         <parameter name="role"/>
-        <documentation>
-        </documentation>
-    </method>
-
-    <method name="space/owner/set" responder="simple">
-        <parameter name="identity"/>
-        <parameter name="space"/>
-        <parameter name="email"/>
         <documentation>
         </documentation>
     </method>

@@ -35,6 +35,9 @@ public class Main {
       case "database":
         Database.execute(config, next);
         return;
+      case "documents":
+        Documents.execute(config, next);
+        return;
       case "init":
         Init.execute(config, next);
         return;
@@ -67,6 +70,7 @@ public class Main {
     System.out.println("    " + Util.prefix("code", Util.ANSI.Green) + "              Local developer tools");
     System.out.println("    " + Util.prefix("contrib", Util.ANSI.Green) + "           Open source contributor tools");
     System.out.println("    " + Util.prefix("database", Util.ANSI.Green) + "          Prepare database for usage");
+    System.out.println("    " + Util.prefix("documents", Util.ANSI.Green) + "         Interact with documents");
     System.out.println("    " + Util.prefix("init", Util.ANSI.Green) + "              Initializes the config with a valid token");
     System.out.println("    " + Util.prefix("security", Util.ANSI.Green) + "          Security tools for production usage");
     System.out.println("    " + Util.prefix("service", Util.ANSI.Green) + "           Launch a service");

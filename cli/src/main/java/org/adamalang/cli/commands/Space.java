@@ -17,6 +17,9 @@ import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
 import org.adamalang.common.Validators;
 
+import java.io.File;
+import java.nio.file.Files;
+
 public class Space {
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
@@ -29,6 +32,9 @@ public class Space {
       case "create":
         spaceCreate(config, next);
         return;
+      case "delete":
+        spaceDelete(config, next);
+        return;
       case "deploy":
         spaceDeploy(config, next);
         return;
@@ -37,6 +43,9 @@ public class Space {
         return;
       case "list":
         spaceList(config, next);
+        return;
+      case "reflect":
+        spaceReflect(config, next);
         return;
       case "set-role":
         spaceSetRole(config, next);
@@ -66,20 +75,113 @@ public class Space {
     }
   }
 
-  private static void spaceDeploy(Config config, String[] args) throws Exception {
-    // TODO: (1) search for --file OR --plan, (2.a) for --file, build a dumb plan and compile the file for fast, (2.b) for --plan validate the plan json, (3) send the plan to socket
+  private static void spaceDownload(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/get");
+        request.put("identity", identity);
+        request.put("space", space);
+        ObjectNode response = connection.execute(request);
+        System.err.println(response.toPrettyString());
+      }
+    }
   }
 
-  private static void spaceDownload(Config config, String[] args) throws Exception {
-    // TODO: (1) validate next[0] exists and then go forth and fetch the plan and return a pretty printed version
+  private static void spaceDeploy(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String planFile = Util.extractOrCrash("--plan", "-p", args);
+    String planJson = Files.readString(new File(planFile).toPath());
+    // TODO: VALIDATOR JSON
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/set");
+        request.put("identity", identity);
+        request.put("space", space);
+        request.put("plan", Json.parseJsonObject(planJson));
+        ObjectNode response = connection.execute(request);
+        System.err.println(response.toPrettyString());
+      }
+    }
+  }
+
+  private static void spaceDelete(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/delete");
+        request.put("identity", identity);
+        request.put("space", space);
+        ObjectNode response = connection.execute(request);
+        System.err.println(response.toPrettyString());
+      }
+    }
+  }
+
+
+
+  private static void spaceReflect(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String key = Util.extractWithDefault("--key", "-k", "", args);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/reflect");
+        request.put("identity", identity);
+        request.put("space", space);
+        request.put("key", key);
+        ObjectNode response = connection.execute(request);
+        System.err.println(response.toPrettyString());
+      }
+    }
   }
 
   private static void spaceList(Config config, String[] args) throws Exception {
-    // TODO: (1) search for marker in next, (2) search for limit in next, (3) send the command along, (4) return beautiful results
+    String identity = config.get_string("identity", null);
+
+    String marker = Util.extractWithDefault("--marker", "-m", "", args);
+    int limit = Integer.parseInt(Util.extractWithDefault("--limit", "-l", "100", args));
+
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/list");
+        request.put("identity", identity);
+        if (!"".equals(marker)) {
+          request.put("marker", marker);
+        }
+        request.put("limit", limit);
+        connection.stream(request, (response) -> {
+          System.err.println(response.toPrettyString());
+        });
+      }
+    }
   }
 
   private static void spaceSetRole(Config config, String[] args) throws Exception {
-    // TODO: (1) search for space, (2) search for email, (3) search for role
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String email = Util.extractWithDefault("--email", "-e", "", args);
+    String role = Util.extractWithDefault("--role", "-r", "none", args);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/set-role");
+        request.put("identity", identity);
+        request.put("space", space);
+        request.put("email", email);
+        request.put("role", role);
+        ObjectNode response = connection.execute(request);
+        System.err.println(response.toPrettyString());
+      }
+    }
   }
 
   public static void spaceHelp(String[] args) {
@@ -96,6 +198,7 @@ public class Space {
     System.out.println("");
     System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Create a new space");
+    System.out.println("    " + Util.prefix("delete", Util.ANSI.Green) + "            Deletes an empty space");
     System.out.println("    " + Util.prefix("deploy", Util.ANSI.Green) + "            Deploy a plan to a space");
     System.out.println("    " + Util.prefix("download", Util.ANSI.Green) + "          Download a space's plan");
     System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List spaces available to your account");
