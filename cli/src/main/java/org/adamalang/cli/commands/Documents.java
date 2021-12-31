@@ -49,14 +49,14 @@ public class Documents {
       String command = Util.normalize(args[0]);
     }
     System.out.println(Util.prefix("Interact with documents in a limited fashion", Util.ANSI.Green));
-    System.out.println("");
+    System.out.println();
     System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama space", Util.ANSI.Green) + " " + Util.prefix("[SPACESUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println("");
+    System.out.println("    " + Util.prefix("adama documents", Util.ANSI.Green) + " " + Util.prefix("[SPACESUBCOMMAND]", Util.ANSI.Magenta));
+    System.out.println();
     System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
-    System.out.println("");
+    System.out.println();
     System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("connect", Util.ANSI.Green) + "            Create a new space");
+    System.out.println("    " + Util.prefix("connect", Util.ANSI.Green) + "           Connection to a document and monitor it (will not respond to requests)");
   }
 }
