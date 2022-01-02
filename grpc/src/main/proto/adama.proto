@@ -18,6 +18,9 @@ service Adama {
 
   /** deploy a space */
   rpc Deploy(DeployRequest) returns (DeployResponse) {}
+
+  /** undeploy a space */
+  rpc Undeploy(UndeployRequest) returns (UndeployResponse) {}
 }
 
 message DeployRequest {
@@ -26,7 +29,13 @@ message DeployRequest {
 }
 
 message DeployResponse {
+}
 
+message UndeployRequest {
+  string space = 1;
+}
+
+message UndeployResponse {
 }
 
 message PingRequest {
