@@ -9,7 +9,7 @@
  */
 package org.adamalang.runtime.sys;
 
-import org.adamalang.runtime.contracts.SimpleExecutor;
+import org.adamalang.common.SimpleExecutor;
 import org.junit.Test;
 
 public class SimpleExecutorNowTests {

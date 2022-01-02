@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.threads;
+package org.adamalang.common;
 
 import java.util.concurrent.ThreadFactory;
 

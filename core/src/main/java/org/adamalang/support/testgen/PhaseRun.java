@@ -13,7 +13,7 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.runtime.contracts.SimpleExecutor;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.DocumentThreadBase;
