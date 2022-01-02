@@ -3,9 +3,13 @@ package org.adamalang.grpc.client.contracts;
 /** an unit of work that sits within a queue for processing */
 public abstract class QueueAction<T> {
   private boolean alive;
+  private int errorTimeout;
+  private int errorRejected;
 
-  public QueueAction() {
+  public QueueAction(int errorTimeout, int errorRejected) {
     this.alive = true;
+    this.errorTimeout = errorTimeout;
+    this.errorRejected = errorRejected;
   }
 
   /** is the queue action alive */
@@ -22,20 +26,16 @@ public abstract class QueueAction<T> {
     }
   }
 
-  /** the queue action did not finish in time */
-  protected abstract void timeOut();
-
-  /** the queue action was rejected */
-  protected abstract void rejected();
+  protected abstract void failure(int code);
 
   /** how the timeout is executed */
   public void killDueToTimeout() {
     alive = false;
-    timeOut();
+    failure(errorTimeout);
   }
 
   public void killDueToReject() {
     alive = false;
-    rejected();
+    failure(errorRejected);
   }
 }

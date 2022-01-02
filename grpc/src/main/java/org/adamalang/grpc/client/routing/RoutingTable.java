@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /** the routing table which maps keys to targets for use by clients */
-
 public class RoutingTable {
   /** raw targets held onto for differentiation */
   private HashMap<String, Collection<InventoryRecord>> targets;
