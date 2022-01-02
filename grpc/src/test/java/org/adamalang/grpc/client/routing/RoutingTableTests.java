@@ -1,6 +1,5 @@
 package org.adamalang.grpc.client.routing;
 
-import org.adamalang.grpc.proto.InventoryRecord;
 import org.adamalang.runtime.contracts.Key;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,11 +13,11 @@ public class RoutingTableTests {
     MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
     RoutingTable table = new RoutingTable(events);
     ArrayList<String> decisions = new ArrayList<>();
-    table.subscribe(new Key("space", "key"), (x) -> decisions.add(x));
+    Runnable unsubscribe = table.subscribe(new Key("space", "key"), (x) -> decisions.add(x));
     Assert.assertEquals(1, decisions.size());
     Assert.assertNull(decisions.get(0));
     decisions.clear();
-    table.integrate("t1", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(100).setMessages(1000).setCount(123).setPlanHash("hash").build()));
+    table.integrate("t1", Collections.singleton("space"));
     Assert.assertEquals(0, decisions.size());
     table.broadcast();
     Assert.assertEquals(1, decisions.size());
@@ -28,8 +27,8 @@ public class RoutingTableTests {
     Assert.assertEquals(2, decisions.size());
     Assert.assertEquals("t1", decisions.get(0));
     Assert.assertNull(decisions.get(1));
-    table.unsubscribe(new Key("space", "key"));
-    table.integrate("t1", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(100).setMessages(1000).setCount(123).setPlanHash("hash").build()));
+    unsubscribe.run();
+    table.integrate("t1", Collections.singleton("space"));
     Assert.assertEquals(2, decisions.size());
     table.broadcast();
     Assert.assertEquals(2, decisions.size());
@@ -46,9 +45,9 @@ public class RoutingTableTests {
     Assert.assertNull(decisions.get(0));
     decisions.clear();
     Assert.assertEquals(0, decisions.size());
-    table.integrate("t1", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(100).setMessages(1000).setCount(123).setPlanHash("hash").build()));
-    table.integrate("t2", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(200).setMessages(11000).setCount(1230).setPlanHash("hash").build()));
-    table.integrate("t3", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(300).setMessages(21000).setCount(12300).setPlanHash("hash").build()));
+    table.integrate("t1", Collections.singleton("space"));
+    table.integrate("t2", Collections.singleton("space"));
+    table.integrate("t3", Collections.singleton("space"));
     Assert.assertEquals(0, decisions.size());
     table.broadcast();
     Assert.assertEquals(1, decisions.size());
@@ -73,9 +72,9 @@ public class RoutingTableTests {
       decisions.clear();
     }
     Assert.assertEquals(0, decisions.size());
-    table.integrate("t1", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(100).setMessages(1000).setCount(123).setPlanHash("hash").build()));
-    table.integrate("t2", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(200).setMessages(11000).setCount(1230).setPlanHash("hash").build()));
-    table.integrate("t3", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(300).setMessages(21000).setCount(12300).setPlanHash("hash").build()));
+    table.integrate("t1", Collections.singleton("space"));
+    table.integrate("t2", Collections.singleton("space"));
+    table.integrate("t3", Collections.singleton("space"));
     Assert.assertEquals(0, decisions.size());
     table.broadcast();
     Assert.assertEquals(100, decisions.size());
@@ -133,9 +132,9 @@ public class RoutingTableTests {
       decisions.clear();
     }
     Assert.assertEquals(0, decisions.size());
-    table.integrate("t1", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(100).setMessages(1000).setCount(123).setPlanHash("hash").build()));
-    table.integrate("t2", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(200).setMessages(11000).setCount(1230).setPlanHash("hash").build()));
-    table.integrate("t3", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(300).setMessages(21000).setCount(12300).setPlanHash("hash").build()));
+    table.integrate("t1", Collections.singleton("space"));
+    table.integrate("t2", Collections.singleton("space"));
+    table.integrate("t3", Collections.singleton("space"));
     Assert.assertEquals(0, decisions.size());
     table.broadcast();
     Assert.assertEquals(100, decisions.size());
@@ -159,7 +158,7 @@ public class RoutingTableTests {
       Assert.assertEquals(37, t3Count);
     }
     decisions.clear();
-    table.integrate("t3", Collections.singleton(InventoryRecord.newBuilder().setSpace("different").setCpuTicks(300).setMessages(21000).setCount(12300).setPlanHash("hash").build()));
+    table.integrate("t3", Collections.emptyList());
     Assert.assertEquals(0, decisions.size());
     table.broadcast();
     Assert.assertEquals(37, decisions.size());
@@ -178,7 +177,7 @@ public class RoutingTableTests {
       Assert.assertEquals(19, t1Count);
       Assert.assertEquals(18, t2Count);
     }
-    events.assertHistory("[GAIN:space][SHARE:space=t1,t2,t3][GAIN:different][SHARE:different=t3][LOST:different][SHARE:space=t1,t2]");
+    events.assertHistory("[GAIN:space][SHARE:space=t1,t2,t3][LOST:space][SHARE:space=t1,t2]");
   }
 
   @Test
@@ -193,8 +192,8 @@ public class RoutingTableTests {
       decisions.clear();
     }
     Assert.assertEquals(0, decisions.size());
-    table.integrate("t1", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(100).setMessages(1000).setCount(123).setPlanHash("hash").build()));
-    table.integrate("t2", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(200).setMessages(11000).setCount(1230).setPlanHash("hash").build()));
+    table.integrate("t1", Collections.singleton("space"));
+    table.integrate("t2", Collections.singleton("space"));
     Assert.assertEquals(0, decisions.size());
     table.broadcast();
     Assert.assertEquals(100, decisions.size());
@@ -214,7 +213,7 @@ public class RoutingTableTests {
       Assert.assertEquals(50, t2Count);
     }
     decisions.clear();
-    table.integrate("t3", Collections.singleton(InventoryRecord.newBuilder().setSpace("space").setCpuTicks(300).setMessages(21000).setCount(12300).setPlanHash("hash").build()));
+    table.integrate("t3", Collections.singleton("space"));
     Assert.assertEquals(0, decisions.size());
     table.broadcast();
     Assert.assertEquals(37, decisions.size());

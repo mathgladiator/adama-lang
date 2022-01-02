@@ -10,7 +10,6 @@
 package org.adamalang.grpc.client.contracts;
 
 import org.adamalang.grpc.client.InstanceClient;
-import org.adamalang.grpc.proto.InventoryRecord;
 
 import java.util.Collection;
 
@@ -20,7 +19,7 @@ public interface Lifecycle {
   public void connected(InstanceClient client);
 
   /** the server sent an exceptionally useful heartbeat back */
-  public void heartbeat(InstanceClient client, Collection<InventoryRecord> records);
+  public void heartbeat(InstanceClient client, Collection<String> spaces);
 
   /** the given client is disconnected and not good to use */
   public void disconnected(InstanceClient client);

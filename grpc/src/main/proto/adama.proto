@@ -16,26 +16,14 @@ service Adama {
   /** open a bidi connection */
   rpc MultiplexedProtocol(stream StreamMessageClient) returns (stream StreamMessageServer) {}
 
-  /** deploy a space */
-  rpc Deploy(DeployRequest) returns (DeployResponse) {}
-
-  /** undeploy a space */
-  rpc Undeploy(UndeployRequest) returns (UndeployResponse) {}
+  /** the service knows how to pull deployments */
+  rpc ScanDeployments(ScanDeploymentsRequest) returns (ScanDeploymentsResponse) {}
 }
 
-message DeployRequest {
-  string space = 1;
-  string plan = 2;
+message ScanDeploymentsRequest {
 }
 
-message DeployResponse {
-}
-
-message UndeployRequest {
-  string space = 1;
-}
-
-message UndeployResponse {
+message ScanDeploymentsResponse {
 }
 
 message PingRequest {
@@ -125,18 +113,8 @@ message StreamMessageClient {
 message Establish {
 }
 
-message InventoryRecord {
-  string id = 1;
-  string space = 2;
-  int64 memory_bytes = 3;
-  int64 cpu_ticks = 4;
-  int64 count = 5;
-  int64 messages = 6;
-  string plan_hash = 7;
-}
-
 message InventoryHeartbeat {
-  repeated InventoryRecord records = 1;
+  repeated string spaces = 1;
 }
 
 message StreamMessageServer {

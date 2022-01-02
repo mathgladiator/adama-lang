@@ -11,7 +11,6 @@ package org.adamalang.grpc.mocks;
 
 import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.contracts.Lifecycle;
-import org.adamalang.grpc.proto.InventoryRecord;
 
 import java.util.Collection;
 
@@ -30,7 +29,7 @@ public class MockClentLifecycle implements Lifecycle {
   }
 
   @Override
-  public synchronized void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+  public synchronized void heartbeat(InstanceClient client, Collection<String> spaces) {
     heartbeats.append("!");
   }
 

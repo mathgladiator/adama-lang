@@ -10,12 +10,8 @@
 package org.adamalang.grpc.client;
 
 import org.adamalang.grpc.TestBed;
-import org.adamalang.grpc.client.contracts.AskAttachmentCallback;
-import org.adamalang.grpc.client.contracts.Lifecycle;
-import org.adamalang.grpc.client.contracts.Remote;
-import org.adamalang.grpc.client.contracts.SeqCallback;
+import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.mocks.*;
-import org.adamalang.grpc.proto.InventoryRecord;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,6 +20,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class InstanceClientTests {
   @Test
@@ -100,7 +97,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -179,7 +176,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -262,7 +259,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -331,7 +328,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -414,7 +411,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -498,7 +495,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -586,7 +583,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -677,7 +674,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -765,7 +762,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -819,7 +816,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {
                 }
 
                 @Override
@@ -836,4 +833,75 @@ public class InstanceClientTests {
       }
     }
   }
+
+  @Test
+  public void scanDeploymentsSuccessAndFailures() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 10012,
+                 "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+      bed.startServer();
+      CountDownLatch latch = new CountDownLatch(3);
+      try (InstanceClient client =
+               new InstanceClient(
+                   bed.identity,
+                   "127.0.0.1:10012",
+                   bed.clientExecutor,
+                   new Lifecycle() {
+                     @Override
+                     public void connected(InstanceClient client) {
+                       client.scanDeployments(new ScanDeploymentCallback() {
+                         @Override
+                         public void success() {
+                           System.err.println("first good");
+                           latch.countDown();
+                           client.scanDeployments(new ScanDeploymentCallback() {
+                             @Override
+                             public void success() {
+                               System.err.println("second good");
+                               latch.countDown();
+                               client.scanDeployments(new ScanDeploymentCallback() {
+                                 @Override
+                                 public void success() {
+                                 }
+
+                                 @Override
+                                 public void failure() {
+                                   System.err.println("third bad");
+                                   latch.countDown();
+                                 }
+                               });
+                             }
+
+                             @Override
+                             public void failure() {
+
+                             }
+                           });
+                         }
+
+                         @Override
+                         public void failure() {
+
+                         }
+                       });
+                     }
+
+                     @Override
+                     public void heartbeat(InstanceClient client, Collection<String> spaces) {
+                     }
+
+                     @Override
+                     public void disconnected(InstanceClient client) {
+                                            }
+                   },
+                   (t, errorCode) -> {
+                     System.err.println("EXCEPTION:" + t.getMessage());
+                   })) {
+        bed.startServer();
+        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+      }
+    }
+  }
+
 }

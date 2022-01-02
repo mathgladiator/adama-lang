@@ -6,12 +6,10 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.contracts.Lifecycle;
 import org.adamalang.grpc.client.contracts.QueueAction;
 import org.adamalang.grpc.client.routing.RoutingEngine;
-import org.adamalang.grpc.proto.InventoryRecord;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.concurrent.ScheduledExecutorService;
 
 /** You ask it for clients, and you get clients */
 public class InstanceClientFinder {
@@ -52,8 +50,8 @@ public class InstanceClientFinder {
     }
 
     @Override
-    public void heartbeat(InstanceClient client, Collection<InventoryRecord> records) {
-      engine.integrate(client.target, records);
+    public void heartbeat(InstanceClient client, Collection<String> spaces) {
+      engine.integrate(client.target, spaces);
     }
 
     public void add(QueueAction<InstanceClient> action) {

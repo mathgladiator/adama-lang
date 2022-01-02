@@ -15,7 +15,6 @@ import org.adamalang.gossip.proto.*;
 import java.util.Collections;
 import java.util.TreeSet;
 import java.util.concurrent.Executor;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /** Represents the client for initiating a gossip to a peer */
 public class ClientObserver implements StreamObserver<GossipReverse> {

@@ -1,86 +1,54 @@
 package org.adamalang.grpc.client.routing;
 
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
-import org.adamalang.grpc.proto.InventoryRecord;
 import org.adamalang.runtime.contracts.Key;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public class RoutingEngine {
-  private final Executor executor;
+  private final SimpleExecutor executor;
   private final RoutingTable table;
-  private final HashMap<Key, ArrayList<Consumer<String>>> subscribersByKey;
+  private boolean broadcastInflight;
+  private final int broadcastDelayOffset;
+  private final int broadcastDelayJitter;
 
-  public RoutingEngine(Executor executor) {
+  public RoutingEngine(SimpleExecutor executor, SpaceTrackingEvents events, int broadcastDelayOffset, int broadcastDelayJitter) {
     this.executor = executor;
-    this.table = new RoutingTable(new SpaceTrackingEvents() {
-      @Override
-      public void gainInterestInSpace(String space) {
-
-      }
-
-      @Override
-      public void shareTargetsFor(String space, Set<String> targets) {
-
-      }
-
-      @Override
-      public void lostInterestInSpace(String space) {
-
-      }
-    });
-    this.subscribersByKey = new HashMap<>();
+    this.table = new RoutingTable(events);
+    this.broadcastInflight = false;
+    this.broadcastDelayOffset = broadcastDelayOffset;
+    this.broadcastDelayJitter = broadcastDelayJitter;
   }
 
-  public void integrate(String target, Collection<InventoryRecord> newRecords) {
+  private void scheduleBroadcastWhileInExecutor() {
+    if (!broadcastInflight) {
+      broadcastInflight = true;
+      executor.schedule(() -> {
+        table.broadcast();
+        broadcastInflight = false;
+      }, (int) (broadcastDelayOffset + Math.random() * broadcastDelayJitter));
+    }
+  }
+
+  public void integrate(String target, Collection<String> newSpaces) {
     executor.execute(() -> {
-      table.integrate(target, newRecords);
+      table.integrate(target, newSpaces);
+      scheduleBroadcastWhileInExecutor();
     });
   }
 
   public void remove(String target) {
     executor.execute(() -> {
       table.remove(target);
-    });
-  }
-
-  public void broadcast() {
-    executor.execute(() -> {
-      table.broadcast();
+      scheduleBroadcastWhileInExecutor();
     });
   }
 
   public void subscribe(Key key, Consumer<String> subscriber, Consumer<Runnable> onCancel) {
     executor.execute(() -> {
-      ArrayList<Consumer<String>> subscribers = subscribersByKey.get(key);
-      {
-        if (subscribers == null) {
-          subscribers = new ArrayList<>();
-          subscribersByKey.put(key, subscribers);
-          ArrayList<Consumer<String>> _subscribers = subscribers;
-          table.subscribe(
-              key,
-              (target) -> {
-                for (Consumer<String> single : _subscribers) {
-                  single.accept(target);
-                }
-              });
-        }
-      }
-      subscribers.add(subscriber);
-      ArrayList<Consumer<String>> _subscribers = subscribers;
-      onCancel.accept(() -> {
-        _subscribers.remove(subscriber);
-        if (_subscribers.size() == 0) {
-          table.unsubscribe(key);
-          subscribersByKey.remove(key);
-        }
-      });
+      onCancel.accept(table.subscribe(key, subscriber));
     });
   }
 }

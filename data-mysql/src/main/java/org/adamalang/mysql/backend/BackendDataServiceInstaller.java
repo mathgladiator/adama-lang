@@ -33,8 +33,7 @@ public class BackendDataServiceInstaller {
             .append("  `space` VARCHAR(128) NOT NULL,") //
             .append("  `key` VARCHAR(512) NOT NULL,") //
             .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
-            .append(
-                "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
+            .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
             .append("  `head_seq` INT(4) UNSIGNED NOT NULL,") //
             .append("  `invalidate` BOOLEAN NOT NULL,") //
             .append("  `when` DATETIME NOT NULL,") //
@@ -65,11 +64,26 @@ public class BackendDataServiceInstaller {
             .append(" DEFAULT CHARACTER SET = utf8;") //
             .toString();
 
+    String createDeployedTableSQL =
+        new StringBuilder() //
+            .append("CREATE TABLE IF NOT EXISTS `")
+            .append(dataBase.databaseName)
+            .append("`.`deployed` (") //
+            .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+            .append("  `space` VARCHAR(128) NOT NULL,") //
+            .append("  `target` VARCHAR(256) NOT NULL,") //
+            .append("  `hash` VARCHAR(256) NOT NULL,") //
+            .append("  `plan` LONGTEXT NOT NULL,") //
+            .append("  PRIMARY KEY (`id`))") //
+            .append(" ENGINE = InnoDB") //
+            .append(" DEFAULT CHARACTER SET = utf8;") //
+            .toString();
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, createDatabaseSQL);
       DataBase.execute(connection, createIndexTableSQL);
       DataBase.execute(connection, createDeltasTableSQL);
+      DataBase.execute(connection, createDeployedTableSQL);
     } finally {
       connection.close();
     }
@@ -78,6 +92,12 @@ public class BackendDataServiceInstaller {
   public void uninstall() throws Exception {
     Connection connection = dataBase.pool.getConnection();
     try {
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP TABLE IF EXISTS `")
+              .append(dataBase.databaseName)
+              .append("`.`deployed`;")
+              .toString());
       DataBase.execute(
           connection,
           new StringBuilder("DROP TABLE IF EXISTS `")

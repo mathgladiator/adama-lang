@@ -15,6 +15,7 @@ import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
 import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.ExceptionSupplier;
 import org.adamalang.common.MachineIdentity;
+import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 
@@ -29,18 +30,18 @@ public class Server implements AutoCloseable {
   private final AtomicBoolean alive;
   private io.grpc.Server server;
 
-  public Server(MachineIdentity identity, CoreService service, BillingPubSub billingPubSub, int port) throws Exception {
+  public Server(ServerNexus nexus) throws Exception {
     this.alive = new AtomicBoolean(false);
     this.server = null;
     this.serverSupplier =
         ExceptionSupplier.TO_RUNTIME(
             () ->
-                NettyServerBuilder.forPort(port)
-                    .addService(new Handler(service, billingPubSub))
+                NettyServerBuilder.forPort(nexus.port)
+                    .addService(new Handler(nexus))
                     .sslContext(
                         GrpcSslContexts //
-                            .forServer(identity.getCert(), identity.getKey()) //
-                            .trustManager(identity.getTrust()) //
+                            .forServer(nexus.identity.getCert(), nexus.identity.getKey()) //
+                            .trustManager(nexus.identity.getTrust()) //
                             .clientAuth(ClientAuth.REQUIRE) //
                             .build())
                     .build());

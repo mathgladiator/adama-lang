@@ -141,6 +141,10 @@ public class InstanceClient implements AutoCloseable {
     stub.create(request, CreateCallback.WRAP(callback, logger));
   }
 
+  public void scanDeployments(ScanDeploymentCallback callback) {
+    stub.scanDeployments(ScanDeploymentsRequest.newBuilder().build(), ScanDeploymentCallback.WRAP(callback));
+  }
+
   /** connect to a document */
   public long connect(String agent, String authority, String space, String key, Events events) {
     long docId = nextId.getAndIncrement();
@@ -164,22 +168,6 @@ public class InstanceClient implements AutoCloseable {
           }
         });
     return docId;
-  }
-
-  public void forceDisconnect(long docId) {
-    executor.execute(
-        () -> {
-          Events events = documents.remove(docId);
-          if (upstream != null && events != null) {
-            events.disconnected();
-            upstream.onNext(
-                StreamMessageClient.newBuilder()
-                                   .setId(nextId.getAndIncrement())
-                                   .setAct(docId)
-                                   .setDisconnect(StreamDisconnect.newBuilder().build())
-                                   .build());
-          }
-        });
   }
 
   @Override
@@ -309,7 +297,7 @@ public class InstanceClient implements AutoCloseable {
           return;
         case HEARTBEAT:
           executor.execute(() -> {
-            lifecycle.heartbeat(InstanceClient.this, message.getHeartbeat().getRecordsList());
+            lifecycle.heartbeat(InstanceClient.this, message.getHeartbeat().getSpacesList());
           });
           return;
         case DATA:

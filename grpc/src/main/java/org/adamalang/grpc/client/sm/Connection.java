@@ -23,7 +23,7 @@ public class Connection {
   private final SimpleEvents events;
 
   // the state machine registers itself with the routing table which will tell it where to go
-  Runnable cancelRouting;
+  Runnable unsubscribeFromRouting;
   boolean routingAlive;
 
   // the state machine is complicated because of the two stages.
@@ -47,13 +47,32 @@ public class Connection {
     this.events = events;
 
     this.routingAlive = true;
-    this.cancelRouting = null;
+    this.unsubscribeFromRouting = null;
     this.state = Label.NotConnected;
     this.target = null;
     this.foundClient = null;
     this.buffer = new ArrayList<>();
     this.foundRemote = null;
     this.backoffFindInstance = 1;
+  }
+
+  private void start() {
+    events.connected();
+    base.engine.subscribe(key, (newTarget) -> {
+      base.executor.execute(() -> {
+        if (newTarget == null) {
+          if (target != null) {
+            target = null;
+            handle_onKillRoutingTarget();
+          }
+        } else {
+          if (!newTarget.equals(target)) {
+            target = newTarget;
+            handle_onNewRoutingTarget();
+          }
+        }
+      });
+    }, this::onAcquireRoutingCancel);
   }
 
   private void bufferOrExecute(QueueAction<Remote> action) {
@@ -85,7 +104,12 @@ public class Connection {
 
   public void disconnect() {
     base.executor.execute(() -> {
+      events.disconnected();
 
+      // this will trigger a target change to null which will take care of a great deal of things
+      unsubscribeFromRouting.run();
+      unsubscribeFromRouting = null;
+      routingAlive = false;
     });
   }
 
@@ -217,7 +241,6 @@ public class Connection {
       case FoundClientConnectingWait:
       case FoundClientConnectingTryNewTarget:
         state = Label.FoundClientConnectingStop;
-        ;
         return;
       case Connected:
         // TODO: disconnect trigger disconnect cascade
@@ -263,28 +286,9 @@ public class Connection {
 
   public void onAcquireRoutingCancel(Runnable cancel) {
     if (routingAlive) {
-      cancelRouting = cancel;
+      unsubscribeFromRouting = cancel;
     } else {
       cancel.run();
     }
-  }
-
-  public void start() {
-    events.connected();
-    base.engine.subscribe(key, (newTarget) -> {
-      base.executor.execute(() -> {
-        if (newTarget == null) {
-          if (target != null) {
-            target = null;
-            handle_onKillRoutingTarget();
-          }
-        } else {
-          if (!newTarget.equals(target)) {
-            target = newTarget;
-            handle_onNewRoutingTarget();
-          }
-        }
-      });
-    }, this::onAcquireRoutingCancel);
   }
 }

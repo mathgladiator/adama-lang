@@ -20,10 +20,13 @@ import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.InstanceSetChain;
 import org.adamalang.gossip.Metrics;
 import org.adamalang.grpc.server.Server;
+import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.backend.BlockingDataService;
+import org.adamalang.mysql.backend.Deployments;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
+import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.sys.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.threads.ThreadedDataService;
@@ -31,6 +34,7 @@ import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Service {
@@ -100,8 +104,28 @@ public class Service {
             });
         });
 
+        Runnable scanForDeployments = () -> {
+            try {
+                ArrayList<Deployments.Deployment> deployments = Deployments.list(dataBase, identity.ip + ":" + port);
+                for (Deployments.Deployment deployment : deployments) {
+                    try {
+                        deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {}));
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        };
+
+        // prime the host with spaces
+        scanForDeployments.run();
+
+        ServerNexus nexus = new ServerNexus(identity, service, deploymentFactoryBase, scanForDeployments, billingPubSub, port);
+
         // TODO: hold onto the Server reference and kill on a signal, need signal listener
-        new Server(identity, service, billingPubSub, port).start();
+        new Server(nexus).start();
     }
 
     public static void serviceFrontend(Config config) throws Exception {

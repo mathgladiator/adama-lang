@@ -19,7 +19,6 @@ import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.BillingPubSub;
-import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
 
 import java.util.ArrayList;
@@ -29,12 +28,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /** the handler to answer the client's call */
 public class Handler extends AdamaGrpc.AdamaImplBase {
 
-  public final CoreService service;
-  public final BillingPubSub billingPubSub;
+  private final ServerNexus nexus;
 
-  public Handler(CoreService service,BillingPubSub billingPubSub) {
-    this.service = service;
-    this.billingPubSub = billingPubSub;
+  public Handler(ServerNexus nexus) {
+    this.nexus = nexus;
   }
 
   @Override
@@ -44,8 +41,19 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   }
 
   @Override
+  public void scanDeployments(ScanDeploymentsRequest request, StreamObserver<ScanDeploymentsResponse> responseObserver) {
+    try {
+      nexus.scanForDeployments.run();
+      responseObserver.onNext(ScanDeploymentsResponse.newBuilder().build());
+      responseObserver.onCompleted();
+    } catch (Exception ex) {
+      responseObserver.onError(ex);
+    }
+  }
+
+  @Override
   public void create(CreateRequest request, StreamObserver<CreateResponse> responseObserver) {
-    service.create(
+    nexus.service.create(
         new NtClient(request.getAgent(), request.getAuthority()),
         new Key(request.getSpace(), request.getKey()),
         request.getArg(),
@@ -84,14 +92,14 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     ConcurrentHashMap<Long, CoreStream> streams = new ConcurrentHashMap<>();
     AtomicBoolean alive = new AtomicBoolean(true);
     responseObserver.onNext(StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
-    billingPubSub.subscribe((bills) -> {
+    nexus.billingPubSub.subscribe((bills) -> {
       if (alive.get()) {
-        ArrayList<InventoryRecord> records = new ArrayList<>();
+        ArrayList<String> spaces = new ArrayList<>();
         for (BillingPubSub.Bill bill : bills) {
-          records.add(InventoryRecord.newBuilder().setId(bill.id).setSpace(bill.space).setMemoryBytes(bill.memory).setCpuTicks(bill.cpu).setCount(bill.count).setMessages(bill.messages).setPlanHash(bill.hash).build());
+          spaces.add(bill.space);
         }
-        // TODO: need to discover thread safty of this
-        responseObserver.onNext(StreamMessageServer.newBuilder().setHeartbeat(InventoryHeartbeat.newBuilder().addAllRecords(records).build()).build());
+        // TODO: discover the thread safety of this since this is going to be on a different writer thread
+        responseObserver.onNext(StreamMessageServer.newBuilder().setHeartbeat(InventoryHeartbeat.newBuilder().addAllSpaces(spaces).build()).build());
       }
       return alive.get();
     });
@@ -117,7 +125,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         switch (payload.getByTypeCase()) {
           case CONNECT:
             StreamConnect connect = payload.getConnect();
-            service.connect(
+            nexus.service.connect(
                 new NtClient(connect.getAgent(), connect.getAuthority()),
                 new Key(connect.getSpace(), connect.getKey()),
                 new Streamback() {

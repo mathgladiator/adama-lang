@@ -11,6 +11,7 @@ package org.adamalang.grpc;
 
 import org.adamalang.common.*;
 import org.adamalang.grpc.server.Server;
+import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.InMemoryDataService;
@@ -32,16 +33,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestBed implements AutoCloseable {
   public final SimpleExecutor clientExecutor;
   public final MachineIdentity identity;
   public final BillingPubSub billingPubSub;
   private final Server server;
-
+  public final AtomicInteger deploymentScans;
 
   public TestBed(int port, String code) throws Exception {
     clientExecutor = SimpleExecutor.create("testbed");
+    deploymentScans = new AtomicInteger(0);
     JsonStreamWriter planWriter = new JsonStreamWriter();
     planWriter.beginObject();
     planWriter.writeObjectFieldIntro("versions");
@@ -69,7 +72,13 @@ public class TestBed implements AutoCloseable {
 
     this.identity = MachineIdentity.fromFile(prefixForLocalhost());
     this.billingPubSub = new BillingPubSub(base);
-    this.server = new Server(identity, service, billingPubSub, port);
+
+    ServerNexus nexus = new ServerNexus(identity, service, base, () -> {
+      if (deploymentScans.incrementAndGet() == 3) {
+        throw new NullPointerException();
+      }
+    }, billingPubSub, port);
+    this.server = new Server(nexus);
   }
 
   private String prefixForLocalhost() {
