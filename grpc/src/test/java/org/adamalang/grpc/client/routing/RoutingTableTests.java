@@ -11,7 +11,8 @@ import java.util.Collections;
 public class RoutingTableTests {
   @Test
   public void sanity_flow() {
-    RoutingTable table = new RoutingTable();
+    MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
+    RoutingTable table = new RoutingTable(events);
     ArrayList<String> decisions = new ArrayList<>();
     table.subscribe(new Key("space", "key"), (x) -> decisions.add(x));
     Assert.assertEquals(1, decisions.size());
@@ -32,11 +33,13 @@ public class RoutingTableTests {
     Assert.assertEquals(2, decisions.size());
     table.broadcast();
     Assert.assertEquals(2, decisions.size());
+    events.assertHistory("[GAIN:space][SHARE:space=t1][SHARE:space=][SHARE:space=t1][LOST:space]");
   }
 
   @Test
   public void singleKeyAgainstMany() {
-    RoutingTable table = new RoutingTable();
+    MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
+    RoutingTable table = new RoutingTable(events);
     ArrayList<String> decisions = new ArrayList<>();
     table.subscribe(new Key("space", "key"), (x) -> decisions.add(x));
     Assert.assertEquals(1, decisions.size());
@@ -55,11 +58,13 @@ public class RoutingTableTests {
     table.broadcast();
     Assert.assertEquals(2, decisions.size());
     Assert.assertEquals("t2", decisions.get(1));
+    events.assertHistory("[GAIN:space][SHARE:space=t1,t2,t3][SHARE:space=t1,t2]");
   }
 
   @Test
   public void multiKeysWithRebalanceByDeath() {
-    RoutingTable table = new RoutingTable();
+    MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
+    RoutingTable table = new RoutingTable(events);
     ArrayList<String> decisions = new ArrayList<>();
     for (int k = 0; k < 100; k++) {
       table.subscribe(new Key("space", "key-" + k), (x) -> decisions.add(x));
@@ -113,11 +118,13 @@ public class RoutingTableTests {
       Assert.assertEquals(19, t1Count);
       Assert.assertEquals(18, t2Count);
     }
+    events.assertHistory("[GAIN:space][SHARE:space=t1,t2,t3][SHARE:space=t1,t2]");
   }
 
   @Test
   public void multiKeysWithRebalanceByShift() {
-    RoutingTable table = new RoutingTable();
+    MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
+    RoutingTable table = new RoutingTable(events);
     ArrayList<String> decisions = new ArrayList<>();
     for (int k = 0; k < 100; k++) {
       table.subscribe(new Key("space", "key-" + k), (x) -> decisions.add(x));
@@ -171,11 +178,13 @@ public class RoutingTableTests {
       Assert.assertEquals(19, t1Count);
       Assert.assertEquals(18, t2Count);
     }
+    events.assertHistory("[GAIN:space][SHARE:space=t1,t2,t3][GAIN:different][SHARE:different=t3][LOST:different][SHARE:space=t1,t2]");
   }
 
   @Test
   public void multiKeysWithRebalanceByAdd() {
-    RoutingTable table = new RoutingTable();
+    MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
+    RoutingTable table = new RoutingTable(events);
     ArrayList<String> decisions = new ArrayList<>();
     for (int k = 0; k < 100; k++) {
       table.subscribe(new Key("space", "key-" + k), (x) -> decisions.add(x));
@@ -228,5 +237,6 @@ public class RoutingTableTests {
       Assert.assertEquals(0, t2Count);
       Assert.assertEquals(37, t3Count);
     }
+    events.assertHistory("[GAIN:space][SHARE:space=t1,t2][SHARE:space=t1,t2,t3]");
   }
 }

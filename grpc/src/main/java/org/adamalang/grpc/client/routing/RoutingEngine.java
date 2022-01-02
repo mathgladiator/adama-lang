@@ -1,11 +1,13 @@
 package org.adamalang.grpc.client.routing;
 
+import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
 import org.adamalang.grpc.proto.InventoryRecord;
 import org.adamalang.runtime.contracts.Key;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
@@ -16,7 +18,22 @@ public class RoutingEngine {
 
   public RoutingEngine(Executor executor) {
     this.executor = executor;
-    this.table = new RoutingTable();
+    this.table = new RoutingTable(new SpaceTrackingEvents() {
+      @Override
+      public void gainInterestInSpace(String space) {
+
+      }
+
+      @Override
+      public void shareTargetsFor(String space, Set<String> targets) {
+
+      }
+
+      @Override
+      public void lostInterestInSpace(String space) {
+
+      }
+    });
     this.subscribersByKey = new HashMap<>();
   }
 

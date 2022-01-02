@@ -68,7 +68,7 @@ public class Connection {
   }
 
   public void send(String channel, String marker, String message, SeqCallback callback) {
-    base.scheduler.execute(() -> {
+    base.executor.execute(() -> {
       bufferOrExecute(new QueueAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED) {
         @Override
         protected void executeNow(Remote remote) {
@@ -84,7 +84,7 @@ public class Connection {
   }
 
   public void disconnect() {
-    base.scheduler.execute(() -> {
+    base.executor.execute(() -> {
 
     });
   }
@@ -136,9 +136,9 @@ public class Connection {
       case FindingClientCancelTryNewTarget:
         state = Label.FindingClientWait;
         if (backoffFindInstance < 1000) {
-          base.scheduler.schedule(() -> {
+          base.executor.schedule(() -> {
             fireFindClient();
-          }, backoffFindInstance, TimeUnit.MILLISECONDS);
+          }, backoffFindInstance);
           backoffFindInstance = (int) (backoffFindInstance + Math.random() * backoffFindInstance + 1);
         } else {
           // TODO: RAISE ISSUE AND SHUTDOWN
@@ -156,7 +156,7 @@ public class Connection {
     foundClient.connect(agent, authority, key.space, key.key, new Events() {
       @Override
       public void connected(Remote remote) {
-        base.scheduler.execute(() -> {
+        base.executor.execute(() -> {
           foundRemote = remote;
           handle_onFoundRemote();
         });
@@ -170,14 +170,14 @@ public class Connection {
 
       @Override
       public void error(int code) {
-        base.scheduler.execute(() -> {
+        base.executor.execute(() -> {
           handle_onError(code);
         });
       }
 
       @Override
       public void disconnected() {
-        base.scheduler.execute(() -> {
+        base.executor.execute(() -> {
           handle_onDisconnected();
         });
       }
@@ -189,7 +189,7 @@ public class Connection {
     base.mesh.find(target, new QueueAction<>(ErrorCodes.INSTANCE_FINDER_TIMEOUT, ErrorCodes.INSTANCE_FINDER_REJECTED) {
       @Override
       protected void executeNow(InstanceClient client) {
-        base.scheduler.execute(() -> {
+        base.executor.execute(() -> {
           foundClient = client;
           handle_onFoundClient();
         });
@@ -197,7 +197,7 @@ public class Connection {
 
       @Override
       protected void failure(int code) {
-        base.scheduler.execute(() -> {
+        base.executor.execute(() -> {
           handle_onFailedFindingClient();
         });
       }
@@ -272,7 +272,7 @@ public class Connection {
   public void start() {
     events.connected();
     base.engine.subscribe(key, (newTarget) -> {
-      base.scheduler.execute(() -> {
+      base.executor.execute(() -> {
         if (newTarget == null) {
           if (target != null) {
             target = null;

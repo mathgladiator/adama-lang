@@ -1,5 +1,6 @@
 package org.adamalang.grpc.client.routing;
 
+import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
 import org.adamalang.grpc.proto.InventoryRecord;
 import org.adamalang.runtime.contracts.Key;
 
@@ -14,9 +15,13 @@ public class RoutingTable {
   /** the routing table of spaces to their tables */
   private HashMap<String, SpaceState> routing;
 
-  public RoutingTable() {
+  /** what happens when a space is created and destroyed */
+  private final SpaceTrackingEvents events;
+
+  public RoutingTable(SpaceTrackingEvents events) {
     this.targets = new HashMap<>();
     this.routing = new HashMap<>();
+    this.events = events;
   }
 
   /** a target has reported their inventory */
@@ -58,8 +63,13 @@ public class RoutingTable {
 
   /** broadcast to subscribers that the table has convergence (expensive recompute) */
   public void broadcast() {
-    for (Map.Entry<String, SpaceState> entry : routing.entrySet()) {
-      entry.getValue().recompute();
+    Iterator<Map.Entry<String, SpaceState>> it = routing.entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry<String, SpaceState> entry = it.next();
+      if (entry.getValue().recompute((set) -> events.shareTargetsFor(entry.getKey(), set)) == 0) {
+        events.lostInterestInSpace(entry.getKey());
+        it.remove();
+      }
     }
   }
 
@@ -78,6 +88,7 @@ public class RoutingTable {
     if (state == null) {
       state = new SpaceState();
       routing.put(space, state);
+      events.gainInterestInSpace(space);
     }
     return state;
   }

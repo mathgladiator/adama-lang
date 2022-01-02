@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
@@ -75,13 +76,16 @@ public class SpaceState {
     return winner;
   }
 
-  public void recompute() {
+  public int recompute(Consumer<Set<String>> share) {
+    int count = subscribers.size();
     if (invalid) {
       for (Map.Entry<String, TargetSubscriber> entry : subscribers.entrySet()) {
         entry.getValue().set(pick(entry.getKey()));
       }
       invalid = false;
+      share.accept(targetsToPlan.keySet());
     }
+    return count;
   }
 
   public void subscribe(String key, Consumer<String> callback) {
