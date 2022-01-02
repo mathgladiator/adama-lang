@@ -9,10 +9,7 @@
  */
 package org.adamalang.grpc;
 
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.grpc.server.Server;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
@@ -34,19 +31,17 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.*;
 
 public class TestBed implements AutoCloseable {
-  public final ScheduledExecutorService clientExecutor;
+  public final SimpleExecutor clientExecutor;
   public final MachineIdentity identity;
   public final BillingPubSub billingPubSub;
   private final Server server;
 
 
   public TestBed(int port, String code) throws Exception {
-    clientExecutor = Executors.newSingleThreadScheduledExecutor();
+    clientExecutor = SimpleExecutor.create("testbed");
     JsonStreamWriter planWriter = new JsonStreamWriter();
     planWriter.beginObject();
     planWriter.writeObjectFieldIntro("versions");

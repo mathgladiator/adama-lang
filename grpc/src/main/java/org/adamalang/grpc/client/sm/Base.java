@@ -1,9 +1,8 @@
 package org.adamalang.grpc.client.sm;
 
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.InstanceClientFinder;
 import org.adamalang.grpc.client.routing.RoutingEngine;
-
-import java.util.concurrent.ScheduledExecutorService;
 
 /** each state machine has some common ground, and we form a base around that */
 public class Base {
@@ -14,11 +13,11 @@ public class Base {
   public final InstanceClientFinder mesh;
 
   // how we handle thread safety and time
-  public final ScheduledExecutorService scheduler;
+  public final SimpleExecutor executor;
 
-  public Base(RoutingEngine engine, InstanceClientFinder mesh, ScheduledExecutorService scheduler) {
+  public Base(RoutingEngine engine, InstanceClientFinder mesh, SimpleExecutor executor) {
     this.engine = engine;
     this.mesh = mesh;
-    this.scheduler = scheduler;
+    this.executor = executor;
   }
 }

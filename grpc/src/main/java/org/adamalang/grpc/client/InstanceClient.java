@@ -17,6 +17,7 @@ import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.proto.*;
 
@@ -30,7 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /** a managed client that makes talking to the gRPC server nice */
 public class InstanceClient implements AutoCloseable {
-  public final ScheduledExecutorService executor;
+  public final SimpleExecutor executor;
   public final AdamaGrpc.AdamaStub stub;
   public final String target;
   private final Lifecycle lifecycle;
@@ -49,7 +50,7 @@ public class InstanceClient implements AutoCloseable {
   public InstanceClient(
       MachineIdentity identity,
       String target,
-      ScheduledExecutorService executor,
+      SimpleExecutor executor,
       Lifecycle lifecycle,
       ExceptionLogger logger)
       throws Exception {
@@ -417,8 +418,7 @@ public class InstanceClient implements AutoCloseable {
                     downstream = new Observer();
                     downstream.upstream = stub.multiplexedProtocol(downstream);
                   },
-                  backoff,
-                  TimeUnit.MILLISECONDS);
+                  backoff);
             }
           });
     }

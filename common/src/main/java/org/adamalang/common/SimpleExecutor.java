@@ -10,6 +10,9 @@
 package org.adamalang.common;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /** wraps Java executor for time and simplifies for Adama */
 public interface SimpleExecutor {
@@ -40,4 +43,29 @@ public interface SimpleExecutor {
 
   /** shutdown the executor */
   CountDownLatch shutdown();
+
+  public static SimpleExecutor create(String name) {
+    ScheduledExecutorService realExecutor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(name));
+    return new SimpleExecutor() {
+      @Override
+      public void execute(Runnable command) {
+        realExecutor.execute(command);
+      }
+
+      @Override
+      public void schedule(Runnable command, long milliseconds) {
+        realExecutor.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
+      }
+
+      @Override
+      public CountDownLatch shutdown() {
+        CountDownLatch latch = new CountDownLatch(1);
+        realExecutor.execute(() -> {
+          latch.countDown();
+          realExecutor.shutdown();
+        });
+        return latch;
+      }
+    };
+  }
 }

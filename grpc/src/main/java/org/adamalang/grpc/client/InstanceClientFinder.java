@@ -2,6 +2,7 @@ package org.adamalang.grpc.client;
 
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.contracts.Lifecycle;
 import org.adamalang.grpc.client.contracts.QueueAction;
 import org.adamalang.grpc.client.routing.RoutingEngine;
@@ -16,14 +17,14 @@ import java.util.concurrent.ScheduledExecutorService;
 public class InstanceClientFinder {
   private final MachineIdentity identity;
   private final RoutingEngine engine;
-  private final ScheduledExecutorService scheduler;
+  private final SimpleExecutor executor;
   private final HashMap<String, InstanceClientProxy> clients;
   private final ExceptionLogger logger;
 
-  public InstanceClientFinder(MachineIdentity identity, RoutingEngine engine, ScheduledExecutorService scheduler, ExceptionLogger logger) {
+  public InstanceClientFinder(MachineIdentity identity, RoutingEngine engine, SimpleExecutor executor, ExceptionLogger logger) {
     this.identity = identity;
     this.engine = engine;
-    this.scheduler = scheduler;
+    this.executor = executor;
     this.clients = new HashMap<>();
     this.logger = logger;
   }
@@ -39,7 +40,7 @@ public class InstanceClientFinder {
 
     @Override
     public void connected(InstanceClient client) {
-      scheduler.execute(() -> {
+      executor.execute(() -> {
         this.client = client;
         if (buffer != null) {
           for (QueueAction<InstanceClient> action : buffer) {
@@ -69,7 +70,7 @@ public class InstanceClientFinder {
 
     @Override
     public void disconnected(InstanceClient client) {
-      scheduler.execute(() -> {
+      executor.execute(() -> {
         InstanceClientProxy.this.client = null;
       });
     }
@@ -82,7 +83,7 @@ public class InstanceClientFinder {
   }
 
   public void find(String target, QueueAction<InstanceClient> action) {
-    scheduler.execute(
+    executor.execute(
         () -> {
           // look within the cache
           InstanceClientProxy cached = clients.get(target);
@@ -92,7 +93,7 @@ public class InstanceClientFinder {
 
             // create the client and have it feed the proxy
             try {
-              new InstanceClient(identity, target, scheduler, cached, logger);
+              new InstanceClient(identity, target, executor, cached, logger);
               // record the proxy if the above worked
               clients.put(target, cached);
             } catch (Exception ex) {
