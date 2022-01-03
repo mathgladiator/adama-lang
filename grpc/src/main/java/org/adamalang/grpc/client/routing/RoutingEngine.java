@@ -10,11 +10,15 @@ import java.util.function.Consumer;
 public class RoutingEngine {
   private final SimpleExecutor executor;
   private final RoutingTable table;
-  private boolean broadcastInflight;
   private final int broadcastDelayOffset;
   private final int broadcastDelayJitter;
+  private boolean broadcastInflight;
 
-  public RoutingEngine(SimpleExecutor executor, SpaceTrackingEvents events, int broadcastDelayOffset, int broadcastDelayJitter) {
+  public RoutingEngine(
+      SimpleExecutor executor,
+      SpaceTrackingEvents events,
+      int broadcastDelayOffset,
+      int broadcastDelayJitter) {
     this.executor = executor;
     this.table = new RoutingTable(events);
     this.broadcastInflight = false;
@@ -22,33 +26,38 @@ public class RoutingEngine {
     this.broadcastDelayJitter = broadcastDelayJitter;
   }
 
+  public void integrate(String target, Collection<String> newSpaces) {
+    executor.execute(
+        () -> {
+          table.integrate(target, newSpaces);
+          scheduleBroadcastWhileInExecutor();
+        });
+  }
+
   private void scheduleBroadcastWhileInExecutor() {
     if (!broadcastInflight) {
       broadcastInflight = true;
-      executor.schedule(() -> {
-        table.broadcast();
-        broadcastInflight = false;
-      }, (int) (broadcastDelayOffset + Math.random() * broadcastDelayJitter));
+      executor.schedule(
+          () -> {
+            table.broadcast();
+            broadcastInflight = false;
+          },
+          (int) (broadcastDelayOffset + Math.random() * broadcastDelayJitter));
     }
   }
 
-  public void integrate(String target, Collection<String> newSpaces) {
-    executor.execute(() -> {
-      table.integrate(target, newSpaces);
-      scheduleBroadcastWhileInExecutor();
-    });
-  }
-
   public void remove(String target) {
-    executor.execute(() -> {
-      table.remove(target);
-      scheduleBroadcastWhileInExecutor();
-    });
+    executor.execute(
+        () -> {
+          table.remove(target);
+          scheduleBroadcastWhileInExecutor();
+        });
   }
 
   public void subscribe(Key key, Consumer<String> subscriber, Consumer<Runnable> onCancel) {
-    executor.execute(() -> {
-      onCancel.accept(table.subscribe(key, subscriber));
-    });
+    executor.execute(
+        () -> {
+          onCancel.accept(table.subscribe(key, subscriber));
+        });
   }
 }

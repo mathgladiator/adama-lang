@@ -2,20 +2,14 @@ package org.adamalang.grpc.client.sm;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.grpc.client.InstanceClient;
-import org.adamalang.grpc.client.InstanceClientFinder;
 import org.adamalang.grpc.client.contracts.*;
-import org.adamalang.grpc.client.routing.RoutingEngine;
-import org.adamalang.grpc.client.sm.Base;
-import org.adamalang.grpc.client.sm.Label;
 import org.adamalang.runtime.contracts.Key;
 
 import java.util.ArrayList;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Connection {
   // these can be put under a base
-  private final Base base;
+  private final ConnectionBase base;
   // these are critical to the request (i.e they are the request)
   private final String agent;
   private final String authority;
@@ -31,7 +25,8 @@ public class Connection {
   // second, then using that client we have to connect
   private Label state;
 
-  // the state machine has implicit state that we dump here. TODO: see which state can be held by various closures.
+  // the state machine has implicit state that we dump here. TODO: see which state can be held by
+  // various closures.
   private String target;
   private InstanceClient foundClient;
 
@@ -39,7 +34,13 @@ public class Connection {
   private Remote foundRemote;
   private int backoffFindInstance;
 
-  public Connection(Base base, String agent, String authority, String space, String key, SimpleEvents events) {
+  public Connection(
+      ConnectionBase base,
+      String agent,
+      String authority,
+      String space,
+      String key,
+      SimpleEvents events) {
     this.base = base;
     this.agent = agent;
     this.authority = authority;
@@ -56,23 +57,45 @@ public class Connection {
     this.backoffFindInstance = 1;
   }
 
-  private void start() {
+  public void start() {
     events.connected();
-    base.engine.subscribe(key, (newTarget) -> {
-      base.executor.execute(() -> {
-        if (newTarget == null) {
-          if (target != null) {
-            target = null;
-            handle_onKillRoutingTarget();
-          }
-        } else {
-          if (!newTarget.equals(target)) {
-            target = newTarget;
-            handle_onNewRoutingTarget();
-          }
-        }
-      });
-    }, this::onAcquireRoutingCancel);
+    base.engine.subscribe(
+        key,
+        (newTarget) -> {
+          base.executor.execute(
+              () -> {
+                if (newTarget == null) {
+                  if (target != null) {
+                    target = null;
+                    handle_onKillRoutingTarget();
+                  }
+                } else {
+                  if (!newTarget.equals(target)) {
+                    target = newTarget;
+                    handle_onNewRoutingTarget();
+                  }
+                }
+              });
+        },
+        this::onAcquireRoutingCancel);
+  }
+
+  public void send(String channel, String marker, String message, SeqCallback callback) {
+    base.executor.execute(
+        () -> {
+          bufferOrExecute(
+              new QueueAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED) {
+                @Override
+                protected void executeNow(Remote remote) {
+                  remote.send(channel, marker, message, callback);
+                }
+
+                @Override
+                protected void failure(int code) {
+                  callback.error(code);
+                }
+              });
+        });
   }
 
   private void bufferOrExecute(QueueAction<Remote> action) {
@@ -86,31 +109,17 @@ public class Connection {
     }
   }
 
-  public void send(String channel, String marker, String message, SeqCallback callback) {
-    base.executor.execute(() -> {
-      bufferOrExecute(new QueueAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED) {
-        @Override
-        protected void executeNow(Remote remote) {
-          remote.send(channel, marker, message, callback);
-        }
-
-        @Override
-        protected void failure(int code) {
-          callback.error(code);
-        }
-      });
-    });
-  }
-
   public void disconnect() {
-    base.executor.execute(() -> {
-      events.disconnected();
+    base.executor.execute(
+        () -> {
+          events.disconnected();
 
-      // this will trigger a target change to null which will take care of a great deal of things
-      unsubscribeFromRouting.run();
-      unsubscribeFromRouting = null;
-      routingAlive = false;
-    });
+          // this will trigger a target change to null which will take care of a great deal of
+          // things
+          unsubscribeFromRouting.run();
+          unsubscribeFromRouting = null;
+          routingAlive = false;
+        });
   }
 
   private void handle_onFoundRemote() {
@@ -130,10 +139,11 @@ public class Connection {
   }
 
   private void handle_onError(int code) {
-
+    events.error(code);
   }
 
   private void handle_onDisconnected() {
+    events.disconnected();
   }
 
   private void handle_onFoundClient() {
@@ -147,7 +157,6 @@ public class Connection {
         state = Label.FindingClientCancelTryNewTarget;
         return;
       case FindingClientCancelTryNewTarget:
-
         fireFindClient();
       default:
         // INVALID
@@ -160,10 +169,13 @@ public class Connection {
       case FindingClientCancelTryNewTarget:
         state = Label.FindingClientWait;
         if (backoffFindInstance < 1000) {
-          base.executor.schedule(() -> {
-            fireFindClient();
-          }, backoffFindInstance);
-          backoffFindInstance = (int) (backoffFindInstance + Math.random() * backoffFindInstance + 1);
+          base.executor.schedule(
+              () -> {
+                fireFindClient();
+              },
+              backoffFindInstance);
+          backoffFindInstance =
+              (int) (backoffFindInstance + Math.random() * backoffFindInstance + 1);
         } else {
           // TODO: RAISE ISSUE AND SHUTDOWN
         }
@@ -177,55 +189,66 @@ public class Connection {
   }
 
   private void fireConnectRemote() {
-    foundClient.connect(agent, authority, key.space, key.key, new Events() {
-      @Override
-      public void connected(Remote remote) {
-        base.executor.execute(() -> {
-          foundRemote = remote;
-          handle_onFoundRemote();
-        });
-      }
+    foundClient.connect(
+        agent,
+        authority,
+        key.space,
+        key.key,
+        new Events() {
+          @Override
+          public void connected(Remote remote) {
+            base.executor.execute(
+                () -> {
+                  foundRemote = remote;
+                  handle_onFoundRemote();
+                });
+          }
 
-      @Override
-      public void delta(String data) {
-        // TODO: handle data
-        // send data3
-      }
+          @Override
+          public void delta(String data) {
+            events.delta(data);
+          }
 
-      @Override
-      public void error(int code) {
-        base.executor.execute(() -> {
-          handle_onError(code);
-        });
-      }
+          @Override
+          public void error(int code) {
+            base.executor.execute(
+                () -> {
+                  handle_onError(code);
+                });
+          }
 
-      @Override
-      public void disconnected() {
-        base.executor.execute(() -> {
-          handle_onDisconnected();
+          @Override
+          public void disconnected() {
+            base.executor.execute(
+                () -> {
+                  handle_onDisconnected();
+                });
+          }
         });
-      }
-    });
   }
 
   private void fireFindClient() {
     state = Label.FindingClientWait;
-    base.mesh.find(target, new QueueAction<>(ErrorCodes.INSTANCE_FINDER_TIMEOUT, ErrorCodes.INSTANCE_FINDER_REJECTED) {
-      @Override
-      protected void executeNow(InstanceClient client) {
-        base.executor.execute(() -> {
-          foundClient = client;
-          handle_onFoundClient();
-        });
-      }
+    base.mesh.find(
+        target,
+        new QueueAction<>(ErrorCodes.INSTANCE_FINDER_TIMEOUT, ErrorCodes.INSTANCE_FINDER_REJECTED) {
+          @Override
+          protected void executeNow(InstanceClient client) {
+            base.executor.execute(
+                () -> {
+                  foundClient = client;
+                  handle_onFoundClient();
+                });
+          }
 
-      @Override
-      protected void failure(int code) {
-        base.executor.execute(() -> {
-          handle_onFailedFindingClient();
+          @Override
+          protected void failure(int code) {
+            base.executor.execute(
+                () -> {
+                  handle_onFailedFindingClient();
+                });
+          }
         });
-      }
-    });
   }
 
   private void handle_onKillRoutingTarget() {
@@ -285,10 +308,13 @@ public class Connection {
   }
 
   public void onAcquireRoutingCancel(Runnable cancel) {
-    if (routingAlive) {
-      unsubscribeFromRouting = cancel;
-    } else {
-      cancel.run();
-    }
+    this.base.executor.execute(
+        () -> {
+          if (routingAlive) {
+            unsubscribeFromRouting = cancel;
+          } else {
+            cancel.run();
+          }
+        });
   }
 }

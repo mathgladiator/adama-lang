@@ -4,14 +4,17 @@ import org.adamalang.common.Hashing;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 /** the collection of targets for a single space; core element of the routing table */
 public class SpaceState {
   private long idgen;
-  private TreeSet<String> targets;
-  private HashMap<String, HashMap<Long, TargetSubscriber>> subscribers;
+  private final TreeSet<String> targets;
+  private final HashMap<String, HashMap<Long, TargetSubscriber>> subscribers;
   private boolean invalid;
 
   public SpaceState() {
@@ -31,6 +34,24 @@ public class SpaceState {
     invalid = true;
   }
 
+  public boolean recompute(Consumer<Set<String>> share) {
+    if (invalid) {
+      int count = 0;
+      for (Map.Entry<String, HashMap<Long, TargetSubscriber>> entry : subscribers.entrySet()) {
+        String target = pick(entry.getKey());
+        for (TargetSubscriber subscriber : entry.getValue().values()) {
+          count++;
+          subscriber.set(target);
+        }
+      }
+      invalid = false;
+      share.accept(targets);
+      return count == 0;
+    } else {
+      return false;
+    }
+  }
+
   private String pick(String key) {
     String winner = null;
     String winningHash = "";
@@ -48,21 +69,6 @@ public class SpaceState {
     return winner;
   }
 
-  public int recompute(Consumer<Set<String>> share) {
-    int count = subscribers.size();
-    if (invalid) {
-      for (Map.Entry<String, HashMap<Long, TargetSubscriber>> entry : subscribers.entrySet()) {
-        String target = pick(entry.getKey());
-        for (TargetSubscriber subscriber : entry.getValue().values()) {
-          subscriber.set(target);
-        }
-      }
-      invalid = false;
-      share.accept(targets);
-    }
-    return count;
-  }
-
   public Runnable subscribe(String key, Consumer<String> callback) {
     TargetSubscriber subscriber = new TargetSubscriber(callback, pick(key));
     long id = idgen++;
@@ -77,7 +83,7 @@ public class SpaceState {
       subscriber.set(null);
       _map.remove(id);
       if (_map.size() == 0) {
-       subscribers.remove(key);
+        subscribers.remove(key);
       }
     };
   }

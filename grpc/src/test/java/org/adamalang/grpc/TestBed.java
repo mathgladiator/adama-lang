@@ -43,7 +43,7 @@ public class TestBed implements AutoCloseable {
   public final AtomicInteger deploymentScans;
 
   public TestBed(int port, String code) throws Exception {
-    clientExecutor = SimpleExecutor.create("testbed");
+    clientExecutor = SimpleExecutor.create("testbed-client");
     deploymentScans = new AtomicInteger(0);
     JsonStreamWriter planWriter = new JsonStreamWriter();
     planWriter.beginObject();
@@ -61,17 +61,17 @@ public class TestBed implements AutoCloseable {
     base.deploy("space", plan);
 
     ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
+    this.billingPubSub = new BillingPubSub(base);
 
     CoreService service =
         new CoreService(
             base, //
-            (bill) -> {}, //
+            billingPubSub.publisher(), //
             new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
             TimeSource.REAL_TIME,
             2);
 
     this.identity = MachineIdentity.fromFile(prefixForLocalhost());
-    this.billingPubSub = new BillingPubSub(base);
 
     ServerNexus nexus = new ServerNexus(identity, service, base, () -> {
       if (deploymentScans.incrementAndGet() == 3) {
@@ -120,28 +120,5 @@ public class TestBed implements AutoCloseable {
   public void close() throws Exception {
     server.close();
     clientExecutor.shutdown();
-  }
-
-  public static class FiniteDocumentFactory implements LivingDocumentFactoryFactory {
-    public final HashMap<String, LivingDocumentFactory> factories;
-
-    public FiniteDocumentFactory() {
-      this.factories = new HashMap<>();
-    }
-
-    @Override
-    public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
-      LivingDocumentFactory factory = factories.get(key.space);
-      if (factory == null) {
-        callback.failure(new ErrorCodeException(12345));
-        return;
-      }
-      callback.success(factory);
-    }
-
-    @Override
-    public Collection<String> spacesAvailable() {
-      return factories.keySet();
-    }
   }
 }

@@ -41,17 +41,6 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   }
 
   @Override
-  public void scanDeployments(ScanDeploymentsRequest request, StreamObserver<ScanDeploymentsResponse> responseObserver) {
-    try {
-      nexus.scanForDeployments.run();
-      responseObserver.onNext(ScanDeploymentsResponse.newBuilder().build());
-      responseObserver.onCompleted();
-    } catch (Exception ex) {
-      responseObserver.onError(ex);
-    }
-  }
-
-  @Override
   public void create(CreateRequest request, StreamObserver<CreateResponse> responseObserver) {
     nexus.service.create(
         new NtClient(request.getAgent(), request.getAuthority()),
@@ -91,18 +80,24 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       StreamObserver<StreamMessageServer> responseObserver) {
     ConcurrentHashMap<Long, CoreStream> streams = new ConcurrentHashMap<>();
     AtomicBoolean alive = new AtomicBoolean(true);
-    responseObserver.onNext(StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
-    nexus.billingPubSub.subscribe((bills) -> {
-      if (alive.get()) {
-        ArrayList<String> spaces = new ArrayList<>();
-        for (BillingPubSub.Bill bill : bills) {
-          spaces.add(bill.space);
-        }
-        // TODO: discover the thread safety of this since this is going to be on a different writer thread
-        responseObserver.onNext(StreamMessageServer.newBuilder().setHeartbeat(InventoryHeartbeat.newBuilder().addAllSpaces(spaces).build()).build());
-      }
-      return alive.get();
-    });
+    responseObserver.onNext(
+        StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
+    nexus.billingPubSub.subscribe(
+        (bills) -> {
+          if (alive.get()) {
+            ArrayList<String> spaces = new ArrayList<>();
+            for (BillingPubSub.Bill bill : bills) {
+              spaces.add(bill.space);
+            }
+            // TODO: discover the thread safety of this since this is going to be on a different
+            // writer thread
+            responseObserver.onNext(
+                StreamMessageServer.newBuilder()
+                    .setHeartbeat(InventoryHeartbeat.newBuilder().addAllSpaces(spaces).build())
+                    .build());
+          }
+          return alive.get();
+        });
     return new StreamObserver<>() {
       @Override
       public void onNext(StreamMessageClient payload) {
@@ -286,5 +281,17 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         responseObserver.onCompleted();
       }
     };
+  }
+
+  @Override
+  public void scanDeployments(
+      ScanDeploymentsRequest request, StreamObserver<ScanDeploymentsResponse> responseObserver) {
+    try {
+      nexus.scanForDeployments.run();
+      responseObserver.onNext(ScanDeploymentsResponse.newBuilder().build());
+      responseObserver.onCompleted();
+    } catch (Exception ex) {
+      responseObserver.onError(ex);
+    }
   }
 }

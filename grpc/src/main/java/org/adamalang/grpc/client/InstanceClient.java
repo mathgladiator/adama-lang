@@ -24,7 +24,6 @@ import org.adamalang.grpc.proto.*;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -41,10 +40,10 @@ public class InstanceClient implements AutoCloseable {
   private final ManagedChannel channel;
   private final Random rng;
   private final ExceptionLogger logger;
-  private AtomicLong nextId;
+  private final AtomicLong nextId;
   private StreamObserver<StreamMessageClient> upstream;
   private Observer downstream;
-  private boolean alive;
+  private final AtomicBoolean alive;
   private int backoff;
 
   public InstanceClient(
@@ -72,7 +71,7 @@ public class InstanceClient implements AutoCloseable {
     this.downstream = null;
     this.lifecycle = lifecycle;
     this.logger = logger;
-    this.alive = true;
+    this.alive = new AtomicBoolean(true);
     this.backoff = 1;
     executor.execute(
         () -> {
@@ -142,7 +141,8 @@ public class InstanceClient implements AutoCloseable {
   }
 
   public void scanDeployments(ScanDeploymentCallback callback) {
-    stub.scanDeployments(ScanDeploymentsRequest.newBuilder().build(), ScanDeploymentCallback.WRAP(callback));
+    stub.scanDeployments(
+        ScanDeploymentsRequest.newBuilder().build(), ScanDeploymentCallback.WRAP(callback));
   }
 
   /** connect to a document */
@@ -174,11 +174,26 @@ public class InstanceClient implements AutoCloseable {
   public void close() {
     executor.execute(
         () -> {
-          alive = false;
+          alive.set(false);
           if (downstream != null) {
             downstream.onCompleted();
           }
         });
+  }
+
+  private void killCallbacksWhileInExecutor() {
+    for (Events events : documents.values()) {
+      events.disconnected();
+    }
+    documents.clear();
+    for (AskAttachmentCallback callback : asks.values()) {
+      callback.error(ErrorCodes.GRPC_DISCONNECT);
+    }
+    asks.clear();
+    for (SeqCallback callback : outstanding.values()) {
+      callback.error(ErrorCodes.GRPC_DISCONNECT);
+    }
+    outstanding.clear();
   }
 
   public class InstanceRemote implements Remote {
@@ -296,9 +311,10 @@ public class InstanceClient implements AutoCloseable {
               });
           return;
         case HEARTBEAT:
-          executor.execute(() -> {
-            lifecycle.heartbeat(InstanceClient.this, message.getHeartbeat().getSpacesList());
-          });
+          executor.execute(
+              () -> {
+                lifecycle.heartbeat(InstanceClient.this, message.getHeartbeat().getSpacesList());
+              });
           return;
         case DATA:
           executor.execute(
@@ -385,22 +401,11 @@ public class InstanceClient implements AutoCloseable {
             downstream = null;
             upstream = null;
             InstanceClient.this.upstream = null;
-            for (Events events : documents.values()) {
-              events.disconnected();
-            }
-            documents.clear();
-            for (AskAttachmentCallback callback : asks.values()) {
-              callback.error(ErrorCodes.GRPC_DISCONNECT);
-            }
-            asks.clear();
-            for (SeqCallback callback : outstanding.values()) {
-              callback.error(ErrorCodes.GRPC_DISCONNECT);
-            }
-            outstanding.clear();
+            killCallbacksWhileInExecutor();
             if (send) {
               lifecycle.disconnected(InstanceClient.this);
             }
-            if (alive) {
+            if (alive.get()) {
               executor.schedule(
                   () -> {
                     downstream = new Observer();

@@ -4,11 +4,7 @@ import io.grpc.stub.StreamObserver;
 import org.adamalang.grpc.proto.ScanDeploymentsResponse;
 
 public interface ScanDeploymentCallback {
-  public void success();
-
-  public void failure();
-
-  public static StreamObserver<ScanDeploymentsResponse> WRAP(ScanDeploymentCallback callback) {
+  static StreamObserver<ScanDeploymentsResponse> WRAP(ScanDeploymentCallback callback) {
     return new StreamObserver<ScanDeploymentsResponse>() {
       @Override
       public void onNext(ScanDeploymentsResponse scanDeploymentsResponse) {
@@ -21,8 +17,11 @@ public interface ScanDeploymentCallback {
       }
 
       @Override
-      public void onCompleted() {
-      }
+      public void onCompleted() {}
     };
   }
+
+  void success();
+
+  void failure();
 }

@@ -2,7 +2,10 @@ package org.adamalang.grpc.client.routing;
 
 import java.util.function.Consumer;
 
-/** wraps a callback from the interested party and then dedupes events such that only distinct elements make it through */
+/**
+ * wraps a callback from the interested party and then dedupes events such that only distinct
+ * elements make it through
+ */
 public class TargetSubscriber {
   private final Consumer<String> callback;
   private String priorTarget;
