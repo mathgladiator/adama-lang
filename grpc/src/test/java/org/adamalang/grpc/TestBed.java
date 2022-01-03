@@ -77,7 +77,7 @@ public class TestBed implements AutoCloseable {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();
       }
-    }, billingPubSub, port);
+    }, billingPubSub, port, 2);
     this.server = new Server(nexus);
   }
 

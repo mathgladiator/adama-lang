@@ -1,3 +1,12 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See http://www.adama-lang.org/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ */
 package org.adamalang.grpc.client.sm;
 
 import org.adamalang.ErrorCodes;
@@ -25,14 +34,18 @@ public class Connection {
   // second, then using that client we have to connect
   private Label state;
 
-  // the state machine has implicit state that we dump here. TODO: see which state can be held by
-  // various closures.
+  // the target provided by the routing table
   private String target;
+  // the client found via the finder
   private InstanceClient foundClient;
-
+  // the buffer of actions to execute once we have a remote
   private ArrayList<QueueAction<Remote>> buffer;
+  // the remote to talk to the remote peer's connection
   private Remote foundRemote;
+  // how long to wait on a failure to find an instance
   private int backoffFindInstance;
+  // how long to wait on a failure to connect to a remote peer
+  private int backoffConnectPeer;
 
   public Connection(
       ConnectionBase base,
@@ -46,8 +59,7 @@ public class Connection {
     this.authority = authority;
     this.key = new Key(space, key);
     this.events = events;
-
-    this.routingAlive = true;
+    this.routingAlive = false;
     this.unsubscribeFromRouting = null;
     this.state = Label.NotConnected;
     this.target = null;
@@ -55,31 +67,49 @@ public class Connection {
     this.buffer = new ArrayList<>();
     this.foundRemote = null;
     this.backoffFindInstance = 1;
+    this.backoffConnectPeer = 1;
   }
 
-  public void start() {
-    events.connected();
-    base.engine.subscribe(
-        key,
-        (newTarget) -> {
-          base.executor.execute(
-              () -> {
-                if (newTarget == null) {
-                  if (target != null) {
-                    target = null;
-                    handle_onKillRoutingTarget();
-                  }
-                } else {
-                  if (!newTarget.equals(target)) {
-                    target = newTarget;
-                    handle_onNewRoutingTarget();
-                  }
-                }
-              });
-        },
-        this::onAcquireRoutingCancel);
+  /** api: open the connection */
+  public void open() {
+    base.executor.execute(
+        () -> {
+          if (!routingAlive) {
+            routingAlive = true;
+            events.connected();
+            base.engine.subscribe(
+                key,
+                (newTarget) -> {
+                  base.executor.execute(
+                      () -> {
+                        if (newTarget == null) {
+                          if (target != null) {
+                            target = null;
+                            handle_onKillRoutingTarget();
+                          }
+                        } else {
+                          if (!newTarget.equals(target)) {
+                            target = newTarget;
+                            handle_onNewRoutingTarget();
+                          }
+                        }
+                      });
+                },
+                (cancel) -> {
+                  base.executor.execute(
+                      () -> {
+                        if (routingAlive) {
+                          unsubscribeFromRouting = cancel;
+                        } else {
+                          cancel.run();
+                        }
+                    });
+                });
+          }
+        });
   }
 
+  /** send the remote peer a message */
   public void send(String channel, String marker, String message, SeqCallback callback) {
     base.executor.execute(
         () -> {
@@ -98,6 +128,63 @@ public class Connection {
         });
   }
 
+  public void canAttach(AskAttachmentCallback callback) {
+    base.executor.execute(() -> {
+      bufferOrExecute(new QueueAction<Remote>(ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED) {
+        @Override
+        protected void executeNow(Remote item) {
+          item.canAttach(callback);
+        }
+
+        @Override
+        protected void failure(int code) {
+          callback.error(code);
+        }
+      });
+    });
+  }
+
+  public void attach(String id, String name, String contentType, long size, String md5, String sha384, SeqCallback callback) {
+    base.executor.execute(() -> {
+      bufferOrExecute(new QueueAction<Remote>(ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED) {
+        @Override
+        protected void executeNow(Remote item) {
+          item.attach(id, name, contentType, size, md5, sha384, callback);
+        }
+
+        @Override
+        protected void failure(int code) {
+          callback.error(code);
+        }
+      });
+    });
+  }
+
+  public void close() {
+    base.executor.execute(
+        () -> {
+          if (routingAlive) {
+            events.disconnected();
+            switch (state) {
+              case Connected:
+                state = Label.WaitingForDisconnect;
+                foundRemote.disconnect();
+                break;
+              default:
+                state = Label.NotConnected;
+            }
+
+            // this will trigger a target change to null which will take care of a great deal of
+            // things
+            if (unsubscribeFromRouting != null) {
+              unsubscribeFromRouting.run();
+              unsubscribeFromRouting = null;
+            }
+            routingAlive = false;
+          }
+        });
+  }
+
   private void bufferOrExecute(QueueAction<Remote> action) {
     if (state == Label.Connected) {
       action.execute(foundRemote);
@@ -109,41 +196,53 @@ public class Connection {
     }
   }
 
-  public void disconnect() {
-    base.executor.execute(
-        () -> {
-          events.disconnected();
-
-          // this will trigger a target change to null which will take care of a great deal of
-          // things
-          unsubscribeFromRouting.run();
-          unsubscribeFromRouting = null;
-          routingAlive = false;
-        });
-  }
-
   private void handle_onFoundRemote() {
+    backoffConnectPeer = 1;
     switch (state) {
       case FoundClientConnectingWait:
         state = Label.Connected;
         return;
       case FoundClientConnectingStop:
-        foundRemote.disconnect();
-        state = Label.NotConnected;
-        return;
       case FoundClientConnectingTryNewTarget:
         foundRemote.disconnect();
-        fireFindClient();
         return;
     }
   }
 
   private void handle_onError(int code) {
+    if (routingAlive) {
+      routingAlive = false;
+      if (unsubscribeFromRouting != null) {
+        unsubscribeFromRouting.run();
+      }
+    }
+    // TODO: what other clean up is there
+    state = Label.Failed;
     events.error(code);
   }
 
   private void handle_onDisconnected() {
-    events.disconnected();
+    switch (state) {
+      case FoundClientConnectingWait:
+      case FoundClientConnectingTryNewTarget:
+      case Connected:
+        if (backoffConnectPeer < 2000) {
+          base.executor.schedule(
+              () -> {
+                if (state == Label.Connected) {
+                  fireFindClient();
+                }
+              },
+              backoffConnectPeer);
+        } else {
+          handle_onError(ErrorCodes.STATE_MACHINE_UNABLE_TO_RECONNECT);
+        }
+        return;
+      case FoundClientConnectingStop:
+      case WaitingForDisconnect:
+        state = Label.NotConnected;
+        return;
+    }
   }
 
   private void handle_onFoundClient() {
@@ -159,7 +258,7 @@ public class Connection {
       case FindingClientCancelTryNewTarget:
         fireFindClient();
       default:
-        // INVALID
+        // nothing to do
     }
   }
 
@@ -177,7 +276,7 @@ public class Connection {
           backoffFindInstance =
               (int) (backoffFindInstance + Math.random() * backoffFindInstance + 1);
         } else {
-          // TODO: RAISE ISSUE AND SHUTDOWN
+          handle_onError(ErrorCodes.STATE_MACHINE_TOO_MANY_FAILURES);
         }
         return;
       case FindingClientCancelStop:
@@ -269,9 +368,6 @@ public class Connection {
         // TODO: disconnect trigger disconnect cascade
         state = Label.WaitingForDisconnect;
         return;
-      case WaitingForDisconnectCancelTryAgain:
-        state = Label.WaitingForDisconnect;
-        return;
       case WaitingForDisconnect:
         // NO-OP
         return;
@@ -295,26 +391,12 @@ public class Connection {
       case FoundClientConnectingTryNewTarget:
         return; // NO-OP, just a change in the target parameter
       case Connected:
-        // TODO: trigger disconnect
-        state = Label.WaitingForDisconnectCancelTryAgain;
+        // this will retry a retry
+        foundRemote.disconnect();
         return;
       case WaitingForDisconnect:
-        state = Label.WaitingForDisconnectCancelTryAgain;
-        return;
-      case WaitingForDisconnectCancelTryAgain:
-        // NO-OP
+        // just ignore it
         return;
     }
-  }
-
-  public void onAcquireRoutingCancel(Runnable cancel) {
-    this.base.executor.execute(
-        () -> {
-          if (routingAlive) {
-            unsubscribeFromRouting = cancel;
-          } else {
-            cancel.run();
-          }
-        });
   }
 }

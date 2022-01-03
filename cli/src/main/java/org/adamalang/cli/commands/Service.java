@@ -122,7 +122,7 @@ public class Service {
         // prime the host with spaces
         scanForDeployments.run();
 
-        ServerNexus nexus = new ServerNexus(identity, service, deploymentFactoryBase, scanForDeployments, billingPubSub, port);
+        ServerNexus nexus = new ServerNexus(identity, service, deploymentFactoryBase, scanForDeployments, billingPubSub, port, 4);
 
         // TODO: hold onto the Server reference and kill on a signal, need signal listener
         new Server(nexus).start();

@@ -13,6 +13,7 @@ import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.proto.*;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Streamback;
@@ -22,6 +23,7 @@ import org.adamalang.runtime.sys.BillingPubSub;
 import org.adamalang.runtime.sys.CoreStream;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -29,9 +31,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Handler extends AdamaGrpc.AdamaImplBase {
 
   private final ServerNexus nexus;
+  private final SimpleExecutor[] executors;
+  private final Random rng;
 
   public Handler(ServerNexus nexus) {
     this.nexus = nexus;
+    this.executors = new SimpleExecutor[nexus.handlerThreads];
+    for (int k = 0; k < nexus.handlerThreads; k++) {
+      executors[k] = SimpleExecutor.create("handler-" + k);
+    }
+    this.rng = new Random();
   }
 
   @Override
@@ -78,6 +87,8 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   @Override
   public StreamObserver<StreamMessageClient> multiplexedProtocol(
       StreamObserver<StreamMessageServer> responseObserver) {
+    SimpleExecutor executor = executors[rng.nextInt(executors.length)];
+
     ConcurrentHashMap<Long, CoreStream> streams = new ConcurrentHashMap<>();
     AtomicBoolean alive = new AtomicBoolean(true);
     responseObserver.onNext(
@@ -89,12 +100,10 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             for (BillingPubSub.Bill bill : bills) {
               spaces.add(bill.space);
             }
-            // TODO: discover the thread safety of this since this is going to be on a different
-            // writer thread
-            responseObserver.onNext(
-                StreamMessageServer.newBuilder()
-                    .setHeartbeat(InventoryHeartbeat.newBuilder().addAllSpaces(spaces).build())
-                    .build());
+            executor.execute(() -> responseObserver.onNext(
+                  StreamMessageServer.newBuilder()
+                      .setHeartbeat(InventoryHeartbeat.newBuilder().addAllSpaces(spaces).build())
+                      .build()));
           }
           return alive.get();
         });
@@ -106,14 +115,14 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         if (payload.hasAct()) {
           stream = streams.get(payload.getAct());
           if (stream == null) {
-            responseObserver.onNext(
+            executor.execute(() -> responseObserver.onNext(
                 StreamMessageServer.newBuilder()
                     .setId(id)
                     .setError(
                         StreamError.newBuilder()
                             .setCode(ErrorCodes.GRPC_COMMON_FAILED_TO_FIND_STREAM_USING_GIVEN_ACT)
                             .build())
-                    .build());
+                    .build()));
             return;
           }
         }
@@ -131,23 +140,15 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
                   @Override
                   public void status(StreamStatus status) {
-                    StreamStatusCode code = StreamStatusCode.Connected;
-                    switch (status) {
-                      case Connected:
-                        code = StreamStatusCode.Connected;
-                        break;
-                      case Disconnected:
-                        code = StreamStatusCode.Disconnected;
-                        break;
-                    }
-                    responseObserver.onNext(
-                        StreamMessageServer.newBuilder()
-                            .setId(id)
-                            .setStatus(
-                                org.adamalang.grpc.proto.StreamStatus.newBuilder()
-                                    .setCode(code)
-                                    .build())
-                            .build());
+                    StreamStatusCode code = status == StreamStatus.Connected ? StreamStatusCode.Connected : StreamStatusCode.Disconnected;
+                    executor.execute(() -> responseObserver.onNext(
+                          StreamMessageServer.newBuilder()
+                              .setId(id)
+                              .setStatus(
+                                  org.adamalang.grpc.proto.StreamStatus.newBuilder()
+                                      .setCode(code)
+                                      .build())
+                              .build()));
                     if (status == StreamStatus.Disconnected) {
                       streams.remove(id);
                     }
@@ -155,20 +156,20 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
                   @Override
                   public void next(String data) {
-                    responseObserver.onNext(
-                        StreamMessageServer.newBuilder()
-                            .setId(id)
-                            .setData(StreamData.newBuilder().setDelta(data).build())
-                            .build());
+                    executor.execute(() -> responseObserver.onNext(
+                          StreamMessageServer.newBuilder()
+                              .setId(id)
+                              .setData(StreamData.newBuilder().setDelta(data).build())
+                              .build()));
                   }
 
                   @Override
                   public void failure(ErrorCodeException exception) {
-                    responseObserver.onNext(
-                        StreamMessageServer.newBuilder()
-                            .setId(id)
-                            .setError(StreamError.newBuilder().setCode(exception.code).build())
-                            .build());
+                    executor.execute(() -> responseObserver.onNext(
+                          StreamMessageServer.newBuilder()
+                              .setId(id)
+                              .setError(StreamError.newBuilder().setCode(exception.code).build())
+                              .build()));
                     streams.remove(id);
                   }
                 });
@@ -178,21 +179,21 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                 new Callback<>() {
                   @Override
                   public void success(Boolean value) {
-                    responseObserver.onNext(
+                    executor.execute(() -> responseObserver.onNext(
                         StreamMessageServer.newBuilder()
                             .setId(id)
                             .setResponse(
                                 StreamAskAttachmentResponse.newBuilder().setAllowed(value).build())
-                            .build());
+                            .build()));
                   }
 
                   @Override
                   public void failure(ErrorCodeException ex) {
-                    responseObserver.onNext(
+                    executor.execute(() -> responseObserver.onNext(
                         StreamMessageServer.newBuilder()
                             .setId(id)
                             .setError(StreamError.newBuilder().setCode(ex.code).build())
-                            .build());
+                            .build()));
                   }
                 });
             return;
@@ -211,20 +212,20 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                 new Callback<>() {
                   @Override
                   public void success(Integer value) {
-                    responseObserver.onNext(
+                    executor.execute(() -> responseObserver.onNext(
                         StreamMessageServer.newBuilder()
                             .setId(id)
                             .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
-                            .build());
+                            .build()));
                   }
 
                   @Override
                   public void failure(ErrorCodeException ex) {
-                    responseObserver.onNext(
+                    executor.execute(() -> responseObserver.onNext(
                         StreamMessageServer.newBuilder()
                             .setId(id)
                             .setError(StreamError.newBuilder().setCode(ex.code).build())
-                            .build());
+                            .build()));
                   }
                 });
             return;
@@ -241,25 +242,24 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                 new Callback<>() {
                   @Override
                   public void success(Integer value) {
-                    responseObserver.onNext(
+                    executor.execute(() -> responseObserver.onNext(
                         StreamMessageServer.newBuilder()
                             .setId(id)
                             .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
-                            .build());
+                            .build()));
                   }
 
                   @Override
                   public void failure(ErrorCodeException exception) {
-                    responseObserver.onNext(
+                    executor.execute(() -> responseObserver.onNext(
                         StreamMessageServer.newBuilder()
                             .setId(id)
                             .setError(StreamError.newBuilder().setCode(exception.code).build())
-                            .build());
+                            .build()));
                   }
                 });
             return;
           case DISCONNECT:
-            System.err.println("disconnect");
             stream.disconnect();
             streams.remove(payload.getAct());
             return;
@@ -278,7 +278,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         for (CoreStream stream : streams.values()) {
           stream.disconnect();
         }
-        responseObserver.onCompleted();
+        executor.execute(responseObserver::onCompleted);
       }
     };
   }

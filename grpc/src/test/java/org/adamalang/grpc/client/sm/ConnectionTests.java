@@ -1,3 +1,12 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See http://www.adama-lang.org/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ */
 package org.adamalang.grpc.client.sm;
 
 import org.adamalang.common.ExceptionLogger;
@@ -85,7 +94,7 @@ public class ConnectionTests {
               public void disconnected() {
                 System.err.println("disconnected");
               }
-            }).start();
+            }).open();
         Assert.assertTrue(latch.await(25000, TimeUnit.MILLISECONDS));
         Assert.assertEquals(198705, codeFound.get());
       } finally {
@@ -188,12 +197,10 @@ public class ConnectionTests {
                 latchD.countDown();
               }
             });
-        connection.start();
+        connection.open();
         Assert.assertTrue(latch.await(25000, TimeUnit.MILLISECONDS));
-        connection.disconnect();
+        connection.close();
         Assert.assertTrue(latchD.await(25000, TimeUnit.MILLISECONDS));
-
-
       } finally {
         routingExecutor.shutdown();
       }
