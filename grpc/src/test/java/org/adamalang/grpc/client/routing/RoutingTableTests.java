@@ -42,7 +42,22 @@ public class RoutingTableTests {
     table.integrate("t1", Collections.emptyList());
     table.broadcast();
     Assert.assertEquals(2, decisions.size());
-    events.assertHistory("[GAIN:space][SHARE:space=t1][SHARE:space=][SHARE:space=][LOST:space]");
+    table.integrate("t1", Collections.singleton("space"));
+    table.integrate("t2", Collections.singleton("space"));
+    table.integrate("t3", Collections.singleton("space"));
+    table.broadcast();
+    unsubscribe = table.subscribe(new Key("space", "key"), (x) -> decisions.add(x));
+    Assert.assertEquals(3, decisions.size());
+    Assert.assertEquals("t3", decisions.get(2));
+    table.integrate("t1", Collections.emptyList());
+    table.integrate("t2", Collections.emptyList());
+    table.integrate("t3", Collections.emptyList());
+    table.broadcast();
+    Assert.assertEquals(4, decisions.size());
+    Assert.assertNull(decisions.get(3));
+    unsubscribe.run();
+    table.broadcast();
+    events.assertHistory("[GAIN:space][SHARE:space=t1][SHARE:space=][SHARE:space=][LOST:space][GAIN:space][SHARE:space=t1,t2,t3][SHARE:space=][LOST:space]");
   }
 
   @Test

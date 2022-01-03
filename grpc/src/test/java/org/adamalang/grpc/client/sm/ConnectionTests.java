@@ -11,6 +11,7 @@ package org.adamalang.grpc.client.sm;
 
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.SimpleExecutorFactory;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.InstanceClientFinder;
@@ -60,7 +61,7 @@ public class ConnectionTests {
                 },
                 50,
                 25);
-        InstanceClientFinder finder = new InstanceClientFinder(server.identity, 1, engine, logger);
+        InstanceClientFinder finder = new InstanceClientFinder(server.identity, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
         finder.prime(Collections.singleton("127.0.0.1:30000"));
         Assert.assertTrue(primed.await(15000, TimeUnit.MILLISECONDS));
         ConnectionBase base = new ConnectionBase(engine, finder, server.clientExecutor);
@@ -137,7 +138,7 @@ public class ConnectionTests {
                 },
                 50,
                 25);
-        InstanceClientFinder finder = new InstanceClientFinder(server.identity, 1, engine, logger);
+        InstanceClientFinder finder = new InstanceClientFinder(server.identity, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
         finder.prime(Collections.singleton("127.0.0.1:30001"));
         Assert.assertTrue(primed.await(15000, TimeUnit.MILLISECONDS));
         CountDownLatch created = new CountDownLatch(1);

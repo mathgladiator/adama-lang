@@ -44,8 +44,8 @@ public class SpaceState {
   }
 
   public boolean recompute(Consumer<Set<String>> share) {
+    int count = 0;
     if (invalid) {
-      int count = 0;
       for (Map.Entry<String, HashMap<Long, TargetSubscriber>> entry : subscribers.entrySet()) {
         String target = pick(entry.getKey());
         for (TargetSubscriber subscriber : entry.getValue().values()) {
@@ -55,10 +55,10 @@ public class SpaceState {
       }
       invalid = false;
       share.accept(targets);
-      return count == 0;
     } else {
-      return false;
+      count = subscribers.size();
     }
+    return count == 0;
   }
 
   private String pick(String key) {

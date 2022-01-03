@@ -16,6 +16,7 @@ import org.adamalang.runtime.contracts.Key;
 
 import java.util.ArrayList;
 
+/** a single connection for a document; given the number of outstanding events that can influence the connection; this is s sizeable state machine. */
 public class Connection {
   // these can be put under a base
   private final ConnectionBase base;

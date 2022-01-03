@@ -12,6 +12,7 @@ package org.adamalang.grpc.client;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.SimpleExecutorFactory;
 import org.adamalang.grpc.client.contracts.Lifecycle;
 import org.adamalang.grpc.client.contracts.QueueAction;
 import org.adamalang.grpc.client.routing.RoutingEngine;
@@ -35,15 +36,12 @@ public class InstanceClientFinder {
   private final AtomicBoolean alive;
 
   public InstanceClientFinder(
-      MachineIdentity identity, int nThreads, RoutingEngine engine, ExceptionLogger logger) {
+      MachineIdentity identity, SimpleExecutorFactory threadFactory, int nThreads, RoutingEngine engine, ExceptionLogger logger) {
     this.identity = identity;
     this.engine = engine;
     this.clients = new HashMap<>();
-    this.clientExecutors = new SimpleExecutor[nThreads];
-    for (int k = 0; k < nThreads; k++) {
-      this.clientExecutors[k] = SimpleExecutor.create("instance-client-finder-" + k);
-    }
-    this.mapExecutor = SimpleExecutor.create("instance-client-finder-main");
+    this.clientExecutors = threadFactory.makeMany("instance-client-finder", nThreads);
+    this.mapExecutor = threadFactory.makeSingle("instance-client-finder-main");
     this.logger = logger;
     this.rng = new Random();
     this.alive = new AtomicBoolean(true);

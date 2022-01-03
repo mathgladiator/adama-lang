@@ -11,6 +11,7 @@ package org.adamalang.grpc.client;
 
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.SimpleExecutorFactory;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.contracts.QueueAction;
 import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
@@ -56,7 +57,7 @@ public class InstanceClientFinderTests {
         public void lostInterestInSpace(String space) {
         }
       }, 50, 25);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].identity, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].identity, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         finder.prime(targets);
         Assert.assertTrue(primed.await(25000, TimeUnit.MILLISECONDS));
