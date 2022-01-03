@@ -14,7 +14,7 @@ There’s great fun when you post on HN and get those precious internet points i
 ## My bad: big miss on communication
 One thing that felt like was a miss was that I was the nature of what I was writing. I wasn't saying "You shouldn't use WebSockets", but rather "There will be pain for using WebSockets and here is a list of pain points which you should think about as requirements"
 
-Now, you may argue that's true for all technology, but that's kind of the point. Things are painful until we evolve a more shared understanding of how to deal with problems or have great abstractions. I believe we don't yet have great abstractions for working with streams, and there is an [entire manifesto and community focused on this problem](https://www.reactivemanifesto.org/) 
+Now, you may argue that's true for all technology, but that's kind of the point. Things are painful until we evolve a more shared understanding of how to deal with problems or have great abstractions. I believe we don't yet have great abstractions for working with streams, and there is an [entire manifesto and community related to this problem.](https://www.reactivemanifesto.org/) 
 
 ## Problem: the internet is a wild place
 One problem to contend with which adds to the pain and suffering of using a WebSocket is that it isn’t [uniformly available with 98.4% availability](https://caniuse.com/websockets). Worse still is that some networks tank the connections with a corporate MITM which screws with your precious socket. The good news is that both of these problems can be solved with long polling or even [Server-Side Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events). While long polling starts simple, it does have challenges to scale and you will basically learn why the features of TCP are the way they are (the hard way).
@@ -31,12 +31,12 @@ These heartbeats can be combined with some useful state to assess if anything ha
 My bias is to use gossip/anti-entropy techniques to inspire how to quickly check if things are expected between client and server.
 
 ## Problem: the herd will thunder
-Most catastrophic failure modes require an additional level of protocol that is not provided out of the box. You will need to leverage exponential back-off to detect if you are causing a problem. Unfortunately, an aggressive retry policy at massive scale is a cannon on every service.
+Most catastrophic failure modes require an additional level of protocol that is not provided out of the box. You will need to leverage exponential back-off to detect if you are causing a problem. Unfortunately, an aggressive retry policy at scale is a cannon on every service.
 
 While you can fix this and have your client be a polite citizen, you also have to contend with this internally as the world can be rather impolite. Ideally, create the connections as cheap as possible, but as they gain weight you will need to apply flow control internally along with some exponential back-off. Extra capacity can be exceptionally useful for handling self-induced DDoS attacks. The ability to scale on demand becomes important as you need the head-room to absorb traffic.
 
 ## Problem: this is an old space
-In a way, using a TCP socket or a WebSocket is a well paved road. However, we forget that learning how to navigate the road is rougher than the train provided by well-designed abstractions like request response. There are plenty of HTTP clients that you can use for your language which are amazing in terms of operability.
+In a way, using a TCP socket or a WebSocket is a well paved road. However, we forget that learning how to navigate the road is rougher than the fancy train provided by well-designed abstractions like request response. There are plenty of HTTP clients that you can use for your language which are amazing in terms of operability.
 
 Unfortunately, with WebSocket being so open, you have to implement and design everything. This requires knowing a great deal of best practices such as:
 * Pairing of callbacks to responses for sent requests
@@ -47,10 +47,12 @@ Unfortunately, with WebSocket being so open, you have to implement and design ev
 * Request metadata
 * Multiplexing
 
-The challenge of even picking WebSockets is that you have so much freedom. That additional freedom is not without additional responsibility and burden. Ultimately, this responsibility will add to the engineering cost because you must build a team which understands this as well.
+The challenge of even picking WebSockets is that you have so much freedom. That additional freedom is not without additional responsibility and burden.
+
+Ultimately, this responsibility will add to the engineering cost because you must build a team which understands this as well. The true cost of choosing a WebSocket doesn't reveal itself until you scale a team to handle all the details.
 
 ## Problem: there are many protocols
-Having used MQTT and RSocket, I can tell you that these protocols have leaks. Let's take MQTT an example.
+Having used MQTT and RSocket, I can tell you that these protocols have leaks. Let's take MQTT as an example.
 
 You get your MQTT broker stood up, and then you get a client that has all the nice retry built into. Great! You issue your SUB and get a SUBACK back, amazing! This will work for many use-cases, but there is a transition when you start to care about reliability. Disconnects can cause implicit message loss because it works with ideal flow:
 * client X subscribes to topic X
@@ -64,13 +66,15 @@ Seems reasonable? Well, what happens when client X loses connectivity
 * client X reconnects and resubscribes
 * client X never gets payload "A""
 
-The only fix for this is that the publish stream needs to be made durable, but the MQTT protocol lacks a notion of sequencer when then you have to build into the protocol at a higher level. WELL, guess what, now you have a non-trivial game of pulling updates from another place. Should the protocol handle this? Maybe, but the point is there is no free lunch in terms of expectations.
+The only fix for this is that the publish stream needs to be made durable, but the MQTT protocol lacks a notion of sequencer. This is a generalized problem with pub-sub which I will address in a future post.
 
-Another problem is the signalling on where the retry is made. MQTT forces your hand such that you have to respond to a failure of getting the SUBACK and the disconnection of the socket. OK, fine, but this forces the broker's handler that when it fails to maintain a single subscription to fail the entire connection. You must do this if you want to be honest with your client. As a contrast, RSocket allows streams to fail independently on a single connection.
+You then have to build a new protocol (albeit much smaller) at a higher level. Should the MQTT protocol handle this? Maybe, but the point is there is no free lunch in terms of expectations.
+
+Another problem is the signalling on where the retry is made. MQTT forces your hand such that you have to respond to a failure of getting the SUBACK and the disconnection of the socket. OK, fine, but this forces the broker's handler when it fails to maintain a single subscription to fail the entire connection. You must do this if you want to be honest with your client. As a contrast, RSocket allows streams to fail independently on a single connection.
 
 It could be said that there are expectations of consuming some streams which require special application logic. This however means the protocol was lacking, and you don't capitalize on the wide breadth of the protocol's client deployment. If you have to sprinkle logic across all languages, then you will need a client team to maintain all that shit.
 
-You can take a look at [the request stream patent which was filled](https://patents.google.com/patent/EP3790253A1/en) for details of what a great protocol could look like if you care about reliability. This protocol summarizes all my learnings and bootstraps off of the language of [RSocket. RSocket may be the most winnable game in terms of a future protocol to build on top of.](https://rsocket.io/).
+You can take a look at [the request stream patent which was filled](https://patents.google.com/patent/EP3790253A1/en) for details of what a great protocol could look like if you care about reliability. This protocol summarizes all my learnings and bootstraps off of the language of [RSocket. RSocket may be the most winnable game in terms of a future protocol to build on top of.](https://rsocket.io/). I say this knowing that RSocket has issues as well, but the distance between RSocket and something more ideal isn't that far. I intend to switch away from [gRPC](https://grpc.io/) when the protocol between the web proxy and adama server firms up.
 
 ## The importance of abstractions
 There was agreement on the need for abstractions, and that's what I was building up to as I am seeking to balance my trade-offs for Adama. With Adama, I have a specific engineering game that I am playing since I can't solve all the problems I want to.
@@ -103,7 +107,9 @@ In an asynchronous world, you have callback hell
     });  
   });
 ```
-For a variety of reasons, each of these steps can fail which requires handling. You go and do that with the appropriate retry and back-off with the option to eventually give up. Now, this complexity blows up because instead of picking a host once like a traditional load balancer, you now subscribe to a series of hosts.
+For a variety of reasons, each of these steps can fail which requires handling. With request response, you simply can retry the entire logic again or have the client retry. It's worth noting that most load balancers use stickiness as a bias rather than a guarantee.
+
+You go and do that with the appropriate retry and back-off with the option to eventually give up. Now, this complexity blows up because instead of picking a host once like a traditional load balancer, you now subscribe to a series of hosts.
 ```js
   var targetHost = subscribeHost(yourStreamInfo, (targetHost) => {
     // TODO: cancel inflight finding client
@@ -122,14 +128,14 @@ For a variety of reasons, each of these steps can fail which requires handling. 
 
 You can greatly simplify your life by simply saying, "well, look, I'm going to just cancel everything on a target change and move on". This simplifies your life, but you now force the retry logic on the client to pick up the slack.  That's simple, but the user experience suffers when deployments happen since there generally is a latency chasm between the client and load balancer. Instead, if you move the retry logic inside the load balancer, then you get a better experience at a tremendous complexity cost.
 
-The open question is whether that complexity is worth it as it is especially hard to test. I believe it is which is why [I'm suffering a hard to test state machine](https://github.com/mathgladiator/adama-lang/blob/master/grpc/src/main/java/org/adamalang/grpc/client/sm/Connection.java).
+The open question is whether that complexity is worth it as it is especially hard to test. I believe it is which is why [I'm suffering a 'hard to test' state machine](https://github.com/mathgladiator/adama-lang/blob/master/grpc/src/main/java/org/adamalang/grpc/client/sm/Connection.java).
 
 ## Miss: The game should be winnable with abstractions
 There are a lot of protocols, and I've used a few of them (like RSocket and MQTT). At core, when we sit down to build something, we are playing a game of sorts.
 
-The question is whether or not that game is winnable. Currently, request response is a very winnable game because you can time out. You either get a response back or an error. The same isn't true for a stream. I love the language of request stream. You send a single request, and then you get a stream of updates back. In terms out that telling an inactive stream from a dead stream is very hard.
+The question is whether or not that game is winnable. Currently, request response is a very winnable game because you can time out. You either get a response back or an error. The same isn't true for a stream. I love the language of request stream. You send a single request, and then you get a stream of updates back. In turns out that telling an inactive stream from a dead stream is very hard.
 
-For Adama, I can make the game winnable such that a reconnect will generate a payload immediately. This allows me to timeout and measure first-payload latency. Periodically, I will ask what is the sequencer of the document and this will confirm two things. (1) am I up to date, (2) am I still connected. This predictable chatter will also be useful for measuring network conditions. Because the stream has a known schema, the game is winnable and investigations can be had as to why things are not working.
+For Adama, I can make the game winnable such that a reconnect will generate a payload immediately. This allows me to timeout and measure first-payload latency. Periodically, I will ask what is the sequencer of the document and this will confirm two things. (1) am I up to date, (2) am I still connected, (3) am I still connected to the right host. This predictable chatter will also be useful for measuring network conditions. Because the stream has a known schema, the game is winnable and investigations can be had as to why things are not working.
 
 This defines the engineering game of even knowing if the stream is working at all. A hard question for anyone to answer when using WebSockets is how to measure reliability, and if you can't measure it well or get fuzzy then that is a strong signal that something is foul.
 
