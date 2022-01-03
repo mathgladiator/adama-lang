@@ -9,10 +9,7 @@
  */
 package org.adamalang.grpc.client;
 
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.SimpleExecutorFactory;
+import org.adamalang.common.*;
 import org.adamalang.grpc.client.contracts.Lifecycle;
 import org.adamalang.grpc.client.contracts.QueueAction;
 import org.adamalang.grpc.client.routing.RoutingEngine;
@@ -36,7 +33,11 @@ public class InstanceClientFinder {
   private final AtomicBoolean alive;
 
   public InstanceClientFinder(
-      MachineIdentity identity, SimpleExecutorFactory threadFactory, int nThreads, RoutingEngine engine, ExceptionLogger logger) {
+      MachineIdentity identity,
+      SimpleExecutorFactory threadFactory,
+      int nThreads,
+      RoutingEngine engine,
+      ExceptionLogger logger) {
     this.identity = identity;
     this.engine = engine;
     this.clients = new HashMap<>();
@@ -50,23 +51,35 @@ public class InstanceClientFinder {
   public CountDownLatch shutdown() {
     CountDownLatch latch = new CountDownLatch(clientExecutors.length + 1);
     mapExecutor.execute(
-        () -> {
-          // close all the connections
-          for (InstanceClientProxy proxy : clients.values()) {
-            proxy.executor.execute(proxy::close);
+        new NamedRunnable("finder-shutting-down") {
+          @Override
+          public void execute() throws Exception {
+            // close all the connections
+            for (InstanceClientProxy proxy : clients.values()) {
+              proxy.executor.execute(
+                  new NamedRunnable("shutdown-proxy") {
+                    @Override
+                    public void execute() throws Exception {
+                      proxy.close();
+                    }
+                  });
+            }
+            // close down all the executors
+            for (int k = 0; k < clientExecutors.length; k++) {
+              SimpleExecutor executor = clientExecutors[k];
+              executor.execute(
+                  new NamedRunnable("kill-executor", Integer.toString(k)) {
+                    @Override
+                    public void execute() throws Exception {
+                      executor.shutdown();
+                      latch.countDown();
+                    }
+                  });
+            }
+            // shutdown the map executor
+            mapExecutor.shutdown();
+            latch.countDown();
           }
-          // close down all the executors
-          for (int k = 0; k < clientExecutors.length; k++) {
-            SimpleExecutor executor = clientExecutors[k];
-            executor.execute(
-                () -> {
-                  executor.shutdown();
-                  latch.countDown();
-                });
-          }
-          // shutdown the map executor
-          mapExecutor.shutdown();
-          latch.countDown();
         });
     return latch;
   }
@@ -79,25 +92,23 @@ public class InstanceClientFinder {
 
   public void find(String target, QueueAction<InstanceClient> action) {
     mapExecutor.execute(
-        () -> {
-          // look within the cache
-          InstanceClientProxy cached = clients.get(target);
-          if (cached == null) {
-            // it doesn't exist, so create a proxy to hold the place
-            cached = new InstanceClientProxy();
+        new NamedRunnable("finder-find", target) {
+          @Override
+          public void execute() throws Exception {
+            // look within the cache
+            InstanceClientProxy cached = clients.get(target);
+            if (cached == null) {
+              // it doesn't exist, so create a proxy to hold the place
+              cached = new InstanceClientProxy();
 
-            // create the client and have it feed the proxy
-            try {
+              // create the client and have it feed the proxy
               new InstanceClient(identity, target, cached.executor, cached, logger);
               // record the proxy if the above worked
               clients.put(target, cached);
-            } catch (Exception ex) {
-              // TODO: figure out why this is the case
-              ex.printStackTrace();
             }
-          }
-          if (action != null) {
-            cached.add(action);
+            if (action != null) {
+              cached.add(action);
+            }
           }
         });
   }
@@ -116,17 +127,20 @@ public class InstanceClientFinder {
     @Override
     public void connected(InstanceClient client) {
       executor.execute(
-          () -> {
-            if (alive.get()) {
-              this.client = client;
-              if (buffer != null) {
-                for (QueueAction<InstanceClient> action : buffer) {
-                  action.execute(client);
+          new NamedRunnable("finder-found", client.target) {
+            @Override
+            public void execute() throws Exception {
+              if (alive.get()) {
+                InstanceClientProxy.this.client = client;
+                if (buffer != null) {
+                  for (QueueAction<InstanceClient> action : buffer) {
+                    action.execute(client);
+                  }
+                  buffer = null;
                 }
-                buffer = null;
+              } else {
+                client.close();
               }
-            } else {
-              client.close();
             }
           });
     }
@@ -141,8 +155,11 @@ public class InstanceClientFinder {
     @Override
     public void disconnected(InstanceClient client) {
       executor.execute(
-          () -> {
-            InstanceClientProxy.this.client = null;
+          new NamedRunnable("finder-lost", client.target) {
+            @Override
+            public void execute() throws Exception {
+              InstanceClientProxy.this.client = null;
+            }
           });
     }
 

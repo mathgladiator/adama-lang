@@ -10,13 +10,17 @@
 package org.adamalang.grpc.client.sm;
 
 import org.adamalang.ErrorCodes;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.runtime.contracts.Key;
 
 import java.util.ArrayList;
 
-/** a single connection for a document; given the number of outstanding events that can influence the connection; this is s sizeable state machine. */
+/**
+ * a single connection for a document; given the number of outstanding events that can influence the
+ * connection; this is s sizeable state machine.
+ */
 public class Connection {
   // these can be put under a base
   private final ConnectionBase base;
@@ -74,38 +78,47 @@ public class Connection {
   /** api: open the connection */
   public void open() {
     base.executor.execute(
-        () -> {
-          if (!routingAlive) {
-            routingAlive = true;
-            events.connected();
-            base.engine.subscribe(
-                key,
-                (newTarget) -> {
-                  base.executor.execute(
-                      () -> {
-                        if (newTarget == null) {
-                          if (target != null) {
-                            target = null;
-                            handle_onKillRoutingTarget();
+        new NamedRunnable("connection-open", key.space, key.key) {
+          @Override
+          public void execute() throws Exception {
+            if (!routingAlive) {
+              routingAlive = true;
+              events.connected();
+              base.engine.subscribe(
+                  key,
+                  (newTarget) -> {
+                    base.executor.execute(
+                        new NamedRunnable("connection-found-target", newTarget) {
+                          @Override
+                          public void execute() throws Exception {
+                            if (newTarget == null) {
+                              if (target != null) {
+                                target = null;
+                                handle_onKillRoutingTarget();
+                              }
+                            } else {
+                              if (!newTarget.equals(target)) {
+                                target = newTarget;
+                                handle_onNewRoutingTarget();
+                              }
+                            }
                           }
-                        } else {
-                          if (!newTarget.equals(target)) {
-                            target = newTarget;
-                            handle_onNewRoutingTarget();
+                        });
+                  },
+                  (cancel) -> {
+                    base.executor.execute(
+                        new NamedRunnable("connection-cancel-routing") {
+                          @Override
+                          public void execute() throws Exception {
+                            if (routingAlive) {
+                              unsubscribeFromRouting = cancel;
+                            } else {
+                              cancel.run();
+                            }
                           }
-                        }
-                      });
-                },
-                (cancel) -> {
-                  base.executor.execute(
-                      () -> {
-                        if (routingAlive) {
-                          unsubscribeFromRouting = cancel;
-                        } else {
-                          cancel.run();
-                        }
-                    });
-                });
+                        });
+                  });
+            }
           }
         });
   }
@@ -113,75 +126,21 @@ public class Connection {
   /** send the remote peer a message */
   public void send(String channel, String marker, String message, SeqCallback callback) {
     base.executor.execute(
-        () -> {
-          bufferOrExecute(
-              new QueueAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED) {
-                @Override
-                protected void executeNow(Remote remote) {
-                  remote.send(channel, marker, message, callback);
-                }
+        new NamedRunnable("connection-send", key.space, key.key, channel) {
+          @Override
+          public void execute() throws Exception {
+            bufferOrExecute(
+                new QueueAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED) {
+                  @Override
+                  protected void executeNow(Remote remote) {
+                    remote.send(channel, marker, message, callback);
+                  }
 
-                @Override
-                protected void failure(int code) {
-                  callback.error(code);
-                }
-              });
-        });
-  }
-
-  public void canAttach(AskAttachmentCallback callback) {
-    base.executor.execute(() -> {
-      bufferOrExecute(new QueueAction<Remote>(ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED) {
-        @Override
-        protected void executeNow(Remote item) {
-          item.canAttach(callback);
-        }
-
-        @Override
-        protected void failure(int code) {
-          callback.error(code);
-        }
-      });
-    });
-  }
-
-  public void attach(String id, String name, String contentType, long size, String md5, String sha384, SeqCallback callback) {
-    base.executor.execute(() -> {
-      bufferOrExecute(new QueueAction<Remote>(ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED) {
-        @Override
-        protected void executeNow(Remote item) {
-          item.attach(id, name, contentType, size, md5, sha384, callback);
-        }
-
-        @Override
-        protected void failure(int code) {
-          callback.error(code);
-        }
-      });
-    });
-  }
-
-  public void close() {
-    base.executor.execute(
-        () -> {
-          if (routingAlive) {
-            events.disconnected();
-            switch (state) {
-              case Connected:
-                state = Label.WaitingForDisconnect;
-                foundRemote.disconnect();
-                break;
-              default:
-                state = Label.NotConnected;
-            }
-
-            // this will trigger a target change to null which will take care of a great deal of
-            // things
-            if (unsubscribeFromRouting != null) {
-              unsubscribeFromRouting.run();
-              unsubscribeFromRouting = null;
-            }
-            routingAlive = false;
+                  @Override
+                  protected void failure(int code) {
+                    callback.error(code);
+                  }
+                });
           }
         });
   }
@@ -195,6 +154,85 @@ public class Connection {
       }
       buffer.add(action);
     }
+  }
+
+  public void canAttach(AskAttachmentCallback callback) {
+    base.executor.execute(
+        new NamedRunnable("connection-can-attach", key.space, key.key) {
+          @Override
+          public void execute() throws Exception {
+            bufferOrExecute(
+                new QueueAction<Remote>(
+                    ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED) {
+                  @Override
+                  protected void executeNow(Remote item) {
+                    item.canAttach(callback);
+                  }
+
+                  @Override
+                  protected void failure(int code) {
+                    callback.error(code);
+                  }
+                });
+          }
+        });
+  }
+
+  public void attach(
+      String id,
+      String name,
+      String contentType,
+      long size,
+      String md5,
+      String sha384,
+      SeqCallback callback) {
+    base.executor.execute(
+        new NamedRunnable("connection-attach", key.space, key.key, id) {
+          @Override
+          public void execute() throws Exception {
+            bufferOrExecute(
+                new QueueAction<Remote>(
+                    ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED) {
+                  @Override
+                  protected void executeNow(Remote item) {
+                    item.attach(id, name, contentType, size, md5, sha384, callback);
+                  }
+
+                  @Override
+                  protected void failure(int code) {
+                    callback.error(code);
+                  }
+                });
+          }
+        });
+  }
+
+  public void close() {
+    base.executor.execute(
+        new NamedRunnable("connection-close", key.space, key.key) {
+          @Override
+          public void execute() throws Exception {
+            if (routingAlive) {
+              events.disconnected();
+              switch (state) {
+                case Connected:
+                  state = Label.WaitingForDisconnect;
+                  foundRemote.disconnect();
+                  break;
+                default:
+                  state = Label.NotConnected;
+              }
+
+              // this will trigger a target change to null which will take care of a great deal of
+              // things
+              if (unsubscribeFromRouting != null) {
+                unsubscribeFromRouting.run();
+                unsubscribeFromRouting = null;
+              }
+              routingAlive = false;
+            }
+          }
+        });
   }
 
   private void handle_onFoundRemote() {
@@ -228,10 +266,21 @@ public class Connection {
       case FoundClientConnectingTryNewTarget:
       case Connected:
         if (backoffConnectPeer < 2000) {
+          state = Label.FindingClientWait;
           base.executor.schedule(
-              () -> {
-                if (state == Label.Connected) {
-                  fireFindClient();
+              new NamedRunnable("connection-retry") {
+                @Override
+                public void execute() throws Exception {
+                  switch (state) {
+                    case FoundClientConnectingWait:
+                    case FoundClientConnectingTryNewTarget:
+                    case Connected:
+                      fireFindClient();
+                      return;
+                    case FoundClientConnectingStop:
+                      state = Label.NotConnected;
+                      return;
+                  }
                 }
               },
               backoffConnectPeer);
@@ -247,6 +296,7 @@ public class Connection {
   }
 
   private void handle_onFoundClient() {
+    System.err.println("found client:" + state);
     backoffFindInstance = 0;
     switch (state) {
       case FindingClientWait:
@@ -254,37 +304,37 @@ public class Connection {
         fireConnectRemote();
         return;
       case FindingClientCancelStop:
-        state = Label.FindingClientCancelTryNewTarget;
+        state = Label.NotConnected;
         return;
       case FindingClientCancelTryNewTarget:
         fireFindClient();
+        return;
       default:
         // nothing to do
     }
   }
 
   private void handle_onFailedFindingClient() {
-    switch (state) {
-      case FindingClientWait:
-      case FindingClientCancelTryNewTarget:
-        state = Label.FindingClientWait;
-        if (backoffFindInstance < 1000) {
-          base.executor.schedule(
-              () -> {
-                fireFindClient();
-              },
-              backoffFindInstance);
-          backoffFindInstance =
-              (int) (backoffFindInstance + Math.random() * backoffFindInstance + 1);
-        } else {
-          handle_onError(ErrorCodes.STATE_MACHINE_TOO_MANY_FAILURES);
-        }
-        return;
-      case FindingClientCancelStop:
-        state = Label.NotConnected;
-        return;
-      default:
-        // INVALID
+    if (backoffFindInstance < 1000) {
+      base.executor.schedule(
+          new NamedRunnable("connection-failed-retry") {
+            @Override
+            public void execute() throws Exception {
+              switch (state) {
+                case FindingClientWait:
+                case FindingClientCancelTryNewTarget:
+                  fireFindClient();
+                  return;
+                case FindingClientCancelStop:
+                  state = Label.NotConnected;
+                  return;
+              }
+            }
+          },
+          backoffFindInstance);
+      backoffFindInstance = (int) (backoffFindInstance + Math.random() * backoffFindInstance + 1);
+    } else {
+      handle_onError(ErrorCodes.STATE_MACHINE_TOO_MANY_FAILURES);
     }
   }
 
@@ -298,9 +348,12 @@ public class Connection {
           @Override
           public void connected(Remote remote) {
             base.executor.execute(
-                () -> {
-                  foundRemote = remote;
-                  handle_onFoundRemote();
+                new NamedRunnable("connection-connected") {
+                  @Override
+                  public void execute() throws Exception {
+                    foundRemote = remote;
+                    handle_onFoundRemote();
+                  }
                 });
           }
 
@@ -312,16 +365,22 @@ public class Connection {
           @Override
           public void error(int code) {
             base.executor.execute(
-                () -> {
-                  handle_onError(code);
+                new NamedRunnable("connection-error") {
+                  @Override
+                  public void execute() throws Exception {
+                    handle_onError(code);
+                  }
                 });
           }
 
           @Override
           public void disconnected() {
             base.executor.execute(
-                () -> {
-                  handle_onDisconnected();
+                new NamedRunnable("connection-disconnected") {
+                  @Override
+                  public void execute() throws Exception {
+                    handle_onDisconnected();
+                  }
                 });
           }
         });
@@ -335,17 +394,23 @@ public class Connection {
           @Override
           protected void executeNow(InstanceClient client) {
             base.executor.execute(
-                () -> {
-                  foundClient = client;
-                  handle_onFoundClient();
+                new NamedRunnable("connection-found-client") {
+                  @Override
+                  public void execute() throws Exception {
+                    foundClient = client;
+                    handle_onFoundClient();
+                  }
                 });
           }
 
           @Override
           protected void failure(int code) {
             base.executor.execute(
-                () -> {
-                  handle_onFailedFindingClient();
+                new NamedRunnable("connection-failed-finding-client", Integer.toString(code)) {
+                  @Override
+                  public void execute() throws Exception {
+                    handle_onFailedFindingClient();
+                  }
                 });
           }
         });
@@ -399,5 +464,10 @@ public class Connection {
         // just ignore it
         return;
     }
+  }
+
+  @Override
+  public String toString() {
+    return "state=" + state;
   }
 }

@@ -11,9 +11,9 @@ package org.adamalang.grpc.client.contracts;
 
 /** an unit of work that sits within a queue for processing */
 public abstract class QueueAction<T> {
-  private boolean alive;
   private final int errorTimeout;
   private final int errorRejected;
+  private boolean alive;
 
   public QueueAction(int errorTimeout, int errorRejected) {
     this.alive = true;

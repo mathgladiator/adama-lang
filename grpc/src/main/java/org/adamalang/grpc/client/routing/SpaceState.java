@@ -21,9 +21,9 @@ import java.util.function.Consumer;
 
 /** the collection of targets for a single space; core element of the routing table */
 public class SpaceState {
-  private long idgen;
   private final TreeSet<String> targets;
   private final HashMap<String, HashMap<Long, TargetSubscriber>> subscribers;
+  private long idgen;
   private boolean invalid;
 
   public SpaceState() {

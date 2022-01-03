@@ -9,6 +9,7 @@
  */
 package org.adamalang.grpc.client.routing;
 
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
 import org.adamalang.runtime.contracts.Key;
@@ -37,9 +38,12 @@ public class RoutingEngine {
 
   public void integrate(String target, Collection<String> newSpaces) {
     executor.execute(
-        () -> {
-          table.integrate(target, newSpaces);
-          scheduleBroadcastWhileInExecutor();
+        new NamedRunnable("routing-integrate", target) {
+          @Override
+          public void execute() throws Exception {
+            table.integrate(target, newSpaces);
+            scheduleBroadcastWhileInExecutor();
+          }
         });
   }
 
@@ -47,9 +51,12 @@ public class RoutingEngine {
     if (!broadcastInflight) {
       broadcastInflight = true;
       executor.schedule(
-          () -> {
-            table.broadcast();
-            broadcastInflight = false;
+          new NamedRunnable("routing-broadcast") {
+            @Override
+            public void execute() throws Exception {
+              table.broadcast();
+              broadcastInflight = false;
+            }
           },
           (int) (broadcastDelayOffset + Math.random() * broadcastDelayJitter));
     }
@@ -57,16 +64,22 @@ public class RoutingEngine {
 
   public void remove(String target) {
     executor.execute(
-        () -> {
-          table.remove(target);
-          scheduleBroadcastWhileInExecutor();
+        new NamedRunnable("routing-remove", target) {
+          @Override
+          public void execute() throws Exception {
+            table.remove(target);
+            scheduleBroadcastWhileInExecutor();
+          }
         });
   }
 
   public void subscribe(Key key, Consumer<String> subscriber, Consumer<Runnable> onCancel) {
     executor.execute(
-        () -> {
-          onCancel.accept(table.subscribe(key, subscriber));
+        new NamedRunnable("routing-subscribe", key.space, key.key) {
+          @Override
+          public void execute() throws Exception {
+            onCancel.accept(table.subscribe(key, subscriber));
+          }
         });
   }
 }
