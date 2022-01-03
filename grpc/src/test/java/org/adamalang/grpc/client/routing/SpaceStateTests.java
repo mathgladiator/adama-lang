@@ -22,12 +22,13 @@ public class SpaceStateTests {
   @Test
   public void flow() {
     AtomicReference<String> last = new AtomicReference<>("");
-    Consumer<Set<String>> share = (set) -> {
-      last.set("");
-      for (String e : new TreeSet<>(set)) {
-        last.set(last.get() + "/" + e);
-      }
-    } ;
+    Consumer<Set<String>> share =
+        (set) -> {
+          last.set("");
+          for (String e : new TreeSet<>(set)) {
+            last.set(last.get() + "/" + e);
+          }
+        };
     SpaceState state = new SpaceState();
     ArrayList<String> pub = new ArrayList<>();
     Runnable unsubscribe = state.subscribe("key", pub::add);

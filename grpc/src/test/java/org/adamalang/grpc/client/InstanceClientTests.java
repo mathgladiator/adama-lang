@@ -96,8 +96,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -175,8 +174,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -258,8 +256,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -327,8 +324,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -410,8 +406,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -494,8 +489,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -582,8 +576,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -673,8 +666,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -761,8 +753,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -815,8 +806,7 @@ public class InstanceClientTests {
                 }
 
                 @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                }
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
                 @Override
                 public void disconnected(InstanceClient client) {
@@ -836,71 +826,66 @@ public class InstanceClientTests {
   @Test
   public void scanDeploymentsSuccessAndFailures() throws Exception {
     try (TestBed bed =
-             new TestBed(
-                 10012,
-                 "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+        new TestBed(
+            10012,
+            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       CountDownLatch latch = new CountDownLatch(3);
       try (InstanceClient client =
-               new InstanceClient(
-                   bed.identity,
-                   "127.0.0.1:10012",
-                   bed.clientExecutor,
-                   new Lifecycle() {
-                     @Override
-                     public void connected(InstanceClient client) {
-                       client.scanDeployments(new ScanDeploymentCallback() {
-                         @Override
-                         public void success() {
-                           System.err.println("first good");
-                           latch.countDown();
-                           client.scanDeployments(new ScanDeploymentCallback() {
-                             @Override
-                             public void success() {
-                               System.err.println("second good");
-                               latch.countDown();
-                               client.scanDeployments(new ScanDeploymentCallback() {
-                                 @Override
-                                 public void success() {
-                                 }
+          new InstanceClient(
+              bed.identity,
+              "127.0.0.1:10012",
+              bed.clientExecutor,
+              new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {
+                  client.scanDeployments(
+                      new ScanDeploymentCallback() {
+                        @Override
+                        public void success() {
+                          System.err.println("first good");
+                          latch.countDown();
+                          client.scanDeployments(
+                              new ScanDeploymentCallback() {
+                                @Override
+                                public void success() {
+                                  System.err.println("second good");
+                                  latch.countDown();
+                                  client.scanDeployments(
+                                      new ScanDeploymentCallback() {
+                                        @Override
+                                        public void success() {}
 
-                                 @Override
-                                 public void failure() {
-                                   System.err.println("third bad");
-                                   latch.countDown();
-                                 }
-                               });
-                             }
+                                        @Override
+                                        public void failure() {
+                                          System.err.println("third bad");
+                                          latch.countDown();
+                                        }
+                                      });
+                                }
 
-                             @Override
-                             public void failure() {
+                                @Override
+                                public void failure() {}
+                              });
+                        }
 
-                             }
-                           });
-                         }
+                        @Override
+                        public void failure() {}
+                      });
+                }
 
-                         @Override
-                         public void failure() {
+                @Override
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
-                         }
-                       });
-                     }
-
-                     @Override
-                     public void heartbeat(InstanceClient client, Collection<String> spaces) {
-                     }
-
-                     @Override
-                     public void disconnected(InstanceClient client) {
-                                            }
-                   },
-                   (t, errorCode) -> {
-                     System.err.println("EXCEPTION:" + t.getMessage());
-                   })) {
+                @Override
+                public void disconnected(InstanceClient client) {}
+              },
+              (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+              })) {
         bed.startServer();
         Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
       }
     }
   }
-
 }

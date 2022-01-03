@@ -18,17 +18,18 @@ public class QueueActionTests {
   @Test
   public void timeout() {
     AtomicInteger x = new AtomicInteger(0);
-    QueueAction<String> action = new QueueAction<>(100, 200) {
-      @Override
-      protected void executeNow(String item) {
-        x.incrementAndGet();
-      }
+    QueueAction<String> action =
+        new QueueAction<>(100, 200) {
+          @Override
+          protected void executeNow(String item) {
+            x.incrementAndGet();
+          }
 
-      @Override
-      protected void failure(int code) {
-        x.addAndGet(code);
-      }
-    };
+          @Override
+          protected void failure(int code) {
+            x.addAndGet(code);
+          }
+        };
     action.execute("z");
     action.execute("z");
     action.execute("z");
@@ -45,17 +46,18 @@ public class QueueActionTests {
   @Test
   public void rejected() {
     AtomicInteger x = new AtomicInteger(0);
-    QueueAction<String> action = new QueueAction<String>(100, 1000) {
-      @Override
-      protected void executeNow(String item) {
-        x.incrementAndGet();
-      }
+    QueueAction<String> action =
+        new QueueAction<String>(100, 1000) {
+          @Override
+          protected void executeNow(String item) {
+            x.incrementAndGet();
+          }
 
-      @Override
-      protected void failure(int code) {
-        x.addAndGet(code);
-      }
-    };
+          @Override
+          protected void failure(int code) {
+            x.addAndGet(code);
+          }
+        };
     action.execute("z");
     action.execute("z");
     action.execute("z");

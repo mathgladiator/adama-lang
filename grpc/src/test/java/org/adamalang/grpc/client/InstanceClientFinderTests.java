@@ -34,47 +34,55 @@ public class InstanceClientFinderTests {
     try {
       TreeSet<String> targets = new TreeSet<>();
       for (int k = 0; k < servers.length; k++) {
-        servers[k] = new TestBed(20001 + k, "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
+        servers[k] =
+            new TestBed(
+                20001 + k,
+                "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
       }
       for (int k = 0; k < servers.length; k++) {
         servers[k].startServer();
         targets.add("127.0.0.1:" + (20001 + k));
       }
       CountDownLatch primed = new CountDownLatch(1);
-      RoutingEngine engine = new RoutingEngine(routingExecutor, new SpaceTrackingEvents() {
-        @Override
-        public void gainInterestInSpace(String space) {
-        }
+      RoutingEngine engine =
+          new RoutingEngine(
+              routingExecutor,
+              new SpaceTrackingEvents() {
+                @Override
+                public void gainInterestInSpace(String space) {}
 
-        @Override
-        public void shareTargetsFor(String space, Set<String> targets) {
-          if ("space".equals(space) && servers.length == targets.size()) {
-            primed.countDown();
-          }
-        }
+                @Override
+                public void shareTargetsFor(String space, Set<String> targets) {
+                  if ("space".equals(space) && servers.length == targets.size()) {
+                    primed.countDown();
+                  }
+                }
 
-        @Override
-        public void lostInterestInSpace(String space) {
-        }
-      }, 50, 25);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].identity, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+                @Override
+                public void lostInterestInSpace(String space) {}
+              },
+              50,
+              25);
+      InstanceClientFinder finder =
+          new InstanceClientFinder(
+              servers[0].identity, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         finder.prime(targets);
         Assert.assertTrue(primed.await(25000, TimeUnit.MILLISECONDS));
         CountDownLatch latchFound = new CountDownLatch(1);
-        finder.find("127.0.0.1:20005", new QueueAction<>(100, 200) {
-          @Override
-          protected void executeNow(InstanceClient item) {
-            latchFound.countDown();
-          }
+        finder.find(
+            "127.0.0.1:20005",
+            new QueueAction<>(100, 200) {
+              @Override
+              protected void executeNow(InstanceClient item) {
+                latchFound.countDown();
+              }
 
-          @Override
-          protected void failure(int code) {
-
-          }
-        });
+              @Override
+              protected void failure(int code) {}
+            });
         Assert.assertTrue(latchFound.await(25000, TimeUnit.MILLISECONDS));
-      } finally{
+      } finally {
         finder.shutdown();
       }
     } finally {

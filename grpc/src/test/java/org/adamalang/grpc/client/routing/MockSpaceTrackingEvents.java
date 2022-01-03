@@ -21,6 +21,7 @@ public class MockSpaceTrackingEvents implements SpaceTrackingEvents {
   public MockSpaceTrackingEvents() {
     sb = new StringBuilder();
   }
+
   @Override
   public void gainInterestInSpace(String space) {
     sb.append("[GAIN:" + space + "]");

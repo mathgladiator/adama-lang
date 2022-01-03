@@ -57,7 +57,8 @@ public class RoutingTableTests {
     Assert.assertNull(decisions.get(3));
     unsubscribe.run();
     table.broadcast();
-    events.assertHistory("[GAIN:space][SHARE:space=t1][SHARE:space=][SHARE:space=][LOST:space][GAIN:space][SHARE:space=t1,t2,t3][SHARE:space=][LOST:space]");
+    events.assertHistory(
+        "[GAIN:space][SHARE:space=t1][SHARE:space=][SHARE:space=][LOST:space][GAIN:space][SHARE:space=t1,t2,t3][SHARE:space=][LOST:space]");
   }
 
   @Test
