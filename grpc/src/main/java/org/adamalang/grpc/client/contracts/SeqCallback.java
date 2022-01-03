@@ -14,8 +14,8 @@ package org.adamalang.grpc.client.contracts;
  */
 public interface SeqCallback {
   /** the operation was a success */
-  public void success(int seq);
+  void success(int seq);
 
   /** the operation failed */
-  public void error(int code);
+  void error(int code);
 }

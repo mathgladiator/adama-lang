@@ -17,8 +17,7 @@ import org.adamalang.grpc.proto.CreateResponse;
 
 /** asking for a document to be created is either success or not (with a code) */
 public interface CreateCallback {
-  public static StreamObserver<CreateResponse> WRAP(
-      CreateCallback callback, ExceptionLogger logger) {
+  static StreamObserver<CreateResponse> WRAP(CreateCallback callback, ExceptionLogger logger) {
     return new StreamObserver<>() {
       @Override
       public void onNext(CreateResponse createResponse) {
@@ -43,8 +42,8 @@ public interface CreateCallback {
   }
 
   /** create was successful */
-  public void created();
+  void created();
 
   /** create was not successful */
-  public void error(int code);
+  void error(int code);
 }

@@ -13,7 +13,13 @@ public class ServerNexus {
   public final Runnable scanForDeployments;
   public final int port;
 
-  public ServerNexus(MachineIdentity identity, CoreService service, DeploymentFactoryBase deploymentFactoryBase, Runnable scanForDeployments, BillingPubSub billingPubSub, int port) {
+  public ServerNexus(
+      MachineIdentity identity,
+      CoreService service,
+      DeploymentFactoryBase deploymentFactoryBase,
+      Runnable scanForDeployments,
+      BillingPubSub billingPubSub,
+      int port) {
     this.identity = identity;
     this.service = service;
     this.deploymentFactoryBase = deploymentFactoryBase;
