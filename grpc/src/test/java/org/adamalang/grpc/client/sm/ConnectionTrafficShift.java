@@ -15,7 +15,6 @@ import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.InstanceClientFinder;
-import org.adamalang.grpc.client.contracts.AskAttachmentCallback;
 import org.adamalang.grpc.client.routing.MockSpaceTrackingEvents;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.adamalang.grpc.mocks.LatchedSeqCallback;
@@ -26,14 +25,14 @@ import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class ConnectionActionQueueTests {
+public class ConnectionTrafficShift {
+
   @Test
-  public void validateQueueLazyQueueExecutionAndRejection() throws Exception {
+  public void validateTrafficShiftOnNewHost() throws Exception {
     TestBed[] servers = new TestBed[2];
     SimpleExecutor fauxExector = SimpleExecutor.create("routing");
     SlowSingleThreadedExecutorFactory finderExecutor =
@@ -47,7 +46,7 @@ public class ConnectionActionQueueTests {
       for (int k = 0; k < servers.length; k++) {
         servers[k] =
             new TestBed(
-                21005 + k,
+                20005 + k,
                 "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
 
         CountDownLatch latchMade = new CountDownLatch(1);
@@ -83,105 +82,100 @@ public class ConnectionActionQueueTests {
         Runnable eventsGotUpdate = events.latchAt(3);
         Runnable eventsGotRollback = events.latchAt(4);
 
-        Runnable integrate = directExector.latchAtAndDrain(1, 1);
-        Runnable integrateBroadcast = directExector.latchAtAndDrain(2, 1);
-        Runnable ranStart = connectionExecutor.latchAtAndDrain(1, 20);
+        Runnable ranStart = connectionExecutor.latchAtAndDrain(1, 1);
         Runnable subscribed = directExector.latchAtAndDrain(1, 1);
-        Runnable gotTargetAndCancel = connectionExecutor.latchAtAndDrain(3, 2);
+        Runnable gotNullTargetAndCancel = connectionExecutor.latchAtAndDrain(3, 2);
+        Runnable gotNewTarget = directExector.latchAtAndDrain(2, 1);
+        Runnable newTargetBroadcastQueued = directExector.latchAtAndDrain(3, 1);
+        Runnable gotFirstTarget = connectionExecutor.latchAtAndDrain(4, 1);
         Runnable gotFindRequest = finderExecutor.latchAtAndDrain(1, 1);
         Runnable clientSetup = finderExecutor.latchAtAndDrain(2, 1);
         Runnable executeFound = finderExecutor.latchAtAndDrain(3, 1);
         Runnable clientConnected = finderExecutor.latchAtAndDrain(4, 1);
         Runnable clientFound = connectionExecutor.latchAtAndDrain(5, 1);
-        Runnable sendConnect = finderExecutor.latchAtAndDrain(5, 1);
-        Runnable connectEstablish = finderExecutor.latchAtAndDrain(6, 1);
-        Runnable connectionComplete = connectionExecutor.latchAtAndDrain(6, 1);
-        Runnable sends = finderExecutor.latchAtAndDrain(23, 17);
-        Runnable results = finderExecutor.latchAtAndDrain(39, 16);
+        Runnable clientReconnecting = finderExecutor.latchAtAndDrain(5, 1);
+        Runnable clientGotEstablished = finderExecutor.latchAtAndDrain(6, 1);
+        Runnable clientMade = finderExecutor.latchAtAndDrain(7, 1);
+        Runnable connectionMade = connectionExecutor.latchAtAndDrain(6, 1);
+        Runnable executeSend = connectionExecutor.latchAtAndDrain(7, 1);
+        Runnable forwardSend = finderExecutor.latchAtAndDrain(8, 1);
+        Runnable clientDataForward = finderExecutor.latchAtAndDrain(9, 1);
+        Runnable sendSeqResult = finderExecutor.latchAtAndDrain(10, 1);
+        Runnable executorIntegrates = directExector.latchAtAndDrain(4, 1);
+        Runnable broadcastNewTarget = directExector.latchAtAndDrain(5, 1);
+        Runnable connectionFoundNewTarget = connectionExecutor.latchAtAndDrain(8, 1);
+        Runnable connectionGetsClosed = finderExecutor.latchAtAndDrain(11, 1);
+        Runnable disconnectStatusShared = finderExecutor.latchAtAndDrain(12, 1);
+        Runnable connectionConfirmsDisconnect = connectionExecutor.latchAtAndDrain(9, 1);
+        Runnable connectionRetry = connectionExecutor.latchAtAndDrain(10, 1);
+        Runnable finderRetry = finderExecutor.latchAtAndDrain(13, 1);
+        Runnable finderSuccess = finderExecutor.latchAtAndDrain(14, 1);
+        Runnable finderEstablished = finderExecutor.latchAtAndDrain(15, 1);
+        Runnable finderSendsFound = finderExecutor.latchAtAndDrain(16, 1);
+        Runnable connectionGetsClient = connectionExecutor.latchAtAndDrain(11, 1);
+        Runnable executeConnectAgain = finderExecutor.latchAtAndDrain(17, 1);
+        Runnable pumpEvents = finderExecutor.latchAtAndDrain(19, 2);
+        Runnable completeConnection = connectionExecutor.latchAtAndDrain(12, 1);
         ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
-        engineDirect.integrate("127.0.0.1:21005", Collections.singleton("space"));
-        integrate.run();
-        integrateBroadcast.run();
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
-        ArrayList<LatchedSeqCallback> successes = new ArrayList<>();
-        for (int k = 0; k < 4; k++) {
-          LatchedSeqCallback cb1 = new LatchedSeqCallback();
-          LatchedSeqCallback cb2 = new LatchedSeqCallback();
-          LatchedSeqCallback cb3 = new LatchedSeqCallback();
-          LatchedSeqCallback cb4 = new LatchedSeqCallback();
-          connection.send("foo", null, "{\"z\":100}", cb1);
-          connection.canAttach(
-              new AskAttachmentCallback() {
-                @Override
-                public void allow() {
-                  cb2.success(100);
-                }
-
-                @Override
-                public void reject() {
-                  cb2.success(200);
-                }
-
-                @Override
-                public void error(int code) {
-                  cb2.error(code);
-                }
-              });
-          connection.attach("id", "name", "type", 12, "md5", "sha", cb3);
-          connection.send("foo", null, "{\"z\":100}", cb4);
-          successes.add(cb1);
-          successes.add(cb2);
-          successes.add(cb3);
-          successes.add(cb4);
-        }
-        LatchedSeqCallback cbFailure1 = new LatchedSeqCallback();
-        connection.send("foo", null, "{\"z\":100}", cbFailure1);
-        LatchedSeqCallback cbFailure2 = new LatchedSeqCallback();
-        connection.canAttach(
-            new AskAttachmentCallback() {
-              @Override
-              public void allow() {
-                cbFailure2.success(100);
-              }
-
-              @Override
-              public void reject() {
-                cbFailure2.success(200);
-              }
-
-              @Override
-              public void error(int code) {
-                cbFailure2.error(code);
-              }
-            });
-        LatchedSeqCallback cbFailure3 = new LatchedSeqCallback();
-        connection.attach("id", "name", "type", 12, "md5", "sha", cbFailure3);
-
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
         ranStart.run();
         eventsConnected.run();
         events.assertWrite(0, "CONNECTED");
-        cbFailure1.assertFail(916520);
-        cbFailure2.assertFail(901163);
-        cbFailure3.assertFail(913447);
         subscribed.run();
-        gotTargetAndCancel.run();
+        gotNullTargetAndCancel.run();
+        engineDirect.integrate("127.0.0.1:20005", Collections.singleton("space"));
+        gotNewTarget.run();
+        newTargetBroadcastQueued.run();
+        gotFirstTarget.run();
         gotFindRequest.run();
         clientSetup.run();
         executeFound.run();
         clientConnected.run();
         clientFound.run();
-        sendConnect.run();
-        connectEstablish.run();
-        connectionComplete.run();
-        sends.run();
-        results.run();
+        clientReconnecting.run();
+        Assert.assertEquals("state=FoundClientConnectingWait", connection.toString());
+        clientGotEstablished.run();
+        clientMade.run();
         eventsProducedData.run();
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
+        Assert.assertEquals("state=FoundClientConnectingWait", connection.toString());
+        connectionMade.run();
+        Assert.assertEquals("state=Connected", connection.toString());
+        LatchedSeqCallback cb1 = new LatchedSeqCallback();
+        connection.send("foo", null, "{\"z\":100}", cb1);
+        executeSend.run();
+        forwardSend.run();
+        clientDataForward.run();
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
+        sendSeqResult.run();
         eventsGotUpdate.run();
-        System.err.println("SURVEY");
+        cb1.assertSuccess(6);
+        engineDirect.integrate("127.0.0.1:20006", Collections.singleton("space"));
+        executorIntegrates.run();
+        broadcastNewTarget.run();
+        Assert.assertEquals("state=Connected", connection.toString());
+        connectionFoundNewTarget.run();
+        connectionGetsClosed.run();
+        disconnectStatusShared.run();
+        Assert.assertEquals("state=Connected", connection.toString());
+        connectionConfirmsDisconnect.run();
+        Assert.assertEquals("state=FindingClientWait", connection.toString());
+        connectionRetry.run();
+        finderRetry.run();
+        finderSuccess.run();
+        finderEstablished.run();
+        finderSendsFound.run();
+        connectionGetsClient.run();
+        executeConnectAgain.run();
+        pumpEvents.run();
+        eventsGotRollback.run();
+        events.assertWrite(3, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
+        completeConnection.run();
+        Assert.assertEquals("state=Connected", connection.toString());
         Thread.sleep(1000);
+        System.err.println("SURVEY");
         directExector.survey();
         finderExecutor.survey();
         connectionExecutor.survey();
