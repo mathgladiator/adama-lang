@@ -442,10 +442,9 @@ public class Connection {
         return;
       case FoundClientConnectingWait:
       case FoundClientConnectingStop:
+      case FoundClientConnectingTryNewTarget:
         state = Label.FoundClientConnectingTryNewTarget;
         return;
-      case FoundClientConnectingTryNewTarget:
-        return; // NO-OP, just a change in the target parameter
       case Connected:
         // this will retry a retry
         foundRemote.disconnect();
