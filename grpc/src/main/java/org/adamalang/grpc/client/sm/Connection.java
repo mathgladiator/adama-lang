@@ -274,6 +274,7 @@ public class Connection {
     switch (state) {
       case FoundClientConnectingWait:
       case FoundClientConnectingTryNewTarget:
+      case ConnectedStoppingPleaseReconnect:
       case Connected:
         if (backoffConnectPeer < 2000) {
           state = Label.FindingClientWait;
@@ -289,6 +290,7 @@ public class Connection {
           handle_onError(ErrorCodes.STATE_MACHINE_UNABLE_TO_RECONNECT);
         }
         return;
+      case ConnectedStopping:
       case FoundClientConnectingStop:
       case WaitingForDisconnect:
         state = Label.NotConnected;
@@ -431,8 +433,11 @@ public class Connection {
         state = Label.FoundClientConnectingStop;
         return;
       case Connected:
-        // TODO: disconnect trigger disconnect cascade
-        state = Label.WaitingForDisconnect;
+        state = Label.ConnectedStopping;
+        foundRemote.disconnect();
+        return;
+      case ConnectedStoppingPleaseReconnect:
+        state = Label.ConnectedStopping;
         return;
       case WaitingForDisconnect:
         // NO-OP
@@ -458,6 +463,9 @@ public class Connection {
       case Connected:
         // this will retry a retry
         foundRemote.disconnect();
+        return;
+      case ConnectedStopping:
+        state = Label.ConnectedStoppingPleaseReconnect;
         return;
       case WaitingForDisconnect:
         // just ignore it

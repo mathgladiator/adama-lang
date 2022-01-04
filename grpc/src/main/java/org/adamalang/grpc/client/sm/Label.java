@@ -30,6 +30,10 @@ public enum Label {
 
   Connected, // we connected on that client and we are fully established
 
+  ConnectedStopping, // we were connected, but routing required us disconnect
+
+  ConnectedStoppingPleaseReconnect, // we were connected, but routing required us disconnect, and then changed its mind
+
   WaitingForDisconnect, // we are connect and a disconnect was issued to terminate the entire thing
 
   Failed, // an error happened and we can't recover from it

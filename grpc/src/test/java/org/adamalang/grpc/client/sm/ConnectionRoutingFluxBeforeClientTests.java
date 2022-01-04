@@ -38,7 +38,7 @@ public class ConnectionRoutingFluxBeforeClientTests {
       for (int k = 0; k < servers.length; k++) {
         servers[k] =
             new TestBed(
-                20005 + k,
+                24005 + k,
                 "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
         servers[k].startServer();
       }
@@ -83,21 +83,21 @@ public class ConnectionRoutingFluxBeforeClientTests {
         ranStart.run();
         subscribed.run();
         gotNullTargetAndCancel.run();
-        engineDirect.integrate("127.0.0.1:20005", Collections.singleton("space"));
+        engineDirect.integrate("127.0.0.1:24005", Collections.singleton("space"));
         gotNewTarget.run();
         newTargetBroadcastQueued.run();
         gotFirstTarget.run();
         gotFindRequest.run();
         Assert.assertEquals("state=FindingClientWait", connection.toString());
-        engineDirect.integrate("127.0.0.1:20006", Collections.singleton("space"));
-        engineDirect.integrate("127.0.0.1:20005", Collections.emptyList());
+        engineDirect.integrate("127.0.0.1:24006", Collections.singleton("space"));
+        engineDirect.integrate("127.0.0.1:24005", Collections.emptyList());
         targetChange.run();
         broadcastNewTarget.run();
         executeFound.run();
         clientConnected.run();
         clientEstablished.run();
         gotChangedTarget.run();
-        engineDirect.integrate("127.0.0.1:20006", Collections.emptyList());
+        engineDirect.integrate("127.0.0.1:24006", Collections.emptyList());
         targetLost.run();
         broadcastLost.run();
         clientGotBroadcast.run();
@@ -108,7 +108,7 @@ public class ConnectionRoutingFluxBeforeClientTests {
         clientEstablishedAgain.run();
         foundClientAgain.run();
         Assert.assertEquals("state=NotConnected", connection.toString());
-        engineDirect.integrate("127.0.0.1:20005", Collections.singleton("space"));
+        engineDirect.integrate("127.0.0.1:24005", Collections.singleton("space"));
         integrateFinalHost.run();
         connection.close();
         executeDisconnect.run();

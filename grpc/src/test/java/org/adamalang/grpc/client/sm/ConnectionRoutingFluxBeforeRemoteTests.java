@@ -44,7 +44,7 @@ public class ConnectionRoutingFluxBeforeRemoteTests {
       for (int k = 0; k < servers.length; k++) {
         servers[k] =
             new TestBed(
-                20005 + k,
+                25005 + k,
                 "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
         CountDownLatch latchMade = new CountDownLatch(1);
         servers[k].coreService.create(
@@ -118,7 +118,7 @@ public class ConnectionRoutingFluxBeforeRemoteTests {
         ranStart.run();
         subscribed.run();
         gotNullTargetAndCancel.run();
-        engineDirect.integrate("127.0.0.1:20005", Collections.singleton("space"));
+        engineDirect.integrate("127.0.0.1:25005", Collections.singleton("space"));
         gotNewTarget.run();
         newTargetBroadcastQueued.run();
         gotFirstTarget.run();
@@ -128,8 +128,8 @@ public class ConnectionRoutingFluxBeforeRemoteTests {
         clientEstablished.run();
         gotClient.run();
         Assert.assertEquals("state=FoundClientConnectingWait", connection.toString());
-        engineDirect.integrate("127.0.0.1:20006", Collections.singleton("space"));
-        engineDirect.integrate("127.0.0.1:20005", Collections.emptyList());
+        engineDirect.integrate("127.0.0.1:25006", Collections.singleton("space"));
+        engineDirect.integrate("127.0.0.1:25005", Collections.emptyList());
         targetChange.run();
         broadcastNewTarget.run();
         gotSecondTarget.run();
@@ -148,7 +148,7 @@ public class ConnectionRoutingFluxBeforeRemoteTests {
         registerFound.run();
         addConnection.run();
         Assert.assertEquals("state=FoundClientConnectingWait", connection.toString());
-        engineDirect.remove("127.0.0.1:20006");
+        engineDirect.remove("127.0.0.1:25006");
         removeTarget.run();
         broadcastRemoval.run();
         understandRemovalForConnection.run();
@@ -160,7 +160,6 @@ public class ConnectionRoutingFluxBeforeRemoteTests {
         finalStatus.run();
         connectionGetsDisconnect.run();
         Assert.assertEquals("state=NotConnected", connection.toString());
-        Thread.sleep(1000);
         directExector.survey();
         finderExecutor.survey();
         connectionExecutor.survey();

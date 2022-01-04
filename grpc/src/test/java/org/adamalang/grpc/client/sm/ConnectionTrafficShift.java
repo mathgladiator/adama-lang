@@ -174,7 +174,6 @@ public class ConnectionTrafficShift {
         events.assertWrite(3, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         completeConnection.run();
         Assert.assertEquals("state=Connected", connection.toString());
-        Thread.sleep(1000);
         System.err.println("SURVEY");
         directExector.survey();
         finderExecutor.survey();

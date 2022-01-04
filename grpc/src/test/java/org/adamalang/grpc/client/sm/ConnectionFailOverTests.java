@@ -46,7 +46,7 @@ public class ConnectionFailOverTests {
       for (int k = 0; k < servers.length; k++) {
         servers[k] =
             new TestBed(
-                20005 + k,
+                17005 + k,
                 "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
 
         CountDownLatch latchMade = new CountDownLatch(1);
@@ -130,8 +130,8 @@ public class ConnectionFailOverTests {
         events.assertWrite(0, "CONNECTED");
         subscribed.run();
         gotNullTargetAndCancel.run();
-        engineDirect.integrate("127.0.0.1:20005", Collections.singleton("space"));
-        engineDirect.integrate("127.0.0.1:20006", Collections.singleton("space"));
+        engineDirect.integrate("127.0.0.1:17005", Collections.singleton("space"));
+        engineDirect.integrate("127.0.0.1:17006", Collections.singleton("space"));
         gotNewTarget.run();
         newTargetBroadcastQueued.run();
         gotFirstTarget.run();
@@ -158,7 +158,7 @@ public class ConnectionFailOverTests {
         sendSeqResult.run();
         eventsGotUpdate.run();
         cb1.assertSuccess(6);
-        servers[1].stopServer();
+        servers[0].stopServer();
         gotDisconnect.run();
         Assert.assertEquals("state=Connected", connection.toString());
         connectionBroke.run();
@@ -166,8 +166,8 @@ public class ConnectionFailOverTests {
         connectionRetry.run();
         finderRetry.run();
         finderFailedAgain.run();
-        engineDirect.remove("127.0.0.1:20006");
-        finder.sync(new TreeSet<>(Collections.singleton("127.0.0.1:20005")));
+        engineDirect.remove("127.0.0.1:17005");
+        finder.sync(new TreeSet<>(Collections.singleton("127.0.0.1:17006")));
         executorRemoves.run();
         Assert.assertEquals("state=FindingClientWait", connection.toString());
         finderSyncs.run();

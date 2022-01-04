@@ -181,7 +181,6 @@ public class ConnectionActionQueueTests {
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         eventsGotUpdate.run();
         System.err.println("SURVEY");
-        Thread.sleep(1000);
         directExector.survey();
         finderExecutor.survey();
         connectionExecutor.survey();
