@@ -67,7 +67,7 @@ public class InstanceClientFinderTests {
           new InstanceClientFinder(
               servers[0].identity, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
-        finder.prime(targets);
+        finder.sync(targets);
         Assert.assertTrue(primed.await(25000, TimeUnit.MILLISECONDS));
         CountDownLatch latchFound = new CountDownLatch(1);
         finder.find(

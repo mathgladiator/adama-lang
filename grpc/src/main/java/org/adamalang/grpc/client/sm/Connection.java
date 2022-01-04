@@ -271,16 +271,7 @@ public class Connection {
               new NamedRunnable("connection-retry") {
                 @Override
                 public void execute() throws Exception {
-                  switch (state) {
-                    case FoundClientConnectingWait:
-                    case FoundClientConnectingTryNewTarget:
-                    case Connected:
-                      fireFindClient();
-                      return;
-                    case FoundClientConnectingStop:
-                      state = Label.NotConnected;
-                      return;
-                  }
+                  fireFindClient();
                 }
               },
               backoffConnectPeer);
@@ -296,7 +287,6 @@ public class Connection {
   }
 
   private void handle_onFoundClient() {
-    System.err.println("found client:" + state);
     backoffFindInstance = 0;
     switch (state) {
       case FindingClientWait:

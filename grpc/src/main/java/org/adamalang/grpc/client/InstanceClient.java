@@ -177,6 +177,10 @@ public class InstanceClient implements AutoCloseable {
     return docId;
   }
 
+  public boolean isAlive() {
+    return alive.get();
+  }
+
   @Override
   public void close() {
     executor.execute(
@@ -409,7 +413,7 @@ public class InstanceClient implements AutoCloseable {
           return;
         case STATUS:
           executor.execute(
-              new NamedRunnable("client-status", target, message.getStatus().toString()) {
+              new NamedRunnable("client-status", target, message.getStatus().getCode().toString()) {
                 @Override
                 public void execute() throws Exception {
                   if (message.getStatus().getCode() == StreamStatusCode.Connected) {

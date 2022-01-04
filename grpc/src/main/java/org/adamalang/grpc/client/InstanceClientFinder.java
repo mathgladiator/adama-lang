@@ -14,10 +14,7 @@ import org.adamalang.grpc.client.contracts.Lifecycle;
 import org.adamalang.grpc.client.contracts.QueueAction;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -84,10 +81,23 @@ public class InstanceClientFinder {
     return latch;
   }
 
-  public void prime(Collection<String> targets) {
+  public void sync(TreeSet<String> targets) {
     for (String target : targets) {
       find(target, null);
     }
+    mapExecutor.execute(new NamedRunnable("finder-cleaning") {
+      @Override
+      public void execute() throws Exception {
+        Iterator<Map.Entry<String, InstanceClientProxy>> it = clients.entrySet().iterator();
+        while (it.hasNext()) {
+          Map.Entry<String, InstanceClientProxy> entry = it.next();
+          if (!targets.contains(entry.getKey())) {
+            entry.getValue().close();
+            it.remove();
+          }
+        }
+      }
+    });
   }
 
   public void find(String target, QueueAction<InstanceClient> action) {
@@ -99,10 +109,7 @@ public class InstanceClientFinder {
             InstanceClientProxy cached = clients.get(target);
             if (cached == null) {
               // it doesn't exist, so create a proxy to hold the place
-              cached = new InstanceClientProxy();
-
-              // create the client and have it feed the proxy
-              new InstanceClient(identity, target, cached.executor, cached, logger);
+              cached = new InstanceClientProxy(target);
               // record the proxy if the above worked
               clients.put(target, cached);
             }
@@ -115,11 +122,13 @@ public class InstanceClientFinder {
 
   private class InstanceClientProxy implements Lifecycle {
     private final SimpleExecutor executor;
+    private InstanceClient createdClient;
     private InstanceClient client;
     private ArrayList<QueueAction<InstanceClient>> buffer;
 
-    private InstanceClientProxy() {
-      executor = clientExecutors[rng.nextInt(clientExecutors.length)];
+    private InstanceClientProxy(String target) throws Exception {
+      this.executor = clientExecutors[rng.nextInt(clientExecutors.length)];
+      this.createdClient = new InstanceClient(identity, target, executor, this, logger);
       client = null;
       buffer = null;
     }
@@ -159,14 +168,20 @@ public class InstanceClientFinder {
             @Override
             public void execute() throws Exception {
               InstanceClientProxy.this.client = null;
+              if (buffer != null) {
+                for (QueueAction<InstanceClient> action : buffer) {
+                  action.killDueToReject();
+                }
+                buffer = null;
+              }
             }
           });
     }
 
     public void close() {
-      if (client != null) {
-        client.close();
-      } else if (buffer != null) {
+      createdClient.close();
+      client = null;
+      if (buffer != null) {
         for (QueueAction<InstanceClient> action : buffer) {
           action.killDueToReject();
         }
@@ -178,11 +193,15 @@ public class InstanceClientFinder {
       if (client != null) {
         action.execute(client);
       } else {
-        if (buffer == null) {
-          buffer = new ArrayList<>();
+        if (createdClient.isAlive()) {
+          if (buffer == null) {
+            buffer = new ArrayList<>();
+          }
+          // TODO: enforce limit
+          buffer.add(action);
+        } else {
+          action.killDueToReject();
         }
-        // TODO: enforce limit
-        buffer.add(action);
       }
     }
   }

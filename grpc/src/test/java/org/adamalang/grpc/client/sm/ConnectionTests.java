@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -67,7 +68,7 @@ public class ConnectionTests {
         InstanceClientFinder finder =
             new InstanceClientFinder(
                 server.identity, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
-        finder.prime(Collections.singleton("127.0.0.1:30000"));
+        finder.sync(new TreeSet<>(Collections.singleton("127.0.0.1:30000")));
         Assert.assertTrue(primed.await(15000, TimeUnit.MILLISECONDS));
         ConnectionBase base = new ConnectionBase(engine, finder, server.clientExecutor);
         CountDownLatch latch = new CountDownLatch(1);
@@ -147,7 +148,7 @@ public class ConnectionTests {
         InstanceClientFinder finder =
             new InstanceClientFinder(
                 server.identity, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
-        finder.prime(Collections.singleton("127.0.0.1:30001"));
+        finder.sync(new TreeSet<>(Collections.singleton("127.0.0.1:30001")));
         Assert.assertTrue(primed.await(15000, TimeUnit.MILLISECONDS));
         CountDownLatch created = new CountDownLatch(1);
         finder.find(

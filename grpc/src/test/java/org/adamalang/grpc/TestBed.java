@@ -41,6 +41,7 @@ public class TestBed implements AutoCloseable {
   public final BillingPubSub billingPubSub;
   private final Server server;
   public final AtomicInteger deploymentScans;
+  public final CoreService coreService;
 
   public TestBed(int port, String code) throws Exception {
     clientExecutor = SimpleExecutor.create("testbed-client");
@@ -63,7 +64,7 @@ public class TestBed implements AutoCloseable {
     ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
     this.billingPubSub = new BillingPubSub(base);
 
-    CoreService service =
+    this.coreService =
         new CoreService(
             base, //
             billingPubSub.publisher(), //
@@ -73,7 +74,7 @@ public class TestBed implements AutoCloseable {
 
     this.identity = MachineIdentity.fromFile(prefixForLocalhost());
 
-    ServerNexus nexus = new ServerNexus(identity, service, base, () -> {
+    ServerNexus nexus = new ServerNexus(identity, coreService, base, () -> {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();
       }
