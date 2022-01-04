@@ -78,7 +78,14 @@ public class RoutingEngine {
         new NamedRunnable("routing-subscribe", key.space, key.key) {
           @Override
           public void execute() throws Exception {
-            onCancel.accept(table.subscribe(key, subscriber));
+            Runnable cancel = table.subscribe(key, subscriber);
+            onCancel.accept(() ->
+              executor.execute(new NamedRunnable("routing-unsubscribe") {
+                @Override
+                public void execute() throws Exception {
+                  cancel.run();
+                }
+              }));
           }
         });
   }
