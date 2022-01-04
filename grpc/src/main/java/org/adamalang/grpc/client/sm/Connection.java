@@ -265,7 +265,6 @@ public class Connection {
         unsubscribeFromRouting.run();
       }
     }
-    // TODO: what other clean up is there
     state = Label.Failed;
     events.error(code);
   }
@@ -286,6 +285,7 @@ public class Connection {
                 }
               },
               backoffConnectPeer);
+          backoffConnectPeer = (int) (backoffConnectPeer + Math.random() * backoffConnectPeer + 1);
         } else {
           handle_onError(ErrorCodes.STATE_MACHINE_UNABLE_TO_RECONNECT);
         }

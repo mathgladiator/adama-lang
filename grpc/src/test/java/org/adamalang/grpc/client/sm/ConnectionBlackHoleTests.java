@@ -398,17 +398,11 @@ public class ConnectionBlackHoleTests {
         Runnable broadcastNewTargetForReal = directExector.latchAtAndDrain(7, 1);
         Runnable connectionGotRealTarget = connectionExecutor.latchAtAndDrain(9, 1);
         Runnable sendDisconnect = finderExecutor.latchAtAndDrain(11, 1);
-
         Runnable executeRemovalFinal = directExector.latchAtAndDrain(8, 1);
         Runnable broadcastRemovalFinal = directExector.latchAtAndDrain(9, 1);
         Runnable connectionGotBroadcast = connectionExecutor.latchAtAndDrain(10, 1);
-
-
         Runnable gotDisconnectSignalBack = finderExecutor.latchAtAndDrain(12, 1);
-
-
         Runnable connectionGotDisconnect = connectionExecutor.latchAtAndDrain(11, 1);
-
         ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
@@ -482,5 +476,4 @@ public class ConnectionBlackHoleTests {
       fauxExector.shutdown();
     }
   }
-
 }

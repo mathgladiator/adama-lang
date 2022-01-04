@@ -8,7 +8,6 @@ import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.InstanceClientFinder;
 import org.adamalang.grpc.client.routing.MockSpaceTrackingEvents;
 import org.adamalang.grpc.client.routing.RoutingEngine;
-import org.adamalang.grpc.mocks.LatchedSeqCallback;
 import org.adamalang.grpc.mocks.MockSimpleEvents;
 import org.adamalang.grpc.mocks.SlowSingleThreadedExecutorFactory;
 import org.adamalang.runtime.contracts.Key;
@@ -16,8 +15,6 @@ import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 

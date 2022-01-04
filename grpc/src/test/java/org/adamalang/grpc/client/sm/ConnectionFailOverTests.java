@@ -111,8 +111,7 @@ public class ConnectionFailOverTests {
         Runnable finderCleansUp = finderExecutor.latchAtAndDrain(21, 3);
         Runnable broadcastNewTarget = directExector.latchAtAndDrain(5, 1);
         Runnable completeClients = finderExecutor.latchAtAndDrain(23, 2);
-        Runnable newConnectionAvailable = finderExecutor.latchAtAndDrain(24, 1);
-        Runnable newConnectionEstablished = finderExecutor.latchAtAndDrain(25, 1);
+        Runnable newConnectionEstablished = finderExecutor.latchAtAndDrain(25, 2);
         Runnable connectionFoundTarget = connectionExecutor.latchAtAndDrain(10, 2);
         Runnable newConnectionSignal = connectionExecutor.latchAtAndDrain(11, 1);
         Runnable findNewTargetForFailOver = finderExecutor.latchAtAndDrain(26, 1);
@@ -174,7 +173,6 @@ public class ConnectionFailOverTests {
         finderCleansUp.run();
         broadcastNewTarget.run();
         completeClients.run();
-        newConnectionAvailable.run();
         newConnectionEstablished.run();
         Assert.assertEquals("state=FindingClientWait", connection.toString());
         connectionFoundTarget.run();
