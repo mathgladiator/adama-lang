@@ -19,7 +19,15 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** You ask it for clients, and you get clients */
+
 public class InstanceClientFinder {
+  /** tests to write
+   + kill finder once a client is connected
+   + reject queue
+   + add after killing queue
+   + too many items in the queue
+   + fill queue with things, then disconnect the server on "finder-lost"; use sync
+   */
   private final MachineIdentity identity;
   private final RoutingEngine engine;
   private final HashMap<String, InstanceClientProxy> clients;
@@ -197,8 +205,11 @@ public class InstanceClientFinder {
           if (buffer == null) {
             buffer = new ArrayList<>();
           }
-          // TODO: enforce limit
-          buffer.add(action);
+          if (buffer.size() > 16) {
+            action.killDueToReject();
+          } else {
+            buffer.add(action);
+          }
         } else {
           action.killDueToReject();
         }
