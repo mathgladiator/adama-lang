@@ -50,6 +50,7 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
 
   private synchronized Runnable drainUnderLock(int expectedSize) {
     ArrayList<Runnable> copy = new ArrayList<>(runnables);
+    Assert.assertEquals(expectedSize, copy.size());
     runnables.clear();
     return () -> {
       for (Runnable runnable : copy) {

@@ -69,7 +69,7 @@ public class Connection {
     this.state = Label.NotConnected;
     this.target = null;
     this.foundClient = null;
-    this.buffer = new ArrayList<>();
+    this.buffer = null;
     this.foundRemote = null;
     this.backoffFindInstance = 1;
     this.backoffConnectPeer = 1;
@@ -152,7 +152,11 @@ public class Connection {
       if (buffer == null) {
         buffer = new ArrayList<>();
       }
-      buffer.add(action);
+      if (buffer.size() >= 16) {
+        action.killDueToReject();
+      } else {
+        buffer.add(action);
+      }
     }
   }
 
@@ -192,7 +196,7 @@ public class Connection {
           public void execute() throws Exception {
             bufferOrExecute(
                 new QueueAction<Remote>(
-                    ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED) {
+                    ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_ATTACH_REJECTED) {
                   @Override
                   protected void executeNow(Remote item) {
                     item.attach(id, name, contentType, size, md5, sha384, callback);
@@ -240,6 +244,12 @@ public class Connection {
     switch (state) {
       case FoundClientConnectingWait:
         state = Label.Connected;
+        if (buffer != null) {
+          for (QueueAction<Remote> action : buffer) {
+            action.execute(foundRemote);
+          }
+          buffer = null;
+        }
         return;
       case FoundClientConnectingStop:
       case FoundClientConnectingTryNewTarget:
