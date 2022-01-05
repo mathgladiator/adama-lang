@@ -33,7 +33,8 @@ public class BackendDataServiceInstaller {
             .append("  `space` VARCHAR(128) NOT NULL,") //
             .append("  `key` VARCHAR(512) NOT NULL,") //
             .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
-            .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
+            .append(
+                "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
             .append("  `head_seq` INT(4) UNSIGNED NOT NULL,") //
             .append("  `invalidate` BOOLEAN NOT NULL,") //
             .append("  `when` DATETIME NOT NULL,") //

@@ -10,8 +10,8 @@
 package org.adamalang.mysql.frontend;
 
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
 import org.junit.Assert;
 import org.junit.Test;

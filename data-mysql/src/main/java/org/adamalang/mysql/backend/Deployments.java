@@ -13,7 +13,10 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class Deployments {
@@ -32,18 +35,6 @@ public class Deployments {
           statement.execute();
         }
       }
-    }
-  }
-
-  public static class Deployment {
-    public final String space;
-    public final String hash;
-    public final String plan;
-
-    public Deployment(String space, String hash, String plan) {
-      this.space = space;
-      this.hash = hash;
-      this.plan = plan;
     }
   }
 
@@ -91,7 +82,8 @@ public class Deployments {
     }
   }
 
-  public static void deploy(DataBase dataBase, String space, String target, String hash, String plan) throws Exception {
+  public static void deploy(
+      DataBase dataBase, String space, String target, String hash, String plan) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       { // delete prior versions
         String sql =
@@ -122,6 +114,18 @@ public class Deployments {
           statement.execute();
         }
       }
+    }
+  }
+
+  public static class Deployment {
+    public final String space;
+    public final String hash;
+    public final String plan;
+
+    public Deployment(String space, String hash, String plan) {
+      this.space = space;
+      this.hash = hash;
+      this.plan = plan;
     }
   }
 }

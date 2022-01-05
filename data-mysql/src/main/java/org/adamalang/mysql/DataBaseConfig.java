@@ -12,9 +12,6 @@ package org.adamalang.mysql;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.adamalang.runtime.json.JsonStreamReader;
 
-import java.io.File;
-import java.nio.file.Files;
-
 /** defines the config for the mysql data service */
 public class DataBaseConfig {
   public final String jdbcUrl;
@@ -49,11 +46,15 @@ public class DataBaseConfig {
                 case "database_name":
                   _databaseName = reader.readString();
                   break;
+                default:
+                  reader.skipValue();
               }
             }
           } else {
-            reader.skipValue();
+            throw new RuntimeException("role '" + testRole + "'/'any' should be an object");
           }
+        } else {
+          reader.skipValue();
         }
       }
     }

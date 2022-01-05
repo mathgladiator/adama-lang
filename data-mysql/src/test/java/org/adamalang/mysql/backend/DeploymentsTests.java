@@ -9,6 +9,7 @@
  */
 package org.adamalang.mysql.backend;
 
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
@@ -28,19 +29,19 @@ public class DeploymentsTests {
         ArrayList<Deployments.Deployment> listing = Deployments.list(dataBase, "127.0.0.1:230");
         Assert.assertEquals(0, listing.size());
         Deployments.deploy(dataBase, "space1", "127.0.0.1:230", "hash1", "plan1");
-        listing = Deployments.list(dataBase, "127.0.0.1:230");;
+        listing = Deployments.list(dataBase, "127.0.0.1:230");
         Assert.assertEquals(1, listing.size());
         Assert.assertEquals("space1", listing.get(0).space);
         Assert.assertEquals("hash1", listing.get(0).hash);
         Assert.assertEquals("plan1", listing.get(0).plan);
         Deployments.deploy(dataBase, "space1", "127.0.0.1:230", "hash1x", "plan1x");
-        listing = Deployments.list(dataBase, "127.0.0.1:230");;
+        listing = Deployments.list(dataBase, "127.0.0.1:230");
         Assert.assertEquals(1, listing.size());
         Assert.assertEquals("space1", listing.get(0).space);
         Assert.assertEquals("hash1x", listing.get(0).hash);
         Assert.assertEquals("plan1x", listing.get(0).plan);
         Deployments.deploy(dataBase, "space2", "127.0.0.1:230", "hash2x", "plan2x");
-        listing = Deployments.list(dataBase, "127.0.0.1:230");;
+        listing = Deployments.list(dataBase, "127.0.0.1:230");
         Assert.assertEquals(2, listing.size());
         Assert.assertEquals("space1", listing.get(0).space);
         Assert.assertEquals("hash1x", listing.get(0).hash);
@@ -49,11 +50,18 @@ public class DeploymentsTests {
         Assert.assertEquals("hash2x", listing.get(1).hash);
         Assert.assertEquals("plan2x", listing.get(1).plan);
         Deployments.undeploy(dataBase, "space1", "127.0.0.1:230");
-        listing = Deployments.list(dataBase, "127.0.0.1:230");;
+        listing = Deployments.list(dataBase, "127.0.0.1:230");
         Assert.assertEquals(1, listing.size());
         Assert.assertEquals("space2", listing.get(0).space);
         Assert.assertEquals("hash2x", listing.get(0).hash);
         Assert.assertEquals("plan2x", listing.get(0).plan);
+        Assert.assertEquals("plan2x", Deployments.get(dataBase, "127.0.0.1:230", "space2").plan);
+        try {
+          Deployments.get(dataBase, "127.0.0.1:230", "space1000");
+          Assert.fail();
+        } catch (ErrorCodeException ec) {
+          Assert.assertEquals(643084, ec.code);
+        }
       } finally {
         installer.uninstall();
       }

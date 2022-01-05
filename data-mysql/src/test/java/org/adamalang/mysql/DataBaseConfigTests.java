@@ -85,6 +85,31 @@ public class DataBaseConfigTests {
   }
 
   @Test
+  public void skipAndOk() throws Exception {
+    DataBaseConfig c =
+        new DataBaseConfig(
+            "{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"z\":123}",
+            "x");
+    Assert.assertEquals("1", c.jdbcUrl);
+    Assert.assertEquals("2", c.user);
+    Assert.assertEquals("3", c.password);
+    Assert.assertEquals("4", c.databaseName);
+  }
+
+  @Test
+  public void skipAndNotOk() throws Exception {
+    try {
+      new DataBaseConfig(
+          "{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"any\":123}",
+          "x");
+      Assert.fail();
+    } catch (Exception ex) {
+      Assert.assertTrue(ex instanceof RuntimeException);
+      Assert.assertTrue(ex.getMessage().contains(" should be an object"));
+    }
+  }
+
+  @Test
   public void localIntegration() throws Exception {
     DataBaseConfig dataBaseConfig = getLocalIntegrationConfig();
     dataBaseConfig.createComboPooledDataSource().close();

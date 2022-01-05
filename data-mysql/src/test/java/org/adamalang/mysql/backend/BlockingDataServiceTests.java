@@ -9,8 +9,8 @@
  */
 package org.adamalang.mysql.backend;
 
-import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
 import org.adamalang.mysql.mocks.SimpleDataCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
@@ -27,7 +27,7 @@ public class BlockingDataServiceTests {
           1, NtClient.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0);
   private static final DataService.RemoteDocumentUpdate UPDATE_2 =
       new DataService.RemoteDocumentUpdate(
-          2, NtClient.NO_ONE, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0);
+          2, null, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0);
 
   @Test
   public void flow_1() throws Exception {
