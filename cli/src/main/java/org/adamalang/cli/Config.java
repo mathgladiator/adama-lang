@@ -10,6 +10,7 @@
 package org.adamalang.cli;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 
@@ -91,5 +92,19 @@ public class Config {
       return (ObjectNode) node;
     }
     return Json.newJsonObject();
+  }
+
+  public ArrayList<String> get_str_list(String field) {
+    JsonNode node = read().get(field);
+    if (node instanceof ArrayNode) {
+      ArrayList<String> results = new ArrayList<>(node.size());
+      for (int k = 0; k < node.size(); k++) {
+        if (node.get(k).isTextual()) {
+          results.add(node.get(k).textValue());
+        }
+      }
+      return results;
+    }
+    return new ArrayList<>();
   }
 }

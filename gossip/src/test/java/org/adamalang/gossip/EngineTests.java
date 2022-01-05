@@ -71,7 +71,6 @@ public class EngineTests {
       latch.await(5000, TimeUnit.MILLISECONDS);
       versionCount = versions.size();
       Thread.sleep(1000);
-      System.err.println("ROUND:" + versions.size());
     }
     // this shutdown is very noisy
     for (Engine engine : engines) {

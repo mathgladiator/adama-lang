@@ -57,7 +57,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     if (connToKill != null) {
       connToKill.kill();
     }
-    ctx.channel().close();
+    ctx.close();
   }
 
   private ServiceConnection clean() {

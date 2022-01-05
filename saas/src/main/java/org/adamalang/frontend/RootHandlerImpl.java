@@ -19,6 +19,9 @@ import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
 import org.adamalang.common.Validators;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.grpc.client.contracts.SeqCallback;
+import org.adamalang.grpc.client.contracts.SimpleEvents;
+import org.adamalang.grpc.client.sm.Connection;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
@@ -29,16 +32,17 @@ import java.security.KeyPair;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 public class RootHandlerImpl implements RootHandler {
   private final ExternNexus nexus;
-  private final SecureRandom rng;
+  private final Random rng;
   private final ExceptionLogger logger;
 
   public RootHandlerImpl(ExternNexus nexus) throws Exception {
     this.nexus = nexus;
-    this.rng = SecureRandom.getInstanceStrong();
+    this.rng = new Random(); // TODO: figure out why secure random was hanging
     this.logger = nexus.makeLogger(RootHandler.class);
   }
 
@@ -325,9 +329,59 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public DocumentStreamHandler handle(ConnectionCreateRequest request, DataResponder responder) {
-    // TODO: find the _right_ adama host
-    // TODO: execute the connect
-    return null;
+    return new DocumentStreamHandler() {
+      private Connection connection;
+      @Override
+      public void bind() {
+        connection = nexus.client.create(request.who.who.agent, request.who.who.authority, request.space, request.key, new SimpleEvents() {
+          @Override
+          public void connected() {
+
+          }
+
+          @Override
+          public void delta(String data) {
+            responder.next(Json.parseJsonObject(data));
+          }
+
+          @Override
+          public void error(int code) {
+            responder.error(new ErrorCodeException(code));
+          }
+
+          @Override
+          public void disconnected() {
+            responder.finish();
+          }
+        });
+      }
+
+      @Override
+      public void handle(ConnectionSendRequest request, SimpleResponder responder) {
+        connection.send(request.channel, null, request.message.toString(), new SeqCallback() {
+          @Override
+          public void success(int seq) {
+            responder.complete();
+          }
+
+          @Override
+          public void error(int code) {
+            responder.error(new ErrorCodeException(code));
+          }
+        });
+      }
+
+      // TODO: attach, canAttach
+      @Override
+      public void handle(ConnectionEndRequest request, SimpleResponder responder) {
+        connection.close();
+      }
+
+      @Override
+      public void disconnect(long id) {
+        connection.close();
+      }
+    };
   }
 
   @Override

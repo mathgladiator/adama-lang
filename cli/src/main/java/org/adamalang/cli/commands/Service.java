@@ -19,6 +19,7 @@ import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.InstanceSetChain;
 import org.adamalang.gossip.Metrics;
+import org.adamalang.grpc.client.Client;
 import org.adamalang.grpc.server.Server;
 import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBaseConfig;
@@ -63,34 +64,20 @@ public class Service {
     public static void serviceYolo(Config config) {
     }
 
-
-
     public static void serviceBackend(Config config) throws Exception {
-        // TODO: pull backend port from config
-        int port = 3281;
-
-        // TODO: embed the identity into the config?
-        MachineIdentity identity = MachineIdentity.fromFile("me.identity");
-
-        Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(), 20000, GOSSIP_METRICS);
+        int port = config.get_int("adama_port", 3281);
+        int gossipPort = config.get_int("gossip_backend_port", 8232);
+        int dataThreads = config.get_int("data_thread_count", 32);
+        int coreThreads = config.get_int("service_thread_count", 4);
+        String identityFileName = config.get_string("identity_filename", "me.identity");
+        MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
+        Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, GOSSIP_METRICS);
         engine.start();
-
         DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
         DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "backend"));
-
-        // TODO: pull threads from config
-        ThreadedDataService dataService = new ThreadedDataService(16, () -> new BlockingDataService(dataBase) );
-
-        // TODO: transform the billing into a heat vector that is sent to all clients
-        // TODO: record the billing into a database (pick a random client to record bill)
-
+        ThreadedDataService dataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(dataBase) );
         BillingPubSub billingPubSub = new BillingPubSub(deploymentFactoryBase);
-
-        // TODO: pull service threads from config
-        CoreService service = new CoreService(deploymentFactoryBase, //
-            billingPubSub.publisher(),
-            dataService, //
-            TimeSource.REAL_TIME, 2);
+        CoreService service = new CoreService(deploymentFactoryBase, billingPubSub.publisher(), dataService, TimeSource.REAL_TIME, coreThreads);
 
         billingPubSub.subscribe((bills) -> {
             // TODO: submit to billing service
@@ -121,35 +108,36 @@ public class Service {
 
         // prime the host with spaces
         scanForDeployments.run();
-
         ServerNexus nexus = new ServerNexus(identity, service, deploymentFactoryBase, scanForDeployments, billingPubSub, port, 4);
-
-        // TODO: hold onto the Server reference and kill on a signal, need signal listener
+        // TODO: hold onto the Server reference and kill on a signal, need signal listener to clean shutdown
         new Server(nexus).start();
     }
 
     public static void serviceFrontend(Config config) throws Exception {
         DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "frontend"));
-
-        // TODO: embed the identity into the config?
-        MachineIdentity identity = MachineIdentity.fromFile("me.identity");
-
-        // TODO: pull gossip port from config
-        Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(), 20001, GOSSIP_METRICS);
+        String identityFileName = config.get_string("identity_filename", "me.identity");
+        int gossipPort = config.get_int("gossip_frontend_port", 8233);
+        MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
+        Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, GOSSIP_METRICS);
         engine.start();
+        WebConfig webConfig = new WebConfig(config.get_or_create_child("web"));
 
+        // TODO: have some sense of health checking in the web package
+        /*
+        engine.newApp("web", webConfig.port, (hb) -> {
+
+        });
+        */
+
+        Client client = new Client(identity);
+        engine.subscribe("adama", client.getTargetPublisher());
         ExternNexus nexus = new ExternNexus(new Email() {
             @Override
             public void sendCode(String email, String code) {
                 System.err.println("Email:" + email + " --> " + code);
             }
-        }, dataBase);
-
-        // TODO: link the gRPC stuff here for talking to Adama
-
+        }, dataBase, client);
         ServiceBase serviceBase = BootstrapFrontend.make(nexus);
-
-        WebConfig webConfig = new WebConfig(config.get_or_create_child("web"));
         final var runnable = new ServiceRunnable(webConfig, serviceBase);
         final var thread = new Thread(runnable);
         thread.start();

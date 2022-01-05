@@ -31,8 +31,7 @@ public class BootstrapFrontend {
     // TODO: make multiple of these, pull nThreads from config
     ExecutorService executor = Executors.newSingleThreadExecutor();
     RootHandlerImpl handler = new RootHandlerImpl(extern);
-    SpacePolicyLocator spacePolicyLocator =
-        new SpacePolicyLocator(Executors.newSingleThreadExecutor(), extern);
+    SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(Executors.newSingleThreadExecutor(), extern);
     UserIdResolver userIdResolver = new UserIdResolver(Executors.newSingleThreadExecutor(), extern);
 
     return context ->

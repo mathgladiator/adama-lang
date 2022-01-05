@@ -49,7 +49,6 @@ public class Engine implements AutoCloseable {
   private final Supplier<Server> serverSupplier;
   private final HashMap<String, Link> links;
   private final HashMap<String, ArrayList<Consumer<Collection<String>>>> subscribersByApp;
-  private final int _PORT;
 
   private String broadcastHash;
   private io.grpc.Server server;
@@ -58,7 +57,6 @@ public class Engine implements AutoCloseable {
   public Engine(
       MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, Metrics metrics)
       throws Exception {
-    this._PORT = port;
     this.credentials =
         TlsChannelCredentials.newBuilder() //
             .keyManager(identity.getCert(), identity.getKey()) //
@@ -163,7 +161,6 @@ public class Engine implements AutoCloseable {
           int wait = 100;
           for (int k = 0; k < 4; k++) {
             wait += jitter.nextInt(100);
-            ;
           }
           gossiper =
               executor.schedule(
