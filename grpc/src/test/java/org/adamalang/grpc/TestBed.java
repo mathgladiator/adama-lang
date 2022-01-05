@@ -74,7 +74,7 @@ public class TestBed implements AutoCloseable {
 
     this.identity = MachineIdentity.fromFile(prefixForLocalhost());
 
-    ServerNexus nexus = new ServerNexus(identity, coreService, base, () -> {
+    ServerNexus nexus = new ServerNexus(identity, coreService, base, (space) -> {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();
       }

@@ -144,9 +144,9 @@ public class InstanceClient implements AutoCloseable {
     stub.create(request, CreateCallback.WRAP(callback, logger));
   }
 
-  public void scanDeployments(ScanDeploymentCallback callback) {
+  public void scanDeployments(String space, ScanDeploymentCallback callback) {
     stub.scanDeployments(
-        ScanDeploymentsRequest.newBuilder().build(), ScanDeploymentCallback.WRAP(callback));
+        ScanDeploymentsRequest.newBuilder().setSpace(space).build(), ScanDeploymentCallback.WRAP(callback));
   }
 
   /** connect to a document */

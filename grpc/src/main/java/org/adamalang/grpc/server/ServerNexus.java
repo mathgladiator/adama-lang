@@ -14,12 +14,14 @@ import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 
+import java.util.function.Consumer;
+
 public class ServerNexus {
   public final MachineIdentity identity;
   public final CoreService service;
   public final BillingPubSub billingPubSub;
   public final DeploymentFactoryBase deploymentFactoryBase;
-  public final Runnable scanForDeployments;
+  public final Consumer<String> scanForDeployments;
   public final int port;
   public final int handlerThreads;
 
@@ -27,7 +29,7 @@ public class ServerNexus {
       MachineIdentity identity,
       CoreService service,
       DeploymentFactoryBase deploymentFactoryBase,
-      Runnable scanForDeployments,
+      Consumer<String> scanForDeployments,
       BillingPubSub billingPubSub,
       int port,
       int handlerThreads) {

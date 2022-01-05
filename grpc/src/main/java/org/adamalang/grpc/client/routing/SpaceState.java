@@ -13,10 +13,7 @@ import org.adamalang.common.Hashing;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Consumer;
 
 /** the collection of targets for a single space; core element of the routing table */
@@ -43,6 +40,10 @@ public class SpaceState {
     invalid = true;
   }
 
+  public TreeSet<String> list() {
+    return new TreeSet<>(targets);
+  }
+
   public boolean recompute(Consumer<Set<String>> share) {
     int count = 0;
     if (invalid) {
@@ -61,7 +62,7 @@ public class SpaceState {
     return count == 0;
   }
 
-  private String pick(String key) {
+  public String pick(String key) {
     String winner = null;
     String winningHash = "";
     byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);

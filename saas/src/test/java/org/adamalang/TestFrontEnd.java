@@ -48,7 +48,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     DataBase dataBase = new DataBase(new DataBaseConfig(config, "frontend"));
     this.installer = new FrontendManagementInstaller(dataBase);
     installer.install();
-    this.nexus = new ExternNexus(this, dataBase, null);
+    this.nexus = new ExternNexus(this, dataBase, dataBase, null);
     this.frontend = BootstrapFrontend.make(nexus);
     this.context = new ConnectionContext("home", "ip", "agent");
     connection = this.frontend.establish(context);
@@ -58,7 +58,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   @Override
   public void close() throws Exception {
     installer.uninstall();
-    nexus.dataBase.close();
+    nexus.close();
   }
 
   @Override

@@ -14,26 +14,23 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.Json;
-import org.adamalang.common.Validators;
+import org.adamalang.common.*;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.grpc.client.contracts.CreateCallback;
 import org.adamalang.grpc.client.contracts.SeqCallback;
 import org.adamalang.grpc.client.contracts.SimpleEvents;
 import org.adamalang.grpc.client.sm.Connection;
+import org.adamalang.mysql.backend.Deployments;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.transforms.results.AuthenticatedUser;
 
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
-import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.security.MessageDigest;
+import java.util.*;
 
 public class RootHandlerImpl implements RootHandler {
   private final ExternNexus nexus;
@@ -61,7 +58,7 @@ public class RootHandlerImpl implements RootHandler {
       public void handle(InitRevokeAllRequest request, SimpleResponder responder) {
         if (generatedCode.equals(request.code)) {
           try {
-            Users.removeAllKeys(nexus.dataBase, startRequest.userId);
+            Users.removeAllKeys(nexus.dataBaseManagement, startRequest.userId);
           } catch (Exception ex) {
             responder.error(
                 ErrorCodeException.detectOrWrap(
@@ -83,7 +80,7 @@ public class RootHandlerImpl implements RootHandler {
                 new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
             try {
               Users.addKey(
-                  nexus.dataBase,
+                  nexus.dataBaseManagement,
                   startRequest.userId,
                   publicKey,
                   new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60));
@@ -134,7 +131,7 @@ public class RootHandlerImpl implements RootHandler {
     String authority = UUID.randomUUID().toString();
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
-        Authorities.createAuthority(nexus.dataBase, request.who.id, authority);
+        Authorities.createAuthority(nexus.dataBaseManagement, request.who.id, authority);
         responder.complete(authority);
       } else {
         responder.error(
@@ -153,7 +150,7 @@ public class RootHandlerImpl implements RootHandler {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: setKeystore validates ownership
         Authorities.setKeystore(
-            nexus.dataBase, request.who.id, request.authority, request.keyStore.toString());
+            nexus.dataBaseManagement, request.who.id, request.authority, request.keyStore.toString());
         responder.complete();
       } else {
         responder.error(
@@ -170,7 +167,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(AuthorityListRequest request, AuthorityListingResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
-        for (String authority : Authorities.list(nexus.dataBase, request.who.id)) {
+        for (String authority : Authorities.list(nexus.dataBaseManagement, request.who.id)) {
           responder.next(authority);
         }
         responder.finish();
@@ -190,7 +187,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: deleteAuthority validates ownership
-        Authorities.deleteAuthority(nexus.dataBase, request.who.id, request.authority);
+        Authorities.deleteAuthority(nexus.dataBaseManagement, request.who.id, request.authority);
         responder.complete();
       } else {
         responder.error(
@@ -207,7 +204,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(SpaceCreateRequest request, SimpleResponder responder) {
     try {
       if (Validators.simple(request.space, 127)) {
-        Spaces.createSpace(nexus.dataBase, request.who.id, request.space);
+        Spaces.createSpace(nexus.dataBaseManagement, request.who.id, request.space);
         responder.complete();
       } else {
         responder.error(
@@ -224,7 +221,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(SpaceGetRequest request, PlanResponder responder) {
     try {
       if (request.policy.canUserGetPlan(request.who)) {
-        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.dataBase, request.policy.id)));
+        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.dataBaseManagement, request.policy.id)));
       } else {
         responder.error(
             new ErrorCodeException(ErrorCodes.API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE));
@@ -240,7 +237,22 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(SpaceSetRequest request, SimpleResponder responder) {
     try {
       if (request.policy.canUserSetPlan(request.who)) {
-        Spaces.setPlan(nexus.dataBase, request.policy.id, request.plan.toString());
+        // Change the master plan
+        String planJson = request.plan.toString();
+        MessageDigest digest = Hashing.md5();
+        digest.digest(planJson.getBytes(StandardCharsets.UTF_8));
+        String hash = Hashing.finishAndEncode(digest);
+        Spaces.setPlan(nexus.dataBaseManagement, request.policy.id, planJson);
+        nexus.client.getDeploymentTargets(request.space, (target) -> {
+          System.err.println("Deploying " + request.space + " to " + target);
+          try {
+            Deployments.deploy(nexus.dataBaseDeployments, request.space, target, hash, planJson);
+            nexus.client.notifyDeployment(target, request.space);
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        });
+
         responder.complete();
       } else {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
@@ -263,7 +275,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       Role role = Role.from(request.role);
       if (request.policy.canUserSetRole(request.who)) {
-        Spaces.setRole(nexus.dataBase, request.policy.id, request.userId, role);
+        Spaces.setRole(nexus.dataBaseManagement, request.policy.id, request.userId, role);
         responder.complete();
       } else {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE);
@@ -288,7 +300,7 @@ public class RootHandlerImpl implements RootHandler {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         for (Spaces.Item item :
             Spaces.list(
-                nexus.dataBase,
+                nexus.dataBaseManagement,
                 request.who.id,
                 request.marker,
                 request.limit == null ? 100 : request.limit)) {
@@ -308,8 +320,17 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(DocumentCreateRequest request, SimpleResponder responder) {
     try {
       if (Validators.simple(request.key, 511)) {
-        // TODO: find the appropriate Adama host
-        // TODO: send the create over and respond
+        nexus.client.create(request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new CreateCallback() {
+          @Override
+          public void created() {
+            responder.complete();
+          }
+
+          @Override
+          public void error(int code) {
+            responder.error(new ErrorCodeException(code));
+          }
+        });
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_INVALID_KEY));
       }
@@ -317,7 +338,6 @@ public class RootHandlerImpl implements RootHandler {
       responder.error(
           ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, logger));
     }
-
   }
 
   @Override
@@ -333,7 +353,7 @@ public class RootHandlerImpl implements RootHandler {
       private Connection connection;
       @Override
       public void bind() {
-        connection = nexus.client.create(request.who.who.agent, request.who.who.authority, request.space, request.key, new SimpleEvents() {
+        connection = nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, new SimpleEvents() {
           @Override
           public void connected() {
 

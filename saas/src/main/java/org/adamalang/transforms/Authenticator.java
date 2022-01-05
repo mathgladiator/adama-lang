@@ -48,7 +48,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
       ParsedToken parsedToken = new ParsedToken(identity);
       if ("adama".equals(parsedToken.iss)) {
         int userId = Integer.parseInt(parsedToken.sub);
-        for (String publicKey64 : Users.listKeys(nexus.dataBase, userId)) {
+        for (String publicKey64 : Users.listKeys(nexus.dataBaseManagement, userId)) {
           byte[] publicKey = Base64.getDecoder().decode(publicKey64);
           X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKey);
           KeyFactory kf = KeyFactory.getInstance("EC");
@@ -69,7 +69,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
         callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
       } else {
         ObjectNode keystore =
-            Json.parseJsonObject(Authorities.getKeystoreInternal(nexus.dataBase, parsedToken.iss));
+            Json.parseJsonObject(Authorities.getKeystoreInternal(nexus.dataBaseManagement, parsedToken.iss));
         // TODO: cache the lookup, parsing, teardown
         // TODO: decode the authority
         // TODO: for each public key, test the given token

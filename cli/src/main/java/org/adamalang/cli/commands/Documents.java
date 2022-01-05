@@ -28,12 +28,38 @@ public class Documents {
       case "connect":
         documentsConnect(config, next);
         return;
+      case "create":
+        documentsCreate(config, next);
+        return;
       case "help":
         documentsHelp(next);
         return;
     }
   }
 
+
+  private static void documentsCreate(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String key = Util.extractOrCrash("--key", "-k", args);
+    String arg = Util.extractOrCrash("--arg", "-aa", args);
+    String entropy = Util.extractWithDefault("--entropy", "--e", null, args);
+    ObjectNode argNode = Json.parseJsonObject(arg);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "document/create");
+        request.put("identity", identity);
+        request.put("space", space);
+        request.put("key", key);
+        if (entropy != null) {
+          request.put("entropy", entropy);
+        }
+        request.set("arg", argNode);
+        System.err.println(connection.execute(request).toPrettyString());
+      }
+    }
+  }
 
   private static void documentsConnect(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
@@ -66,6 +92,7 @@ public class Documents {
     System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("connect", Util.ANSI.Green) + "           Connection to a document and monitor it (will not respond to requests)");
+    System.out.println("    " + Util.prefix("connect", Util.ANSI.Green) + "           Connect to a document");
+    System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Create a document");
   }
 }

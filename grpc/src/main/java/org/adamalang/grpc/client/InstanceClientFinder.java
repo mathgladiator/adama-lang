@@ -17,6 +17,7 @@ import org.adamalang.grpc.client.routing.RoutingEngine;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /** You ask it for clients, and you get clients */
 
@@ -104,6 +105,29 @@ public class InstanceClientFinder {
             it.remove();
           }
         }
+      }
+    });
+  }
+
+  public void findCapacity(TreeSet<String> existing, Consumer<TreeSet<String>> capacity, int n) {
+    if (existing.size() >= n) {
+      capacity.accept(existing);
+      return;
+    }
+    mapExecutor.execute(new NamedRunnable("finding-capacity") {
+      @Override
+      public void execute() throws Exception {
+        TreeSet<String> results = new TreeSet<>(existing);
+        String[] targets = new String[clients.size()];
+        int at = 0;
+        for (String target : clients.keySet()) {
+          targets[at] = target;
+          at++;
+        }
+        while (results.size() < n && results.size() < clients.size()) {
+          results.add(targets[rng.nextInt(targets.length)]);
+        }
+        capacity.accept(results);
       }
     });
   }

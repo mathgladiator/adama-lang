@@ -839,19 +839,19 @@ public class InstanceClientTests {
               new Lifecycle() {
                 @Override
                 public void connected(InstanceClient client) {
-                  client.scanDeployments(
+                  client.scanDeployments("space",
                       new ScanDeploymentCallback() {
                         @Override
                         public void success() {
                           System.err.println("first good");
                           latch.countDown();
-                          client.scanDeployments(
+                          client.scanDeployments("space",
                               new ScanDeploymentCallback() {
                                 @Override
                                 public void success() {
                                   System.err.println("second good");
                                   latch.countDown();
-                                  client.scanDeployments(
+                                  client.scanDeployments("space",
                                       new ScanDeploymentCallback() {
                                         @Override
                                         public void success() {}

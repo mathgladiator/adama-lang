@@ -196,7 +196,7 @@ public class Connection {
           public void execute() throws Exception {
             bufferOrExecute(
                 new QueueAction<Remote>(
-                    ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_ATTACH_REJECTED) {
+                    ErrorCodes.API_ATTACH_TIMEOUT, ErrorCodes.API_ATTACH_REJECTED) {
                   @Override
                   protected void executeNow(Remote item) {
                     item.attach(id, name, contentType, size, md5, sha384, callback);

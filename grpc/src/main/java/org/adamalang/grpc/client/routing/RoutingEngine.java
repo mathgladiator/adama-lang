@@ -15,6 +15,8 @@ import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
 import org.adamalang.runtime.contracts.Key;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 public class RoutingEngine {
@@ -34,6 +36,24 @@ public class RoutingEngine {
     this.broadcastInflight = false;
     this.broadcastDelayOffset = broadcastDelayOffset;
     this.broadcastDelayJitter = broadcastDelayJitter;
+  }
+
+  public void list(String space, Consumer<TreeSet<String>> callback) {
+    executor.execute(new NamedRunnable("listing-targets") {
+      @Override
+      public void execute() throws Exception {
+        callback.accept(table.targetsFor(space));
+      }
+    });
+  }
+
+  public void get(String space, String key, Consumer<String> callback) {
+    executor.execute(new NamedRunnable("get", space, key) {
+      @Override
+      public void execute() throws Exception {
+        table.get(space, key, callback);
+      }
+    });
   }
 
   public void integrate(String target, Collection<String> newSpaces) {

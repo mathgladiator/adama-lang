@@ -16,12 +16,14 @@ import org.adamalang.mysql.DataBase;
 public class ExternNexus {
 
   public final Email email;
-  public final DataBase dataBase;
+  public final DataBase dataBaseManagement;
+  public final DataBase dataBaseDeployments;
   public final Client client;
 
-  public ExternNexus(Email email, DataBase dataBase, Client client) {
+  public ExternNexus(Email email, DataBase dataBaseManagement, DataBase dataBaseDeployments, Client client) {
     this.email = email;
-    this.dataBase = dataBase;
+    this.dataBaseManagement = dataBaseManagement;
+    this.dataBaseDeployments = dataBaseDeployments;
     this.client = client;
   }
 
@@ -32,5 +34,11 @@ public class ExternNexus {
         t.printStackTrace();
       }
     };
+  }
+
+  public void close() throws Exception {
+    dataBaseDeployments.close();
+    dataBaseManagement.close();
+    client.shutdown();
   }
 }

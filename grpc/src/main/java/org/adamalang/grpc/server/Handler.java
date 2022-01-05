@@ -287,7 +287,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   public void scanDeployments(
       ScanDeploymentsRequest request, StreamObserver<ScanDeploymentsResponse> responseObserver) {
     try {
-      nexus.scanForDeployments.run();
+      nexus.scanForDeployments.accept(request.getSpace());
       responseObserver.onNext(ScanDeploymentsResponse.newBuilder().build());
       responseObserver.onCompleted();
     } catch (Exception ex) {

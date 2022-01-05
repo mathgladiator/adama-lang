@@ -30,7 +30,7 @@ public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
 
   public SpacePolicyLocator(Executor executor, ExternNexus nexus) {
     this.executor = executor;
-    this.dataBase = nexus.dataBase;
+    this.dataBase = nexus.dataBaseManagement;
     this.policies = new ConcurrentHashMap<>();
     this.logger = nexus.makeLogger(SpacePolicyLocator.class);
   }

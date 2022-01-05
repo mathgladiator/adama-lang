@@ -27,7 +27,7 @@ public class UserIdResolver implements AsyncTransform<String, Integer> {
 
   public UserIdResolver(Executor executor, ExternNexus nexus) {
     this.executor = executor;
-    this.dataBase = nexus.dataBase;
+    this.dataBase = nexus.dataBaseManagement;
     this.logger = nexus.makeLogger(UserIdResolver.class);
   }
 

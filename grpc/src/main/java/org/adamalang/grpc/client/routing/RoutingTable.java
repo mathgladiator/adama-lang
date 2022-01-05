@@ -30,6 +30,18 @@ public class RoutingTable {
     this.events = events;
   }
 
+  public TreeSet<String> targetsFor(String space) {
+    SpaceState state = routing.get(space);
+    if (state == null) {
+      return new TreeSet<>();
+    }
+    return state.list();
+  }
+
+  public void get(String space, String key, Consumer<String> callback) {
+    callback.accept(getOrCreateSpaceState(space).pick(key));
+  }
+
   /** a target has reported their inventory */
   public void integrate(String target, Collection<String> spaces) {
     // there are two ways for the routing table to update

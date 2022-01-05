@@ -9,31 +9,31 @@
  */
 package org.adamalang.grpc.client;
 
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.Callback;
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
-import org.adamalang.grpc.client.contracts.SimpleEvents;
-import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
+import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.adamalang.grpc.client.sm.Connection;
 import org.adamalang.grpc.client.sm.ConnectionBase;
 
-import java.util.Collection;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Client {
+  private final SimpleExecutor routingExecutor;
   private final RoutingEngine engine;
   private final InstanceClientFinder finder;
   private final SimpleExecutor[] executors;
   private final Random rng;
 
   public Client(MachineIdentity identity) {
+    this.routingExecutor = SimpleExecutor.create("routing");
     this.engine =
         new RoutingEngine(
-            SimpleExecutor.create("routing"),
+            routingExecutor,
             new SpaceTrackingEvents() {
               @Override
               public void gainInterestInSpace(String space) {}
@@ -59,16 +59,82 @@ public class Client {
     this.rng = new Random();
   }
 
+  public void getDeploymentTargets(String space, Consumer<String> stream) {
+    engine.list(space, new Consumer<TreeSet<String>>() {
+      @Override
+      public void accept(TreeSet<String> targets) {
+        finder.findCapacity(targets, (set) -> {
+          for (String target : set) {
+            stream.accept(target);
+          }
+        }, 3);
+      }
+    });
+
+  }
+
+  public void notifyDeployment(String target, String space) {
+    finder.find(target, new QueueAction<>(ErrorCodes.API_CANT_FIND_CAPACITY_TIMEOUT, ErrorCodes.API_CANT_FIND_CAPACITY_REJECTED) {
+      @Override
+      protected void executeNow(InstanceClient client) {
+        client.scanDeployments(space, new ScanDeploymentCallback() {
+          @Override
+          public void success() {
+
+          }
+
+          @Override
+          public void failure() {
+
+          }
+        });
+      }
+
+      @Override
+      protected void failure(int code) {
+
+      }
+    });
+  }
+
   public Consumer<Collection<String>> getTargetPublisher() {
     return (targets) -> finder.sync(new TreeSet<>(targets));
   }
 
-  public Connection create(
+  public void create(String agent, String authority, String space, String key, String entropy, String arg, CreateCallback callback) {
+    engine.get(space, key, (target) -> {
+      if (target != null) {
+        finder.find(target, new QueueAction<>(ErrorCodes.API_CANT_FIND_CAPACITY_CREATE_TIMEOUT, ErrorCodes.API_CANT_FIND_CAPACITY_CREATE_REJECTED) {
+          @Override
+          protected void executeNow(InstanceClient client) {
+            client.create(agent, authority, space, key, entropy, arg, callback);
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.error(code);
+          }
+        });
+      } else {
+        callback.error(ErrorCodes.API_CANT_FIND_CAPACITY_CREATE_NONE_ALLOCATED);
+      }
+    });
+  }
+
+  public Connection connect(
       String agent, String authority, String space, String key, SimpleEvents events) {
     ConnectionBase base =
         new ConnectionBase(engine, finder, executors[rng.nextInt(executors.length)]);
     Connection connection = new Connection(base, agent, authority, space, key, events);
     connection.open();
     return connection;
+  }
+
+  public void shutdown() {
+    finder.shutdown();
+    for (SimpleExecutor executor : executors) {
+      executor.shutdown();
+    }
+    routingExecutor.shutdown();
   }
 }

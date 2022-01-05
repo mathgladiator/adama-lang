@@ -37,6 +37,7 @@ import org.adamalang.web.service.WebConfig;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.function.Consumer;
 
 public class Service {
     public static void execute(Config config, String[] args) throws Exception {
@@ -91,30 +92,40 @@ public class Service {
             });
         });
 
-        Runnable scanForDeployments = () -> {
-            try {
-                ArrayList<Deployments.Deployment> deployments = Deployments.list(dataBase, identity.ip + ":" + port);
-                for (Deployments.Deployment deployment : deployments) {
-                    try {
-                        deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {}));
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
+    Consumer<String> scanForDeployments =
+        (space) -> {
+          try {
+            if ("*".equals(space)) {
+              ArrayList<Deployments.Deployment> deployments =
+                  Deployments.list(dataBase, identity.ip + ":" + port);
+              for (Deployments.Deployment deployment : deployments) {
+                try {
+                  deploymentFactoryBase.deploy(
+                      deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {}));
+                } catch (Exception ex) {
+                  ex.printStackTrace();
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+              }
+            } else {
+                Deployments.Deployment deployment = Deployments.get(dataBase, identity.ip + ":" + port, space);
+                deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {}));
             }
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
         };
 
         // prime the host with spaces
-        scanForDeployments.run();
+        scanForDeployments.accept("*");
         ServerNexus nexus = new ServerNexus(identity, service, deploymentFactoryBase, scanForDeployments, billingPubSub, port, 4);
         // TODO: hold onto the Server reference and kill on a signal, need signal listener to clean shutdown
         new Server(nexus).start();
     }
 
     public static void serviceFrontend(Config config) throws Exception {
-        DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "frontend"));
+        DataBase dataBaseFront = new DataBase(new DataBaseConfig(config.read().toString(), "frontend"));
+        DataBase dataBaseBackend = new DataBase(new DataBaseConfig(config.read().toString(), "backend"));
+
         String identityFileName = config.get_string("identity_filename", "me.identity");
         int gossipPort = config.get_int("gossip_frontend_port", 8233);
         MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
@@ -136,7 +147,7 @@ public class Service {
             public void sendCode(String email, String code) {
                 System.err.println("Email:" + email + " --> " + code);
             }
-        }, dataBase, client);
+        }, dataBaseFront, dataBaseBackend, client);
         ServiceBase serviceBase = BootstrapFrontend.make(nexus);
         final var runnable = new ServiceRunnable(webConfig, serviceBase);
         final var thread = new Thread(runnable);

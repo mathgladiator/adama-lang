@@ -1,0 +1,9 @@
+@connected(who) {
+  return true;
+}
+
+public int x;
+
+@construct {
+  x = 123;
+}

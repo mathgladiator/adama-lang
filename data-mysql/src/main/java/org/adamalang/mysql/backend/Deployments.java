@@ -69,6 +69,28 @@ public class Deployments {
     }
   }
 
+  public static Deployment get(DataBase dataBase, String target, String space) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql =
+          new StringBuilder()
+              .append("SELECT `space`, `hash`, `plan` FROM `")
+              .append(dataBase.databaseName)
+              .append("`.`deployed` WHERE `target`=? AND `space`=? LIMIT 1")
+              .toString();
+
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, target);
+        statement.setString(2, space);
+        try (ResultSet rs = statement.executeQuery()) {
+          while (rs.next()) {
+            return new Deployment(rs.getString(1), rs.getString(2), rs.getString(3));
+          }
+          throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_NOT_FOUND);
+        }
+      }
+    }
+  }
+
   public static void deploy(DataBase dataBase, String space, String target, String hash, String plan) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       { // delete prior versions

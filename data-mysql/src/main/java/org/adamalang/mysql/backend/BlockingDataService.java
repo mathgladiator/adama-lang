@@ -155,11 +155,15 @@ public class BlockingDataService implements DataService {
             .append("', ") //
             .append("?, ?, ?, ?, ?, '')") //
             .toString();
-
     PreparedStatement statement = connection.prepareStatement(insertDeltaSQL);
     try {
-      statement.setString(1, patch.who.agent);
-      statement.setString(2, patch.who.authority);
+      if (patch.who != null) {
+        statement.setString(1, patch.who.agent);
+        statement.setString(2, patch.who.authority);
+      } else {
+        statement.setString(1, "?");
+        statement.setString(2, "adama");
+      }
       statement.setString(3, patch.request);
       statement.setString(4, patch.redo);
       statement.setString(5, patch.undo);

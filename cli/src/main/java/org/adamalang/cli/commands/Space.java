@@ -16,6 +16,7 @@ import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
 import org.adamalang.common.Validators;
+import org.adamalang.runtime.deploy.DeploymentPlan;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -93,9 +94,20 @@ public class Space {
   private static void spaceDeploy(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
-    String planFile = Util.extractOrCrash("--plan", "-p", args);
-    String planJson = Files.readString(new File(planFile).toPath());
-    // TODO: VALIDATOR JSON
+    String singleFile = Util.extractWithDefault("--file", "-f", null, args);
+    final String planJson;
+    if (singleFile != null) {
+      String singleScript = Files.readString(new File(singleFile).toPath());;
+      ObjectNode plan = Json.newJsonObject();
+      plan.putObject("versions").put("file", singleScript);
+      plan.put("default", "file");
+      plan.putArray("plan");
+      planJson = plan.toString();
+    } else {
+      String planFile = Util.extractOrCrash("--plan", "-p", args);
+      planJson = Files.readString(new File(planFile).toPath());
+      new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());
+    }
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
@@ -123,8 +135,6 @@ public class Space {
       }
     }
   }
-
-
 
   private static void spaceReflect(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);

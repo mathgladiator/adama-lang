@@ -21,6 +21,7 @@ service Adama {
 }
 
 message ScanDeploymentsRequest {
+  string space = 1;
 }
 
 message ScanDeploymentsResponse {
