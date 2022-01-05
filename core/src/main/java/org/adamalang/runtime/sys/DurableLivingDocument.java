@@ -29,17 +29,6 @@ import java.util.ArrayDeque;
 
 /** A LivingDocument tied to a document id and DataService */
 public class DurableLivingDocument {
-
-  public static final Callback<DurableLivingDocument> INVALIDATE_ON_SUCCESS =
-      new Callback<DurableLivingDocument>() {
-        @Override
-        public void success(DurableLivingDocument value) {
-          value.invalidate(Callback.DONT_CARE_INTEGER);
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {}
-      };
   public final DocumentThreadBase base;
   public final Key key;
   private final ArrayDeque<IngestRequest> pending;

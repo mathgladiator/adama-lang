@@ -21,7 +21,8 @@ public class GossipPartnerPicker {
   private final HashMap<String, Integer> counts;
   private String cachedPeersHash;
 
-  public GossipPartnerPicker(String self, InstanceSetChain chain, HashSet<String> initial, Random rng) {
+  public GossipPartnerPicker(
+      String self, InstanceSetChain chain, HashSet<String> initial, Random rng) {
     this.self = self;
     this.chain = chain;
     this.initial = initial;
@@ -29,18 +30,6 @@ public class GossipPartnerPicker {
     this.peers = new ArrayList<>();
     this.counts = new HashMap<>();
     this.cachedPeersHash = "";
-  }
-
-  private String randomPeerNotSelf() {
-    int attempts = 0;
-    while (attempts < 4) {
-      String x = peers.get(rng.nextInt(peers.size()));
-      if (!self.equals(x)) {
-        return x;
-      }
-      attempts++;
-    }
-    return null;
   }
 
   public String pick() {
@@ -69,6 +58,18 @@ public class GossipPartnerPicker {
     } else {
       return null;
     }
+  }
+
+  private String randomPeerNotSelf() {
+    int attempts = 0;
+    while (attempts < 4) {
+      String x = peers.get(rng.nextInt(peers.size()));
+      if (!self.equals(x)) {
+        return x;
+      }
+      attempts++;
+    }
+    return null;
   }
 
   private int countOf(String target) {

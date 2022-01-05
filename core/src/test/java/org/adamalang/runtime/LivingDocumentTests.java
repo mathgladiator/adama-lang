@@ -1260,9 +1260,4 @@ public class LivingDocumentTests {
     setup.assertCompare();
     Assert.assertEquals(0, setup.document.getCodeCost());
   }
-
-  @Test
-  public void dontcare() {
-    DurableLivingDocument.INVALIDATE_ON_SUCCESS.failure(null);
-  }
 }

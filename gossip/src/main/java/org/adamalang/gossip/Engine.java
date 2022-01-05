@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -118,17 +117,17 @@ public class Engine implements AutoCloseable {
         });
   }
 
-
   public void subscribe(String app, Consumer<Collection<String>> consumer) {
-    executor.execute(() -> {
-      ArrayList<Consumer<Collection<String>>> subscribers = subscribersByApp.get(app);
-      if (subscribers == null) {
-        subscribers = new ArrayList<>();
-        subscribersByApp.put(app, subscribers);
-      }
-      subscribers.add(consumer);
-      consumer.accept(chain.current().targetsFor(app));
-    });
+    executor.execute(
+        () -> {
+          ArrayList<Consumer<Collection<String>>> subscribers = subscribersByApp.get(app);
+          if (subscribers == null) {
+            subscribers = new ArrayList<>();
+            subscribersByApp.put(app, subscribers);
+          }
+          subscribers.add(consumer);
+          consumer.accept(chain.current().targetsFor(app));
+        });
   }
 
   public void hash(Consumer<String> callback) {
@@ -187,17 +186,19 @@ public class Engine implements AutoCloseable {
   }
 
   private void doBroadcast() {
-    executor.execute(() -> {
-      String testHash = chain.current().hash();
-      if (!broadcastHash.equals(testHash)) {
-        for (Map.Entry<String, ArrayList<Consumer<Collection<String>>>> entry : subscribersByApp.entrySet()) {
-          for (Consumer<Collection<String>> subscriber : entry.getValue()) {
-            subscriber.accept(chain.current().targetsFor(entry.getKey()));
+    executor.execute(
+        () -> {
+          String testHash = chain.current().hash();
+          if (!broadcastHash.equals(testHash)) {
+            for (Map.Entry<String, ArrayList<Consumer<Collection<String>>>> entry :
+                subscribersByApp.entrySet()) {
+              for (Consumer<Collection<String>> subscriber : entry.getValue()) {
+                subscriber.accept(chain.current().targetsFor(entry.getKey()));
+              }
+            }
+            broadcastHash = testHash;
           }
-        }
-        broadcastHash = testHash;
-      }
-    });
+        });
   }
 
   private void gossipInExecutor() {
@@ -211,7 +212,7 @@ public class Engine implements AutoCloseable {
     }
     ClientObserver observer = new ClientObserver(executor, chain, metrics);
     StreamObserver<GossipReverse> interceptObserver =
-        new StreamObserver<GossipReverse>() {
+        new StreamObserver<>() {
           boolean finished = false;
 
           @Override

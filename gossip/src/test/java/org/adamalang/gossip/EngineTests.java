@@ -11,17 +11,95 @@ package org.adamalang.gossip;
 
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.TimeSource;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class EngineTests {
+  @Test
+  public void failuresHappen() throws Exception {
+    ArrayList<Engine> engines = new ArrayList<>();
+
+    HashSet<String> initial = new HashSet<>();
+    initial.add("127.0.0.1:20000");
+    initial.add("127.0.0.1:20005");
+    MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
+
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, new MockMetrics("app"));
+    engines.add(app);
+    app.start();
+
+    AtomicReference<TreeSet<String>> values = new AtomicReference<>();
+
+    app.subscribe("app", new Consumer<Collection<String>>() {
+      @Override
+      public void accept(Collection<String> strings) {
+        values.set(new TreeSet<>(strings));
+      }
+    });
+    AtomicReference<Runnable> appHeartBeat = new AtomicReference<>();
+    CountDownLatch latchForSet = new CountDownLatch(1);
+    app.newApp(
+        "app",
+        4242,
+        new Consumer<Runnable>() {
+          @Override
+          public void accept(Runnable runnable) {
+            appHeartBeat.set(runnable);
+            latchForSet.countDown();
+            runnable.run();
+          }
+        });
+
+    latchForSet.await(1000, TimeUnit.MILLISECONDS);
+    Engine lateEngine = null;
+    for (int k = 0; k < 10; k++) {
+      Engine engine =
+          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, new MockMetrics("k:" + k));
+      engines.add(engine);
+      if (k == 5) {
+        lateEngine = engine;
+      } else {
+        engine.start();
+      }
+    }
+    int versionCount = 100;
+    for (int k = 0; k < 30 && versionCount > 1; k++) {
+      appHeartBeat.get().run();
+      HashSet<String> versions = new HashSet<>();
+      CountDownLatch latch = new CountDownLatch(engines.size());
+      for (Engine engine : engines) {
+        engine.hash(
+            (hash) -> {
+              versions.add(hash);
+              latch.countDown();
+            });
+      }
+      if (k == 15) {
+        lateEngine.start();
+      }
+      latch.await(5000, TimeUnit.MILLISECONDS);
+      versionCount = versions.size();
+      System.err.println(versionCount);
+      Thread.sleep(1000);
+    }
+    Assert.assertEquals(1, versionCount);
+    // this shutdown is very noisy
+    for (Engine engine : engines) {
+      engine.close();
+    }
+  }
+
+
   @Test
   public void convergence10() throws Exception {
     ArrayList<Engine> engines = new ArrayList<>();
@@ -35,6 +113,15 @@ public class EngineTests {
     engines.add(app);
     app.start();
 
+    AtomicReference<TreeSet<String>> values = new AtomicReference<>();
+    CountDownLatch latchForBroadcast = new CountDownLatch(1);
+    app.subscribe("app", new Consumer<Collection<String>>() {
+      @Override
+      public void accept(Collection<String> strings) {
+        values.set(new TreeSet<>(strings));
+        latchForBroadcast.countDown();
+      }
+    });
     AtomicReference<Runnable> appHeartBeat = new AtomicReference<>();
     CountDownLatch latchForSet = new CountDownLatch(1);
     app.newApp(
@@ -57,7 +144,7 @@ public class EngineTests {
       engine.start();
     }
     int versionCount = 100;
-    for (int k = 0; k < 10 && versionCount > 1; k++) {
+    for (int k = 0; k < 20 && versionCount > 1; k++) {
       appHeartBeat.get().run();
       HashSet<String> versions = new HashSet<>();
       CountDownLatch latch = new CountDownLatch(engines.size());
@@ -72,6 +159,8 @@ public class EngineTests {
       versionCount = versions.size();
       Thread.sleep(1000);
     }
+    Assert.assertEquals(1, versionCount);
+    Assert.assertTrue(latchForBroadcast.await(2500, TimeUnit.MILLISECONDS));
     // this shutdown is very noisy
     for (Engine engine : engines) {
       engine.close();
