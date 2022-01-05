@@ -27,6 +27,7 @@ public class AssembleConnectionRouter {
     router.append("import org.adamalang.common.Callback;\n");
     router.append("import org.adamalang.common.ErrorCodeException;\n");
     router.append("import org.adamalang.web.io.*;\n");
+    router.append("import org.adamalang.ErrorCodes;\n");
     router.append("\n");
     router.append("import java.util.HashMap;\n");
     router.append("import java.util.Map;\n");
@@ -141,7 +142,7 @@ public class AssembleConnectionRouter {
       router.append("          } return;\n");
     }
     router.append("        }\n");
-    router.append("        responder.error(new ErrorCodeException(42));\n"); // TODO: need an error
+    router.append("        responder.error(new ErrorCodeException(ErrorCodes.API_METHOD_NOT_FOUND));\n");
     router.append("      });\n");
     router.append("    } catch (ErrorCodeException ex) {\n");
     router.append("      responder.error(ex);\n");

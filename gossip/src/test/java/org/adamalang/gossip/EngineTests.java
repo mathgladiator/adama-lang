@@ -40,12 +40,14 @@ public class EngineTests {
 
     AtomicReference<TreeSet<String>> values = new AtomicReference<>();
 
-    app.subscribe("app", new Consumer<Collection<String>>() {
-      @Override
-      public void accept(Collection<String> strings) {
-        values.set(new TreeSet<>(strings));
-      }
-    });
+    app.subscribe(
+        "app",
+        new Consumer<Collection<String>>() {
+          @Override
+          public void accept(Collection<String> strings) {
+            values.set(new TreeSet<>(strings));
+          }
+        });
     AtomicReference<Runnable> appHeartBeat = new AtomicReference<>();
     CountDownLatch latchForSet = new CountDownLatch(1);
     app.newApp(
@@ -99,6 +101,16 @@ public class EngineTests {
     }
   }
 
+  private String prefixForLocalhost() {
+    for (String search : new String[] {"./", "../", "./grpc/"}) {
+      String candidate = search + "localhost.identity";
+      File file = new File(candidate);
+      if (file.exists()) {
+        return candidate;
+      }
+    }
+    throw new NullPointerException("could not find identity.localhost");
+  }
 
   @Test
   public void convergence10() throws Exception {
@@ -115,13 +127,15 @@ public class EngineTests {
 
     AtomicReference<TreeSet<String>> values = new AtomicReference<>();
     CountDownLatch latchForBroadcast = new CountDownLatch(1);
-    app.subscribe("app", new Consumer<Collection<String>>() {
-      @Override
-      public void accept(Collection<String> strings) {
-        values.set(new TreeSet<>(strings));
-        latchForBroadcast.countDown();
-      }
-    });
+    app.subscribe(
+        "app",
+        new Consumer<Collection<String>>() {
+          @Override
+          public void accept(Collection<String> strings) {
+            values.set(new TreeSet<>(strings));
+            latchForBroadcast.countDown();
+          }
+        });
     AtomicReference<Runnable> appHeartBeat = new AtomicReference<>();
     CountDownLatch latchForSet = new CountDownLatch(1);
     app.newApp(
@@ -165,16 +179,5 @@ public class EngineTests {
     for (Engine engine : engines) {
       engine.close();
     }
-  }
-
-  private String prefixForLocalhost() {
-    for (String search : new String[] {"./", "../", "./grpc/"}) {
-      String candidate = search + "localhost.identity";
-      File file = new File(candidate);
-      if (file.exists()) {
-        return candidate;
-      }
-    }
-    throw new NullPointerException("could not find identity.localhost");
   }
 }

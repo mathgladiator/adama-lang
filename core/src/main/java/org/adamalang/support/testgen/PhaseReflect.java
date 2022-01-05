@@ -14,7 +14,7 @@ public class PhaseReflect {
       final PhaseValidate.ValidationResults results, final StringBuilder outputFile)
       throws Exception {
     outputFile.append("--REFLECTION RESULTS-------------------------------------").append("\n");
-    outputFile.append(results.reflection); // TODO: pretty print
+    outputFile.append(results.reflection);
     outputFile.append("\n");
   }
 }

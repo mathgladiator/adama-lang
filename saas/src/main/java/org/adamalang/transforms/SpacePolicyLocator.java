@@ -13,6 +13,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.Validators;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Spaces;
@@ -37,7 +38,10 @@ public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
 
   @Override
   public void execute(String spaceName, Callback<SpacePolicy> callback) {
-    // TODO: validate the space name
+    if (!Validators.simple(spaceName, 127)) {
+      callback.failure(new ErrorCodeException(ErrorCodes.API_SPACE_INVALID_NAME_FOR_LOOKUP));
+      return;
+    }
     SpacePolicy policy = policies.get(spaceName);
     if (policy != null) {
       callback.success(policy);

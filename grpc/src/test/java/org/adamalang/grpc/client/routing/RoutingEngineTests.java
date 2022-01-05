@@ -9,21 +9,26 @@
  */
 package org.adamalang.grpc.client.routing;
 
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.contracts.Key;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class RoutingEngineTests {
   @Test
   public void flow() throws Exception {
     MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
-    RoutingEngine engine = new RoutingEngine(SimpleExecutor.create("derp"), events, 50, 25);
+    SimpleExecutor derp = SimpleExecutor.create("derp");
+    RoutingEngine engine = new RoutingEngine(derp, events, 50, 25);
 
     AtomicReference<Runnable> cancelRunnable = new AtomicReference<>();
     CountDownLatch latchGotCancel = new CountDownLatch(1);
@@ -57,6 +62,38 @@ public class RoutingEngineTests {
         // we checkpoint on W because we will be removing a bunch of stuff
         Assert.assertTrue(becameW.await(10000, TimeUnit.MILLISECONDS));
       }
+      if ("2".equals(inj)) {
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicBoolean success = new AtomicBoolean(false);
+        engine.list("space", new Consumer<TreeSet<String>>() {
+          @Override
+          public void accept(TreeSet<String> strings) {
+            success.set(true);
+            for (String inj : new String[] {"y", "3", "t", "4", "w", "2"}) {
+              if (!strings.contains(inj)) {
+                success.set(false);
+              }
+            }
+            latch.countDown();
+          }
+        });
+        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(success.get());
+      }
+      {
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicBoolean success = new AtomicBoolean(false);
+        engine.get("space", "key", new Consumer<String>() {
+          @Override
+          public void accept(String s) {
+            // given the irregularity of the broadcast, can't assert much... hrmm
+            success.set(true);
+            latch.countDown();
+          }
+        });
+        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(success.get());
+      }
       Thread.sleep(25);
     }
     Assert.assertTrue(becameZ.await(10000, TimeUnit.MILLISECONDS));
@@ -64,5 +101,16 @@ public class RoutingEngineTests {
       engine.remove(kill);
     }
     Assert.assertTrue(becameWAgain.await(10000, TimeUnit.MILLISECONDS));
+    cancelRunnable.get().run();
+    {
+      CountDownLatch latch = new CountDownLatch(1);
+      derp.execute(new NamedRunnable("flush") {
+        @Override
+        public void execute() throws Exception {
+          latch.countDown();
+        }
+      });
+      Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+    }
   }
 }

@@ -20,7 +20,8 @@ public class GossipPartnerPickerTests {
   public void flow_empty() {
     MockTime time = new MockTime();
     InstanceSetChain chain = new InstanceSetChain(time);
-    GossipPartnerPicker picker = new GossipPartnerPicker("127.0.0.1", chain, new HashSet<>(), new Random());
+    GossipPartnerPicker picker =
+        new GossipPartnerPicker("127.0.0.1", chain, new HashSet<>(), new Random());
     Assert.assertNull(picker.pick());
   }
 
@@ -33,6 +34,4 @@ public class GossipPartnerPickerTests {
     GossipPartnerPicker picker = new GossipPartnerPicker("127.0.0.1", chain, set, new Random());
     Assert.assertNull(picker.pick());
   }
-
-
 }

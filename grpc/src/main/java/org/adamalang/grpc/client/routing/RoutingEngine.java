@@ -51,7 +51,7 @@ public class RoutingEngine {
     executor.execute(new NamedRunnable("get", space, key) {
       @Override
       public void execute() throws Exception {
-        table.get(space, key, callback);
+        callback.accept(table.get(space, key));
       }
     });
   }

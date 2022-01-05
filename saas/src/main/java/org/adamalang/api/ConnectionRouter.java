@@ -13,6 +13,7 @@ package org.adamalang.api;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.io.*;
+import org.adamalang.ErrorCodes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -366,7 +367,7 @@ public class ConnectionRouter {
             });
           } return;
         }
-        responder.error(new ErrorCodeException(42));
+        responder.error(new ErrorCodeException(ErrorCodes.API_METHOD_NOT_FOUND));
       });
     } catch (ErrorCodeException ex) {
       responder.error(ex);

@@ -31,15 +31,11 @@ public class RoutingTable {
   }
 
   public TreeSet<String> targetsFor(String space) {
-    SpaceState state = routing.get(space);
-    if (state == null) {
-      return new TreeSet<>();
-    }
-    return state.list();
+    return getOrCreateSpaceState(space).list();
   }
 
-  public void get(String space, String key, Consumer<String> callback) {
-    callback.accept(getOrCreateSpaceState(space).pick(key));
+  public String get(String space, String key) {
+    return getOrCreateSpaceState(space).pick(key);
   }
 
   /** a target has reported their inventory */

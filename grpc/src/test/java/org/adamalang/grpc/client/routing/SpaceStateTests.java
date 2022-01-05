@@ -33,11 +33,13 @@ public class SpaceStateTests {
     ArrayList<String> pub = new ArrayList<>();
     Runnable unsubscribe = state.subscribe("key", pub::add);
     state.add("x");
+    Assert.assertEquals(1, state.list().size());
     state.recompute(share);
     Assert.assertEquals("/x", last.get());
     state.add("y");
     state.add("z");
     state.add("t");
+    Assert.assertEquals(4, state.list().size());
     state.recompute(share);
     Assert.assertEquals("/t/x/y/z", last.get());
     Assert.assertEquals(3, pub.size());
