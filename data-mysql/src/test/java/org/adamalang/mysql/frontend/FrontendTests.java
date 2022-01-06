@@ -66,6 +66,14 @@ public class FrontendTests {
 
         Authorities.setKeystore(dataBase, 1, "auth_space_1", "{\"x\":1}");
         Assert.assertEquals("{\"x\":1}", Authorities.getKeystoreInternal(dataBase, "auth_space_1"));
+        Assert.assertEquals("{\"x\":1}", Authorities.getKeystorePublic(dataBase, 1, "auth_space_1"));
+        try {
+          Authorities.getKeystorePublic(dataBase, 2, "auth_space_1");
+          Assert.fail();
+        } catch (ErrorCodeException ece) {
+          failures++;
+          Assert.assertEquals(626691, ece.code);
+        }
         Authorities.deleteAuthority(dataBase, 1, "auth_space_1");
         Assert.assertEquals(0, Authorities.list(dataBase, 1).size());
         try {
@@ -74,6 +82,13 @@ public class FrontendTests {
         } catch (ErrorCodeException ece) {
           failures++;
           Assert.assertEquals(643072, ece.code);
+        }
+        try {
+          Authorities.getKeystorePublic(dataBase, 1, "auth_space_1");
+          Assert.fail();
+        } catch (ErrorCodeException ece) {
+          failures++;
+          Assert.assertEquals(626691, ece.code);
         }
         try {
           Authorities.setKeystore(dataBase, 1, "auth_space_1", "{\"x\":1}");
@@ -113,7 +128,7 @@ public class FrontendTests {
           failures++;
           Assert.assertEquals(662528, ece.code);
         }
-        Assert.assertEquals(5, failures);
+        Assert.assertEquals(7, failures);
 
       } finally {
         installer.uninstall();
