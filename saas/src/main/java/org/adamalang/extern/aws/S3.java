@@ -9,6 +9,7 @@
  */
 package org.adamalang.extern.aws;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.adamalang.ErrorCodes;
@@ -20,11 +21,12 @@ import org.adamalang.runtime.natives.NtAsset;
 import java.io.File;
 
 public class S3 implements AssetUploader {
-  private final AmazonS3Client s3;
+  private final AmazonS3 s3;
   private final String bucket;
-  public S3(AmazonS3Client s3, String bucket) {
-    this.s3 = s3;
-    this.bucket = bucket;
+
+  public S3(AWSConfig config) {
+    this.s3 = AmazonS3Client.builder().withRegion(config.region).withCredentials(config).build();
+    this.bucket = config.bucketForAssets;
   }
 
   @Override

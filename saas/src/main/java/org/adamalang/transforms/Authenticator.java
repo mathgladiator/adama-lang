@@ -23,8 +23,10 @@ import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.transforms.results.Keystore;
 import org.adamalang.web.io.AsyncTransform;
 
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -68,12 +70,10 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
         }
         callback.failure(new ErrorCodeException(ErrorCodes.AUTH_FAILED_FINDING_DEVELOPER_KEY));
       } else {
-        ObjectNode keystore =
-            Json.parseJsonObject(Authorities.getKeystoreInternal(nexus.dataBaseManagement, parsedToken.iss));
-        // TODO: cache the lookup, parsing, teardown
-        // TODO: decode the authority
-        // TODO: for each public key, test the given token
-        callback.failure(new ErrorCodeException(-1));
+        String keystoreJson = Authorities.getKeystoreInternal(nexus.dataBaseManagement, parsedToken.iss);
+        Keystore keystore = Keystore.parse(keystoreJson);
+        NtClient who = keystore.validate(parsedToken.iss, identity);
+        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who));
       }
     } catch (Exception ex) {
       callback.failure(

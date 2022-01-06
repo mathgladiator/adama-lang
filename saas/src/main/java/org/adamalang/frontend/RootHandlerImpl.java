@@ -25,22 +25,27 @@ import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
+import org.adamalang.runtime.deploy.DeploymentFactory;
+import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.transforms.results.AuthenticatedUser;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.MessageDigest;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RootHandlerImpl implements RootHandler {
   private final ExternNexus nexus;
   private final Random rng;
   private final ExceptionLogger logger;
+  private final AtomicInteger validationClassId;
 
   public RootHandlerImpl(ExternNexus nexus) throws Exception {
     this.nexus = nexus;
     this.rng = new Random();
     this.logger = nexus.makeLogger(RootHandler.class);
+    validationClassId = new AtomicInteger(0);
   }
 
   @Override
@@ -149,8 +154,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: setKeystore validates ownership
-        Authorities.setKeystore(
-            nexus.dataBaseManagement, request.who.id, request.authority, request.keyStore.toString());
+        Authorities.setKeystore(nexus.dataBaseManagement, request.who.id, request.authority, request.keyStore.toString());
         responder.complete();
       } else {
         responder.error(
@@ -160,6 +164,23 @@ public class RootHandlerImpl implements RootHandler {
       responder.error(
           ErrorCodeException.detectOrWrap(
               ErrorCodes.API_SET_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+    }
+  }
+
+  @Override
+  public void handle(AuthorityGetRequest request, KeystoreResponder responder) {
+    try {
+      if (request.who.source == AuthenticatedUser.Source.Adama) {
+        // NOTE: getKeystorePublic validates ownership
+        responder.complete(Json.parseJsonObject(Authorities.getKeystorePublic(nexus.dataBaseManagement, request.who.id, request.authority)));
+      } else {
+        responder.error(
+            new ErrorCodeException(ErrorCodes.API_GET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+      }
+    } catch (Exception ex) {
+      responder.error(
+          ErrorCodeException.detectOrWrap(
+              ErrorCodes.API_GET_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
     }
   }
 
@@ -242,10 +263,11 @@ public class RootHandlerImpl implements RootHandler {
         MessageDigest digest = Hashing.md5();
         digest.digest(planJson.getBytes(StandardCharsets.UTF_8));
         String hash = Hashing.finishAndEncode(digest);
-
+        // validate the plan
+        DeploymentPlan localPlan = new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());
+        new DeploymentFactory(request.space, "Space_" + request.space, validationClassId, null, localPlan);
         // Change the master plan
         Spaces.setPlan(nexus.dataBaseManagement, request.policy.id, planJson, hash);
-
         // iterate the targets with this space loaded
         nexus.client.getDeploymentTargets(request.space, (target) -> {
           try {

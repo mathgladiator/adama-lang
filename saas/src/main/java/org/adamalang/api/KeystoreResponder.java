@@ -15,27 +15,17 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.io.*;
 
-public class DataResponder {
+public class KeystoreResponder {
   public final JsonResponder responder;
 
-  public DataResponder(JsonResponder responder) {
+  public KeystoreResponder(JsonResponder responder) {
     this.responder = responder;
   }
 
-  public void next(ObjectNode delta) {
+  public void complete(ObjectNode keystore) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.set("delta", delta);
-    responder.stream(_obj.toString());
-  }
-
-  public void finish(ObjectNode delta) {
-    ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.set("delta", delta);
+    _obj.set("keystore", keystore);
     responder.finish(_obj.toString());
-  }
-
-  public void finish() {
-    responder.finish("{}");
   }
 
   public void error(ErrorCodeException ex) {

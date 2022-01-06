@@ -112,17 +112,41 @@ public class Authorities {
               .append("`.`authorities` WHERE authority=?")
               .toString();
       try (PreparedStatement statement =
-          connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+               connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, authority);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {
           return rs.getString(1);
         } else {
-          throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_GET_NOT_FOUND);
+          throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_GET_NOT_FOUND_INTERNAL);
         }
       }
     }
   }
+
+  public static String getKeystorePublic(DataBase dataBase, int owner, String authority) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql =
+          new StringBuilder()
+              .append("SELECT `keystore` FROM `")
+              .append(dataBase.databaseName)
+              .append("`.`authorities` WHERE authority=? AND `owner`=?")
+              .toString();
+      try (PreparedStatement statement =
+               connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        statement.setString(1, authority);
+        statement.setInt(2, owner);
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+          return rs.getString(1);
+        } else {
+          throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_GET_NOT_FOUND_PUBLIC);
+        }
+      }
+    }
+  }
+
+
 
   public static void deleteAuthority(DataBase dataBase, int ownerId, String authority)
       throws Exception {

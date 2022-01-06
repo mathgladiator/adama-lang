@@ -16,10 +16,12 @@ import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
 import org.adamalang.common.Validators;
+import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Space {
   public static void execute(Config config, String[] args) throws Exception {
@@ -106,8 +108,13 @@ public class Space {
     } else {
       String planFile = Util.extractOrCrash("--plan", "-p", args);
       planJson = Files.readString(new File(planFile).toPath());
-      new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());
     }
+    System.out.println("validating plan...");
+    DeploymentPlan localPlan = new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());
+    System.out.println("compiling plan...");
+    new DeploymentFactory(space, "Space_" + space, new AtomicInteger(0), null, localPlan);
+    System.out.println("deploying plan...");
+
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();

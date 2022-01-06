@@ -19,6 +19,8 @@ public interface RootHandler {
 
   public void handle(AuthoritySetRequest request, SimpleResponder responder);
 
+  public void handle(AuthorityGetRequest request, KeystoreResponder responder);
+
   public void handle(AuthorityListRequest request, AuthorityListingResponder responder);
 
   public void handle(AuthorityDestroyRequest request, SimpleResponder responder);

@@ -10,14 +10,20 @@
 package org.adamalang.cli.commands;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.transforms.results.Keystore;
+import org.adamalang.validators.ValidateKeystore;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.security.PrivateKey;
 
 public class Authority {
     public static void execute(Config config, String[] args) throws Exception {
@@ -34,17 +40,23 @@ public class Authority {
             case "set":
                 authoritySet(config, args);
                 return;
+            case "get":
+                authorityGet(config, args);
+                return;
             case "destroy":
                 authorityDestroy(config, args);
                 return;
             case "list":
                 authorityList(config, args);
                 return;
-            case "make-keystore":
+            case "create-local":
                 authorityMakeKeyStore(config, args);
                 return;
-            case "append-keystore":
+            case "append-local":
                 authorityAppendKeyStore(config, args);
+                return;
+            case "sign":
+                sign(config, args);
                 return;
             case "help":
                 authorityHelp();
@@ -52,19 +64,52 @@ public class Authority {
         }
     }
 
+    public static void sign(Config config, String[] args) throws Exception {
+        String key = Util.extractOrCrash("--key", "-k", args);
+        ObjectNode keyNode = Json.parseJsonObject(Files.readString(new File(key).toPath()));
+        String authority = keyNode.get("authority").textValue();
+        PrivateKey signingKey = Keystore.parsePrivateKey(keyNode);
+        String agent = Util.extractOrCrash("--agent", "-ag", args);
+        String token = Jwts.builder()
+                           .setSubject(agent)
+                           .setIssuer(authority)
+                           .signWith(signingKey)
+                           .compact();
+        System.out.println(token);
+        String validateAgainst = Util.extractWithDefault("--validate", "-v", null, args);
+        if (validateAgainst != null) {
+            Keystore keystore = Keystore.parse(Files.readString(new File(validateAgainst).toPath()));
+            NtClient who = keystore.validate(authority, token);
+            System.err.println("validated:" + who.agent);
+        }
+    }
+
+    private static File ensureFileDoesNotExist(String filename) throws Exception {
+        File file = new File(filename);
+        if (file.exists()) {
+            throw new Exception(filename + " already exists, refusing to create");
+        }
+        return file;
+    }
+
     public static void authorityMakeKeyStore(Config config, String[] args) throws Exception {
-        String identity = config.get_string("identity", null);
-        String authority = Util.extractOrCrash("--authority", "-a", args);
+        Util.extractOrCrash("--authority", "-a", args);
         String keystoreFile = Util.extractOrCrash("--keystore", "-k", args);
-        // TODO: GENERATE A KEY and persist to keystore
+        String newKeyFile = Util.extractOrCrash("--private", "-p", args);
+        ensureFileDoesNotExist(newKeyFile);
+        Files.writeString(ensureFileDoesNotExist(keystoreFile).toPath(), "{}");
+        authorityAppendKeyStore(config, args);
     }
 
     public static void authorityAppendKeyStore(Config config, String[] args) throws Exception {
-        String identity = config.get_string("identity", null);
         String authority = Util.extractOrCrash("--authority", "-a", args);
         String keystoreFile = Util.extractOrCrash("--keystore", "-k", args);
-        // TODO: LOAD KEYSTORE
-        // TODO: GENERATE A KEY and _APPEND_ to keystore
+        String newKeyFile = Util.extractOrCrash("--private", "-p", args);
+        File newPrivateKeyFile = ensureFileDoesNotExist(newKeyFile);
+        Keystore keystore = Keystore.parse(Files.readString(new File(keystoreFile).toPath()));
+        String privateKeyFile = keystore.generate(authority);
+        Files.writeString(newPrivateKeyFile.toPath(), privateKeyFile);
+        Files.writeString(new File(keystoreFile).toPath(), keystore.persist());
     }
 
     public static void authorityCreate(Config config, String[] args) throws Exception {
@@ -85,16 +130,33 @@ public class Authority {
         String authority = Util.extractOrCrash("--authority", "-a", args);
         String keystoreFile = Util.extractOrCrash("--keystore", "-k", args);
         String keystoreJson = Files.readString(new File(keystoreFile).toPath());
-        // TODO: define keystore schema and validate
+        ValidateKeystore.validate(Json.parseJsonObject(keystoreJson));
         try (WebSocketClient client = new WebSocketClient(config)) {
             try (Connection connection = client.open()) {
                 ObjectNode request = Json.newJsonObject();
                 request.put("method", "authority/set");
                 request.put("identity", identity);
                 request.put("authority", authority);
-                request.put("key-store", Json.parseJsonObject(keystoreJson));
+                request.set("key-store", Json.parseJsonObject(keystoreJson));
                 ObjectNode response = connection.execute(request);
                 System.err.println(response.toPrettyString());
+            }
+        }
+    }
+
+    public static void authorityGet(Config config, String[] args) throws Exception {
+        String identity = config.get_string("identity", null);
+        String authority = Util.extractOrCrash("--authority", "-a", args);
+        String keystoreFile = Util.extractOrCrash("--keystore", "-k", args);
+        ensureFileDoesNotExist(keystoreFile);
+        try (WebSocketClient client = new WebSocketClient(config)) {
+            try (Connection connection = client.open()) {
+                ObjectNode request = Json.newJsonObject();
+                request.put("method", "authority/get");
+                request.put("identity", identity);
+                request.put("authority", authority);
+                ObjectNode response = connection.execute(request);
+                Files.writeString(new File(keystoreFile).toPath(), response.get("keystore").toString());
             }
         }
     }
@@ -141,8 +203,10 @@ public class Authority {
         System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Creates a new authority");
         System.out.println("    " + Util.prefix("destroy", Util.ANSI.Green) + "           Destroy an authority " + Util.prefix ("(WARNING)", Util.ANSI.Red));
         System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List authorities this developer owns");
-        System.out.println("    " + Util.prefix("set", Util.ANSI.Green) + "               Set/upload the keystore");
-        System.out.println("    " + Util.prefix("make-keystore", Util.ANSI.Green) + "     Make a new keystore");
-        System.out.println("    " + Util.prefix("append-keystore", Util.ANSI.Green) + "   Generate a new key and append it to an existing keystore and auto expire old keys");
+        System.out.println("    " + Util.prefix("set", Util.ANSI.Green) + "               Set public keys to an authority");
+        System.out.println("    " + Util.prefix("get", Util.ANSI.Green) + "               Get released public keys for an authority");
+        System.out.println("    " + Util.prefix("create-local", Util.ANSI.Green) + "      Make a new set of public keys" + Util.prefix ("(WARNING)", Util.ANSI.Red));
+        System.out.println("    " + Util.prefix("append-local", Util.ANSI.Green) + "      Append a new public key to the public key file" + Util.prefix ("(WARNING)", Util.ANSI.Red));
+        System.out.println("    " + Util.prefix("sign", Util.ANSI.Green) + "              Sign an agent with a local private key");
     }
 }

@@ -190,9 +190,15 @@
         </documentation>
     </field-definition>
 
-    <field-definition name="delta" type="json-object" optional="true">
+    <field-definition name="delta" type="json-object">
         <documentation>
             A json delta representing a change of data. See XYZ for more information about how to use the delta format.
+        </documentation>
+    </field-definition>
+
+    <field-definition name="keystore" type="json-object">
+        <documentation>
+            A bunch of public keys
         </documentation>
     </field-definition>
 
@@ -271,6 +277,11 @@
         <field name="plan"/>
     </responder>
 
+    <responder name="keystore">
+        <field name="keystore"/>
+    </responder>
+
+
     <responder name="reflection">
         <field name="reflection"/>
     </responder>
@@ -345,6 +356,13 @@
         <parameter name="identity"/>
         <parameter name="authority"/>
         <parameter name="key-store"/>
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="authority/get" responder="keystore">
+        <parameter name="identity"/>
+        <parameter name="authority"/>
         <documentation>
         </documentation>
     </method>

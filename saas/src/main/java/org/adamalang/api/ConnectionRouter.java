@@ -138,6 +138,18 @@ public class ConnectionRouter {
               }
             });
           } return;
+          case "authority/get": {
+            AuthorityGetRequest.resolve(nexus, request, new Callback<>() {
+              @Override
+              public void success(AuthorityGetRequest resolved) {
+                handler.handle(resolved, new KeystoreResponder(responder));
+              }
+              @Override
+              public void failure(ErrorCodeException ex) {
+                responder.error(ex);
+              }
+            });
+          } return;
           case "authority/list": {
             AuthorityListRequest.resolve(nexus, request, new Callback<>() {
               @Override

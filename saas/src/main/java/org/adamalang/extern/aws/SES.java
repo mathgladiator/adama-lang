@@ -10,23 +10,25 @@
 package org.adamalang.extern.aws;
 
 import com.amazonaws.services.simpleemailv2.AmazonSimpleEmailServiceV2Async;
+import com.amazonaws.services.simpleemailv2.AmazonSimpleEmailServiceV2AsyncClientBuilder;
 import com.amazonaws.services.simpleemailv2.model.*;
 import org.adamalang.extern.Email;
 
 import java.util.Collections;
 
 public class SES implements Email {
-  // TODO: need to invest in how Amazon does credential management
+  private final AWSConfig config;
   private final AmazonSimpleEmailServiceV2Async client;
 
-  public SES(AmazonSimpleEmailServiceV2Async client) {
-    this.client = client;
+  public SES(AWSConfig config) {
+    this.config = config;
+    this.client = AmazonSimpleEmailServiceV2AsyncClientBuilder.standard().withCredentials(config).withRegion(config.region).build();
   }
 
   @Override
   public void sendCode(String email, String code) {
     SendEmailRequest request = new SendEmailRequest();
-    request.setReplyToAddresses(Collections.singleton("nope@jeffrey.io"));
+    request.setReplyToAddresses(Collections.singleton(config.replyToEmailAddressForInit));
     request.setDestination(new Destination().withToAddresses(email));
     request.setContent(
         new EmailContent()
@@ -42,7 +44,7 @@ public class SES implements Email {
                                 new Content()
                                     .withData("Your code is " + code)
                                     .withCharset("UTF-8")))));
-    request.setFromEmailAddress("boss@jeffrey.io");
+    request.setFromEmailAddress(config.fromEmailAddressForInit);
     client.sendEmail(request);
   }
 }
