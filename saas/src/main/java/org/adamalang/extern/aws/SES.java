@@ -7,10 +7,11 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.extern;
+package org.adamalang.extern.aws;
 
 import com.amazonaws.services.simpleemailv2.AmazonSimpleEmailServiceV2Async;
 import com.amazonaws.services.simpleemailv2.model.*;
+import org.adamalang.extern.Email;
 
 import java.util.Collections;
 

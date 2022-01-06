@@ -56,9 +56,9 @@ public class FrontendManagementInstaller {
             .append("  `name` VARCHAR(128) NOT NULL,") //
             .append("  `billing` VARCHAR(16) NOT NULL,") //
             .append("  `plan` TEXT NOT NULL,") //
+            .append("  `hash` VARCHAR(256) NOT NULL,") //
             .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
-            .append(
-                "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
+            .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
             .append("  PRIMARY KEY (`id`),") //
             .append("  UNIQUE `u` (`name`),") //
             .append("  INDEX `c` (`owner`))") //

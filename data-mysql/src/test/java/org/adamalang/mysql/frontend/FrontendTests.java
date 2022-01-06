@@ -150,8 +150,8 @@ public class FrontendTests {
         Assert.assertEquals(2, Spaces.getSpaceId(dataBase, "space2").id);
         Assert.assertEquals("{}", Spaces.getPlan(dataBase, 1));
         Assert.assertEquals("{}", Spaces.getPlan(dataBase, 2));
-        Spaces.setPlan(dataBase, 1, "{\"x\":1}");
-        Spaces.setPlan(dataBase, 2, "{\"x\":2}");
+        Spaces.setPlan(dataBase, 1, "{\"x\":1}", "h1");
+        Spaces.setPlan(dataBase, 2, "{\"x\":2}", "h2");
         Spaces.setBilling(dataBase, 1, "fixed50");
         Spaces.setBilling(dataBase, 2, "open");
         Assert.assertEquals("{\"x\":1}", Spaces.getPlan(dataBase, 1));

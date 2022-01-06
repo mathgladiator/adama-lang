@@ -39,7 +39,7 @@ public class RootHandlerImpl implements RootHandler {
 
   public RootHandlerImpl(ExternNexus nexus) throws Exception {
     this.nexus = nexus;
-    this.rng = new Random(); // TODO: figure out why secure random was hanging
+    this.rng = new Random();
     this.logger = nexus.makeLogger(RootHandler.class);
   }
 
@@ -237,22 +237,26 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(SpaceSetRequest request, SimpleResponder responder) {
     try {
       if (request.policy.canUserSetPlan(request.who)) {
-        // Change the master plan
         String planJson = request.plan.toString();
+        // hash the plan
         MessageDigest digest = Hashing.md5();
         digest.digest(planJson.getBytes(StandardCharsets.UTF_8));
         String hash = Hashing.finishAndEncode(digest);
-        Spaces.setPlan(nexus.dataBaseManagement, request.policy.id, planJson);
+
+        // Change the master plan
+        Spaces.setPlan(nexus.dataBaseManagement, request.policy.id, planJson, hash);
+
+        // iterate the targets with this space loaded
         nexus.client.getDeploymentTargets(request.space, (target) -> {
-          System.err.println("Deploying " + request.space + " to " + target);
           try {
+            // persist the deployment binding
             Deployments.deploy(nexus.dataBaseDeployments, request.space, target, hash, planJson);
+            // notify the client of an update
             nexus.client.notifyDeployment(target, request.space);
           } catch (Exception ex) {
             ex.printStackTrace();
           }
         });
-
         responder.complete();
       } else {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
@@ -319,21 +323,17 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(DocumentCreateRequest request, SimpleResponder responder) {
     try {
-      if (Validators.simple(request.key, 511)) {
-        nexus.client.create(request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new CreateCallback() {
-          @Override
-          public void created() {
-            responder.complete();
-          }
+      nexus.client.create(request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new CreateCallback() {
+        @Override
+        public void created() {
+          responder.complete();
+        }
 
-          @Override
-          public void error(int code) {
-            responder.error(new ErrorCodeException(code));
-          }
-        });
-      } else {
-        responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_DOCUMENT_INVALID_KEY));
-      }
+        @Override
+        public void error(int code) {
+          responder.error(new ErrorCodeException(code));
+        }
+      });
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, logger));

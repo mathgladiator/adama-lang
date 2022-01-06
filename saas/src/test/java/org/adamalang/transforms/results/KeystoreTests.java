@@ -7,16 +7,13 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.validators;
+package org.adamalang.transforms.results;
 
-import org.adamalang.ErrorCodes;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Validators;
+import org.junit.Test;
 
-public class ValidateKey {
-  public static void validate(String key) throws ErrorCodeException {
-    if (!Validators.simple(key, 511)) {
-      throw new ErrorCodeException(ErrorCodes.API_INVALID_KEY);
-    }
+public class KeystoreTests {
+  @Test
+  public void flow() {
+
   }
 }

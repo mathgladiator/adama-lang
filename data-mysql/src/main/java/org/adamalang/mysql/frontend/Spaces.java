@@ -43,7 +43,7 @@ public class Spaces {
           new StringBuilder()
               .append("INSERT INTO `")
               .append(dataBase.databaseName)
-              .append("`.`spaces` (`owner`, `name`, `plan`, `billing`) VALUES (?,?,'{}', 'free')")
+              .append("`.`spaces` (`owner`, `name`, `plan`, `hash`, `billing`) VALUES (?,?,'{}', '', 'free')")
               .toString();
       try (PreparedStatement statement =
           connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -95,19 +95,20 @@ public class Spaces {
     }
   }
 
-  public static void setPlan(DataBase dataBase, int spaceId, String plan) throws Exception {
+  public static void setPlan(DataBase dataBase, int spaceId, String plan, String hash) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql =
           new StringBuilder()
               .append("UPDATE `")
               .append(dataBase.databaseName)
-              .append("`.`spaces` SET `plan`=? WHERE `id`=")
+              .append("`.`spaces` SET `plan`=?, `hash`=? WHERE `id`=")
               .append(spaceId)
               .append(" LIMIT 1")
               .toString();
       try (PreparedStatement statement =
           connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, plan);
+        statement.setString(2, hash);
         statement.execute();
       }
     }

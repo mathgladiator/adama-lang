@@ -67,11 +67,13 @@ public class Contrib {
                     String code = Files.readString(f.toPath());
                     int start = code.indexOf("/*");
                     int end = code.indexOf("*/");
+                    String newCode = null;
                     if (start >= 0 && start <= 5 && end > start) {
-                        String newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.substring(end + 2).trim() + "\n";
-                        Files.writeString(f.toPath(), newCode);
+                        newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.substring(end + 2).trim() + "\n";
                     } else {
-                        String newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.trim() + "\n";
+                        newCode = DefaultCopyright.COPYRIGHT_FILE_PREFIX + code.trim() + "\n";
+                    }
+                    if (!code.equals(newCode)) {
                         Files.writeString(f.toPath(), newCode);
                     }
                 }
