@@ -85,11 +85,10 @@ public class ClientObserver implements StreamObserver<GossipReverse> {
                 }
                 return;
               }
-            case COMPLEMENT:
+            case SLOW_GOSSIP:
               {
-                metrics.bump_complement();
-                SlowGossipComplement complement = gossipReverse.getComplement();
-                chain.ingest(complement.getMissingEndpointsList(), Collections.emptySet());
+                metrics.bump_client_slow_gossip();
+                chain.ingest(gossipReverse.getSlowGossip().getAllEndpointsList(), Collections.emptySet());
                 forward.onCompleted();
                 return;
               }

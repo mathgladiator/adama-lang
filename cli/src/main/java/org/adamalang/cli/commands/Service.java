@@ -178,7 +178,7 @@ public class Service {
         }
 
         @Override
-        public void bump_complement() {
+        public void bump_client_slow_gossip() {
 
         }
 
@@ -208,7 +208,7 @@ public class Service {
         }
 
         @Override
-        public void bump_slow_gossip() {
+        public void bump_server_slow_gossip() {
 
         }
 

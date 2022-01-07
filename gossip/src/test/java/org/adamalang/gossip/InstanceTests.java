@@ -61,12 +61,12 @@ public class InstanceTests {
     instance.bump(100);
     Assert.assertFalse(instance.canDelete(100));
     Assert.assertFalse(instance.tooOldMustDelete(100));
-    Assert.assertFalse(instance.canDelete(5099));
-    Assert.assertFalse(instance.tooOldMustDelete(5099));
-    Assert.assertFalse(instance.canDelete(5100));
-    Assert.assertFalse(instance.tooOldMustDelete(5100));
-    Assert.assertTrue(instance.canDelete(5101));
-    Assert.assertFalse(instance.tooOldMustDelete(5101));
+    Assert.assertFalse(instance.canDelete(20099));
+    Assert.assertFalse(instance.tooOldMustDelete(20099));
+    Assert.assertFalse(instance.canDelete(20100));
+    Assert.assertFalse(instance.tooOldMustDelete(20100));
+    Assert.assertTrue(instance.canDelete(20101));
+    Assert.assertFalse(instance.tooOldMustDelete(20101));
     Assert.assertTrue(instance.canDelete(25099));
     Assert.assertFalse(instance.tooOldMustDelete(25099));
     Assert.assertTrue(instance.canDelete(25100));

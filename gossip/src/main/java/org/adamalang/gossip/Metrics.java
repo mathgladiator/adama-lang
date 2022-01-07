@@ -13,7 +13,7 @@ package org.adamalang.gossip;
 public interface Metrics {
   void bump_sad_return();
 
-  void bump_complement();
+  void bump_client_slow_gossip();
 
   void bump_optimistic_return();
 
@@ -25,7 +25,7 @@ public interface Metrics {
 
   void bump_quick_gossip();
 
-  void bump_slow_gossip();
+  void bump_server_slow_gossip();
 
   void log_error(Throwable cause);
 }

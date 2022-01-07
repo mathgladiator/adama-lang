@@ -56,10 +56,6 @@ message SlowGossip {
   repeated Endpoint all_endpoints = 1;
 }
 
-message SlowGossipComplement {
-  repeated Endpoint missing_endpoints = 1;
-}
-
 /**
  client picks a random known host
  (1) sends a BeginGossip with its most recent hash of its endpoint set along with a handful of recent endpoints learned about
@@ -92,6 +88,6 @@ message GossipReverse {
     HashNotFoundReverseConversation sad_return = 1;
     HashFoundRequestForwardQuickGossip optimistic_return = 2;
     ReverseHashFound turn_tables = 3;
-    SlowGossipComplement complement = 4;
+    SlowGossip slow_gossip = 4;
   }
 }

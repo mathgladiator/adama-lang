@@ -35,7 +35,7 @@ public class MockMetrics implements Metrics {
   }
 
   @Override
-  public synchronized void bump_complement() {
+  public synchronized void bump_client_slow_gossip() {
     seq.append("[COMP]");
   }
 
@@ -65,7 +65,7 @@ public class MockMetrics implements Metrics {
   }
 
   @Override
-  public synchronized void bump_slow_gossip() {
+  public synchronized void bump_server_slow_gossip() {
     seq.append("[SG]");
   }
 

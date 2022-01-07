@@ -12,7 +12,6 @@ package org.adamalang.gossip;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.gossip.proto.*;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.TreeSet;
@@ -107,7 +106,7 @@ public class ServerHandler extends GossipGrpc.GossipImplBase {
                   }
                 case SLOW_GOSSIP:
                   {
-                    metrics.bump_slow_gossip();
+                    metrics.bump_server_slow_gossip();
                     TreeSet<String> incoming = new TreeSet<>();
                     for (Endpoint ep : gossipForward.getSlowGossip().getAllEndpointsList()) {
                       incoming.add(ep.getId());
@@ -115,17 +114,11 @@ public class ServerHandler extends GossipGrpc.GossipImplBase {
                     chain.ingest(
                         gossipForward.getSlowGossip().getAllEndpointsList(),
                         Collections.emptySet());
-                    ArrayList<Endpoint> toSend = new ArrayList<>();
-                    for (Endpoint ep : chain.all()) {
-                      if (!incoming.contains(ep.getId())) {
-                        toSend.add(ep);
-                      }
-                    }
                     responseObserver.onNext(
                         GossipReverse.newBuilder()
-                            .setComplement(
-                                SlowGossipComplement.newBuilder()
-                                    .addAllMissingEndpoints(toSend)
+                            .setSlowGossip(
+                                SlowGossip.newBuilder()
+                                    .addAllAllEndpoints(chain.all())
                                     .build())
                             .build());
                     responseObserver.onCompleted();
