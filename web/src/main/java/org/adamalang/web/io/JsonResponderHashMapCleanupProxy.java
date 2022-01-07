@@ -10,6 +10,7 @@
 package org.adamalang.web.io;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.metrics.StreamMonitor;
 
 import java.util.HashMap;
 import java.util.concurrent.Executor;
@@ -19,13 +20,14 @@ import java.util.concurrent.Executor;
  * all mutations to the map are executed in the provided executor
  */
 public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
+  private final StreamMonitor.StreamMonitorInstance metrics;
   private final Executor executor;
   private final HashMap<Long, T> map;
   private final long key;
   private final JsonResponder responder;
 
-  public JsonResponderHashMapCleanupProxy(
-      Executor executor, HashMap<Long, T> map, long key, JsonResponder responder) {
+  public JsonResponderHashMapCleanupProxy(StreamMonitor.StreamMonitorInstance metrics, Executor executor, HashMap<Long, T> map, long key, JsonResponder responder) {
+    this.metrics = metrics;
     this.executor = executor;
     this.map = map;
     this.key = key;
@@ -34,11 +36,13 @@ public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
 
   @Override
   public void stream(String json) {
+    metrics.progress();
     responder.stream(json);
   }
 
   @Override
   public void finish(String json) {
+    metrics.finish();
     executor.execute(
         () -> {
           map.remove(key);
@@ -48,6 +52,7 @@ public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
 
   @Override
   public void error(ErrorCodeException ex) {
+    metrics.failure(ex.code);
     executor.execute(
         () -> {
           map.remove(key);

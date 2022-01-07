@@ -61,6 +61,7 @@ public class Tool {
     Map<String, String> responderFiles = AssembleResponders.make(packageName, responders);
     Map<String, String> handlerFiles = AssembleHandlers.make(packageName, methods);
     String router = AssembleConnectionRouter.make(packageName, methods);
+    String metrics = AssembleMetrics.make(packageName, methods);
 
     File outputPath = new File(outputPathStr);
     outputPath.mkdirs();
@@ -70,6 +71,8 @@ public class Tool {
     HashMap<String, String> apiOutput = new HashMap<>();
     apiOutput.put("ConnectionNexus.java", nexus);
     apiOutput.put("ConnectionRouter.java", router);
+    apiOutput.put("Metrics.java", metrics);
+
     apiOutput.putAll(requestsFiles);
     apiOutput.putAll(responderFiles);
     apiOutput.putAll(handlerFiles);

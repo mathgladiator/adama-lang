@@ -24,8 +24,8 @@ public class AssembleConnectionRouter {
     StringBuilder router = new StringBuilder();
     router.append("package ").append(packageName).append(";\n\n");
     router.append("\n");
-    router.append("import org.adamalang.common.Callback;\n");
-    router.append("import org.adamalang.common.ErrorCodeException;\n");
+    router.append("import org.adamalang.common.*;\n");
+    router.append("import org.adamalang.common.metrics.*;\n");
     router.append("import org.adamalang.web.io.*;\n");
     router.append("import org.adamalang.ErrorCodes;\n");
     router.append("\n");
@@ -35,6 +35,7 @@ public class AssembleConnectionRouter {
     router.append("public class ConnectionRouter {\n");
     router.append("  public final ConnectionNexus nexus;\n");
     router.append("  public final RootHandler handler;\n");
+
     for (String subHandler : subHandlers) {
       if (!"Root".equals(subHandler)) {
         router
@@ -80,6 +81,11 @@ public class AssembleConnectionRouter {
     router.append("        switch (method) {\n");
     for (Method method : methods) {
       router.append("          case \"").append(method.name).append("\": {\n");
+      if (method.create != null) {
+        router.append("            StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_").append(method.camelName).append(".start();\n");
+      } else {
+        router.append("            RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_").append(method.camelName).append(".start();\n");
+      }
       router
           .append("            ")
           .append(method.camelName)
@@ -101,10 +107,11 @@ public class AssembleConnectionRouter {
             .append(");\n");
         router.append("                if (handlerToUse != null) {\n");
         router
-            .append("                  handlerToUse.handle(resolved, new ")
+            .append("                  handlerToUse.handle(resolved,new ")
             .append(method.responder.camelName)
-            .append("Responder(responder));\n");
+            .append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
         router.append("                } else {\n");
+        router.append("                  mInstance.failure(").append(method.errorCantFindBy).append(");\n");
         router
             .append("                  responder.error(new ErrorCodeException(")
             .append(method.errorCantFindBy)
@@ -117,7 +124,7 @@ public class AssembleConnectionRouter {
               .append(Common.camelize(method.create))
               .append("Handler handlerMade = handler.handle(resolved, new ")
               .append(method.responder.camelName)
-              .append("Responder(new JsonResponderHashMapCleanupProxy<>(nexus.executor, inflight")
+              .append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight")
               .append(Common.camelize(method.create))
               .append(", requestId, responder)));\n");
           router
@@ -130,12 +137,13 @@ public class AssembleConnectionRouter {
           router
               .append("                handler.handle(resolved, new ")
               .append(method.responder.camelName)
-              .append("Responder(responder));\n");
+              .append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
         }
       }
       router.append("              }\n");
       router.append("              @Override\n");
       router.append("              public void failure(ErrorCodeException ex) {\n");
+      router.append("                mInstance.failure(ex.code);\n");
       router.append("                responder.error(ex);\n");
       router.append("              }\n");
       router.append("            });\n");
