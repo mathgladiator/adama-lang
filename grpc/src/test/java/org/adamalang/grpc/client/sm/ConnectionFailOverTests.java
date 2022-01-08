@@ -111,13 +111,13 @@ public class ConnectionFailOverTests {
         Runnable broadcastNewTarget = directExector.latchAtAndDrain(5, 1);
         Runnable completeClients = finderExecutor.latchAtAndDrain(23, 2);
         Runnable newConnectionEstablished = finderExecutor.latchAtAndDrain(25, 2);
-        Runnable connectionFoundTarget = connectionExecutor.latchAtAndDrain(10, 2);
-        Runnable newConnectionSignal = connectionExecutor.latchAtAndDrain(11, 1);
+        Runnable connectionFoundTarget = connectionExecutor.latchAtAndDrain(11, 2);
+        Runnable newConnectionSignal = connectionExecutor.latchAtAndDrain(12, 1);
         Runnable findNewTargetForFailOver = finderExecutor.latchAtAndDrain(26, 1);
-        Runnable foundConnection = connectionExecutor.latchAtAndDrain(12, 1);
+        Runnable foundConnection = connectionExecutor.latchAtAndDrain(13, 1);
         Runnable executeConnect = finderExecutor.latchAtAndDrain(27, 1);
         Runnable produceEventsOnNewDataStream = finderExecutor.latchAtAndDrain(29, 2);
-        Runnable connectionComplete = connectionExecutor.latchAtAndDrain(13, 1);
+        Runnable connectionComplete = connectionExecutor.latchAtAndDrain(14, 1);
 
         ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);

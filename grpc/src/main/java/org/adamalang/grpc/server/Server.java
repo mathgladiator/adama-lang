@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 
 /** the server to handler requests and proxy to the core */
 public class Server implements AutoCloseable {
+  private final Handler handler;
   private final Supplier<io.grpc.Server> serverSupplier;
   private final AtomicBoolean alive;
   private io.grpc.Server server;
@@ -29,11 +30,11 @@ public class Server implements AutoCloseable {
   public Server(ServerNexus nexus) throws Exception {
     this.alive = new AtomicBoolean(false);
     this.server = null;
+    this.handler = new Handler(nexus);
     this.serverSupplier =
         ExceptionSupplier.TO_RUNTIME(
-            () ->
-                NettyServerBuilder.forPort(nexus.port)
-                    .addService(new Handler(nexus))
+            () -> NettyServerBuilder.forPort(nexus.port)
+                    .addService(handler)
                     .sslContext(
                         GrpcSslContexts //
                             .forServer(nexus.identity.getCert(), nexus.identity.getKey()) //
@@ -48,13 +49,6 @@ public class Server implements AutoCloseable {
     if (alive.compareAndExchange(false, true) == false) {
       server = serverSupplier.get();
       server.start();
-      Runtime.getRuntime()
-          .addShutdownHook(
-              new Thread(
-                  ExceptionRunnable.TO_RUNTIME(
-                      () -> {
-                        Server.this.close();
-                      })));
     }
   }
 

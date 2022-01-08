@@ -34,8 +34,6 @@ public class UserIdResolver implements AsyncTransform<String, Integer> {
   public void execute(String email, Callback<Integer> callback) {
     executor.execute(
         () -> {
-          // TODO: validate the email (roughly, for quick rejects)
-          // https://stackoverflow.com/questions/624581/what-is-the-best-java-email-address-validation-method
           try {
             callback.success(Users.getOrCreateUserId(dataBase, email));
           } catch (Exception ex) {

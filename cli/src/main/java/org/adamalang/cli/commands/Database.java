@@ -81,7 +81,7 @@ public class Database {
         System.out.print(Util.prefix("Database:", Util.ANSI.Yellow));
         String dbname = System.console().readLine();
 
-        // TODO: validate
+        // TODO: validate by connecting to the database
         config.manipulate((node) -> {
             ObjectNode roleNode = node.putObject(role);
             roleNode.put("jdbc_url", "jdbc:mysql://" + host + ":" + port);

@@ -11,6 +11,7 @@ package org.adamalang.cli.commands;
 
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.TimeSource;
 import org.adamalang.extern.Email;
@@ -187,9 +188,16 @@ public class Service {
     ServerNexus nexus =
         new ServerNexus(
             identity, service, deploymentFactoryBase, scanForDeployments, billingPubSub, port, 4);
-    // TODO: hold onto the Server reference and kill on a signal, need signal listener to clean
-    // shutdown
-    new Server(nexus).start();
+
+    Server server = new Server(nexus);
+    server.start();
+    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
+      @Override
+      public void run() throws Exception {
+        // TODO: for each connection, remove from routing table, stop
+        server.close();
+      }
+    })));
   }
 
   public static void serviceFrontend(Config config) throws Exception {

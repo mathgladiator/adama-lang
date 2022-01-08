@@ -196,9 +196,10 @@ public class InstanceClientFinder {
     @Override
     public void disconnected(InstanceClient client) {
       executor.execute(
-          new NamedRunnable("finder-lost", client.target) {
+          new NamedRunnable("finder-lost-client", client.target) {
             @Override
             public void execute() throws Exception {
+              engine.remove(client.target);
               InstanceClientProxy.this.client = null;
               if (buffer != null) {
                 for (QueueAction<InstanceClient> action : buffer) {

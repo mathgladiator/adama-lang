@@ -31,7 +31,6 @@ public class Contrib {
                 GenerateLanguageTests.generate(0, next);
                 return;
             case "make-api":
-                // TODO: needs a lot of love and testing
                 Tool.build();
                 return;
             case "copyright":

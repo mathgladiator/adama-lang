@@ -38,7 +38,7 @@ public class AssertCreateFailure implements CreateCallback {
 
   public void await(int expectedCode) {
     try {
-      Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
       Assert.assertEquals(expectedCode, code);
     } catch (InterruptedException ie) {
       Assert.fail();
