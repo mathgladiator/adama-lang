@@ -53,6 +53,7 @@ public class EngineTests {
     app.newApp(
         "app",
         4242,
+        -1,
         new Consumer<Runnable>() {
           @Override
           public void accept(Runnable runnable) {
@@ -141,6 +142,7 @@ public class EngineTests {
     app.newApp(
         "app",
         4242,
+        -1,
         new Consumer<Runnable>() {
           @Override
           public void accept(Runnable runnable) {

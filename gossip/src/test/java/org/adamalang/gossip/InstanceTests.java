@@ -24,6 +24,7 @@ public class InstanceTests {
                 .setIp("ip")
                 .setRole("proxy")
                 .setPort(4242)
+                .setMonitoringPort(10002)
                 .build(),
             0);
     Assert.assertEquals(224, instance.counter());
@@ -44,6 +45,7 @@ public class InstanceTests {
     Assert.assertEquals(4242, instance.toEndpoint().getPort());
     Assert.assertEquals("ip:4242", instance.target());
     Assert.assertEquals("proxy", instance.role());
+    Assert.assertEquals(10002, instance.toEndpoint().getMonitoringPort());
   }
 
   @Test

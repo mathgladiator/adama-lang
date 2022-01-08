@@ -18,6 +18,7 @@ public class Instance implements Comparable<Instance> {
   public final String id;
   private final String ip;
   private final int port;
+  public final int monitoringPort;
   private final String role;
   private int counter;
   private long witness;
@@ -26,6 +27,7 @@ public class Instance implements Comparable<Instance> {
     this.id = endpoint.getId();
     this.ip = endpoint.getIp();
     this.port = endpoint.getPort();
+    this.monitoringPort = endpoint.getMonitoringPort();
     this.role = endpoint.getRole();
     this.counter = endpoint.getCounter();
     this.witness = now;
@@ -52,6 +54,7 @@ public class Instance implements Comparable<Instance> {
         .setId(id)
         .setIp(ip)
         .setPort(port)
+        .setMonitoringPort(monitoringPort)
         .setRole(role)
         .setCounter(counter)
         .build();

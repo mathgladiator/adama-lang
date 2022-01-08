@@ -24,6 +24,7 @@ public class CommonTest {
             .setIp("ip1")
             .setRole("proxy")
             .setPort(123)
+            .setMonitoringPort(200)
             .build(),
         0);
   }
@@ -36,6 +37,7 @@ public class CommonTest {
             .setIp("ip2")
             .setRole("proxy")
             .setPort(234)
+            .setMonitoringPort(201)
             .build(),
         0);
   }
@@ -48,6 +50,7 @@ public class CommonTest {
             .setIp("ip1")
             .setRole("proxy")
             .setPort(345)
+            .setMonitoringPort(202)
             .build(),
         0);
   }
@@ -60,6 +63,7 @@ public class CommonTest {
             .setIp("ip2")
             .setRole("proxy")
             .setPort(456)
+            .setMonitoringPort(203)
             .build(),
         0);
   }

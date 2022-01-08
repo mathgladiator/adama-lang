@@ -15,8 +15,9 @@ message Endpoint {
   string id = 1;
   string ip = 2;
   int32 port = 3;
-  int32 counter = 4;
-  string role = 5;
+  int32 monitoringPort = 4;
+  int32 counter = 5;
+  string role = 6;
 }
 
 // client initiates gossip by sending its hash along with an optimistic list of endpoints

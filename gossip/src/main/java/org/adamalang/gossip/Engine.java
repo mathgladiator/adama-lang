@@ -69,6 +69,7 @@ public class Engine implements AutoCloseable {
                 .setIp(identity.ip)
                 .setId(id)
                 .setPort(port)
+                .setMonitoringPort(-1)
                 .setCounter(0)
                 .setRole("gossip")
                 .build()),
@@ -99,7 +100,7 @@ public class Engine implements AutoCloseable {
                     .build());
   }
 
-  public void newApp(String role, int port, Consumer<Runnable> callback) {
+  public void newApp(String role, int port, int monitoringPort, Consumer<Runnable> callback) {
     executor.execute(
         () -> {
           String id = UUID.randomUUID().toString();
@@ -109,6 +110,7 @@ public class Engine implements AutoCloseable {
                       .setIp(ip)
                       .setId(id)
                       .setPort(port)
+                      .setMonitoringPort(monitoringPort)
                       .setCounter(0)
                       .setRole(role)
                       .build()),
