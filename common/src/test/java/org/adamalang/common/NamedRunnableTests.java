@@ -18,14 +18,15 @@ public class NamedRunnableTests {
   @Test
   public void coverageLongName() {
     AtomicInteger x = new AtomicInteger(0);
-    NamedRunnable runnable = new NamedRunnable("me", "too", "tired") {
-      @Override
-      public void execute() throws Exception {
-        if (x.incrementAndGet() == 3) {
-          throw new Exception("huh");
-        }
-      }
-    };
+    NamedRunnable runnable =
+        new NamedRunnable("me", "too", "tired") {
+          @Override
+          public void execute() throws Exception {
+            if (x.incrementAndGet() == 3) {
+              throw new Exception("huh");
+            }
+          }
+        };
     Assert.assertEquals("me/too/tired", runnable.toString());
     runnable.run();
     runnable.run();
@@ -36,14 +37,15 @@ public class NamedRunnableTests {
   @Test
   public void coverageSingle() {
     AtomicInteger x = new AtomicInteger(0);
-    NamedRunnable runnable = new NamedRunnable("me") {
-      @Override
-      public void execute() throws Exception {
-        if (x.incrementAndGet() == 3) {
-          throw new Exception("huh");
-        }
-      }
-    };
+    NamedRunnable runnable =
+        new NamedRunnable("me") {
+          @Override
+          public void execute() throws Exception {
+            if (x.incrementAndGet() == 3) {
+              throw new Exception("huh");
+            }
+          }
+        };
     Assert.assertEquals("me", runnable.toString());
     runnable.run();
     runnable.run();

@@ -24,8 +24,6 @@ public abstract class NamedRunnable implements Runnable {
     this.name = sb.toString();
   }
 
-  public abstract void execute() throws Exception;
-
   @Override
   public void run() {
     try {
@@ -35,6 +33,8 @@ public abstract class NamedRunnable implements Runnable {
       // TODO: raise a counter
     }
   }
+
+  public abstract void execute() throws Exception;
 
   @Override
   public String toString() {

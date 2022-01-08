@@ -13,14 +13,14 @@ package org.adamalang.common.metrics;
 public interface RequestResponseMonitor {
 
   /** start an operation */
-  public RequestResponseMonitorInstance start();
+  RequestResponseMonitorInstance start();
 
   /** the operation must success or fail. We also capture common bugs */
-  public interface RequestResponseMonitorInstance {
-    public void success();
+  interface RequestResponseMonitorInstance {
+    void success();
 
-    public void extra();
+    void extra();
 
-    public void failure(int code);
+    void failure(int code);
   }
 }

@@ -9,11 +9,14 @@
  */
 package org.adamalang.common.metrics;
 
-/** the front-door for all metrics; all metrics are known in the first few ms of the process starting up */
+/**
+ * the front-door for all metrics; all metrics are known in the first few ms of the process starting
+ * up
+ */
 public interface MetricsFactory {
   /** produce a monitor for request response style operations */
-  public RequestResponseMonitor makeRequestResponseMonitor(String name);
+  RequestResponseMonitor makeRequestResponseMonitor(String name);
 
   /** produce a monitor for a stream operation */
-  public StreamMonitor makeStreamMonitor(String name);
+  StreamMonitor makeStreamMonitor(String name);
 }

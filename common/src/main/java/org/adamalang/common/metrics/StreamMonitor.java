@@ -13,14 +13,14 @@ package org.adamalang.common.metrics;
 public interface StreamMonitor {
 
   /** start an operation */
-  public StreamMonitorInstance start();
+  StreamMonitorInstance start();
 
   /** the operation makes progress, finishes or fails */
-  public interface StreamMonitorInstance {
-    public void progress();
+  interface StreamMonitorInstance {
+    void progress();
 
-    public void finish();
+    void finish();
 
-    public void failure(int code);
+    void failure(int code);
   }
 }

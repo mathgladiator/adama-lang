@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /** wraps Java executor for time and simplifies for Adama */
 public interface SimpleExecutor {
   /** a default instance for doing things NOW */
-  public static final SimpleExecutor NOW =
+  SimpleExecutor NOW =
       new SimpleExecutor() {
         @Override
         public void execute(Runnable command) {
@@ -35,17 +35,9 @@ public interface SimpleExecutor {
         }
       };
 
-  /** execute the given command in the executor */
-  void execute(Runnable command);
-
-  /** schedule the given command to run after some milliseconds within the executor */
-  void schedule(Runnable command, long milliseconds);
-
-  /** shutdown the executor */
-  CountDownLatch shutdown();
-
-  public static SimpleExecutor create(String name) {
-    ScheduledExecutorService realExecutor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(name));
+  static SimpleExecutor create(String name) {
+    ScheduledExecutorService realExecutor =
+        Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(name));
     return new SimpleExecutor() {
       @Override
       public void execute(Runnable command) {
@@ -60,12 +52,22 @@ public interface SimpleExecutor {
       @Override
       public CountDownLatch shutdown() {
         CountDownLatch latch = new CountDownLatch(1);
-        realExecutor.execute(() -> {
-          latch.countDown();
-          realExecutor.shutdown();
-        });
+        realExecutor.execute(
+            () -> {
+              latch.countDown();
+              realExecutor.shutdown();
+            });
         return latch;
       }
     };
   }
+
+  /** execute the given command in the executor */
+  void execute(Runnable command);
+
+  /** schedule the given command to run after some milliseconds within the executor */
+  void schedule(Runnable command, long milliseconds);
+
+  /** shutdown the executor */
+  CountDownLatch shutdown();
 }

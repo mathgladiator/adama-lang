@@ -14,16 +14,16 @@ import org.slf4j.LoggerFactory;
 
 /** allows exceptions to be monitored externally */
 public interface ExceptionLogger {
-  /**
-   * an issue emerged which was not understood by an error code, and was returned to use as the
-   * given error code
-   */
-  void convertedToErrorCode(Throwable t, int errorCode);
-
-  public static ExceptionLogger FOR(Class<?> clazz) {
+  static ExceptionLogger FOR(Class<?> clazz) {
     Logger logger = LoggerFactory.getLogger(clazz);
     return (t, ec) -> {
       logger.error("exception", t);
     };
   }
+
+  /**
+   * an issue emerged which was not understood by an error code, and was returned to use as the
+   * given error code
+   */
+  void convertedToErrorCode(Throwable t, int errorCode);
 }

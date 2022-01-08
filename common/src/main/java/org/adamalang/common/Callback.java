@@ -17,7 +17,7 @@ import java.util.function.Function;
  * provide progress notifications which could relate to a state diagram.
  */
 public interface Callback<T> {
-  static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Callback.class);
+  ExceptionLogger LOGGER = ExceptionLogger.FOR(Callback.class);
 
   Callback<Integer> DONT_CARE_INTEGER =
       new Callback<Integer>() {
