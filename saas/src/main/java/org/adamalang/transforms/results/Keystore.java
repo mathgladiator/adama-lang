@@ -18,6 +18,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
 import org.adamalang.runtime.natives.NtClient;
 
@@ -33,6 +34,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Keystore {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Keystore.class);
   private final ArrayList<PublicKey> keys;
   private PublicKey mostRecentKey;
 
@@ -97,7 +99,7 @@ public class Keystore {
           throw new ErrorCodeException(ErrorCodes.API_KEYSTORE_KEY_LACKS_VALID_ALGO);
       }
     } catch (Exception ex) {
-      throw ErrorCodeException.detectOrWrap(ErrorCodes.API_KEYSTORE_KEY_INTERNAL_ERROR, ex);
+      throw ErrorCodeException.detectOrWrap(ErrorCodes.API_KEYSTORE_KEY_INTERNAL_ERROR, ex, LOGGER);
     }
   }
 
@@ -126,7 +128,7 @@ public class Keystore {
           throw new ErrorCodeException(ErrorCodes.API_KEYSTORE_KEY_LACKS_VALID_ALGO);
       }
     } catch (Exception ex) {
-      throw ErrorCodeException.detectOrWrap(ErrorCodes.API_KEYSTORE_KEY_INTERNAL_ERROR, ex);
+      throw ErrorCodeException.detectOrWrap(ErrorCodes.API_KEYSTORE_KEY_INTERNAL_ERROR, ex, LOGGER);
     }
   }
 
@@ -138,7 +140,7 @@ public class Keystore {
     try {
       return new Keystore(Json.parseJsonObject(json));
     } catch (Exception ex) {
-      throw ErrorCodeException.detectOrWrap(ErrorCodes.API_KEYSTORE_NOT_JSON, ex);
+      throw ErrorCodeException.detectOrWrap(ErrorCodes.API_KEYSTORE_NOT_JSON, ex, LOGGER);
     }
   }
 

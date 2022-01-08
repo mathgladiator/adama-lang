@@ -9,6 +9,9 @@
  */
 package org.adamalang.common;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /** allows exceptions to be monitored externally */
 public interface ExceptionLogger {
   /**
@@ -16,4 +19,11 @@ public interface ExceptionLogger {
    * given error code
    */
   void convertedToErrorCode(Throwable t, int errorCode);
+
+  public static ExceptionLogger FOR(Class<?> clazz) {
+    Logger logger = LoggerFactory.getLogger(clazz);
+    return (t, ec) -> {
+      logger.error("exception", t);
+    };
+  }
 }

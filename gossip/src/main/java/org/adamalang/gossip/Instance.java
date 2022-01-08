@@ -16,9 +16,9 @@ import java.util.Objects;
 /** an instance represents an application on a host that is heartbeating */
 public class Instance implements Comparable<Instance> {
   public final String id;
+  public final int monitoringPort;
   private final String ip;
   private final int port;
-  public final int monitoringPort;
   private final String role;
   private int counter;
   private long witness;

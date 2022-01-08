@@ -21,14 +21,13 @@ import org.adamalang.web.io.AsyncTransform;
 import java.util.concurrent.Executor;
 
 public class UserIdResolver implements AsyncTransform<String, Integer> {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(UserIdResolver.class);
   private final Executor executor;
   private final DataBase dataBase;
-  private final ExceptionLogger logger;
 
   public UserIdResolver(Executor executor, ExternNexus nexus) {
     this.executor = executor;
     this.dataBase = nexus.dataBaseManagement;
-    this.logger = nexus.makeLogger(UserIdResolver.class);
   }
 
   @Override
@@ -40,9 +39,7 @@ public class UserIdResolver implements AsyncTransform<String, Integer> {
           try {
             callback.success(Users.getOrCreateUserId(dataBase, email));
           } catch (Exception ex) {
-            callback.failure(
-                ErrorCodeException.detectOrWrap(
-                    ErrorCodes.USERID_RESOLVE_UNKNOWN_EXCEPTION, ex, logger));
+            callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.USERID_RESOLVE_UNKNOWN_EXCEPTION, ex, LOGGER));
           }
         });
   }

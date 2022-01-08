@@ -11,6 +11,7 @@ package org.adamalang.common;
 
 /** for complex executor bouncing, this helps understand what is going on */
 public abstract class NamedRunnable implements Runnable {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(NamedRunnable.class);
   public final String name;
 
   public NamedRunnable(String first, String... tail) {
@@ -30,8 +31,8 @@ public abstract class NamedRunnable implements Runnable {
     try {
       execute();
     } catch (Exception ex) {
-      // TODO: LOG THIS SHIT
-      ex.printStackTrace();
+      LOGGER.convertedToErrorCode(ex, name.hashCode());
+      // TODO: raise a counter
     }
   }
 

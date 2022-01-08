@@ -9,6 +9,7 @@
  */
 package org.adamalang.gossip;
 
+import org.adamalang.common.SimpleExecutor;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,9 +23,9 @@ public class ClientServerExchangeTests extends CommonTest {
     MockMetrics metrics = new MockMetrics();
     MockTime timeX = new MockTime();
     InstanceSetChain X = new InstanceSetChain(timeX);
-    ClientObserver observer = new ClientObserver((r) -> r.run(), X, metrics);
+    ClientObserver observer = new ClientObserver(SimpleExecutor.NOW, X, metrics);
     ServerHandler serverHandler =
-        new ServerHandler((r) -> r.run(), X, new AtomicBoolean(true), metrics);
+        new ServerHandler(SimpleExecutor.NOW, X, new AtomicBoolean(true), metrics);
     observer.initiate(serverHandler.exchange(observer));
     serverHandler.exchange(observer).onError(new RuntimeException());
     observer.onError(new RuntimeException());
@@ -101,8 +102,8 @@ public class ClientServerExchangeTests extends CommonTest {
   }
 
   private void exchange(InstanceSetChain X, InstanceSetChain Y, Metrics M) {
-    ClientObserver observer = new ClientObserver((r) -> r.run(), X, M);
-    ServerHandler serverHandler = new ServerHandler((r) -> r.run(), Y, new AtomicBoolean(true), M);
+    ClientObserver observer = new ClientObserver(SimpleExecutor.NOW, X, M);
+    ServerHandler serverHandler = new ServerHandler(SimpleExecutor.NOW, Y, new AtomicBoolean(true), M);
     observer.initiate(serverHandler.exchange(observer));
   }
 

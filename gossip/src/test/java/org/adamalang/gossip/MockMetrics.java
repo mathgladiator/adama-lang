@@ -25,6 +25,11 @@ public class MockMetrics implements Metrics {
     this.seq = new StringBuilder();
   }
 
+  @Override
+  public void wake() {
+    seq.append("[WAKE]");
+  }
+
   public synchronized void dump() {
     System.err.println(seq);
   }

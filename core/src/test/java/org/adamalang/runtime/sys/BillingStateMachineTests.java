@@ -139,7 +139,7 @@ public class BillingStateMachineTests {
               try {
                 callback.success(factory);
               } catch (Exception ex) {
-                callback.failure(ErrorCodeException.detectOrWrap(100, ex));
+                callback.failure(ErrorCodeException.detectOrWrap(100, ex, (t, c) -> {}));
               }
             }
 
@@ -217,7 +217,7 @@ public class BillingStateMachineTests {
         try {
           callback.success(factory);
         } catch (Exception ex) {
-          callback.failure(ErrorCodeException.detectOrWrap(100, ex));
+          callback.failure(ErrorCodeException.detectOrWrap(100, ex, (t, c) -> {}));
         }
       }
 

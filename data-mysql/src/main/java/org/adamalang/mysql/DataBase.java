@@ -12,6 +12,7 @@ package org.adamalang.mysql;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.mysql.contracts.SQLConsumer;
 import org.adamalang.mysql.contracts.SQLTransact;
 
@@ -19,6 +20,7 @@ import java.sql.*;
 
 /** the connection pool and helpers for interacting with MySQL */
 public class DataBase implements AutoCloseable {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DataBase.class);
   public final ComboPooledDataSource pool;
   public final String databaseName;
 
@@ -82,8 +84,7 @@ public class DataBase implements AutoCloseable {
         connection.close();
       }
     } catch (Throwable ex) {
-      ex.printStackTrace();
-      callback.failure(ErrorCodeException.detectOrWrap(failureReason, ex));
+      callback.failure(ErrorCodeException.detectOrWrap(failureReason, ex, LOGGER));
     }
   }
 }

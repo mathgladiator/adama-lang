@@ -24,16 +24,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
 public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(SpacePolicyLocator.class);
   public final Executor executor;
   public final DataBase dataBase;
   public final ConcurrentHashMap<String, SpacePolicy> policies;
-  private final ExceptionLogger logger;
 
   public SpacePolicyLocator(Executor executor, ExternNexus nexus) {
     this.executor = executor;
     this.dataBase = nexus.dataBaseManagement;
     this.policies = new ConcurrentHashMap<>();
-    this.logger = nexus.makeLogger(SpacePolicyLocator.class);
   }
 
   @Override
@@ -56,7 +55,7 @@ public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
           } catch (Exception ex) {
             callback.failure(
                 ErrorCodeException.detectOrWrap(
-                    ErrorCodes.SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION, ex, logger));
+                    ErrorCodes.SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION, ex, LOGGER));
           }
         });
   }

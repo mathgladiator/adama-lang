@@ -11,6 +11,7 @@ package org.adamalang.gossip;
 
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.TimeSource;
+import org.adamalang.gossip.proto.Endpoint;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -114,6 +115,24 @@ public class EngineTests {
   }
 
   @Test
+  public void empty() throws Exception {
+    HashSet<String> initial = new HashSet<>();
+    MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
+    CountDownLatch latch = new CountDownLatch(2);
+    MockMetrics metrics = new MockMetrics() {
+      @Override
+      public void wake() {
+        latch.countDown();
+        super.wake();
+      }
+    };
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, metrics);
+    app.start();
+    Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
+    app.close();
+  }
+
+  @Test
   public void convergence10() throws Exception {
     ArrayList<Engine> engines = new ArrayList<>();
 
@@ -124,6 +143,15 @@ public class EngineTests {
 
     Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, new MockMetrics("app"));
     engines.add(app);
+    CountDownLatch latchForWatchingUpdate = new CountDownLatch(1);
+    app.setWatcher(new Consumer<Collection<Endpoint>>() {
+      @Override
+      public void accept(Collection<Endpoint> endpoints) {
+        if (endpoints.size() >= 11) {
+          latchForWatchingUpdate.countDown();
+        }
+      }
+    });
     app.start();
 
     AtomicReference<TreeSet<String>> values = new AtomicReference<>();
@@ -175,6 +203,7 @@ public class EngineTests {
       versionCount = versions.size();
       Thread.sleep(1000);
     }
+    Assert.assertTrue(latchForWatchingUpdate.await(100000, TimeUnit.MILLISECONDS));
     Assert.assertEquals(1, versionCount);
     Assert.assertTrue(latchForBroadcast.await(2500, TimeUnit.MILLISECONDS));
     // this shutdown is very noisy

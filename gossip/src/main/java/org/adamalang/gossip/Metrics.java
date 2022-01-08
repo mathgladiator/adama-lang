@@ -11,6 +11,9 @@ package org.adamalang.gossip;
 
 /** how to learn of events happening during the mysterious gossip protocol */
 public interface Metrics {
+  // a round of gossip is being considered
+  void wake();
+
   void bump_sad_return();
 
   void bump_client_slow_gossip();

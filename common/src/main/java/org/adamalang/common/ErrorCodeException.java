@@ -28,11 +28,6 @@ public class ErrorCodeException extends Exception {
     this.code = code;
   }
 
-  @Deprecated
-  public static ErrorCodeException detectOrWrap(int code, Throwable cause) {
-    return detectOrWrap(code, cause, null);
-  }
-
   public static ErrorCodeException detectOrWrap(int code, Throwable cause, ExceptionLogger logger) {
     if (cause instanceof RuntimeException) {
       if (cause.getCause() instanceof ErrorCodeException) {

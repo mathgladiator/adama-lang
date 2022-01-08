@@ -99,7 +99,7 @@ public class ConnectionFailOverTests {
         Runnable connectionMade = connectionExecutor.latchAtAndDrain(6, 1);
         Runnable executeSend = connectionExecutor.latchAtAndDrain(7, 1);
         Runnable forwardSend = finderExecutor.latchAtAndDrain(8, 1);
-        Runnable clientDataForward = finderExecutor.latchAtAndDrain(9, 1);
+        Runnable clientDataForward = finderExecutor.latchAtAndDrain(9, -1);
         Runnable sendSeqResult = finderExecutor.latchAtAndDrain(10, 1);
         Runnable gotDisconnect = finderExecutor.latchAtAndDrain(11, 1);
         Runnable connectionBroke = connectionExecutor.latchAtAndDrain(8, 1);

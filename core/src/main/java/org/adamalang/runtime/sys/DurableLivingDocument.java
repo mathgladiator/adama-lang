@@ -12,6 +12,7 @@ package org.adamalang.runtime.sys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Key;
@@ -29,6 +30,7 @@ import java.util.ArrayDeque;
 
 /** A LivingDocument tied to a document id and DataService */
 public class DurableLivingDocument {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DurableLivingDocument.class);
   public final DocumentThreadBase base;
   public final Key key;
   private final ArrayDeque<IngestRequest> pending;
@@ -73,8 +75,7 @@ public class DurableLivingDocument {
               callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST, (seq) -> document));
     } catch (Throwable ex) {
       callback.failure(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex));
+          ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex, LOGGER));
     }
   }
 
@@ -100,8 +101,7 @@ public class DurableLivingDocument {
                 return new DurableLivingDocument(key, doc, factory, base);
               }));
     } catch (Throwable ex) {
-      callback.failure(
-          ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, LOGGER));
     }
   }
 
@@ -339,8 +339,7 @@ public class DurableLivingDocument {
               }));
     } catch (Throwable ex) {
       callback.failure(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex));
+          ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex, LOGGER));
     }
   }
 

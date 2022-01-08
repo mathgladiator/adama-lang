@@ -10,6 +10,7 @@
 package org.adamalang.gossip;
 
 import io.grpc.stub.StreamObserver;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.gossip.proto.GossipReverse;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class ServerTests {
   @Test
   public void shutdownProducesQuickComplete() {
     AtomicBoolean alive = new AtomicBoolean(false);
-    ServerHandler handler = new ServerHandler((r) -> r.run(), null, alive, new MockMetrics());
+    ServerHandler handler = new ServerHandler(SimpleExecutor.NOW, null, alive, new MockMetrics());
 
     AtomicBoolean done = new AtomicBoolean(false);
     handler.exchange(

@@ -36,15 +36,14 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RootHandlerImpl implements RootHandler {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(RootHandlerImpl.class);
   private final ExternNexus nexus;
   private final Random rng;
-  private final ExceptionLogger logger;
   private final AtomicInteger validationClassId;
 
   public RootHandlerImpl(ExternNexus nexus) throws Exception {
     this.nexus = nexus;
     this.rng = new Random();
-    this.logger = nexus.makeLogger(RootHandler.class);
     validationClassId = new AtomicInteger(0);
   }
 
@@ -67,7 +66,7 @@ public class RootHandlerImpl implements RootHandler {
           } catch (Exception ex) {
             responder.error(
                 ErrorCodeException.detectOrWrap(
-                    ErrorCodes.API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION, ex, logger));
+                    ErrorCodes.API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION, ex, LOGGER));
             return;
           }
           responder.complete();
@@ -92,7 +91,7 @@ public class RootHandlerImpl implements RootHandler {
             } catch (Exception ex) {
               responder.error(
                   ErrorCodeException.detectOrWrap(
-                      ErrorCodes.API_INIT_GENERATE_UNKNOWN_EXCEPTION, ex, logger));
+                      ErrorCodes.API_INIT_GENERATE_UNKNOWN_EXCEPTION, ex, LOGGER));
               return;
             }
             responder.complete(
@@ -145,7 +144,7 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_CREATE_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+              ErrorCodes.API_CREATE_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -163,7 +162,7 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SET_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+              ErrorCodes.API_SET_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -180,7 +179,7 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_GET_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+              ErrorCodes.API_GET_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -199,7 +198,7 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_LIST_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+              ErrorCodes.API_LIST_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -217,7 +216,7 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_DELETE_AUTHORITY_UNKNOWN_EXCEPTION, ex, logger));
+              ErrorCodes.API_DELETE_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -234,7 +233,7 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex, logger));
+              ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -250,7 +249,7 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_GET_PLAN_UNKNOWN_EXCEPTION, ex, logger));
+              ErrorCodes.API_SPACE_GET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -286,7 +285,7 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION, ex, logger));
+              ErrorCodes.API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -309,7 +308,7 @@ public class RootHandlerImpl implements RootHandler {
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION, ex, logger));
+              ErrorCodes.API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -338,7 +337,7 @@ public class RootHandlerImpl implements RootHandler {
       }
     } catch (Exception ex) {
       responder.error(
-          ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_UNKNOWN_EXCEPTION, ex, logger));
+          ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -358,7 +357,7 @@ public class RootHandlerImpl implements RootHandler {
       });
     } catch (Exception ex) {
       responder.error(
-          ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, logger));
+          ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 

@@ -19,17 +19,15 @@ import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.netty.shaded.io.netty.channel.ChannelOption;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
 import io.grpc.stub.StreamObserver;
-import org.adamalang.common.ExceptionRunnable;
-import org.adamalang.common.ExceptionSupplier;
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.gossip.proto.Endpoint;
 import org.adamalang.gossip.proto.GossipGrpc;
 import org.adamalang.gossip.proto.GossipReverse;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -41,17 +39,16 @@ public class Engine implements AutoCloseable {
   private final Runnable me;
   private final Random jitter;
   private final GossipPartnerPicker picker;
-  private final ScheduledExecutorService executor;
+  private final SimpleExecutor executor;
   private final String ip;
   private final Metrics metrics;
   private final AtomicBoolean alive;
   private final Supplier<Server> serverSupplier;
   private final HashMap<String, Link> links;
   private final HashMap<String, ArrayList<Consumer<Collection<String>>>> subscribersByApp;
-
   private String broadcastHash;
   private io.grpc.Server server;
-  private ScheduledFuture<?> gossiper = null;
+  private Consumer<Collection<Endpoint>> watcher;
 
   public Engine(
       MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, Metrics metrics)
@@ -77,7 +74,7 @@ public class Engine implements AutoCloseable {
     me = chain.pick(id);
     this.jitter = new Random();
     this.picker = new GossipPartnerPicker(identity.ip + ":" + port, chain, initial, jitter);
-    this.executor = Executors.newSingleThreadScheduledExecutor();
+    this.executor = SimpleExecutor.create("gossip-engine");
     this.ip = identity.ip;
     this.metrics = metrics;
     this.alive = new AtomicBoolean(false);
@@ -85,6 +82,7 @@ public class Engine implements AutoCloseable {
     this.subscribersByApp = new HashMap<>();
     this.broadcastHash = "";
     this.server = null;
+    this.watcher = null;
     serverSupplier =
         ExceptionSupplier.TO_RUNTIME(
             () ->
@@ -102,40 +100,63 @@ public class Engine implements AutoCloseable {
 
   public void newApp(String role, int port, int monitoringPort, Consumer<Runnable> callback) {
     executor.execute(
-        () -> {
-          String id = UUID.randomUUID().toString();
-          chain.ingest(
-              Collections.singleton(
-                  Endpoint.newBuilder()
-                      .setIp(ip)
-                      .setId(id)
-                      .setPort(port)
-                      .setMonitoringPort(monitoringPort)
-                      .setCounter(0)
-                      .setRole(role)
-                      .build()),
-              Collections.emptySet());
-          callback.accept(chain.pick(id));
+        new NamedRunnable("engine-new-app") {
+          @Override
+          public void execute() throws Exception {
+            String id = UUID.randomUUID().toString();
+            chain.ingest(
+                Collections.singleton(
+                    Endpoint.newBuilder()
+                        .setIp(ip)
+                        .setId(id)
+                        .setPort(port)
+                        .setMonitoringPort(monitoringPort)
+                        .setCounter(0)
+                        .setRole(role)
+                        .build()),
+                Collections.emptySet());
+            if (watcher != null) {
+              watcher.accept(chain.current().toEndpoints());
+            }
+            callback.accept(chain.pick(id));
+          }
+        });
+  }
+
+  public void setWatcher(Consumer<Collection<Endpoint>> watcher) {
+    executor.execute(
+        new NamedRunnable("gossip-watcher") {
+          @Override
+          public void execute() throws Exception {
+            Engine.this.watcher = watcher;
+            watcher.accept(chain.current().toEndpoints());
+          }
         });
   }
 
   public void subscribe(String app, Consumer<Collection<String>> consumer) {
     executor.execute(
-        () -> {
-          ArrayList<Consumer<Collection<String>>> subscribers = subscribersByApp.get(app);
-          if (subscribers == null) {
-            subscribers = new ArrayList<>();
-            subscribersByApp.put(app, subscribers);
+        new NamedRunnable("subscribe-app", app) {
+          @Override
+          public void execute() throws Exception {
+            ArrayList<Consumer<Collection<String>>> subscribers = subscribersByApp.get(app);
+            if (subscribers == null) {
+              subscribers = new ArrayList<>();
+              subscribersByApp.put(app, subscribers);
+            }
+            subscribers.add(consumer);
+            consumer.accept(chain.current().targetsFor(app));
           }
-          subscribers.add(consumer);
-          consumer.accept(chain.current().targetsFor(app));
         });
   }
 
   public void hash(Consumer<String> callback) {
     executor.execute(
-        () -> {
-          callback.accept(chain.current().hash());
+        new NamedRunnable("compute-hash") {
+          @Override
+          public void execute() throws Exception {
+            callback.accept(chain.current().hash());
+          }
         });
   }
 
@@ -158,18 +179,22 @@ public class Engine implements AutoCloseable {
 
   private void scheduleGossip() {
     executor.execute(
-        () -> {
-          int wait = 100;
-          for (int k = 0; k < 4; k++) {
-            wait += jitter.nextInt(100);
-          }
-          gossiper =
-              executor.schedule(
-                  () -> {
+        new NamedRunnable("schedule-gossip") {
+          @Override
+          public void execute() throws Exception {
+            int wait = 100;
+            for (int k = 0; k < 4; k++) {
+              wait += jitter.nextInt(100);
+            }
+            executor.schedule(
+                new NamedRunnable("gossip-round") {
+                  @Override
+                  public void execute() throws Exception {
                     gossipInExecutor();
-                  },
-                  wait,
-                  TimeUnit.MILLISECONDS);
+                  }
+                },
+                wait);
+          }
         });
   }
 
@@ -189,16 +214,22 @@ public class Engine implements AutoCloseable {
 
   private void doBroadcast() {
     executor.execute(
-        () -> {
-          String testHash = chain.current().hash();
-          if (!broadcastHash.equals(testHash)) {
-            for (Map.Entry<String, ArrayList<Consumer<Collection<String>>>> entry :
-                subscribersByApp.entrySet()) {
-              for (Consumer<Collection<String>> subscriber : entry.getValue()) {
-                subscriber.accept(chain.current().targetsFor(entry.getKey()));
+        new NamedRunnable("gossip-broadcast") {
+          @Override
+          public void execute() throws Exception {
+            String testHash = chain.current().hash();
+            if (!broadcastHash.equals(testHash)) {
+              for (Map.Entry<String, ArrayList<Consumer<Collection<String>>>> entry :
+                  subscribersByApp.entrySet()) {
+                for (Consumer<Collection<String>> subscriber : entry.getValue()) {
+                  subscriber.accept(chain.current().targetsFor(entry.getKey()));
+                }
               }
+              if (watcher != null) {
+                watcher.accept(chain.current().toEndpoints());
+              }
+              broadcastHash = testHash;
             }
-            broadcastHash = testHash;
           }
         });
   }
@@ -208,6 +239,7 @@ public class Engine implements AutoCloseable {
     me.run();
     // pick a random partner
     Link link = pick();
+    metrics.wake();
     if (link == null) {
       scheduleGossip();
       return;
@@ -225,13 +257,16 @@ public class Engine implements AutoCloseable {
           @Override
           public void onError(Throwable throwable) {
             executor.execute(
-                () -> {
-                  if (!finished) {
-                    observer.onError(throwable);
-                    link.channel.shutdown();
-                    links.remove(link.target);
-                    scheduleGossip();
-                    finished = true;
+                new NamedRunnable("engine-reverse-on-error") {
+                  @Override
+                  public void execute() throws Exception {
+                    if (!finished) {
+                      observer.onError(throwable);
+                      link.channel.shutdown();
+                      links.remove(link.target);
+                      scheduleGossip();
+                      finished = true;
+                    }
                   }
                 });
           }
@@ -239,25 +274,30 @@ public class Engine implements AutoCloseable {
           @Override
           public void onCompleted() {
             executor.execute(
-                () -> {
-                  if (!finished) {
-                    observer.onCompleted();
-                    doBroadcast();
-                    scheduleGossip();
-                    finished = true;
+                new NamedRunnable("engine-reverse-on-completed") {
+                  @Override
+                  public void execute() throws Exception {
+                    if (!finished) {
+                      observer.onCompleted();
+                      doBroadcast();
+                      scheduleGossip();
+                      finished = true;
+                    }
                   }
                 });
           }
         };
     observer.initiate(link.stub.exchange(interceptObserver));
     executor.schedule(
-        () -> {
-          if (!observer.isDone() && alive.get()) {
-            interceptObserver.onError(new RuntimeException("Gossip Time out"));
+        new NamedRunnable("gossip-initiate") {
+          @Override
+          public void execute() throws Exception {
+            if (!observer.isDone() && alive.get()) {
+              interceptObserver.onError(new RuntimeException("Gossip Time out"));
+            }
           }
         },
-        jitter.nextInt(1000) + 2500,
-        TimeUnit.MILLISECONDS);
+        jitter.nextInt(1000) + 2500);
   }
 
   /** Finish serving request */
@@ -266,20 +306,18 @@ public class Engine implements AutoCloseable {
     if (alive.compareAndExchange(true, false) == true) {
       CountDownLatch finished = new CountDownLatch(1);
       executor.execute(
-          ExceptionRunnable.TO_RUNTIME(
-              () -> {
-                if (gossiper != null) {
-                  gossiper.cancel(false);
-                  gossiper = null;
-                }
-                for (Link link : new ArrayList<>(links.values())) {
-                  link.channel.shutdown();
-                }
-                server.shutdown();
-                server = null;
-                gossiper = null;
-                finished.countDown();
-              }));
+          new NamedRunnable("gossip-closing") {
+            @Override
+            public void execute() throws Exception {
+              for (Link link : new ArrayList<>(links.values())) {
+                link.channel.shutdown();
+              }
+              server.shutdown();
+              server = null;
+              finished.countDown();
+            }
+          });
+
       finished.await(5000, TimeUnit.MILLISECONDS);
       executor.shutdown();
     }

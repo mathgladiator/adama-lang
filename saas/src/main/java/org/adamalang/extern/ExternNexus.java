@@ -27,15 +27,6 @@ public class ExternNexus {
     this.client = client;
   }
 
-  public ExceptionLogger makeLogger(Class<?> clazz) {
-    return new ExceptionLogger() {
-      @Override
-      public void convertedToErrorCode(Throwable t, int errorCode) {
-        t.printStackTrace();
-      }
-    };
-  }
-
   public void close() throws Exception {
     dataBaseDeployments.close();
     dataBaseManagement.close();

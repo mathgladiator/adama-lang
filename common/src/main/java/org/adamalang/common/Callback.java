@@ -17,6 +17,8 @@ import java.util.function.Function;
  * provide progress notifications which could relate to a state diagram.
  */
 public interface Callback<T> {
+  static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Callback.class);
+
   Callback<Integer> DONT_CARE_INTEGER =
       new Callback<Integer>() {
         @Override
@@ -24,7 +26,7 @@ public interface Callback<T> {
 
         @Override
         public void failure(ErrorCodeException ex) {
-          ex.printStackTrace();
+          LOGGER.convertedToErrorCode(ex, -1);
         }
       };
   Callback<Void> DONT_CARE_VOID =
@@ -34,7 +36,7 @@ public interface Callback<T> {
 
         @Override
         public void failure(ErrorCodeException ex) {
-          ex.printStackTrace();
+          LOGGER.convertedToErrorCode(ex, -1);
         }
       };
 
@@ -46,7 +48,7 @@ public interface Callback<T> {
         try {
           output.success(f.apply(value));
         } catch (Throwable ex) {
-          output.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex));
+          output.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex, LOGGER));
         }
       }
 
@@ -73,7 +75,7 @@ public interface Callback<T> {
               try {
                 next.success(value);
               } catch (Throwable ex) {
-                next.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex));
+                next.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex, LOGGER));
               }
             });
       }
@@ -95,7 +97,7 @@ public interface Callback<T> {
         try {
           success.run();
         } catch (Throwable ex) {
-          next.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex));
+          next.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex, LOGGER));
         }
       }
 

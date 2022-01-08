@@ -11,13 +11,11 @@ package org.adamalang.transforms;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.Json;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Users;
@@ -26,19 +24,17 @@ import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.Keystore;
 import org.adamalang.web.io.AsyncTransform;
 
-import java.security.Key;
 import java.security.KeyFactory;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
 public class Authenticator implements AsyncTransform<String, AuthenticatedUser> {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Authenticator.class);
   public final ExternNexus nexus;
-  private final ExceptionLogger logger;
 
   public Authenticator(ExternNexus nexus) {
     this.nexus = nexus;
-    this.logger = nexus.makeLogger(Authenticator.class);
   }
 
   @Override
@@ -77,7 +73,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
       }
     } catch (Exception ex) {
       callback.failure(
-          ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, logger));
+          ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 

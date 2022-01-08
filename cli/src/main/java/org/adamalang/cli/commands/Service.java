@@ -43,6 +43,11 @@ public class Service {
   private static final Metrics GOSSIP_METRICS =
       new Metrics() {
         @Override
+        public void wake() {
+
+        }
+
+        @Override
         public void bump_sad_return() {}
 
         @Override

@@ -17,6 +17,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
@@ -29,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(WebSocketHandler.class);
   private final WebConfig webConfig;
   private final ServiceBase base;
   private boolean ended;
@@ -36,6 +38,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   private ScheduledFuture<?> future;
   private long created;
   private AtomicLong latency;
+  private boolean closed;
 
   public WebSocketHandler(final WebConfig webConfig, final ServiceBase base) {
     this.webConfig = webConfig;
@@ -45,6 +48,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     this.future = null;
     this.created = System.currentTimeMillis();
     this.latency = new AtomicLong();
+    this.closed = false;
   }
 
   @Override
@@ -57,7 +61,10 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     if (connToKill != null) {
       connToKill.kill();
     }
-    ctx.close();
+    if (!closed) {
+      ctx.close();
+      closed = true;
+    }
   }
 
   private ServiceConnection clean() {
@@ -169,8 +176,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       connection.execute(request, responder);
 
     } catch (Exception ex) {
-      ErrorCodeException codedException =
-          ErrorCodeException.detectOrWrap(ErrorCodes.UNCAUGHT_EXCEPTION_WEB_SOCKET, ex);
+      ErrorCodeException codedException = ErrorCodeException.detectOrWrap(ErrorCodes.UNCAUGHT_EXCEPTION_WEB_SOCKET, ex, LOGGER);
       ctx.writeAndFlush(
           new TextWebSocketFrame(
               "{\"status\":\"disconnected\",\"reason\":" + codedException.code + "}"));
