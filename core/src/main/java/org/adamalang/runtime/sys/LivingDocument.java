@@ -270,7 +270,9 @@ public abstract class LivingDocument implements RxParent {
   /** garbage collect the views for the given client; return the number of views for that user */
   public int __garbageCollectViews(final NtClient __who) {
     final var views = __trackedViews.get(__who);
-    if (views == null) { return 0; }
+    if (views == null) {
+      return 0;
+    }
     var count = 0;
     final var it = views.iterator();
     while (it.hasNext()) {
@@ -865,7 +867,6 @@ public abstract class LivingDocument implements RxParent {
       final var result =
           new DataService.RemoteDocumentUpdate(
               __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
-      ;
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -914,7 +915,6 @@ public abstract class LivingDocument implements RxParent {
       final var result =
           new DataService.RemoteDocumentUpdate(
               __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
-      ;
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -1081,7 +1081,6 @@ public abstract class LivingDocument implements RxParent {
               reverse.toString(),
               true,
               0);
-      ;
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -1162,7 +1161,6 @@ public abstract class LivingDocument implements RxParent {
       final var result =
           new DataService.RemoteDocumentUpdate(
               __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
-      ;
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {

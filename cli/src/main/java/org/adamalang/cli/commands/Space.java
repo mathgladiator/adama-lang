@@ -121,7 +121,7 @@ public class Space {
         request.put("method", "space/set");
         request.put("identity", identity);
         request.put("space", space);
-        request.put("plan", Json.parseJsonObject(planJson));
+        request.set("plan", Json.parseJsonObject(planJson));
         ObjectNode response = connection.execute(request);
         System.err.println(response.toPrettyString());
       }

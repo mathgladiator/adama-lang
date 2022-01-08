@@ -9,14 +9,25 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.junit.Test;
 
 public class SimpleExecutorNowTests {
   @Test
   public void coverage() {
-    SimpleExecutor.NOW.execute(() -> {});
-    SimpleExecutor.NOW.schedule(() -> {}, 1000L);
+    SimpleExecutor.NOW.execute(new NamedRunnable("y") {
+      @Override
+      public void execute() throws Exception {
+
+      }
+    });
+    SimpleExecutor.NOW.schedule(new NamedRunnable("x") {
+      @Override
+      public void execute() throws Exception {
+
+      }
+    }, 1000L);
     SimpleExecutor.NOW.shutdown();
   }
 }

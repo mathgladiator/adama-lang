@@ -18,8 +18,18 @@ import java.util.concurrent.TimeUnit;
 public class SimpleExecutorTests {
   @Test
   public void coverageNow() {
-    SimpleExecutor.NOW.execute(() -> {});
-    SimpleExecutor.NOW.schedule(() -> {}, 100);
+    SimpleExecutor.NOW.execute(new NamedRunnable("name") {
+      @Override
+      public void execute() throws Exception {
+
+      }
+    });
+    SimpleExecutor.NOW.schedule(new NamedRunnable("name") {
+      @Override
+      public void execute() throws Exception {
+
+      }
+    }, 100);
     SimpleExecutor.NOW.shutdown();
   }
 
@@ -27,8 +37,18 @@ public class SimpleExecutorTests {
   public void create() throws Exception {
     SimpleExecutor executor = SimpleExecutor.create("base");
     CountDownLatch latchExec = new CountDownLatch(2);
-    executor.execute(latchExec::countDown);
-    executor.schedule(latchExec::countDown, 10);
+    executor.execute(new NamedRunnable("name") {
+      @Override
+      public void execute() throws Exception {
+        latchExec.countDown();
+      }
+    });
+    executor.schedule(new NamedRunnable("name") {
+      @Override
+      public void execute() throws Exception {
+        latchExec.countDown();
+      }
+    }, 10);
     Assert.assertTrue(latchExec.await(1000, TimeUnit.MILLISECONDS));
     Assert.assertTrue(executor.shutdown().await(1000, TimeUnit.MILLISECONDS));
   }

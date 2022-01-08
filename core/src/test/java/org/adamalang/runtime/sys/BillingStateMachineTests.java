@@ -9,13 +9,10 @@
  */
 package org.adamalang.runtime.sys;
 
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
-import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -40,12 +37,12 @@ public class BillingStateMachineTests {
               new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME),
               new SimpleExecutor() {
                 @Override
-                public void execute(Runnable command) {
+                public void execute(NamedRunnable command) {
                   service.execute(command);
                 }
 
                 @Override
-                public void schedule(Runnable command, long milliseconds) {
+                public void schedule(NamedRunnable command, long milliseconds) {
                   service.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
                 }
 
@@ -89,12 +86,12 @@ public class BillingStateMachineTests {
               new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME),
               new SimpleExecutor() {
                 @Override
-                public void execute(Runnable command) {
+                public void execute(NamedRunnable command) {
                   service.execute(command);
                 }
 
                 @Override
-                public void schedule(Runnable command, long milliseconds) {
+                public void schedule(NamedRunnable command, long milliseconds) {
                   service.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
                 }
 
@@ -113,9 +110,12 @@ public class BillingStateMachineTests {
       DurableLivingDocument.fresh(new Key("space", "key"), factory, NtClient.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
-          bases[0].executor.execute(() -> {
-            bases[0].map.put(new Key("space", "key"), value);
-            latch.countDown();
+          bases[0].executor.execute(new NamedRunnable("test") {
+            @Override
+            public void execute() throws Exception {
+              bases[0].map.put(new Key("space", "key"), value);
+              latch.countDown();
+            }
           });
         }
 
@@ -172,12 +172,12 @@ public class BillingStateMachineTests {
               new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME),
               new SimpleExecutor() {
                 @Override
-                public void execute(Runnable command) {
+                public void execute(NamedRunnable command) {
                   service.execute(command);
                 }
 
                 @Override
-                public void schedule(Runnable command, long milliseconds) {
+                public void schedule(NamedRunnable command, long milliseconds) {
                   service.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
                 }
 
@@ -196,10 +196,13 @@ public class BillingStateMachineTests {
       DurableLivingDocument.fresh(new Key("space", "key"), factory, NtClient.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
         @Override
         public void success(DurableLivingDocument value) {
-          bases[0].executor.execute(() -> {
-            bases[0].map.put(new Key("space", "key"), value);
-            bases[0].performInventory();
-            latch.countDown();
+          bases[0].executor.execute(new NamedRunnable("test") {
+            @Override
+            public void execute() throws Exception {
+              bases[0].map.put(new Key("space", "key"), value);
+              bases[0].performInventory();
+              latch.countDown();
+            }
           });
         }
 

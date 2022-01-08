@@ -9,7 +9,10 @@
  */
 package org.adamalang.runtime.sys;
 
-/** Used to predict inventory by estimating growth of resources and correcting with a periodic precise inventory */
+/**
+ * Used to predict inventory by estimating growth of resources and correcting with a periodic
+ * precise inventory
+ */
 public class PredictiveInventory {
   private long memory;
   private long ticks;
@@ -17,55 +20,7 @@ public class PredictiveInventory {
   private long ticks_growth;
   private long messages;
   private long count;
-  private Snapshot[] snapshots;
-
-  private class Snapshot {
-    private final long memory;
-    private final long ticks;
-    private final long count;
-
-    public Snapshot(long memory, long ticks, long count) {
-      this.memory = memory;
-      this.ticks = ticks;
-      this.count = count;
-    }
-  }
-
-  public static class Billing {
-    public final long memory;
-    public final long cpu;
-    public final long count;
-    public final long messages;
-
-    public Billing(long memory, long cpu, long count, long messages) {
-      this.memory = memory;
-      this.cpu = cpu;
-      this.count = count;
-      this.messages = messages;
-    }
-
-    public static Billing add(Billing a, Billing b) {
-      return new Billing(a.memory + b.memory, a.cpu + b.cpu, a.count + b.count, a.messages + b.messages);
-    }
-  }
-
-  public Billing toBill() {
-    Billing billing = new Billing(memory, ticks, count, messages);
-    messages = 0;
-    return billing;
-  }
-
-  public static class PreciseSnapshotAccumulator {
-    public long memory;
-    public long ticks;
-    public int count;
-
-    public PreciseSnapshotAccumulator() {
-      this.memory = 0;
-      this.ticks = 0;
-      this.count = 0;
-    }
-  }
+  private final Snapshot[] snapshots;
 
   public PredictiveInventory() {
     this.memory = 0;
@@ -77,13 +32,23 @@ public class PredictiveInventory {
     this.snapshots = new Snapshot[4];
   }
 
+  public Billing toBill() {
+    Billing billing = new Billing(memory, ticks, count, messages);
+    messages = 0;
+    return billing;
+  }
+
   /** provide a precise and accurate accounting of the state */
   public void accurate(PreciseSnapshotAccumulator preciseSnapshotAccumulator) {
     // we put this in the buffer
     for (int k = 0; k < snapshots.length - 1; k++) {
-      snapshots[k] = snapshots[k+1];
+      snapshots[k] = snapshots[k + 1];
     }
-    snapshots[snapshots.length - 1] = new Snapshot(preciseSnapshotAccumulator.memory, preciseSnapshotAccumulator.ticks, preciseSnapshotAccumulator.count);
+    snapshots[snapshots.length - 1] =
+        new Snapshot(
+            preciseSnapshotAccumulator.memory,
+            preciseSnapshotAccumulator.ticks,
+            preciseSnapshotAccumulator.count);
 
     // absorb the precision
     this.memory = preciseSnapshotAccumulator.memory;
@@ -110,10 +75,53 @@ public class PredictiveInventory {
   public void grow() {
     this.memory += memory_growth;
     this.ticks += ticks_growth;
-    this.count ++;
+    this.count++;
   }
 
   public void message() {
-    this.messages ++;
+    this.messages++;
+  }
+
+  public static class Billing {
+    public final long memory;
+    public final long cpu;
+    public final long count;
+    public final long messages;
+
+    public Billing(long memory, long cpu, long count, long messages) {
+      this.memory = memory;
+      this.cpu = cpu;
+      this.count = count;
+      this.messages = messages;
+    }
+
+    public static Billing add(Billing a, Billing b) {
+      return new Billing(
+          a.memory + b.memory, a.cpu + b.cpu, a.count + b.count, a.messages + b.messages);
+    }
+  }
+
+  public static class PreciseSnapshotAccumulator {
+    public long memory;
+    public long ticks;
+    public int count;
+
+    public PreciseSnapshotAccumulator() {
+      this.memory = 0;
+      this.ticks = 0;
+      this.count = 0;
+    }
+  }
+
+  private class Snapshot {
+    private final long memory;
+    private final long ticks;
+    private final long count;
+
+    public Snapshot(long memory, long ticks, long count) {
+      this.memory = memory;
+      this.ticks = ticks;
+      this.count = count;
+    }
   }
 }

@@ -10,14 +10,10 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.common.NamedThreadFactory;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.HashMap;
@@ -55,120 +51,61 @@ public class CoreService {
     for (int k = 0; k < nThreads; k++) {
       ScheduledExecutorService realExecutorToUse =
           Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("core-" + k));
-      SimpleExecutor executor =
-          new SimpleExecutor() {
-            @Override
-            public void execute(Runnable command) {
-              realExecutorToUse.execute(command);
-            }
+      SimpleExecutor executor = SimpleExecutor.create("core-" + k);
+      new SimpleExecutor() {
+        @Override
+        public void execute(NamedRunnable command) {
+          realExecutorToUse.execute(command);
+        }
 
-            @Override
-            public void schedule(Runnable command, long milliseconds) {
-              // register to pick up this key on restart
-              realExecutorToUse.schedule(
-                  () -> {
-                    if (alive.get()) {
-                      command.run();
-                    }
-                  },
-                  milliseconds,
-                  TimeUnit.MILLISECONDS);
-            }
+        @Override
+        public void schedule(NamedRunnable command, long milliseconds) {
+          // register to pick up this key on restart
+          realExecutorToUse.schedule(
+              () -> {
+                if (alive.get()) {
+                  command.run();
+                }
+              },
+              milliseconds,
+              TimeUnit.MILLISECONDS);
+        }
 
-            @Override
-            public CountDownLatch shutdown() {
-              CountDownLatch latch = new CountDownLatch(1);
-              realExecutorToUse.execute(
-                  () -> {
-                    for (Runnable run : realExecutorToUse.shutdownNow()) {
-                      run.run();
-                    }
-                    latch.countDown();
-                  });
-              return latch;
-            }
-          };
+        @Override
+        public CountDownLatch shutdown() {
+          CountDownLatch latch = new CountDownLatch(1);
+          realExecutorToUse.execute(
+              () -> {
+                for (Runnable run : realExecutorToUse.shutdownNow()) {
+                  run.run();
+                }
+                latch.countDown();
+              });
+          return latch;
+        }
+      };
       bases[k] = new DocumentThreadBase(dataService, executor, time);
       bases[k].kickOffInventory();
     }
     rng = new Random();
-    Runnable doBilling = new Runnable() {
-      @Override
-      public void run() {
-        Runnable self = this;
-        BillingStateMachine.bill(bases, livingDocumentFactoryFactory, new Consumer<HashMap<String, PredictiveInventory.Billing>>() {
+    NamedRunnable doBilling =
+        new NamedRunnable("billing") {
           @Override
-          public void accept(HashMap<String, PredictiveInventory.Billing> bill) {
-            billing.accept(bill);
-            bases[rng.nextInt(bases.length)].executor.schedule(self, 1000);
+          public void execute() {
+            NamedRunnable self = this;
+            BillingStateMachine.bill(
+                bases,
+                livingDocumentFactoryFactory,
+                new Consumer<HashMap<String, PredictiveInventory.Billing>>() {
+                  @Override
+                  public void accept(HashMap<String, PredictiveInventory.Billing> bill) {
+                    billing.accept(bill);
+                    bases[rng.nextInt(bases.length)].executor.schedule(self, 1000);
+                  }
+                });
           }
-        });
-      }
-    };
+        };
     doBilling.run();
-  }
-
-  private void load(Key key, Callback<DurableLivingDocument> callback) {
-    // bind to the thread
-    int threadId = key.hashCode() % bases.length;
-    DocumentThreadBase base = bases[threadId];
-
-    // jump into thread
-    base.executor.execute(
-        () -> {
-
-          // is document already loaded?
-          DurableLivingDocument documentFetch = base.map.get(key);
-          if (documentFetch != null) {
-            callback.success(documentFetch);
-            return;
-          }
-
-          // let's load the factory and pull from source
-          livingDocumentFactoryFactory.fetch(
-              key,
-              new Callback<>() {
-                @Override
-                public void success(LivingDocumentFactory factory) {
-                  // pull from data source
-                  DurableLivingDocument.load(
-                      key,
-                      factory,
-                      null,
-                      base,
-                      new Callback<>() {
-                        @Override
-                        public void success(DurableLivingDocument documentMade) {
-                          // it was found, let's try to put it into memory
-                          base.executor.execute(
-                              () -> {
-                                // attempt to put
-                                DurableLivingDocument documentPut =
-                                    base.map.putIfAbsent(key, documentMade);
-                                if (documentPut == null) {
-                                  // the put was successful, so use the newly made document
-                                  documentPut = documentMade;
-                                }
-                                callback.success(documentPut);
-                                base.executor.schedule(
-                                    documentPut::postLoadReconcile,
-                                    base.getMillisecondsAfterLoadForReconciliation());
-                              });
-                        }
-
-                        @Override
-                        public void failure(ErrorCodeException ex) {
-                          callback.failure(ex);
-                        }
-                      });
-                }
-
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  callback.failure(ex);
-                }
-              });
-        });
   }
 
   public void shutdown() throws InterruptedException {
@@ -188,55 +125,60 @@ public class CoreService {
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
     base.executor.execute(
-        () -> {
-          // the document already exists
-          if (base.map.containsKey(key)) {
-            callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED));
-            return;
+        new NamedRunnable("create", key.space) {
+          @Override
+          public void execute() throws Exception {
+            // the document already exists
+            if (base.map.containsKey(key)) {
+              callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED));
+              return;
+            }
+            // estimate the impact
+            base.getOrCreateInventory(key.space).grow();
+            // fetch the factory
+            livingDocumentFactoryFactory.fetch(
+                key,
+                new Callback<LivingDocumentFactory>() {
+                  @Override
+                  public void success(LivingDocumentFactory factory) {
+                    // bring the document into existence
+                    DurableLivingDocument.fresh(
+                        key,
+                        factory,
+                        who,
+                        arg,
+                        entropy,
+                        null,
+                        base,
+                        new Callback<>() {
+                          @Override
+                          public void success(DurableLivingDocument document) {
+                            // jump into the thread; note, the data service must ensure this will
+                            // succeed once
+                            base.executor.execute(
+                                new NamedRunnable("loaded-factory", key.space) {
+                                  @Override
+                                  public void execute() throws Exception {
+                                    base.map.put(key, document);
+                                    document.scheduleCleanup();
+                                    callback.success(null);
+                                  }
+                                });
+                          }
+
+                          @Override
+                          public void failure(ErrorCodeException ex) {
+                            callback.failure(ex);
+                          }
+                        });
+                  }
+
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    callback.failure(ex);
+                  }
+                });
           }
-          // estimate the impact
-          base.getOrCreateInventory(key.space).grow();
-          // fetch the factory
-          livingDocumentFactoryFactory.fetch(
-              key,
-              new Callback<LivingDocumentFactory>() {
-                @Override
-                public void success(LivingDocumentFactory factory) {
-                  // bring the document into existence
-                  DurableLivingDocument.fresh(
-                      key,
-                      factory,
-                      who,
-                      arg,
-                      entropy,
-                      null,
-                      base,
-                      new Callback<>() {
-                        @Override
-                        public void success(DurableLivingDocument document) {
-                          // jump into the thread; note, the data service must ensure this will
-                          // succeed once
-                          base.executor.execute(
-                              () -> {
-                                // try to put into the map
-                                base.map.put(key, document);
-                                document.scheduleCleanup();
-                                callback.success(null);
-                              });
-                        }
-
-                        @Override
-                        public void failure(ErrorCodeException ex) {
-                          callback.failure(ex);
-                        }
-                      });
-                }
-
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  callback.failure(ex);
-                }
-              });
         });
   }
 
@@ -253,6 +195,81 @@ public class CoreService {
           @Override
           public void failure(ErrorCodeException ex) {
             stream.failure(ex);
+          }
+        });
+  }
+
+  private void load(Key key, Callback<DurableLivingDocument> callback) {
+    // bind to the thread
+    int threadId = key.hashCode() % bases.length;
+    DocumentThreadBase base = bases[threadId];
+
+    // jump into thread
+    base.executor.execute(
+        new NamedRunnable("load", key.space, key.key) {
+          @Override
+          public void execute() throws Exception {
+
+            // is document already loaded?
+            DurableLivingDocument documentFetch = base.map.get(key);
+            if (documentFetch != null) {
+              callback.success(documentFetch);
+              return;
+            }
+
+            // let's load the factory and pull from source
+            livingDocumentFactoryFactory.fetch(
+                key,
+                new Callback<>() {
+                  @Override
+                  public void success(LivingDocumentFactory factory) {
+                    // pull from data source
+                    DurableLivingDocument.load(
+                        key,
+                        factory,
+                        null,
+                        base,
+                        new Callback<>() {
+                          @Override
+                          public void success(DurableLivingDocument documentMade) {
+                            // it was found, let's try to put it into memory
+                            base.executor.execute(
+                                new NamedRunnable("document-made") {
+                                  @Override
+                                  public void execute() throws Exception {
+                                    // attempt to put
+                                    DurableLivingDocument documentPut =
+                                        base.map.putIfAbsent(key, documentMade);
+                                    if (documentPut == null) {
+                                      // the put was successful, so use the newly made document
+                                      documentPut = documentMade;
+                                    }
+                                    callback.success(documentPut);
+                                    DurableLivingDocument _putForClosure = documentPut;
+                                    base.executor.schedule(
+                                        new NamedRunnable("post-load-reconcile") {
+                                          @Override
+                                          public void execute() throws Exception {
+                                            _putForClosure.postLoadReconcile();
+                                          }
+                                        },
+                                        base.getMillisecondsAfterLoadForReconciliation());
+                                  }
+                                });
+                          }
+
+                          @Override
+                          public void failure(ErrorCodeException ex) {
+                            callback.failure(ex);
+                          }
+                        });
+                  }
+
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    callback.failure(ex);
+                  }
+                });
           }
         });
   }
@@ -320,9 +337,13 @@ public class CoreService {
     for (int kThread = 0; kThread < bases.length; kThread++) {
       final int kThreadLocal = kThread;
       bases[kThread].executor.execute(
-          () -> {
-            for (Map.Entry<Key, DurableLivingDocument> entry : bases[kThreadLocal].map.entrySet()) {
-              deploy(bases[kThreadLocal], entry.getKey(), entry.getValue(), monitor);
+          new NamedRunnable("deploy-" + kThreadLocal) {
+            @Override
+            public void execute() throws Exception {
+              for (Map.Entry<Key, DurableLivingDocument> entry :
+                  bases[kThreadLocal].map.entrySet()) {
+                deploy(bases[kThreadLocal], entry.getKey(), entry.getValue(), monitor);
+              }
             }
           });
     }
@@ -337,24 +358,27 @@ public class CoreService {
           @Override
           public void success(LivingDocumentFactory newFactory) {
             base.executor.execute(
-                () -> {
-                  boolean toChange = document.getCurrentFactory() != newFactory;
-                  monitor.bumpDocument(toChange);
-                  if (toChange) {
-                    try {
-                      document.deploy(
-                          newFactory,
-                          new Callback<Integer>() {
-                            @Override
-                            public void success(Integer value) {}
+                new NamedRunnable("deploy", key.space, key.key) {
+                  @Override
+                  public void execute() throws Exception {
+                    boolean toChange = document.getCurrentFactory() != newFactory;
+                    monitor.bumpDocument(toChange);
+                    if (toChange) {
+                      try {
+                        document.deploy(
+                            newFactory,
+                            new Callback<Integer>() {
+                              @Override
+                              public void success(Integer value) {}
 
-                            @Override
-                            public void failure(ErrorCodeException ex) {
-                              monitor.witnessException(ex);
-                            }
-                          });
-                    } catch (ErrorCodeException ex) {
-                      monitor.witnessException(ex);
+                              @Override
+                              public void failure(ErrorCodeException ex) {
+                                monitor.witnessException(ex);
+                              }
+                            });
+                      } catch (ErrorCodeException ex) {
+                        monitor.witnessException(ex);
+                      }
                     }
                   }
                 });

@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
-import org.adamalang.common.SimpleExecutor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,10 +29,10 @@ public class DocumentThreadBase {
   public final SimpleExecutor executor;
   public final HashMap<Key, DurableLivingDocument> map;
   public final TimeSource time;
+  private final HashMap<String, PredictiveInventory> inventoryBySpace;
   private int millisecondsForCleanupCheck;
   private int millisecondsAfterLoadForReconciliation;
-  private Random rng;
-  private final HashMap<String, PredictiveInventory> inventoryBySpace;
+  private final Random rng;
   private int millisecondsToPerformInventory;
   private int millisecondsToPerformInventoryJitter;
 
@@ -49,7 +50,13 @@ public class DocumentThreadBase {
   }
 
   public void kickOffInventory() {
-    executor.execute(this::performInventory);
+    executor.execute(
+        new NamedRunnable("base-inventory") {
+          @Override
+          public void execute() throws Exception {
+            performInventory();
+          }
+        });
   }
 
   public PredictiveInventory getOrCreateInventory(String space) {
@@ -62,17 +69,22 @@ public class DocumentThreadBase {
   }
 
   public void bill(Consumer<HashMap<String, PredictiveInventory.Billing>> callback) {
-    executor.execute(() -> {
-      HashMap<String, PredictiveInventory.Billing> result = new HashMap<>();
-      for (Map.Entry<String, PredictiveInventory> entry : inventoryBySpace.entrySet()) {
-        result.put(entry.getKey(), entry.getValue().toBill());
-      }
-      callback.accept(result);
-    });
+    executor.execute(
+        new NamedRunnable("base-billing") {
+          @Override
+          public void execute() throws Exception {
+            HashMap<String, PredictiveInventory.Billing> result = new HashMap<>();
+            for (Map.Entry<String, PredictiveInventory> entry : inventoryBySpace.entrySet()) {
+              result.put(entry.getKey(), entry.getValue().toBill());
+            }
+            callback.accept(result);
+          }
+        });
   }
 
   public void performInventory() {
-    HashMap<String, PredictiveInventory.PreciseSnapshotAccumulator> accumulators = new HashMap<>(inventoryBySpace.size());
+    HashMap<String, PredictiveInventory.PreciseSnapshotAccumulator> accumulators =
+        new HashMap<>(inventoryBySpace.size());
     for (DurableLivingDocument document : map.values()) {
       PredictiveInventory.PreciseSnapshotAccumulator accum = accumulators.get(document.key.space);
       if (accum == null) {
@@ -81,20 +93,28 @@ public class DocumentThreadBase {
       }
       accum.memory += document.getMemoryBytes();
       accum.ticks += document.getCodeCost();
-      accum.count ++;
+      accum.count++;
       document.zeroOutCodeCost();
     }
     HashMap<String, PredictiveInventory> nextInventoryBySpace = new HashMap<>();
-    for (Map.Entry<String, PredictiveInventory.PreciseSnapshotAccumulator> entry : accumulators.entrySet()) {
+    for (Map.Entry<String, PredictiveInventory.PreciseSnapshotAccumulator> entry :
+        accumulators.entrySet()) {
       PredictiveInventory inventory = getOrCreateInventory(entry.getKey());
       inventory.accurate(entry.getValue());
       nextInventoryBySpace.put(entry.getKey(), inventory);
     }
     inventoryBySpace.clear();
     inventoryBySpace.putAll(nextInventoryBySpace);
-    executor.schedule(() -> {
-      performInventory();
-    }, millisecondsToPerformInventory + rng.nextInt(millisecondsToPerformInventoryJitter) + rng.nextInt(millisecondsToPerformInventoryJitter));
+    executor.schedule(
+        new NamedRunnable("base-inventory-scheduled") {
+          @Override
+          public void execute() throws Exception {
+            performInventory();
+          }
+        },
+        millisecondsToPerformInventory
+            + rng.nextInt(millisecondsToPerformInventoryJitter)
+            + rng.nextInt(millisecondsToPerformInventoryJitter));
   }
 
   public int getMillisecondsForCleanupCheck() {

@@ -23,27 +23,37 @@ public class BillingStateMachine {
   private final HashMap<String, PredictiveInventory.Billing> accum;
   private int at;
 
-  private BillingStateMachine(DocumentThreadBase[] bases, Consumer<HashMap<String, PredictiveInventory.Billing>> onFinalBill) {
+  private BillingStateMachine(
+      DocumentThreadBase[] bases,
+      Consumer<HashMap<String, PredictiveInventory.Billing>> onFinalBill) {
     this.bases = bases;
     this.at = 0;
     this.onFinalBill = onFinalBill;
     this.accum = new HashMap<>();
   }
 
+  public static void bill(
+      DocumentThreadBase[] bases,
+      LivingDocumentFactoryFactory factory,
+      Consumer<HashMap<String, PredictiveInventory.Billing>> onFinalBill) {
+    new BillingStateMachine(bases, onFinalBill).seed(factory.spacesAvailable()).next();
+  }
+
   private void next() {
     if (at < bases.length) {
-      bases[at].bill((b) -> {
-        for (Map.Entry<String, PredictiveInventory.Billing> entry : b.entrySet()) {
-          PredictiveInventory.Billing prior = accum.get(entry.getKey());
-          if (prior != null) {
-            accum.put(entry.getKey(), PredictiveInventory.Billing.add(prior, entry.getValue()));
-          } else {
-            accum.put(entry.getKey(), entry.getValue());
-          }
-        }
-        at ++;
-        next();
-      });
+      bases[at].bill(
+          (b) -> {
+            for (Map.Entry<String, PredictiveInventory.Billing> entry : b.entrySet()) {
+              PredictiveInventory.Billing prior = accum.get(entry.getKey());
+              if (prior != null) {
+                accum.put(entry.getKey(), PredictiveInventory.Billing.add(prior, entry.getValue()));
+              } else {
+                accum.put(entry.getKey(), entry.getValue());
+              }
+            }
+            at++;
+            next();
+          });
     } else {
       onFinalBill.accept(accum);
     }
@@ -51,12 +61,8 @@ public class BillingStateMachine {
 
   private BillingStateMachine seed(Collection<String> spaces) {
     for (String space : spaces) {
-      accum.put(space, new PredictiveInventory.Billing(0, 0,0, 0));
+      accum.put(space, new PredictiveInventory.Billing(0, 0, 0, 0));
     }
     return this;
-  }
-
-  public static void bill(DocumentThreadBase[] bases, LivingDocumentFactoryFactory factory, Consumer<HashMap<String, PredictiveInventory.Billing>> onFinalBill) {
-    new BillingStateMachine(bases, onFinalBill).seed(factory.spacesAvailable()).next();
   }
 }

@@ -20,12 +20,12 @@ public interface SimpleExecutor {
   SimpleExecutor NOW =
       new SimpleExecutor() {
         @Override
-        public void execute(Runnable command) {
+        public void execute(NamedRunnable command) {
           command.run();
         }
 
         @Override
-        public void schedule(Runnable command, long milliseconds) {
+        public void schedule(NamedRunnable command, long milliseconds) {
           // no-op
         }
 
@@ -40,12 +40,12 @@ public interface SimpleExecutor {
         Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(name));
     return new SimpleExecutor() {
       @Override
-      public void execute(Runnable command) {
+      public void execute(NamedRunnable command) {
         realExecutor.execute(command);
       }
 
       @Override
-      public void schedule(Runnable command, long milliseconds) {
+      public void schedule(NamedRunnable command, long milliseconds) {
         realExecutor.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
       }
 
@@ -63,10 +63,10 @@ public interface SimpleExecutor {
   }
 
   /** execute the given command in the executor */
-  void execute(Runnable command);
+  void execute(NamedRunnable command);
 
   /** schedule the given command to run after some milliseconds within the executor */
-  void schedule(Runnable command, long milliseconds);
+  void schedule(NamedRunnable command, long milliseconds);
 
   /** shutdown the executor */
   CountDownLatch shutdown();

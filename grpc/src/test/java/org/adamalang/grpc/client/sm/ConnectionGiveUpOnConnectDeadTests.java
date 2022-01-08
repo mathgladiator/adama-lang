@@ -10,6 +10,7 @@
 package org.adamalang.grpc.client.sm;
 
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.InstanceClient;
@@ -70,10 +71,10 @@ public class ConnectionGiveUpOnConnectDeadTests {
                         target,
                         new SimpleExecutor() {
                           @Override
-                          public void execute(Runnable command) {}
+                          public void execute(NamedRunnable command) {}
 
                           @Override
-                          public void schedule(Runnable command, long milliseconds) {}
+                          public void schedule(NamedRunnable command, long milliseconds) {}
 
                           @Override
                           public CountDownLatch shutdown() {

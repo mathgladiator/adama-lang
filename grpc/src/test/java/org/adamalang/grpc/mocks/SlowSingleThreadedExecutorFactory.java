@@ -110,12 +110,12 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
   }
 
   @Override
-  public void execute(Runnable command) {
+  public void execute(NamedRunnable command) {
     add(command);
   }
 
   @Override
-  public void schedule(Runnable command, long milliseconds) {
+  public void schedule(NamedRunnable command, long milliseconds) {
     add(command);
   }
 

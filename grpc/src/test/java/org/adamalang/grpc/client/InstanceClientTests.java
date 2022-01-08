@@ -39,21 +39,21 @@ public class InstanceClientTests {
           failure.await(723982);
         }
         bed.startServer();
-        Assert.assertTrue(client.ping(5000));
+        Assert.assertTrue(client.ping(15000));
         {
           AssertCreateSuccess success = new AssertCreateSuccess();
           client.create("nope", "nope", "space", "2", "123", "{}", success);
           success.await();
         }
         bed.stopServer();
-        Assert.assertFalse(client.ping(5000));
+        Assert.assertFalse(client.ping(15000));
         {
           AssertCreateFailure failure = new AssertCreateFailure();
           client.create("nope", "nope", "space", "3", "42", "{}", failure);
           failure.await(723982);
         }
         bed.startServer();
-        Assert.assertTrue(client.ping(5000));
+        Assert.assertTrue(client.ping(15000));
         {
           AssertCreateSuccess success = new AssertCreateSuccess();
           client.create("nope", "nope", "space", "4", null, "{}", success);

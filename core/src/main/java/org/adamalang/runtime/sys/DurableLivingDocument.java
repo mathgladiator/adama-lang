@@ -13,6 +13,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Key;
@@ -75,7 +76,8 @@ public class DurableLivingDocument {
               callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST, (seq) -> document));
     } catch (Throwable ex) {
       callback.failure(
-          ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex, LOGGER));
+          ErrorCodeException.detectOrWrap(
+              ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex, LOGGER));
     }
   }
 
@@ -101,7 +103,9 @@ public class DurableLivingDocument {
                 return new DurableLivingDocument(key, doc, factory, base);
               }));
     } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, LOGGER));
+      callback.failure(
+          ErrorCodeException.detectOrWrap(
+              ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, LOGGER));
     }
   }
 
@@ -158,8 +162,11 @@ public class DurableLivingDocument {
         callback.success(seq);
         if (requiresInvalidateMilliseconds != null) {
           base.executor.schedule(
-              () -> {
-                invalidate(Callback.DONT_CARE_INTEGER);
+              new NamedRunnable("finish-success-patch") {
+                @Override
+                public void execute() throws Exception {
+                  invalidate(Callback.DONT_CARE_INTEGER);
+                }
               },
               requiresInvalidateMilliseconds);
         }
@@ -197,51 +204,60 @@ public class DurableLivingDocument {
             @Override
             public void success(Void value) {
               base.executor.execute(
-                  () -> {
-                    change.complete();
-                    finishSuccessDataServicePatch(
-                        change.update.requiresFutureInvalidation
-                            ? change.update.whenToInvalidateMilliseconds
-                            : null,
-                        request.callback,
-                        change.update.seq);
+                  new NamedRunnable("execute-now-patch-callback") {
+                    @Override
+                    public void execute() throws Exception {
+                      change.complete();
+                      finishSuccessDataServicePatch(
+                          change.update.requiresFutureInvalidation
+                              ? change.update.whenToInvalidateMilliseconds
+                              : null,
+                          request.callback,
+                          change.update.seq);
+                    }
                   });
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
               base.executor.execute(
-                  () -> {
-                    if (ex.code == ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF) {
-                      if (!request.tryAgain()) {
+                  new NamedRunnable("failed-patch") {
+                    @Override
+                    public void execute() throws Exception {
+                      if (ex.code == ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF) {
+                        if (!request.tryAgain()) {
+                          request.callback.failure(ex);
+                          catastrophicFailure();
+                          return;
+                        }
+                        document.__insert(new JsonStreamReader(change.update.undo));
+                        base.service.compute(
+                            key,
+                            DataService.ComputeMethod.HeadPatch,
+                            document.__seq.get(),
+                            new Callback<>() {
+                              @Override
+                              public void success(DataService.LocalDocumentChange value) {
+                                base.executor.execute(
+                                    new NamedRunnable("catch-up-for-failed-patch") {
+                                      @Override
+                                      public void execute() throws Exception {
+                                        document.__insert(new JsonStreamReader(value.patch));
+                                        executeNow(request);
+                                      }
+                                    });
+                              }
+
+                              @Override
+                              public void failure(ErrorCodeException ex) {
+                                request.callback.failure(ex);
+                                catastrophicFailure();
+                              }
+                            });
+                      } else {
                         request.callback.failure(ex);
                         catastrophicFailure();
-                        return;
                       }
-                      document.__insert(new JsonStreamReader(change.update.undo));
-                      base.service.compute(
-                          key,
-                          DataService.ComputeMethod.HeadPatch,
-                          document.__seq.get(),
-                          new Callback<>() {
-                            @Override
-                            public void success(DataService.LocalDocumentChange value) {
-                              base.executor.execute(
-                                  () -> {
-                                    document.__insert(new JsonStreamReader(value.patch));
-                                    executeNow(request);
-                                  });
-                            }
-
-                            @Override
-                            public void failure(ErrorCodeException ex) {
-                              request.callback.failure(ex);
-                              catastrophicFailure();
-                            }
-                          });
-                    } else {
-                      request.callback.failure(ex);
-                      catastrophicFailure();
                     }
                   });
             }
@@ -255,21 +271,28 @@ public class DurableLivingDocument {
             @Override
             public void success(DataService.LocalDocumentChange value) {
               base.executor.execute(
-                  () -> {
-                    final var writer = forge("apply", request.who);
-                    writer.writeObjectFieldIntro("patch");
-                    writer.injectJson(value.patch);
-                    writer.endObject();
-                    executeNow(new IngestRequest(request.who, writer.toString(), request.callback));
+                  new NamedRunnable("document-rewind-success") {
+                    @Override
+                    public void execute() throws Exception {
+                      final var writer = forge("apply", request.who);
+                      writer.writeObjectFieldIntro("patch");
+                      writer.injectJson(value.patch);
+                      writer.endObject();
+                      executeNow(
+                          new IngestRequest(request.who, writer.toString(), request.callback));
+                    }
                   });
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
               base.executor.execute(
-                  () -> {
-                    request.callback.failure(ex);
-                    catastrophicFailure();
+                  new NamedRunnable("document-rewind-failure") {
+                    @Override
+                    public void execute() throws Exception {
+                      request.callback.failure(ex);
+                      catastrophicFailure();
+                    }
                   });
             }
           });
@@ -280,19 +303,25 @@ public class DurableLivingDocument {
             @Override
             public void success(Void value) {
               base.executor.execute(
-                  () -> {
-                    request.callback.failure(
-                        new ErrorCodeException(ErrorCodes.DOCUMENT_SELF_DESTRUCT_SUCCESSFUL));
-                    catastrophicFailure();
+                  new NamedRunnable("document-destroy-success") {
+                    @Override
+                    public void execute() throws Exception {
+                      request.callback.failure(
+                          new ErrorCodeException(ErrorCodes.DOCUMENT_SELF_DESTRUCT_SUCCESSFUL));
+                      catastrophicFailure();
+                    }
                   });
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
               base.executor.execute(
-                  () -> {
-                    request.callback.failure(ex);
-                    catastrophicFailure();
+                  new NamedRunnable("document-destroy-failure") {
+                    @Override
+                    public void execute() throws Exception {
+                      request.callback.failure(ex);
+                      catastrophicFailure();
+                    }
                   });
             }
           });
@@ -339,7 +368,8 @@ public class DurableLivingDocument {
               }));
     } catch (Throwable ex) {
       callback.failure(
-          ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex, LOGGER));
+          ErrorCodeException.detectOrWrap(
+              ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex, LOGGER));
     }
   }
 
@@ -395,9 +425,12 @@ public class DurableLivingDocument {
 
   public void scheduleCleanup() {
     base.executor.schedule(
-        () -> {
-          if (document.__canRemoveFromMemory()) {
-            base.map.remove(key);
+        new NamedRunnable("document-cleanup") {
+          @Override
+          public void execute() throws Exception {
+            if (document.__canRemoveFromMemory()) {
+              base.map.remove(key);
+            }
           }
         },
         base.getMillisecondsForCleanupCheck());

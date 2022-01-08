@@ -27,6 +27,44 @@ public class BillingPubSub {
     this.lastValue = null;
   }
 
+  public synchronized void subscribe(Function<ArrayList<Bill>, Boolean> subscriber) {
+    if (lastValue != null) {
+      if (subscriber.apply(lastValue)) {
+        subscribers.add(subscriber);
+      }
+    } else {
+      subscribers.add(subscriber);
+    }
+  }
+
+  public synchronized int size() {
+    return subscribers.size();
+  }
+
+  public Consumer<HashMap<String, PredictiveInventory.Billing>> publisher() {
+    return billings -> {
+      ArrayList<Bill> bill = new ArrayList<>();
+      for (Map.Entry<String, PredictiveInventory.Billing> billing : billings.entrySet()) {
+        String space = billing.getKey();
+        String hash = base.hashOf(space);
+        if (hash != null) {
+          bill.add(new Bill(space, hash, billing.getValue()));
+        }
+      }
+      publish(bill);
+    };
+  }
+
+  private synchronized void publish(ArrayList<Bill> bill) {
+    Iterator<Function<ArrayList<Bill>, Boolean>> it = subscribers.iterator();
+    lastValue = bill;
+    while (it.hasNext()) {
+      if (!it.next().apply(bill)) {
+        it.remove();
+      }
+    }
+  }
+
   public static class Bill {
     public final String id;
     public final String space;
@@ -46,43 +84,5 @@ public class BillingPubSub {
       this.count = billing.count;
       this.messages = billing.messages;
     }
-  }
-
-  public synchronized void subscribe(Function<ArrayList<Bill>, Boolean> subscriber) {
-    if (lastValue != null) {
-      if (subscriber.apply(lastValue)) {
-        subscribers.add(subscriber);
-      }
-    } else {
-      subscribers.add(subscriber);
-    }
-  }
-
-  public synchronized int size() {
-    return subscribers.size();
-  }
-
-  private synchronized void publish(ArrayList<Bill> bill) {
-    Iterator<Function<ArrayList<Bill>, Boolean>> it = subscribers.iterator();
-    lastValue = bill;
-    while (it.hasNext()) {
-      if (!it.next().apply(bill)) {
-        it.remove();
-      }
-    }
-  }
-
-  public Consumer<HashMap<String, PredictiveInventory.Billing>> publisher() {
-    return billings -> {
-      ArrayList<Bill> bill = new ArrayList<>();
-      for (Map.Entry<String, PredictiveInventory.Billing> billing : billings.entrySet()) {
-        String space = billing.getKey();
-        String hash = base.hashOf(space);
-        if (hash != null) {
-          bill.add(new Bill(space, hash, billing.getValue()));
-        }
-      }
-      publish(bill);
-    };
   }
 }

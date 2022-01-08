@@ -99,15 +99,14 @@ public class ConnectionFailOverTests {
         Runnable connectionMade = connectionExecutor.latchAtAndDrain(6, 1);
         Runnable executeSend = connectionExecutor.latchAtAndDrain(7, 1);
         Runnable forwardSend = finderExecutor.latchAtAndDrain(8, 1);
-        Runnable clientDataForward = finderExecutor.latchAtAndDrain(9, -1);
-        Runnable sendSeqResult = finderExecutor.latchAtAndDrain(10, 1);
+        Runnable clientDataForward = finderExecutor.latchAtAndDrain(10, 2);
         Runnable gotDisconnect = finderExecutor.latchAtAndDrain(11, 1);
         Runnable connectionBroke = connectionExecutor.latchAtAndDrain(8, 1);
         Runnable connectionRetry = connectionExecutor.latchAtAndDrain(9, 1);
-        Runnable finderRetry = finderExecutor.latchAtAndDrain(13, 3);
+        Runnable finderRetry = finderExecutor.latchAtAndDrain(14, 3);
         Runnable finderFailedAgain = finderExecutor.latchAtAndDrain(15, 1);
         Runnable executorRemoves = directExector.latchAtAndDrain(4, 1);
-        Runnable finderSyncs = finderExecutor.latchAtAndDrain(16, 3);
+        Runnable finderSyncs = finderExecutor.latchAtAndDrain(18, 3);
         Runnable finderCleansUp = finderExecutor.latchAtAndDrain(21, 3);
         Runnable broadcastNewTarget = directExector.latchAtAndDrain(5, 1);
         Runnable completeClients = finderExecutor.latchAtAndDrain(23, 2);
@@ -154,7 +153,6 @@ public class ConnectionFailOverTests {
         forwardSend.run();
         clientDataForward.run();
         events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
-        sendSeqResult.run();
         eventsGotUpdate.run();
         cb1.assertSuccess(6);
         servers[0].stopServer();
