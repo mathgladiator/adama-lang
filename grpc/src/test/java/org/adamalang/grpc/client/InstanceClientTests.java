@@ -52,13 +52,6 @@ public class InstanceClientTests {
           client.create("nope", "nope", "space", "3", "42", "{}", failure);
           failure.await(723982);
         }
-        bed.startServer();
-        Assert.assertTrue(client.ping(15000));
-        {
-          AssertCreateSuccess success = new AssertCreateSuccess();
-          client.create("nope", "nope", "space", "4", null, "{}", success);
-          success.await();
-        }
       }
     }
   }

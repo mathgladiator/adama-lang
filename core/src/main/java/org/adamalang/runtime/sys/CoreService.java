@@ -14,6 +14,7 @@ import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.billing.BillingStateMachine;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.HashMap;

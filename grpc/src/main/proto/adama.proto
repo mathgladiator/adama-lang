@@ -13,6 +13,9 @@ service Adama {
   /** create a new document */
   rpc Create(CreateRequest) returns (CreateResponse) {}
 
+  /** reflect a schema based on a space and key */
+  rpc Reflect(ReflectRequest) returns (ReflectResponse) {}
+
   /** open a bidi connection */
   rpc MultiplexedProtocol(stream StreamMessageClient) returns (stream StreamMessageServer) {}
 
@@ -31,6 +34,15 @@ message PingRequest {
 }
 
 message PingResponse {
+}
+
+message ReflectRequest {
+  string space = 1;
+  string key = 2;
+}
+
+message ReflectResponse {
+  string schema = 1;
 }
 
 message CreateRequest {

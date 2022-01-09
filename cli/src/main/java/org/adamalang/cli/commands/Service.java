@@ -29,7 +29,7 @@ import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.backend.Deployments;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
-import org.adamalang.runtime.sys.BillingPubSub;
+import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.threads.ThreadedDataService;
 import org.adamalang.web.contracts.ServiceBase;
@@ -141,6 +141,8 @@ public class Service {
 
     billingPubSub.subscribe(
         (bills) -> {
+          // TODO: log to disk
+          // TODO: once the disk has an hour of usage, summarize and send to S3
           // TODO: submit to billing service
           return true;
         });

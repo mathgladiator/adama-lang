@@ -43,7 +43,7 @@ public class Users {
             new StringBuilder()
                 .append("INSERT INTO `")
                 .append(dataBase.databaseName)
-                .append("`.`emails` (`email`) VALUES (?)")
+                .append("`.`emails` (`email`, `validations`) VALUES (?, 0)")
                 .toString();
         try (PreparedStatement statement =
             connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -51,6 +51,22 @@ public class Users {
           statement.execute();
           return DataBase.getInsertId(statement);
         }
+      }
+    }
+  }
+
+  public static void validateUser(DataBase dataBase, int userId) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql =
+          new StringBuilder()
+              .append("UPDATE `")
+              .append(dataBase.databaseName)
+              .append("`.`emails` SET `validations` = `validations` + 1, `last_validated`=? WHERE `id`=").append(userId)
+              .toString();
+      try (PreparedStatement statement =
+               connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        statement.setDate(1, new java.sql.Date(System.currentTimeMillis()));
+        statement.execute();
       }
     }
   }

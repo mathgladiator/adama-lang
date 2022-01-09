@@ -7,10 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys;
+package org.adamalang.runtime.sys.billing;
 
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.runtime.sys.PredictiveInventory;
+import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.junit.Assert;
 import org.junit.Test;
 

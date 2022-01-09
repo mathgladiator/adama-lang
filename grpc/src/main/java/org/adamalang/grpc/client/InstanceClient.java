@@ -15,10 +15,7 @@ import io.grpc.TlsChannelCredentials;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.NamedRunnable;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.*;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.proto.*;
 
@@ -86,10 +83,10 @@ public class InstanceClient implements AutoCloseable {
 
   /** block the current thread to ensure the client is connected right now */
   public boolean ping(int timeLimit) throws Exception {
-    AtomicBoolean success = new AtomicBoolean(false);
     int backoff = 5;
     int time = 0;
     do {
+      AtomicBoolean success = new AtomicBoolean(false);
       CountDownLatch latch = new CountDownLatch(1);
       this.stub.ping(
           PingRequest.newBuilder().build(),
@@ -117,7 +114,7 @@ public class InstanceClient implements AutoCloseable {
       Thread.sleep(backoff);
       time += backoff;
       backoff += Math.round(backoff * rng.nextDouble() + 1);
-    } while (!success.get() && time < timeLimit);
+    } while (time < timeLimit);
     return false;
   }
 
@@ -142,6 +139,10 @@ public class InstanceClient implements AutoCloseable {
     }
     CreateRequest request = builder.build();
     stub.create(request, CreateCallback.WRAP(callback, logger));
+  }
+
+  public void reflect(String space, String key, Callback<String> callback) {
+
   }
 
   public void scanDeployments(String space, ScanDeploymentCallback callback) {

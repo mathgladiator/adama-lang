@@ -17,7 +17,7 @@ import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.BillingPubSub;
+import org.adamalang.runtime.sys.billing.Bill;
 import org.adamalang.runtime.sys.CoreStream;
 
 import java.util.ArrayList;
@@ -95,7 +95,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         (bills) -> {
           if (alive.get()) {
             ArrayList<String> spaces = new ArrayList<>();
-            for (BillingPubSub.Bill bill : bills) {
+            for (Bill bill : bills) {
               spaces.add(bill.space);
             }
             executor.execute(new NamedRunnable("handler-send-heartbeat") {

@@ -28,6 +28,9 @@ public class FrontendManagementInstaller {
             .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`emails` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `email` VARCHAR(128) NOT NULL,") //
+            .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
+            .append("  `validations` INT(4) UNSIGNED NOT NULL,") //
+            .append("  `last_validated` DATETIME NULL,") //
             .append("  PRIMARY KEY (`id`),") //
             .append("  UNIQUE  `u` (`email`))") //
             .append(" ENGINE = InnoDB") //

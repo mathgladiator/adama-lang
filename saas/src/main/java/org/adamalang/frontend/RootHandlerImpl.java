@@ -29,6 +29,8 @@ import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.transforms.results.AuthenticatedUser;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.MessageDigest;
@@ -63,6 +65,7 @@ public class RootHandlerImpl implements RootHandler {
         if (generatedCode.equals(request.code)) {
           try {
             Users.removeAllKeys(nexus.dataBaseManagement, startRequest.userId);
+            Users.validateUser(nexus.dataBaseManagement, startRequest.userId);
           } catch (Exception ex) {
             responder.error(
                 ErrorCodeException.detectOrWrap(
@@ -88,6 +91,7 @@ public class RootHandlerImpl implements RootHandler {
                   startRequest.userId,
                   publicKey,
                   new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60));
+              Users.validateUser(nexus.dataBaseManagement, startRequest.userId);
             } catch (Exception ex) {
               responder.error(
                   ErrorCodeException.detectOrWrap(
@@ -427,32 +431,61 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public AttachmentUploadHandler handle(AttachmentStartRequest request, SimpleResponder responder) {
-    // TODO: find the _right_ adama host
-    // TODO: ask if the current user can attach
     return new AttachmentUploadHandler() {
+      String id;
+      FileOutputStream output;
+      File file;
+      MessageDigest digestMD5;
+      MessageDigest digestSHA384;
       @Override
       public void bind() {
-        // TODO: OPEN LOCAL FILE
-        // TODO: OPEN DIGEST FOR MD5
-        // TODO: OPEN DIGEST FOR SHA-384
-        // TODO: generate ID
+        try {
+          id = UUID.randomUUID().toString();
+          File root = new File("inflight");
+          file = new File(root,id + ".upload");
+          file.deleteOnExit();
+          digestMD5 = MessageDigest.getInstance("MD5");
+          digestSHA384 = MessageDigest.getInstance("SHA-384");
+          output = new FileOutputStream(file);
+        } catch (Exception ex) {
+          responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_FAILED_BIND, ex, LOGGER));
+        }
       }
 
       @Override
-      public void handle(AttachmentAppendRequest request, SimpleResponder responder) {
-        // TODO: UPDATE DIGESTS
-        // TODO: VALIDATE CHUNK
-        // TODO: APPEND TO FILE
+      public void handle(AttachmentAppendRequest request, SimpleResponder chunkResponder) {
+        try {
+          byte[] chunk = Base64.getDecoder().decode(request.base64Bytes);
+          output.write(chunk);
+          digestMD5.update(chunk);
+          digestSHA384.update(chunk);
+          MessageDigest chunkDigest = Hashing.md5();
+          chunkDigest.update(chunk);
+          if (!Hashing.finishAndEncode(chunkDigest).equals(request.chunkMd5)) {
+            chunkResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_CHUNK_BAD_DIGEST));
+          } else {
+            chunkResponder.complete();
+          }
+        } catch (Exception ex) {
+          chunkResponder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_CHUNK_UNKNOWN_EXCEPTION, ex, LOGGER));
+        }
       }
 
       @Override
       public void handle(AttachmentFinishRequest request, SimpleResponder responder) {
-        // TODO: CLOSE THE FILE
-        // TODO: COMPUTE FINAL DIGESTS
-        // TODO: UPLOAD TO S3
-        // TODO: find _right_ adama host
-        // TODO: attach to Adama
-        // TODO: DELETE FILE
+        try {
+          output.flush();
+          output.close();
+          String md5_64 = Hashing.finishAndEncode(digestMD5);
+          // TODO: convert this digest to an S3 compatible
+          String sha384_64 = Hashing.finishAndEncode(digestSHA384);
+          // TODO: UPLOAD TO S3
+          // TODO: find _right_ adama host
+          // TODO: attach to Adama
+          file.delete();
+        } catch (Exception ex) {
+
+        }
 
       }
 

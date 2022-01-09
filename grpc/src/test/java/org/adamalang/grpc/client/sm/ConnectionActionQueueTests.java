@@ -96,8 +96,8 @@ public class ConnectionActionQueueTests {
         Runnable sendConnect = finderExecutor.latchAtAndDrain(5, 1);
         Runnable connectEstablish = finderExecutor.latchAtAndDrain(6, 1);
         Runnable connectionComplete = connectionExecutor.latchAtAndDrain(6, 1);
-        Runnable sends = finderExecutor.latchAtAndDrain(23, -1); // why is this 16/17 at times? is there an event I'm not accounting for?
-        Runnable results = finderExecutor.latchAtAndDrain(39, 16);
+        Runnable sends = finderExecutor.latchAtAndDrain(23, 17);
+        Runnable results = finderExecutor.latchAtAndDrain(40, 17);
         ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
         engineDirect.integrate("127.0.0.1:21005", Collections.singleton("space"));
         integrate.run();
