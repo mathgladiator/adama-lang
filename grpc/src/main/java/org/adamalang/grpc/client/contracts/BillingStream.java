@@ -7,8 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.grpc.client.contracts;
 
-public class BillAggregator {
+public interface BillingStream {
+  public void handle(String batch, Runnable after);
 
+  public void failure(int code);
+
+  public void finished();
 }

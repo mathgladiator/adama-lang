@@ -11,6 +11,7 @@ package org.adamalang.grpc.server;
 
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
+import org.adamalang.runtime.sys.billing.BillAggregator;
 import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 

@@ -486,7 +486,6 @@ public class RootHandlerImpl implements RootHandler {
         } catch (Exception ex) {
 
         }
-
       }
 
       @Override

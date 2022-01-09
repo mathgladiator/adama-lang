@@ -19,6 +19,7 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.billing.Bill;
 import org.adamalang.runtime.sys.CoreStream;
+import org.adamalang.runtime.sys.billing.BillAggregator;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -80,6 +81,59 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     } catch (NumberFormatException nfe) {
       return "" + entropy.hashCode();
     }
+  }
+
+  @Override
+  public StreamObserver<BillingForward> billingExchange(StreamObserver<BillingReverse> responseObserver) {
+    SimpleExecutor executor = executors[rng.nextInt(executors.length)];
+    return new StreamObserver<BillingForward>() {
+      private boolean sentComplete = false;
+      @Override
+      public void onNext(BillingForward billingForward) {
+        executor.execute(new NamedRunnable("processing-billing-next") {
+          @Override
+          public void execute() throws Exception {
+            switch (billingForward.getOperationCase()) {
+              case BEGIN: {
+                String idFound = "";
+                String batchFound = "";
+                // IF FOUND
+                responseObserver.onNext(BillingReverse.newBuilder().setFound(BillingBatchFound.newBuilder().setId(idFound).setBatch(batchFound).build()).build());
+                // ELSE SEND onComplete ;; sendCompleteWhileInExecutor();
+                // TODO: find a billing batch
+              }
+              case REMOVE: {
+                BillingDeleteBill deleteBill = billingForward.getRemove();
+                // TODO: Issue the delete
+                responseObserver.onNext(BillingReverse.newBuilder().setRemoved(BillingBatchRemoved.newBuilder().build()).build());
+              }
+            }
+          }
+        });
+      }
+
+      private void sendCompleteWhileInExecutor() {
+        if (!sentComplete) {
+          sentComplete = true;
+        }
+      }
+
+      @Override
+      public void onError(Throwable throwable) {
+        LOGGER.convertedToErrorCode(throwable, ErrorCodes.GRPC_BILLING_UNEXPECTED_ERROR);
+      }
+
+      @Override
+      public void onCompleted() {
+        executor.execute(new NamedRunnable("processing-billing-next") {
+          @Override
+          public void execute() throws Exception {
+
+            sendCompleteWhileInExecutor();
+          }
+        });
+      }
+    };
   }
 
   @Override

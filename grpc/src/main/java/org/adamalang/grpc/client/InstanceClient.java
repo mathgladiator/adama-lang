@@ -41,7 +41,7 @@ public class InstanceClient implements AutoCloseable {
   private final AtomicLong nextId;
   private final AtomicBoolean alive;
   private StreamObserver<StreamMessageClient> upstream;
-  private Observer downstream;
+  private MultiplexObserver downstream;
   private int backoff;
 
   public InstanceClient(
@@ -75,7 +75,7 @@ public class InstanceClient implements AutoCloseable {
         new NamedRunnable("client-setup", target) {
           @Override
           public void execute() throws Exception {
-            downstream = new Observer();
+            downstream = new MultiplexObserver();
             downstream.upstream = stub.multiplexedProtocol(downstream);
           }
         });
@@ -142,7 +142,94 @@ public class InstanceClient implements AutoCloseable {
   }
 
   public void reflect(String space, String key, Callback<String> callback) {
+    executor.execute(new NamedRunnable("reflect") {
+      @Override
+      public void execute() throws Exception {
+        stub.reflect(ReflectRequest.newBuilder().setSpace(space).setKey(key).build(), new StreamObserver<ReflectResponse>() {
+          @Override
+          public void onNext(ReflectResponse reflectResponse) {
+           callback.success(reflectResponse.getSchema());
+          }
 
+          @Override
+          public void onError(Throwable throwable) {
+            callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_REFLECT_UNKNOWN_EXCEPTION, throwable, logger));
+          }
+
+          @Override
+          public void onCompleted() {
+
+          }
+        });
+      }
+    });
+  }
+
+  private class BillingObserver implements StreamObserver<BillingReverse> {
+    private final BillingStream billingStream;
+    private StreamObserver<BillingForward> upstream;
+    private String batchRemoved;
+
+    public BillingObserver(BillingStream billingStream) {
+      this.billingStream = billingStream;
+      this.batchRemoved = null;
+    }
+    public void start(StreamObserver<BillingForward> upstream) {
+      this.upstream = upstream;
+      // start the conversation
+      upstream.onNext(BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
+    }
+
+    @Override
+    public void onNext(BillingReverse billingReverse) {
+      switch (billingReverse.getOperationCase()) {
+        case FOUND: {
+          executor.execute(new NamedRunnable("asking-to-remove") {
+            @Override
+            public void execute() throws Exception {
+              BillingBatchFound found = billingReverse.getFound();
+              BillingObserver.this.batchRemoved = found.getBatch();
+              upstream.onNext(BillingForward.newBuilder().setRemove(BillingDeleteBill.newBuilder().setId(found.getId()).buildPartial()).build());
+            }
+          });
+        }
+        case REMOVED: {
+          executor.execute(new NamedRunnable("removing-batch") {
+            @Override
+            public void execute() throws Exception {
+              billingStream.handle(batchRemoved, () -> {
+                executor.execute(new NamedRunnable("batch-processed") {
+                  @Override
+                  public void execute() throws Exception {
+                    upstream.onNext(BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
+                  }
+                });
+              });
+            }
+          });
+        }
+      }
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+      billingStream.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_BILLING_UNKNOWN_EXCEPTION, throwable, logger).code);
+    }
+
+    @Override
+    public void onCompleted() {
+      billingStream.finished();
+    }
+  }
+
+  public void startBillingExchange(BillingStream billingStream) {
+    executor.execute(new NamedRunnable("billing-exchange") {
+      @Override
+      public void execute() throws Exception {
+        BillingObserver observer = new BillingObserver(billingStream);
+        observer.start(stub.billingExchange(observer));
+      }
+    });
   }
 
   public void scanDeployments(String space, ScanDeploymentCallback callback) {
@@ -323,7 +410,7 @@ public class InstanceClient implements AutoCloseable {
     }
   }
 
-  private class Observer implements StreamObserver<StreamMessageServer> {
+  private class MultiplexObserver implements StreamObserver<StreamMessageServer> {
     private StreamObserver<StreamMessageClient> upstream = null;
 
     @Override
@@ -334,7 +421,7 @@ public class InstanceClient implements AutoCloseable {
               new NamedRunnable("client-established", target) {
                 @Override
                 public void execute() throws Exception {
-                  InstanceClient.this.upstream = Observer.this.upstream;
+                  InstanceClient.this.upstream = MultiplexObserver.this.upstream;
                   backoff = 1;
                   lifecycle.connected(InstanceClient.this);
                 }
@@ -460,7 +547,7 @@ public class InstanceClient implements AutoCloseable {
                     new NamedRunnable("client-reconnecting", target) {
                       @Override
                       public void execute() throws Exception {
-                        downstream = new Observer();
+                        downstream = new MultiplexObserver();
                         downstream.upstream = stub.multiplexedProtocol(downstream);
                       }
                     },

@@ -21,6 +21,39 @@ service Adama {
 
   /** the service knows how to pull deployments */
   rpc ScanDeployments(ScanDeploymentsRequest) returns (ScanDeploymentsResponse) {}
+
+  /** tear billing */
+  rpc BillingExchange(stream BillingForward) returns (stream BillingReverse) {}
+}
+
+
+message BillingBegin {
+}
+
+message BillingDeleteBill {
+  string id = 1;
+}
+
+message BillingForward  {
+  oneof Operation {
+    BillingBegin begin = 1;
+    BillingDeleteBill remove = 2;
+  }
+}
+
+message BillingBatchFound {
+  string id = 1;
+  string batch = 2;
+}
+
+message BillingBatchRemoved {
+}
+
+message BillingReverse {
+  oneof Operation {
+    BillingBatchFound found = 1;
+    BillingBatchRemoved removed = 2;
+  }
 }
 
 message ScanDeploymentsRequest {
