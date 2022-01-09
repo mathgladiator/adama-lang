@@ -19,7 +19,7 @@ public class LivingDocumentFactoryTests {
     final var compiler =
         new LivingDocumentFactory(
             "Foo",
-            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who, NtCreateContext context) { return false; } }",
+            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; } public static boolean __onCanInvent(NtClient who) { return false; } }",
             "{}");
     var success = false;
     try {
@@ -51,7 +51,7 @@ public class LivingDocumentFactoryTests {
     final var compiler =
         new LivingDocumentFactory(
             "Foo",
-            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who, NtCreateContext context) { return false; } }",
+            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; }  public static boolean __onCanInvent(NtClient who) { return false; }}",
             "{}");
     var success = false;
     try {
@@ -68,7 +68,7 @@ public class LivingDocumentFactoryTests {
     try {
       new LivingDocumentFactory(
           "Foo",
-          "import org.adamalang.runtime.natives.*; class Foo { public static boolean __onCanCreate(NtClient who, NtCreateContext context) { return false; } }",
+          "import org.adamalang.runtime.natives.*; class Foo { public static boolean __onCanCreate(NtClient who) { return false; } public static boolean __onCanInvent(NtClient who) { return false; } }",
           "{}");
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
