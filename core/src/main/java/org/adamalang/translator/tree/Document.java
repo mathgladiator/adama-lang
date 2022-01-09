@@ -49,7 +49,7 @@ import java.util.function.Consumer;
 public class Document implements TopLevelDocumentHandler {
   public final HashSet<String> channelsThatAreFutures;
   public final HashMap<String, String> channelToMessageType;
-  public final ArrayList<DefineDocumentEvent> connectionEvents;
+  public final ArrayList<DefineDocumentEvent> events;
   public final ArrayList<DefineConstructor> constructors;
   public final ArrayList<DefineFunction> functionDefinitions;
   public final HashMap<String, TyNativeFunctional> functionTypes;
@@ -81,7 +81,7 @@ public class Document implements TopLevelDocumentHandler {
     handlers = new ArrayList<>();
     transitions = new LinkedHashMap<>();
     tests = new ArrayList<>();
-    connectionEvents = new ArrayList<>();
+    events = new ArrayList<>();
     channelToMessageType = new HashMap<>();
     channelsThatAreFutures = new HashSet<>();
     searchPaths = new ArrayList<>();
@@ -224,7 +224,7 @@ public class Document implements TopLevelDocumentHandler {
   @Override
   public void add(final DefineDocumentEvent dce) {
     typeCheckOrder.add(env -> dce.typing(env));
-    connectionEvents.add(dce);
+    events.add(dce);
   }
 
   @Override
@@ -485,6 +485,15 @@ public class Document implements TopLevelDocumentHandler {
         functionIndex.put(df.name, index);
       }
       index.add(df);
+    }
+    for (final DefineDocumentEvent de : events) {
+      if (de.which == DocumentEvent.AskInvention) {
+        for (DefineConstructor c : constructors) {
+          if (c.messageTypeToken != null) {
+            createError(de, "Invention requires all constructors to not accept messages", "INVENT");
+          }
+        }
+      }
     }
     for (final Map.Entry<String, ArrayList<DefineFunction>> entry : functionIndex.entrySet()) {
       final var instances = new ArrayList<FunctionOverloadInstance>();

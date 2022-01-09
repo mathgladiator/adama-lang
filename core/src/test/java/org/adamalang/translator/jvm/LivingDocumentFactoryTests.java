@@ -10,6 +10,7 @@
 package org.adamalang.translator.jvm;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -75,6 +76,33 @@ public class LivingDocumentFactoryTests {
       Assert.assertEquals(198174, nsme.code);
     }
   }
+
+
+  @Test
+  public void invalidPolicies() throws Exception {
+    LivingDocumentFactory factory = new LivingDocumentFactory(
+        "Foo",
+        "import org.adamalang.runtime.contracts.DocumentMonitor;" +
+            "import org.adamalang.runtime.natives.*; class Foo {" +
+            "public Foo(final DocumentMonitor __monitor) { }" +
+            "public static boolean __onCanCreate(NtClient who) { throw new NullPointerException(); }" +
+            "public static boolean __onCanInvent(NtClient who) { throw new NullPointerException(); }" +
+            "}",
+        "{}");
+
+    try {
+      factory.canCreate(NtClient.NO_ONE);
+      Assert.fail();
+    } catch (ErrorCodeException ex) {
+
+    }
+    try {
+      factory.canInvent(NtClient.NO_ONE);
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+    }
+  }
+
 
   @Test
   public void noPolicy() throws Exception {

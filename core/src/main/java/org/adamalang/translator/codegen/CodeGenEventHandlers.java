@@ -25,7 +25,7 @@ public class CodeGenEventHandlers {
     var askAssetAttachCount = 0;
     var askCreationCount = 0;
     var askInventionCount = 0;
-    for (final DefineDocumentEvent dce : environment.document.connectionEvents) {
+    for (final DefineDocumentEvent dce : environment.document.events) {
       if (dce.which == DocumentEvent.ClientConnected) {
         sb.append(
             "public boolean __onConnected__"
@@ -48,7 +48,7 @@ public class CodeGenEventHandlers {
         sb.append(
             "public static boolean __onCanCreate__"
                 + askCreationCount
-                + "(NtClient "
+                + "(StaticState __static_state, NtClient "
                 + dce.clientVarToken.text
                 + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
@@ -56,10 +56,10 @@ public class CodeGenEventHandlers {
       } else if (dce.which == DocumentEvent.AskInvention) {
         sb.append(
             "public static boolean __onCanInvent__"
-                + askCreationCount
-                + "(NtClient "
+                + askInventionCount
+                + "(StaticState __static_state, NtClient "
                 + dce.clientVarToken.text
-                + ") ");
+                + ")").tabUp().writeNewline();
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askInventionCount++;
       } else if (dce.which == DocumentEvent.AskAssetAttachment) {
@@ -133,8 +133,9 @@ public class CodeGenEventHandlers {
         .writeNewline();
     if (askCreationCount > 0) {
       sb.append("boolean __result = false;").writeNewline();
+      sb.append("StaticState __static_state = new StaticState();").writeNewline();
       for (var k = 0; k < askCreationCount; k++) {
-        sb.append("if (__onCanCreate__" + k + "(__client)) {").tabUp().writeNewline();
+        sb.append("if (__onCanCreate__" + k + "(__static_state, __client)) {").tabUp().writeNewline();
         sb.append("__result = true;").tabDown().writeNewline();
         sb.append("} else {").tabUp().writeNewline();
         sb.append("return false;").tabDown().writeNewline();
@@ -153,8 +154,9 @@ public class CodeGenEventHandlers {
       .writeNewline();
     if (askInventionCount > 0) {
       sb.append("boolean __result = false;").writeNewline();
+      sb.append("StaticState __static_state = new StaticState();").writeNewline();
       for (var k = 0; k < askInventionCount; k++) {
-        sb.append("if (__onCanInvent__" + k + "(__client)) {").tabUp().writeNewline();
+        sb.append("if (__onCanInvent__" + k + "(__static_state, __client)) {").tabUp().writeNewline();
         sb.append("__result = true;").tabDown().writeNewline();
         sb.append("} else {").tabUp().writeNewline();
         sb.append("return false;").tabDown().writeNewline();

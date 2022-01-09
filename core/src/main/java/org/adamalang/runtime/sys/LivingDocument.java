@@ -114,6 +114,25 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
+  public static class StaticState {
+    protected int __goodwillBudget;
+
+    public StaticState() {
+      this.__goodwillBudget = 25000;
+    }
+
+    public boolean __goodwill(
+        final int startLine, final int startPosition, final int endLine, final int endLinePosition) {
+      if (__goodwillBudget > 0) {
+        __goodwillBudget--;
+        if (__goodwillBudget == 0) {
+          throw new GoodwillExhaustedException(startLine, startPosition, endLine, endLinePosition);
+        }
+      }
+      return true;
+    }
+  }
+
   /** code generate: get strings that are part of the document */
   public abstract Set<String> __get_intern_strings();
 
@@ -270,20 +289,19 @@ public abstract class LivingDocument implements RxParent {
   /** garbage collect the views for the given client; return the number of views for that user */
   public int __garbageCollectViews(final NtClient __who) {
     final var views = __trackedViews.get(__who);
-    if (views == null) {
-      return 0;
-    }
     var count = 0;
-    final var it = views.iterator();
-    while (it.hasNext()) {
-      if (it.next().isAlive()) {
-        count++;
-      } else {
-        it.remove();
+    if (views != null) {
+      final var it = views.iterator();
+      while (it.hasNext()) {
+        if (it.next().isAlive()) {
+          count++;
+        } else {
+          it.remove();
+        }
       }
-    }
-    if (count == 0) {
-      __trackedViews.remove(__who);
+      if (count == 0) {
+        __trackedViews.remove(__who);
+      }
     }
     return count;
   }

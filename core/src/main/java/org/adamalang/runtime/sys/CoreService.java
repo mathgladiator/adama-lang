@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -50,42 +48,7 @@ public class CoreService {
     bases = new DocumentThreadBase[nThreads];
     this.alive = new AtomicBoolean(true);
     for (int k = 0; k < nThreads; k++) {
-      ScheduledExecutorService realExecutorToUse =
-          Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("core-" + k));
-      SimpleExecutor executor = SimpleExecutor.create("core-" + k);
-      new SimpleExecutor() {
-        @Override
-        public void execute(NamedRunnable command) {
-          realExecutorToUse.execute(command);
-        }
-
-        @Override
-        public void schedule(NamedRunnable command, long milliseconds) {
-          // register to pick up this key on restart
-          realExecutorToUse.schedule(
-              () -> {
-                if (alive.get()) {
-                  command.run();
-                }
-              },
-              milliseconds,
-              TimeUnit.MILLISECONDS);
-        }
-
-        @Override
-        public CountDownLatch shutdown() {
-          CountDownLatch latch = new CountDownLatch(1);
-          realExecutorToUse.execute(
-              () -> {
-                for (Runnable run : realExecutorToUse.shutdownNow()) {
-                  run.run();
-                }
-                latch.countDown();
-              });
-          return latch;
-        }
-      };
-      bases[k] = new DocumentThreadBase(dataService, executor, time);
+      bases[k] = new DocumentThreadBase(dataService, SimpleExecutor.create("core-" + k), time);
       bases[k].kickOffInventory();
     }
     rng = new Random();
@@ -142,8 +105,13 @@ public class CoreService {
                 new Callback<LivingDocumentFactory>() {
                   @Override
                   public void success(LivingDocumentFactory factory) {
-                    if (!factory.canCreate(who)) {
-                      callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_REJECTED_CREATION));
+                    try {
+                      if (!factory.canCreate(who)) {
+                        callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_REJECTED_CREATION));
+                        return;
+                      }
+                    } catch (ErrorCodeException exNew) {
+                      callback.failure(exNew);
                       return;
                     }
                     // bring the document into existence
@@ -210,8 +178,11 @@ public class CoreService {
                   new Callback<LivingDocumentFactory>() {
                     @Override
                     public void success(LivingDocumentFactory factory) {
-                      boolean supportsImplicitCreation = factory.canImplicitCreate(who);
-                      if (supportsImplicitCreation) {
+                      try {
+                        if (!factory.canInvent(who)) {
+                          stream.failure(exOriginal);
+                          return;
+                        }
                         create(
                             who,
                             key,
@@ -232,6 +203,8 @@ public class CoreService {
                                 }
                               }
                             });
+                      } catch (ErrorCodeException exNew) {
+                        stream.failure(exNew);
                       }
                     }
 

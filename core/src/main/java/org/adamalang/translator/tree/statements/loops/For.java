@@ -104,11 +104,19 @@ public class For extends Statement {
     sb.append("for (");
     sb.append(";");
     if (condition != null) {
-      sb.append("__goodwill(").append(condition.toArgs(true)).append(") && (");
+      if (environment.state.isStatic()) {
+        sb.append("__static_state.__goodwill(").append(condition.toArgs(true)).append(") && (");
+      } else {
+        sb.append("__goodwill(").append(condition.toArgs(true)).append(") && (");
+      }
       condition.writeJava(sb, next.scopeWithComputeContext(ComputeContext.Computation));
       sb.append(")");
     } else {
-      sb.append("__goodwill(").append(toArgs(true)).append(")");
+      if (environment.state.isStatic()) {
+        sb.append("__static_state.__goodwill(").append(toArgs(true)).append(")");
+      } else {
+        sb.append("__goodwill(").append(toArgs(true)).append(")");
+      }
     }
     sb.append(";");
     if (advance != null) {

@@ -51,7 +51,7 @@ public class MockInstantDataService implements DataService {
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     ArrayList<RemoteDocumentUpdate> log = logByKey.get(key);
     if (log == null) {
-      callback.failure(new ErrorCodeException(0));
+      callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
       return;
     }
     println("LOAD:" + key.space + "/" + key.key);
@@ -70,10 +70,19 @@ public class MockInstantDataService implements DataService {
     callback.success(new LocalDocumentChange(writer.toString()));
   }
 
+  private boolean correctFailureCodeForFailure = true;
+  public void failInitializationAgainWithWrongErrorCode() {
+    correctFailureCodeForFailure = false;
+  }
+
   @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
     if (logByKey.containsKey(key)) {
-      callback.failure(new ErrorCodeException(1));
+      if (correctFailureCodeForFailure) {
+        callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
+      } else {
+        callback.failure(new ErrorCodeException(1));
+      }
     } else {
       println("INIT:" + key.space + "/" + key.key + ":" + patch.seq + "->" + patch.redo);
       ArrayList<RemoteDocumentUpdate> log = new ArrayList<>();

@@ -11,13 +11,13 @@ package org.adamalang.translator;
 
 import org.junit.Test;
 
-public class GeneratedCreationPolicyTests extends GeneratedBase {
+public class GeneratedInventionPolicyTests extends GeneratedBase {
   private String cached_ControlFlowOpen_1 = null;
   private String get_ControlFlowOpen_1() {
     if (cached_ControlFlowOpen_1 != null) {
       return cached_ControlFlowOpen_1;
     }
-    cached_ControlFlowOpen_1 = generateTestOutput(false, "ControlFlowOpen_1", "./test_code/CreationPolicy_ControlFlowOpen_failure.a");
+    cached_ControlFlowOpen_1 = generateTestOutput(false, "ControlFlowOpen_1", "./test_code/InventionPolicy_ControlFlowOpen_failure.a");
     return cached_ControlFlowOpen_1;
   }
 
@@ -45,52 +45,92 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
   public void stable_ControlFlowOpen_1() {
     String live = get_ControlFlowOpen_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:CreationPolicy_ControlFlowOpen_failure.a");
+    gold.append("Path:InventionPolicy_ControlFlowOpen_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":18},\"end\":{\"line\":4,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_create handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":18},\"end\":{\"line\":4,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_invent handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Simple_2 = null;
-  private String get_Simple_2() {
-    if (cached_Simple_2 != null) {
-      return cached_Simple_2;
+  private String cached_NotSimpleConstructor_2 = null;
+  private String get_NotSimpleConstructor_2() {
+    if (cached_NotSimpleConstructor_2 != null) {
+      return cached_NotSimpleConstructor_2;
     }
-    cached_Simple_2 = generateTestOutput(true, "Simple_2", "./test_code/CreationPolicy_Simple_success.a");
-    return cached_Simple_2;
+    cached_NotSimpleConstructor_2 = generateTestOutput(false, "NotSimpleConstructor_2", "./test_code/InventionPolicy_NotSimpleConstructor_failure.a");
+    return cached_NotSimpleConstructor_2;
+  }
+
+  @Test
+  public void testNotSimpleConstructorFailure() {
+    assertLiveFail(get_NotSimpleConstructor_2());
+  }
+
+  @Test
+  public void testNotSimpleConstructorNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_NotSimpleConstructor_2());
+  }
+
+  @Test
+  public void testNotSimpleConstructorExceptionFree() {
+    assertExceptionFree(get_NotSimpleConstructor_2());
+  }
+
+  @Test
+  public void testNotSimpleConstructorTODOFree() {
+    assertTODOFree(get_NotSimpleConstructor_2());
+  }
+
+  @Test
+  public void stable_NotSimpleConstructor_2() {
+    String live = get_NotSimpleConstructor_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:InventionPolicy_NotSimpleConstructor_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":18},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Invention requires all constructors to not accept messages (INVENT)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Simple_3 = null;
+  private String get_Simple_3() {
+    if (cached_Simple_3 != null) {
+      return cached_Simple_3;
+    }
+    cached_Simple_3 = generateTestOutput(true, "Simple_3", "./test_code/InventionPolicy_Simple_success.a");
+    return cached_Simple_3;
   }
 
   @Test
   public void testSimpleEmission() {
-    assertEmissionGood(get_Simple_2());
+    assertEmissionGood(get_Simple_3());
   }
 
   @Test
   public void testSimpleSuccess() {
-    assertLivePass(get_Simple_2());
+    assertLivePass(get_Simple_3());
   }
 
   @Test
   public void testSimpleGoodWillHappy() {
-    assertGoodWillHappy(get_Simple_2());
+    assertGoodWillHappy(get_Simple_3());
   }
 
   @Test
   public void testSimpleExceptionFree() {
-    assertExceptionFree(get_Simple_2());
+    assertExceptionFree(get_Simple_3());
   }
 
   @Test
   public void testSimpleTODOFree() {
-    assertTODOFree(get_Simple_2());
+    assertTODOFree(get_Simple_3());
   }
 
   @Test
-  public void stable_Simple_2() {
-    String live = get_Simple_2();
+  public void stable_Simple_3() {
+    String live = get_Simple_3();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:CreationPolicy_Simple_success.a");
+    gold.append("Path:InventionPolicy_Simple_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -115,13 +155,13 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Simple_2 extends LivingDocument {");
+    gold.append("\npublic class Simple_3 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Simple_2(DocumentMonitor __monitor) {");
+    gold.append("\n  public Simple_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -304,12 +344,12 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSimple_2 {");
+    gold.append("\n  private class DeltaSimple_3 {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSimple_2() {");
+    gold.append("\n    private DeltaSimple_3() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Simple_2 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Simple_3 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -332,8 +372,8 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    Simple_2 __self = this;");
-    gold.append("\n    DeltaSimple_2 __state = new DeltaSimple_2();");
+    gold.append("\n    Simple_3 __self = this;");
+    gold.append("\n    DeltaSimple_3 __state = new DeltaSimple_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -397,49 +437,50 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public static boolean __onCanCreate__0(StaticState __static_state, NtClient who) {");
-    gold.append("\n    return true;");
-    gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
-    gold.append("\n    boolean __result = false;");
-    gold.append("\n    return __result;");
-    gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
-    gold.append("\n  @Override");
-    gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
-    gold.append("\n    return false;");
-    gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanCreate(NtClient __client) {");
-    gold.append("\n    boolean __result = false;");
-    gold.append("\n    StaticState __static_state = new StaticState();");
-    gold.append("\n    if (__onCanCreate__0(__static_state, __client)) {");
-    gold.append("\n      __result = true;");
-    gold.append("\n    } else {");
+    gold.append("\n  public static boolean __onCanInvent__0(StaticState __static_state, NtClient who)");
+    gold.append("\n    {");
+    gold.append("\n      return true;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public boolean __onConnected(NtClient __cvalue) {");
+    gold.append("\n      boolean __result = false;");
+    gold.append("\n      return __result;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public boolean __onCanAssetAttached(NtClient __cvalue) {");
     gold.append("\n      return false;");
-    gold.append("\n    }return __result;");
+    gold.append("\n    }");
+    gold.append("\n    public static boolean __onCanCreate(NtClient __client) {");
+    gold.append("\n      return false;");
+    gold.append("\n    }");
+    gold.append("\n    public static boolean __onCanInvent(NtClient __client) {");
+    gold.append("\n      boolean __result = false;");
+    gold.append("\n      StaticState __static_state = new StaticState();");
+    gold.append("\n      if (__onCanInvent__0(__static_state, __client)) {");
+    gold.append("\n        __result = true;");
+    gold.append("\n      } else {");
+    gold.append("\n        return false;");
+    gold.append("\n      }return __result;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
+    gold.append("\n    @Override");
+    gold.append("\n    public String[] __getTests() {");
+    gold.append("\n      return new String[] {};");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n    @Override");
+    gold.append("\n    protected void __construct_intern(NtClient who, NtMessageBase message) {}");
+    gold.append("\n    @Override");
+    gold.append("\n    protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
+    gold.append("\n      __reader.skipValue();");
+    gold.append("\n      return NtMessageBase.NULL;");
+    gold.append("\n    }");
+    gold.append("\n    /* end of file */");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
-    gold.append("\n    return false;");
-    gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
-    gold.append("\n  @Override");
-    gold.append("\n  public String[] __getTests() {");
-    gold.append("\n    return new String[] {};");
-    gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
-    gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtClient who, NtMessageBase message) {}");
-    gold.append("\n  @Override");
-    gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
-    gold.append("\n    __reader.skipValue();");
-    gold.append("\n    return NtMessageBase.NULL;");
-    gold.append("\n  }");
-    gold.append("\n  /* end of file */");
-    gold.append("\n}");
     gold.append("\n");
     gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
     gold.append("\nBegin");
@@ -471,40 +512,40 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_TimeNotStatic_3 = null;
-  private String get_TimeNotStatic_3() {
-    if (cached_TimeNotStatic_3 != null) {
-      return cached_TimeNotStatic_3;
+  private String cached_TimeNotStatic_4 = null;
+  private String get_TimeNotStatic_4() {
+    if (cached_TimeNotStatic_4 != null) {
+      return cached_TimeNotStatic_4;
     }
-    cached_TimeNotStatic_3 = generateTestOutput(false, "TimeNotStatic_3", "./test_code/CreationPolicy_TimeNotStatic_failure.a");
-    return cached_TimeNotStatic_3;
+    cached_TimeNotStatic_4 = generateTestOutput(false, "TimeNotStatic_4", "./test_code/InventionPolicy_TimeNotStatic_failure.a");
+    return cached_TimeNotStatic_4;
   }
 
   @Test
   public void testTimeNotStaticFailure() {
-    assertLiveFail(get_TimeNotStatic_3());
+    assertLiveFail(get_TimeNotStatic_4());
   }
 
   @Test
   public void testTimeNotStaticNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_TimeNotStatic_3());
+    assertNotTerribleLineNumbers(get_TimeNotStatic_4());
   }
 
   @Test
   public void testTimeNotStaticExceptionFree() {
-    assertExceptionFree(get_TimeNotStatic_3());
+    assertExceptionFree(get_TimeNotStatic_4());
   }
 
   @Test
   public void testTimeNotStaticTODOFree() {
-    assertTODOFree(get_TimeNotStatic_3());
+    assertTODOFree(get_TimeNotStatic_4());
   }
 
   @Test
-  public void stable_TimeNotStatic_3() {
-    String live = get_TimeNotStatic_3();
+  public void stable_TimeNotStatic_4() {
+    String live = get_TimeNotStatic_4();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:CreationPolicy_TimeNotStatic_failure.a");
+    gold.append("Path:InventionPolicy_TimeNotStatic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");

@@ -1,0 +1,9 @@
+@can_invent (who) {
+  return true;
+}
+
+message X {}
+
+@construct (client who, X arg) {
+
+}

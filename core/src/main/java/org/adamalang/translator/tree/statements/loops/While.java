@@ -64,7 +64,11 @@ public class While extends Statement {
 
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("while (__goodwill(").append(condition.toArgs(true)).append(") && (");
+    if (environment.state.isStatic()) {
+      sb.append("while (__static_state.__goodwill(").append(condition.toArgs(true)).append(") && (");
+    } else {
+      sb.append("while (__goodwill(").append(condition.toArgs(true)).append(") && (");
+    }
     condition.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
     sb.append(")) ");
     code.writeJava(sb, environment);

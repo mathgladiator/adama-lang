@@ -69,23 +69,19 @@ public class LivingDocumentFactory {
     }
   }
 
-  public boolean canImplicitCreate(NtClient who) {
+  public boolean canInvent(NtClient who) throws ErrorCodeException {
     try {
       return (Boolean) inventionPolicyMethod.invoke(null, who);
     } catch (Exception ex) {
-      ex.printStackTrace();
-      LOGGER.convertedToErrorCode(ex, -1);
-      return false;
+      throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_INVENT, ex, LOGGER);
     }
   }
 
-  public boolean canCreate(NtClient who) {
+  public boolean canCreate(NtClient who) throws ErrorCodeException {
     try {
       return (Boolean) creationPolicyMethod.invoke(null, who);
     } catch (Exception ex) {
-      ex.printStackTrace();
-      LOGGER.convertedToErrorCode(ex, -1);
-      return false;
+      throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_CREATE, ex, LOGGER);
     }
   }
 
