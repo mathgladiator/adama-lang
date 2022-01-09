@@ -185,6 +185,11 @@ public class CoreService {
 
   /** connect the given person to the document hooking up a streamback */
   public void connect(NtClient who, Key key, Streamback stream) {
+    connect(who, key, stream, true);
+  }
+
+  /** internal: do the connect with retry */
+  private void connect(NtClient who, Key key, Streamback stream, boolean canRetry) {
     load(
         key,
         new Callback<>() {
@@ -195,6 +200,25 @@ public class CoreService {
 
           @Override
           public void failure(ErrorCodeException ex) {
+            if (ex.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
+              // TODO: ASK FACTORY IF THE DOCUMENT SUPPORTS IMPLICIT CREATION
+              boolean supportsImplicitCreation = false;
+              if (supportsImplicitCreation) {
+                create(who, key, "{}", null, new Callback<Void>() {
+                  @Override
+                  public void success(Void value) {
+                    connect(who, key, stream, false);
+                  }
+
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    // most likely a race, so try connect again without retry
+                    connect(who, key, stream, false);
+                  }
+                });
+                return;
+              }
+            }
             stream.failure(ex);
           }
         });

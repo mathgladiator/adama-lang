@@ -77,7 +77,7 @@ public class BlockingDataService implements DataService {
           int head_seq = rs.getInt(2);
           return new LookupResult(id, head_seq);
         } else {
-          throw new ErrorCodeException(ErrorCodes.LOOKUP_FAILED);
+          throw new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED);
         }
       } finally {
         rs.close();

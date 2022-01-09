@@ -62,6 +62,7 @@ public class ErrorCodes {
    * all DataService implementations must use this for a patch failure due to sequencer out of whack
    */
   public static final int UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF = 621580;
+  public static final int UNIVERSAL_LOOKUP_FAILED = 625676;
 
   public static final int INITIALIZE_FAILURE = 667658;
   public static final int PATCH_FAILURE = 640009;
@@ -73,7 +74,7 @@ public class ErrorCodes {
   public static final int COMPUTE_EMPTY_REWIND = 694287;
   public static final int COMPUTE_EMPTY_UNSEND = 650252;
   public static final int COMPUTE_UNKNOWN_METHOD = 656396;
-  public static final int LOOKUP_FAILED = 625676;
+
   public static final int FRONTEND_SPACE_ALREADY_EXISTS = 679948;
   public static final int FRONTEND_SPACE_DOESNT_EXIST = 625678;
   public static final int FRONTEND_PLAN_DOESNT_EXIST = 609294;
