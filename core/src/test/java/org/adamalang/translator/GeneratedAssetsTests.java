@@ -469,7 +469,10 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    if (__onCanAssetAttached__0(__cvalue)) __result = true;");
     gold.append("\n    return __result;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanCreate(NtClient __client, NtCreateContext __context) {");
+    gold.append("\n  public static boolean __onCanCreate(NtClient __client) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -991,7 +994,10 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanCreate(NtClient __client, NtCreateContext __context) {");
+    gold.append("\n  public static boolean __onCanCreate(NtClient __client) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");

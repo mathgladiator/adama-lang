@@ -26,7 +26,7 @@ import org.junit.Test;
 public class ServiceDocumentControlTests {
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
-      "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }";
+      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }";
 
   @Test
   public void rewind() throws Exception {

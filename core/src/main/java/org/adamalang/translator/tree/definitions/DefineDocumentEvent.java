@@ -82,6 +82,12 @@ public class DefineDocumentEvent extends Definition {
               String.format("The @can_create handler must return a boolean"),
               "DocumentEvents");
           return;
+        case AskInvention:
+          environment.document.createError(
+              this,
+              String.format("The @can_invent handler must return a boolean"),
+              "DocumentEvents");
+          return;
         case AskAssetAttachment:
           environment.document.createError(
               this,
@@ -93,7 +99,7 @@ public class DefineDocumentEvent extends Definition {
   }
 
   public Environment nextEnvironment(final Environment environment) {
-    if (which == DocumentEvent.AskCreation) {
+    if (which == DocumentEvent.AskCreation || which == DocumentEvent.AskInvention) {
       Environment next = environment.staticPolicy().scopeStatic();
       next.setReturnType(
           new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken));
@@ -103,26 +109,6 @@ public class DefineDocumentEvent extends Definition {
               .withPosition(this),
           true,
           this);
-      if (commaToken != null) {
-        StructureStorage createContextMessageStorage =
-            new StructureStorage(StorageSpecialization.Message, false, null);
-        createContextMessageStorage.add(
-            FieldDefinition.invent(
-                new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), "ip"));
-        createContextMessageStorage.add(
-            FieldDefinition.invent(
-                new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), "origin"));
-        createContextMessageStorage.add(
-            FieldDefinition.invent(
-                new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, null), "key"));
-        TyNativeMessage createContextType =
-            new TyNativeMessage(
-                TypeBehavior.ReadOnlyNativeValue,
-                null,
-                Token.WRAP("__CreateDocumentContext"),
-                createContextMessageStorage);
-        next.define(parameterNameToken.text, createContextType, true, this);
-      }
       return next;
     }
     boolean readonly = which == DocumentEvent.AskAssetAttachment;

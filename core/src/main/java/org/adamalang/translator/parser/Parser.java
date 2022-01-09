@@ -431,6 +431,7 @@ public class Parser {
                     "@disconnected",
                     "@attached",
                     "@can_attach",
+                    "@can_invent",
                     "@can_create"));
     if (op == null) {
       op =
@@ -482,6 +483,8 @@ public class Parser {
           return define_document_event(op, DocumentEvent.AskAssetAttachment);
         case "@can_create":
           return define_document_event(op, DocumentEvent.AskCreation);
+        case "@can_invent":
+          return define_document_event(op, DocumentEvent.AskInvention);
         case "import":
           {
             final var importName = tokens.pop();

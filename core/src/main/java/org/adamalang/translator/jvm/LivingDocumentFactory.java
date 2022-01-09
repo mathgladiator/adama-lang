@@ -11,11 +11,11 @@ package org.adamalang.translator.jvm;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.natives.NtCreateContext;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.sys.LivingDocument;
 
@@ -29,9 +29,11 @@ import java.util.HashMap;
 
 /** responsible for compiling java code into a LivingDocumentFactory */
 public class LivingDocumentFactory {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(LivingDocumentFactory.class);
   public final String reflection;
   private final Constructor<?> constructor;
   private final Method creationPolicyMethod;
+  private final Method inventionPolicyMethod;
 
   public LivingDocumentFactory(final String className, final String javaSource, String reflection)
       throws ErrorCodeException {
@@ -59,11 +61,31 @@ public class LivingDocumentFactory {
       final var loader = new ByteArrayClassLoader(classBytes);
       final Class<?> clazz = Class.forName(className, true, loader);
       constructor = clazz.getConstructor(DocumentMonitor.class);
-      creationPolicyMethod =
-          clazz.getMethod("__onCanCreate", NtClient.class, NtCreateContext.class);
+      creationPolicyMethod = clazz.getMethod("__onCanCreate", NtClient.class);
+      inventionPolicyMethod = clazz.getMethod("__onCanInvent", NtClient.class);
       this.reflection = reflection;
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
+    }
+  }
+
+  public boolean canImplicitCreate(NtClient who) {
+    try {
+      return (Boolean) inventionPolicyMethod.invoke(null, who);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      LOGGER.convertedToErrorCode(ex, -1);
+      return false;
+    }
+  }
+
+  public boolean canCreate(NtClient who) {
+    try {
+      return (Boolean) creationPolicyMethod.invoke(null, who);
+    } catch (Exception ex) {
+      ex.printStackTrace();
+      LOGGER.convertedToErrorCode(ex, -1);
+      return false;
     }
   }
 
@@ -107,7 +129,7 @@ public class LivingDocumentFactory {
     try {
       return (LivingDocument) constructor.newInstance(monitor);
     } catch (final Exception ex) {
-      throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_CREATE_OBJECT_DUE_TO_CATASTROPHE, ex);
+      throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_CREATE_OBJECT_DUE_TO_CATASTROPHE, ex, LOGGER);
     }
   }
 }

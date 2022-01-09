@@ -142,6 +142,10 @@ public class CoreService {
                 new Callback<LivingDocumentFactory>() {
                   @Override
                   public void success(LivingDocumentFactory factory) {
+                    if (!factory.canCreate(who)) {
+                      callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_REJECTED_CREATION));
+                      return;
+                    }
                     // bring the document into existence
                     DurableLivingDocument.fresh(
                         key,
@@ -199,27 +203,46 @@ public class CoreService {
           }
 
           @Override
-          public void failure(ErrorCodeException ex) {
-            if (ex.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
-              // TODO: ASK FACTORY IF THE DOCUMENT SUPPORTS IMPLICIT CREATION
-              boolean supportsImplicitCreation = false;
-              if (supportsImplicitCreation) {
-                create(who, key, "{}", null, new Callback<Void>() {
-                  @Override
-                  public void success(Void value) {
-                    connect(who, key, stream, false);
-                  }
+          public void failure(ErrorCodeException exOriginal) {
+            if (exOriginal.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
+              livingDocumentFactoryFactory.fetch(
+                  key,
+                  new Callback<LivingDocumentFactory>() {
+                    @Override
+                    public void success(LivingDocumentFactory factory) {
+                      boolean supportsImplicitCreation = factory.canImplicitCreate(who);
+                      if (supportsImplicitCreation) {
+                        create(
+                            who,
+                            key,
+                            "{}",
+                            null,
+                            new Callback<Void>() {
+                              @Override
+                              public void success(Void value) {
+                                connect(who, key, stream, false);
+                              }
 
-                  @Override
-                  public void failure(ErrorCodeException ex) {
-                    // most likely a race, so try connect again without retry
-                    connect(who, key, stream, false);
-                  }
-                });
-                return;
-              }
+                              @Override
+                              public void failure(ErrorCodeException ex) {
+                                if (ex.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE) {
+                                  connect(who, key, stream, false);
+                                } else {
+                                  stream.failure(exOriginal);
+                                }
+                              }
+                            });
+                      }
+                    }
+
+                    @Override
+                    public void failure(ErrorCodeException ex) {
+                      stream.failure(exOriginal);
+                    }
+                  });
+              return;
             }
-            stream.failure(ex);
+            stream.failure(exOriginal);
           }
         });
   }

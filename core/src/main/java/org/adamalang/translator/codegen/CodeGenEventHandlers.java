@@ -24,6 +24,7 @@ public class CodeGenEventHandlers {
     var assetAttachCount = 0;
     var askAssetAttachCount = 0;
     var askCreationCount = 0;
+    var askInventionCount = 0;
     for (final DefineDocumentEvent dce : environment.document.connectionEvents) {
       if (dce.which == DocumentEvent.ClientConnected) {
         sb.append(
@@ -49,11 +50,18 @@ public class CodeGenEventHandlers {
                 + askCreationCount
                 + "(NtClient "
                 + dce.clientVarToken.text
-                + ", NtCreateContext "
-                + dce.parameterNameToken.text
                 + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askCreationCount++;
+      } else if (dce.which == DocumentEvent.AskInvention) {
+        sb.append(
+            "public static boolean __onCanInvent__"
+                + askCreationCount
+                + "(NtClient "
+                + dce.clientVarToken.text
+                + ") ");
+        dce.code.writeJava(sb, dce.nextEnvironment(environment));
+        askInventionCount++;
       } else if (dce.which == DocumentEvent.AskAssetAttachment) {
         sb.append(
             "public boolean __onCanAssetAttached__"
@@ -120,13 +128,33 @@ public class CodeGenEventHandlers {
     sb.append("}").writeNewline();
 
     // inject the can create policy
-    sb.append("public static boolean __onCanCreate(NtClient __client, NtCreateContext __context) {")
+    sb.append("public static boolean __onCanCreate(NtClient __client) {")
         .tabUp()
         .writeNewline();
     if (askCreationCount > 0) {
       sb.append("boolean __result = false;").writeNewline();
       for (var k = 0; k < askCreationCount; k++) {
-        sb.append("if (__onCanCreate__" + k + "(__client, __context)) {").tabUp().writeNewline();
+        sb.append("if (__onCanCreate__" + k + "(__client)) {").tabUp().writeNewline();
+        sb.append("__result = true;").tabDown().writeNewline();
+        sb.append("} else {").tabUp().writeNewline();
+        sb.append("return false;").tabDown().writeNewline();
+        sb.append("}");
+      }
+      sb.append("return __result;");
+    } else {
+      sb.append("return false;");
+    }
+    sb.tabDown().writeNewline();
+    sb.append("}").writeNewline();
+
+    // inject the can create policy
+    sb.append("public static boolean __onCanInvent(NtClient __client) {")
+      .tabUp()
+      .writeNewline();
+    if (askInventionCount > 0) {
+      sb.append("boolean __result = false;").writeNewline();
+      for (var k = 0; k < askInventionCount; k++) {
+        sb.append("if (__onCanInvent__" + k + "(__client)) {").tabUp().writeNewline();
         sb.append("__result = true;").tabDown().writeNewline();
         sb.append("} else {").tabUp().writeNewline();
         sb.append("return false;").tabDown().writeNewline();

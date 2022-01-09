@@ -127,7 +127,7 @@ public class BlockingDataService implements DataService {
           return null;
         },
         callback,
-        ErrorCodes.INITIALIZE_FAILURE);
+        ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
   }
 
   private String whenOf(RemoteDocumentUpdate patch) {

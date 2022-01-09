@@ -27,9 +27,9 @@ import java.util.concurrent.TimeUnit;
 public class ServiceDeploymentTests {
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG_FROM =
-      "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_MSG_TO =
-      "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 5000; }";
+      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 5000; }";
 
   @Test
   public void deploy_happy() throws Exception {
@@ -215,7 +215,7 @@ public class ServiceDeploymentTests {
       factoryFactory.set(
           new LivingDocumentFactory(
               "Foo",
-              "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who, NtCreateContext context) { return false; } }",
+              "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; }  public static boolean __onCanInvent(NtClient who) { return false; } }",
               "{}"));
       CountDownLatch deployed = new CountDownLatch(1);
       service.deploy(

@@ -28,9 +28,9 @@ import java.util.HashMap;
 public class ServiceConnectTests {
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
-      "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_ATTACH =
-      "public int x; @connected(who) { x = 42; return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
+      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
 
   @Test
   public void connect_super_happy_connect() throws Exception {

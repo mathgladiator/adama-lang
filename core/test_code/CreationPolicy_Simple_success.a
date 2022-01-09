@@ -1,11 +1,3 @@
-@can_create (who, context) {
-  if (context.origin == "pi") {
-    return true;
-  }
-
-  if (context.ip == "127.0.0.1") {
-    return true;
-  }
-
-  return context.key == "cake";
+@can_create (who) {
+  return true;
 }
