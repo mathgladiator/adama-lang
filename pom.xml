@@ -10,8 +10,8 @@
     <packaging>pom</packaging>
     <licenses>
         <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/MIT</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -28,6 +28,7 @@
         <module>errors</module>
         <module>gossip</module>
         <module>common</module>
+        <module>overlord</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

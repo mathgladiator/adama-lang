@@ -24,8 +24,18 @@ service Adama {
 
   /** tear billing */
   rpc BillingExchange(stream BillingForward) returns (stream BillingReverse) {}
+
+  /** get a stream of heat signals */
+  rpc GetHeatStream(HeatRequest) returns (stream HeatPayload) {}
 }
 
+message HeatRequest {
+}
+
+message HeatPayload {
+  double cpu = 1;
+  double memory = 2;
+}
 
 message BillingBegin {
 }
