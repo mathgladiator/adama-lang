@@ -130,7 +130,7 @@ public class Service {
     DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "backend"));
     ThreadedDataService dataService =
         new ThreadedDataService(dataThreads, () -> new BlockingDataService(dataBase));
-    BillingPubSub billingPubSub = new BillingPubSub(deploymentFactoryBase);
+    BillingPubSub billingPubSub = new BillingPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreService service =
         new CoreService(
             deploymentFactoryBase,

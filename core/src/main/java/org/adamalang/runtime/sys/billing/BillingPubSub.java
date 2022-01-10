@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.sys.billing;
 
+import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.PredictiveInventory;
 
@@ -18,14 +19,18 @@ import java.util.function.Function;
 
 /** ultimately, billing will replicate to every caller and the billing system has to dedupe by id */
 public class BillingPubSub {
+  private final TimeSource time;
   private final DeploymentFactoryBase base;
   private final ArrayList<Function<ArrayList<Bill>, Boolean>> subscribers;
   private ArrayList<Bill> lastValue;
+  private long lastPublish;
 
-  public BillingPubSub(DeploymentFactoryBase base) {
+  public BillingPubSub(TimeSource time, DeploymentFactoryBase base) {
+    this.time = time;
     this.base = base;
     this.subscribers = new ArrayList<>();
     this.lastValue = null;
+    this.lastPublish = time.nowMilliseconds();
   }
 
   public synchronized void subscribe(Function<ArrayList<Bill>, Boolean> subscriber) {
@@ -44,12 +49,15 @@ public class BillingPubSub {
 
   public Consumer<HashMap<String, PredictiveInventory.Billing>> publisher() {
     return billings -> {
+      long now = time.nowMilliseconds();
+      long delta = now - lastPublish;
+      lastPublish = now;
       ArrayList<Bill> bill = new ArrayList<>();
       for (Map.Entry<String, PredictiveInventory.Billing> billing : billings.entrySet()) {
         String space = billing.getKey();
         String hash = base.hashOf(space);
         if (hash != null) {
-          bill.add(new Bill(space, hash, billing.getValue()));
+          bill.add(new Bill(time.nowMilliseconds(), delta, space, hash, billing.getValue()));
         }
       }
       publish(bill);

@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys.billing;
 
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.junit.Assert;
@@ -33,7 +34,7 @@ public class BillingPubSubTests {
             });
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     base.deploy("space", plan);
-    BillingPubSub pubsub = new BillingPubSub(base);
+    BillingPubSub pubsub = new BillingPubSub(new MockTime(), base);
     {
       AtomicInteger pubs = new AtomicInteger(0);
       CountDownLatch latch = new CountDownLatch(10);

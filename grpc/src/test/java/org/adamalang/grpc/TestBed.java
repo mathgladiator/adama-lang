@@ -57,7 +57,7 @@ public class TestBed implements AutoCloseable {
     base.deploy("space", plan);
 
     ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
-    this.billingPubSub = new BillingPubSub(base);
+    this.billingPubSub = new BillingPubSub(TimeSource.REAL_TIME, base);
 
     this.coreService =
         new CoreService(
