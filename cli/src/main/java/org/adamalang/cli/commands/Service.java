@@ -28,6 +28,7 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.backend.Deployments;
+import org.adamalang.overlord.Overlord;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.sys.billing.Bill;
@@ -91,6 +92,9 @@ public class Service {
       case "backend":
         serviceBackend(config);
         return;
+      case "overlord":
+        serviceOverlord(config);
+        return;
       case "frontend":
         serviceFrontend(config);
         return;
@@ -112,6 +116,23 @@ public class Service {
       System.out.println(Util.prefix("SERVICESUBCOMMAND:", Util.ANSI.Yellow));
       System.out.println("    " + Util.prefix("frontend", Util.ANSI.Green) + "          Spin up a WebSocket front-end node");
       System.out.println("    " + Util.prefix("backend", Util.ANSI.Green) + "           Spin up a gRPC back-end node");
+  }
+
+  public static void serviceOverlord(Config config) throws Exception {
+    int gossipPort = config.get_int("gossip_overlord_port", 8250);
+    String identityFileName = config.get_string("identity_filename", "me.identity");
+    File targetsPath = new File(config.get_string("targetsPath", "targets.json"));
+    MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
+    Engine engine =
+        new Engine(
+            identity,
+            TimeSource.REAL_TIME,
+            new HashSet<>(config.get_str_list("bootstrap")),
+            gossipPort,
+            GOSSIP_METRICS);
+    engine.start();
+    Client client = new Client(identity);
+    Overlord.execute(engine, client, targetsPath);
   }
 
   public static void serviceBackend(Config config) throws Exception {

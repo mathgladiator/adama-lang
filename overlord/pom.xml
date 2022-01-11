@@ -18,6 +18,11 @@
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
+            <artifactId>grpc</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.adamalang</groupId>
             <artifactId>data-mysql</artifactId>
             <version>0.2</version>
         </dependency>
