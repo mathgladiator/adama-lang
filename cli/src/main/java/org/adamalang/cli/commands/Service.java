@@ -13,6 +13,7 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
@@ -29,13 +30,16 @@ import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.backend.Deployments;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.runtime.sys.billing.Bill;
 import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.billing.DiskBillingBatchMaker;
 import org.adamalang.runtime.threads.ThreadedDataService;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.function.Consumer;
@@ -117,6 +121,7 @@ public class Service {
     int dataThreads = config.get_int("data_thread_count", 32);
     int coreThreads = config.get_int("service_thread_count", 4);
     String identityFileName = config.get_string("identity_filename", "me.identity");
+    String billingRootPath = config.get_string("billing_path", "billing");
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
     Engine engine =
         new Engine(
@@ -184,12 +189,22 @@ public class Service {
             ex.printStackTrace();
           }
         };
+    // TODO: make not null
+    File billingRoot = new File(billingRootPath);
+    billingRoot.mkdir();
+    DiskBillingBatchMaker billingBatchMaker = new DiskBillingBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot);
+    billingPubSub.subscribe((bills) -> {
+      for (Bill bill : bills) {
+        billingBatchMaker.write(bill);
+      }
+      return true;
+    });
 
     // prime the host with spaces
     scanForDeployments.accept("*");
     ServerNexus nexus =
         new ServerNexus(
-            identity, service, deploymentFactoryBase, scanForDeployments, billingPubSub, port, 4);
+            identity, service, deploymentFactoryBase, scanForDeployments, billingPubSub, billingBatchMaker, port, 4);
 
     Server server = new Server(nexus);
     server.start();

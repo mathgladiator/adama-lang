@@ -13,6 +13,7 @@ import org.adamalang.common.MachineIdentity;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.billing.DiskBillingBatchMaker;
 
 import java.util.function.Consumer;
 
@@ -20,6 +21,7 @@ public class ServerNexus {
   public final MachineIdentity identity;
   public final CoreService service;
   public final BillingPubSub billingPubSub;
+  public final DiskBillingBatchMaker billingBatchMaker;
   public final DeploymentFactoryBase deploymentFactoryBase;
   public final Consumer<String> scanForDeployments;
   public final int port;
@@ -31,6 +33,7 @@ public class ServerNexus {
       DeploymentFactoryBase deploymentFactoryBase,
       Consumer<String> scanForDeployments,
       BillingPubSub billingPubSub,
+      DiskBillingBatchMaker billingBatchMaker,
       int port,
       int handlerThreads) {
     this.identity = identity;
@@ -38,6 +41,7 @@ public class ServerNexus {
     this.deploymentFactoryBase = deploymentFactoryBase;
     this.scanForDeployments = scanForDeployments;
     this.billingPubSub = billingPubSub;
+    this.billingBatchMaker = billingBatchMaker;
     this.port = port;
     this.handlerThreads = handlerThreads;
   }

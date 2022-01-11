@@ -94,16 +94,17 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
           public void execute() throws Exception {
             switch (billingForward.getOperationCase()) {
               case BEGIN: {
-                String idFound = "";
-                String batchFound = "";
-                // IF FOUND
-                responseObserver.onNext(BillingReverse.newBuilder().setFound(BillingBatchFound.newBuilder().setId(idFound).setBatch(batchFound).build()).build());
-                // ELSE SEND onComplete ;; sendCompleteWhileInExecutor();
-                // TODO: find a billing batch
+                String id = nexus.billingBatchMaker.getNextAvailableBatchId();
+                if (id != null) {
+                  String batch = nexus.billingBatchMaker.getBatch(id);
+                  responseObserver.onNext(BillingReverse.newBuilder().setFound(BillingBatchFound.newBuilder().setId(id).setBatch(batch).build()).build());
+                } else {
+                  sendCompleteWhileInExecutor();
+                }
               }
               case REMOVE: {
                 BillingDeleteBill deleteBill = billingForward.getRemove();
-                // TODO: Issue the delete
+                nexus.billingBatchMaker.deleteBatch(deleteBill.getId());
                 responseObserver.onNext(BillingReverse.newBuilder().setRemoved(BillingBatchRemoved.newBuilder().build()).build());
               }
             }

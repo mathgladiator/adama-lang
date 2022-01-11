@@ -18,6 +18,7 @@ import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
+import org.adamalang.runtime.sys.billing.DiskBillingBatchMaker;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -73,7 +74,7 @@ public class TestBed implements AutoCloseable {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();
       }
-    }, billingPubSub, port, 2);
+    }, billingPubSub, new DiskBillingBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("x", "x").getParentFile()), port, 2);
     this.server = new Server(nexus);
   }
 
