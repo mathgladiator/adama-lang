@@ -54,4 +54,34 @@ public class ConfigObjectTests {
     child1.node.put("key", 123);
     Assert.assertEquals(123, child2.intOf("key", 42));
   }
+
+  @Test
+  public void defaultStrMustExist() {
+    ObjectNode root = Json.newJsonObject();
+    ConfigObject config = new ConfigObject(root);
+    try {
+      config.strOfButCrash("key", "NOOOOO");
+      Assert.fail();
+    } catch (NullPointerException npe) {
+      Assert.assertTrue(npe.getMessage().contains("NOOO"));
+    }
+    root.put("key", "yay");
+    Assert.assertEquals("yay", config.strOfButCrash("key", "nope"));
+  }
+
+  @Test
+  public void search() {
+    ObjectNode root = Json.newJsonObject();
+    ConfigObject config = new ConfigObject(root);
+    try {
+      config.childSearchMustExist("NOOO", "x", "y");
+      Assert.fail();
+    } catch (NullPointerException npe) {
+      Assert.assertTrue(npe.getMessage().contains("NOOO"));
+    }
+    root.putObject("y").put("key", 123);
+    Assert.assertEquals(123, config.childSearchMustExist("NOOO", "x", "y").intOf("key", 42));
+    root.putObject("x").put("key", 111);
+    Assert.assertEquals(111, config.childSearchMustExist("NOOO", "x", "y").intOf("key", 42));
+  }
 }

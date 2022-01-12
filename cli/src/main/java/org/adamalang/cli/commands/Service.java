@@ -172,7 +172,7 @@ public class Service {
             GOSSIP_METRICS);
     engine.start();
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
-    DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "backend"));
+    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
     ThreadedDataService dataService =
         new ThreadedDataService(dataThreads, () -> new BlockingDataService(dataBase));
     BillingPubSub billingPubSub = new BillingPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
@@ -258,9 +258,8 @@ public class Service {
   }
 
   public static void serviceFrontend(Config config) throws Exception {
-    DataBase dataBaseFront = new DataBase(new DataBaseConfig(config.read().toString(), "frontend"));
-    DataBase dataBaseBackend =
-        new DataBase(new DataBaseConfig(config.read().toString(), "backend"));
+    DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
+    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
 
     String identityFileName = config.get_string("identity_filename", "me.identity");
     int gossipPort = config.get_int("gossip_frontend_port", 8233);

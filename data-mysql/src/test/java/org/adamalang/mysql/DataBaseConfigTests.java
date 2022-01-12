@@ -9,6 +9,8 @@
  */
 package org.adamalang.mysql;
 
+import org.adamalang.common.ConfigObject;
+import org.adamalang.common.Json;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,7 +22,7 @@ public class DataBaseConfigTests {
   @Test
   public void missing_role() {
     try {
-      new DataBaseConfig("{}", "x");
+      new DataBaseConfig(new ConfigObject(Json.parseJsonObject("{}")), "x");
       Assert.fail();
     } catch (Exception ex) {
       Assert.assertTrue(ex instanceof NullPointerException);
@@ -31,7 +33,7 @@ public class DataBaseConfigTests {
   @Test
   public void missing_jdbc() {
     try {
-      new DataBaseConfig("{\"x\":{}}", "x");
+      new DataBaseConfig(new ConfigObject(Json.parseJsonObject("{\"x\":{}}")), "x");
       Assert.fail();
     } catch (Exception ex) {
       Assert.assertTrue(ex instanceof NullPointerException);
@@ -42,7 +44,7 @@ public class DataBaseConfigTests {
   @Test
   public void missing_user() {
     try {
-      new DataBaseConfig("{\"x\":{\"jdbc_url\":\"1\"}}", "x");
+      new DataBaseConfig(new ConfigObject(Json.parseJsonObject("{\"x\":{\"jdbc_url\":\"1\"}}")), "x");
       Assert.fail();
     } catch (Exception ex) {
       Assert.assertTrue(ex instanceof NullPointerException);
@@ -53,7 +55,7 @@ public class DataBaseConfigTests {
   @Test
   public void missing_password() {
     try {
-      new DataBaseConfig("{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\"}}", "x");
+      new DataBaseConfig(new ConfigObject(Json.parseJsonObject("{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\"}}")), "x");
       Assert.fail();
     } catch (Exception ex) {
       Assert.assertTrue(ex instanceof NullPointerException);
@@ -64,7 +66,7 @@ public class DataBaseConfigTests {
   @Test
   public void missing_database_name() {
     try {
-      new DataBaseConfig("{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\"}}", "x");
+      new DataBaseConfig(new ConfigObject(Json.parseJsonObject("{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\"}}")), "x");
       Assert.fail();
     } catch (Exception ex) {
       Assert.assertTrue(ex instanceof NullPointerException);
@@ -76,7 +78,7 @@ public class DataBaseConfigTests {
   public void ok() throws Exception {
     DataBaseConfig c =
         new DataBaseConfig(
-            "{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\"}}",
+            new ConfigObject(Json.parseJsonObject("{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\"}}")),
             "x");
     Assert.assertEquals("1", c.jdbcUrl);
     Assert.assertEquals("2", c.user);
@@ -88,7 +90,7 @@ public class DataBaseConfigTests {
   public void skipAndOk() throws Exception {
     DataBaseConfig c =
         new DataBaseConfig(
-            "{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"z\":123}",
+            new ConfigObject(Json.parseJsonObject("{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"z\":123}")),
             "x");
     Assert.assertEquals("1", c.jdbcUrl);
     Assert.assertEquals("2", c.user);
@@ -100,12 +102,12 @@ public class DataBaseConfigTests {
   public void skipAndNotOk() throws Exception {
     try {
       new DataBaseConfig(
-          "{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"any\":123}",
-          "x");
+          new ConfigObject(Json.parseJsonObject("{\"x\":{\"jdbc_url\":\"1\",\"user\":\"2\",\"password\":\"3\",\"database_name\":\"4\",\"z\":42},\"any\":123}")),
+          "any");
       Assert.fail();
-    } catch (Exception ex) {
+    } catch (NullPointerException ex) {
       Assert.assertTrue(ex instanceof RuntimeException);
-      Assert.assertTrue(ex.getMessage().contains(" should be an object"));
+      Assert.assertTrue(ex.getMessage().contains("role was not found"));
     }
   }
 
@@ -116,6 +118,6 @@ public class DataBaseConfigTests {
   }
 
   public static DataBaseConfig getLocalIntegrationConfig() throws Exception {
-    return new DataBaseConfig(Files.readString(new File("test.mysql.json").toPath()), "any");
+    return new DataBaseConfig(new ConfigObject(Json.parseJsonObject(Files.readString(new File("test.mysql.json").toPath()))), "any");
   }
 }

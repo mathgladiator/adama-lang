@@ -12,6 +12,7 @@ package org.adamalang.cli.commands;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
+import org.adamalang.common.ConfigObject;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.backend.BackendDataServiceInstaller;
@@ -31,12 +32,12 @@ public class Database {
                 return;
             }
             case "install-frontend": {
-                DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "frontend"));
+                DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
                 new FrontendManagementInstaller(dataBase).install();
                 return;
             }
             case "install-backend": {
-                DataBase dataBase = new DataBase(new DataBaseConfig(config.read().toString(), "backend"));
+                DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
                 new BackendDataServiceInstaller(dataBase).install();
                 return;
             }

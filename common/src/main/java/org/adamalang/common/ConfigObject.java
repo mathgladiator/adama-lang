@@ -40,6 +40,26 @@ public class ConfigObject {
     }
   }
 
+
+  public String strOfButCrash(String key, String errorMessage) {
+    JsonNode v = node.get(key);
+    if (v == null || v.isNull() || !v.isTextual()) {
+      throw new NullPointerException(errorMessage);
+    } else {
+      return v.textValue();
+    }
+  }
+
+  public ConfigObject childSearchMustExist(String message, String... keys) {
+    for (String key : keys) {
+      JsonNode v = node.get(key);
+      if (!(v == null || v.isNull() || !v.isObject())) {
+        return new ConfigObject((ObjectNode) v);
+      }
+    }
+    throw new NullPointerException(message);
+  }
+
   public ConfigObject child(String key) {
     JsonNode v = node.get(key);
     if (v == null || v.isNull() || !v.isObject()) {

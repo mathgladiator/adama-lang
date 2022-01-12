@@ -10,7 +10,8 @@
 package org.adamalang.mysql;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.common.ConfigObject;
+import org.adamalang.common.Json;
 
 /** defines the config for the mysql data service */
 public class DataBaseConfig {
@@ -18,65 +19,23 @@ public class DataBaseConfig {
   public final String user;
   public final String password;
   public final String databaseName;
+  public final int maxStatements;
+  public final int maxStatementsPerConnection;
+  public final int maxPoolSize;
+  public final int minPoolSize;
+  public final int initialPoolSize;
 
-  public DataBaseConfig(String json, String role) {
-    JsonStreamReader reader = new JsonStreamReader(json);
-    String _jdbcUrl = null;
-    String _user = null;
-    String _password = null;
-    String _databaseName = null;
-    boolean _foundRole = false;
-    if (reader.startObject()) {
-      while (reader.notEndOfObject()) {
-        String testRole = reader.fieldName();
-        if (role.equals(testRole) || "any".equals(testRole)) {
-          _foundRole = true;
-          if (reader.startObject()) {
-            while (reader.notEndOfObject()) {
-              switch (reader.fieldName()) {
-                case "jdbc_url":
-                  _jdbcUrl = reader.readString();
-                  break;
-                case "user":
-                  _user = reader.readString();
-                  break;
-                case "password":
-                  _password = reader.readString();
-                  break;
-                case "database_name":
-                  _databaseName = reader.readString();
-                  break;
-                default:
-                  reader.skipValue();
-              }
-            }
-          } else {
-            throw new RuntimeException("role '" + testRole + "'/'any' should be an object");
-          }
-        } else {
-          reader.skipValue();
-        }
-      }
-    }
-    if (!_foundRole) {
-      throw new NullPointerException("role was not found");
-    }
-    if (_jdbcUrl == null) {
-      throw new NullPointerException("jdbc_url was not present in config");
-    }
-    if (_user == null) {
-      throw new NullPointerException("user was not present in config");
-    }
-    if (_password == null) {
-      throw new NullPointerException("password was not present in config");
-    }
-    if (_databaseName == null) {
-      throw new NullPointerException("database_name was not present in config");
-    }
-    this.jdbcUrl = _jdbcUrl;
-    this.user = _user;
-    this.password = _password;
-    this.databaseName = _databaseName;
+  public DataBaseConfig(ConfigObject config, String role) {
+    ConfigObject roleConfig = config.childSearchMustExist("role was not found", role, "any");
+    this.jdbcUrl = roleConfig.strOfButCrash("jdbc_url", "jdbc_url was not present in config");
+    this.user = roleConfig.strOfButCrash("user", "user was not present in config");
+    this.password = roleConfig.strOfButCrash("password", "password was not present in config");
+    this.databaseName = roleConfig.strOfButCrash("database_name", "database_name was not present in config");
+    this.maxStatements = roleConfig.intOf("max_statements", 0);
+    this.maxStatementsPerConnection = roleConfig.intOf("max_statements_per_connection", 0);
+    this.maxPoolSize = roleConfig.intOf("max_pool_size", 32);
+    this.minPoolSize = roleConfig.intOf("min_pool_size", 16);
+    this.initialPoolSize = roleConfig.intOf("initial_pool_size", 16);
   }
 
   public ComboPooledDataSource createComboPooledDataSource() throws Exception {
@@ -85,13 +44,11 @@ public class DataBaseConfig {
     pool.setJdbcUrl(jdbcUrl);
     pool.setUser(user);
     pool.setPassword(password);
-
-    // TODO: make this part of the config
-    pool.setMaxStatements(0);
-    pool.setMaxStatementsPerConnection(0);
-    pool.setMaxPoolSize(32);
-    pool.setMinPoolSize(16);
-    pool.setInitialPoolSize(16);
+    pool.setMaxStatements(maxStatements);
+    pool.setMaxStatementsPerConnection(maxStatementsPerConnection);
+    pool.setMaxPoolSize(maxPoolSize);
+    pool.setMinPoolSize(minPoolSize);
+    pool.setInitialPoolSize(initialPoolSize);
     return pool;
   }
 }

@@ -9,6 +9,7 @@
  */
 package org.adamalang;
 
+import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.MachineIdentity;
@@ -47,7 +48,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public TestFrontEnd() throws Exception {
     codesSentToEmail = new ConcurrentHashMap<>();
     String config = Files.readString(new File("./test.mysql.json").toPath());
-    DataBase dataBase = new DataBase(new DataBaseConfig(config, "frontend"));
+    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config)), "frontend"));
     this.installer = new FrontendManagementInstaller(dataBase);
     installer.install();
     this.nexus = new ExternNexus(this, dataBase, dataBase, new Client(new MachineIdentity("{\"ip\":\"x\",\"key\":\"y\",\"cert\":\"z\",\"trust\":\"w\"}")));
