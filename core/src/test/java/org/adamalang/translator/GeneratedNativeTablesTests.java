@@ -647,6 +647,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  @Override");
@@ -1243,6 +1246,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1845,6 +1851,9 @@ public class GeneratedNativeTablesTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");

@@ -25,6 +25,7 @@ public class CodeGenEventHandlers {
     var askAssetAttachCount = 0;
     var askCreationCount = 0;
     var askInventionCount = 0;
+    var askSendWhileDisconnected = 0;
     for (final DefineDocumentEvent dce : environment.document.events) {
       if (dce.which == DocumentEvent.ClientConnected) {
         sb.append(
@@ -62,6 +63,15 @@ public class CodeGenEventHandlers {
                 + ")").tabUp().writeNewline();
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askInventionCount++;
+      } else if (dce.which == DocumentEvent.AskSendWhileDisconnected) {
+        sb.append(
+            "public static boolean __onCanSendWhileDisconnected__"
+                + askSendWhileDisconnected
+                + "(StaticState __static_state, NtClient "
+                + dce.clientVarToken.text
+                + ")").tabUp().writeNewline();
+        dce.code.writeJava(sb, dce.nextEnvironment(environment));
+        askSendWhileDisconnected++;
       } else if (dce.which == DocumentEvent.AskAssetAttachment) {
         sb.append(
             "public boolean __onCanAssetAttached__"
@@ -148,7 +158,7 @@ public class CodeGenEventHandlers {
     sb.tabDown().writeNewline();
     sb.append("}").writeNewline();
 
-    // inject the can create policy
+    // inject the can invent a topic when the document doesn't exist
     sb.append("public static boolean __onCanInvent(NtClient __client) {")
       .tabUp()
       .writeNewline();
@@ -157,6 +167,27 @@ public class CodeGenEventHandlers {
       sb.append("StaticState __static_state = new StaticState();").writeNewline();
       for (var k = 0; k < askInventionCount; k++) {
         sb.append("if (__onCanInvent__" + k + "(__static_state, __client)) {").tabUp().writeNewline();
+        sb.append("__result = true;").tabDown().writeNewline();
+        sb.append("} else {").tabUp().writeNewline();
+        sb.append("return false;").tabDown().writeNewline();
+        sb.append("}");
+      }
+      sb.append("return __result;");
+    } else {
+      sb.append("return false;");
+    }
+    sb.tabDown().writeNewline();
+    sb.append("}").writeNewline();
+
+    // inject the can send to the document when it doesn't exist
+    sb.append("public static boolean __onCanSendWhileDisconnected(NtClient __client) {")
+      .tabUp()
+      .writeNewline();
+    if (askSendWhileDisconnected > 0) {
+      sb.append("boolean __result = false;").writeNewline();
+      sb.append("StaticState __static_state = new StaticState();").writeNewline();
+      for (var k = 0; k < askSendWhileDisconnected; k++) {
+        sb.append("if (__onCanSendWhileDisconnected__" + k + "(__static_state, __client)) {").tabUp().writeNewline();
         sb.append("__result = true;").tabDown().writeNewline();
         sb.append("} else {").tabUp().writeNewline();
         sb.append("return false;").tabDown().writeNewline();

@@ -13,6 +13,7 @@ package org.adamalang.translator.tree.definitions;
 public enum DocumentEvent {
   AskCreation, //
   AskInvention, //
+  AskSendWhileDisconnected, //
   AskAssetAttachment, //
   AssetAttachment, //
   ClientConnected, //
