@@ -29,6 +29,7 @@
         <module>gossip</module>
         <module>common</module>
         <module>overlord</module>
+        <module>canary</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
