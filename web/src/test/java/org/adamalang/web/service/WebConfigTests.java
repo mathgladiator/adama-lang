@@ -10,6 +10,7 @@
 package org.adamalang.web.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.ConfigObject;
 import org.adamalang.common.Json;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,12 +20,12 @@ public class WebConfigTests {
     ObjectNode configNode = Json.newJsonObject();
     configNode.put("http_port", scenario.port);
     configNode.put("websocket_heart_beat_ms", 250);
-    return new WebConfig(configNode);
+    return new WebConfig(new ConfigObject(configNode));
   }
 
   @Test
   public void defaults() {
-    WebConfig webConfig = new WebConfig(Json.newJsonObject());
+    WebConfig webConfig = new WebConfig(new ConfigObject(Json.newJsonObject()));
     Assert.assertEquals("/~health_check_lb", webConfig.healthCheckPath);
     Assert.assertEquals(1048576, webConfig.maxWebSocketFrameSize);
     Assert.assertEquals(2500, webConfig.timeoutWebsocketHandshake);
@@ -42,7 +43,7 @@ public class WebConfigTests {
     node.put("websocket_handshake_timeout_ms", 123);
     node.put("http_health_check_path", "HEALTH");
     node.put("websocket_heart_beat_ms", 666);
-    WebConfig webConfig = new WebConfig(node);
+    WebConfig webConfig = new WebConfig(new ConfigObject(node));
     Assert.assertEquals(666, webConfig.heartbeatTimeMilliseconds);
     Assert.assertEquals("HEALTH", webConfig.healthCheckPath);
     Assert.assertEquals(7000, webConfig.maxWebSocketFrameSize);

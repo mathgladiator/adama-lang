@@ -9,8 +9,8 @@
  */
 package org.adamalang.web.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.ConfigObject;
 
 public class WebConfig {
   public final String healthCheckPath;
@@ -20,33 +20,14 @@ public class WebConfig {
   public final int timeoutWebsocketHandshake;
   public final int heartbeatTimeMilliseconds;
 
-  public WebConfig(ObjectNode node) {
+  public WebConfig(ConfigObject config) {
     // HTTP properties
-    this.port = intOf(node, "http_port", 8080);
-    this.maxContentLengthSize = intOf(node, "http_max_content_length_size", 4194304);
-    this.healthCheckPath = strOf(node, "http_health_check_path", "/~health_check_lb");
-
+    this.port = config.intOf("http_port", 8080);
+    this.maxContentLengthSize = config.intOf("http_max_content_length_size", 4194304);
+    this.healthCheckPath = config.strOf("http_health_check_path", "/~health_check_lb");
     // WebSocket properties
-    this.timeoutWebsocketHandshake = intOf(node, "websocket_handshake_timeout_ms", 2500);
-    this.maxWebSocketFrameSize = intOf(node, "websocket_max_frame_size", 1048576);
-    this.heartbeatTimeMilliseconds = intOf(node, "websocket_heart_beat_ms", 1000);
-  }
-
-  private static int intOf(ObjectNode node, String key, int defaultValue) {
-    JsonNode v = node.get(key);
-    if (v == null || v.isNull() || !v.isInt()) {
-      return defaultValue;
-    } else {
-      return v.intValue();
-    }
-  }
-
-  private static String strOf(ObjectNode node, String key, String defaultValue) {
-    JsonNode v = node.get(key);
-    if (v == null || v.isNull() || !v.isTextual()) {
-      return defaultValue;
-    } else {
-      return v.textValue();
-    }
+    this.timeoutWebsocketHandshake = config.intOf("websocket_handshake_timeout_ms", 2500);
+    this.maxWebSocketFrameSize = config.intOf("websocket_max_frame_size", 1048576);
+    this.heartbeatTimeMilliseconds = config.intOf("websocket_heart_beat_ms", 1000);
   }
 }

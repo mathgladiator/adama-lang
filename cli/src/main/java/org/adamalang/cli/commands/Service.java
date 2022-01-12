@@ -11,10 +11,7 @@ package org.adamalang.cli.commands;
 
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
-import org.adamalang.common.ExceptionRunnable;
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.TimeSource;
+import org.adamalang.common.*;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.extern.prometheus.PrometheusBase;
@@ -89,6 +86,9 @@ public class Service {
     String command = Util.normalize(args[0]);
     String[] next = Util.tail(args);
     switch (command) {
+      case "auto":
+        serviceAuto(config);
+        return;
       case "backend":
         serviceBackend(config);
         return;
@@ -104,6 +104,23 @@ public class Service {
     }
   }
 
+  public static void serviceAuto(Config config) throws Exception{
+    String role = config.get_string("role", "none");
+    switch (role) {
+      case "backend":
+        serviceBackend(config);
+        return;
+      case "overlord":
+        serviceOverlord(config);
+        return;
+      case "frontend":
+        serviceFrontend(config);
+        return;
+      default:
+        System.err.println("invalid role:" + role);
+    }
+  }
+
   public static void serviceHelp(String[] next) {
       System.out.println(Util.prefix("Spin up a service.", Util.ANSI.Green));
       System.out.println("");
@@ -114,8 +131,10 @@ public class Service {
       System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
       System.out.println("");
       System.out.println(Util.prefix("SERVICESUBCOMMAND:", Util.ANSI.Yellow));
-      System.out.println("    " + Util.prefix("frontend", Util.ANSI.Green) + "          Spin up a WebSocket front-end node");
+      System.out.println("    " + Util.prefix("auto", Util.ANSI.Green) + "              The config will decide the role");
       System.out.println("    " + Util.prefix("backend", Util.ANSI.Green) + "           Spin up a gRPC back-end node");
+      System.out.println("    " + Util.prefix("frontend", Util.ANSI.Green) + "          Spin up a WebSocket front-end node");
+      System.out.println("    " + Util.prefix("overlord", Util.ANSI.Green) + "          Spin up the cluster overlord");
   }
 
   public static void serviceOverlord(Config config) throws Exception {
@@ -254,7 +273,7 @@ public class Service {
             gossipPort,
             GOSSIP_METRICS);
     engine.start();
-    WebConfig webConfig = new WebConfig(config.get_or_create_child("web"));
+    WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
 
     // TODO: have some sense of health checking in the web package
     /*
