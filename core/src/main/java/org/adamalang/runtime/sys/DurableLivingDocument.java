@@ -191,7 +191,7 @@ public class DurableLivingDocument {
 
   private void executeNow(IngestRequest request) {
     try {
-      final var change = document.__transact(request.request);
+      final var change = document.__transact(request.request, currentFactory);
       inflightPatch = true;
 
       if (change.update.requiresFutureInvalidation) {
@@ -355,7 +355,7 @@ public class DurableLivingDocument {
         writer.writeFastString(entropy);
       }
       writer.endObject();
-      final var change = document.__transact(writer.toString());
+      final var change = document.__transact(writer.toString(), currentFactory);
       base.service.initialize(
           key,
           change.update,

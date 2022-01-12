@@ -136,7 +136,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("nope", A);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(132116, drre.code);
     }
@@ -149,7 +149,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("construct", A);
     writer.endObject();
     try {
-      document.__transact(writer.toString());
+      document.__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(196624, drre.code);
     }
@@ -684,6 +684,16 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void blind_send_with_policy() throws Exception {
+    final var setup = new RealDocumentSetup("@can_send_while_disconnected(who) { return true; } @construct {} @connected(who) { return true; } message M {} channel<M> foo;");
+    setup.document.send(
+        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(3));
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(5));
+    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(7));
+    setup.assertCompare();
+  }
+
+  @Test
   public void multi_views() throws Exception {
     final var setup =
         new RealDocumentSetup(
@@ -736,7 +746,7 @@ public class LivingDocumentTests {
     writer.injectJson("{}");
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(132111, drre.code);
     }
@@ -755,7 +765,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("send", A);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(160268, drre.code);
     }
@@ -776,7 +786,7 @@ public class LivingDocumentTests {
     writer.writeFastString("foo");
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(184332, drre.code);
     }
@@ -797,7 +807,7 @@ public class LivingDocumentTests {
     writer.writeFastString("foo");
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(122896, drre.code);
     }
@@ -816,7 +826,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("connect", null);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(122896, drre.code);
     }
@@ -835,7 +845,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("disconnect", null);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(122896, drre.code);
     }
@@ -854,7 +864,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("attach", null);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(122896, drre.code);
     }
@@ -873,7 +883,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("apply", null);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(122896, drre.code);
     }
@@ -892,7 +902,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("expire", null);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(146448, drre.code);
     }
@@ -911,7 +921,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("apply", A);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(193055, drre.code);
     }
@@ -1064,7 +1074,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("attach", A);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
       Assert.fail();
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(143380, drre.code);
@@ -1079,7 +1089,7 @@ public class LivingDocumentTests {
     writer.writeInteger(112);
     writer.endObject();
     try {
-      setup.document.document().__transact(writer.toString());
+      setup.document.document().__transact(writer.toString(), setup.factory);
       Assert.fail();
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(184335, drre.code);
@@ -1117,7 +1127,7 @@ public class LivingDocumentTests {
       writer.endObject();
       writer.endObject();
       try {
-        document.__transact(writer.toString());
+        document.__transact(writer.toString(), setup.factory);
         Assert.fail();
       } catch (final ErrorCodeException drre) {
         Assert.assertEquals(132111, drre.code);
@@ -1150,7 +1160,7 @@ public class LivingDocumentTests {
     writer.beginObject();
     writer.endObject();
     try {
-      document.__transact(writer.toString());
+      document.__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(194575, drre.code);
     }
@@ -1167,7 +1177,7 @@ public class LivingDocumentTests {
     writer.writeString("noop");
     writer.endObject();
     try {
-      document.__transact(writer.toString());
+      document.__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(143889, drre.code);
     }
@@ -1181,7 +1191,7 @@ public class LivingDocumentTests {
     final var writer = setup.document.forge("construct", null);
     writer.endObject();
     try {
-      document.__transact(writer.toString());
+      document.__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(122896, drre.code);
     }

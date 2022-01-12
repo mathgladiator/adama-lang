@@ -215,7 +215,7 @@ public class ServiceDeploymentTests {
       factoryFactory.set(
           new LivingDocumentFactory(
               "Foo",
-              "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; }  public static boolean __onCanInvent(NtClient who) { return false; } }",
+              "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; } public static boolean __onCanInvent(NtClient who) { return false; } public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; } }",
               "{}"));
       CountDownLatch deployed = new CountDownLatch(1);
       service.deploy(

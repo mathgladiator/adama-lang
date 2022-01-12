@@ -27,6 +27,7 @@ import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
+import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.*;
 
@@ -634,7 +635,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: core API (New Version in Draft) */
-  public LivingDocumentChange __transact(final String requestJson) throws ErrorCodeException {
+  public LivingDocumentChange __transact(final String requestJson, LivingDocumentFactory factory) throws ErrorCodeException {
     final var reader = new JsonStreamReader(requestJson);
     String command = null;
     Long timestamp = null;
@@ -743,7 +744,7 @@ public abstract class LivingDocument implements RxParent {
         if (message == null) {
           throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE);
         }
-        return __transaction_send(requestJson, who, marker, channel, timestamp, message);
+        return __transaction_send(requestJson, who, marker, channel, timestamp, message, factory);
       case "expire":
         if (limit == null) {
           throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT);
@@ -1115,7 +1116,8 @@ public abstract class LivingDocument implements RxParent {
       final String marker,
       final String channel,
       final long timestamp,
-      final Object message)
+      final Object message,
+      final LivingDocumentFactory factory)
       throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
@@ -1132,9 +1134,8 @@ public abstract class LivingDocument implements RxParent {
       }
       __random = new Random(Long.parseLong(__entropy.get()));
       // they must be connected
-      if (!__clients.containsKey(who)) {
-        throw new ErrorCodeException(
-            ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
+      if (!__clients.containsKey(who) && !factory.canSendWhileDisconnected(who)) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
       }
       // create the delta
       final var forward = new JsonStreamWriter();

@@ -20,7 +20,7 @@ public class LivingDocumentFactoryTests {
     final var compiler =
         new LivingDocumentFactory(
             "Foo",
-            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; } public static boolean __onCanInvent(NtClient who) { return false; } }",
+            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; } public static boolean __onCanInvent(NtClient who) { return false; } public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; } }",
             "{}");
     var success = false;
     try {
@@ -52,7 +52,7 @@ public class LivingDocumentFactoryTests {
     final var compiler =
         new LivingDocumentFactory(
             "Foo",
-            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; }  public static boolean __onCanInvent(NtClient who) { return false; }}",
+            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; }  public static boolean __onCanInvent(NtClient who) { return false; } public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; }}",
             "{}");
     var success = false;
     try {
@@ -69,14 +69,13 @@ public class LivingDocumentFactoryTests {
     try {
       new LivingDocumentFactory(
           "Foo",
-          "import org.adamalang.runtime.natives.*; class Foo { public static boolean __onCanCreate(NtClient who) { return false; } public static boolean __onCanInvent(NtClient who) { return false; } }",
+          "import org.adamalang.runtime.natives.*; class Foo { public static boolean __onCanCreate(NtClient who) { return false; } public static boolean __onCanInvent(NtClient who) { return false; } public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; } }",
           "{}");
       Assert.fail();
     } catch (final ErrorCodeException nsme) {
       Assert.assertEquals(198174, nsme.code);
     }
   }
-
 
   @Test
   public void invalidPolicies() throws Exception {
@@ -87,6 +86,7 @@ public class LivingDocumentFactoryTests {
             "public Foo(final DocumentMonitor __monitor) { }" +
             "public static boolean __onCanCreate(NtClient who) { throw new NullPointerException(); }" +
             "public static boolean __onCanInvent(NtClient who) { throw new NullPointerException(); }" +
+            "public static boolean __onCanSendWhileDisconnected(NtClient who) { throw new NullPointerException(); }" +
             "}",
         "{}");
 
@@ -94,22 +94,54 @@ public class LivingDocumentFactoryTests {
       factory.canCreate(NtClient.NO_ONE);
       Assert.fail();
     } catch (ErrorCodeException ex) {
-
+      Assert.assertEquals(180858, ex.code);
     }
     try {
       factory.canInvent(NtClient.NO_ONE);
       Assert.fail();
-    } catch (ErrorCodeException ece) {
+    } catch (ErrorCodeException ex) {
+      Assert.assertEquals(146558, ex.code);
+    }
+    try {
+      factory.canSendWhileDisconnected(NtClient.NO_ONE);
+      Assert.fail();
+    } catch (ErrorCodeException ex) {
+      Assert.assertEquals(148095, ex.code);
     }
   }
 
-
   @Test
-  public void noPolicy() throws Exception {
+  public void missingPolicy1() throws Exception {
     try {
       new LivingDocumentFactory(
           "Foo",
           "import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} }",
+          "{}");
+      Assert.fail();
+    } catch (final ErrorCodeException nsme) {
+      Assert.assertEquals(198174, nsme.code);
+    }
+  }
+
+  @Test
+  public void missingPolicy2() throws Exception {
+    try {
+      new LivingDocumentFactory(
+          "Foo",
+          "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { throw new NullPointerException(); } }",
+          "{}");
+      Assert.fail();
+    } catch (final ErrorCodeException nsme) {
+      Assert.assertEquals(198174, nsme.code);
+    }
+  }
+
+  @Test
+  public void missingPolicy3() throws Exception {
+    try {
+      new LivingDocumentFactory(
+          "Foo",
+          "import org.adamalang.runtime.natives.*; import org.adamalang.runtime.contracts.DocumentMonitor; class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { throw new NullPointerException(); } public static boolean __onCanSendWhileDisconnected(NtClient who) { throw new NullPointerException(); } }",
           "{}");
       Assert.fail();
     } catch (final ErrorCodeException nsme) {

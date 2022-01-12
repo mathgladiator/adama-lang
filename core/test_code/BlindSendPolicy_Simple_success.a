@@ -1,0 +1,3 @@
+@can_send_while_disconnected (who) {
+  return true;
+}

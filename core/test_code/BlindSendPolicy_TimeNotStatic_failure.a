@@ -1,0 +1,4 @@
+@can_send_while_disconnected (who) {
+  let x = Time.now();
+  return false;
+}

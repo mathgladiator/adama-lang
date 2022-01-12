@@ -88,6 +88,12 @@ public class DefineDocumentEvent extends Definition {
               String.format("The @can_invent handler must return a boolean"),
               "DocumentEvents");
           return;
+        case AskSendWhileDisconnected:
+          environment.document.createError(
+              this,
+              String.format("The @can_send_while_disconnected handler must return a boolean"),
+              "DocumentEvents");
+          return;
         case AskAssetAttachment:
           environment.document.createError(
               this,
@@ -99,7 +105,7 @@ public class DefineDocumentEvent extends Definition {
   }
 
   public Environment nextEnvironment(final Environment environment) {
-    if (which == DocumentEvent.AskCreation || which == DocumentEvent.AskInvention) {
+    if (which == DocumentEvent.AskCreation || which == DocumentEvent.AskInvention || which == DocumentEvent.AskSendWhileDisconnected) {
       Environment next = environment.staticPolicy().scopeStatic();
       next.setReturnType(
           new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken));

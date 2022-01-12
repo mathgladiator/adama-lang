@@ -34,6 +34,7 @@ public class LivingDocumentFactory {
   private final Constructor<?> constructor;
   private final Method creationPolicyMethod;
   private final Method inventionPolicyMethod;
+  private final Method canSendWhileDisconnectPolicyMethod;
 
   public LivingDocumentFactory(final String className, final String javaSource, String reflection)
       throws ErrorCodeException {
@@ -63,6 +64,7 @@ public class LivingDocumentFactory {
       constructor = clazz.getConstructor(DocumentMonitor.class);
       creationPolicyMethod = clazz.getMethod("__onCanCreate", NtClient.class);
       inventionPolicyMethod = clazz.getMethod("__onCanInvent", NtClient.class);
+      canSendWhileDisconnectPolicyMethod = clazz.getMethod("__onCanSendWhileDisconnected", NtClient.class);
       this.reflection = reflection;
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
@@ -82,6 +84,14 @@ public class LivingDocumentFactory {
       return (Boolean) creationPolicyMethod.invoke(null, who);
     } catch (Exception ex) {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_CREATE, ex, LOGGER);
+    }
+  }
+
+  public boolean canSendWhileDisconnected(NtClient who) throws ErrorCodeException {
+    try {
+      return (Boolean) canSendWhileDisconnectPolicyMethod.invoke(null, who);
+    } catch (Exception ex) {
+      throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_SEND_WHILE_DISCONNECTED, ex, LOGGER);
     }
   }
 
@@ -117,7 +127,7 @@ public class LivingDocumentFactory {
     writer.beginObject();
     writer.endObject();
     writer.endObject();
-    candidate.__transact(writer.toString());
+    candidate.__transact(writer.toString(), this);
     return candidate;
   }
 

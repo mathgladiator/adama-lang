@@ -1,0 +1,5 @@
+@can_send_while_disconnected (who) {
+  if (1 == 2) {
+    return false;
+  }
+}
