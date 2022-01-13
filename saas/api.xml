@@ -245,12 +245,36 @@
         </documentation>
     </field-definition>
 
-    <field-definition name="created" type="string">
+    <field-definition name="key" type="string">
         <documentation>
-            When the space was created
+            The key
         </documentation>
     </field-definition>
 
+    <field-definition name="created" type="string">
+        <documentation>
+            When the item was created
+        </documentation>
+    </field-definition>
+
+    <field-definition name="updated" type="string">
+        <documentation>
+            When the item was created
+        </documentation>
+    </field-definition>
+
+    <field-definition name="seq" type="int">
+        <documentation>
+            The sequencer for the item
+        </documentation>
+    </field-definition>
+
+    <responder name="key-listing" stream="true">
+        <field name="key"/>
+        <field name="created"/>
+        <field name="updated"/>
+        <field name="seq"/>
+    </responder>
 
     <responder name="space-listing" stream="true">
         <field name="space"/>
@@ -445,9 +469,10 @@
         </documentation>
     </method>
 
-    <method name="document/list" responder="simple">
+    <method name="document/list" responder="key-listing">
         <parameter name="identity"/>
         <parameter name="space"/>
+        <parameter name="marker"/>
         <parameter name="limit"/>
         <documentation>
         </documentation>

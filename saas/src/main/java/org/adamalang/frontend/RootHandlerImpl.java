@@ -20,6 +20,7 @@ import org.adamalang.grpc.client.contracts.CreateCallback;
 import org.adamalang.grpc.client.contracts.SeqCallback;
 import org.adamalang.grpc.client.contracts.SimpleEvents;
 import org.adamalang.grpc.client.sm.Connection;
+import org.adamalang.mysql.backend.BackendOperations;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
@@ -295,9 +296,24 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(SpaceDeleteRequest request, SimpleResponder responder) {
-    // TODO: see if the space is empty, if not then reject
-    // TODO: this requires document listing to work which is tricky due to the bifurication
-    responder.error(new ErrorCodeException(-1));
+    try {
+      if (request.policy.canUserDeleteSpace(request.who)) {
+        if (BackendOperations.list(nexus.dataBaseBackend, request.space, null, 1).size() > 0) {
+          responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
+          return;
+        }
+        // change the owner to 0 to block creation
+        // TODO: a periodic clean up job will need to happen to delete spaces with owner 0
+        //       we do this now for privacy reasons such that a data race doesn't leak information
+        Spaces.changePrimaryOwner(nexus.dataBaseBackend, request.policy.id, request.policy.owner, 0);
+        // remove all machines handling this
+        Deployments.undeployAll(nexus.dataBaseDeployments, request.space);
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NO_PERMISSION));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
   }
 
   @Override
@@ -377,16 +393,24 @@ public class RootHandlerImpl implements RootHandler {
         }
       });
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
   @Override
-  public void handle(DocumentListRequest request, SimpleResponder responder) {
-    // TODO: find any appropriate Adama host (pick any, but this does depend on the underlying data
-    // model)
-    // TODO: execute the list
+  public void handle(DocumentListRequest request, KeyListingResponder responder) {
+    try {
+      if (request.policy.canUserSeeKeyListing(request.who)) {
+        for (BackendOperations.DocumentIndex item : BackendOperations.list(nexus.dataBaseBackend, request.space, request.marker, request.limit)) {
+          responder.next(item.key, item.created, item.updated, item.seq);
+        }
+        responder.finish();
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_LIST_DOCUMENTS_NO_PERMISSION));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
   }
 
   @Override

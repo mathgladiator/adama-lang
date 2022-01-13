@@ -41,7 +41,7 @@ public interface RootHandler {
 
   public void handle(DocumentCreateRequest request, SimpleResponder responder);
 
-  public void handle(DocumentListRequest request, SimpleResponder responder);
+  public void handle(DocumentListRequest request, KeyListingResponder responder);
 
   public DocumentStreamHandler handle(ConnectionCreateRequest request, DataResponder responder);
 

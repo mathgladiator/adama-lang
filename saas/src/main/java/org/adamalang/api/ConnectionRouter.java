@@ -311,7 +311,7 @@ public class ConnectionRouter {
             DocumentListRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(DocumentListRequest resolved) {
-                handler.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                handler.handle(resolved, new KeyListingResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
               }
               @Override
               public void failure(ErrorCodeException ex) {

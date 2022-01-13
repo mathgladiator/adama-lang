@@ -24,7 +24,7 @@ public class SpacePolicy {
     this.developers = space.developers;
   }
 
-  public boolean canUserChangeOwner(AuthenticatedUser user) {
+  public boolean canUserDeleteSpace(AuthenticatedUser user) {
     if (user.source == AuthenticatedUser.Source.Adama) {
       return user.id == owner;
     }
@@ -49,6 +49,16 @@ public class SpacePolicy {
   }
 
   public boolean canUserSeeReflection(AuthenticatedUser user) {
+    if (user.source == AuthenticatedUser.Source.Adama) {
+      if (user.id == owner) {
+        return true;
+      }
+      return developers.contains(user.id);
+    }
+    return false;
+  }
+
+  public boolean canUserSeeKeyListing(AuthenticatedUser user) {
     if (user.source == AuthenticatedUser.Source.Adama) {
       if (user.id == owner) {
         return true;
