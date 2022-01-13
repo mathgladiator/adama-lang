@@ -205,6 +205,21 @@ public class Spaces {
     }
   }
 
+  public static boolean delete(DataBase dataBase, int spaceId, int owner) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql =
+          new StringBuilder()
+              .append("DELETE FROM `")
+              .append(dataBase.databaseName)
+              .append("`.`spaces` WHERE `id`=")
+              .append(spaceId)
+              .append(" AND `owner`=")
+              .append(owner)
+              .toString();
+      return DataBase.executeUpdate(connection, sql) > 0;
+    }
+  }
+
   public static void setRole(DataBase dataBase, int spaceId, int userId, Role role)
       throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {

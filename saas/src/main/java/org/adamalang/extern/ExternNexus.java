@@ -9,7 +9,6 @@
  */
 package org.adamalang.extern;
 
-import org.adamalang.common.ExceptionLogger;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
 
@@ -18,12 +17,14 @@ public class ExternNexus {
   public final Email email;
   public final DataBase dataBaseManagement;
   public final DataBase dataBaseDeployments;
+  public final DataBase dataBaseBackend;
   public final Client client;
 
-  public ExternNexus(Email email, DataBase dataBaseManagement, DataBase dataBaseDeployments, Client client) {
+  public ExternNexus(Email email, DataBase dataBaseManagement, DataBase dataBaseDeployments,  DataBase dataBaseBackend, Client client) {
     this.email = email;
     this.dataBaseManagement = dataBaseManagement;
     this.dataBaseDeployments = dataBaseDeployments;
+    this.dataBaseBackend = dataBaseBackend;
     this.client = client;
   }
 

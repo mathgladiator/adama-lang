@@ -7,12 +7,14 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.backend;
+package org.adamalang.mysql.deployments;
 
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
+import org.adamalang.mysql.backend.BackendDataServiceInstaller;
+import org.adamalang.mysql.deployments.Deployments;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +25,7 @@ public class DeploymentsTests {
   public void flow() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
     try (DataBase dataBase = new DataBase(dataBaseConfig)) {
-      BackendDataServiceInstaller installer = new BackendDataServiceInstaller(dataBase);
+      DeployedInstaller installer = new DeployedInstaller(dataBase);
       try {
         installer.install();
         ArrayList<Deployments.Deployment> listing = Deployments.list(dataBase, "127.0.0.1:230");
@@ -62,6 +64,14 @@ public class DeploymentsTests {
         } catch (ErrorCodeException ec) {
           Assert.assertEquals(643084, ec.code);
         }
+        Assert.assertEquals(0, Deployments.list(dataBase, "127.0.0.1:123").size());
+        Deployments.deploy(dataBase, "spaceX", "127.0.0.1:123", "hash1x", "plan1x");
+        Deployments.deploy(dataBase, "spaceX", "127.0.0.1:124", "hash1x", "plan1x");
+        Assert.assertEquals(1, Deployments.list(dataBase, "127.0.0.1:123").size());
+        Assert.assertEquals(1, Deployments.list(dataBase, "127.0.0.1:124").size());
+        Deployments.undeployAll(dataBase, "spaceX");
+        Assert.assertEquals(0, Deployments.list(dataBase, "127.0.0.1:123").size());
+        Assert.assertEquals(0, Deployments.list(dataBase, "127.0.0.1:124").size());
       } finally {
         installer.uninstall();
       }

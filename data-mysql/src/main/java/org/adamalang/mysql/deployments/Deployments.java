@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.mysql.backend;
+package org.adamalang.mysql.deployments;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
@@ -32,6 +32,23 @@ public class Deployments {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, space);
           statement.setString(2, target);
+          statement.execute();
+        }
+      }
+    }
+  }
+
+  public static void undeployAll(DataBase dataBase, String space) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      { // delete prior versions
+        String sql =
+            new StringBuilder()
+                .append("DELETE FROM `")
+                .append(dataBase.databaseName)
+                .append("`.`deployed` WHERE `space`=?")
+                .toString();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+          statement.setString(1, space);
           statement.execute();
         }
       }

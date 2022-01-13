@@ -16,6 +16,7 @@ import org.adamalang.common.ConfigObject;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.backend.BackendDataServiceInstaller;
+import org.adamalang.mysql.deployments.DeployedInstaller;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 
 public class Database {
@@ -31,9 +32,20 @@ public class Database {
                 databaseConfigure(config);
                 return;
             }
+            case "install-all": {
+                new FrontendManagementInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"))).install();
+                new DeployedInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"))).install();
+                new BackendDataServiceInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"))).install();
+                return;
+            }
             case "install-frontend": {
                 DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
                 new FrontendManagementInstaller(dataBase).install();
+                return;
+            }
+            case "install-deployed": {
+                DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"));
+                new DeployedInstaller(dataBase).install();
                 return;
             }
             case "install-backend": {
@@ -51,7 +63,7 @@ public class Database {
         String _role = "";
         System.out.println();
         while (!("frontend".equals(_role) || "backend".equals(_role) || "any".equals(_role))) {
-            System.out.println("Role may be 'frontend', 'backend', or 'any'");
+            System.out.println("Role may be 'frontend', 'backend', 'deployed', or 'any'");
             System.out.print(Util.prefix("    Role:", Util.ANSI.Yellow));
             _role = System.console().readLine();
         }
@@ -103,7 +115,9 @@ public class Database {
         System.out.println("");
         System.out.println(Util.prefix("DATABASESUBCOMMAND:", Util.ANSI.Yellow));
         System.out.println("    " + Util.prefix("configure", Util.ANSI.Green) + "         Update the configuration " + Util.prefix("(interactive)", Util.ANSI.Yellow));
+        System.out.println("    " + Util.prefix("install-all", Util.ANSI.Green) + "       Install all the tables on a monolithic database");
         System.out.println("    " + Util.prefix("install-frontend", Util.ANSI.Green) + "  Install the tables for usage by the front end WebSocket");
         System.out.println("    " + Util.prefix("install-backend", Util.ANSI.Green) + "   Install the tables for usage by the gRPC compute/storage Adama tier");
+        System.out.println("    " + Util.prefix("install-deployed", Util.ANSI.Green) + "  Install the tables for usage where code is pulled by host");
     }
 }

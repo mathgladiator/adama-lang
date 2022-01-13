@@ -33,15 +33,14 @@ public class BackendDataServiceInstaller {
             .append("  `space` VARCHAR(128) NOT NULL,") //
             .append("  `key` VARCHAR(512) NOT NULL,") //
             .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
-            .append(
-                "  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
+            .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
             .append("  `head_seq` INT(4) UNSIGNED NOT NULL,") //
             .append("  `invalidate` BOOLEAN NOT NULL,") //
             .append("  `when` DATETIME NOT NULL,") //
             .append("  PRIMARY KEY (`id`),") //
             .append("  UNIQUE  `u` (`space`, `key`))") //
             .append(" ENGINE = InnoDB") //
-            .append(" DEFAULT CHARACTER SET = utf8;") //
+            .append(" DEFAULT CHARACTER SET = utf8mb4;") //
             .toString();
 
     String createDeltasTableSQL =
@@ -62,7 +61,7 @@ public class BackendDataServiceInstaller {
             .append("  PRIMARY KEY (`id`),") //
             .append("  INDEX `s` (`parent` ASC, `seq_begin` ASC, `seq_end` ASC) VISIBLE)") //
             .append(" ENGINE = InnoDB") //
-            .append(" DEFAULT CHARACTER SET = utf8;") //
+            .append(" DEFAULT CHARACTER SET = utf8mb4;") //
             .toString();
 
     String createDeployedTableSQL =
@@ -77,7 +76,7 @@ public class BackendDataServiceInstaller {
             .append("  `plan` LONGTEXT NOT NULL,") //
             .append("  PRIMARY KEY (`id`))") //
             .append(" ENGINE = InnoDB") //
-            .append(" DEFAULT CHARACTER SET = utf8;") //
+            .append(" DEFAULT CHARACTER SET = utf8mb4;") //
             .toString();
     Connection connection = dataBase.pool.getConnection();
     try {

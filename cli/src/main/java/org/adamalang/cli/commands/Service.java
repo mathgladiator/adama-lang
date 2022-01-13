@@ -24,7 +24,7 @@ import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.backend.BlockingDataService;
-import org.adamalang.mysql.backend.Deployments;
+import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
@@ -172,9 +172,10 @@ public class Service {
             GOSSIP_METRICS);
     engine.start();
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
-    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
+    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
+    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"));
     ThreadedDataService dataService =
-        new ThreadedDataService(dataThreads, () -> new BlockingDataService(dataBase));
+        new ThreadedDataService(dataThreads, () -> new BlockingDataService(dataBaseBackend));
     BillingPubSub billingPubSub = new BillingPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreService service =
         new CoreService(
@@ -210,7 +211,7 @@ public class Service {
           try {
             if ("*".equals(space)) {
               ArrayList<Deployments.Deployment> deployments =
-                  Deployments.list(dataBase, identity.ip + ":" + port);
+                  Deployments.list(dataBaseDeployments, identity.ip + ":" + port);
               for (Deployments.Deployment deployment : deployments) {
                 try {
                   deploymentFactoryBase.deploy(
@@ -221,7 +222,7 @@ public class Service {
               }
             } else {
               Deployments.Deployment deployment =
-                  Deployments.get(dataBase, identity.ip + ":" + port, space);
+                  Deployments.get(dataBaseDeployments, identity.ip + ":" + port, space);
               deploymentFactoryBase.deploy(
                   deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {}));
             }
@@ -251,6 +252,9 @@ public class Service {
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
       @Override
       public void run() throws Exception {
+        // billingPubSub.terminate();
+        // This will send to all connections an empty list which will remove from the routing table. At this point, we should wait all connections migrate away
+
         // TODO: for each connection, remove from routing table, stop
         server.close();
       }
@@ -259,6 +263,7 @@ public class Service {
 
   public static void serviceFrontend(Config config) throws Exception {
     DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
+    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployments"));
     DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
 
     String identityFileName = config.get_string("identity_filename", "me.identity");
@@ -292,6 +297,7 @@ public class Service {
               }
             },
             dataBaseFront,
+            dataBaseDeployments,
             dataBaseBackend,
             client);
     ServiceBase serviceBase = BootstrapFrontend.make(nexus);

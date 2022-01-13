@@ -34,7 +34,7 @@ public class FrontendManagementInstaller {
             .append("  PRIMARY KEY (`id`),") //
             .append("  UNIQUE  `u` (`email`))") //
             .append(" ENGINE = InnoDB") //
-            .append(" DEFAULT CHARACTER SET = utf8;") //
+            .append(" DEFAULT CHARACTER SET = utf8mb4;") //
             .toString();
 
     String createAccessKeysTableSQL =
@@ -48,7 +48,7 @@ public class FrontendManagementInstaller {
             .append("  PRIMARY KEY (`id`),") //
             .append("  INDEX `u` (`user` ASC))") //
             .append(" ENGINE = InnoDB") //
-            .append(" DEFAULT CHARACTER SET = utf8;") //
+            .append(" DEFAULT CHARACTER SET = utf8mb4;") //
             .toString();
 
     String createSpaceTableSQL =
@@ -66,7 +66,7 @@ public class FrontendManagementInstaller {
             .append("  UNIQUE `u` (`name`),") //
             .append("  INDEX `c` (`owner`))") //
             .append(" ENGINE = InnoDB") //
-            .append(" DEFAULT CHARACTER SET = utf8;") //
+            .append(" DEFAULT CHARACTER SET = utf8mb4;") //
             .toString();
 
     String createGrantTableSQL =
@@ -79,7 +79,7 @@ public class FrontendManagementInstaller {
             .append("  PRIMARY KEY (`id`),") //
             .append("  INDEX  `u` (`space`, `user` ASC))") //
             .append(" ENGINE = InnoDB") //
-            .append(" DEFAULT CHARACTER SET = utf8;") //
+            .append(" DEFAULT CHARACTER SET = utf8mb4;") //
             .toString();
 
     String createAuthoritiesTableSQL =
@@ -96,7 +96,7 @@ public class FrontendManagementInstaller {
             .append("  UNIQUE `s` (`authority`),") //
             .append("  INDEX `c` (`created` DESC))") //
             .append(" ENGINE = InnoDB") //
-            .append(" DEFAULT CHARACTER SET = utf8;") //
+            .append(" DEFAULT CHARACTER SET = utf8mb4;") //
             .toString();
 
     Connection connection = dataBase.pool.getConnection();

@@ -20,7 +20,7 @@ import org.adamalang.grpc.client.contracts.CreateCallback;
 import org.adamalang.grpc.client.contracts.SeqCallback;
 import org.adamalang.grpc.client.contracts.SimpleEvents;
 import org.adamalang.grpc.client.sm.Connection;
-import org.adamalang.mysql.backend.Deployments;
+import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;

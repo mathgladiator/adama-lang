@@ -44,6 +44,10 @@ public class BlockingDataServiceTests {
         service.initialize(KEY_1, UPDATE_1, cb1);
         cb1.assertSuccess();
 
+        // do some fun listing
+        Assert.assertEquals(1, BackendOperations.list(dataBase, KEY_1.space, "", 100).size());
+        Assert.assertEquals(0, BackendOperations.list(dataBase, KEY_1.space, KEY_1.key, 100).size());
+
         // second time to create the key should fail
         SimpleMockCallback cb2 = new SimpleMockCallback();
         service.initialize(KEY_1, UPDATE_1, cb2);

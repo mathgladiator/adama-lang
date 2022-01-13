@@ -51,7 +51,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config)), "frontend"));
     this.installer = new FrontendManagementInstaller(dataBase);
     installer.install();
-    this.nexus = new ExternNexus(this, dataBase, dataBase, new Client(new MachineIdentity("{\"ip\":\"x\",\"key\":\"y\",\"cert\":\"z\",\"trust\":\"w\"}")));
+    this.nexus = new ExternNexus(this, dataBase, dataBase, dataBase, new Client(new MachineIdentity("{\"ip\":\"x\",\"key\":\"y\",\"cert\":\"z\",\"trust\":\"w\"}")));
     this.frontend = BootstrapFrontend.make(nexus);
     this.context = new ConnectionContext("home", "ip", "agent");
     connection = this.frontend.establish(context);
