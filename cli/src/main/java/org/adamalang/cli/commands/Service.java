@@ -39,6 +39,7 @@ import org.adamalang.web.service.WebConfig;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.function.Consumer;
 
@@ -155,9 +156,10 @@ public class Service {
   }
 
   public static void serviceBackend(Config config) throws Exception {
-    int port = config.get_int("adama_port", 3281);
-    int gossipPort = config.get_int("gossip_backend_port", 8232);
-    int monitoringPort = config.get_int("monitoring_port", 9111);
+    int port = config.get_int("adama_port", 8001);
+    int gossipPort = config.get_int("gossip_backend_port", 8002);
+    int monitoringPort = config.get_int("monitoring_backend_port", 8003);
+
     int dataThreads = config.get_int("data_thread_count", 32);
     int coreThreads = config.get_int("service_thread_count", 4);
     String identityFileName = config.get_string("identity_filename", "me.identity");
@@ -262,13 +264,16 @@ public class Service {
   }
 
   public static void serviceFrontend(Config config) throws Exception {
+    System.err.println("starting frontend");
     DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
     DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployments"));
     DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
-
+    System.err.println("using databases: " + dataBaseFront.databaseName + ", " + dataBaseDeployments.databaseName + ", and " + dataBaseBackend.databaseName);
     String identityFileName = config.get_string("identity_filename", "me.identity");
-    int gossipPort = config.get_int("gossip_frontend_port", 8233);
+    int gossipPort = config.get_int("gossip_frontend_port", 8004);
+    int monitoringPort = config.get_int("monitoring_frontend_port", 8005);
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
+    System.err.println("identity: " + identity.ip);
     Engine engine =
         new Engine(
             identity,
@@ -277,17 +282,30 @@ public class Service {
             gossipPort,
             GOSSIP_METRICS);
     engine.start();
+    System.err.println("gossiping on:" + gossipPort);
     WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
+    System.err.println("standing up http on:" + webConfig.port);
 
-    // TODO: have some sense of health checking in the web package
-    /*
-    engine.newApp("web", webConfig.port, (hb) -> {
-
-    });
-    */
+    // TODO: Stand up prometheuess
+    PrometheusBase prometheusBase = new PrometheusBase(monitoringPort);
 
     Client client = new Client(identity);
-    engine.subscribe("adama", client.getTargetPublisher());
+    Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
+
+    engine.subscribe("adama", (targets) -> {
+      StringBuilder notice = new StringBuilder();
+      boolean append = false;
+      for (String target : targets) {
+        if (append) {
+          notice.append(", ");
+        }
+        append = true;
+        notice.append(target);
+      }
+      System.err.println("adama targets:" + notice.toString());
+      targetPublisher.accept(targets);
+    });
+    // TODO: use real-email SES thingy
     ExternNexus nexus =
         new ExternNexus(
             new Email() {
@@ -300,11 +318,25 @@ public class Service {
             dataBaseDeployments,
             dataBaseBackend,
             client);
+    System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus);
+
+    // TODO: have some sense of health checking in the web package
+    /*
+    engine.newApp("web", webConfig.port, (hb) -> {
+
+    });
+    */
+
     final var runnable = new ServiceRunnable(webConfig, serviceBase);
-    final var thread = new Thread(runnable);
-    thread.start();
-    runnable.waitForReady(1000);
-    thread.join();
+    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+      @Override
+      public void run() {
+        System.err.println("shutting down");
+        runnable.shutdown();
+      }
+    }));
+    runnable.run();
+    System.err.println("running frontend");
   }
 }

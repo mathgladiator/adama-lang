@@ -1,3 +1,7 @@
+@can_create(who) {
+  return true;
+}
+
 @connected(who) {
   return true;
 }

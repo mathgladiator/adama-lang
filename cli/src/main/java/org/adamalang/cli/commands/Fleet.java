@@ -260,7 +260,5 @@ public class Fleet {
     System.out.println("    " + Util.prefix("configure", Util.ANSI.Green) + "         Configure your CLI");
     System.out.println("    " + Util.prefix("deploy", Util.ANSI.Green) + "            Generate a fleet config and deploy the jar");
     System.out.println("    " + Util.prefix("show", Util.ANSI.Green) + "              Show the current capacity in the given region");
-
-
   }
 }
