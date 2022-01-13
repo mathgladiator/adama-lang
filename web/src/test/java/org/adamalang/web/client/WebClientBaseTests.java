@@ -35,41 +35,41 @@ public class WebClientBaseTests {
     runnable.waitForReady(1000);
     WebClientBase clientBase = new WebClientBase(webConfig);
     try {
-        AtomicReference<WebClientConnection> connRef = new AtomicReference<>();
-        CountDownLatch connectedLatch = new CountDownLatch(1);
+      AtomicReference<WebClientConnection> connRef = new AtomicReference<>();
+      CountDownLatch connectedLatch = new CountDownLatch(1);
       CountDownLatch firstPing = new CountDownLatch(1);
       CountDownLatch disconnected = new CountDownLatch(1);
-        LatchedWebJsonStream streamCake = new LatchedWebJsonStream();
+      LatchedWebJsonStream streamCake = new LatchedWebJsonStream();
       LatchedWebJsonStream streamEx = new LatchedWebJsonStream();
       LatchedWebJsonStream streamEmpty = new LatchedWebJsonStream();
       Runnable cakeFin = streamCake.latchAt(3);
       Runnable exFin = streamEx.latchAt(1);
       Runnable emptyFin = streamEmpty.latchAt(1);
-        clientBase.open(
-            "http://localhost:" + webConfig.port + "/s",
-            new WebLifecycle() {
-              @Override
-              public void connected(WebClientConnection connection) {
-                connRef.set(connection);
-                connection.execute(Json.parseJsonObject("{\"method\":\"cake\"}"), streamCake);
-                connection.execute(Json.parseJsonObject("{\"method\":\"ex\"}"), streamEx);
-                connection.execute(Json.parseJsonObject("{\"method\":\"empty\"}"), streamEmpty);
-                connectedLatch.countDown();
-              }
+      clientBase.open(
+          "http://localhost:" + webConfig.port + "/s",
+          new WebLifecycle() {
+            @Override
+            public void connected(WebClientConnection connection) {
+              connRef.set(connection);
+              connection.execute(Json.parseJsonObject("{\"method\":\"cake\"}"), streamCake);
+              connection.execute(Json.parseJsonObject("{\"method\":\"ex\"}"), streamEx);
+              connection.execute(Json.parseJsonObject("{\"method\":\"empty\"}"), streamEmpty);
+              connectedLatch.countDown();
+            }
 
-              @Override
-              public void ping() {
-                firstPing.countDown();
-              }
+            @Override
+            public void ping() {
+              firstPing.countDown();
+            }
 
-              @Override
-              public void failure(Throwable t) {}
+            @Override
+            public void failure(Throwable t) {}
 
-              @Override
-              public void disconnected() {
-                disconnected.countDown();
-              }
-            });
+            @Override
+            public void disconnected() {
+              disconnected.countDown();
+            }
+          });
       Assert.assertTrue(connectedLatch.await(5000, TimeUnit.MILLISECONDS));
       Assert.assertTrue(firstPing.await(5000, TimeUnit.MILLISECONDS));
       cakeFin.run();
@@ -82,6 +82,51 @@ public class WebClientBaseTests {
       streamEmpty.assertLine(0, "COMPLETE");
       runnable.shutdown();
       Assert.assertTrue(disconnected.await(5000, TimeUnit.MILLISECONDS));
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    } finally{
+      clientBase.shutdown();
+    }
+  }
+
+  @Test
+  public void quickclose() throws Exception {
+    WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ClientTest1);
+    MockServiceBase base = new MockServiceBase();
+    final var runnable = new ServiceRunnable(webConfig, base);
+    final var thread = new Thread(runnable);
+    thread.start();
+    runnable.waitForReady(1000);
+    WebClientBase clientBase = new WebClientBase(webConfig);
+    try {
+      AtomicReference<WebClientConnection> connRef = new AtomicReference<>();
+      CountDownLatch connectedLatch = new CountDownLatch(1);
+      CountDownLatch disconnected = new CountDownLatch(1);
+      clientBase.open(
+          "http://localhost:" + webConfig.port + "/s",
+          new WebLifecycle() {
+            @Override
+            public void connected(WebClientConnection connection) {
+              connection.close();
+              connectedLatch.countDown();
+            }
+
+            @Override
+            public void ping() {
+
+            }
+
+            @Override
+            public void failure(Throwable t) {}
+
+            @Override
+            public void disconnected() {
+              disconnected.countDown();
+            }
+          });
+      Assert.assertTrue(connectedLatch.await(5000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(disconnected.await(5000, TimeUnit.MILLISECONDS));
+      runnable.shutdown();
     } catch (Exception ex) {
       ex.printStackTrace();
     } finally{
