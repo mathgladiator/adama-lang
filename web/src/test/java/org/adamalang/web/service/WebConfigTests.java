@@ -59,7 +59,11 @@ public class WebConfigTests {
     Dev(15003),
     Prod(15004),
     DevScope(15005),
-    ProdScope(15006);
+    ProdScope(15006),
+    ClientTest1(15100),
+    ClientTest2(15101),
+    ClientTest3(15102),
+    ClientTest4(15103);
 
     public final int port;
 

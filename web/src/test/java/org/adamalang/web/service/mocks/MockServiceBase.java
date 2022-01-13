@@ -27,11 +27,20 @@ public class MockServiceBase implements ServiceBase {
         try {
           switch (request.method()) {
             case "cake":
-              {
-                responder.stream("{\"boss\":1}");
-                responder.finish("{\"boss\":2}");
-                return;
-              }
+            {
+              responder.stream("{\"boss\":1}");
+              responder.finish("{\"boss\":2}");
+              return;
+            }
+            case "empty":
+            {
+              responder.finish("{}");
+              return;
+            }
+            case "crash":
+            {
+              throw new NullPointerException();
+            }
             case "kill":
               {
                 responder.stream("{\"death\":1}");

@@ -78,7 +78,6 @@ public class WebSocketClient implements AutoCloseable {
             ch.pipeline()
                 .addLast(
                     new SimpleChannelInboundHandler<TextWebSocketFrame>() {
-
                       @Override
                       public void channelActive(ChannelHandlerContext ctx) throws Exception {
                       }
@@ -135,12 +134,11 @@ public class WebSocketClient implements AutoCloseable {
                     });
           }
         });
-    final var future = b.connect(uri.getHost(), uri.getPort() < 0 ? 443 : uri.getPort());
+    final var future = b.connect(uri.getHost(), uri.getPort() < 0 ? (uri.getScheme().equals("wss")? 443 : 80) : uri.getPort());
     Channel ch = future.sync().channel();
     if (!connected.await(5000, TimeUnit.MILLISECONDS)) {
       throw new Exception("failed to establish");
     }
     return new Connection(ch, callbacks);
   }
-
 }

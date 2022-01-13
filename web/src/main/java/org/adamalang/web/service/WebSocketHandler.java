@@ -90,8 +90,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       // tell client all is ok
       ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\"}"));
 
-      HttpHeaders headers =
-          ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
+      HttpHeaders headers = ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
       String origin = headers.get("Origin");
       String ip = ctx.channel().remoteAddress().toString();
       String userAgent = headers.get("User-Agent");

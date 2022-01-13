@@ -1,5 +1,11 @@
 package org.adamalang.canary;
 
+import org.adamalang.common.*;
+import org.adamalang.web.client.WebClientBase;
+import org.adamalang.web.client.WebClientConnection;
+import org.adamalang.web.contracts.WebLifecycle;
+import org.adamalang.web.service.WebConfig;
+
 public class CanaryLoadGenTool {
   public static void execute() {
     String canaryURL = ""; // TODO: stand up a ELB instance backed by some capacity
@@ -9,6 +15,33 @@ public class CanaryLoadGenTool {
     int distinctSockets = 100; // TODO: define as a parameter
     int connectionsPerSocket = 20; // TODO: define as a parameter
     int sendRatePerConnectionPerSecond = 5; // TODO: define as a parameter
+  }
 
+  public static void main(String[] args) {
+    String url = "ws://3.18.145.197/s";
+    WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(Json.newJsonObject())));
+    base.open(url, new WebLifecycle() {
+      @Override
+      public void connected(WebClientConnection connection) {
+        System.err.println("connected");
+      }
+
+      @Override
+      public void ping() {
+        System.err.println("Ping");
+      }
+
+      @Override
+      public void failure(Throwable t) {
+        System.err.println("error");
+      }
+
+      @Override
+      public void disconnected() {
+        System.err.println("disconnected");
+        // TODO: schedule retry
+        // base.open(url, this);
+      }
+    });
   }
 }
