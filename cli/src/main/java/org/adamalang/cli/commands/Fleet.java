@@ -144,8 +144,6 @@ public class Fleet {
     String keyName = Util.extractOrCrash("--key", "-k", args);
     String template = Files.readString(new File(templateFile).toPath());
     ObjectNode configTemplate = Json.parseJsonObject(template);
-    File staging = new File("staging");
-    staging.mkdir();
     StringBuilder commands = new StringBuilder().append("#!/bin/sh\n");
     ArrayList<Instance> instances = new ArrayList<>();
     for (Reservation reservation : response.getReservations()) {
@@ -159,7 +157,7 @@ public class Fleet {
         }
       }
     }
-
+    commands.append("mkdir staging\n");
     for (Instance instance : instances) {
       String role = "unknown";
       for (Tag tag : instance.getTags()) {
@@ -176,6 +174,10 @@ public class Fleet {
       commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.getPublicIpAddress() + ":/home/ec2-user/release/adama.jar\n");
       commands.append("rm staging/").append(instance.getPrivateIpAddress()).append(".identity\n");
       commands.append("rm staging/").append(instance.getPrivateIpAddress()).append(".json\n");
+    }
+    commands.append("rmdir staging\n");
+    for (Instance instance : instances) {
+      commands.append("ssh -i ").append(keyName).append(" ec2-user@" + instance.getPublicIpAddress() + " sudo systemctl restart adama\n");
     }
     Files.writeString(new File("execute.sh").toPath(), commands.toString());
   }
