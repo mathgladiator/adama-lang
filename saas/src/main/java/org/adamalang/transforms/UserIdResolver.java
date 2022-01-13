@@ -10,40 +10,38 @@
 package org.adamalang.transforms;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.*;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.web.io.AsyncTransform;
 import org.apache.commons.validator.routines.EmailValidator;
 
-import java.util.concurrent.Executor;
-
 public class UserIdResolver implements AsyncTransform<String, Integer> {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(UserIdResolver.class);
-  private final Executor executor;
+  private final SimpleExecutor executor;
   private final DataBase dataBase;
 
-  public UserIdResolver(Executor executor, ExternNexus nexus) {
+  public UserIdResolver(SimpleExecutor executor, ExternNexus nexus) {
     this.executor = executor;
     this.dataBase = nexus.dataBaseManagement;
   }
 
   @Override
   public void execute(String email, Callback<Integer> callback) {
-    executor.execute(
-        () -> {
-          try {
-            if (EmailValidator.getInstance().isValid(email)) {
-              callback.success(Users.getOrCreateUserId(dataBase, email));
-            } else {
-              callback.failure(new ErrorCodeException(ErrorCodes.USERID_RESOLVE_INVALID_EMAIL));
-            }
-          } catch (Exception ex) {
-            callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.USERID_RESOLVE_UNKNOWN_EXCEPTION, ex, LOGGER));
+    executor.execute(new NamedRunnable("resolving-user-id") {
+      @Override
+      public void execute() throws Exception {
+        try {
+          if (EmailValidator.getInstance().isValid(email)) {
+            callback.success(Users.getOrCreateUserId(dataBase, email));
+          } else {
+            callback.failure(new ErrorCodeException(ErrorCodes.USERID_RESOLVE_INVALID_EMAIL));
           }
-        });
+        } catch (Exception ex) {
+          callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.USERID_RESOLVE_UNKNOWN_EXCEPTION, ex, LOGGER));
+        }
+      }
+    });
   }
 }

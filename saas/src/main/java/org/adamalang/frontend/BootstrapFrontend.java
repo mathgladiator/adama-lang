@@ -12,6 +12,7 @@ package org.adamalang.frontend;
 import org.adamalang.api.ConnectionNexus;
 import org.adamalang.api.ConnectionRouter;
 import org.adamalang.api.Metrics;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.common.metrics.StreamMonitor;
@@ -35,8 +36,8 @@ public class BootstrapFrontend {
     // TODO: make multiple of these, pull nThreads from config
     ExecutorService executor = Executors.newSingleThreadExecutor();
     RootHandlerImpl handler = new RootHandlerImpl(extern);
-    SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(Executors.newSingleThreadExecutor(), extern);
-    UserIdResolver userIdResolver = new UserIdResolver(Executors.newSingleThreadExecutor(), extern);
+    SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(SimpleExecutor.create("space-policy-locator"), extern);
+    UserIdResolver userIdResolver = new UserIdResolver(SimpleExecutor.create("user-id-resolver"), extern);
 
     Metrics metrics = new Metrics(new MetricsFactory() {
       @Override

@@ -10,10 +10,7 @@
 package org.adamalang.transforms;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.Validators;
+import org.adamalang.common.*;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Spaces;
@@ -21,15 +18,14 @@ import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.web.io.AsyncTransform;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
 
 public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(SpacePolicyLocator.class);
-  public final Executor executor;
+  public final SimpleExecutor executor;
   public final DataBase dataBase;
   public final ConcurrentHashMap<String, SpacePolicy> policies;
 
-  public SpacePolicyLocator(Executor executor, ExternNexus nexus) {
+  public SpacePolicyLocator(SimpleExecutor executor, ExternNexus nexus) {
     this.executor = executor;
     this.dataBase = nexus.dataBaseManagement;
     this.policies = new ConcurrentHashMap<>();
@@ -46,17 +42,19 @@ public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
       callback.success(policy);
       return;
     }
-    executor.execute(
-        () -> {
-          try {
-            Spaces.Space space = Spaces.getSpaceId(dataBase, spaceName);
-            policies.putIfAbsent(spaceName, new SpacePolicy(space));
-            callback.success(policies.get(spaceName));
-          } catch (Exception ex) {
-            callback.failure(
-                ErrorCodeException.detectOrWrap(
-                    ErrorCodes.SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION, ex, LOGGER));
-          }
-        });
+    executor.execute(new NamedRunnable("space-policy-locate") {
+      @Override
+      public void execute() throws Exception {
+        try {
+          Spaces.Space space = Spaces.getSpaceId(dataBase, spaceName);
+          policies.putIfAbsent(spaceName, new SpacePolicy(space));
+          callback.success(policies.get(spaceName));
+        } catch (Exception ex) {
+          callback.failure(
+              ErrorCodeException.detectOrWrap(
+                  ErrorCodes.SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION, ex, LOGGER));
+        }
+      }
+    });
   }
 }
