@@ -38,6 +38,9 @@ public class Main {
       case "documents":
         Documents.execute(config, next);
         return;
+      case "fleet":
+        Fleet.execute(config, next);
+        return;
       case "init":
         Init.execute(config, next);
         return;
@@ -71,6 +74,7 @@ public class Main {
     System.out.println("    " + Util.prefix("contrib", Util.ANSI.Green) + "           Open source contributor tools");
     System.out.println("    " + Util.prefix("database", Util.ANSI.Green) + "          Prepare database for usage");
     System.out.println("    " + Util.prefix("documents", Util.ANSI.Green) + "         Interact with documents");
+    System.out.println("    " + Util.prefix("fleet", Util.ANSI.Green) + "             Fleet management via EC2");
     System.out.println("    " + Util.prefix("init", Util.ANSI.Green) + "              Initializes the config with a valid token");
     System.out.println("    " + Util.prefix("security", Util.ANSI.Green) + "          Security tools for production usage");
     System.out.println("    " + Util.prefix("service", Util.ANSI.Green) + "           Launch a service");

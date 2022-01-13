@@ -63,4 +63,13 @@ public class Util {
     }
     return defaultValue;
   }
+
+  public static boolean scan(String field, String[] args) {
+    for (int k = 0; k < args.length; k++) {
+      if (field.equals(args[k])) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

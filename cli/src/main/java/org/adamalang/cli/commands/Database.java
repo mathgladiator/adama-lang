@@ -62,7 +62,7 @@ public class Database {
     public static void databaseConfigure(Config config) throws Exception {
         String _role = "";
         System.out.println();
-        while (!("frontend".equals(_role) || "backend".equals(_role) || "any".equals(_role))) {
+        while (!("frontend".equals(_role) || "backend".equals(_role) || "deployed".equals(_role) || "any".equals(_role))) {
             System.out.println("Role may be 'frontend', 'backend', 'deployed', or 'any'");
             System.out.print(Util.prefix("    Role:", Util.ANSI.Yellow));
             _role = System.console().readLine();

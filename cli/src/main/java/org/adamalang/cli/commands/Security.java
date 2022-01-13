@@ -70,7 +70,7 @@ public class Security {
         pipe("/usr/bin/openssl req -x509 -newkey rsa:4096 -days 365 -nodes -keyout " + caPath + "/ca-key.pem -out " + caPath + "/ca-cert.pem -subj  /C=US/ST=Kansas/L=KansasCity/O=Adama/OU=Adama/CN=adama.com/emailAddress=admin@adama.com");
     }
 
-    private static void newServer(String[] args) throws Exception {
+    public static void newServer(String[] args) throws Exception {
         String caPath = "./ca";
         String ip = null;
         String output = "./me.identity";
