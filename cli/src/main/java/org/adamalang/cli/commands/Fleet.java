@@ -9,6 +9,7 @@
  */
 package org.adamalang.cli.commands;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
@@ -27,7 +28,9 @@ import software.amazon.awssdk.services.elasticloadbalancingv2.model.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Random;
 
 public class Fleet {
   public static void execute(Config config, String[] args) throws Exception {
@@ -167,6 +170,16 @@ public class Fleet {
     }
   }
 
+  private static String roleOf(Instance instance) {
+    String role = "unknown";
+    for (Tag tag : instance.tags()) {
+      if ("role".equals(tag.key())) {
+        role = tag.value();
+      }
+    }
+    return role;
+  }
+
   private static void fleetDeploy(Config config, String[] args) throws Exception {
     Ec2Client ec2 = getEC2(config);
     ElasticLoadBalancingV2Client elb = getELB(config);
@@ -182,6 +195,7 @@ public class Fleet {
     ObjectNode configTemplate = Json.parseJsonObject(template);
     StringBuilder commands = new StringBuilder().append("#!/bin/sh\n");
     ArrayList<Instance> instances = new ArrayList<>();
+    ArrayList<String> gossipHosts = new ArrayList<>();
     for (Reservation reservation : response.reservations()) {
       for (Instance instance : reservation.instances()) {
         String state = instance.state().nameAsString();
@@ -189,32 +203,49 @@ public class Fleet {
           throw new Exception("An instance (" + instance.instanceId() + ") is pending; can't configure");
         }
         if ("running".equals(state)) {
+          if (roleOf(instance).equals("frontend")) {
+            gossipHosts.add(instance.privateIpAddress() + ":8004");
+          } else if (roleOf(instance).equals("backend")) {
+            gossipHosts.add(instance.privateIpAddress() + ":8002");
+          }
           instances.add(instance);
         }
       }
     }
+
+    ArrayList<String> bootstrap = new ArrayList<>();
+    Random rng = new Random();
+    while (bootstrap.size() < 3 && gossipHosts.size() > 0) {
+      bootstrap.add(gossipHosts.remove(rng.nextInt(gossipHosts.size())));
+    }
+    bootstrap.sort(String::compareTo);
+    ArrayNode bootstrapNodes = configTemplate.putArray("bootstrap");
+    for (String endpoint : bootstrap) {
+      bootstrapNodes.add(endpoint);
+    }
+
     new File("staging").mkdir();
     HashSet<String> frontendInstances = new HashSet<>();
     for (Instance instance : instances) {
-      String role = "unknown";
-      for (Tag tag : instance.tags()) {
-        if ("role".equals(tag.key())) {
-          role = tag.value();
-        }
-      }
+      String role = roleOf(instance);
       configTemplate.put("role", role);
       if ("frontend".equals(role)) {
         frontendInstances.add(instance.instanceId());
 
       }
       Files.writeString(new File("staging/" + instance.privateIpAddress() + ".json").toPath(), configTemplate.toPrettyString());
+      Files.writeString(new File("staging/" + instance.privateIpAddress() + ".sh").toPath(), "#!/bin/sh\njava -jar adama.jar service auto\n");
+
       Security.newServer(new String[] { "--ip", instance.privateIpAddress(), "--out", "staging/" + instance.privateIpAddress() + ".identity"});
       commands.append("echo Uploading to ").append(instance.publicDnsName()).append("\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".identity ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/me.identity\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".json ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/.adama\n");
-      commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/release/adama.jar\n");
+      commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama.jar\n");
+      commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".sh ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama.sh\n");
+      commands.append("ssh -i ").append(keyName).append(" ec2-user@" + instance.publicIpAddress() + " chmod 700 /home/ec2-user/adama.sh\n");
       commands.append("rm staging/").append(instance.privateIpAddress()).append(".identity\n");
       commands.append("rm staging/").append(instance.privateIpAddress()).append(".json\n");
+      commands.append("rm staging/").append(instance.privateIpAddress()).append(".sh\n");
     }
     commands.append("rmdir staging\n");
     for (Instance instance : instances) {

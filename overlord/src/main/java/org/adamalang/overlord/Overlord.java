@@ -9,13 +9,11 @@
  */
 package org.adamalang.overlord;
 
-import org.adamalang.common.MachineIdentity;
 import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.proto.Endpoint;
 import org.adamalang.grpc.client.Client;
 
 import java.io.File;
-import java.nio.file.Files;
 
 public class Overlord {
   public static void execute(Engine engine, Client client, File targetsDestination) {

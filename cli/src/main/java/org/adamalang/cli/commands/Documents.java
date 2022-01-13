@@ -31,12 +31,36 @@ public class Documents {
       case "create":
         documentsCreate(config, next);
         return;
+      case "list":
+        documentsList(config, next);
+        return;
       case "help":
         documentsHelp(next);
         return;
     }
   }
 
+  private static void documentsList(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String marker = Util.extractWithDefault("--marker", "-m", null, args);
+    int limit = Integer.parseInt(Util.extractWithDefault("--limit", "-l", "1000", args));
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "document/list");
+        request.put("identity", identity);
+        request.put("space", space);
+        if (marker != null) {
+          request.put("marker", marker);
+        }
+        request.put("limit", limit);
+        connection.stream(request, (item) -> {
+          System.err.println(item.toPrettyString());
+        });
+      }
+    }
+  }
 
   private static void documentsCreate(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);

@@ -33,9 +33,9 @@ public class DataBaseConfig {
     this.databaseName = roleConfig.strOfButCrash("database_name", "database_name was not present in config");
     this.maxStatements = roleConfig.intOf("max_statements", 0);
     this.maxStatementsPerConnection = roleConfig.intOf("max_statements_per_connection", 0);
-    this.maxPoolSize = roleConfig.intOf("max_pool_size", 32);
-    this.minPoolSize = roleConfig.intOf("min_pool_size", 16);
-    this.initialPoolSize = roleConfig.intOf("initial_pool_size", 16);
+    this.maxPoolSize = roleConfig.intOf("max_pool_size", 4);
+    this.minPoolSize = roleConfig.intOf("min_pool_size", 2);
+    this.initialPoolSize = roleConfig.intOf("initial_pool_size", 2);
   }
 
   public ComboPooledDataSource createComboPooledDataSource() throws Exception {

@@ -329,6 +329,8 @@ public class Service {
     */
 
     final var runnable = new ServiceRunnable(webConfig, serviceBase);
+
+    System.err.println("register shutdownhook");
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
@@ -336,7 +338,9 @@ public class Service {
         runnable.shutdown();
       }
     }));
-    runnable.run();
+
     System.err.println("running frontend");
+    runnable.run();
+    System.err.println("frontend finished");
   }
 }
