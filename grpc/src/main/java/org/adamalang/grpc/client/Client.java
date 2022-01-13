@@ -10,10 +10,7 @@
 package org.adamalang.grpc.client;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.SimpleExecutorFactory;
+import org.adamalang.common.*;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.adamalang.grpc.client.sm.Connection;
@@ -70,29 +67,28 @@ public class Client {
         }, 3);
       }
     });
-
   }
 
   public void notifyDeployment(String target, String space) {
-    finder.find(target, new QueueAction<>(ErrorCodes.API_CANT_FIND_CAPACITY_TIMEOUT, ErrorCodes.API_CANT_FIND_CAPACITY_REJECTED) {
+    finder.find(target, new QueueAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED) {
       @Override
       protected void executeNow(InstanceClient client) {
         client.scanDeployments(space, new ScanDeploymentCallback() {
           @Override
           public void success() {
-
+            // TODO: metric
           }
 
           @Override
           public void failure() {
-
+            // TODO: metric
           }
         });
       }
 
       @Override
       protected void failure(int code) {
-
+        // TODO: metric
       }
     });
   }
@@ -101,10 +97,40 @@ public class Client {
     return (targets) -> finder.sync(new TreeSet<>(targets));
   }
 
+  public void reflect(String space, String key, Callback<String> callback) {
+    engine.get(space, key, (target) -> {
+      if (target != null) {
+        finder.find(target, new QueueAction<>(ErrorCodes.API_REFLECT_TIMEOUT, ErrorCodes.API_REFLECT_REJECTED) {
+          @Override
+          protected void executeNow(InstanceClient client) {
+            client.reflect(space, key, new Callback<String>() {
+              @Override
+              public void success(String value) {
+                callback.success(value);
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                callback.failure(ex);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      } else {
+        callback.failure(new ErrorCodeException(ErrorCodes.API_REFLECT_CANT_FIND_CAPACITY));
+      }
+    });
+  }
+
   public void create(String agent, String authority, String space, String key, String entropy, String arg, CreateCallback callback) {
     engine.get(space, key, (target) -> {
       if (target != null) {
-        finder.find(target, new QueueAction<>(ErrorCodes.API_CANT_FIND_CAPACITY_CREATE_TIMEOUT, ErrorCodes.API_CANT_FIND_CAPACITY_CREATE_REJECTED) {
+        finder.find(target, new QueueAction<>(ErrorCodes.API_CREATE_TIMEOUT, ErrorCodes.API_CREATE_REJECTED) {
           @Override
           protected void executeNow(InstanceClient client) {
             client.create(agent, authority, space, key, entropy, arg, callback);
@@ -116,7 +142,7 @@ public class Client {
           }
         });
       } else {
-        callback.error(ErrorCodes.API_CANT_FIND_CAPACITY_CREATE_NONE_ALLOCATED);
+        callback.error(ErrorCodes.API_CREATE_CANT_FIND_CAPACITY);
       }
     });
   }

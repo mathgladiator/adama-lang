@@ -56,10 +56,12 @@ public class LivingDocumentTests {
     if (!document.check(state)) {
       throw new Exception("Failed to check:" + document.errorsJson());
     }
+    JsonStreamWriter reflection = new JsonStreamWriter();
+    document.writeTypeReflectionJson(reflection);
     final var java = document.compileJava(state);
     var cached = compilerCache.get(java);
     if (cached == null) {
-      cached = new LivingDocumentFactory("MeCode", java, "{}");
+      cached = new LivingDocumentFactory("MeCode", java, reflection.toString());
       compilerCache.put(java, cached);
     }
     return cached;

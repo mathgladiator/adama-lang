@@ -48,6 +48,16 @@ public class SpacePolicy {
     return false;
   }
 
+  public boolean canUserSeeReflection(AuthenticatedUser user) {
+    if (user.source == AuthenticatedUser.Source.Adama) {
+      if (user.id == owner) {
+        return true;
+      }
+      return developers.contains(user.id);
+    }
+    return false;
+  }
+
   public boolean canUserGetPlan(AuthenticatedUser user) {
     if (user.source == AuthenticatedUser.Source.Adama) {
       if (user.id == owner) {

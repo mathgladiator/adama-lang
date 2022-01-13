@@ -9,15 +9,21 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServiceImplicitCreateTests {
   private static final Key KEY = new Key("space", "key");
@@ -79,6 +85,40 @@ public class ServiceImplicitCreateTests {
       latchData.run();
       Assert.assertEquals("STATUS:Connected", streamback1.get(0));
       Assert.assertEquals("STATUS:Connected", streamback2.get(0));
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void race_cause_retry_but_no_factory_next_time() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    MockInstantLivingDocumentFactoryFactory factoryFactoryReal =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    AtomicInteger countDownUntilFailure = new AtomicInteger(2);
+    LivingDocumentFactoryFactory proxyFactory = new LivingDocumentFactoryFactory() {
+      @Override
+      public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
+        int val = countDownUntilFailure.decrementAndGet();
+        if (val <= 0) {
+          callback.failure(new ErrorCodeException(-123));
+        } else {
+          factoryFactoryReal.fetch(key, callback);
+        }
+      }
+
+      @Override
+      public Collection<String> spacesAvailable() {
+        return factoryFactoryReal.spacesAvailable();
+      }
+    };
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(proxyFactory, (bill) -> {}, dataService, time, 3);
+    try {
+      MockStreamback streamback1 = new MockStreamback();
+      service.connect(NtClient.NO_ONE, KEY, streamback1);
+      streamback1.await_failure(625676);
     } finally {
       service.shutdown();
     }

@@ -297,6 +297,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(SpaceDeleteRequest request, SimpleResponder responder) {
     // TODO: see if the space is empty, if not then reject
     // TODO: this requires document listing to work which is tricky due to the bifurication
+    responder.error(new ErrorCodeException(-1));
   }
 
   @Override
@@ -318,9 +319,25 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(SpaceReflectRequest request, ReflectionResponder responder) {
-    // TODO: find the space
-    // TODO: go to the Adama host
-    // TODO: ask the factory for the reflection string
+    if (request.policy.canUserSeeReflection(request.who)) {
+      nexus.client.reflect(request.space, request.key, new Callback<String>() {
+        @Override
+        public void success(String value) {
+          try {
+            responder.complete(Json.parseJsonObject(value));
+          } catch (RuntimeException failedToParse) {
+            responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_INTERNAL_ERROR_JSON));
+          }
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
+    } else {
+      responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_NO_PERMISSION_TO_EXECUTE));
+    }
   }
 
   @Override

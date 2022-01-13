@@ -17,8 +17,8 @@ import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.billing.Bill;
 import org.adamalang.runtime.sys.CoreStream;
+import org.adamalang.runtime.sys.billing.Bill;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** the handler to answer the client's call */
 public class Handler extends AdamaGrpc.AdamaImplBase {
-  private final static ExceptionLogger LOGGER = ExceptionLogger.FOR(Handler.class);
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Handler.class);
   private final ServerNexus nexus;
   private final SimpleExecutor[] executors;
   private final Random rng;
@@ -70,71 +70,8 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         });
   }
 
-  private static String fixEntropy(String entropy) {
-    if ("".equals(entropy)) {
-      return null;
-    }
-    try {
-      Long.parseLong(entropy);
-      return entropy;
-    } catch (NumberFormatException nfe) {
-      return "" + entropy.hashCode();
-    }
-  }
-
   @Override
-  public StreamObserver<BillingForward> billingExchange(StreamObserver<BillingReverse> responseObserver) {
-    SimpleExecutor executor = executors[rng.nextInt(executors.length)];
-    return new StreamObserver<BillingForward>() {
-      private boolean sentComplete = false;
-      @Override
-      public void onNext(BillingForward billingForward) {
-        executor.execute(new NamedRunnable("processing-billing-next") {
-          @Override
-          public void execute() throws Exception {
-            switch (billingForward.getOperationCase()) {
-              case BEGIN: {
-                String id = nexus.billingBatchMaker.getNextAvailableBatchId();
-                if (id != null) {
-                  String batch = nexus.billingBatchMaker.getBatch(id);
-                  responseObserver.onNext(BillingReverse.newBuilder().setFound(BillingBatchFound.newBuilder().setId(id).setBatch(batch).build()).build());
-                } else {
-                  sendCompleteWhileInExecutor();
-                }
-              }
-              case REMOVE: {
-                BillingDeleteBill deleteBill = billingForward.getRemove();
-                nexus.billingBatchMaker.deleteBatch(deleteBill.getId());
-                responseObserver.onNext(BillingReverse.newBuilder().setRemoved(BillingBatchRemoved.newBuilder().build()).build());
-              }
-            }
-          }
-        });
-      }
-
-      private void sendCompleteWhileInExecutor() {
-        if (!sentComplete) {
-          sentComplete = true;
-        }
-      }
-
-      @Override
-      public void onError(Throwable throwable) {
-        LOGGER.convertedToErrorCode(throwable, ErrorCodes.GRPC_BILLING_UNEXPECTED_ERROR);
-      }
-
-      @Override
-      public void onCompleted() {
-        executor.execute(new NamedRunnable("processing-billing-next") {
-          @Override
-          public void execute() throws Exception {
-
-            sendCompleteWhileInExecutor();
-          }
-        });
-      }
-    };
-  }
+  public void reflect(ReflectRequest request, StreamObserver<ReflectResponse> responseObserver) {}
 
   @Override
   public StreamObserver<StreamMessageClient> multiplexedProtocol(
@@ -152,14 +89,17 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             for (Bill bill : bills) {
               spaces.add(bill.space);
             }
-            executor.execute(new NamedRunnable("handler-send-heartbeat") {
-              @Override
-              public void execute() throws Exception {
-                responseObserver.onNext(StreamMessageServer.newBuilder()
-                                   .setHeartbeat(InventoryHeartbeat.newBuilder().addAllSpaces(spaces).build())
-                                   .build());
-              }
-            });
+            executor.execute(
+                new NamedRunnable("handler-send-heartbeat") {
+                  @Override
+                  public void execute() throws Exception {
+                    responseObserver.onNext(
+                        StreamMessageServer.newBuilder()
+                            .setHeartbeat(
+                                InventoryHeartbeat.newBuilder().addAllSpaces(spaces).build())
+                            .build());
+                  }
+                });
           }
           return alive.get();
         });
@@ -171,18 +111,22 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         if (payload.hasAct()) {
           stream = streams.get(payload.getAct());
           if (stream == null) {
-            executor.execute(new NamedRunnable("error-no-stream-for-act") {
-              @Override
-              public void execute() throws Exception {
-                responseObserver.onNext(StreamMessageServer.newBuilder()
-                                   .setId(id)
-                                   .setError(
-                                       StreamError.newBuilder()
-                                                  .setCode(ErrorCodes.GRPC_COMMON_FAILED_TO_FIND_STREAM_USING_GIVEN_ACT)
-                                                  .build())
-                                   .build());
-              }
-            });
+            executor.execute(
+                new NamedRunnable("error-no-stream-for-act") {
+                  @Override
+                  public void execute() throws Exception {
+                    responseObserver.onNext(
+                        StreamMessageServer.newBuilder()
+                            .setId(id)
+                            .setError(
+                                StreamError.newBuilder()
+                                    .setCode(
+                                        ErrorCodes
+                                            .GRPC_COMMON_FAILED_TO_FIND_STREAM_USING_GIVEN_ACT)
+                                    .build())
+                            .build());
+                  }
+                });
             return;
           }
         }
@@ -200,52 +144,59 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
                   @Override
                   public void status(StreamStatus status) {
-                    StreamStatusCode code = status == StreamStatus.Connected ? StreamStatusCode.Connected : StreamStatusCode.Disconnected;
-                    executor.execute(new NamedRunnable("handler-send-status") {
-                      @Override
-                      public void execute() throws Exception {
-                        responseObserver.onNext(
-                            StreamMessageServer.newBuilder()
-                                               .setId(id)
-                                               .setStatus(
-                                                   org.adamalang.grpc.proto.StreamStatus.newBuilder()
-                                                                                        .setCode(code)
-                                                                                        .build())
-                                               .build());
-                        if (status == StreamStatus.Disconnected) {
-                          streams.remove(id);
-                        }
-                      }
-                    });
+                    StreamStatusCode code =
+                        status == StreamStatus.Connected
+                            ? StreamStatusCode.Connected
+                            : StreamStatusCode.Disconnected;
+                    executor.execute(
+                        new NamedRunnable("handler-send-status") {
+                          @Override
+                          public void execute() throws Exception {
+                            responseObserver.onNext(
+                                StreamMessageServer.newBuilder()
+                                    .setId(id)
+                                    .setStatus(
+                                        org.adamalang.grpc.proto.StreamStatus.newBuilder()
+                                            .setCode(code)
+                                            .build())
+                                    .build());
+                            if (status == StreamStatus.Disconnected) {
+                              streams.remove(id);
+                            }
+                          }
+                        });
                   }
 
                   @Override
                   public void next(String data) {
-                    executor.execute(new NamedRunnable("handler-send-data") {
-                      @Override
-                      public void execute() throws Exception {
-                        responseObserver.onNext(
-                            StreamMessageServer.newBuilder()
-                                               .setId(id)
-                                               .setData(StreamData.newBuilder().setDelta(data).build())
-                                               .build());
-                      }
-                    });
+                    executor.execute(
+                        new NamedRunnable("handler-send-data") {
+                          @Override
+                          public void execute() throws Exception {
+                            responseObserver.onNext(
+                                StreamMessageServer.newBuilder()
+                                    .setId(id)
+                                    .setData(StreamData.newBuilder().setDelta(data).build())
+                                    .build());
+                          }
+                        });
                   }
 
                   @Override
                   public void failure(ErrorCodeException exception) {
-                    executor.execute(new NamedRunnable("handler-send-failure") {
-                      @Override
-                      public void execute() throws Exception {
-                        responseObserver.onNext(
-                            StreamMessageServer.newBuilder()
-                                               .setId(id)
-                                               .setError(StreamError.newBuilder().setCode(exception.code).build())
-                                               .build());
-                        streams.remove(id);
-                      }
-                    });
+                    executor.execute(
+                        new NamedRunnable("handler-send-failure") {
+                          @Override
+                          public void execute() throws Exception {
+                            responseObserver.onNext(
+                                StreamMessageServer.newBuilder()
+                                    .setId(id)
+                                    .setError(
+                                        StreamError.newBuilder().setCode(exception.code).build())
+                                    .build());
+                            streams.remove(id);
+                          }
+                        });
                   }
                 });
             return;
@@ -254,31 +205,35 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                 new Callback<>() {
                   @Override
                   public void success(Boolean value) {
-                    executor.execute(new NamedRunnable("handler-can-attach-success") {
-                      @Override
-                      public void execute() throws Exception {
-                        responseObserver.onNext(
-                            StreamMessageServer.newBuilder()
-                                               .setId(id)
-                                               .setResponse(
-                                                   StreamAskAttachmentResponse.newBuilder().setAllowed(value).build())
-                                               .build());
-                      }
-                    });
+                    executor.execute(
+                        new NamedRunnable("handler-can-attach-success") {
+                          @Override
+                          public void execute() throws Exception {
+                            responseObserver.onNext(
+                                StreamMessageServer.newBuilder()
+                                    .setId(id)
+                                    .setResponse(
+                                        StreamAskAttachmentResponse.newBuilder()
+                                            .setAllowed(value)
+                                            .build())
+                                    .build());
+                          }
+                        });
                   }
 
                   @Override
                   public void failure(ErrorCodeException ex) {
-                    executor.execute(new NamedRunnable("handler-can-attach-failure") {
-                      @Override
-                      public void execute() throws Exception {
-                        responseObserver.onNext(
-                            StreamMessageServer.newBuilder()
-                                               .setId(id)
-                                               .setError(StreamError.newBuilder().setCode(ex.code).build())
-                                               .build());
-                      }
-                    });
+                    executor.execute(
+                        new NamedRunnable("handler-can-attach-failure") {
+                          @Override
+                          public void execute() throws Exception {
+                            responseObserver.onNext(
+                                StreamMessageServer.newBuilder()
+                                    .setId(id)
+                                    .setError(StreamError.newBuilder().setCode(ex.code).build())
+                                    .build());
+                          }
+                        });
                   }
                 });
             return;
@@ -297,30 +252,32 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                 new Callback<>() {
                   @Override
                   public void success(Integer value) {
-                    executor.execute(new NamedRunnable("handler-attach-success") {
-                      @Override
-                      public void execute() throws Exception {
-                        responseObserver.onNext(
-                            StreamMessageServer.newBuilder()
-                                               .setId(id)
-                                               .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
-                                               .build());
-                      }
-                    });
+                    executor.execute(
+                        new NamedRunnable("handler-attach-success") {
+                          @Override
+                          public void execute() throws Exception {
+                            responseObserver.onNext(
+                                StreamMessageServer.newBuilder()
+                                    .setId(id)
+                                    .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
+                                    .build());
+                          }
+                        });
                   }
 
                   @Override
                   public void failure(ErrorCodeException ex) {
-                    executor.execute(new NamedRunnable("handler-attach-failure") {
-                      @Override
-                      public void execute() throws Exception {
-                        responseObserver.onNext(
-                            StreamMessageServer.newBuilder()
-                                               .setId(id)
-                                               .setError(StreamError.newBuilder().setCode(ex.code).build())
-                                               .build());
-                      }
-                    });
+                    executor.execute(
+                        new NamedRunnable("handler-attach-failure") {
+                          @Override
+                          public void execute() throws Exception {
+                            responseObserver.onNext(
+                                StreamMessageServer.newBuilder()
+                                    .setId(id)
+                                    .setError(StreamError.newBuilder().setCode(ex.code).build())
+                                    .build());
+                          }
+                        });
                   }
                 });
             return;
@@ -337,30 +294,33 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                 new Callback<>() {
                   @Override
                   public void success(Integer value) {
-                    executor.execute(new NamedRunnable("stream-send-success") {
-                      @Override
-                      public void execute() throws Exception {
-                        responseObserver.onNext(
-                            StreamMessageServer.newBuilder()
-                                               .setId(id)
-                                               .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
-                                               .build());
-                      }
-                    });
+                    executor.execute(
+                        new NamedRunnable("stream-send-success") {
+                          @Override
+                          public void execute() throws Exception {
+                            responseObserver.onNext(
+                                StreamMessageServer.newBuilder()
+                                    .setId(id)
+                                    .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
+                                    .build());
+                          }
+                        });
                   }
 
                   @Override
                   public void failure(ErrorCodeException exception) {
-                    executor.execute(new NamedRunnable("stream-send-failure") {
-                      @Override
-                      public void execute() throws Exception {
-                        responseObserver.onNext(
-                            StreamMessageServer.newBuilder()
-                                               .setId(id)
-                                               .setError(StreamError.newBuilder().setCode(exception.code).build())
-                                               .build());
-                      }
-                    });
+                    executor.execute(
+                        new NamedRunnable("stream-send-failure") {
+                          @Override
+                          public void execute() throws Exception {
+                            responseObserver.onNext(
+                                StreamMessageServer.newBuilder()
+                                    .setId(id)
+                                    .setError(
+                                        StreamError.newBuilder().setCode(exception.code).build())
+                                    .build());
+                          }
+                        });
                   }
                 });
             return;
@@ -383,12 +343,13 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         for (CoreStream stream : streams.values()) {
           stream.disconnect();
         }
-        executor.execute(new NamedRunnable("stream-on-completed") {
-          @Override
-          public void execute() throws Exception {
-            responseObserver.onCompleted();
-          }
-        });
+        executor.execute(
+            new NamedRunnable("stream-on-completed") {
+              @Override
+              public void execute() throws Exception {
+                responseObserver.onCompleted();
+              }
+            });
       }
     };
   }
@@ -403,6 +364,88 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     } catch (Exception ex) {
       LOGGER.convertedToErrorCode(ex, -1);
       responseObserver.onError(ex);
+    }
+  }
+
+  @Override
+  public StreamObserver<BillingForward> billingExchange(
+      StreamObserver<BillingReverse> responseObserver) {
+    SimpleExecutor executor = executors[rng.nextInt(executors.length)];
+    return new StreamObserver<BillingForward>() {
+      private boolean sentComplete = false;
+
+      @Override
+      public void onNext(BillingForward billingForward) {
+        executor.execute(
+            new NamedRunnable("processing-billing-next") {
+              @Override
+              public void execute() throws Exception {
+                switch (billingForward.getOperationCase()) {
+                  case BEGIN:
+                    {
+                      String id = nexus.billingBatchMaker.getNextAvailableBatchId();
+                      if (id != null) {
+                        String batch = nexus.billingBatchMaker.getBatch(id);
+                        responseObserver.onNext(
+                            BillingReverse.newBuilder()
+                                .setFound(
+                                    BillingBatchFound.newBuilder()
+                                        .setId(id)
+                                        .setBatch(batch)
+                                        .build())
+                                .build());
+                      } else {
+                        sendCompleteWhileInExecutor();
+                      }
+                    }
+                  case REMOVE:
+                    {
+                      BillingDeleteBill deleteBill = billingForward.getRemove();
+                      nexus.billingBatchMaker.deleteBatch(deleteBill.getId());
+                      responseObserver.onNext(
+                          BillingReverse.newBuilder()
+                              .setRemoved(BillingBatchRemoved.newBuilder().build())
+                              .build());
+                    }
+                }
+              }
+            });
+      }
+
+      private void sendCompleteWhileInExecutor() {
+        if (!sentComplete) {
+          sentComplete = true;
+        }
+      }
+
+      @Override
+      public void onError(Throwable throwable) {
+        LOGGER.convertedToErrorCode(throwable, ErrorCodes.GRPC_BILLING_UNEXPECTED_ERROR);
+      }
+
+      @Override
+      public void onCompleted() {
+        executor.execute(
+            new NamedRunnable("processing-billing-next") {
+              @Override
+              public void execute() throws Exception {
+
+                sendCompleteWhileInExecutor();
+              }
+            });
+      }
+    };
+  }
+
+  private static String fixEntropy(String entropy) {
+    if ("".equals(entropy)) {
+      return null;
+    }
+    try {
+      Long.parseLong(entropy);
+      return entropy;
+    } catch (NumberFormatException nfe) {
+      return "" + entropy.hashCode();
     }
   }
 }

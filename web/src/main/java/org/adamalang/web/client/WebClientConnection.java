@@ -22,11 +22,13 @@ public class WebClientConnection {
   private final ChannelHandlerContext ctx;
   private final AtomicInteger idgen;
   private final ConcurrentHashMap<Integer, WebJsonStream> streams;
+  private Runnable close;
 
-  public WebClientConnection(final ChannelHandlerContext ctx, ConcurrentHashMap<Integer, WebJsonStream> streams) {
+  WebClientConnection(final ChannelHandlerContext ctx, ConcurrentHashMap<Integer, WebJsonStream> streams, Runnable close) {
     this.ctx = ctx;
     this.idgen = new AtomicInteger(0);
     this.streams = streams;
+    this.close = close;
   }
 
   public int execute(ObjectNode request, WebJsonStream streamback) {
@@ -35,5 +37,9 @@ public class WebClientConnection {
     streams.put(id, streamback);
     ctx.writeAndFlush(new TextWebSocketFrame(request.toString()));
     return id;
+  }
+
+  public void close() {
+    this.close.run();
   }
 }

@@ -125,7 +125,9 @@ public class WebClientBase {
 
                       @Override
                       public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                        connection = new WebClientConnection(ctx, streams);
+                        connection = new WebClientConnection(ctx, streams, () -> {
+                          end(ctx);
+                        });
                       }
 
                       @Override

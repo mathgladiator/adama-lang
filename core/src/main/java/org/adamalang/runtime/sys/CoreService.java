@@ -83,6 +83,29 @@ public class CoreService {
     }
   }
 
+  /** reflect on the document's schema */
+  public void reflect(Key key, Callback<String> callback) {
+    int threadId = key.hashCode() % bases.length;
+    DocumentThreadBase base = bases[threadId];
+    base.executor.execute(
+        new NamedRunnable("reflect", key.space) {
+          @Override
+          public void execute() throws Exception {
+            livingDocumentFactoryFactory.fetch(key, new Callback<LivingDocumentFactory>() {
+              @Override
+              public void success(LivingDocumentFactory value) {
+                callback.success(value.reflection);
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                callback.failure(ex);
+              }
+            });
+          }
+        });
+  }
+
   /** create a document */
   public void create(NtClient who, Key key, String arg, String entropy, Callback<Void> callback) {
     // jump into thread caching which thread
