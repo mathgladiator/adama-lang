@@ -9,19 +9,25 @@
  */
 package org.adamalang.cli.commands;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2Client;
-import com.amazonaws.services.ec2.model.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.Json;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.ec2.Ec2Client;
+import software.amazon.awssdk.services.ec2.model.DescribeInstancesResponse;
+import software.amazon.awssdk.services.ec2.model.Instance;
+import software.amazon.awssdk.services.ec2.model.Reservation;
+import software.amazon.awssdk.services.ec2.model.Tag;
+import software.amazon.awssdk.services.elasticloadbalancingv2.ElasticLoadBalancingV2Client;
+import software.amazon.awssdk.services.elasticloadbalancingv2.model.*;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class Fleet {
   public static void execute(Config config, String[] args) throws Exception {
@@ -48,7 +54,7 @@ public class Fleet {
     }
   }
 
-  private static AmazonEC2 getEC2(Config config) {
+  private static Ec2Client getEC2(Config config) {
     String accessKeyId = config.get_string("aws_ec2_access_key_id", null);
     String secretAccessKey = config.get_string("aws_ec2_secret_access_key", null);
     String region = config.get_string("aws_ec2_region", null);
@@ -56,29 +62,53 @@ public class Fleet {
       throw new NullPointerException("not configured for fleet management");
     }
 
-    AWSCredentialsProvider provider = new AWSCredentialsProvider() {
+    AwsCredentialsProvider provider = new AwsCredentialsProvider() {
       @Override
-      public AWSCredentials getCredentials() {
-        return new AWSCredentials() {
+      public AwsCredentials resolveCredentials() {
+        return new AwsCredentials() {
           @Override
-          public String getAWSAccessKeyId() {
+          public String accessKeyId() {
             return accessKeyId;
           }
 
           @Override
-          public String getAWSSecretKey() {
+          public String secretAccessKey() {
             return secretAccessKey;
           }
         };
       }
+    };
 
+    return Ec2Client.builder().credentialsProvider(provider).region(Region.of(region)).build();
+  }
+
+
+  private static ElasticLoadBalancingV2Client getELB(Config config) {
+    String accessKeyId = config.get_string("aws_ec2_access_key_id", null);
+    String secretAccessKey = config.get_string("aws_ec2_secret_access_key", null);
+    String region = config.get_string("aws_ec2_region", null);
+    if (accessKeyId == null || secretAccessKey == null || region == null) {
+      throw new NullPointerException("not configured for fleet management");
+    }
+
+    AwsCredentialsProvider provider = new AwsCredentialsProvider() {
       @Override
-      public void refresh() {
+      public AwsCredentials resolveCredentials() {
+        return new AwsCredentials() {
+          @Override
+          public String accessKeyId() {
+            return accessKeyId;
+          }
 
+          @Override
+          public String secretAccessKey() {
+            return secretAccessKey;
+          }
+        };
       }
     };
 
-    return AmazonEC2Client.builder().withCredentials(provider).withRegion(region).build();
+    return ElasticLoadBalancingV2Client.builder().credentialsProvider(provider).region(Region.of(region)).build();
   }
 
   private static void fleetConfigure(Config config, String[] args) throws Exception {
@@ -115,69 +145,101 @@ public class Fleet {
   }
 
   private static void fleetShow(Config config, String[] args) throws Exception {
-    AmazonEC2 ec2 = getEC2(config);
+    Ec2Client ec2 = getEC2(config);
     boolean showNotOK = Util.scan("--all", args);
-    DescribeInstancesResult response = ec2.describeInstances();
-    for (Reservation reservation : response.getReservations()) {
-      for (Instance instance : reservation.getInstances()) {
-        String state = instance.getState().getName();
+    DescribeInstancesResponse response = ec2.describeInstances();
+    for (Reservation reservation : response.reservations()) {
+      for (Instance instance : reservation.instances()) {
+        String state = instance.state().nameAsString();
         boolean ok = "running".equals(state) || "pending".equals(state);
         if (ok) {
           String role = "unknown";
-          for (Tag tag : instance.getTags()) {
-            if ("role".equals(tag.getKey())) {
-              role = tag.getValue();
+          for (Tag tag : instance.tags()) {
+            if ("role".equals(tag.key())) {
+              role = tag.value();
             }
           }
-          System.out.println(instance.getInstanceId() + "," + state + "," + instance.getPublicIpAddress() + "," + instance.getPrivateIpAddress() + "," + instance.getSubnetId() + "," + role);
+          System.out.println(instance.instanceId() + "," + state + "," + instance.publicIpAddress() + "," + instance.privateIpAddress() + "," + instance.subnetId() + "," + role);
         } else if (showNotOK) {
-          System.out.println(instance.getInstanceId() + "," + state + "-,-");
+          System.out.println(instance.instanceId() + "," + state + "-,-");
         }
       }
     }
   }
 
   private static void fleetDeploy(Config config, String[] args) throws Exception {
-    AmazonEC2 ec2 = getEC2(config);
-    DescribeInstancesResult response = ec2.describeInstances();
+    Ec2Client ec2 = getEC2(config);
+    ElasticLoadBalancingV2Client elb = getELB(config);
+
+    String loadBalancerArn = config.get_string("loadbalancer-arn", null);
+    if (loadBalancerArn == null) {
+      throw new NullPointerException("config has no 'loadbalancer-arn'");
+    }
+    DescribeInstancesResponse response = ec2.describeInstances();
     String templateFile = Util.extractOrCrash("--template", "-t", args);
     String keyName = Util.extractOrCrash("--key", "-k", args);
     String template = Files.readString(new File(templateFile).toPath());
     ObjectNode configTemplate = Json.parseJsonObject(template);
     StringBuilder commands = new StringBuilder().append("#!/bin/sh\n");
     ArrayList<Instance> instances = new ArrayList<>();
-    for (Reservation reservation : response.getReservations()) {
-      for (Instance instance : reservation.getInstances()) {
-        String state = instance.getState().getName();
+    for (Reservation reservation : response.reservations()) {
+      for (Instance instance : reservation.instances()) {
+        String state = instance.state().nameAsString();
         if ("pending".equals(state)) {
-          throw new Exception("An instance (" + instance.getInstanceId() + ") is pending; can't configure");
+          throw new Exception("An instance (" + instance.instanceId() + ") is pending; can't configure");
         }
         if ("running".equals(state)) {
           instances.add(instance);
         }
       }
     }
-    commands.append("mkdir staging\n");
+    new File("staging").mkdir();
+    HashSet<String> frontendInstances = new HashSet<>();
     for (Instance instance : instances) {
       String role = "unknown";
-      for (Tag tag : instance.getTags()) {
-        if ("role".equals(tag.getKey())) {
-          role = tag.getValue();
+      for (Tag tag : instance.tags()) {
+        if ("role".equals(tag.key())) {
+          role = tag.value();
         }
       }
       configTemplate.put("role", role);
-      Files.writeString(new File("staging/" + instance.getPrivateIpAddress() + ".json").toPath(), configTemplate.toPrettyString());
-      Security.newServer(new String[] { "--ip", instance.getPrivateIpAddress(), "--out", "staging/" + instance.getPrivateIpAddress() + ".identity"});
-      commands.append("echo Uploading to ").append(instance.getPublicDnsName()).append("\n");
-      commands.append("scp -i ").append(keyName).append(" staging/" + instance.getPrivateIpAddress() + ".identity ec2-user@" + instance.getPublicIpAddress() + ":/home/ec2-user/me.identity\n");
-      commands.append("scp -i ").append(keyName).append(" staging/" + instance.getPrivateIpAddress() + ".json ec2-user@" + instance.getPublicIpAddress() + ":/home/ec2-user/.adama\n");
-      commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.getPublicIpAddress() + ":/home/ec2-user/release/adama.jar\n");
-      commands.append("rm staging/").append(instance.getPrivateIpAddress()).append(".identity\n");
-      commands.append("rm staging/").append(instance.getPrivateIpAddress()).append(".json\n");
+      if ("frontend".equals(role)) {
+        frontendInstances.add(instance.instanceId());
+
+      }
+      Files.writeString(new File("staging/" + instance.privateIpAddress() + ".json").toPath(), configTemplate.toPrettyString());
+      Security.newServer(new String[] { "--ip", instance.privateIpAddress(), "--out", "staging/" + instance.privateIpAddress() + ".identity"});
+      commands.append("echo Uploading to ").append(instance.publicDnsName()).append("\n");
+      commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".identity ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/me.identity\n");
+      commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".json ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/.adama\n");
+      commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/release/adama.jar\n");
+      commands.append("rm staging/").append(instance.privateIpAddress()).append(".identity\n");
+      commands.append("rm staging/").append(instance.privateIpAddress()).append(".json\n");
     }
     commands.append("rmdir staging\n");
     for (Instance instance : instances) {
-      commands.append("ssh -i ").append(keyName).append(" ec2-user@" + instance.getPublicIpAddress() + " sudo systemctl restart adama\n");
+      commands.append("ssh -i ").append(keyName).append(" ec2-user@" + instance.publicIpAddress() + " sudo systemctl restart adama\n");
+    }
+
+    ArrayList<TargetDescription> toRemove = new ArrayList<>();
+    ArrayList<TargetDescription> toAdd = new ArrayList<>();
+    for (TargetHealthDescription health : elb.describeTargetHealth(DescribeTargetHealthRequest.builder().targetGroupArn(loadBalancerArn).build()).targetHealthDescriptions()) {
+      if (frontendInstances.contains(health.target().id())) {
+        frontendInstances.remove(health.target().id());
+      } else {
+        toRemove.add(health.target());
+      }
+    }
+    for (String idToAdd : frontendInstances) {
+      toAdd.add(TargetDescription.builder().id(idToAdd).port(8080).build());
+    }
+    if (toAdd.size() > 0) {
+      elb.registerTargets(RegisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toAdd).build());
+      System.err.println("registered " + toAdd.size() + " targets");
+    }
+    if (toRemove.size() > 0) {
+      elb.deregisterTargets(DeregisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toRemove).build());
+      System.err.println("deregistered " + toRemove.size() + " targets");
     }
     Files.writeString(new File("execute.sh").toPath(), commands.toString());
   }

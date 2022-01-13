@@ -9,12 +9,12 @@
  */
 package org.adamalang.extern.aws;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 
-public class AWSConfig implements AWSCredentials, AWSCredentialsProvider {
+public class AWSConfig implements AwsCredentialsProvider, AwsCredentials {
   private final String accessKeyId;
   private final String secretKey;
   public final String fromEmailAddressForInit;
@@ -40,22 +40,17 @@ public class AWSConfig implements AWSCredentials, AWSCredentialsProvider {
   }
 
   @Override
-  public String getAWSAccessKeyId() {
+  public String accessKeyId() {
     return accessKeyId;
   }
 
   @Override
-  public String getAWSSecretKey() {
+  public String secretAccessKey() {
     return secretKey;
   }
 
   @Override
-  public AWSCredentials getCredentials() {
+  public AwsCredentials resolveCredentials() {
     return this;
-  }
-
-  @Override
-  public void refresh() {
-
   }
 }
