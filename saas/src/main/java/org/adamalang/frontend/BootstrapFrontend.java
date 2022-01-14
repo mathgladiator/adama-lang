@@ -13,9 +13,6 @@ import org.adamalang.api.ConnectionNexus;
 import org.adamalang.api.ConnectionRouter;
 import org.adamalang.api.Metrics;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.common.metrics.RequestResponseMonitor;
-import org.adamalang.common.metrics.StreamMonitor;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.transforms.Authenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
@@ -38,58 +35,8 @@ public class BootstrapFrontend {
     RootHandlerImpl handler = new RootHandlerImpl(extern);
     SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(SimpleExecutor.create("space-policy-locator"), extern);
     UserIdResolver userIdResolver = new UserIdResolver(SimpleExecutor.create("user-id-resolver"), extern);
+    Metrics metrics = new Metrics(extern.metricsFactory);
 
-    Metrics metrics = new Metrics(new MetricsFactory() {
-      @Override
-      public RequestResponseMonitor makeRequestResponseMonitor(String name) {
-        return new RequestResponseMonitor() {
-          @Override
-          public RequestResponseMonitorInstance start() {
-            return new RequestResponseMonitorInstance() {
-              @Override
-              public void success() {
-
-              }
-
-              @Override
-              public void extra() {
-
-              }
-
-              @Override
-              public void failure(int code) {
-
-              }
-            };
-          }
-        };
-      }
-
-      @Override
-      public StreamMonitor makeStreamMonitor(String name) {
-        return new StreamMonitor() {
-          @Override
-          public StreamMonitorInstance start() {
-            return new StreamMonitorInstance() {
-              @Override
-              public void progress() {
-
-              }
-
-              @Override
-              public void finish() {
-
-              }
-
-              @Override
-              public void failure(int code) {
-
-              }
-            };
-          }
-        };
-      }
-    });
     return context ->
         new ServiceConnection() {
           // TODO: pick an executor (randomly? pick two and do the faster of the two?)

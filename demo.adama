@@ -11,3 +11,9 @@ public int x;
 @construct {
   x = 123;
 }
+
+message M { }
+
+channel foo(M m) {
+  x = 2 * x + 1;
+}

@@ -9,6 +9,7 @@
  */
 package org.adamalang.extern;
 
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
 
@@ -19,13 +20,15 @@ public class ExternNexus {
   public final DataBase dataBaseDeployments;
   public final DataBase dataBaseBackend;
   public final Client client;
+  public final MetricsFactory metricsFactory;
 
-  public ExternNexus(Email email, DataBase dataBaseManagement, DataBase dataBaseDeployments,  DataBase dataBaseBackend, Client client) {
+  public ExternNexus(Email email, DataBase dataBaseManagement, DataBase dataBaseDeployments,  DataBase dataBaseBackend, Client client, MetricsFactory metricsFactory) {
     this.email = email;
     this.dataBaseManagement = dataBaseManagement;
     this.dataBaseDeployments = dataBaseDeployments;
     this.dataBaseBackend = dataBaseBackend;
     this.client = client;
+    this.metricsFactory = metricsFactory;
   }
 
   public void close() throws Exception {

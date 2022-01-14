@@ -15,7 +15,7 @@ import org.adamalang.web.client.WebClientConnection;
 public interface WebLifecycle {
   public void connected(WebClientConnection connection);
 
-  public void ping();
+  public void ping(int latency);
 
   public void failure(Throwable t);
 

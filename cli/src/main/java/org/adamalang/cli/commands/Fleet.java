@@ -180,14 +180,39 @@ public class Fleet {
     return role;
   }
 
-  private static void fleetDeploy(Config config, String[] args) throws Exception {
-    Ec2Client ec2 = getEC2(config);
+  private static void fleetDeployUpdateELB(Config config, HashSet<String> frontendInstances) {
     ElasticLoadBalancingV2Client elb = getELB(config);
-
     String loadBalancerArn = config.get_string("loadbalancer-arn", null);
     if (loadBalancerArn == null) {
       throw new NullPointerException("config has no 'loadbalancer-arn'");
     }
+    ArrayList<TargetDescription> toRemove = new ArrayList<>();
+    ArrayList<TargetDescription> toAdd = new ArrayList<>();
+    for (TargetHealthDescription health : elb.describeTargetHealth(DescribeTargetHealthRequest.builder().targetGroupArn(loadBalancerArn).build()).targetHealthDescriptions()) {
+      if (frontendInstances.contains(health.target().id())) {
+        frontendInstances.remove(health.target().id());
+      } else {
+        toRemove.add(health.target());
+      }
+    }
+    for (String idToAdd : frontendInstances) {
+      toAdd.add(TargetDescription.builder().id(idToAdd).port(8080).build());
+    }
+    if (toAdd.size() > 0) {
+      elb.registerTargets(RegisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toAdd).build());
+      System.err.println("registered " + toAdd.size() + " targets");
+    }
+    if (toRemove.size() > 0) {
+      elb.deregisterTargets(DeregisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toRemove).build());
+      System.err.println("deregistered " + toRemove.size() + " targets");
+    }
+  }
+
+  private static void fleetDeploy(Config config, String[] args) throws Exception {
+    Ec2Client ec2 = getEC2(config);
+    String scopeToJustRole = Util.extractWithDefault("--scope", "-s", "*", args);
+
+
     DescribeInstancesResponse response = ec2.describeInstances();
     String templateFile = Util.extractOrCrash("--template", "-t", args);
     String keyName = Util.extractOrCrash("--key", "-k", args);
@@ -203,12 +228,18 @@ public class Fleet {
           throw new Exception("An instance (" + instance.instanceId() + ") is pending; can't configure");
         }
         if ("running".equals(state)) {
-          if (roleOf(instance).equals("frontend")) {
+          String role = roleOf(instance);
+          if (role.equals("frontend")) {
             gossipHosts.add(instance.privateIpAddress() + ":8004");
-          } else if (roleOf(instance).equals("backend")) {
+          } else if (role.equals("backend")) {
             gossipHosts.add(instance.privateIpAddress() + ":8002");
+          } else if (role.equals("overlord")) {
+            gossipHosts.add(instance.privateIpAddress() + ":8010");
+            System.out.println(Util.prefix("OVERLORD AT ", Util.ANSI.Red) + instance.publicIpAddress());
           }
-          instances.add(instance);
+          if (scopeToJustRole.equals(role) || scopeToJustRole.equals("*")) {
+            instances.add(instance);
+          }
         }
       }
     }
@@ -231,13 +262,11 @@ public class Fleet {
       configTemplate.put("role", role);
       if ("frontend".equals(role)) {
         frontendInstances.add(instance.instanceId());
-
       }
       Files.writeString(new File("staging/" + instance.privateIpAddress() + ".json").toPath(), configTemplate.toPrettyString());
       Files.writeString(new File("staging/" + instance.privateIpAddress() + ".sh").toPath(), "#!/bin/sh\njava -jar adama.jar service auto\n");
-
       Security.newServer(new String[] { "--ip", instance.privateIpAddress(), "--out", "staging/" + instance.privateIpAddress() + ".identity"});
-      commands.append("echo Uploading to ").append(instance.publicDnsName()).append("\n");
+      commands.append("echo Uploading to ").append(instance.publicIpAddress()).append("\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".identity ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/me.identity\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".json ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/.adama\n");
       commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama.jar\n");
@@ -249,29 +278,16 @@ public class Fleet {
     }
     commands.append("rmdir staging\n");
     for (Instance instance : instances) {
+      commands.append("echo ").append(Util.prefix("RESTART", Util.ANSI.Red)).append(" ").append(instance.publicIpAddress()).append("\n");
       commands.append("ssh -i ").append(keyName).append(" ec2-user@" + instance.publicIpAddress() + " sudo systemctl restart adama\n");
     }
 
-    ArrayList<TargetDescription> toRemove = new ArrayList<>();
-    ArrayList<TargetDescription> toAdd = new ArrayList<>();
-    for (TargetHealthDescription health : elb.describeTargetHealth(DescribeTargetHealthRequest.builder().targetGroupArn(loadBalancerArn).build()).targetHealthDescriptions()) {
-      if (frontendInstances.contains(health.target().id())) {
-        frontendInstances.remove(health.target().id());
-      } else {
-        toRemove.add(health.target());
-      }
+    if (scopeToJustRole.equals("*")) {
+      System.err.println("Updating ELB");
+      fleetDeployUpdateELB(config, frontendInstances);
     }
-    for (String idToAdd : frontendInstances) {
-      toAdd.add(TargetDescription.builder().id(idToAdd).port(8080).build());
-    }
-    if (toAdd.size() > 0) {
-      elb.registerTargets(RegisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toAdd).build());
-      System.err.println("registered " + toAdd.size() + " targets");
-    }
-    if (toRemove.size() > 0) {
-      elb.deregisterTargets(DeregisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toRemove).build());
-      System.err.println("deregistered " + toRemove.size() + " targets");
-    }
+
+
     Files.writeString(new File("execute.sh").toPath(), commands.toString());
   }
 

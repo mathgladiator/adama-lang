@@ -58,7 +58,7 @@ public class WebClientBaseTests {
             }
 
             @Override
-            public void ping() {
+            public void ping(int latency) {
               firstPing.countDown();
             }
 
@@ -112,7 +112,7 @@ public class WebClientBaseTests {
             }
 
             @Override
-            public void ping() {
+            public void ping(int latency) {
 
             }
 
@@ -159,7 +159,7 @@ public class WebClientBaseTests {
             }
 
             @Override
-            public void ping() {
+            public void ping(int latency) {
               firstPing.countDown();
             }
 
@@ -222,7 +222,7 @@ public class WebClientBaseTests {
             }
 
             @Override
-            public void ping() {
+            public void ping(int latency) {
               firstPing.countDown();
             }
 
@@ -262,8 +262,7 @@ public class WebClientBaseTests {
             }
 
             @Override
-            public void ping() {
-                          }
+            public void ping(int latency) {}
 
             @Override
             public void failure(Throwable t) {

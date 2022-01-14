@@ -47,7 +47,7 @@ public class WebSocketClient implements AutoCloseable {
       }
 
       @Override
-      public void ping() {
+      public void ping(int latency) {
 
       }
 

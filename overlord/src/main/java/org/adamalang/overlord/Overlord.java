@@ -10,25 +10,15 @@
 package org.adamalang.overlord;
 
 import org.adamalang.gossip.Engine;
-import org.adamalang.gossip.proto.Endpoint;
 import org.adamalang.grpc.client.Client;
+import org.adamalang.overlord.roles.PrometheusTargetMaker;
 
 import java.io.File;
 
 public class Overlord {
   public static void execute(Engine engine, Client client, File targetsDestination) {
+    PrometheusTargetMaker.kickOff(engine, targetsDestination);
 
-    // TODO: ROLE #1: scan gossip table to make targets.json for promethesus (and either set on disk locally OR send to server via ssh)
-    engine.setWatcher((endpoints) -> {
-      // TODO: start building a JSON array
-      for (Endpoint endpoint : endpoints) {
-        if (endpoint.getMonitoringPort() >= 0) {
-          // ADD entry to json array
-        }
-      }
-      // write array to disk at location specified
-      // Files.writeString(targetsDestination.toPath(), "");
-    });
 
     // TODO: ROLE #2.A: pick a random adama host, download billing data, cut bills into hourly segments over to billing database
     // client.pickRandomHost((client) -> {});

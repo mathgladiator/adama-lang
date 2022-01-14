@@ -78,7 +78,8 @@ public class WebClientBase {
                 .addLast(
                     new SimpleChannelInboundHandler<TextWebSocketFrame>() {
                       WebClientConnection connection;
-                      final ConcurrentHashMap<Integer, WebJsonStream> streams = new ConcurrentHashMap<>();
+                      final ConcurrentHashMap<Integer, WebJsonStream> streams =
+                          new ConcurrentHashMap<>();
                       private boolean closed = false;
 
                       @Override
@@ -87,7 +88,10 @@ public class WebClientBase {
                           throws Exception {
                         ObjectNode node = Json.parseJsonObject(frame.text());
                         if (node.has("ping")) {
-                          lifecycle.ping();
+                          int latency = node.get("latency").asInt();
+                          if (latency > 0) {
+                            lifecycle.ping(latency);
+                          }
                           node.put("pong", true);
                           ch.writeAndFlush(new TextWebSocketFrame(node.toString()));
                           return;
@@ -125,9 +129,13 @@ public class WebClientBase {
 
                       @Override
                       public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                        connection = new WebClientConnection(ctx, streams, () -> {
-                          end(ctx);
-                        });
+                        connection =
+                            new WebClientConnection(
+                                ctx,
+                                streams,
+                                () -> {
+                                  end(ctx);
+                                });
                       }
 
                       @Override

@@ -14,7 +14,7 @@ import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.extern.prometheus.PrometheusBase;
+import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.Metrics;
@@ -139,9 +139,11 @@ public class Service {
   }
 
   public static void serviceOverlord(Config config) throws Exception {
-    int gossipPort = config.get_int("gossip_overlord_port", 8250);
+    int gossipPort = config.get_int("gossip_overlord_port", 8010);
+    int monitoringPort = config.get_int("monitoring_overlord_port", 8011);
+
     String identityFileName = config.get_string("identity_filename", "me.identity");
-    File targetsPath = new File(config.get_string("targetsPath", "targets.json"));
+    File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
     Engine engine =
         new Engine(
@@ -149,9 +151,12 @@ public class Service {
             TimeSource.REAL_TIME,
             new HashSet<>(config.get_str_list("bootstrap")),
             gossipPort,
+            monitoringPort,
             GOSSIP_METRICS);
     engine.start();
     Client client = new Client(identity);
+    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
+
     Overlord.execute(engine, client, targetsPath);
   }
 
@@ -171,6 +176,7 @@ public class Service {
             TimeSource.REAL_TIME,
             new HashSet<>(config.get_str_list("bootstrap")),
             gossipPort,
+            monitoringPort,
             GOSSIP_METRICS);
     engine.start();
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
@@ -194,12 +200,11 @@ public class Service {
           // TODO: submit to billing service
           return true;
         });
-    PrometheusBase prometheusBase = new PrometheusBase(monitoringPort);
+    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
 
     engine.newApp(
         "adama",
         port,
-        monitoringPort,
         (hb) -> {
           billingPubSub.subscribe(
               (bills) -> {
@@ -280,6 +285,7 @@ public class Service {
             TimeSource.REAL_TIME,
             new HashSet<>(config.get_str_list("bootstrap")),
             gossipPort,
+            monitoringPort,
             GOSSIP_METRICS);
     engine.start();
     System.err.println("gossiping on:" + gossipPort);
@@ -287,7 +293,7 @@ public class Service {
     System.err.println("standing up http on:" + webConfig.port);
 
     // TODO: Stand up prometheuess
-    PrometheusBase prometheusBase = new PrometheusBase(monitoringPort);
+    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
 
     Client client = new Client(identity);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
@@ -317,7 +323,8 @@ public class Service {
             dataBaseFront,
             dataBaseDeployments,
             dataBaseBackend,
-            client);
+            client,
+            prometheusMetricsFactory);
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus);
 

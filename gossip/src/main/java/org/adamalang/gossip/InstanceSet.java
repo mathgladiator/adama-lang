@@ -81,12 +81,12 @@ public class InstanceSet {
   }
 
   public ArrayList<String> targetsFor(String role) {
-    ArrayList<String> targets = new ArrayList<>();
+    TreeSet<String> targets = new TreeSet<>();
     for (Instance instance : instances) {
       if (role.equals(instance.role())) {
         targets.add(instance.target());
       }
     }
-    return targets;
+    return new ArrayList<>(targets);
   }
 }

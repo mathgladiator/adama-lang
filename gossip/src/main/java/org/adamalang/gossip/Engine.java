@@ -51,7 +51,7 @@ public class Engine implements AutoCloseable {
   private Consumer<Collection<Endpoint>> watcher;
 
   public Engine(
-      MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, Metrics metrics)
+      MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, int monitoringPort,  Metrics metrics)
       throws Exception {
     this.credentials =
         TlsChannelCredentials.newBuilder() //
@@ -66,7 +66,7 @@ public class Engine implements AutoCloseable {
                 .setIp(identity.ip)
                 .setId(id)
                 .setPort(port)
-                .setMonitoringPort(-1)
+                .setMonitoringPort(monitoringPort)
                 .setCounter(0)
                 .setRole("gossip")
                 .build()),
@@ -98,7 +98,7 @@ public class Engine implements AutoCloseable {
                     .build());
   }
 
-  public void newApp(String role, int port, int monitoringPort, Consumer<Runnable> callback) {
+  public void newApp(String role, int port, Consumer<Runnable> callback) {
     executor.execute(
         new NamedRunnable("engine-new-app") {
           @Override
@@ -110,7 +110,7 @@ public class Engine implements AutoCloseable {
                         .setIp(ip)
                         .setId(id)
                         .setPort(port)
-                        .setMonitoringPort(monitoringPort)
+                        .setMonitoringPort(-1)
                         .setCounter(0)
                         .setRole(role)
                         .build()),

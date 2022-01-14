@@ -13,6 +13,7 @@ import org.adamalang.common.ConfigObject;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.frontend.BootstrapFrontend;
@@ -51,7 +52,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config)), "frontend"));
     this.installer = new FrontendManagementInstaller(dataBase);
     installer.install();
-    this.nexus = new ExternNexus(this, dataBase, dataBase, dataBase, new Client(new MachineIdentity("{\"ip\":\"x\",\"key\":\"y\",\"cert\":\"z\",\"trust\":\"w\"}")));
+    this.nexus = new ExternNexus(this, dataBase, dataBase, dataBase, new Client(new MachineIdentity("{\"ip\":\"x\",\"key\":\"y\",\"cert\":\"z\",\"trust\":\"w\"}")), new NoOpMetricsFactory());
     this.frontend = BootstrapFrontend.make(nexus);
     this.context = new ConnectionContext("home", "ip", "agent");
     connection = this.frontend.establish(context);
