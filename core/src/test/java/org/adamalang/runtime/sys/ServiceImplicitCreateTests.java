@@ -12,6 +12,7 @@ package org.adamalang.runtime.sys;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
@@ -26,6 +27,7 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ServiceImplicitCreateTests {
+  private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@can_create(who) { return true; } @can_invent(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
@@ -37,7 +39,7 @@ public class ServiceImplicitCreateTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latchClient = streamback.latchAt(2);
@@ -63,7 +65,7 @@ public class ServiceImplicitCreateTests {
     TimeSource time = new MockTime();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback1 = new MockStreamback();
       MockStreamback streamback2 = new MockStreamback();
@@ -114,7 +116,7 @@ public class ServiceImplicitCreateTests {
     };
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(proxyFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, proxyFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback1 = new MockStreamback();
       service.connect(NtClient.NO_ONE, KEY, streamback1);
@@ -133,7 +135,7 @@ public class ServiceImplicitCreateTests {
     MockInstantDataService realDataService = new MockInstantDataService();
     realDataService.failInitializationAgainWithWrongErrorCode();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback1 = new MockStreamback();
       MockStreamback streamback2 = new MockStreamback();

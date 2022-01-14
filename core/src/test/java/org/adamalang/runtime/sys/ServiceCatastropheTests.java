@@ -10,6 +10,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.mocks.MockTime;
@@ -20,6 +21,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ServiceCatastropheTests {
+  private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final NtClient ALICE = new NtClient("alice", "test");
   private static final NtClient BOB = new NtClient("bob", "test");
   private static final Key KEY = new Key("space", "key");
@@ -35,7 +37,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       Runnable latch = realDataService.latchLogAt(3);
       NullCallbackLatch created = new NullCallbackLatch();
@@ -77,7 +79,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsAfterLoadForReconciliation(250);
@@ -155,7 +157,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsAfterLoadForReconciliation(250);
@@ -201,7 +203,7 @@ public class ServiceCatastropheTests {
     MockFailureDataService failureDataService = new MockFailureDataService();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     service.tune(
         (base) -> {
           base.setMillisecondsForCleanupCheck(25);

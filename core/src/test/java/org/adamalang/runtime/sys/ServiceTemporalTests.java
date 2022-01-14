@@ -10,6 +10,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -23,6 +24,7 @@ import org.junit.Test;
 import java.util.HashMap;
 
 public class ServiceTemporalTests {
+  private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; transition #bump in 0.25; } #bump { x += 1000; transition #end; } #end {} ";
@@ -35,7 +37,7 @@ public class ServiceTemporalTests {
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, TimeSource.REAL_TIME, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, TimeSource.REAL_TIME, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);
@@ -78,7 +80,7 @@ public class ServiceTemporalTests {
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, new MockTime(), 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, new MockTime(), 3);
     service.tune((base) -> base.setMillisecondsForCleanupCheck(5));
     try {
       Runnable latch = dataService.latchLogAt(9);

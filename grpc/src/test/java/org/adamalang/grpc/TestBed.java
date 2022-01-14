@@ -10,12 +10,14 @@
 package org.adamalang.grpc;
 
 import org.adamalang.common.*;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.server.Server;
 import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.billing.DiskBillingBatchMaker;
@@ -62,6 +64,7 @@ public class TestBed implements AutoCloseable {
 
     this.coreService =
         new CoreService(
+            new CoreMetrics(new NoOpMetricsFactory()),
             base, //
             billingPubSub.publisher(), //
             new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //

@@ -22,9 +22,7 @@ public class ConnectionNexus {
   public final SpacePolicyLocator spaceService;
 
   public ConnectionNexus(Metrics metrics, Executor executor, UserIdResolver emailService, Authenticator identityService, SpacePolicyLocator spaceService) {
-    this.metrics = metrics;
-    this.executor = executor;
-    this.emailService = emailService;
+    this.metrics = metrics;    this.executor = executor;    this.emailService = emailService;
     this.identityService = identityService;
     this.spaceService = spaceService;
   }

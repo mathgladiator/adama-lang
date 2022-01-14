@@ -59,4 +59,29 @@ public class NoOpMetricsFactory implements MetricsFactory {
       }
     };
   }
+
+  @Override
+  public CallbackMonitor makeCallbackMonitor(String name) {
+    return new CallbackMonitor() {
+      @Override
+      public CallbackMonitorInstance start() {
+        return new CallbackMonitorInstance() {
+          @Override
+          public void success() {
+
+          }
+
+          @Override
+          public void failure(int code) {
+
+          }
+        };
+      }
+    };
+  }
+
+  @Override
+  public Runnable counter(String name) {
+    return () -> {};
+  }
 }

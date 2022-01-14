@@ -12,6 +12,7 @@ package org.adamalang.runtime.sys;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.mocks.MockTime;
@@ -24,6 +25,8 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Test;
 
 public class ServiceCreateTests {
+  private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
+
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
@@ -35,7 +38,7 @@ public class ServiceCreateTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);
@@ -52,7 +55,7 @@ public class ServiceCreateTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created1 = new NullCallbackLatch();
       NullCallbackLatch created2 = new NullCallbackLatch();
@@ -72,7 +75,7 @@ public class ServiceCreateTests {
         new MockRacerLivingDocumentFactoryFactory();
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created1 = new NullCallbackLatch();
       NullCallbackLatch created2 = new NullCallbackLatch();
@@ -94,7 +97,7 @@ public class ServiceCreateTests {
         new MockRacerLivingDocumentFactoryFactory();
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       Runnable latchAfter = factoryFactory.latchAt(1);

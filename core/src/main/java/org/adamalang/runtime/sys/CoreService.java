@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 
 /** The core service enables consumers to manage an in-process Adama */
 public class CoreService {
+  private final CoreMetrics metrics;
   private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
   private final DocumentThreadBase[] bases;
   private final AtomicBoolean alive;
@@ -39,11 +40,13 @@ public class CoreService {
    * @param nThreads the number of threads to use
    */
   public CoreService(
+      CoreMetrics metrics,
       LivingDocumentFactoryFactory livingDocumentFactoryFactory,
       Consumer<HashMap<String, PredictiveInventory.Billing>> billing,
       DataService dataService,
       TimeSource time,
       int nThreads) {
+    this.metrics = metrics;
     this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
     bases = new DocumentThreadBase[nThreads];
     this.alive = new AtomicBoolean(true);
@@ -84,7 +87,8 @@ public class CoreService {
   }
 
   /** reflect on the document's schema */
-  public void reflect(Key key, Callback<String> callback) {
+  public void reflect(Key key, Callback<String> callbackReal) {
+    Callback<String> callback = metrics.reflect.wrap(callbackReal);
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
     base.executor.execute(
@@ -107,7 +111,8 @@ public class CoreService {
   }
 
   /** create a document */
-  public void create(NtClient who, Key key, String arg, String entropy, Callback<Void> callback) {
+  public void create(NtClient who, Key key, String arg, String entropy, Callback<Void> callbackReal) {
+    Callback<Void> callback = metrics.serviceCreate.wrap(callbackReal);
     // jump into thread caching which thread
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
@@ -125,7 +130,7 @@ public class CoreService {
             // fetch the factory
             livingDocumentFactoryFactory.fetch(
                 key,
-                new Callback<LivingDocumentFactory>() {
+                metrics.factoryFetchCreate.wrap(new Callback<LivingDocumentFactory>() {
                   @Override
                   public void success(LivingDocumentFactory factory) {
                     try {
@@ -146,7 +151,7 @@ public class CoreService {
                         entropy,
                         null,
                         base,
-                        new Callback<>() {
+                        metrics.documentFresh.wrap(new Callback<>() {
                           @Override
                           public void success(DurableLivingDocument document) {
                             // jump into the thread; note, the data service must ensure this will
@@ -166,14 +171,14 @@ public class CoreService {
                           public void failure(ErrorCodeException ex) {
                             callback.failure(ex);
                           }
-                        });
+                        }));
                   }
 
                   @Override
                   public void failure(ErrorCodeException ex) {
                     callback.failure(ex);
                   }
-                });
+                }));
           }
         });
   }
@@ -185,6 +190,7 @@ public class CoreService {
 
   /** internal: do the connect with retry */
   private void connect(NtClient who, Key key, Streamback stream, boolean canRetry) {
+    // TODO: instrument the stream
     load(
         key,
         new Callback<>() {
@@ -198,7 +204,7 @@ public class CoreService {
             if (exOriginal.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
               livingDocumentFactoryFactory.fetch(
                   key,
-                  new Callback<LivingDocumentFactory>() {
+                  metrics.factoryFetchConnect.wrap(new Callback<>() {
                     @Override
                     public void success(LivingDocumentFactory factory) {
                       try {
@@ -211,7 +217,7 @@ public class CoreService {
                             key,
                             "{}",
                             null,
-                            new Callback<Void>() {
+                            metrics.implicitCreate.wrap(new Callback<Void>() {
                               @Override
                               public void success(Void value) {
                                 connect(who, key, stream, false);
@@ -225,7 +231,7 @@ public class CoreService {
                                   stream.failure(exOriginal);
                                 }
                               }
-                            });
+                            }));
                       } catch (ErrorCodeException exNew) {
                         stream.failure(exNew);
                       }
@@ -235,7 +241,7 @@ public class CoreService {
                     public void failure(ErrorCodeException ex) {
                       stream.failure(exOriginal);
                     }
-                  });
+                  }));
               return;
             }
             stream.failure(exOriginal);
@@ -243,7 +249,9 @@ public class CoreService {
         });
   }
 
-  private void load(Key key, Callback<DurableLivingDocument> callback) {
+  private void load(Key key, Callback<DurableLivingDocument> callbackReal) {
+    Callback<DurableLivingDocument> callback = metrics.serviceLoad.wrap(callbackReal);
+
     // bind to the thread
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
@@ -264,7 +272,7 @@ public class CoreService {
             // let's load the factory and pull from source
             livingDocumentFactoryFactory.fetch(
                 key,
-                new Callback<>() {
+                metrics.factoryFetchLoad.wrap(new Callback<>() {
                   @Override
                   public void success(LivingDocumentFactory factory) {
                     // pull from data source
@@ -273,7 +281,7 @@ public class CoreService {
                         factory,
                         null,
                         base,
-                        new Callback<>() {
+                        metrics.documentLoad.wrap(new Callback<>() {
                           @Override
                           public void success(DurableLivingDocument documentMade) {
                             // it was found, let's try to put it into memory
@@ -306,14 +314,14 @@ public class CoreService {
                           public void failure(ErrorCodeException ex) {
                             callback.failure(ex);
                           }
-                        });
+                        }));
                   }
 
                   @Override
                   public void failure(ErrorCodeException ex) {
                     callback.failure(ex);
                   }
-                });
+                }));
           }
         });
   }
@@ -340,10 +348,10 @@ public class CoreService {
                     stream.status(Streamback.StreamStatus.Disconnected);
                   }
                 },
-                new Callback<>() {
+                metrics.createPrivateView.wrap(new Callback<>() {
                   @Override
                   public void success(PrivateView view) {
-                    CoreStream core = new CoreStream(who, inventory, document, view);
+                    CoreStream core = new CoreStream(metrics, who, inventory, document, view);
                     stream.onSetupComplete(core);
                   }
 
@@ -351,7 +359,7 @@ public class CoreService {
                   public void failure(ErrorCodeException ex) {
                     stream.failure(ex);
                   }
-                });
+                }));
           }
 
           @Override
@@ -398,7 +406,7 @@ public class CoreService {
       DocumentThreadBase base, Key key, DurableLivingDocument document, DeploymentMonitor monitor) {
     livingDocumentFactoryFactory.fetch(
         key,
-        new Callback<>() {
+        metrics.factoryFetchDeploy.wrap(new Callback<>() {
           @Override
           public void success(LivingDocumentFactory newFactory) {
             base.executor.execute(
@@ -411,7 +419,7 @@ public class CoreService {
                       try {
                         document.deploy(
                             newFactory,
-                            new Callback<Integer>() {
+                            metrics.deploy.wrap(new Callback<Integer>() {
                               @Override
                               public void success(Integer value) {}
 
@@ -419,7 +427,7 @@ public class CoreService {
                               public void failure(ErrorCodeException ex) {
                                 monitor.witnessException(ex);
                               }
-                            });
+                            }));
                       } catch (ErrorCodeException ex) {
                         monitor.witnessException(ex);
                       }
@@ -432,6 +440,6 @@ public class CoreService {
           public void failure(ErrorCodeException ex) {
             monitor.witnessException(ex);
           }
-        });
+        }));
   }
 }

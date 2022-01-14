@@ -15,6 +15,7 @@ import io.prometheus.client.Histogram;
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.hotspot.GarbageCollectorExports;
 import io.prometheus.client.hotspot.MemoryPoolsExports;
+import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.common.metrics.StreamMonitor;
@@ -45,8 +46,6 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter failure = Counter.build().name("rr_" + name + "_failure").help("Request failure for " + name).register();
     Gauge inflight = Gauge.build().name("rr_" + name + "_inflight").help("Inprogress streams for " + name).register();
     Histogram firstLatency = Histogram.build().name("rr_" + name + "_latency").help("Latency for the first bit of progress for " + name).register();
-
-
     return () -> {
       Histogram.Timer timer = firstLatency.startTimer();
       start.inc();
@@ -82,6 +81,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     };
   }
 
+  // TODO: FIX TOOL THAT GENERATES NAMES
   private static String correctName(String nameRaw) {
     // TODO: lex the name and remove everything bad
     return nameRaw.replaceAll(Pattern.quote("/"), "").replaceAll(Pattern.quote("-"), "").toLowerCase(Locale.ROOT);
@@ -138,6 +138,54 @@ public class PrometheusMetricsFactory implements MetricsFactory {
           dec();
         }
       };
+    };
+  }
+
+  @Override
+  public CallbackMonitor makeCallbackMonitor(String name) {
+    Counter start = Counter.build().name("cb_" + name + "_start").help("Callback started for " + name).register();
+    Counter success = Counter.build().name("cb_" + name + "_success").help("Callback success for " + name).register();
+    Counter failure = Counter.build().name("cb_" + name + "_failure").help("Callback failure for " + name).register();
+    Gauge inflight = Gauge.build().name("cb_" + name + "_inflight").help("Inprogress callbacks for " + name).register();
+    Histogram latency = Histogram.build().name("cb_" + name + "_latency").help("Latency callback to succeed " + name).register();
+    return new CallbackMonitor() {
+      @Override
+      public CallbackMonitor.CallbackMonitorInstance start() {
+        start.inc();
+        inflight.inc();
+        Histogram.Timer timer = latency.startTimer();
+        return new CallbackMonitorInstance() {
+          boolean first = true;
+
+          private void time() {
+            if (first) {
+              timer.observeDuration();
+              inflight.dec();
+              first = false;
+            }
+          }
+
+          @Override
+          public void success() {
+            success.inc();
+            time();
+          }
+
+          @Override
+          public void failure(int code) {
+            failure.inc();
+            time();
+          }
+        };
+      }
+    };
+  }
+
+  @Override
+  public Runnable counter(String name) {
+    Counter start = Counter.build().name("raw_" + name).help("Raw counter for " + name).register();
+    return () -> {
+      start.inc();
     };
   }
 }

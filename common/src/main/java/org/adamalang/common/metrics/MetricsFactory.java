@@ -19,4 +19,10 @@ public interface MetricsFactory {
 
   /** produce a monitor for a stream operation */
   StreamMonitor makeStreamMonitor(String name);
+
+  /** produce a monitor for a callback */
+  CallbackMonitor makeCallbackMonitor(String name);
+
+  /** produce a counter */
+  Runnable counter(String name);
 }

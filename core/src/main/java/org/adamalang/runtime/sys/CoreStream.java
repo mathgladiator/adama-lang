@@ -20,16 +20,19 @@ import org.adamalang.runtime.natives.NtClient;
  * interaction model such that consumers don't need to think about how threading happens.
  */
 public class CoreStream {
+  private final CoreMetrics metrics;
   private final NtClient who;
   private final PredictiveInventory inventory;
   private final DurableLivingDocument document;
   private final PrivateView view;
 
   public CoreStream(
+      CoreMetrics metrics,
       NtClient who,
       PredictiveInventory inventory,
       DurableLivingDocument document,
       PrivateView view) {
+    this.metrics = metrics;
     this.who = who;
     this.inventory = inventory;
     this.document = document;

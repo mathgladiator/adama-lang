@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.mocks.MockTime;
@@ -24,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ServiceDocumentControlTests {
+  private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }";
@@ -42,7 +44,7 @@ public class ServiceDocumentControlTests {
         ServiceConnectTests.wrap(
             "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
         Callback.DONT_CARE_VOID);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);

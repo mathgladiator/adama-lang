@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
@@ -26,6 +27,7 @@ import org.junit.Test;
 import java.util.HashMap;
 
 public class ServiceConnectTests {
+  private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
@@ -39,7 +41,7 @@ public class ServiceConnectTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);
@@ -79,7 +81,7 @@ public class ServiceConnectTests {
         wrap(
             "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
         Callback.DONT_CARE_VOID);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
@@ -124,7 +126,7 @@ public class ServiceConnectTests {
         wrap(
             "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
         Callback.DONT_CARE_VOID);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
@@ -158,7 +160,7 @@ public class ServiceConnectTests {
         wrap(
             "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
         Callback.DONT_CARE_VOID);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
@@ -192,7 +194,7 @@ public class ServiceConnectTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);
@@ -233,7 +235,7 @@ public class ServiceConnectTests {
     TimeSource time = new MockTime();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(NtClient.NO_ONE, new Key("space", "key"), "{}", null, created);
@@ -267,7 +269,7 @@ public class ServiceConnectTests {
         new MockRacerLivingDocumentFactoryFactory();
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latchAfter = factoryFactory.latchAt(1);
@@ -288,7 +290,7 @@ public class ServiceConnectTests {
     TimeSource time = new MockTime();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);
@@ -311,7 +313,7 @@ public class ServiceConnectTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockFailureDataService dataService = new MockFailureDataService();
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
       service.connect(NtClient.NO_ONE, KEY, streamback);
@@ -329,7 +331,7 @@ public class ServiceConnectTests {
     TimeSource time = new MockTime();
     MockInstantDataService realDataService = new MockInstantDataService();
     MockDelayDataService dataService = new MockDelayDataService(realDataService);
-    CoreService service = new CoreService(factoryFactory, (bill) -> {}, dataService, time, 3);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);

@@ -18,6 +18,7 @@ import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.Metrics;
+import org.adamalang.gossip.MetricsImpl;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.grpc.server.Server;
 import org.adamalang.grpc.server.ServerNexus;
@@ -28,6 +29,7 @@ import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.billing.Bill;
 import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
@@ -44,41 +46,6 @@ import java.util.HashSet;
 import java.util.function.Consumer;
 
 public class Service {
-  private static final Metrics GOSSIP_METRICS =
-      new Metrics() {
-        @Override
-        public void wake() {
-
-        }
-
-        @Override
-        public void bump_sad_return() {}
-
-        @Override
-        public void bump_client_slow_gossip() {}
-
-        @Override
-        public void bump_optimistic_return() {}
-
-        @Override
-        public void bump_turn_tables() {}
-
-        @Override
-        public void bump_start() {}
-
-        @Override
-        public void bump_found_reverse() {}
-
-        @Override
-        public void bump_quick_gossip() {}
-
-        @Override
-        public void bump_server_slow_gossip() {}
-
-        @Override
-        public void log_error(Throwable cause) {}
-      };
-
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
       serviceHelp(new String[0]);
@@ -141,6 +108,7 @@ public class Service {
   public static void serviceOverlord(Config config) throws Exception {
     int gossipPort = config.get_int("gossip_overlord_port", 8010);
     int monitoringPort = config.get_int("monitoring_overlord_port", 8011);
+    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
 
     String identityFileName = config.get_string("identity_filename", "me.identity");
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
@@ -152,10 +120,9 @@ public class Service {
             new HashSet<>(config.get_str_list("bootstrap")),
             gossipPort,
             monitoringPort,
-            GOSSIP_METRICS);
+            new MetricsImpl(prometheusMetricsFactory));
     engine.start();
     Client client = new Client(identity);
-    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
 
     Overlord.execute(engine, client, targetsPath);
   }
@@ -164,7 +131,7 @@ public class Service {
     int port = config.get_int("adama_port", 8001);
     int gossipPort = config.get_int("gossip_backend_port", 8002);
     int monitoringPort = config.get_int("monitoring_backend_port", 8003);
-
+    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
     int dataThreads = config.get_int("data_thread_count", 32);
     int coreThreads = config.get_int("service_thread_count", 4);
     String identityFileName = config.get_string("identity_filename", "me.identity");
@@ -177,7 +144,7 @@ public class Service {
             new HashSet<>(config.get_str_list("bootstrap")),
             gossipPort,
             monitoringPort,
-            GOSSIP_METRICS);
+            new MetricsImpl(prometheusMetricsFactory));
     engine.start();
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
@@ -185,8 +152,10 @@ public class Service {
     ThreadedDataService dataService =
         new ThreadedDataService(dataThreads, () -> new BlockingDataService(dataBaseBackend));
     BillingPubSub billingPubSub = new BillingPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
+    CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
     CoreService service =
         new CoreService(
+            coreMetrics,
             deploymentFactoryBase,
             billingPubSub.publisher(),
             dataService,
@@ -200,7 +169,6 @@ public class Service {
           // TODO: submit to billing service
           return true;
         });
-    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
 
     engine.newApp(
         "adama",
@@ -279,6 +247,7 @@ public class Service {
     int monitoringPort = config.get_int("monitoring_frontend_port", 8005);
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
     System.err.println("identity: " + identity.ip);
+    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
     Engine engine =
         new Engine(
             identity,
@@ -286,15 +255,11 @@ public class Service {
             new HashSet<>(config.get_str_list("bootstrap")),
             gossipPort,
             monitoringPort,
-            GOSSIP_METRICS);
+            new MetricsImpl(prometheusMetricsFactory));
     engine.start();
     System.err.println("gossiping on:" + gossipPort);
     WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
     System.err.println("standing up http on:" + webConfig.port);
-
-    // TODO: Stand up prometheuess
-    PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
-
     Client client = new Client(identity);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
 
