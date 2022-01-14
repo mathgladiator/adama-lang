@@ -16,7 +16,7 @@ For clarity, each diagram here represents a single cluster within a single regio
 ## Ultra YOLO
 We start with the simplest and most problematic. Take the code and then run the WebSocket frontend with Adama directly coupled within the process.
 
-![a single service](/img/20220101_topology_1.png)
+![a single service](/img/20220101-topology-1.png)
 
 **Pros**
 * Easy for me, a single command
@@ -39,7 +39,7 @@ This could be used as an ephemeral real-time solution since it is just a state m
 ## Mega YOLO
 We take the Ultra YOLO and split the process with a front-end web tier connecting to an Adama host via gRPC.
 
-![a single service](/img/20220101_topology_2.png)
+![a single service](/img/20220101-topology-2.png)
 
 **Pros**
 * Simple to reason about
@@ -63,7 +63,7 @@ Since the key failure mode would be Adama deployments, this begs the question if
 ## YOLO
 We take the Mega YOLO and introduce a database into the mix. I'm currently using MySQL because it's old as dirt and reliable enough.
 
-![a single service](/img/20220101_topology_3.png)
+![a single service](/img/20220101-topology-3.png)
 
 **Pros**
 * Simple to reason about
@@ -83,7 +83,7 @@ It all depends on latency. The key problem is that this fakes quality with a sub
 ## Durable
 Replace managing a database with using an existing DB as a Service (i.e. RDS) which handle everything for you. The key requirement of the DBaaS is that it provides transactions within a shard holding a document's log. The transaction is an atomic append, and this could be replaced with a raft logger as well.
 
-![a single service](/img/20220101_topology_4.png)
+![a single service](/img/20220101-topology-4.png)
 
 **Pros**
 * Still simple to reason about (until you build your own DBaaS)
@@ -103,7 +103,7 @@ At this point, this can look like a "buy an Adama host" and let customers do sha
 ## Defense against the interwebs
 We can mitigate the denial of service by introducing multiple web proxies to front-load Adama traffic
 
-![a single service](/img/20220101_topology_5.png)
+![a single service](/img/20220101-topology-5.png)
 
 **Pros**
 * Somewhat simple to reason about as this mirrors
@@ -122,7 +122,7 @@ This extends the business of front-loading Adama's traffic, and to some degree t
 ## Expensive Load Balancer
 Or, we can build an expensive high-throughput load balancer which can route traffic to Adama's shard. The key aspect is that the WebProxy is just shuffling bytes between the user and Adama. Adama has several burdens like managing the document in memory, transforming messages into storage deltas, computing privacy and keeping clients up to date. Early tests on a $5/mo host indicates that memory is the key bottleneck followed by CPU.
 
-![a single service](/img/20220101_topology_6.png)
+![a single service](/img/20220101-topology-6.png)
 
 **Pros**
 * Simple to reason about
@@ -143,7 +143,7 @@ This will dramatically increase scale, but the single point of failure becomes a
 ## Condenser
 We can combine the distributed load balancer with the expensive load balancer. We rename that single load balancer as a condenser and then optimize the protocol as it has one job: routing streams. This lets us radically simplify the expensive load balancer aspect such that it has one job. We can then offload TLS, auth, and administration based APIs to the WebProxy.
 
-![a single service](/img/20220101_topology_7.png)
+![a single service](/img/20220101-topology-7.png)
 
 **Pros**
 * Durable
@@ -166,7 +166,7 @@ That single point of failure may be a deal-breaker for the unlucky customers bou
 ## Distributed Load Balancer
 Fixing the reliability of the choke point is as of the same of having a distributed load balancer between the web proxy and Adama tier. This introduces an exceptionally hard routing problem between the WebProxy and Adama tier. Ideally, a document lives on exactly one Adama host. We should expect (and embrace) the possibility that two or more Adama hosts will have the same document loaded. This then forces the DBaaS to reject writes from the least up-to-date Adama host. When the not-so-up-date Adama host sees the failure, it requests a patch from the DBaaS to catch up, and it will then retry. This logic has been implemented, so progress is made. However, it comes with the burden that latency of users learning of updates depend on the frequency of every Adama host being active.
 
-![a single service](/img/20220101_topology_8.png)
+![a single service](/img/20220101-topology-8.png)
 
 **Pros**
 * Durable
@@ -193,7 +193,7 @@ This is the model that I intend to launch with since I can leverage a gossip sty
 The latency of the system will depend on the DBaaS, and we can take over the DB role. Assuming we build out the DB with replicas. This will influence the design of how the WebProxy tier chooses Adama host since it doesn't make sense to have multiple full socket meshes especially with most database clients requiring many threads to achieve concurrency.
 
 
-![a single service](/img/20220101_topology_9.png)
+![a single service](/img/20220101-topology-9.png)
 
 **Pros**
 * Durable
@@ -222,7 +222,7 @@ There's an interesting thing that happens when you think about having compute an
 
 This has the potential to split the CPU burden between the head (for privacy computations and viewer updates) and the tail (doing work). This split allows you to optimistically update clients because the head can have a queue of messages which can be evaluated locally to turn into data updates on clients and then reverted. The state will be reconciled once durably persisted.
 
-![a single service](/img/20220101_topology_9.png)
+![a single service](/img/20220101-topology-9.png)
 
 **Pros**
 * Durable

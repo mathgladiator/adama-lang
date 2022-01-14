@@ -15,6 +15,8 @@ import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.adamalang.grpc.client.sm.Connection;
 import org.adamalang.grpc.client.sm.ConnectionBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -49,9 +51,7 @@ public class Client {
             SimpleExecutorFactory.DEFAULT,
             4,
             engine,
-            (t, c) -> {
-              t.printStackTrace();
-            });
+            ExceptionLogger.FOR(Client.class));
     this.executors = SimpleExecutorFactory.DEFAULT.makeMany("connections", 2);
     this.rng = new Random();
   }

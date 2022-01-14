@@ -44,7 +44,7 @@ public class ConnectionQuickDisconnect {
         servers[k] =
             new TestBed(
                 17005 + k,
-                "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
+                "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
 
         CountDownLatch latchMade = new CountDownLatch(1);
         servers[k].coreService.create(

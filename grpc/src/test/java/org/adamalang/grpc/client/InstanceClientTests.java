@@ -27,7 +27,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10001,
-            "@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       try (InstanceClient client =
           new InstanceClient(
@@ -61,7 +61,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10002,
-            "@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.1; } #p { x++; } ")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.1; } #p { x++; } ")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       MockEvents events = new MockEvents();
@@ -125,7 +125,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10003,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       MockEvents events =
@@ -192,7 +192,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10004,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       AtomicInteger errorCodeSeq = new AtomicInteger(0);
@@ -275,7 +275,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10005,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       CountDownLatch cantAttachLatch = new CountDownLatch(1);
@@ -342,7 +342,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10006,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } @can_attach(who) { return true; } @attached (who, what) { x++; } ")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } @can_attach(who) { return true; } @attached (who, what) { x++; } ")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       CountDownLatch canAttachLatch = new CountDownLatch(1);
@@ -425,7 +425,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10007,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       CountDownLatch cantAttachLatch = new CountDownLatch(1);
@@ -508,7 +508,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10008,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       CountDownLatch cantAttachLatch = new CountDownLatch(1);
@@ -595,7 +595,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10009,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       CountDownLatch attachLatch = new CountDownLatch(1);
@@ -685,7 +685,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10010,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       AtomicInteger errorCodeSeq = new AtomicInteger(0);
@@ -772,7 +772,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10011,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       MockEvents events =
@@ -821,7 +821,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10012,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       CountDownLatch latch = new CountDownLatch(3);
       try (InstanceClient client =
