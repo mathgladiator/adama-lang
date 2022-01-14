@@ -28,7 +28,7 @@ Look, I understand the spirit of moving fast and breaking things, but I'm an old
 As I am currently filing for an LLC and intend to start a company around this, the values of that company will manifest because "the fish rots from the head down".
 Thus, I'm going to talk about the engineering discipline being put into action for this effort.
 
-## Code quality vis unit test coverage
+## Code quality via unit test coverage
 It all starts with unit tests and coverage, so let's take an audit of where I am at today as I build this. The core which contains the language, the embeddable service, and runtime clocks in with 2,781 tests at 100% coverage.
 
 ![beyond core has 100% unit tests](/img/20220114-core-unit-tests.png)
