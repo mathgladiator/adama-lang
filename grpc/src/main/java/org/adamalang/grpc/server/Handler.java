@@ -12,6 +12,7 @@ package org.adamalang.grpc.server;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.grpc.proto.*;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Streamback;
@@ -111,9 +112,8 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             @Override
             public void execute() throws Exception {
               if (alive.get()) {
-                // TODO: pull from management stuff
-                responseObserver.onNext(StreamMessageServer.newBuilder().setHeat(HeatPayload.newBuilder().setCpu(0.2).setMemory(0.3).build()).build());
-                executor.schedule(this, 250);
+                responseObserver.onNext(StreamMessageServer.newBuilder().setHeat(HeatPayload.newBuilder().setCpu(MachineHeat.cpu()).setMemory(MachineHeat.memory()).build()).build());
+                executor.schedule(this, 100);
               }
             }
           }, 250);

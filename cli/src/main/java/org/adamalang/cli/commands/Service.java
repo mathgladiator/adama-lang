@@ -12,6 +12,7 @@ package org.adamalang.cli.commands;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.*;
+import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
@@ -125,11 +126,15 @@ public class Service {
             monitoringPort,
             new MetricsImpl(prometheusMetricsFactory));
     engine.start();
-    Client client = new Client(identity, new ClientMetrics(prometheusMetricsFactory), (target, cpu, memory) -> System.err.println("HEAT[" + target + "] := " + cpu + "," + memory));
+    Client client = new Client(identity, new ClientMetrics(prometheusMetricsFactory), (target, cpu, memory) -> {
+      // TODO: use this information productively
+      // System.err.println("HEAT[" + target + "] := " + cpu + "," + memory);
+    });
     Overlord.execute(engine, client, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront);
   }
 
   public static void serviceBackend(Config config) throws Exception {
+    MachineHeat.install();
     int port = config.get_int("adama_port", 8001);
     int gossipPort = config.get_int("gossip_backend_port", 8002);
     int monitoringPort = config.get_int("monitoring_backend_port", 8003);
