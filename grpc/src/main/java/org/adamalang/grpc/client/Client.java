@@ -57,16 +57,11 @@ public class Client {
   }
 
   public void getDeploymentTargets(String space, Consumer<String> stream) {
-    engine.list(space, new Consumer<TreeSet<String>>() {
-      @Override
-      public void accept(TreeSet<String> targets) {
-        finder.findCapacity(targets, (set) -> {
-          for (String target : set) {
-            stream.accept(target);
-          }
-        }, 3);
+    engine.list(space, targets -> finder.findCapacity(targets, (set) -> {
+      for (String target : set) {
+        stream.accept(target);
       }
-    });
+    }, 3));
   }
 
   public void notifyDeployment(String target, String space) {

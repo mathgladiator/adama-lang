@@ -25,16 +25,6 @@ service Adama {
   /** tear billing */
   rpc BillingExchange(stream BillingForward) returns (stream BillingReverse) {}
 
-  /** get a stream of heat signals */
-  rpc GetHeatStream(HeatRequest) returns (stream HeatPayload) {}
-}
-
-message HeatRequest {
-}
-
-message HeatPayload {
-  double cpu = 1;
-  double memory = 2;
 }
 
 message BillingBegin {
@@ -154,6 +144,9 @@ message StreamError {
 
 message StreamDisconnect {}
 
+message RequestHeat {
+}
+
 message StreamMessageClient {
   int64 id = 1;
   optional int64 act = 2;
@@ -163,6 +156,7 @@ message StreamMessageClient {
     StreamDisconnect disconnect = 5;
     StreamAskAttachmentRequest ask = 6;
     StreamAttach attach = 7;
+    RequestHeat monitor = 8;
   }
 }
 
@@ -171,6 +165,11 @@ message Establish {
 
 message InventoryHeartbeat {
   repeated string spaces = 1;
+}
+
+message HeatPayload {
+  double cpu = 1;
+  double memory = 2;
 }
 
 message StreamMessageServer {
@@ -183,6 +182,7 @@ message StreamMessageServer {
     StreamError error = 6;
     StreamAskAttachmentResponse response = 7;
     StreamSeqResult result = 8;
+    HeatPayload heat = 9;
   }
 }
 

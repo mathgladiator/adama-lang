@@ -17,7 +17,6 @@ import org.adamalang.extern.ExternNexus;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.gossip.Engine;
-import org.adamalang.gossip.Metrics;
 import org.adamalang.gossip.MetricsImpl;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.grpc.server.Server;
@@ -109,6 +108,8 @@ public class Service {
     int gossipPort = config.get_int("gossip_overlord_port", 8010);
     int monitoringPort = config.get_int("monitoring_overlord_port", 8011);
     PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
+    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"));
+    DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
 
     String identityFileName = config.get_string("identity_filename", "me.identity");
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
@@ -124,7 +125,7 @@ public class Service {
     engine.start();
     Client client = new Client(identity);
 
-    Overlord.execute(engine, client, targetsPath);
+    Overlord.execute(engine, client, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront);
   }
 
   public static void serviceBackend(Config config) throws Exception {
@@ -186,7 +187,7 @@ public class Service {
           try {
             if ("*".equals(space)) {
               ArrayList<Deployments.Deployment> deployments =
-                  Deployments.list(dataBaseDeployments, identity.ip + ":" + port);
+                  Deployments.listSpacesOnTarget(dataBaseDeployments, identity.ip + ":" + port);
               for (Deployments.Deployment deployment : deployments) {
                 try {
                   deploymentFactoryBase.deploy(

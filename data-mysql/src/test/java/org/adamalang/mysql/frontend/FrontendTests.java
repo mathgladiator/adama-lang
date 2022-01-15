@@ -152,6 +152,11 @@ public class FrontendTests {
         Assert.assertEquals(1, Spaces.getSpaceId(dataBase, "space1").id);
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
+
+        ArrayList<String> names = Spaces.listAllSpaceNames(dataBase);
+        Assert.assertEquals(2, names.size());
+        Assert.assertEquals("space1", names.get(0));
+        Assert.assertEquals("space2", names.get(1));
         try {
           Spaces.createSpace(dataBase, bob, "space1");
           Assert.fail();
@@ -169,6 +174,11 @@ public class FrontendTests {
         Assert.assertEquals("{}", Spaces.getPlan(dataBase, 2));
         Spaces.setPlan(dataBase, 1, "{\"x\":1}", "h1");
         Spaces.setPlan(dataBase, 2, "{\"x\":2}", "h2");
+
+        Spaces.InternalDeploymentPlan iPlan = Spaces.getPlanByNameForInternalDeployment(dataBase, "space2");
+        Assert.assertEquals("h2", iPlan.hash);
+        Assert.assertEquals("{\"x\":2}", iPlan.plan);
+
         Spaces.setBilling(dataBase, 1, "fixed50");
         Spaces.setBilling(dataBase, 2, "open");
         Assert.assertEquals("{\"x\":1}", Spaces.getPlan(dataBase, 1));
@@ -243,6 +253,12 @@ public class FrontendTests {
           Assert.fail();
         } catch (ErrorCodeException ex) {
           Assert.assertEquals(609294, ex.code);
+        }
+        try {
+          Spaces.getPlanByNameForInternalDeployment(dataBase, "nospacename");
+          Assert.fail();
+        } catch (ErrorCodeException ex) {
+          Assert.assertEquals(654341, ex.code);
         }
         {
           Assert.assertEquals(2, Spaces.list(dataBase, bob, null, 5).size());

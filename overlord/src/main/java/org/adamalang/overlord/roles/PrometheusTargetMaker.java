@@ -11,6 +11,7 @@ package org.adamalang.overlord.roles;
 
 import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.proto.Endpoint;
+import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,28 +22,15 @@ import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PrometheusTargetMaker {
-  private static Logger LOGGER = LoggerFactory.getLogger(PrometheusTargetMaker.class);
-
-  private static String classifyByPort(int port) {
-    switch (port) {
-      case 8003:
-        return "backend";
-      case 8005:
-        return "frontend";
-      case 8011:
-        return "overlord";
-      default:
-        return "unknown";
-    }
-  }
+  private static final Logger LOGGER = LoggerFactory.getLogger(PrometheusTargetMaker.class);
 
   /** scan gossip table to make targets.json for promethesus */
-  public static void kickOff(Engine engine, File targetsDestination) {
+  public static void kickOff(OverlordMetrics metrics, Engine engine, File targetsDestination) {
     AtomicReference<String> lastWritten = new AtomicReference<>("");
     engine.setWatcher(
         (endpoints) -> {
+          metrics.targets_watcher_fired.run();
           HashSet<String> seen = new HashSet<>();
-
           JsonStreamWriter writer = new JsonStreamWriter();
           writer.beginArray();
           for (Endpoint endpoint : endpoints) {
@@ -75,12 +63,29 @@ public class PrometheusTargetMaker {
           try {
             String toWrite = writer.toString();
             if (!lastWritten.get().equals(toWrite)) {
+              LOGGER.info("made-targets", toWrite);
               Files.writeString(targetsDestination.toPath(), writer.toString());
+              metrics.targets_made.run();
               lastWritten.set(toWrite);
+            } else {
+              metrics.targets_skipped.run();
             }
           } catch (Exception ex) {
             LOGGER.error("failed-write-to-disk", ex);
           }
         });
+  }
+
+  private static String classifyByPort(int port) {
+    switch (port) {
+      case 8003:
+        return "backend";
+      case 8005:
+        return "frontend";
+      case 8011:
+        return "overlord";
+      default:
+        return "unknown";
+    }
   }
 }

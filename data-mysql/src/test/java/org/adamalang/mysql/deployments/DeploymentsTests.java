@@ -13,12 +13,11 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
-import org.adamalang.mysql.backend.BackendDataServiceInstaller;
-import org.adamalang.mysql.deployments.Deployments;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class DeploymentsTests {
   @Test
@@ -28,22 +27,22 @@ public class DeploymentsTests {
       DeployedInstaller installer = new DeployedInstaller(dataBase);
       try {
         installer.install();
-        ArrayList<Deployments.Deployment> listing = Deployments.list(dataBase, "127.0.0.1:230");
+        ArrayList<Deployments.Deployment> listing = Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:230");
         Assert.assertEquals(0, listing.size());
         Deployments.deploy(dataBase, "space1", "127.0.0.1:230", "hash1", "plan1");
-        listing = Deployments.list(dataBase, "127.0.0.1:230");
+        listing = Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:230");
         Assert.assertEquals(1, listing.size());
         Assert.assertEquals("space1", listing.get(0).space);
         Assert.assertEquals("hash1", listing.get(0).hash);
         Assert.assertEquals("plan1", listing.get(0).plan);
         Deployments.deploy(dataBase, "space1", "127.0.0.1:230", "hash1x", "plan1x");
-        listing = Deployments.list(dataBase, "127.0.0.1:230");
+        listing = Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:230");
         Assert.assertEquals(1, listing.size());
         Assert.assertEquals("space1", listing.get(0).space);
         Assert.assertEquals("hash1x", listing.get(0).hash);
         Assert.assertEquals("plan1x", listing.get(0).plan);
         Deployments.deploy(dataBase, "space2", "127.0.0.1:230", "hash2x", "plan2x");
-        listing = Deployments.list(dataBase, "127.0.0.1:230");
+        listing = Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:230");
         Assert.assertEquals(2, listing.size());
         Assert.assertEquals("space1", listing.get(0).space);
         Assert.assertEquals("hash1x", listing.get(0).hash);
@@ -52,7 +51,7 @@ public class DeploymentsTests {
         Assert.assertEquals("hash2x", listing.get(1).hash);
         Assert.assertEquals("plan2x", listing.get(1).plan);
         Deployments.undeploy(dataBase, "space1", "127.0.0.1:230");
-        listing = Deployments.list(dataBase, "127.0.0.1:230");
+        listing = Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:230");
         Assert.assertEquals(1, listing.size());
         Assert.assertEquals("space2", listing.get(0).space);
         Assert.assertEquals("hash2x", listing.get(0).hash);
@@ -64,14 +63,38 @@ public class DeploymentsTests {
         } catch (ErrorCodeException ec) {
           Assert.assertEquals(643084, ec.code);
         }
-        Assert.assertEquals(0, Deployments.list(dataBase, "127.0.0.1:123").size());
+        Assert.assertEquals(0, Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:123").size());
         Deployments.deploy(dataBase, "spaceX", "127.0.0.1:123", "hash1x", "plan1x");
         Deployments.deploy(dataBase, "spaceX", "127.0.0.1:124", "hash1x", "plan1x");
-        Assert.assertEquals(1, Deployments.list(dataBase, "127.0.0.1:123").size());
-        Assert.assertEquals(1, Deployments.list(dataBase, "127.0.0.1:124").size());
+        Assert.assertEquals(1, Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:123").size());
+        Assert.assertEquals(1, Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:124").size());
         Deployments.undeployAll(dataBase, "spaceX");
-        Assert.assertEquals(0, Deployments.list(dataBase, "127.0.0.1:123").size());
-        Assert.assertEquals(0, Deployments.list(dataBase, "127.0.0.1:124").size());
+        Assert.assertEquals(0, Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:123").size());
+        Assert.assertEquals(0, Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:124").size());
+        Deployments.deploy(dataBase, "space1", "127.0.0.1:230", "hash1x", "plan1x");
+        Deployments.deploy(dataBase, "space2", "127.0.0.1:230", "hash1x", "plan1x");
+        Deployments.deploy(dataBase, "space2", "127.0.0.1:231", "hash1x", "plan1x");
+        Deployments.deploy(dataBase, "space3", "127.0.0.1:232", "hash1x", "plan1x");
+
+
+        ArrayList<Deployments.Deployment> deploymentsOnSpace = Deployments.listTargetsOnSpace(dataBase,"space2");
+        Assert.assertEquals(2, deploymentsOnSpace.size());
+        Assert.assertEquals("127.0.0.1:230", deploymentsOnSpace.get(0).target);
+        Assert.assertEquals("127.0.0.1:231", deploymentsOnSpace.get(1).target);
+
+        TreeSet<String> allTargets = Deployments.listAllTargets(dataBase);
+        Assert.assertEquals(3, allTargets.size());
+        Assert.assertEquals("127.0.0.1:230", allTargets.first());
+        Deployments.undeployTarget(dataBase, "127.0.0.1:230");
+        allTargets = Deployments.listAllTargets(dataBase);
+        Assert.assertEquals(2, allTargets.size());
+        Assert.assertEquals("127.0.0.1:231", allTargets.first());
+        Deployments.undeployTarget(dataBase, "127.0.0.1:231");
+        allTargets = Deployments.listAllTargets(dataBase);
+        Assert.assertEquals(1, allTargets.size());
+        Assert.assertEquals("127.0.0.1:232", allTargets.first());
+        Deployments.undeployTarget(dataBase, "127.0.0.1:232");
+        Assert.assertEquals(0, Deployments.listAllTargets(dataBase).size());
       } finally {
         installer.uninstall();
       }

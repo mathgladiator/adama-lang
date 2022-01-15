@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class Deployments {
   public static void undeploy(DataBase dataBase, String space, String target) throws Exception {
@@ -55,7 +56,41 @@ public class Deployments {
     }
   }
 
-  public static ArrayList<Deployment> list(DataBase dataBase, String target) throws Exception {
+  public static void undeployTarget(DataBase dataBase, String target) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      { // delete prior versions
+        String sql =
+            new StringBuilder()
+                .append("DELETE FROM `")
+                .append(dataBase.databaseName)
+                .append("`.`deployed` WHERE `target`=?")
+                .toString();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+          statement.setString(1, target);
+          statement.execute();
+        }
+      }
+    }
+  }
+
+  public static TreeSet<String> listAllTargets(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql =
+          new StringBuilder()
+              .append("SELECT DISTINCT `target` FROM `")
+              .append(dataBase.databaseName)
+              .append("`.`deployed`")
+              .toString();
+
+      TreeSet<String> targets = new TreeSet<>();
+      DataBase.walk(connection, (rs) -> {
+        targets.add(rs.getString(1));
+      }, sql);
+      return targets;
+    }
+  }
+
+  public static ArrayList<Deployment> listSpacesOnTarget(DataBase dataBase, String target) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql =
           new StringBuilder()
@@ -69,7 +104,29 @@ public class Deployments {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<Deployment> results = new ArrayList<>();
           while (rs.next()) {
-            results.add(new Deployment(rs.getString(1), rs.getString(2), rs.getString(3)));
+            results.add(new Deployment(rs.getString(1), rs.getString(2), rs.getString(3), target));
+          }
+          return results;
+        }
+      }
+    }
+  }
+
+  public static ArrayList<Deployment> listTargetsOnSpace(DataBase dataBase, String space) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql =
+          new StringBuilder()
+              .append("SELECT `hash`, `plan`, `target` FROM `")
+              .append(dataBase.databaseName)
+              .append("`.`deployed` WHERE `space`=? ORDER BY `target` ASC")
+              .toString();
+
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, space);
+        try (ResultSet rs = statement.executeQuery()) {
+          ArrayList<Deployment> results = new ArrayList<>();
+          while (rs.next()) {
+            results.add(new Deployment(space, rs.getString(1), rs.getString(2), rs.getString(3)));
           }
           return results;
         }
@@ -81,7 +138,7 @@ public class Deployments {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql =
           new StringBuilder()
-              .append("SELECT `space`, `hash`, `plan` FROM `")
+              .append("SELECT `hash`, `plan` FROM `")
               .append(dataBase.databaseName)
               .append("`.`deployed` WHERE `target`=? AND `space`=? LIMIT 1")
               .toString();
@@ -91,7 +148,7 @@ public class Deployments {
         statement.setString(2, space);
         try (ResultSet rs = statement.executeQuery()) {
           while (rs.next()) {
-            return new Deployment(rs.getString(1), rs.getString(2), rs.getString(3));
+            return new Deployment(space, rs.getString(1), rs.getString(2), target);
           }
           throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_NOT_FOUND);
         }
@@ -138,11 +195,13 @@ public class Deployments {
     public final String space;
     public final String hash;
     public final String plan;
+    public final String target;
 
-    public Deployment(String space, String hash, String plan) {
+    public Deployment(String space, String hash, String plan, String target) {
       this.space = space;
       this.hash = hash;
       this.plan = plan;
+      this.target = target;
     }
   }
 }

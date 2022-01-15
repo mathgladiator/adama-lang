@@ -14,12 +14,10 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Spaces {
+
 
   public static int createSpace(DataBase dataBase, int userId, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
@@ -151,6 +149,35 @@ public class Spaces {
     }
   }
 
+  public static class InternalDeploymentPlan {
+    public final String plan;
+    public final String hash;
+
+    public InternalDeploymentPlan(String plan, String hash) {
+      this.plan = plan;
+      this.hash = hash;
+    }
+  }
+
+  public static InternalDeploymentPlan getPlanByNameForInternalDeployment(DataBase dataBase, String spaceName) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql =
+          new StringBuilder("SELECT `plan`, `hash` FROM `")
+              .append(dataBase.databaseName)
+              .append("`.`spaces` WHERE `name`=?")
+              .toString();
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setString(1, spaceName);
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            return new InternalDeploymentPlan(rs.getString(1), rs.getString(2));
+          }
+          throw new ErrorCodeException(ErrorCodes.FRONTEND_INTERNAL_PLAN_DOESNT_EXIST);
+        }
+      }
+    }
+  }
+
   public static List<Item> list(DataBase dataBase, int userId, String marker, int limit)
       throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
@@ -183,6 +210,22 @@ public class Spaces {
           return names;
         }
       }
+    }
+  }
+
+  public static ArrayList<String> listAllSpaceNames(DataBase dataBase)
+      throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql =
+          new StringBuilder("SELECT `name` FROM `")
+              .append(dataBase.databaseName) //
+              .append("`.`spaces` ORDER BY `id` ASC")
+              .toString();
+      ArrayList<String> results = new ArrayList<>();
+      DataBase.walk(connection, (rs) -> {
+        results.add(rs.getString(1));
+      }, sql);
+      return results;
     }
   }
 

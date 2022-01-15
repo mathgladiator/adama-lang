@@ -9,15 +9,22 @@
  */
 package org.adamalang.overlord;
 
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.gossip.Engine;
 import org.adamalang.grpc.client.Client;
+import org.adamalang.mysql.DataBase;
+import org.adamalang.overlord.roles.CapacityManager;
+import org.adamalang.overlord.roles.DeploymentReconciliation;
 import org.adamalang.overlord.roles.PrometheusTargetMaker;
 
 import java.io.File;
 
 public class Overlord {
-  public static void execute(Engine engine, Client client, File targetsDestination) {
-    PrometheusTargetMaker.kickOff(engine, targetsDestination);
+  public static void execute(Engine engine, Client client, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront) {
+    OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
+    PrometheusTargetMaker.kickOff(metrics, engine, targetsDestination);
+    DeploymentReconciliation.kickOff(metrics, engine, deploymentsDatabase);
+    CapacityManager.kickOff(metrics, client, deploymentsDatabase, dataBaseFront);
 
 
     // TODO: ROLE #2.A: pick a random adama host, download billing data, cut bills into hourly segments over to billing database
