@@ -9,6 +9,7 @@
  */
 package org.adamalang.grpc.client;
 
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.mocks.*;
@@ -24,14 +25,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InstanceClientTests {
   @Test
   public void stubPersistent() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10001,
             "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       try (InstanceClient client =
-          new InstanceClient(
-              bed.identity, "127.0.0.1:10001", bed.clientExecutor, lifecycle, new StdErrLogger())) {
+          new InstanceClient(bed.identity, metrics, null, "127.0.0.1:10001", bed.clientExecutor, lifecycle, new StdErrLogger())) {
         {
           AssertCreateFailure failure = new AssertCreateFailure();
           client.create("nope", "nope", "space", "1", null, "{}", failure);
@@ -58,6 +59,7 @@ public class InstanceClientTests {
 
   @Test
   public void multiplexPersistent() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10002,
@@ -72,7 +74,7 @@ public class InstanceClientTests {
       AtomicBoolean created = new AtomicBoolean(false);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10002",
               bed.clientExecutor,
               new Lifecycle() {
@@ -122,6 +124,7 @@ public class InstanceClientTests {
 
   @Test
   public void sendAndDisconnect() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10003,
@@ -153,7 +156,7 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(4);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10003",
               bed.clientExecutor,
               new Lifecycle() {
@@ -189,6 +192,7 @@ public class InstanceClientTests {
 
   @Test
   public void disconnectThenSendFailure() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10004,
@@ -235,7 +239,7 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10004",
               bed.clientExecutor,
               new Lifecycle() {
@@ -272,6 +276,7 @@ public class InstanceClientTests {
 
   @Test
   public void cantAttachPolicy() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10005,
@@ -303,7 +308,7 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10005",
               bed.clientExecutor,
               new Lifecycle() {
@@ -339,6 +344,7 @@ public class InstanceClientTests {
 
   @Test
   public void canAttachThenAttach() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10006,
@@ -385,7 +391,7 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(4);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10006",
               bed.clientExecutor,
               new Lifecycle() {
@@ -422,6 +428,7 @@ public class InstanceClientTests {
 
   @Test
   public void cantAttachDisconnect() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10007,
@@ -468,7 +475,7 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10007",
               bed.clientExecutor,
               new Lifecycle() {
@@ -505,6 +512,7 @@ public class InstanceClientTests {
 
   @Test
   public void cantAttachSocketDisconnect() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10008,
@@ -555,7 +563,7 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10008",
               bed.clientExecutor,
               new Lifecycle() {
@@ -592,6 +600,7 @@ public class InstanceClientTests {
 
   @Test
   public void attachSocketDisconnect() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10009,
@@ -645,7 +654,7 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10009",
               bed.clientExecutor,
               new Lifecycle() {
@@ -682,6 +691,7 @@ public class InstanceClientTests {
 
   @Test
   public void socketDisconnectThenSendFailure() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10010,
@@ -732,7 +742,7 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10010",
               bed.clientExecutor,
               new Lifecycle() {
@@ -769,6 +779,7 @@ public class InstanceClientTests {
 
   @Test
   public void noSocket() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10011,
@@ -788,7 +799,7 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(1);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10011",
               bed.clientExecutor,
               new Lifecycle() {
@@ -818,6 +829,7 @@ public class InstanceClientTests {
 
   @Test
   public void scanDeploymentsSuccessAndFailures() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10012,
@@ -826,7 +838,7 @@ public class InstanceClientTests {
       CountDownLatch latch = new CountDownLatch(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity,
+              bed.identity, metrics, null,
               "127.0.0.1:10012",
               bed.clientExecutor,
               new Lifecycle() {
@@ -878,6 +890,47 @@ public class InstanceClientTests {
               })) {
         bed.startServer();
         Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+      }
+    }
+  }
+
+  @Test
+  public void heatMonitoring() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    try (TestBed bed =
+             new TestBed(
+                 10012,
+                 "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+      bed.startServer();
+      CountDownLatch latch = new CountDownLatch(3);
+      HeatMonitor monitor = new HeatMonitor() {
+        @Override
+        public void heat(String target, double cpu, double memory) {
+          latch.countDown();
+        }
+      };
+      try (InstanceClient client =
+               new InstanceClient(
+                   bed.identity, metrics, monitor,
+                   "127.0.0.1:10012",
+                   bed.clientExecutor,
+                   new Lifecycle() {
+                     @Override
+                     public void connected(InstanceClient client) {
+                     }
+
+                     @Override
+                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+
+                     @Override
+                     public void disconnected(InstanceClient client) {}
+                   },
+                   (t, errorCode) -> {
+                     System.err.println("EXCEPTION:" + t.getMessage());
+                   })) {
+        bed.startServer();
+        Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+        bed.stopServer();
       }
     }
   }

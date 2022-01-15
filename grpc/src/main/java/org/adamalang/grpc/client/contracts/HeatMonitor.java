@@ -10,4 +10,5 @@
 package org.adamalang.grpc.client.contracts;
 
 public interface HeatMonitor {
+  public void heat(String target, double cpu, double memory);
 }

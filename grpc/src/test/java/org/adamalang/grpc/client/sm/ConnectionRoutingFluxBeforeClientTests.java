@@ -11,7 +11,9 @@ package org.adamalang.grpc.client.sm;
 
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.TestBed;
+import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.grpc.client.InstanceClientFinder;
 import org.adamalang.grpc.client.routing.MockSpaceTrackingEvents;
 import org.adamalang.grpc.client.routing.RoutingEngine;
@@ -25,6 +27,7 @@ import java.util.Collections;
 public class ConnectionRoutingFluxBeforeClientTests {
   @Test
   public void validateSkipsClientBasedOnTargetChange() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     TestBed[] servers = new TestBed[2];
     SimpleExecutor fauxExector = SimpleExecutor.create("routing");
     SlowSingleThreadedExecutorFactory finderExecutor =
@@ -44,12 +47,12 @@ public class ConnectionRoutingFluxBeforeClientTests {
       }
       // The faux engine absorbs the workload from the finder
       RoutingEngine fauxEngine =
-          new RoutingEngine(fauxExector, new MockSpaceTrackingEvents(), 50, 25);
+          new RoutingEngine(metrics, fauxExector, new MockSpaceTrackingEvents(), 50, 25);
       // we use the direct engine to control the connection... directly
       RoutingEngine engineDirect =
-          new RoutingEngine(directExector, new MockSpaceTrackingEvents(), 50, 25);
+          new RoutingEngine(metrics, directExector, new MockSpaceTrackingEvents(), 50, 25);
       InstanceClientFinder finder =
-          new InstanceClientFinder(servers[0].identity, finderExecutor, 2, fauxEngine, logger);
+          new InstanceClientFinder(metrics, null, servers[0].identity, finderExecutor, 2, fauxEngine, logger);
       try {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable ranStart = connectionExecutor.latchAtAndDrain(1, 1);

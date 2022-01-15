@@ -10,6 +10,7 @@
 package org.adamalang.grpc.client;
 
 import org.adamalang.common.*;
+import org.adamalang.grpc.client.contracts.HeatMonitor;
 import org.adamalang.grpc.client.contracts.Lifecycle;
 import org.adamalang.grpc.client.contracts.QueueAction;
 import org.adamalang.grpc.client.routing.RoutingEngine;
@@ -29,6 +30,8 @@ public class InstanceClientFinder {
    + too many items in the queue
    + fill queue with things, then disconnect the server on "finder-lost"; use sync
    */
+  private final ClientMetrics metrics;
+  private final HeatMonitor monitor;
   private final MachineIdentity identity;
   private final RoutingEngine engine;
   private final HashMap<String, InstanceClientProxy> clients;
@@ -39,11 +42,15 @@ public class InstanceClientFinder {
   private final AtomicBoolean alive;
 
   public InstanceClientFinder(
+      ClientMetrics metrics,
+      HeatMonitor monitor,
       MachineIdentity identity,
       SimpleExecutorFactory threadFactory,
       int nThreads,
       RoutingEngine engine,
       ExceptionLogger logger) {
+    this.metrics = metrics;
+    this.monitor = monitor;
     this.identity = identity;
     this.engine = engine;
     this.clients = new HashMap<>();
@@ -160,7 +167,7 @@ public class InstanceClientFinder {
 
     private InstanceClientProxy(String target) throws Exception {
       this.executor = clientExecutors[rng.nextInt(clientExecutors.length)];
-      this.createdClient = new InstanceClient(identity, target, executor, this, logger);
+      this.createdClient = new InstanceClient(identity, metrics, monitor,  target, executor, this, logger);
       client = null;
       buffer = null;
     }

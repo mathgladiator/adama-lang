@@ -11,6 +11,7 @@ package org.adamalang.grpc.client.routing;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
 import org.adamalang.runtime.contracts.Key;
 
@@ -20,6 +21,7 @@ import java.util.TreeSet;
 import java.util.function.Consumer;
 
 public class RoutingEngine {
+  private final ClientMetrics metrics;
   private final SimpleExecutor executor;
   private final RoutingTable table;
   private final int broadcastDelayOffset;
@@ -27,10 +29,12 @@ public class RoutingEngine {
   private boolean broadcastInflight;
 
   public RoutingEngine(
+      ClientMetrics metrics,
       SimpleExecutor executor,
       SpaceTrackingEvents events,
       int broadcastDelayOffset,
       int broadcastDelayJitter) {
+    this.metrics = metrics;
     this.executor = executor;
     this.table = new RoutingTable(events);
     this.broadcastInflight = false;

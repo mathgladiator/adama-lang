@@ -11,6 +11,8 @@ package org.adamalang.grpc.client.routing;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.runtime.contracts.Key;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,9 +28,10 @@ import java.util.function.Consumer;
 public class RoutingEngineTests {
   @Test
   public void flow() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
     SimpleExecutor derp = SimpleExecutor.create("derp");
-    RoutingEngine engine = new RoutingEngine(derp, events, 50, 25);
+    RoutingEngine engine = new RoutingEngine(metrics, derp, events, 50, 25);
 
     AtomicReference<Runnable> cancelRunnable = new AtomicReference<>();
     CountDownLatch latchGotCancel = new CountDownLatch(1);

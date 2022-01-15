@@ -31,6 +31,8 @@ public class InstanceClient implements AutoCloseable {
   public final SimpleExecutor executor;
   public final AdamaGrpc.AdamaStub stub;
   public final String target;
+  private final ClientMetrics metrics;
+  private final HeatMonitor monitor;
   private final Lifecycle lifecycle;
   private final HashMap<Long, Events> documents;
   private final HashMap<Long, SeqCallback> outstanding;
@@ -46,21 +48,25 @@ public class InstanceClient implements AutoCloseable {
 
   public InstanceClient(
       MachineIdentity identity,
+      ClientMetrics metrics,
+      HeatMonitor monitor,
       String target,
       SimpleExecutor executor,
       Lifecycle lifecycle,
       ExceptionLogger logger)
       throws Exception {
+    this.executor = executor;
+    this.target = target;
+    this.metrics = metrics;
+    this.monitor = monitor;
     ChannelCredentials credentials =
         TlsChannelCredentials.newBuilder()
-            .keyManager(identity.getCert(), identity.getKey())
-            .trustManager(identity.getTrust())
-            .build();
+                             .keyManager(identity.getCert(), identity.getKey())
+                             .trustManager(identity.getTrust())
+                             .build();
     this.channel = NettyChannelBuilder.forTarget(target, credentials).build();
     this.stub = AdamaGrpc.newStub(channel);
-    this.target = target;
     this.rng = new Random();
-    this.executor = executor;
     this.documents = new HashMap<>();
     this.outstanding = new HashMap<>();
     this.asks = new HashMap<>();
@@ -424,9 +430,23 @@ public class InstanceClient implements AutoCloseable {
                   InstanceClient.this.upstream = MultiplexObserver.this.upstream;
                   backoff = 1;
                   lifecycle.connected(InstanceClient.this);
+                  if (monitor != null) {
+                    upstream.onNext(StreamMessageClient.newBuilder().setMonitor(RequestHeat.newBuilder().build()).build());
+                  }
                 }
               });
           return;
+        case HEAT:
+          if (monitor != null) {
+            HeatPayload heat = message.getHeat();
+            executor.execute(
+                new NamedRunnable("route-heat") {
+                  @Override
+                  public void execute() throws Exception {
+                    monitor.heat(target, heat.getCpu(), heat.getMemory());
+                  }
+                });
+          }
         case HEARTBEAT:
           executor.execute(
               new NamedRunnable("client-heartbeat", target) {

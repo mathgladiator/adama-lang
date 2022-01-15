@@ -19,6 +19,8 @@ import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.MetricsImpl;
 import org.adamalang.grpc.client.Client;
+import org.adamalang.grpc.client.ClientMetrics;
+import org.adamalang.grpc.client.contracts.HeatMonitor;
 import org.adamalang.grpc.server.Server;
 import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBase;
@@ -123,8 +125,7 @@ public class Service {
             monitoringPort,
             new MetricsImpl(prometheusMetricsFactory));
     engine.start();
-    Client client = new Client(identity);
-
+    Client client = new Client(identity, new ClientMetrics(prometheusMetricsFactory), (target, cpu, memory) -> System.err.println("HEAT[" + target + "] := " + cpu + "," + memory));
     Overlord.execute(engine, client, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront);
   }
 
@@ -261,7 +262,7 @@ public class Service {
     System.err.println("gossiping on:" + gossipPort);
     WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
     System.err.println("standing up http on:" + webConfig.port);
-    Client client = new Client(identity);
+    Client client = new Client(identity, new ClientMetrics(prometheusMetricsFactory), null);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
 
     engine.subscribe("adama", (targets) -> {

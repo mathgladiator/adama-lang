@@ -22,16 +22,19 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class Client {
+  private final ClientMetrics metrics;
   private final SimpleExecutor routingExecutor;
   private final RoutingEngine engine;
   private final InstanceClientFinder finder;
   private final SimpleExecutor[] executors;
   private final Random rng;
 
-  public Client(MachineIdentity identity) {
+  public Client(MachineIdentity identity, ClientMetrics metrics, HeatMonitor monitor) {
+    this.metrics = metrics;
     this.routingExecutor = SimpleExecutor.create("routing");
     this.engine =
         new RoutingEngine(
+            metrics,
             routingExecutor,
             new SpaceTrackingEvents() {
               @Override
@@ -47,6 +50,8 @@ public class Client {
             250);
     this.finder =
         new InstanceClientFinder(
+            metrics,
+            monitor,
             identity,
             SimpleExecutorFactory.DEFAULT,
             4,
@@ -65,25 +70,26 @@ public class Client {
   }
 
   public void notifyDeployment(String target, String space) {
+    metrics.client_notify_deploy_attempt.run();
     finder.find(target, new QueueAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED) {
       @Override
       protected void executeNow(InstanceClient client) {
         client.scanDeployments(space, new ScanDeploymentCallback() {
           @Override
           public void success() {
-            // TODO: metric
+            metrics.client_notify_deploy_success.run();
           }
 
           @Override
           public void failure() {
-            // TODO: metric
+            metrics.client_notify_deploy_failure_do.run();
           }
         });
       }
 
       @Override
       protected void failure(int code) {
-        // TODO: metric
+        metrics.client_notify_deploy_failure_find.run();
       }
     });
   }

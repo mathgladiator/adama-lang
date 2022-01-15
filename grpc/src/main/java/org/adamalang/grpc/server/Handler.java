@@ -106,6 +106,19 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     return new StreamObserver<>() {
       @Override
       public void onNext(StreamMessageClient payload) {
+        if (payload.hasMonitor()) {
+          executor.schedule(new NamedRunnable("measure-heat") {
+            @Override
+            public void execute() throws Exception {
+              if (alive.get()) {
+                // TODO: pull from management stuff
+                responseObserver.onNext(StreamMessageServer.newBuilder().setHeat(HeatPayload.newBuilder().setCpu(0.2).setMemory(0.3).build()).build());
+                executor.schedule(this, 250);
+              }
+            }
+          }, 250);
+          return;
+        }
         long id = payload.getId();
         CoreStream stream = null;
         if (payload.hasAct()) {

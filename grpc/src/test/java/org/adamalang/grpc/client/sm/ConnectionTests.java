@@ -12,7 +12,9 @@ package org.adamalang.grpc.client.sm;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.TestBed;
+import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.InstanceClientFinder;
 import org.adamalang.grpc.client.contracts.CreateCallback;
@@ -33,6 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ConnectionTests {
   @Test
   public void failureToConnect() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed server =
         new TestBed(
             30000,
@@ -44,6 +47,7 @@ public class ConnectionTests {
         CountDownLatch primed = new CountDownLatch(1);
         RoutingEngine engine =
             new RoutingEngine(
+                metrics,
                 routingExecutor,
                 new SpaceTrackingEvents() {
                   @Override
@@ -65,9 +69,7 @@ public class ConnectionTests {
                 },
                 50,
                 25);
-        InstanceClientFinder finder =
-            new InstanceClientFinder(
-                server.identity, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
+        InstanceClientFinder finder = new InstanceClientFinder(metrics, null, server.identity, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
         finder.sync(new TreeSet<>(Collections.singleton("127.0.0.1:30000")));
         Assert.assertTrue(primed.await(15000, TimeUnit.MILLISECONDS));
         ConnectionBase base = new ConnectionBase(engine, finder, server.clientExecutor);
@@ -113,6 +115,8 @@ public class ConnectionTests {
 
   @Test
   public void connectHappy() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+
     try (TestBed server =
         new TestBed(
             30001,
@@ -124,6 +128,7 @@ public class ConnectionTests {
         CountDownLatch primed = new CountDownLatch(1);
         RoutingEngine engine =
             new RoutingEngine(
+                metrics,
                 routingExecutor,
                 new SpaceTrackingEvents() {
                   @Override
@@ -146,8 +151,7 @@ public class ConnectionTests {
                 50,
                 25);
         InstanceClientFinder finder =
-            new InstanceClientFinder(
-                server.identity, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
+            new InstanceClientFinder(metrics, null, server.identity, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
         finder.sync(new TreeSet<>(Collections.singleton("127.0.0.1:30001")));
         Assert.assertTrue(primed.await(15000, TimeUnit.MILLISECONDS));
         CountDownLatch created = new CountDownLatch(1);

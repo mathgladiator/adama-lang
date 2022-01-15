@@ -12,6 +12,7 @@ package org.adamalang.grpc.client;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.contracts.QueueAction;
 import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
@@ -28,6 +29,7 @@ public class InstanceClientFinderTests {
 
   @Test
   public void bigMesh() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     TestBed[] servers = new TestBed[10];
     SimpleExecutor routingExecutor = SimpleExecutor.create("routing");
     ExceptionLogger logger = (t, c) -> {};
@@ -46,6 +48,7 @@ public class InstanceClientFinderTests {
       CountDownLatch primed = new CountDownLatch(1);
       RoutingEngine engine =
           new RoutingEngine(
+              metrics,
               routingExecutor,
               new SpaceTrackingEvents() {
                 @Override
@@ -63,9 +66,7 @@ public class InstanceClientFinderTests {
               },
               50,
               25);
-      InstanceClientFinder finder =
-          new InstanceClientFinder(
-              servers[0].identity, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(metrics, null, servers[0].identity, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         finder.sync(targets);
         Assert.assertTrue(primed.await(25000, TimeUnit.MILLISECONDS));
