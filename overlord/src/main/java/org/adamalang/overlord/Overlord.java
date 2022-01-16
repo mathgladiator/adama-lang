@@ -9,28 +9,44 @@
  */
 package org.adamalang.overlord;
 
+import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.gossip.Engine;
 import org.adamalang.grpc.client.Client;
+import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.overlord.heat.HeatTable;
+import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
+import org.adamalang.overlord.roles.BillingAggregator;
 import org.adamalang.overlord.roles.CapacityManager;
 import org.adamalang.overlord.roles.DeploymentReconciliation;
 import org.adamalang.overlord.roles.PrometheusTargetMaker;
+import org.adamalang.web.contracts.HtmlHandler;
 
 import java.io.File;
 
 public class Overlord {
-  public static void execute(Engine engine, Client client, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront) {
+  public static HtmlHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront) {
+    ConcurrentCachedHtmlHandler handler = new ConcurrentCachedHtmlHandler();
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
-    PrometheusTargetMaker.kickOff(metrics, engine, targetsDestination);
-    DeploymentReconciliation.kickOff(metrics, engine, deploymentsDatabase);
-    CapacityManager.kickOff(metrics, client, deploymentsDatabase, dataBaseFront);
-
-    // TODO: ROLE #2.A: pick a random adama host, download billing data, cut bills into hourly segments over to billing database
-    // client.pickRandomHost((client) -> {});
-
-    // TODO: ROLE #3.B: when a hot host appears, use billing information to find hottest space, and then make a decision to act on it
-    // TODO: ROLE #3.C: adama should inform which spaces on a hot host are oversubscribed... this is an interesting challenge
+    PrometheusTargetMaker.kickOff(metrics, engine, targetsDestination, handler);
+    DeploymentReconciliation.kickOff(metrics, engine, deploymentsDatabase, handler);
+    HeatTable heatTable = new HeatTable(handler);
+    Client client = new Client(identity, new ClientMetrics(metricsFactory), heatTable::onSample);
     engine.subscribe("adama", client.getTargetPublisher());
+    CapacityManager.kickOffReturnHotTargetEvent(metrics, client, deploymentsDatabase, dataBaseFront, handler, heatTable);
+    BillingAggregator.kickOff(metrics, client, handler);
+
+    // build the index
+    StringBuilder indexHtmlBuilder = new StringBuilder();
+    indexHtmlBuilder.append("<html><head><title>OVERLORD</title></head><body>\n");
+    indexHtmlBuilder.append("<a href=\"/capacity-manager\">Capacity Management View</a><br />\n");
+    indexHtmlBuilder.append("<a href=\"/heat\">Heat Table</a><br />\n");
+    indexHtmlBuilder.append("<a href=\"/reconcile\">Deployment Reconciliation</a><br />\n");
+    indexHtmlBuilder.append("<a href=\"/targets\">Targets</a><br />\n");
+    indexHtmlBuilder.append("</body></html>");
+    String indexHtml = indexHtmlBuilder.toString();
+    handler.put("/", indexHtml);
+    return handler;
   }
 }

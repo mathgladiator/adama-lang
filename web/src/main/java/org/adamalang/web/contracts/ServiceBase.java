@@ -9,7 +9,10 @@
  */
 package org.adamalang.web.contracts;
 
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.io.ConnectionContext;
+import org.adamalang.web.io.JsonRequest;
+import org.adamalang.web.io.JsonResponder;
 
 /**
  * this is the base of the service which is used to spawn ServiceConnection's when a new request
@@ -21,4 +24,33 @@ public interface ServiceBase {
   public ServiceConnection establish(ConnectionContext context);
 
   public HtmlHandler html();
+
+  public static ServiceBase JUST_HTML(HtmlHandler html) {
+    return new ServiceBase() {
+      @Override
+      public ServiceConnection establish(ConnectionContext context) {
+        return new ServiceConnection() {
+          @Override
+          public void execute(JsonRequest request, JsonResponder responder) {
+            responder.error(new ErrorCodeException(-1));
+          }
+
+          @Override
+          public boolean keepalive() {
+            return false;
+          }
+
+          @Override
+          public void kill() {
+
+          }
+        };
+      }
+
+      @Override
+      public HtmlHandler html() {
+        return html;
+      }
+    };
+  }
 }

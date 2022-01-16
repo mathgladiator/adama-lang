@@ -122,6 +122,7 @@ public class Service {
     String identityFileName = config.get_string("identity_filename", "me.identity");
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
+
     Engine engine =
         new Engine(
             identity,
@@ -131,47 +132,13 @@ public class Service {
             monitoringPort,
             new MetricsImpl(prometheusMetricsFactory));
     engine.start();
-    Client client = new Client(identity, new ClientMetrics(prometheusMetricsFactory), (target, cpu, memory) -> {
-      // TODO: use this information productively
-      // System.err.println("HEAT[" + target + "] := " + cpu + "," + memory);
-    });
-    Overlord.execute(engine, client, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront);
+
+    HtmlHandler handler = Overlord.execute(identity, engine, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront);
 
     ConfigObject co = new ConfigObject(config.get_or_create_child("overlord_web"));
     co.intOf("http_port", 9089);
     WebConfig webConfig = new WebConfig(co);
-    ServiceBase serviceBase = new ServiceBase() {
-      @Override
-      public ServiceConnection establish(ConnectionContext context) {
-        return new ServiceConnection() {
-          @Override
-          public void execute(JsonRequest request, JsonResponder responder) {
-            responder.error(new ErrorCodeException(-1));
-          }
-
-          @Override
-          public boolean keepalive() {
-            return false;
-          }
-
-          @Override
-          public void kill() {
-
-          }
-        };
-      }
-
-      @Override
-      public HtmlHandler html() {
-        return new HtmlHandler() {
-          @Override
-          public String handle(String uri) {
-            return "Overlord";
-          }
-        };
-      }
-    };
-
+    ServiceBase serviceBase = ServiceBase.JUST_HTML(handler);
     final var runnable = new ServiceRunnable(webConfig, serviceBase);
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override

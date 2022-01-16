@@ -17,11 +17,16 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.overlord.OverlordMetrics;
+import org.adamalang.overlord.heat.HeatTable;
+import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
+import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 
 public class CapacityManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(CapacityManager.class);
@@ -32,14 +37,22 @@ public class CapacityManager {
     private final Client client;
     private final DataBase deploymentsDatabase;
     private final DataBase frontendDatabase;
+    private final ConcurrentCachedHtmlHandler handler;
+    private final FixedHtmlStringLoggerTable tableLogger;
 
-    public CoreCapacityManagementTask(SimpleExecutor executor, OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase) {
+    public CoreCapacityManagementTask(SimpleExecutor executor, OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHtmlHandler handler) {
       super("capacity-management");
       this.executor = executor;
       this.metrics = metrics;
       this.client = client;
       this.deploymentsDatabase = deploymentsDatabase;
       this.frontendDatabase = frontendDatabase;
+      this.handler = handler;
+      this.tableLogger = new FixedHtmlStringLoggerTable(1024, "space", "act", "activity", "time");
+    }
+
+    private void warn(String target) {
+
     }
 
     private void simpleCapacityCheck(String space, boolean retryAvailable) {
@@ -58,7 +71,7 @@ public class CapacityManager {
           if (!deployment.hash.equals(plan.hash)) {
             metrics.capacity_monitor_found_inconsistent_deployment.run();
             sb.append(" [FIXED]");
-            System.out.println("deploy:" + space + " to " + deployment.target);
+            tableLogger.row(space, "deploy", deployment.target, new Date().toString());
             Deployments.deploy(deploymentsDatabase, space, deployment.target, plan.hash, plan.plan);
             metrics.capacity_monitor_fixed_inconsistent_deployment.run();
             client.notifyDeployment(deployment.target, space);
@@ -70,16 +83,18 @@ public class CapacityManager {
           sb.append(" [WEAK]");
           client.getDeploymentTargets(space, (target) -> {
             try {
-              System.out.println("deploy:" + space + " to " + target);
+              tableLogger.row(space, "deploy", target, new Date().toString());
               Deployments.deploy(deploymentsDatabase, space, target, plan.hash, plan.plan);
               client.notifyDeployment(target, space);
             } catch (Exception ex) {
-              ex.printStackTrace();
+              tableLogger.row(space, "deploy-exception", ex.getMessage(), new Date().toString());
+              LOGGER.error("deploy-exception", ex);
             }
           });
         }
         // TODO: figure out how to manage heat to expand/retract capacity
-        System.out.println("Capacity for: " + space + " = " + sb);
+        tableLogger.row(space, "summary", sb.toString(), new Date().toString());
+        handler.put("/capacity-manager", tableLogger.toHtml("Capacity Manager"));
       } catch (Exception ex) {
         metrics.capacity_monitor_failed_space.run();
         if (retryAvailable) {
@@ -122,9 +137,17 @@ public class CapacityManager {
     }
   }
 
-  public static void kickOff(OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase) {
+  public static void kickOffReturnHotTargetEvent(OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHtmlHandler handler, HeatTable heatTable) {
     SimpleExecutor executor = SimpleExecutor.create("capacity-management");
-    CoreCapacityManagementTask task = new CoreCapacityManagementTask(executor, metrics, client, deploymentsDatabase, frontendDatabase);
+    CoreCapacityManagementTask task = new CoreCapacityManagementTask(executor, metrics, client, deploymentsDatabase, frontendDatabase, handler);
     executor.schedule(task, 1000);
+    heatTable.setHeatWarning((target) -> {
+      executor.execute(new NamedRunnable("found-hot-target") {
+        @Override
+        public void execute() throws Exception {
+          task.warn(target);
+        }
+      });
+    });
   }
 }

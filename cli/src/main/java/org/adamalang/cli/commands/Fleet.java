@@ -208,6 +208,10 @@ public class Fleet {
     }
   }
 
+  public Fleet() {
+    super();
+  }
+
   private static void fleetDeploy(Config config, String[] args) throws Exception {
     Ec2Client ec2 = getEC2(config);
     String scopeToJustRole = Util.extractWithDefault("--scope", "-s", "*", args);
@@ -264,12 +268,12 @@ public class Fleet {
         frontendInstances.add(instance.instanceId());
       }
       Files.writeString(new File("staging/" + instance.privateIpAddress() + ".json").toPath(), configTemplate.toPrettyString());
-      Files.writeString(new File("staging/" + instance.privateIpAddress() + ".sh").toPath(), "#!/bin/sh\njava -jar adama.jar service auto\n");
+      Files.writeString(new File("staging/" + instance.privateIpAddress() + ".sh").toPath(), "#!/bin/sh\nmv adama-new.jar adama.jar\njava -jar adama.jar service auto\n");
       Security.newServer(new String[] { "--ip", instance.privateIpAddress(), "--out", "staging/" + instance.privateIpAddress() + ".identity"});
       commands.append("echo Uploading to ").append(instance.publicIpAddress()).append("\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".identity ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/me.identity\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".json ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/.adama\n");
-      commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama.jar\n");
+      commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama-new.jar\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".sh ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama.sh\n");
       commands.append("ssh -i ").append(keyName).append(" ec2-user@" + instance.publicIpAddress() + " chmod 700 /home/ec2-user/adama.sh\n");
       commands.append("rm staging/").append(instance.privateIpAddress()).append(".identity\n");

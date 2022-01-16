@@ -28,28 +28,29 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   }
 
   @Override
-  protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req)
-      throws Exception {
+  protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
     String htmlResult = html.handle(req.uri());
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
-
-
     // send the default response for bad or health checks
     final HttpResponseStatus status;
     final byte[] content;
+    final String contentType;
     if (isHealthCheck) {
       status = HttpResponseStatus.OK;
       content = ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8);
+      contentType = "text/text; charset=UTF-8";
     } else if (htmlResult != null) {
       status = HttpResponseStatus.OK;
       content = htmlResult.getBytes(StandardCharsets.UTF_8);
+      contentType = "text/html; charset=UTF-8";
     } else {
       status = HttpResponseStatus.BAD_REQUEST;
-      content = "Bad Request".getBytes(StandardCharsets.UTF_8);
+      content = "<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>".getBytes(StandardCharsets.UTF_8);
+      contentType = "text/html; charset=UTF-8";
     }
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
     HttpUtil.setContentLength(res, content.length);
-    res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=UTF-8");
+    res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 

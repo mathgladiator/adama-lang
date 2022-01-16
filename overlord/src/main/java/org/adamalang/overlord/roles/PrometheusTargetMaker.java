@@ -9,9 +9,11 @@
  */
 package org.adamalang.overlord.roles;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.proto.Endpoint;
 import org.adamalang.overlord.OverlordMetrics;
+import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,7 @@ public class PrometheusTargetMaker {
   private static final Logger LOGGER = LoggerFactory.getLogger(PrometheusTargetMaker.class);
 
   /** scan gossip table to make targets.json for promethesus */
-  public static void kickOff(OverlordMetrics metrics, Engine engine, File targetsDestination) {
+  public static void kickOff(OverlordMetrics metrics, Engine engine, File targetsDestination, ConcurrentCachedHtmlHandler handler) {
     AtomicReference<String> lastWritten = new AtomicReference<>("");
     engine.setWatcher(
         (endpoints) -> {
@@ -62,6 +64,7 @@ public class PrometheusTargetMaker {
           writer.endArray();
           try {
             String toWrite = writer.toString();
+            handler.put("/targets", "<html><head><title>Targets</title></head><body><pre>" + JsonMapper.builder().build().readTree(toWrite).toPrettyString() + "</pre></body></html>");
             if (!lastWritten.get().equals(toWrite)) {
               LOGGER.info("made-targets", toWrite);
               Files.writeString(targetsDestination.toPath(), writer.toString());
