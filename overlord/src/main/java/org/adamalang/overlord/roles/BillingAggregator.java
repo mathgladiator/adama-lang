@@ -10,6 +10,7 @@
 package org.adamalang.overlord.roles;
 
 import org.adamalang.grpc.client.Client;
+import org.adamalang.mysql.DataBase;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
 
@@ -17,6 +18,7 @@ public class BillingAggregator {
   public static void kickOff(
       OverlordMetrics metrics,
       Client client,
+      DataBase dataBaseFront,
       ConcurrentCachedHtmlHandler handler) {
     // TODO: ROLE #2.A: pick a random adama host, download billing data, cut bills into hourly segments over to billing database
     // client.pickRandomHost((client) -> {});

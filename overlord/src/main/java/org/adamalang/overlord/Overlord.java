@@ -27,15 +27,30 @@ import java.io.File;
 
 public class Overlord {
   public static HtmlHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront) {
+    // the HTTP web server will render data that has been put/cached in this handler
     ConcurrentCachedHtmlHandler handler = new ConcurrentCachedHtmlHandler();
+
+    // the overlord has metrics
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);
+
+    // start producing the prometheus targets.json from the gossip engine
     PrometheusTargetMaker.kickOff(metrics, engine, targetsDestination, handler);
+
+    // make sure that we remove deployments from dead hosts
     DeploymentReconciliation.kickOff(metrics, engine, deploymentsDatabase, handler);
+
+    // we will be monitoring the heat on each host within this table
     HeatTable heatTable = new HeatTable(handler);
+
+    // build a full mesh from overlord to all clients
     Client client = new Client(identity, new ClientMetrics(metricsFactory), heatTable::onSample);
     engine.subscribe("adama", client.getTargetPublisher());
+
+    // kick off capacity management will will add/remove capacity per space
     CapacityManager.kickOffReturnHotTargetEvent(metrics, client, deploymentsDatabase, dataBaseFront, handler, heatTable);
-    BillingAggregator.kickOff(metrics, client, handler);
+
+    // start aggregating bills from hosts and write them to database
+    BillingAggregator.kickOff(metrics, client, dataBaseFront, handler);
 
     // build the index
     StringBuilder indexHtmlBuilder = new StringBuilder();
