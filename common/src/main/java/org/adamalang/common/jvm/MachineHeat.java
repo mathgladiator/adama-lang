@@ -29,12 +29,8 @@ public class MachineHeat {
   }
 
   public static double memory() {
-    if (os != null) {
-      // TODO: find out if allocating the entire JVM messes this number up... it probably does, but move on for now
-      double free = Math.ceil(os.getFreeMemorySize() / (1024 * 1024.0));
-      double total = Math.floor(os.getTotalMemorySize() / (1024 * 1024.0));
-      return (total - free) / total;
-    }
-    return -1;
+    double free = Math.ceil(Runtime.getRuntime().freeMemory() / (1024 * 1024.0));
+    double total = Math.floor(Runtime.getRuntime().totalMemory() / (1024 * 1024.0));
+    return (total - free) / total;
   }
 }
