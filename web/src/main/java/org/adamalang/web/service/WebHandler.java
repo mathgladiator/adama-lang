@@ -14,30 +14,40 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import org.adamalang.web.contracts.HtmlHandler;
 
 import java.nio.charset.StandardCharsets;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebConfig webConfig;
+  private final HtmlHandler html;
 
-  public WebHandler(WebConfig webConfig) {
+  public WebHandler(WebConfig webConfig, HtmlHandler html) {
     this.webConfig = webConfig;
+    this.html = html;
   }
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req)
       throws Exception {
-    // analyze the request
+    String htmlResult = html.handle(req.uri());
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
 
+
     // send the default response for bad or health checks
-    HttpResponseStatus status =
-        isHealthCheck ? HttpResponseStatus.OK : HttpResponseStatus.BAD_REQUEST;
-    final var content =
-        (isHealthCheck ? "HEALTHY:" + System.currentTimeMillis() : "Bad Request")
-            .getBytes(StandardCharsets.UTF_8);
-    final FullHttpResponse res =
-        new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
+    final HttpResponseStatus status;
+    final byte[] content;
+    if (isHealthCheck) {
+      status = HttpResponseStatus.OK;
+      content = ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8);
+    } else if (htmlResult != null) {
+      status = HttpResponseStatus.OK;
+      content = htmlResult.getBytes(StandardCharsets.UTF_8);
+    } else {
+      status = HttpResponseStatus.BAD_REQUEST;
+      content = "Bad Request".getBytes(StandardCharsets.UTF_8);
+    }
+    final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
     HttpUtil.setContentLength(res, content.length);
     res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=UTF-8");
     sendWithKeepAlive(webConfig, ctx, req, res);

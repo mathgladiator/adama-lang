@@ -17,8 +17,10 @@ import org.adamalang.extern.ExternNexus;
 import org.adamalang.transforms.Authenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
+import org.adamalang.web.contracts.HtmlHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
+import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 
@@ -37,8 +39,11 @@ public class BootstrapFrontend {
     UserIdResolver userIdResolver = new UserIdResolver(SimpleExecutor.create("user-id-resolver"), extern);
     Metrics metrics = new Metrics(extern.metricsFactory);
 
-    return context ->
-        new ServiceConnection() {
+
+    return new ServiceBase() {
+      @Override
+      public ServiceConnection establish(ConnectionContext context) {
+        return new ServiceConnection() {
           // TODO: pick an executor (randomly? pick two and do the faster of the two?)
           final ConnectionNexus nexus =
               new ConnectionNexus(
@@ -67,5 +72,12 @@ public class BootstrapFrontend {
             router.disconnect();
           }
         };
+      }
+
+      @Override
+      public HtmlHandler html() {
+        return HtmlHandler.NULL;
+      }
+    };
   }
 }

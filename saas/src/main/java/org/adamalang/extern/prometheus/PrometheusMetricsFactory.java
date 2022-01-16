@@ -13,8 +13,7 @@ import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.exporter.HTTPServer;
-import io.prometheus.client.hotspot.GarbageCollectorExports;
-import io.prometheus.client.hotspot.MemoryPoolsExports;
+import io.prometheus.client.hotspot.*;
 import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
@@ -25,12 +24,16 @@ import java.util.regex.Pattern;
 
 public class PrometheusMetricsFactory implements MetricsFactory {
   private final HTTPServer server;
+
   public PrometheusMetricsFactory(int metricsHttpPort) throws Exception {
     server = new HTTPServer.Builder()
         .withPort(metricsHttpPort)
         .build();
     new MemoryPoolsExports().register();
     new GarbageCollectorExports().register();
+    new StandardExports().register();
+    new MemoryAllocationExports().register();
+    new ThreadExports().register();
   }
 
   public void shutdown() {

@@ -49,6 +49,16 @@ public class WebHandlerTests {
       {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
+                                .server("localhost", webConfig.port)
+                                .get("/foo")
+                                .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("goo");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .get("/demo.html")
             .execute(callback);

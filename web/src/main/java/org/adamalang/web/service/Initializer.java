@@ -46,7 +46,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
             false,
             true,
             webConfig.timeoutWebsocketHandshake));
-    pipeline.addLast(new WebHandler(webConfig));
+    pipeline.addLast(new WebHandler(webConfig, base.html()));
     pipeline.addLast(new WebSocketHandler(webConfig, base));
   }
 }

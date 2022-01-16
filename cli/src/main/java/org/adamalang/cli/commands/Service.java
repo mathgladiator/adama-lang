@@ -37,7 +37,12 @@ import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.billing.DiskBillingBatchMaker;
 import org.adamalang.runtime.threads.ThreadedDataService;
+import org.adamalang.web.contracts.HtmlHandler;
 import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.contracts.ServiceConnection;
+import org.adamalang.web.io.ConnectionContext;
+import org.adamalang.web.io.JsonRequest;
+import org.adamalang.web.io.JsonResponder;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
 
@@ -131,6 +136,43 @@ public class Service {
       // System.err.println("HEAT[" + target + "] := " + cpu + "," + memory);
     });
     Overlord.execute(engine, client, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront);
+
+    ConfigObject co = new ConfigObject(config.get_or_create_child("overlord_web"));
+    co.intOf("http_port", 9089);
+    WebConfig webConfig = new WebConfig(co);
+    ServiceBase serviceBase = new ServiceBase() {
+      @Override
+      public ServiceConnection establish(ConnectionContext context) {
+        return new ServiceConnection() {
+          @Override
+          public void execute(JsonRequest request, JsonResponder responder) {
+            responder.error(new ErrorCodeException(-1));
+          }
+
+          @Override
+          public boolean keepalive() {
+            return false;
+          }
+
+          @Override
+          public void kill() {
+
+          }
+        };
+      }
+
+      @Override
+      public HtmlHandler html() {
+        return new HtmlHandler() {
+          @Override
+          public String handle(String uri) {
+            return "Overlord";
+          }
+        };
+      }
+    };
+
+    final var runnable = new ServiceRunnable(webConfig, serviceBase);
   }
 
   public static void serviceBackend(Config config) throws Exception {

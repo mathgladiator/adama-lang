@@ -9,7 +9,6 @@
  */
 package org.adamalang.web.service;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.ConfigObject;
 
 public class WebConfig {

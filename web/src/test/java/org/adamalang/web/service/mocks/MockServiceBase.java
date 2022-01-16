@@ -10,6 +10,7 @@
 package org.adamalang.web.service.mocks;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.contracts.HtmlHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
@@ -66,6 +67,16 @@ public class MockServiceBase implements ServiceBase {
 
       @Override
       public void kill() {}
+    };
+  }
+
+  @Override
+  public HtmlHandler html() {
+    return uri -> {
+      if ("/foo".equals(uri)){
+        return "goo";
+      }
+      return null;
     };
   }
 }
