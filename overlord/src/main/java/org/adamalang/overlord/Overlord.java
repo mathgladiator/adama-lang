@@ -26,20 +26,11 @@ public class Overlord {
     DeploymentReconciliation.kickOff(metrics, engine, deploymentsDatabase);
     CapacityManager.kickOff(metrics, client, deploymentsDatabase, dataBaseFront);
 
-
     // TODO: ROLE #2.A: pick a random adama host, download billing data, cut bills into hourly segments over to billing database
     // client.pickRandomHost((client) -> {});
 
-    // TODO: ROLE #3.A: subscribe to every adama to get periodoic heat of host cpu + memory to find a hot host
     // TODO: ROLE #3.B: when a hot host appears, use billing information to find hottest space, and then make a decision to act on it
     // TODO: ROLE #3.C: adama should inform which spaces on a hot host are oversubscribed... this is an interesting challenge
     engine.subscribe("adama", client.getTargetPublisher());
-
-    // client.setHeatSubscriber((endpoint, heat) -> {});
-
-    // TODO: Periodically download the deployment mapping so we can contrast what hosts and reconcile deployments
-    // TODO: ROLE #4: Ensure deployments are consistent
-
-
   }
 }

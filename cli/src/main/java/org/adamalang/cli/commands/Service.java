@@ -173,6 +173,17 @@ public class Service {
     };
 
     final var runnable = new ServiceRunnable(webConfig, serviceBase);
+    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+      @Override
+      public void run() {
+        System.err.println("shutting down overlord");
+        runnable.shutdown();
+      }
+    }));
+
+    System.err.println("running overlord web");
+    runnable.run();
+    System.err.println("overlord finished");
   }
 
   public static void serviceBackend(Config config) throws Exception {
@@ -350,16 +361,13 @@ public class Service {
     */
 
     final var runnable = new ServiceRunnable(webConfig, serviceBase);
-
-    System.err.println("register shutdownhook");
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
-        System.err.println("shutting down");
+        System.err.println("shutting down frontend");
         runnable.shutdown();
       }
     }));
-
     System.err.println("running frontend");
     runnable.run();
     System.err.println("frontend finished");
