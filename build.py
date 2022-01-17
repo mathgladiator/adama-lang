@@ -44,12 +44,13 @@ if jar:
        args.append("-DskipTests")
     if os.system(" ".join(args)) == 0:
        made_jar = True
+    elif:
+       exit(1)
+
 
 if made_jar:
     args = ["cp", "./cli/target/cli-0.2-jar-with-dependencies.jar", "./release/adama.jar"]
-    ret = os.system(" ".join(args))
-    if ret > 0:
-        exit(ret)
+    os.system(" ".join(args))
 
 if generate:
     cwd = os.getcwd()
