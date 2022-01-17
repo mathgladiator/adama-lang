@@ -17,6 +17,7 @@ import org.adamalang.mysql.contracts.SQLConsumer;
 import org.adamalang.mysql.contracts.SQLTransact;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 /** the connection pool and helpers for interacting with MySQL */
 public class DataBase implements AutoCloseable {
@@ -27,6 +28,10 @@ public class DataBase implements AutoCloseable {
   public DataBase(DataBaseConfig config) throws Exception {
     this.pool = config.createComboPooledDataSource();
     this.databaseName = config.databaseName;
+  }
+
+  public static String dateTimeOf(long time) {
+    return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(time));
   }
 
   public static boolean execute(Connection connection, String sql) throws SQLException {

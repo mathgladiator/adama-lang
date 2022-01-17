@@ -428,6 +428,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       private void sendCompleteWhileInExecutor() {
         if (!sentComplete) {
           sentComplete = true;
+          responseObserver.onCompleted();
         }
       }
 
@@ -439,10 +440,9 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       @Override
       public void onCompleted() {
         executor.execute(
-            new NamedRunnable("processing-billing-next") {
+            new NamedRunnable("processing-client-closed") {
               @Override
               public void execute() throws Exception {
-
                 sendCompleteWhileInExecutor();
               }
             });

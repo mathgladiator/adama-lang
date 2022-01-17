@@ -59,6 +59,7 @@ public class Overlord {
     indexHtmlBuilder.append("<a href=\"/heat\">Heat Table</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/reconcile\">Deployment Reconciliation</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/targets\">Targets</a><br />\n");
+    indexHtmlBuilder.append("<a href=\"/billing\">Recent Billing Data</a><br />\n");
     indexHtmlBuilder.append("</body></html>");
     String indexHtml = indexHtmlBuilder.toString();
     handler.put("/", indexHtml);

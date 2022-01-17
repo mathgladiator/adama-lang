@@ -180,6 +180,7 @@ public class InstanceClient implements AutoCloseable {
       this.billingStream = billingStream;
       this.batchRemoved = null;
     }
+
     public void start(StreamObserver<BillingForward> upstream) {
       this.upstream = upstream;
       // start the conversation
@@ -203,7 +204,7 @@ public class InstanceClient implements AutoCloseable {
           executor.execute(new NamedRunnable("removing-batch") {
             @Override
             public void execute() throws Exception {
-              billingStream.handle(batchRemoved, () -> {
+              billingStream.handle(target, batchRemoved, () -> {
                 executor.execute(new NamedRunnable("batch-processed") {
                   @Override
                   public void execute() throws Exception {
@@ -222,9 +223,14 @@ public class InstanceClient implements AutoCloseable {
       billingStream.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_BILLING_UNKNOWN_EXCEPTION, throwable, logger).code);
     }
 
+    boolean completedThisSide = false;
     @Override
     public void onCompleted() {
       billingStream.finished();
+      if (!completedThisSide) {
+        upstream.onCompleted();
+        completedThisSide = true;
+      }
     }
   }
 

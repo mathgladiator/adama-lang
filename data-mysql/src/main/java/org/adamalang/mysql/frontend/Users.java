@@ -65,7 +65,7 @@ public class Users {
               .toString();
       try (PreparedStatement statement =
                connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-        statement.setDate(1, new java.sql.Date(System.currentTimeMillis()));
+        statement.setString(1, DataBase.dateTimeOf(System.currentTimeMillis()));
         statement.execute();
       }
     }
@@ -91,7 +91,7 @@ public class Users {
     }
   }
 
-  public static void addKey(DataBase dataBase, int userId, String publicKey, Date expires)
+  public static void addKey(DataBase dataBase, int userId, String publicKey, long expires)
       throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql =
@@ -103,7 +103,7 @@ public class Users {
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setInt(1, userId);
         statement.setString(2, publicKey);
-        statement.setDate(3, new java.sql.Date(expires.getTime()));
+        statement.setString(3, DataBase.dateTimeOf(expires));
         statement.execute();
         return;
       }

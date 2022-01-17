@@ -9,5 +9,44 @@
  */
 package org.adamalang.mysql.frontend;
 
+import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.DataBaseConfig;
+import org.adamalang.mysql.DataBaseConfigTests;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Date;
+import java.util.HashMap;
+
 public class BillingTests {
+
+  @Test
+  public void billingbatches() throws Exception {
+    DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+      FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
+      try {
+        installer.install();
+        long now = System.currentTimeMillis();
+        Billing.recordBatch(
+            dataBase,
+            "target1",
+            "{\"time\":\""+ (now - 10000 )+"\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}}", now);
+
+        Billing.recordBatch(
+            dataBase,
+            "target2",
+            "{\"time\":\""+(now + 10000)+"\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}}", now);
+
+        HashMap<String, Billing.SpaceSummary> summary1 = Billing.summarizeWindow(dataBase, now - 100000, now + 100000);
+        Assert.assertEquals(1, summary1.size());
+        Assert.assertEquals(
+            "{\"cpu\":\"29625809720\",\"messages\":\"5660000\",\"count\":\"8\",\"memory\":\"2000\"}",
+            summary1.get("space").summarize());
+
+      } finally {
+        installer.uninstall();
+      }
+    }
+  }
 }

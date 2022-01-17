@@ -33,7 +33,7 @@ public class FrontendTests {
         Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
         Users.validateUser(dataBase, 1);
         Users.validateUser(dataBase, 1);
-        Users.addKey(dataBase, 1, "key", new Date(System.currentTimeMillis() + 1000 * 60));
+        Users.addKey(dataBase, 1, "key", System.currentTimeMillis() + 1000 * 60);
         Assert.assertEquals("key", Users.listKeys(dataBase, 1).get(0));
         Users.removeAllKeys(dataBase, 1);
         Assert.assertEquals(0, Users.listKeys(dataBase, 1).size());

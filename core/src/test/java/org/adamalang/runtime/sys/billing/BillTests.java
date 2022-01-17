@@ -30,12 +30,49 @@ public class BillTests {
   }
 
   @Test
-  public void pack() {
-    Bill bill =
-        new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000));
-    Assert.assertEquals(
-        "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\"]",
-        bill.packup());
+  public void packings() {
+    {
+      Bill bill =
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000));
+      Assert.assertEquals(
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\"]",
+          bill.packup());
+    }
+    {
+      Bill bill =
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 0, 0, 0));
+      Assert.assertEquals(
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"0\",\"0\",\"0\"]",
+          bill.packup());
+    }
+    {
+      Bill bill =
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 200, 0, 0));
+      Assert.assertEquals(
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"200\",\"0\",\"0\"]",
+          bill.packup());
+    }
+    {
+      Bill bill =
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 42, 0));
+      Assert.assertEquals(
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"42\",\"0\"]",
+          bill.packup());
+    }
+    {
+      Bill bill =
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 0, 1000));
+      Assert.assertEquals(
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"1000\"]",
+          bill.packup());
+    }
+    {
+      Bill bill =
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 0, 0));
+      Assert.assertEquals(
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"0\"]",
+          bill.packup());
+    }
   }
 
   @Test

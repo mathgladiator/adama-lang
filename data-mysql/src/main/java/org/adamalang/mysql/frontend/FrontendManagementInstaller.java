@@ -84,8 +84,7 @@ public class FrontendManagementInstaller {
 
     String createAuthoritiesTableSQL =
         new StringBuilder() //
-            .append(
-                "CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`authorities` (") //
+            .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`authorities` (") //
             .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
             .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
             .append("  `authority` VARCHAR(64) NOT NULL,") //
@@ -99,6 +98,20 @@ public class FrontendManagementInstaller {
             .append(" DEFAULT CHARACTER SET = utf8mb4;") //
             .toString();
 
+    String createBillingBatchTableSQL =
+        new StringBuilder() //
+            .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`billing_batches` (") //
+            .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+            .append("  `target` VARCHAR(256) NOT NULL,") //
+            .append("  `batch` LONGTEXT NOT NULL,") //
+            .append("  `created` DATETIME NOT NULL,") //
+            .append("  PRIMARY KEY (`id`),") //
+            .append("  INDEX `t` (`target`),") //
+            .append("  INDEX `c` (`created` DESC))") //
+            .append(" ENGINE = InnoDB") //
+            .append(" DEFAULT CHARACTER SET = utf8mb4;") //
+            .toString();
+
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, createDatabaseSQL);
@@ -107,6 +120,7 @@ public class FrontendManagementInstaller {
       DataBase.execute(connection, createSpaceTableSQL);
       DataBase.execute(connection, createGrantTableSQL);
       DataBase.execute(connection, createAuthoritiesTableSQL);
+      DataBase.execute(connection, createBillingBatchTableSQL);
     } finally {
       connection.close();
     }
@@ -144,6 +158,12 @@ public class FrontendManagementInstaller {
           new StringBuilder("DROP TABLE IF EXISTS `")
               .append(dataBase.databaseName)
               .append("`.`authorities`;")
+              .toString());
+      DataBase.execute(
+          connection,
+          new StringBuilder("DROP TABLE IF EXISTS `")
+              .append(dataBase.databaseName)
+              .append("`.`billing_batches`;")
               .toString());
       DataBase.execute(
           connection,

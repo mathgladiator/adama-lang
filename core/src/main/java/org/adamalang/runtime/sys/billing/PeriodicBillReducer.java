@@ -33,18 +33,38 @@ public class PeriodicBillReducer {
       this.countSamples = new ArrayList<>();
     }
 
-    public void writeAsObject(JsonStreamWriter writer) {
+    private String reduce() {
+      boolean notZero = false;
       countSamples.sort(Long::compareTo);
+      JsonStreamWriter writer = new JsonStreamWriter();
       writer.beginObject();
       writer.writeObjectFieldIntro("cpu");
       writer.writeLong(sumCPU);
+      if (sumCPU != 0) {
+        notZero = true;
+      }
       writer.writeObjectFieldIntro("messages");
       writer.writeLong(sumMessages);
+      if (sumMessages != 0) {
+        notZero = true;
+      }
       writer.writeObjectFieldIntro("count_p95");
-      writer.writeLong(estimateP95(countSamples));
+      long count95 = estimateP95(countSamples);
+      writer.writeLong(count95);
+      if (count95 != 0) {
+        notZero = true;
+      }
       writer.writeObjectFieldIntro("memory_p95");
-      writer.writeLong(estimateP95(memorySamples));
+      long memory95 = estimateP95(memorySamples);
+      writer.writeLong(memory95);
+      if (memory95 != 0) {
+        notZero = true;
+      }
       writer.endObject();
+      if (notZero) {
+        return writer.toString();
+      }
+      return null;
     }
   }
   private final TreeMap<String, PerSpaceReducer> spaces;
@@ -74,8 +94,11 @@ public class PeriodicBillReducer {
     writer.writeObjectFieldIntro("spaces");
     writer.beginObject();
     for (Map.Entry<String, PerSpaceReducer> space : spaces.entrySet()) {
-      writer.writeObjectFieldIntro(space.getKey());
-      space.getValue().writeAsObject(writer);
+      String reduced = space.getValue().reduce();
+      if (reduced != null) {
+        writer.writeObjectFieldIntro(space.getKey());
+        writer.injectJson(reduced);
+      }
     }
     writer.endObject();
     writer.endObject();

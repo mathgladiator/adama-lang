@@ -91,7 +91,7 @@ public class RootHandlerImpl implements RootHandler {
                   nexus.dataBaseManagement,
                   startRequest.userId,
                   publicKey,
-                  new Date(System.currentTimeMillis() + 30 * 24 * 60 * 60));
+                  System.currentTimeMillis() + 30 * 24 * 60 * 60);
               Users.validateUser(nexus.dataBaseManagement, startRequest.userId);
             } catch (Exception ex) {
               responder.error(

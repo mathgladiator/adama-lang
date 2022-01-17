@@ -40,6 +40,10 @@ public class OverlordMetrics {
   public final Runnable capacity_monitor_fixed_inconsistent_deployment;
   public final Runnable capacity_monitor_found_weak_space;
 
+  public final Runnable billing_fetch_found;
+  public final Runnable billing_fetch_saved;
+  public final Runnable billing_fetch_failed;
+  public final Runnable billing_fetch_finished;
 
   public OverlordMetrics(MetricsFactory factory) {
     targets_watcher_fired = factory.counter("overlord_targets_watcher_fired");
@@ -67,6 +71,11 @@ public class OverlordMetrics {
     capacity_monitor_found_inconsistent_deployment = factory.counter("capacity_monitor_found_inconsistent_deployment");
     capacity_monitor_fixed_inconsistent_deployment = factory.counter("capacity_monitor_fixed_inconsistent_deployment");
     capacity_monitor_found_weak_space = factory.counter("capacity_monitor_found_weak_space");
+
+    billing_fetch_found = factory.counter("billing_fetch_found");
+    billing_fetch_saved = factory.counter("billing_fetch_saved");
+    billing_fetch_failed = factory.counter("billing_fetch_failed");
+    billing_fetch_finished = factory.counter("billing_fetch_finished");
 
   }
 }
