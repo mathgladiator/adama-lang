@@ -27,7 +27,7 @@ public class GenerateLanguageTestsTests {
     GenerateLanguageTests.generate(
         0,
         new String[] {
-          "--input", "./test_data/code1", "--output", "./test_data/java-out1", "--what", "ok"
+          "--input", "./test_data/code1", "--output", "./test_data/java-out1", "--what", "ok", "--errors", "./test_data/errors.csv"
         });
     javaOut.delete();
     testdataCode.delete();
@@ -43,7 +43,7 @@ public class GenerateLanguageTestsTests {
     final var javaOut = new File("./test_data/java-out2");
     javaOut.mkdir();
     GenerateLanguageTests.generate(
-        0, new String[] {"--input", "./test_data/code2", "--output", "./test_data/java-out2"});
+        0, new String[] {"--input", "./test_data/code2", "--output", "./test_data/java-out2", "--errors", "./test_data/errors.csv"});
     final var testExists = new File(javaOut, "GeneratedClazzTests.java");
     Assert.assertTrue(testExists.exists());
     testExists.delete();

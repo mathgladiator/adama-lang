@@ -42,6 +42,9 @@ public class GenerateLanguageTests {
         case "--output":
           outputJavaPath = args[k + 1];
           break;
+        case "--errors":
+          outputErrorFile = args[k + 1];
+          break;
         default:
           System.err.println("unknown option:" + args[k]);
       }

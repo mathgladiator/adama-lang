@@ -410,6 +410,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                       } else {
                         sendCompleteWhileInExecutor();
                       }
+                      return;
                     }
                   case REMOVE:
                     {
@@ -419,6 +420,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                           BillingReverse.newBuilder()
                               .setRemoved(BillingBatchRemoved.newBuilder().build())
                               .build());
+                      return;
                     }
                 }
               }

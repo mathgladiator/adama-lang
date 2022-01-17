@@ -196,9 +196,10 @@ public class InstanceClient implements AutoCloseable {
             public void execute() throws Exception {
               BillingBatchFound found = billingReverse.getFound();
               BillingObserver.this.batchRemoved = found.getBatch();
-              upstream.onNext(BillingForward.newBuilder().setRemove(BillingDeleteBill.newBuilder().setId(found.getId()).buildPartial()).build());
+              upstream.onNext(BillingForward.newBuilder().setRemove(BillingDeleteBill.newBuilder().setId(found.getId()).build()).build());
             }
           });
+          return;
         }
         case REMOVED: {
           executor.execute(new NamedRunnable("removing-batch") {
@@ -214,6 +215,7 @@ public class InstanceClient implements AutoCloseable {
               });
             }
           });
+          return;
         }
       }
     }
