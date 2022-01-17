@@ -54,6 +54,8 @@ public class GenerateLanguageTestsTests {
 
   @Test
   public void csv() throws Exception {
-    GenerateLanguageTests.writeErrorCSV("./test_code", "./error-messages.csv");
+    File errorMessages = new File("./test_data/error-messages.csv");
+    GenerateLanguageTests.writeErrorCSV("./test_code", "./test_data/error-messages.csv");
+    errorMessages.delete();
   }
 }
