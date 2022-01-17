@@ -44,7 +44,7 @@ if jar:
        args.append("-DskipTests")
     if os.system(" ".join(args)) == 0:
        made_jar = True
-    elif:
+    else:
        exit(1)
 
 
