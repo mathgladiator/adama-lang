@@ -47,7 +47,9 @@ if jar:
 
 if made_jar:
     args = ["cp", "./cli/target/cli-0.2-jar-with-dependencies.jar", "./release/adama.jar"]
-    os.system(" ".join(args))
+    ret = os.system(" ".join(args))
+    if ret > 0:
+        exit(ret)
 
 if generate:
     cwd = os.getcwd()
