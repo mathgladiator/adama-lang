@@ -60,10 +60,41 @@ public class RoutingEngineTests {
     // without the broadcast delay
     // you can play with this by increase the thread sleep to 200 and each thing will pop out
     for (String inj : new String[] {"y", "3", "t", "4", "w", "2", "1", "x", "z"}) {
+      if (inj.equals("y")) {
+        CountDownLatch latch = new CountDownLatch(1);
+        engine.random(
+            new Consumer<String>() {
+              @Override
+              public void accept(String s) {
+                Assert.assertNull(s);
+                latch.countDown();
+              }
+            });
+        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+      }
       engine.integrate(inj, Collections.singleton("space"));
       if ("w".equals(inj)) {
         // we checkpoint on W because we will be removing a bunch of stuff
         Assert.assertTrue(becameW.await(10000, TimeUnit.MILLISECONDS));
+      }
+      if (inj.equals("y")) {
+        CountDownLatch latch = new CountDownLatch(1);
+        engine.random(
+            new Consumer<String>() {
+              @Override
+              public void accept(String s) {
+                Assert.assertTrue("y".equals(s));
+                latch.countDown();
+              }
+            });
+        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+      } else {
+        engine.random(new Consumer<String>() {
+          @Override
+          public void accept(String s) {
+            System.err.println("random: " + s);
+          }
+        });
       }
       if ("2".equals(inj)) {
         CountDownLatch latch = new CountDownLatch(1);

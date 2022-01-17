@@ -94,6 +94,26 @@ public class Client {
     });
   }
 
+  public void randomBillingExchange(BillingStream billing) {
+    engine.random(target -> {
+      if (target != null) {
+        finder.find(target, new QueueAction<InstanceClient>(ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED) {
+          @Override
+          protected void executeNow(InstanceClient item) {
+            item.startBillingExchange(billing);
+          }
+
+          @Override
+          protected void failure(int code) {
+            billing.failure(code);
+          }
+        });
+      } else {
+        billing.failure(ErrorCodes.API_BILLING_FAILED_FINDING_RANDOM_HOST);
+      }
+    });
+  }
+
   public Consumer<Collection<String>> getTargetPublisher() {
     return (targets) -> finder.sync(new TreeSet<>(targets));
   }

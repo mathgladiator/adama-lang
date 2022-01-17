@@ -51,6 +51,15 @@ public class RoutingEngine {
     });
   }
 
+  public void random(Consumer<String> callback) {
+    executor.execute(new NamedRunnable("find-random-target") {
+      @Override
+      public void execute() throws Exception {
+        callback.accept(table.random());
+      }
+    });
+  }
+
   public void get(String space, String key, Consumer<String> callback) {
     executor.execute(new NamedRunnable("get", space, key) {
       @Override

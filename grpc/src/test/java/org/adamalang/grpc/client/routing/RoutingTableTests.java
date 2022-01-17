@@ -21,6 +21,7 @@ public class RoutingTableTests {
   public void sanity_flow() {
     MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
     RoutingTable table = new RoutingTable(events);
+    Assert.assertNull(table.random());
     ArrayList<String> decisions = new ArrayList<>();
     Assert.assertEquals(0, table.targetsFor("space").size());
     Runnable unsubscribe = table.subscribe(new Key("space", "key"), (x) -> decisions.add(x));
@@ -29,12 +30,14 @@ public class RoutingTableTests {
     decisions.clear();
     Assert.assertEquals(0, table.targetsFor("space").size());
     table.integrate("t1", Collections.singleton("space"));
+    Assert.assertEquals("t1", table.random());
     Assert.assertEquals("t1", table.get("space", "key"));
     Assert.assertEquals(1, table.targetsFor("space").size());
     Assert.assertEquals(0, decisions.size());
     table.broadcast();
     Assert.assertEquals(1, decisions.size());
     table.remove("t1");
+    Assert.assertNull(table.random());
     Assert.assertEquals(0, table.targetsFor("space").size());
     Assert.assertEquals(1, decisions.size());
     table.broadcast();

@@ -17,8 +17,6 @@ import java.sql.*;
 import java.util.*;
 
 public class Spaces {
-
-
   public static int createSpace(DataBase dataBase, int userId, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sqlTestWater =
