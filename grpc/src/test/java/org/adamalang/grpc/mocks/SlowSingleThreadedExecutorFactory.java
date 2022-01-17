@@ -23,6 +23,7 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
   private final String name;
   private final ArrayList<CountDownLatch> latches;
   private final ArrayList<Runnable> runnables;
+  private boolean fast = false;
 
   public SlowSingleThreadedExecutorFactory(String name) {
     this.name = name;
@@ -33,6 +34,13 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
   public synchronized void survey() {
     for (Runnable runnable : runnables) {
       System.err.println("QUEUE:" + name + "|" + runnable);
+    }
+  }
+
+  public synchronized void goFast() {
+    fast = true;
+    for (Runnable runnable : runnables) {
+      runnable.run();
     }
   }
 
@@ -83,6 +91,10 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
       System.err.println(name + "|ADD:" + ((NamedRunnable) command).name);
     } else {
       System.err.println(name + "|ADD:" + command);
+    }
+    if (fast) {
+      command.run();
+      return;
     }
     runnables.add(command);
     Iterator<CountDownLatch> it = latches.iterator();

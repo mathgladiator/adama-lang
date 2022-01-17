@@ -94,7 +94,7 @@ public class DiskBillingBatchMaker {
                 current.renameTo(cuttingBatch);
                 oldestTime = time.nowMilliseconds();
                 output = new FileOutputStream(current, true);
-                HourlyBillReducer reducer = new HourlyBillReducer();
+                HourlyBillReducer reducer = new HourlyBillReducer(time);
                 try (FileReader reader = new FileReader(cuttingBatch)) {
                   try (BufferedReader buffered = new BufferedReader(reader)) {
                     String ln;

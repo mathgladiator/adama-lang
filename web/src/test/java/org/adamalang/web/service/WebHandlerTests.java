@@ -43,7 +43,7 @@ public class WebHandlerTests {
             .get("/x")
             .execute(callback);
         callback.awaitFirst();
-        callback.assertData("Bad Request");
+        callback.assertData("<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>");
       }
 
       {
@@ -60,41 +60,10 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
-            .get("/demo.html")
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("Bad Request");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
-            .header("origin", "http://localhost")
-            .get("/demo.html")
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("Bad Request");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
             .get(webConfig.healthCheckPath)
             .execute(callback);
         callback.awaitFirst();
         callback.assertDataPrefix("HEALTHY:");
-      }
-
-      {
-        TestClientCallback callback = new TestClientCallback();
-        TestClientRequestBuilder.start(group)
-            .server("localhost", webConfig.port)
-            .get("/ex_500")
-            .execute(callback);
-        callback.awaitFirst();
-        callback.assertData("Bad Request");
       }
 
       {

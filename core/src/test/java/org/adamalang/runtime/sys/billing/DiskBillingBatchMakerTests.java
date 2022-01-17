@@ -53,7 +53,7 @@ public class DiskBillingBatchMakerTests {
       String batchId = maker.getNextAvailableBatchId();
       Assert.assertNotNull(batchId);
       Assert.assertEquals(
-          "{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}",
+          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}}",
           maker.getBatch(batchId));
       maker.deleteBatch(batchId);
     } finally {
@@ -93,7 +93,7 @@ public class DiskBillingBatchMakerTests {
       String batchId = maker.getNextAvailableBatchId();
       Assert.assertNotNull(batchId);
       Assert.assertEquals(
-          "{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}",
+          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}}",
           maker.getBatch(batchId));
       maker.deleteBatch(batchId);
     } finally {
@@ -161,7 +161,9 @@ public class DiskBillingBatchMakerTests {
       }
       String batchId = maker.getNextAvailableBatchId();
       Assert.assertNotNull(batchId);
-      Assert.assertEquals("{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}", maker.getBatch(batchId));
+      Assert.assertEquals(
+          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}}",
+          maker.getBatch(batchId));
       maker.deleteBatch(batchId);
     } finally {
       for (File child : root.listFiles()) {

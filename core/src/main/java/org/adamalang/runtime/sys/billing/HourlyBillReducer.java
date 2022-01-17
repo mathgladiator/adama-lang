@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.sys.billing;
 
+import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.TreeMap;
 
 /** math for reducing a stream of billing updates for an hour into a summary using P95 for memory and count and SUM for cpu and messages */
 public class HourlyBillReducer {
+  private final TimeSource time;
 
   private class PerSpaceReducer {
     private long sumCPU;
@@ -47,7 +49,8 @@ public class HourlyBillReducer {
   }
   private final TreeMap<String, PerSpaceReducer> spaces;
 
-  public HourlyBillReducer() {
+  public HourlyBillReducer(final TimeSource time) {
+    this.time = time;
     this.spaces = new TreeMap<>();
   }
 
@@ -66,10 +69,15 @@ public class HourlyBillReducer {
   public String toJson() {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.beginObject();
+    writer.writeObjectFieldIntro("time");
+    writer.writeLong(time.nowMilliseconds());
+    writer.writeObjectFieldIntro("spaces");
+    writer.beginObject();
     for (Map.Entry<String, PerSpaceReducer> space : spaces.entrySet()) {
       writer.writeObjectFieldIntro(space.getKey());
       space.getValue().writeAsObject(writer);
     }
+    writer.endObject();
     writer.endObject();
     return writer.toString();
   }

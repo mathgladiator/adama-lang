@@ -78,6 +78,7 @@ public class ConnectionFailOverTests {
           new RoutingEngine(metrics, directExector, new MockSpaceTrackingEvents(), 50, 25);
       InstanceClientFinder finder =
           new InstanceClientFinder(metrics, null, servers[0].identity, finderExecutor, 2, fauxEngine, logger);
+      boolean finished = false;
       try {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsConnected = events.latchAt(1);
@@ -188,11 +189,17 @@ public class ConnectionFailOverTests {
         connectionComplete.run();
         events.assertWrite(3, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         Assert.assertEquals("state=Connected", connection.toString());
-        directExector.survey();
-        finderExecutor.survey();
-        connectionExecutor.survey();
+        finished = true;
       } finally {
         System.err.println("FIN\n");
+        if (!finished) {
+          System.err.println("Not finished\n");
+          Thread.sleep(500);
+          directExector.survey();
+          finderExecutor.survey();
+          connectionExecutor.survey();
+          System.err.println("survey revealed issued on a queue\n");
+        }
         finder.shutdown();
       }
     } finally {
