@@ -113,14 +113,10 @@ public class ConnectionFailOverTests {
         Runnable finderSyncs = finderExecutor.latchAtAndDrain(18, 3);
         Runnable finderCleansUp = finderExecutor.latchAtAndDrain(21, 3);
         Runnable broadcastNewTarget = directExector.latchAtAndDrain(5, 1);
-        Runnable completeClients = finderExecutor.latchAtAndDrain(23, 2);
-        Runnable newConnectionEstablished = finderExecutor.latchAtAndDrain(25, 2);
+        Runnable completeClients = finderExecutor.latchAtAndDrain(23, -1);
         Runnable connectionFoundTarget = connectionExecutor.latchAtAndDrain(11, 2);
         Runnable newConnectionSignal = connectionExecutor.latchAtAndDrain(12, 1);
-        Runnable findNewTargetForFailOver = finderExecutor.latchAtAndDrain(26, 1);
         Runnable foundConnection = connectionExecutor.latchAtAndDrain(13, 1);
-        Runnable executeConnect = finderExecutor.latchAtAndDrain(27, 1);
-        Runnable produceEventsOnNewDataStream = finderExecutor.latchAtAndDrain(29, 2);
         Runnable connectionComplete = connectionExecutor.latchAtAndDrain(14, 1);
 
         ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
@@ -175,16 +171,13 @@ public class ConnectionFailOverTests {
         finderCleansUp.run();
         broadcastNewTarget.run();
         completeClients.run();
-        newConnectionEstablished.run();
+        finderExecutor.goFast();
         Assert.assertEquals("state=FindingClientWait", connection.toString());
         connectionFoundTarget.run();
         Assert.assertEquals("state=FindingClientCancelTryNewTarget", connection.toString());
         newConnectionSignal.run();
         Assert.assertEquals("state=FindingClientWait", connection.toString());
-        findNewTargetForFailOver.run();
         foundConnection.run();
-        executeConnect.run();
-        produceEventsOnNewDataStream.run();
         eventsGotRollback.run();
         connectionComplete.run();
         events.assertWrite(3, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");

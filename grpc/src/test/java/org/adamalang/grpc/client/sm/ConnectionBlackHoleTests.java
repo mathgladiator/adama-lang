@@ -83,8 +83,6 @@ public class ConnectionBlackHoleTests {
         Runnable eventsConnected = events.latchAt(1);
         Runnable eventsProducedData = events.latchAt(2);
         Runnable eventsGotUpdate = events.latchAt(3);
-        Runnable eventsGotRollback = events.latchAt(4);
-
         Runnable ranStart = connectionExecutor.latchAtAndDrain(1, 1);
         Runnable subscribed = directExector.latchAtAndDrain(1, 1);
         Runnable gotNullTargetAndCancel = connectionExecutor.latchAtAndDrain(3, 2);
@@ -102,15 +100,11 @@ public class ConnectionBlackHoleTests {
         Runnable connectionMade = connectionExecutor.latchAtAndDrain(6, 1);
         Runnable executeSend = connectionExecutor.latchAtAndDrain(7, 1);
         Runnable forwardSend = finderExecutor.latchAtAndDrain(8, 1);
-        Runnable clientDataForward = finderExecutor.latchAtAndDrain(9, 1);
-        Runnable sendSeqResult = finderExecutor.latchAtAndDrain(10, 1);
+        Runnable clientDataForward = finderExecutor.latchAtAndDrain(9, -1);
         Runnable executorIntegrates = directExector.latchAtAndDrain(4, 1);
         Runnable broadcastNewTarget = directExector.latchAtAndDrain(5, 1);
         Runnable connectionFoundNull = connectionExecutor.latchAtAndDrain(8, 1);
-        Runnable sendDisconnect = finderExecutor.latchAtAndDrain(11, 1);
-        Runnable gotDisconnectSignalBack = finderExecutor.latchAtAndDrain(12, 1);
         Runnable connectionGotDisconnect = connectionExecutor.latchAtAndDrain(9, 1);
-
         ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
@@ -143,8 +137,8 @@ public class ConnectionBlackHoleTests {
         executeSend.run();
         forwardSend.run();
         clientDataForward.run();
+        finderExecutor.goFast();
         events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
-        sendSeqResult.run();
         eventsGotUpdate.run();
         cb1.assertSuccess(6);
         engineDirect.remove("127.0.0.1:22005");
@@ -153,8 +147,6 @@ public class ConnectionBlackHoleTests {
         Assert.assertEquals("state=Connected", connection.toString());
         connectionFoundNull.run();
         Assert.assertEquals("state=ConnectedStopping", connection.toString());
-        sendDisconnect.run();
-        gotDisconnectSignalBack.run();
         connectionGotDisconnect.run();
         Assert.assertEquals("state=NotConnected", connection.toString());
         System.err.println("SURVEY");
@@ -225,8 +217,6 @@ public class ConnectionBlackHoleTests {
         Runnable eventsConnected = events.latchAt(1);
         Runnable eventsProducedData = events.latchAt(2);
         Runnable eventsGotUpdate = events.latchAt(3);
-        Runnable eventsGotRollback = events.latchAt(4);
-
         Runnable ranStart = connectionExecutor.latchAtAndDrain(1, 1);
         Runnable subscribed = directExector.latchAtAndDrain(1, 1);
         Runnable gotNullTargetAndCancel = connectionExecutor.latchAtAndDrain(3, 2);
@@ -255,7 +245,6 @@ public class ConnectionBlackHoleTests {
         Runnable sendDisconnect = finderExecutor.latchAtAndDrain(11, 1);
         Runnable gotDisconnectSignalBack = finderExecutor.latchAtAndDrain(12, 1);
         Runnable connectionGotDisconnect = connectionExecutor.latchAtAndDrain(10, 1);
-
         ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
