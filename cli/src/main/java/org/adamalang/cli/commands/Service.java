@@ -232,10 +232,9 @@ public class Service {
             ex.printStackTrace();
           }
         };
-    // TODO: make not null
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();
-    DiskBillingBatchMaker billingBatchMaker = new DiskBillingBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot);
+    DiskBillingBatchMaker billingBatchMaker = new DiskBillingBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 900000L);
     billingPubSub.subscribe((bills) -> {
       for (Bill bill : bills) {
         billingBatchMaker.write(bill);

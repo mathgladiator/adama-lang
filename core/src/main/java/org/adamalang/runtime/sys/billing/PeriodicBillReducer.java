@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /** math for reducing a stream of billing updates for an hour into a summary using P95 for memory and count and SUM for cpu and messages */
-public class HourlyBillReducer {
+public class PeriodicBillReducer {
   private final TimeSource time;
 
   private class PerSpaceReducer {
@@ -49,7 +49,7 @@ public class HourlyBillReducer {
   }
   private final TreeMap<String, PerSpaceReducer> spaces;
 
-  public HourlyBillReducer(final TimeSource time) {
+  public PeriodicBillReducer(final TimeSource time) {
     this.time = time;
     this.spaces = new TreeMap<>();
   }

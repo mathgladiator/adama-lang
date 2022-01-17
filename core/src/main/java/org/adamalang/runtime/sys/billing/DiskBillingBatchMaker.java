@@ -28,11 +28,13 @@ public class DiskBillingBatchMaker {
   private File current;
   private FileOutputStream output;
   private long oldestTime;
+  private final long cutOffMilliseconds;
 
-  public DiskBillingBatchMaker(TimeSource time, SimpleExecutor executor, File root) throws Exception {
+  public DiskBillingBatchMaker(TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds) throws Exception {
     this.time = time;
     this.executor = executor;
     this.root = root;
+    this.cutOffMilliseconds = cutOffMilliseconds;
     this.oldestTime = time.nowMilliseconds();
     this.current = new File(root, "CURRENT");
     if (current.exists()) {
@@ -85,7 +87,7 @@ public class DiskBillingBatchMaker {
             // we don't flush for performance reasons, and we are willing to let records slide on a
             // problem
             long delta = time.nowMilliseconds() - oldestTime;
-            if (delta > 3600000L) {
+            if (delta > cutOffMilliseconds) {
               String batchId = UUID.randomUUID() + "_" + time.nowMilliseconds();
               File cuttingBatch = new File(root, "CUT-" + batchId);
               try {
@@ -94,7 +96,7 @@ public class DiskBillingBatchMaker {
                 current.renameTo(cuttingBatch);
                 oldestTime = time.nowMilliseconds();
                 output = new FileOutputStream(current, true);
-                HourlyBillReducer reducer = new HourlyBillReducer(time);
+                PeriodicBillReducer reducer = new PeriodicBillReducer(time);
                 try (FileReader reader = new FileReader(cuttingBatch)) {
                   try (BufferedReader buffered = new BufferedReader(reader)) {
                     String ln;

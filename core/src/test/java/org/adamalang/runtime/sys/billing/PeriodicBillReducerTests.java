@@ -14,12 +14,12 @@ import org.adamalang.runtime.sys.PredictiveInventory;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class HourlyBillReducerTests {
+public class PeriodicBillReducerTests {
   @Test
   public void flow() {
     MockTime time = new MockTime();
     time.set(42);
-    HourlyBillReducer reducer = new HourlyBillReducer(time);
+    PeriodicBillReducer reducer = new PeriodicBillReducer(time);
     Assert.assertEquals("{\"time\":\"42\",\"spaces\":{}}", reducer.toJson());
     reducer.next(new Bill(1, 120, "space", "hash", new PredictiveInventory.Billing(100, 1000, 10, 200)));
     reducer.next(new Bill(1, 120, "mush", "hash", new PredictiveInventory.Billing(100, 1000, 10, 200)));
