@@ -41,9 +41,14 @@ public class BillingAggregator {
               @Override
               public void execute() throws Exception {
                 long now = System.currentTimeMillis();
-                Billing.recordBatch(dataBaseFront, target, batch, now);
-                table.row(target, batch, Long.toString(now));
-                metrics.billing_fetch_saved.run();
+                if (!batch.contains("\"spaces\":{}")) {
+                  Billing.recordBatch(dataBaseFront, target, batch, now);
+                  table.row(target, batch, Long.toString(now));
+                  metrics.billing_fetch_saved.run();
+                } else {
+                  // don't bother saving an empty batch
+                  metrics.billing_fetch_empty.run();
+                }
                 after.run();
               }
             });

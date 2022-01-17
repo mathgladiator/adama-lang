@@ -42,6 +42,7 @@ public class OverlordMetrics {
 
   public final Runnable billing_fetch_found;
   public final Runnable billing_fetch_saved;
+  public final Runnable billing_fetch_empty;
   public final Runnable billing_fetch_failed;
   public final Runnable billing_fetch_finished;
 
@@ -74,6 +75,7 @@ public class OverlordMetrics {
 
     billing_fetch_found = factory.counter("billing_fetch_found");
     billing_fetch_saved = factory.counter("billing_fetch_saved");
+    billing_fetch_empty = factory.counter("billing_fetch_empty");
     billing_fetch_failed = factory.counter("billing_fetch_failed");
     billing_fetch_finished = factory.counter("billing_fetch_finished");
 
