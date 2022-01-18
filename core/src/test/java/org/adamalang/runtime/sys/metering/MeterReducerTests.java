@@ -14,12 +14,12 @@ import org.adamalang.runtime.sys.PredictiveInventory;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class PeriodicMeterReducerTests {
+public class MeterReducerTests {
   @Test
   public void flow() {
     MockTime time = new MockTime();
     time.set(42);
-    PeriodicMeterReducer reducer = new PeriodicMeterReducer(time);
+    MeterReducer reducer = new MeterReducer(time);
     Assert.assertEquals("{\"time\":\"42\",\"spaces\":{}}", reducer.toJson());
     reducer.next(new MeterReading(1, 120, "space", "hash", new PredictiveInventory.MeteringSample(100, 1000, 10, 200, 17)));
     reducer.next(new MeterReading(1, 120, "mush", "hash", new PredictiveInventory.MeteringSample(100, 1000, 10, 200, 18)));

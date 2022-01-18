@@ -9,13 +9,14 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
 /** a list that will respect privacy and sends state to client only on changes */
-public class DList<dTy> {
+public class DList<dTy extends DeltaNode> implements DeltaNode {
   public final ArrayList<dTy> cachedDeltas;
   private int emittedSize;
 
@@ -54,5 +55,15 @@ public class DList<dTy> {
       writer.planField("@s").writeInt(size);
       emittedSize = cachedDeltas.size();
     }
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    long memory = 128;
+    for (dTy item : cachedDeltas) {
+      memory += item.__memory();
+    }
+    return memory;
   }
 }

@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtComplex;
 
-public class DComplex {
+public class DComplex implements DeltaNode {
   private NtComplex prior;
 
   public DComplex() {
@@ -33,5 +34,11 @@ public class DComplex {
       writer.writeNtComplex(value);
     }
     prior = value;
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return (prior != null ? prior.memory() : 0) + 32;
   }
 }

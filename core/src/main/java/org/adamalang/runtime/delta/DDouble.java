@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
 /** a double that will respect privacy and sends state to client only on changes */
-public class DDouble {
+public class DDouble implements DeltaNode {
   private Double prior;
 
   public DDouble() {
@@ -33,5 +34,11 @@ public class DDouble {
       writer.writeDouble(value);
     }
     prior = value;
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return 40;
   }
 }

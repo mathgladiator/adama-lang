@@ -9,14 +9,16 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.function.Supplier;
 
 /** a map that will respect privacy and sends state to client only on changes */
-public class DMap<TyIn, dTyOut> {
+public class DMap<TyIn, dTyOut extends DeltaNode> implements DeltaNode {
   // cache of all the items in the map
   private final HashMap<TyIn, dTyOut> cache;
 
@@ -66,5 +68,15 @@ public class DMap<TyIn, dTyOut> {
         }
       }
     }
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    long memory = 40;
+    for (Map.Entry<TyIn, dTyOut> entry : cache.entrySet()) {
+      memory += 40 + entry.getValue().__memory();
+    }
+    return memory;
   }
 }

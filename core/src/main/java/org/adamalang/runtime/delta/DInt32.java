@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
 /** a int32 that will respect privacy and sends state to client only on changes */
-public class DInt32 {
+public class DInt32 implements DeltaNode {
   private Integer prior;
 
   public DInt32() {
@@ -33,5 +34,11 @@ public class DInt32 {
       writer.writeInt(value);
     }
     prior = value;
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return 40;
   }
 }

@@ -36,7 +36,7 @@ public class CodeGenDeltaClass {
     return true;
   }
 
-  private static void writeCommonConstructor(
+  private static void writeCommonConstructorAndCost(
       final ArrayList<FieldDefinition> fds,
       final ArrayList<FieldDefinition> bubbles,
       final StringBuilderWithTabs sb,
@@ -68,6 +68,17 @@ public class CodeGenDeltaClass {
     }
     sb.append("__emitted = false;").tabDown().writeNewline();
     sb.append("}").writeNewline();
+    sb.append("@Override").writeNewline();
+    sb.append("public long __memory() {").tabUp().writeNewline();
+    sb.append("long __sum = 40;").writeNewline();
+    for (final FieldDefinition fd : fds) {
+      sb.append("__sum += __d").append(fd.name).append(".__memory();").writeNewline();
+    }
+    for (final FieldDefinition fd : bubbles) {
+      sb.append("__sum += __d").append(fd.name).append(".__memory();").writeNewline();
+    }
+    sb.append("return __sum;").tabDown().writeNewline();
+    sb.append("}").writeNewline();
   }
 
   private static void writeCommonTrailer(final StringBuilderWithTabs sb) {
@@ -89,7 +100,7 @@ public class CodeGenDeltaClass {
       final StringBuilderWithTabs sb,
       final Environment environment,
       final String className) {
-    sb.append("private class Delta").append(className).append(" {").tabUp().writeNewline();
+    sb.append("private class Delta").append(className).append(" implements DeltaNode {").tabUp().writeNewline();
     for (final FieldDefinition fd : storage.fieldsByOrder) {
       final var fieldType = environment.rules.Resolve(fd.type, false);
       final var deltaType = ((DetailHasDeltaType) fieldType).getDeltaType(environment);
@@ -100,7 +111,7 @@ public class CodeGenDeltaClass {
           .append(";")
           .writeNewline();
     }
-    writeCommonConstructor(storage.fieldsByOrder, new ArrayList<>(), sb, environment, className);
+    writeCommonConstructorAndCost(storage.fieldsByOrder, new ArrayList<>(), sb, environment, className);
     sb.append("public void show(")
         .append(className)
         .append(" __item, PrivateLazyDeltaWriter __writer) {")
@@ -132,7 +143,7 @@ public class CodeGenDeltaClass {
       final String className,
       final boolean forceManifest) {
     final var fds = new ArrayList<FieldDefinition>();
-    sb.append("private class Delta").append(className).append(" {").tabUp().writeNewline();
+    sb.append("private class Delta").append(className).append(" implements DeltaNode {").tabUp().writeNewline();
     final var bubbles = new ArrayList<FieldDefinition>();
     for (final FieldDefinition fd : storage.fieldsByOrder) {
       var fieldType = environment.rules.Resolve(fd.type, false);
@@ -163,7 +174,7 @@ public class CodeGenDeltaClass {
           .writeNewline();
       bubbles.add(FieldDefinition.invent(bd.expressionType, bd.nameToken.text));
     }
-    writeCommonConstructor(fds, bubbles, sb, environment, className);
+    writeCommonConstructorAndCost(fds, bubbles, sb, environment, className);
     sb.append("public void show(")
         .append(className)
         .append(" __item, PrivateLazyDeltaWriter __writer) {")

@@ -93,7 +93,7 @@ public class DiskMeteringBatchMaker {
                 current.renameTo(cuttingBatch);
                 oldestTime = time.nowMilliseconds();
                 output = new FileOutputStream(current, true);
-                PeriodicMeterReducer reducer = new PeriodicMeterReducer(time);
+                MeterReducer reducer = new MeterReducer(time);
                 try (FileReader reader = new FileReader(cuttingBatch)) {
                   try (BufferedReader buffered = new BufferedReader(reader)) {
                     String ln;

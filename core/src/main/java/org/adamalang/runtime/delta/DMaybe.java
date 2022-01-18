@@ -9,12 +9,13 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
 import java.util.function.Supplier;
 
 /** a maybe wrapper that will respect privacy and sends state to client only on changes */
-public class DMaybe<dTy> {
+public class DMaybe<dTy extends DeltaNode> implements DeltaNode {
   private dTy cache;
 
   /** get or make the cached delta (see CodeGenDeltaClass) */
@@ -31,5 +32,11 @@ public class DMaybe<dTy> {
       writer.writeNull();
       cache = null;
     }
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return 40 + (cache != null ? cache.__memory() : 0);
   }
 }

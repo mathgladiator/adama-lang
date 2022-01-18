@@ -34,6 +34,11 @@ public class PrivateViewTests {
             }) {
 
           @Override
+          public long memory() {
+            return 0;
+          }
+
+          @Override
           public void ingest(JsonStreamReader reader) {}
 
           @Override
@@ -66,6 +71,11 @@ public class PrivateViewTests {
             }) {
 
           @Override
+          public long memory() {
+            return 0;
+          }
+
+          @Override
           public void ingest(JsonStreamReader reader) {}
 
           @Override
@@ -77,6 +87,11 @@ public class PrivateViewTests {
 
     PrivateView pv2 =
         new PrivateView(NtClient.NO_ONE, pv1.perspective) {
+
+          @Override
+          public long memory() {
+            return 0;
+          }
 
           @Override
           public void ingest(JsonStreamReader reader) {}

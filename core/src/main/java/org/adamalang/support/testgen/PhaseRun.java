@@ -83,6 +83,7 @@ public class PhaseRun {
         outputFile.append("RANDO was DENIED:\n");
       }
       doc.invalidate(DumbDataService.NOOPINT);
+      outputFile.append("MEMORY:" + doc.getMemoryBytes() + "\n");
       outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
       outputFile.append(doc.json()).append("\n");
       outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");

@@ -611,6 +611,7 @@ public class LivingDocumentTests {
     shouldFail.add(8);
     shouldFail.add(9);
     int expectedAt = 11;
+    Assert.assertEquals(534, setup.document.getMemoryBytes());
     for (int k = 0; k < size.length; k++) {
       HashMap<String, Object> send =
           ((HashMap<String, Object>)
@@ -630,6 +631,7 @@ public class LivingDocumentTests {
         expectedAt += 2;
       }
     }
+    Assert.assertEquals(432, setup.document.getMemoryBytes());
   }
 
   @Test

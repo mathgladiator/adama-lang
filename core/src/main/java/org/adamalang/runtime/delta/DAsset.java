@@ -9,11 +9,12 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtAsset;
 
 /** an asset that will respect privacy and sends state to client only on changes */
-public class DAsset {
+public class DAsset implements DeltaNode {
   private NtAsset prior;
 
   public DAsset() {
@@ -41,5 +42,11 @@ public class DAsset {
       obj.end();
     }
     prior = value;
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return (prior != null ? prior.memory() : 0) + 32;
   }
 }

@@ -9,10 +9,11 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
 /** a boolean that will respect privacy and sends state to client only on changes */
-public class DBoolean {
+public class DBoolean  implements DeltaNode  {
   private Boolean prior;
 
   public DBoolean() {
@@ -33,5 +34,11 @@ public class DBoolean {
       writer.writeBool(value);
     }
     prior = value;
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return 40;
   }
 }

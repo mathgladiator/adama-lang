@@ -9,16 +9,14 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 import java.util.function.Supplier;
 
 /** a list of records that will respect privacy and sends state to client only on changes */
-public class DRecordList<dRecordTy> {
+public class DRecordList<dRecordTy extends DeltaNode> implements DeltaNode {
   public final HashMap<Integer, dRecordTy> cache;
   public final ArrayList<Integer> order;
 
@@ -143,5 +141,15 @@ public class DRecordList<dRecordTy> {
         }
       }
     }
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    long memory = order.size() * 32;
+    for (Map.Entry<Integer, dRecordTy> entry : cache.entrySet()) {
+      memory += 40 + entry.getValue().__memory();
+    }
+    return memory;
   }
 }

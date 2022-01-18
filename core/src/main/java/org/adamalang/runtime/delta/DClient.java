@@ -9,11 +9,12 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtClient;
 
 /** a client that will respect privacy and sends state to client only on changes */
-public class DClient {
+public class DClient implements DeltaNode {
   private NtClient prior;
 
   public DClient() {
@@ -38,5 +39,11 @@ public class DClient {
       obj.end();
     }
     prior = value;
+  }
+
+  /** memory usage */
+  @Override
+  public long __memory() {
+    return (prior != null ? prior.memory() : 0) + 32;
   }
 }

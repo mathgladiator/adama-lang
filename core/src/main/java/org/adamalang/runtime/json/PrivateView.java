@@ -54,6 +54,9 @@ public abstract class PrivateView {
     return alive;
   }
 
+  /** get the memory of the view */
+  public abstract long memory();
+
   /** dedupe excessive outstanding and blockers sharing */
   public boolean futures(String futures) {
     String futuresToTest = futures;

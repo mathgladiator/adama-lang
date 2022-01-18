@@ -593,10 +593,17 @@ public abstract class LivingDocument implements RxParent {
   /** code generated: commit the tree, and push data into the given delta */
   public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
 
+  /** estimate the memory of the document */
   public long __memory() {
     long memory = 384;
     for (String dedupeKey : __dedupe.keySet()) {
       memory += dedupeKey.length() * 2 + 16;
+    }
+    for (Map.Entry<NtClient, ArrayList<PrivateView>> entry : __trackedViews.entrySet()) {
+      memory += entry.getKey().memory();
+      for (PrivateView view : entry.getValue()) {
+        memory += view.memory();
+      }
     }
     return memory;
   }

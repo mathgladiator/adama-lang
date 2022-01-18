@@ -628,6 +628,10 @@ public class CodeGenRecords {
     sb.append("RTx__ViewerType __viewerState = new RTx__ViewerType();").writeNewline();
     sb.append("return new PrivateView(__who, ___perspective) {").tabUp().writeNewline();
     sb.append("@Override").writeNewline();
+    sb.append("public long memory() {").tabUp().writeNewline();
+    sb.append("return __state.__memory();").tabDown().writeNewline();
+    sb.append("}").writeNewline();
+    sb.append("@Override").writeNewline();
     sb.append("public void dumpViewer(JsonStreamWriter __writer) {").tabUp().writeNewline();
     sb.append("__viewerState.__writeOut(__writer);").tabDown().writeNewline();
     sb.append("}").writeNewline();
