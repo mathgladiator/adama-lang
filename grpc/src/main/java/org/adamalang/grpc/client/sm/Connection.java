@@ -251,8 +251,7 @@ public class Connection {
           buffer = null;
         }
         return;
-      case FoundClientConnectingStop:
-      case FoundClientConnectingTryNewTarget:
+      default:
         foundRemote.disconnect();
         return;
     }

@@ -7,6 +7,8 @@
 }
 
 public int x;
+public int y = 42;
+public formula z = x + y;
 
 @construct {
   x = 123;
@@ -16,4 +18,5 @@ message M { }
 
 channel foo(M m) {
   x = (2 * x + 1).abs() + 1;
+  y = y + 1;
 }

@@ -29,6 +29,7 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.overlord.Overlord;
+import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -208,6 +209,17 @@ public class Service {
               });
         });
 
+    DeploymentMonitor deploymentMonitor = new DeploymentMonitor() {
+      @Override
+      public void bumpDocument(boolean changed) {
+
+      }
+
+      @Override
+      public void witnessException(ErrorCodeException ex) {
+
+      }
+    };
     Consumer<String> scanForDeployments =
         (space) -> {
           try {
@@ -218,6 +230,7 @@ public class Service {
                 try {
                   deploymentFactoryBase.deploy(
                       deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {}));
+                  service.deploy(deploymentMonitor);
                 } catch (Exception ex) {
                   ex.printStackTrace();
                 }
@@ -227,6 +240,7 @@ public class Service {
                   Deployments.get(dataBaseDeployments, identity.ip + ":" + port, space);
               deploymentFactoryBase.deploy(
                   deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {}));
+              service.deploy(deploymentMonitor);
             }
           } catch (Exception ex) {
             ex.printStackTrace();

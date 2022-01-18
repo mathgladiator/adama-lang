@@ -36,7 +36,6 @@ public class CanaryLoadGenTool {
 
   public static void main(String[] args) throws Exception {
     // TODO: move this to config
-    String url = "http://adama-lb-us-east-2-2073537616.us-east-2.elb.amazonaws.com/s";
     WebClientBase base = new WebClientBase(new WebConfig(new ConfigObject(Json.newJsonObject())));
     SimpleExecutor canaryExecutor = SimpleExecutor.create("canaryExecutor");
 
