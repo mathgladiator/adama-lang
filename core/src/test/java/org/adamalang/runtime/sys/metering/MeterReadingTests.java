@@ -7,83 +7,83 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.sys.PredictiveInventory;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class BillTests {
+public class MeterReadingTests {
   @Test
   public void flow() {
-    Bill bill =
-        new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000, 13));
-    Assert.assertEquals(42L, bill.time);
-    Assert.assertEquals(123, bill.timeframe);
-    Assert.assertEquals("space", bill.space);
-    Assert.assertEquals("hash", bill.hash);
-    Assert.assertEquals(100, bill.memory);
-    Assert.assertEquals(200, bill.cpu);
-    Assert.assertEquals(42, bill.count);
-    Assert.assertEquals(1000, bill.messages);
+    MeterReading meterReading =
+        new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 200, 42, 1000, 13));
+    Assert.assertEquals(42L, meterReading.time);
+    Assert.assertEquals(123, meterReading.timeframe);
+    Assert.assertEquals("space", meterReading.space);
+    Assert.assertEquals("hash", meterReading.hash);
+    Assert.assertEquals(100, meterReading.memory);
+    Assert.assertEquals(200, meterReading.cpu);
+    Assert.assertEquals(42, meterReading.count);
+    Assert.assertEquals(1000, meterReading.messages);
   }
 
   @Test
   public void packings() {
     {
-      Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000, 13));
+      MeterReading meterReading =
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 200, 42, 1000, 13));
       Assert.assertEquals(
           "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"13\"]",
-          bill.packup());
+          meterReading.packup());
     }
     {
-      Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 0, 0, 0, 0));
+      MeterReading meterReading =
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 0, 0, 0, 0));
       Assert.assertEquals(
           "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"0\",\"0\",\"0\",\"0\"]",
-          bill.packup());
+          meterReading.packup());
     }
     {
-      Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 200, 0, 0, 0));
+      MeterReading meterReading =
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 200, 0, 0, 0));
       Assert.assertEquals(
           "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"200\",\"0\",\"0\",\"0\"]",
-          bill.packup());
+          meterReading.packup());
     }
     {
-      Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 42, 0, 0));
+      MeterReading meterReading =
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 0, 42, 0, 0));
       Assert.assertEquals(
           "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"42\",\"0\",\"0\"]",
-          bill.packup());
+          meterReading.packup());
     }
     {
-      Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 0, 1000, 0));
+      MeterReading meterReading =
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 0, 0, 1000, 0));
       Assert.assertEquals(
           "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"1000\",\"0\"]",
-          bill.packup());
+          meterReading.packup());
     }
     {
-      Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 0, 0, 13));
+      MeterReading meterReading =
+          new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(0, 0, 0, 0, 13));
       Assert.assertEquals(
           "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"0\",\"13\"]",
-          bill.packup());
+          meterReading.packup());
     }
   }
 
   @Test
   public void unpack() {
-    Bill bill =
-        new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000, 13));
-    JsonStreamReader reader = new JsonStreamReader(bill.packup() + bill.packup() + bill.packup());
-    Bill a = Bill.unpack(reader);
-    Bill b = Bill.unpack(reader);
-    Bill c = Bill.unpack(reader);
-    Bill d = Bill.unpack(reader);
+    MeterReading meterReading =
+        new MeterReading(42, 123, "space", "hash", new PredictiveInventory.MeteringSample(100, 200, 42, 1000, 13));
+    JsonStreamReader reader = new JsonStreamReader(meterReading.packup() + meterReading.packup() + meterReading.packup());
+    MeterReading a = MeterReading.unpack(reader);
+    MeterReading b = MeterReading.unpack(reader);
+    MeterReading c = MeterReading.unpack(reader);
+    MeterReading d = MeterReading.unpack(reader);
     Assert.assertEquals(42, b.time);
     Assert.assertEquals(42, c.time);
     Assert.assertEquals(42, a.time);
@@ -106,10 +106,10 @@ public class BillTests {
                 + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\"]"
                 + "[\"v1\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\"]"
                 + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\"]");
-    Bill bad1 = Bill.unpack(reader);
-    Bill a = Bill.unpack(reader);
-    Bill bad2 = Bill.unpack(reader);
-    Bill b = Bill.unpack(reader);
+    MeterReading bad1 = MeterReading.unpack(reader);
+    MeterReading a = MeterReading.unpack(reader);
+    MeterReading bad2 = MeterReading.unpack(reader);
+    MeterReading b = MeterReading.unpack(reader);
     Assert.assertNull(bad1);
     Assert.assertNull(bad2);
     Assert.assertEquals(42, a.time);

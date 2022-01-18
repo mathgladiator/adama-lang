@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.NamedRunnable;
@@ -21,7 +21,7 @@ import java.nio.file.Files;
 import java.util.UUID;
 
 /** writes billing information to disk for querying; this is designed to survive a process restart using a disk log */
-public class DiskBillingBatchMaker {
+public class DiskMeteringBatchMaker {
   private final TimeSource time;
   private final SimpleExecutor executor;
   private final File root;
@@ -30,7 +30,7 @@ public class DiskBillingBatchMaker {
   private long oldestTime;
   private final long cutOffMilliseconds;
 
-  public DiskBillingBatchMaker(TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds) throws Exception {
+  public DiskMeteringBatchMaker(TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds) throws Exception {
     this.time = time;
     this.executor = executor;
     this.root = root;
@@ -44,14 +44,12 @@ public class DiskBillingBatchMaker {
           try (BufferedReader reader = new BufferedReader(inputReader)) {
             String ln;
             while ((ln = reader.readLine()) != null) {
-              Bill bill = Bill.unpack(new JsonStreamReader(ln));
-              if (bill != null) {
-                if (bill.time < oldestTime) {
-                  oldestTime = bill.time;
+              MeterReading meterReading = MeterReading.unpack(new JsonStreamReader(ln));
+              if (meterReading != null) {
+                if (meterReading.time < oldestTime) {
+                  oldestTime = meterReading.time;
                 }
-                String billJson = bill.packup() + "\n";
-                byte[] billBytes = billJson.getBytes(StandardCharsets.UTF_8);
-                transferStream.write(billBytes);
+                transferStream.write((meterReading.packup() + "\n").getBytes(StandardCharsets.UTF_8));
               }
             }
           }
@@ -76,14 +74,13 @@ public class DiskBillingBatchMaker {
     output.close();
   }
 
-  public void write(Bill bill) {
-    String billJson = bill.packup() + "\n";
-    byte[] billBytes = billJson.getBytes(StandardCharsets.UTF_8);
+  public void write(MeterReading meterReading) {
+    byte[] meterBytes = (meterReading.packup() + "\n").getBytes(StandardCharsets.UTF_8);
     this.executor.execute(
         new NamedRunnable("billing-add-sample") {
           @Override
           public void execute() throws Exception {
-            output.write(billBytes);
+            output.write(meterBytes);
             // we don't flush for performance reasons, and we are willing to let records slide on a
             // problem
             long delta = time.nowMilliseconds() - oldestTime;
@@ -96,14 +93,14 @@ public class DiskBillingBatchMaker {
                 current.renameTo(cuttingBatch);
                 oldestTime = time.nowMilliseconds();
                 output = new FileOutputStream(current, true);
-                PeriodicBillReducer reducer = new PeriodicBillReducer(time);
+                PeriodicMeterReducer reducer = new PeriodicMeterReducer(time);
                 try (FileReader reader = new FileReader(cuttingBatch)) {
                   try (BufferedReader buffered = new BufferedReader(reader)) {
                     String ln;
                     while ((ln = buffered.readLine()) != null) {
-                      Bill bill = Bill.unpack(new JsonStreamReader(ln));
-                      if (bill != null) {
-                        reducer.next(bill);
+                      MeterReading meterReading = MeterReading.unpack(new JsonStreamReader(ln));
+                      if (meterReading != null) {
+                        reducer.next(meterReading);
                       }
                     }
                   }

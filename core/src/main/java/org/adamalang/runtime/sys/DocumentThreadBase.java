@@ -69,14 +69,14 @@ public class DocumentThreadBase {
     return inventory;
   }
 
-  public void bill(Consumer<HashMap<String, PredictiveInventory.Billing>> callback) {
+  public void sampleMetering(Consumer<HashMap<String, PredictiveInventory.MeteringSample>> callback) {
     executor.execute(
-        new NamedRunnable("base-billing") {
+        new NamedRunnable("base-meter-sampling") {
           @Override
           public void execute() throws Exception {
-            HashMap<String, PredictiveInventory.Billing> result = new HashMap<>();
+            HashMap<String, PredictiveInventory.MeteringSample> result = new HashMap<>();
             for (Map.Entry<String, PredictiveInventory> entry : inventoryBySpace.entrySet()) {
-              result.put(entry.getKey(), entry.getValue().toBill());
+              result.put(entry.getKey(), entry.getValue().sample());
             }
             callback.accept(result);
           }

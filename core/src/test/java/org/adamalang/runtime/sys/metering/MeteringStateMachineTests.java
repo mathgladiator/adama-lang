@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.common.*;
 import org.adamalang.runtime.LivingDocumentTests;
@@ -18,7 +18,6 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.sys.PredictiveInventory;
-import org.adamalang.runtime.sys.billing.BillingStateMachine;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,7 +29,7 @@ import java.util.HashSet;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class BillingStateMachineTests {
+public class MeteringStateMachineTests {
   @Test
   public void flow() throws Exception {
     ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
@@ -57,9 +56,9 @@ public class BillingStateMachineTests {
               },
               TimeSource.REAL_TIME);
       }
-    AtomicReference<HashMap<String, PredictiveInventory.Billing>> billing = new AtomicReference<>(null);
+    AtomicReference<HashMap<String, PredictiveInventory.MeteringSample>> billing = new AtomicReference<>(null);
     CountDownLatch latch = new CountDownLatch(1);
-    BillingStateMachine.bill(bases, new LivingDocumentFactoryFactory() {
+    MeteringStateMachine.estimate(bases, new LivingDocumentFactoryFactory() {
       @Override
       public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
 
@@ -134,9 +133,9 @@ public class BillingStateMachineTests {
     int attempts = 0;
     while (attempts < 50) {
       attempts++;
-      AtomicReference<HashMap<String, PredictiveInventory.Billing>> billing = new AtomicReference<>(null);
+      AtomicReference<HashMap<String, PredictiveInventory.MeteringSample>> billing = new AtomicReference<>(null);
       CountDownLatch latch = new CountDownLatch(1);
-      BillingStateMachine.bill(
+      MeteringStateMachine.estimate(
           bases,
           new LivingDocumentFactoryFactory() {
             @Override
@@ -195,7 +194,7 @@ public class BillingStateMachineTests {
       bases[k].kickOffInventory();
     }
     LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123;");
-    AtomicReference<HashMap<String, PredictiveInventory.Billing>> billing = new AtomicReference<>(null);
+    AtomicReference<HashMap<String, PredictiveInventory.MeteringSample>> billing = new AtomicReference<>(null);
     {
       CountDownLatch latch = new CountDownLatch(1);
       DurableLivingDocument.fresh(new Key("space", "key"), factory, NtClient.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
@@ -219,7 +218,7 @@ public class BillingStateMachineTests {
       Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     }
     CountDownLatch latch = new CountDownLatch(1);
-    BillingStateMachine.bill(bases, new LivingDocumentFactoryFactory() {
+    MeteringStateMachine.estimate(bases, new LivingDocumentFactoryFactory() {
       @Override
       public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
         try {

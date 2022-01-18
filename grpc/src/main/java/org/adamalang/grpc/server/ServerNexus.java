@@ -11,17 +11,17 @@ package org.adamalang.grpc.server;
 
 import org.adamalang.common.MachineIdentity;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
-import org.adamalang.runtime.sys.billing.BillingPubSub;
+import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.sys.CoreService;
-import org.adamalang.runtime.sys.billing.DiskBillingBatchMaker;
+import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 
 import java.util.function.Consumer;
 
 public class ServerNexus {
   public final MachineIdentity identity;
   public final CoreService service;
-  public final BillingPubSub billingPubSub;
-  public final DiskBillingBatchMaker billingBatchMaker;
+  public final MeteringPubSub meteringPubSub;
+  public final DiskMeteringBatchMaker billingBatchMaker;
   public final DeploymentFactoryBase deploymentFactoryBase;
   public final Consumer<String> scanForDeployments;
   public final int port;
@@ -32,15 +32,15 @@ public class ServerNexus {
       CoreService service,
       DeploymentFactoryBase deploymentFactoryBase,
       Consumer<String> scanForDeployments,
-      BillingPubSub billingPubSub,
-      DiskBillingBatchMaker billingBatchMaker,
+      MeteringPubSub meteringPubSub,
+      DiskMeteringBatchMaker billingBatchMaker,
       int port,
       int handlerThreads) {
     this.identity = identity;
     this.service = service;
     this.deploymentFactoryBase = deploymentFactoryBase;
     this.scanForDeployments = scanForDeployments;
-    this.billingPubSub = billingPubSub;
+    this.meteringPubSub = meteringPubSub;
     this.billingBatchMaker = billingBatchMaker;
     this.port = port;
     this.handlerThreads = handlerThreads;

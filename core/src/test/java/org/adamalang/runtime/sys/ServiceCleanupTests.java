@@ -1,6 +1,5 @@
 package org.adamalang.runtime.sys;
 
-import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
@@ -32,20 +31,20 @@ public class ServiceCleanupTests {
     MockInstantDataService dataService = new MockInstantDataService();
     AtomicReference<CountDownLatch> latchMade = new AtomicReference<>(null);
     CountDownLatch latchSet = new CountDownLatch(1);
-    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {
-      PredictiveInventory.Billing billing = bill.get(KEY.space);
-      if (billing != null) {
-        if (billing.count == 1) {
+    CoreService service = new CoreService(METRICS, factoryFactory, (samples) -> {
+      PredictiveInventory.MeteringSample meteringSample = samples.get(KEY.space);
+      if (meteringSample != null) {
+        if (meteringSample.count == 1) {
           if (latchMade.get() == null) {
             latchMade.set(new CountDownLatch(1));
             latchSet.countDown();
           }
-        } else if (billing.count == 0) {
+        } else if (meteringSample.count == 0) {
           if (latchMade.get() != null) {
             latchMade.get().countDown();
           }
         }
-        System.err.println(billing.count);
+        System.err.println(meteringSample.count);
       }
     }, dataService, time, 3);
     service.tune(

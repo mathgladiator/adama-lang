@@ -7,23 +7,23 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.sys.PredictiveInventory;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class PeriodicBillReducerTests {
+public class PeriodicMeterReducerTests {
   @Test
   public void flow() {
     MockTime time = new MockTime();
     time.set(42);
-    PeriodicBillReducer reducer = new PeriodicBillReducer(time);
+    PeriodicMeterReducer reducer = new PeriodicMeterReducer(time);
     Assert.assertEquals("{\"time\":\"42\",\"spaces\":{}}", reducer.toJson());
-    reducer.next(new Bill(1, 120, "space", "hash", new PredictiveInventory.Billing(100, 1000, 10, 200, 17)));
-    reducer.next(new Bill(1, 120, "mush", "hash", new PredictiveInventory.Billing(100, 1000, 10, 200, 18)));
-    reducer.next(new Bill(1, 120, "yo", "hash", new PredictiveInventory.Billing(0, 0, 0, 0, 0)));
+    reducer.next(new MeterReading(1, 120, "space", "hash", new PredictiveInventory.MeteringSample(100, 1000, 10, 200, 17)));
+    reducer.next(new MeterReading(1, 120, "mush", "hash", new PredictiveInventory.MeteringSample(100, 1000, 10, 200, 18)));
+    reducer.next(new MeterReading(1, 120, "yo", "hash", new PredictiveInventory.MeteringSample(0, 0, 0, 0, 0)));
     Assert.assertEquals(
         "{\"time\":\"42\",\"spaces\":{\"mush\":{\"cpu\":\"1000\",\"messages\":\"200\",\"count_p95\":\"10\",\"memory_p95\":\"100\",\"connections_p95\":\"18\"},\"space\":{\"cpu\":\"1000\",\"messages\":\"200\",\"count_p95\":\"10\",\"memory_p95\":\"100\",\"connections_p95\":\"17\"}}}",
         reducer.toJson());

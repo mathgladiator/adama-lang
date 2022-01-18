@@ -18,7 +18,7 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.HashMap;
 
-public class BillingTests {
+public class MeteringSampleTests {
 
   @Test
   public void billingbatches() throws Exception {

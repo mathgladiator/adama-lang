@@ -18,9 +18,9 @@ import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.runtime.sys.billing.BillingPubSub;
+import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.sys.CoreService;
-import org.adamalang.runtime.sys.billing.DiskBillingBatchMaker;
+import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TestBed implements AutoCloseable {
   public final SimpleExecutor clientExecutor;
   public final MachineIdentity identity;
-  public final BillingPubSub billingPubSub;
+  public final MeteringPubSub meteringPubSub;
   private final Server server;
   public final AtomicInteger deploymentScans;
   public final CoreService coreService;
@@ -60,13 +60,13 @@ public class TestBed implements AutoCloseable {
     base.deploy("space", plan);
 
     ExecutorService inMemoryThread = Executors.newSingleThreadScheduledExecutor();
-    this.billingPubSub = new BillingPubSub(TimeSource.REAL_TIME, base);
+    this.meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, base);
 
     this.coreService =
         new CoreService(
             new CoreMetrics(new NoOpMetricsFactory()),
             base, //
-            billingPubSub.publisher(), //
+            meteringPubSub.publisher(), //
             new InMemoryDataService(inMemoryThread, TimeSource.REAL_TIME), //
             TimeSource.REAL_TIME,
             2);
@@ -77,7 +77,7 @@ public class TestBed implements AutoCloseable {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();
       }
-    }, billingPubSub, new DiskBillingBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("x23", "x23").getParentFile(),  1800000L), port, 2);
+    }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("x23", "x23").getParentFile(),  1800000L), port, 2);
     this.server = new Server(nexus);
   }
 

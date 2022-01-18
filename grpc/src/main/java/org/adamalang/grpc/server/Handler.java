@@ -19,7 +19,7 @@ import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.CoreStream;
-import org.adamalang.runtime.sys.billing.Bill;
+import org.adamalang.runtime.sys.metering.MeterReading;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -83,12 +83,12 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     AtomicBoolean alive = new AtomicBoolean(true);
     responseObserver.onNext(
         StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
-    nexus.billingPubSub.subscribe(
+    nexus.meteringPubSub.subscribe(
         (bills) -> {
           if (alive.get()) {
             ArrayList<String> spaces = new ArrayList<>();
-            for (Bill bill : bills) {
-              spaces.add(bill.space);
+            for (MeterReading meterReading : bills) {
+              spaces.add(meterReading.space);
             }
             executor.execute(
                 new NamedRunnable("handler-send-heartbeat") {

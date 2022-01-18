@@ -26,11 +26,11 @@ public class PredictiveInventoryTests {
     inventory.message();
     inventory.message();
     inventory.message();
-    PredictiveInventory.Billing billing = inventory.toBill();
-    Assert.assertEquals(2, billing.count);
-    Assert.assertEquals(2000, billing.memory);
-    Assert.assertEquals(20000, billing.cpu);
-    Assert.assertEquals(3, billing.messages);
+    PredictiveInventory.MeteringSample meteringSample = inventory.sample();
+    Assert.assertEquals(2, meteringSample.count);
+    Assert.assertEquals(2000, meteringSample.memory);
+    Assert.assertEquals(20000, meteringSample.cpu);
+    Assert.assertEquals(3, meteringSample.messages);
     snapshot.count = 2;
     snapshot.memory = 2000;
     snapshot.ticks = 20000;
@@ -39,11 +39,11 @@ public class PredictiveInventoryTests {
     inventory.grow();
     inventory.message();
     inventory.message();
-    billing = inventory.toBill();
-    Assert.assertEquals(4, billing.count);
-    Assert.assertEquals(4000, billing.memory);
-    Assert.assertEquals(40000, billing.cpu);
-    Assert.assertEquals(2, billing.messages);
+    meteringSample = inventory.sample();
+    Assert.assertEquals(4, meteringSample.count);
+    Assert.assertEquals(4000, meteringSample.memory);
+    Assert.assertEquals(40000, meteringSample.cpu);
+    Assert.assertEquals(2, meteringSample.messages);
     snapshot.count = 10;
     snapshot.memory = 5000;
     snapshot.ticks = 60000;
@@ -55,18 +55,18 @@ public class PredictiveInventoryTests {
     inventory.message();
     inventory.message();
     inventory.message();
-    billing = inventory.toBill();
-    Assert.assertEquals(12, billing.count);
-    Assert.assertEquals(6230, billing.memory);
-    Assert.assertEquals(73846, billing.cpu);
-    Assert.assertEquals(5, billing.messages);
+    meteringSample = inventory.sample();
+    Assert.assertEquals(12, meteringSample.count);
+    Assert.assertEquals(6230, meteringSample.memory);
+    Assert.assertEquals(73846, meteringSample.cpu);
+    Assert.assertEquals(5, meteringSample.messages);
   }
 
   @Test
   public void add() {
-    PredictiveInventory.Billing a = new PredictiveInventory.Billing(100, 1000, 5, 100, 41);
-    PredictiveInventory.Billing b = new PredictiveInventory.Billing(1100, 21000, 51, 1100, 91);
-    PredictiveInventory.Billing s = PredictiveInventory.Billing.add(a, b);
+    PredictiveInventory.MeteringSample a = new PredictiveInventory.MeteringSample(100, 1000, 5, 100, 41);
+    PredictiveInventory.MeteringSample b = new PredictiveInventory.MeteringSample(1100, 21000, 51, 1100, 91);
+    PredictiveInventory.MeteringSample s = PredictiveInventory.MeteringSample.add(a, b);
     Assert.assertEquals(1200, s.memory);
     Assert.assertEquals(22000, s.cpu);
     Assert.assertEquals(56, s.count);

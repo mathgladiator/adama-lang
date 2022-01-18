@@ -34,10 +34,10 @@ public class PredictiveInventory {
     this.connections = 0;
   }
 
-  public Billing toBill() {
-    Billing billing = new Billing(memory, ticks, count, messages, connections);
+  public MeteringSample sample() {
+    MeteringSample meteringSample = new MeteringSample(memory, ticks, count, messages, connections);
     messages = 0;
-    return billing;
+    return meteringSample;
   }
 
   /** provide a precise and accurate accounting of the state */
@@ -90,14 +90,14 @@ public class PredictiveInventory {
     this.connections++;
   }
 
-  public static class Billing {
+  public static class MeteringSample {
     public final long memory;
     public final long cpu;
     public final long count;
     public final long messages;
     public final long connections;
 
-    public Billing(long memory, long cpu, long count, long messages, long connections) {
+    public MeteringSample(long memory, long cpu, long count, long messages, long connections) {
       this.memory = memory;
       this.cpu = cpu;
       this.count = count;
@@ -105,8 +105,8 @@ public class PredictiveInventory {
       this.connections = connections;
     }
 
-    public static Billing add(Billing a, Billing b) {
-      return new Billing(
+    public static MeteringSample add(MeteringSample a, MeteringSample b) {
+      return new MeteringSample(
           a.memory + b.memory, a.cpu + b.cpu, a.count + b.count, a.messages + b.messages, a.connections + b.connections);
     }
   }

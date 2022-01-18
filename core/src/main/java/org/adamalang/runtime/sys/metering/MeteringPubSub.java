@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
@@ -18,14 +18,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /** ultimately, billing will replicate to every caller and the billing system has to dedupe by id */
-public class BillingPubSub {
+public class MeteringPubSub {
   private final TimeSource time;
   private final DeploymentFactoryBase base;
-  private final ArrayList<Function<ArrayList<Bill>, Boolean>> subscribers;
-  private ArrayList<Bill> lastValue;
+  private final ArrayList<Function<ArrayList<MeterReading>, Boolean>> subscribers;
+  private ArrayList<MeterReading> lastValue;
   private long lastPublish;
 
-  public BillingPubSub(TimeSource time, DeploymentFactoryBase base) {
+  public MeteringPubSub(TimeSource time, DeploymentFactoryBase base) {
     this.time = time;
     this.base = base;
     this.subscribers = new ArrayList<>();
@@ -33,7 +33,7 @@ public class BillingPubSub {
     this.lastPublish = time.nowMilliseconds();
   }
 
-  public synchronized void subscribe(Function<ArrayList<Bill>, Boolean> subscriber) {
+  public synchronized void subscribe(Function<ArrayList<MeterReading>, Boolean> subscriber) {
     if (lastValue != null) {
       if (subscriber.apply(lastValue)) {
         subscribers.add(subscriber);
@@ -47,28 +47,28 @@ public class BillingPubSub {
     return subscribers.size();
   }
 
-  public Consumer<HashMap<String, PredictiveInventory.Billing>> publisher() {
-    return billings -> {
+  public Consumer<HashMap<String, PredictiveInventory.MeteringSample>> publisher() {
+    return samples -> {
       long now = time.nowMilliseconds();
       long delta = now - lastPublish;
       lastPublish = now;
-      ArrayList<Bill> bill = new ArrayList<>();
-      for (Map.Entry<String, PredictiveInventory.Billing> billing : billings.entrySet()) {
-        String space = billing.getKey();
+      ArrayList<MeterReading> meterReading = new ArrayList<>();
+      for (Map.Entry<String, PredictiveInventory.MeteringSample> sample : samples.entrySet()) {
+        String space = sample.getKey();
         String hash = base.hashOf(space);
         if (hash != null) {
-          bill.add(new Bill(time.nowMilliseconds(), delta, space, hash, billing.getValue()));
+          meterReading.add(new MeterReading(time.nowMilliseconds(), delta, space, hash, sample.getValue()));
         }
       }
-      publish(bill);
+      publish(meterReading);
     };
   }
 
-  private synchronized void publish(ArrayList<Bill> bill) {
-    Iterator<Function<ArrayList<Bill>, Boolean>> it = subscribers.iterator();
-    lastValue = bill;
+  private synchronized void publish(ArrayList<MeterReading> meterReading) {
+    Iterator<Function<ArrayList<MeterReading>, Boolean>> it = subscribers.iterator();
+    lastValue = meterReading;
     while (it.hasNext()) {
-      if (!it.next().apply(bill)) {
+      if (!it.next().apply(meterReading)) {
         it.remove();
       }
     }

@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.mocks.MockTime;
@@ -18,17 +18,17 @@ import org.junit.Test;
 import java.io.*;
 import java.util.ArrayList;
 
-public class DiskBillingBatchMakerTests {
+public class DiskMeteringBatchMakerTests {
 
-  private Runnable makeAdvance1000(MockTime time, DiskBillingBatchMaker maker, String space) {
+  private Runnable makeAdvance1000(MockTime time, DiskMeteringBatchMaker maker, String space) {
     return  () -> {
       maker.write(
-          new Bill(
+          new MeterReading(
               time.nowMilliseconds(),
               100,
               space,
               "hash",
-              new PredictiveInventory.Billing(1000, 5234242, 4, 1000, 128)));
+              new PredictiveInventory.MeteringSample(1000, 5234242, 4, 1000, 128)));
       time.time += 1000;
     };
   }
@@ -41,7 +41,7 @@ public class DiskBillingBatchMakerTests {
     try {
       root.mkdirs();
       Assert.assertTrue(root.isDirectory());
-      DiskBillingBatchMaker maker = new DiskBillingBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+      DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
       Runnable advance1000 = makeAdvance1000(time, maker, "space");
       for (int k = 0; k < 3599; k++) {
         advance1000.run();
@@ -77,14 +77,14 @@ public class DiskBillingBatchMakerTests {
       root.mkdirs();
       Assert.assertTrue(root.isDirectory());
       {
-        DiskBillingBatchMaker maker = new DiskBillingBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+        DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
         Runnable advance1000 = makeAdvance1000(time, maker, "space");
         for (int k = 0; k < 3599; k++) {
           advance1000.run();
         }
         maker.close();
       }
-      DiskBillingBatchMaker maker = new DiskBillingBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+      DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
       Assert.assertNull(maker.getNextAvailableBatchId());
       Runnable advance1000 = makeAdvance1000(time, maker, "space");
       for (int k = 0; k < 200; k++) {
@@ -118,7 +118,7 @@ public class DiskBillingBatchMakerTests {
       root.mkdirs();
       Assert.assertTrue(root.isDirectory());
       {
-        DiskBillingBatchMaker maker = new DiskBillingBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+        DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
         Runnable advance1000 = makeAdvance1000(time, maker, "space");
         for (int k = 0; k < 3599; k++) {
           advance1000.run();
@@ -153,7 +153,7 @@ public class DiskBillingBatchMakerTests {
         }
       }
 
-      DiskBillingBatchMaker maker = new DiskBillingBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
+      DiskMeteringBatchMaker maker = new DiskMeteringBatchMaker(time, SimpleExecutor.NOW, root, 3600000L);
       Assert.assertNull(maker.getNextAvailableBatchId());
       Runnable advance1000 = makeAdvance1000(time, maker, "space");
       for (int k = 0; k < 200; k++) {

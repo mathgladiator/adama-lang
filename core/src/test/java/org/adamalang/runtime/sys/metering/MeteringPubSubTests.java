@@ -7,13 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.sys.PredictiveInventory;
-import org.adamalang.runtime.sys.billing.BillingPubSub;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-public class BillingPubSubTests {
+public class MeteringPubSubTests {
   @Test
   public void flow() throws Exception {
     DeploymentPlan plan =
@@ -34,7 +33,7 @@ public class BillingPubSubTests {
             });
     DeploymentFactoryBase base = new DeploymentFactoryBase();
     base.deploy("space", plan);
-    BillingPubSub pubsub = new BillingPubSub(new MockTime(), base);
+    MeteringPubSub pubsub = new MeteringPubSub(new MockTime(), base);
     {
       AtomicInteger pubs = new AtomicInteger(0);
       CountDownLatch latch = new CountDownLatch(10);
@@ -44,9 +43,9 @@ public class BillingPubSubTests {
         return pubs.getAndIncrement() < 5;
       });
       Assert.assertEquals(1, pubsub.size());
-      Consumer<HashMap<String, PredictiveInventory.Billing>> publisher = pubsub.publisher();
-      HashMap<String, PredictiveInventory.Billing> map = new HashMap<>();
-      map.put("space", new PredictiveInventory.Billing(0, 1, 2, 3, 4));
+      Consumer<HashMap<String, PredictiveInventory.MeteringSample>> publisher = pubsub.publisher();
+      HashMap<String, PredictiveInventory.MeteringSample> map = new HashMap<>();
+      map.put("space", new PredictiveInventory.MeteringSample(0, 1, 2, 3, 4));
       for (int k = 0; k < 11; k++) {
         publisher.accept(map);
       }

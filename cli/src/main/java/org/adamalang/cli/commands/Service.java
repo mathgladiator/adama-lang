@@ -32,10 +32,10 @@ import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.runtime.sys.billing.Bill;
-import org.adamalang.runtime.sys.billing.BillingPubSub;
+import org.adamalang.runtime.sys.metering.MeterReading;
+import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.sys.CoreService;
-import org.adamalang.runtime.sys.billing.DiskBillingBatchMaker;
+import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.threads.ThreadedDataService;
 import org.adamalang.web.contracts.HtmlHandler;
 import org.adamalang.web.contracts.ServiceBase;
@@ -177,18 +177,18 @@ public class Service {
     DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"));
     ThreadedDataService dataService =
         new ThreadedDataService(dataThreads, () -> new BlockingDataService(dataBaseBackend));
-    BillingPubSub billingPubSub = new BillingPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
+    MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
     CoreService service =
         new CoreService(
             coreMetrics,
             deploymentFactoryBase,
-            billingPubSub.publisher(),
+            meteringPubSub.publisher(),
             dataService,
             TimeSource.REAL_TIME,
             coreThreads);
 
-    billingPubSub.subscribe(
+    meteringPubSub.subscribe(
         (bills) -> {
           // TODO: log to disk
           // TODO: once the disk has an hour of usage, summarize and send to S3
@@ -200,7 +200,7 @@ public class Service {
         "adama",
         port,
         (hb) -> {
-          billingPubSub.subscribe(
+          meteringPubSub.subscribe(
               (bills) -> {
                 hb.run();
                 return true;
@@ -246,10 +246,12 @@ public class Service {
         };
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();
-    DiskBillingBatchMaker billingBatchMaker = new DiskBillingBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 900000L);
-    billingPubSub.subscribe((bills) -> {
-      for (Bill bill : bills) {
-        billingBatchMaker.write(bill);
+    // TODO: change to 10 minutes, maybe? using a much shorter cut-off period as it is helping test production issues;
+    //  600000L
+    DiskMeteringBatchMaker billingBatchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 60000L);
+    meteringPubSub.subscribe((bills) -> {
+      for (MeterReading meterReading : bills) {
+        billingBatchMaker.write(meterReading);
       }
       return true;
     });
@@ -258,7 +260,7 @@ public class Service {
     scanForDeployments.accept("*");
     ServerNexus nexus =
         new ServerNexus(
-            identity, service, deploymentFactoryBase, scanForDeployments, billingPubSub, billingBatchMaker, port, 4);
+            identity, service, deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, port, 4);
 
     Server server = new Server(nexus);
     server.start();

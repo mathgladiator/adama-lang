@@ -7,18 +7,16 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.sys.PredictiveInventory;
 
-import java.util.UUID;
-
 /** a billing for a space */
-public class Bill {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Bill.class);
+public class MeterReading {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(MeterReading.class);
   public final long time;
   public final long timeframe;
   public final String space;
@@ -30,16 +28,16 @@ public class Bill {
   public final long messages; // total --> sum
   public final long connections; // standing --> p95
 
-  public Bill(long time, long timeframe, String space, String hash, PredictiveInventory.Billing billing) {
+  public MeterReading(long time, long timeframe, String space, String hash, PredictiveInventory.MeteringSample meteringSample) {
     this.time = time;
     this.timeframe = timeframe;
     this.space = space;
     this.hash = hash;
-    this.memory = billing.memory;
-    this.cpu = billing.cpu;
-    this.count = billing.count;
-    this.messages = billing.messages;
-    this.connections = billing.connections;
+    this.memory = meteringSample.memory;
+    this.cpu = meteringSample.cpu;
+    this.count = meteringSample.count;
+    this.messages = meteringSample.messages;
+    this.connections = meteringSample.connections;
   }
 
   public String packup() {
@@ -59,7 +57,7 @@ public class Bill {
     return writer.toString();
   }
 
-  public static Bill unpack(JsonStreamReader reader) {
+  public static MeterReading unpack(JsonStreamReader reader) {
     try {
       if (!reader.end() && reader.startArray()) {
         String version = reader.readString();
@@ -74,12 +72,12 @@ public class Bill {
           long messages = reader.readLong();
           long connections = reader.readLong();
           if (!reader.notEndOfArray()) {
-            return new Bill(
+            return new MeterReading(
                 time,
                 timeframe,
                 space,
                 hash,
-                new PredictiveInventory.Billing(memory, cpu, count, messages, connections));
+                new PredictiveInventory.MeteringSample(memory, cpu, count, messages, connections));
           }
         }
         while (reader.notEndOfArray()) {

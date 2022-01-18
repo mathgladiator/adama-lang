@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.sys.DocumentThreadBase;
@@ -18,37 +18,37 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-/** a state machine for computing a service bill across all threads */
-public class BillingStateMachine {
+/** a state machine for computing a service meter across all threads */
+public class MeteringStateMachine {
   private final DocumentThreadBase[] bases;
-  private final Consumer<HashMap<String, PredictiveInventory.Billing>> onFinalBill;
-  private final HashMap<String, PredictiveInventory.Billing> accum;
+  private final Consumer<HashMap<String, PredictiveInventory.MeteringSample>> onFinalSampling;
+  private final HashMap<String, PredictiveInventory.MeteringSample> accum;
   private int at;
 
-  private BillingStateMachine(
+  private MeteringStateMachine(
       DocumentThreadBase[] bases,
-      Consumer<HashMap<String, PredictiveInventory.Billing>> onFinalBill) {
+      Consumer<HashMap<String, PredictiveInventory.MeteringSample>> onFinalSampling) {
     this.bases = bases;
     this.at = 0;
-    this.onFinalBill = onFinalBill;
+    this.onFinalSampling = onFinalSampling;
     this.accum = new HashMap<>();
   }
 
-  public static void bill(
+  public static void estimate(
       DocumentThreadBase[] bases,
       LivingDocumentFactoryFactory factory,
-      Consumer<HashMap<String, PredictiveInventory.Billing>> onFinalBill) {
-    new BillingStateMachine(bases, onFinalBill).seed(factory.spacesAvailable()).next();
+      Consumer<HashMap<String, PredictiveInventory.MeteringSample>> onFinalSampling) {
+    new MeteringStateMachine(bases, onFinalSampling).seed(factory.spacesAvailable()).next();
   }
 
   private void next() {
     if (at < bases.length) {
-      bases[at].bill(
+      bases[at].sampleMetering(
           (b) -> {
-            for (Map.Entry<String, PredictiveInventory.Billing> entry : b.entrySet()) {
-              PredictiveInventory.Billing prior = accum.get(entry.getKey());
+            for (Map.Entry<String, PredictiveInventory.MeteringSample> entry : b.entrySet()) {
+              PredictiveInventory.MeteringSample prior = accum.get(entry.getKey());
               if (prior != null) {
-                accum.put(entry.getKey(), PredictiveInventory.Billing.add(prior, entry.getValue()));
+                accum.put(entry.getKey(), PredictiveInventory.MeteringSample.add(prior, entry.getValue()));
               } else {
                 accum.put(entry.getKey(), entry.getValue());
               }
@@ -57,13 +57,13 @@ public class BillingStateMachine {
             next();
           });
     } else {
-      onFinalBill.accept(accum);
+      onFinalSampling.accept(accum);
     }
   }
 
-  private BillingStateMachine seed(Collection<String> spaces) {
+  private MeteringStateMachine seed(Collection<String> spaces) {
     for (String space : spaces) {
-      accum.put(space, new PredictiveInventory.Billing(0, 0, 0, 0, 0));
+      accum.put(space, new PredictiveInventory.MeteringSample(0, 0, 0, 0, 0));
     }
     return this;
   }

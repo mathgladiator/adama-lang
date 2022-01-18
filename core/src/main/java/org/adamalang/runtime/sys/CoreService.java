@@ -14,7 +14,7 @@ import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.billing.BillingStateMachine;
+import org.adamalang.runtime.sys.metering.MeteringStateMachine;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.HashMap;
@@ -42,7 +42,7 @@ public class CoreService {
   public CoreService(
       CoreMetrics metrics,
       LivingDocumentFactoryFactory livingDocumentFactoryFactory,
-      Consumer<HashMap<String, PredictiveInventory.Billing>> billing,
+      Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent,
       DataService dataService,
       TimeSource time,
       int nThreads) {
@@ -55,24 +55,18 @@ public class CoreService {
       bases[k].kickOffInventory();
     }
     rng = new Random();
-    NamedRunnable doBilling =
-        new NamedRunnable("billing") {
-          @Override
-          public void execute() {
-            NamedRunnable self = this;
-            BillingStateMachine.bill(
-                bases,
-                livingDocumentFactoryFactory,
-                new Consumer<HashMap<String, PredictiveInventory.Billing>>() {
-                  @Override
-                  public void accept(HashMap<String, PredictiveInventory.Billing> bill) {
-                    billing.accept(bill);
-                    bases[rng.nextInt(bases.length)].executor.schedule(self, 1000);
-                  }
-                });
-          }
-        };
-    doBilling.run();
+    new NamedRunnable("metering-run") {
+      @Override
+      public void execute() {
+        NamedRunnable self = this;
+        MeteringStateMachine.estimate(
+            bases,
+            livingDocumentFactoryFactory, samples -> {
+              meteringEvent.accept(samples);
+              bases[rng.nextInt(bases.length)].executor.schedule(self, 1000);
+            });
+      }
+    }.run();
   }
 
   public void shutdown() throws InterruptedException {

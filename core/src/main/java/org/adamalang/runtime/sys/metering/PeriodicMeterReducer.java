@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.sys.billing;
+package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /** math for reducing a stream of billing updates for an hour into a summary using P95 for memory and count and SUM for cpu and messages */
-public class PeriodicBillReducer {
+public class PeriodicMeterReducer {
   private final TimeSource time;
 
   private class PerSpaceReducer {
@@ -77,22 +77,22 @@ public class PeriodicBillReducer {
   }
   private final TreeMap<String, PerSpaceReducer> spaces;
 
-  public PeriodicBillReducer(final TimeSource time) {
+  public PeriodicMeterReducer(final TimeSource time) {
     this.time = time;
     this.spaces = new TreeMap<>();
   }
 
-  public void next(Bill bill) {
-    PerSpaceReducer space = spaces.get(bill.space);
+  public void next(MeterReading meterReading) {
+    PerSpaceReducer space = spaces.get(meterReading.space);
     if (space == null) {
       space = new PerSpaceReducer();
-      spaces.put(bill.space, space);
+      spaces.put(meterReading.space, space);
     }
-    space.sumCPU += bill.cpu;
-    space.sumMessages += bill.messages;
-    space.memorySamples.add(bill.memory);
-    space.countSamples.add(bill.count);
-    space.connectionsSamples.add(bill.connections);
+    space.sumCPU += meterReading.cpu;
+    space.sumMessages += meterReading.messages;
+    space.memorySamples.add(meterReading.memory);
+    space.countSamples.add(meterReading.count);
+    space.connectionsSamples.add(meterReading.connections);
   }
 
   public String toJson() {
