@@ -11,11 +11,11 @@ package org.adamalang.grpc.client.sm;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.queue.ItemAction;
+import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.runtime.contracts.Key;
-
-import java.util.ArrayList;
 
 /**
  * a single connection for a document; given the number of outstanding events that can influence the
@@ -44,7 +44,7 @@ public class Connection {
   // the client found via the finder
   private InstanceClient foundClient;
   // the buffer of actions to execute once we have a remote
-  private ArrayList<QueueAction<Remote>> buffer;
+  private final ItemQueue<Remote> queue;
   // the remote to talk to the remote peer's connection
   private Remote foundRemote;
   // how long to wait on a failure to find an instance
@@ -69,7 +69,7 @@ public class Connection {
     this.state = Label.NotConnected;
     this.target = null;
     this.foundClient = null;
-    this.buffer = null;
+    this.queue = new ItemQueue<>(base.executor, 16, 2500);
     this.foundRemote = null;
     this.backoffFindInstance = 1;
     this.backoffConnectPeer = 1;
@@ -130,7 +130,7 @@ public class Connection {
           @Override
           public void execute() throws Exception {
             bufferOrExecute(
-                new QueueAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED) {
+                new ItemAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED) {
                   @Override
                   protected void executeNow(Remote remote) {
                     remote.send(channel, marker, message, callback);
@@ -145,18 +145,11 @@ public class Connection {
         });
   }
 
-  private void bufferOrExecute(QueueAction<Remote> action) {
+  private void bufferOrExecute(ItemAction<Remote> action) {
     if (state == Label.Connected) {
       action.execute(foundRemote);
     } else {
-      if (buffer == null) {
-        buffer = new ArrayList<>();
-      }
-      if (buffer.size() >= 16) {
-        action.killDueToReject();
-      } else {
-        buffer.add(action);
-      }
+      queue.add(action);
     }
   }
 
@@ -166,7 +159,7 @@ public class Connection {
           @Override
           public void execute() throws Exception {
             bufferOrExecute(
-                new QueueAction<Remote>(
+                new ItemAction<Remote>(
                     ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED) {
                   @Override
                   protected void executeNow(Remote item) {
@@ -195,7 +188,7 @@ public class Connection {
           @Override
           public void execute() throws Exception {
             bufferOrExecute(
-                new QueueAction<Remote>(
+                new ItemAction<Remote>(
                     ErrorCodes.API_ATTACH_TIMEOUT, ErrorCodes.API_ATTACH_REJECTED) {
                   @Override
                   protected void executeNow(Remote item) {
@@ -239,20 +232,21 @@ public class Connection {
         });
   }
 
+  private void remoteDoDisconnect() {
+    queue.unready();
+    foundRemote.disconnect();
+    foundRemote = null;
+  }
+
   private void handle_onFoundRemote() {
     backoffConnectPeer = 1;
     switch (state) {
       case FoundClientConnectingWait:
         state = Label.Connected;
-        if (buffer != null) {
-          for (QueueAction<Remote> action : buffer) {
-            action.execute(foundRemote);
-          }
-          buffer = null;
-        }
+        queue.ready(foundRemote);
         return;
       default:
-        foundRemote.disconnect();
+        remoteDoDisconnect();
         return;
     }
   }
@@ -391,7 +385,7 @@ public class Connection {
     state = Label.FindingClientWait;
     base.mesh.find(
         target,
-        new QueueAction<>(ErrorCodes.INSTANCE_FINDER_TIMEOUT, ErrorCodes.INSTANCE_FINDER_REJECTED) {
+        new ItemAction<>(ErrorCodes.INSTANCE_FINDER_TIMEOUT, ErrorCodes.INSTANCE_FINDER_REJECTED) {
           @Override
           protected void executeNow(InstanceClient client) {
             base.executor.execute(
@@ -433,7 +427,7 @@ public class Connection {
         return;
       case Connected:
         state = Label.ConnectedStopping;
-        foundRemote.disconnect();
+        remoteDoDisconnect();
         return;
       case ConnectedStoppingPleaseReconnect:
         state = Label.ConnectedStopping;
@@ -460,8 +454,7 @@ public class Connection {
         state = Label.FoundClientConnectingTryNewTarget;
         return;
       case Connected:
-        // this will retry a retry
-        foundRemote.disconnect();
+        remoteDoDisconnect();
         return;
       case ConnectedStopping:
         state = Label.ConnectedStoppingPleaseReconnect;

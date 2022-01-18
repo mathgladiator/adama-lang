@@ -14,7 +14,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.TestBed;
-import org.adamalang.grpc.client.contracts.QueueAction;
+import org.adamalang.common.queue.ItemAction;
 import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.junit.Assert;
@@ -73,7 +73,7 @@ public class InstanceClientFinderTests {
         CountDownLatch latchFound = new CountDownLatch(1);
         finder.find(
             "127.0.0.1:20005",
-            new QueueAction<>(100, 200) {
+            new ItemAction<>(100, 200) {
               @Override
               protected void executeNow(InstanceClient item) {
                 latchFound.countDown();

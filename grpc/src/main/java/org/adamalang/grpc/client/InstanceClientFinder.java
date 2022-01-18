@@ -10,9 +10,10 @@
 package org.adamalang.grpc.client;
 
 import org.adamalang.common.*;
+import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.client.contracts.HeatMonitor;
 import org.adamalang.grpc.client.contracts.Lifecycle;
-import org.adamalang.grpc.client.contracts.QueueAction;
+import org.adamalang.common.queue.ItemAction;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 
 import java.util.*;
@@ -139,7 +140,7 @@ public class InstanceClientFinder {
     });
   }
 
-  public void find(String target, QueueAction<InstanceClient> action) {
+  public void find(String target, ItemAction<InstanceClient> action) {
     mapExecutor.execute(
         new NamedRunnable("finder-find", target) {
           @Override
@@ -163,13 +164,13 @@ public class InstanceClientFinder {
     private final SimpleExecutor executor;
     private InstanceClient createdClient;
     private InstanceClient client;
-    private ArrayList<QueueAction<InstanceClient>> buffer;
+    private ItemQueue<InstanceClient> queue;
 
     private InstanceClientProxy(String target) throws Exception {
       this.executor = clientExecutors[rng.nextInt(clientExecutors.length)];
       this.createdClient = new InstanceClient(identity, metrics, monitor,  target, executor, this, logger);
       client = null;
-      buffer = null;
+      queue = new ItemQueue<>(this.executor, 16, 2500);
     }
 
     @Override
@@ -180,12 +181,8 @@ public class InstanceClientFinder {
             public void execute() throws Exception {
               if (alive.get()) {
                 InstanceClientProxy.this.client = client;
-                if (buffer != null) {
-                  for (QueueAction<InstanceClient> action : buffer) {
-                    action.execute(client);
-                  }
-                  buffer = null;
-                }
+                queue.ready(client);
+
               } else {
                 client.close();
               }
@@ -208,12 +205,7 @@ public class InstanceClientFinder {
             public void execute() throws Exception {
               engine.remove(client.target);
               InstanceClientProxy.this.client = null;
-              if (buffer != null) {
-                for (QueueAction<InstanceClient> action : buffer) {
-                  action.killDueToReject();
-                }
-                buffer = null;
-              }
+              queue.unready();
             }
           });
     }
@@ -221,34 +213,15 @@ public class InstanceClientFinder {
     public void close() {
       createdClient.close();
       client = null;
-      if (buffer != null) {
-        for (QueueAction<InstanceClient> action : buffer) {
-          action.killDueToReject();
-        }
-        buffer = null;
-      }
+      queue.unready();
     }
 
-    public void add(QueueAction<InstanceClient> action) {
+    public void add(ItemAction<InstanceClient> action) {
       if (client != null) {
         action.execute(client);
       } else {
         if (createdClient.isAlive()) {
-          if (buffer == null) {
-            buffer = new ArrayList<>();
-          }
-          if (buffer.size() > 16) {
-            action.killDueToReject();
-          } else {
-            buffer.add(action);
-            executor.schedule(new NamedRunnable("expire-action") {
-              @Override
-              public void execute() throws Exception {
-                action.killDueToTimeout();
-                buffer.remove(action);
-              }
-            }, 2500);
-          }
+          queue.add(action);
         } else {
           action.killDueToReject();
         }

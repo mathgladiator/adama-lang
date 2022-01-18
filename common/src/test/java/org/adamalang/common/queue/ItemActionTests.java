@@ -7,19 +7,19 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.grpc.client.contracts;
+package org.adamalang.common.queue;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class QueueActionTests {
+public class ItemActionTests {
   @Test
   public void normal() {
     AtomicInteger x = new AtomicInteger(0);
-    QueueAction<String> action =
-        new QueueAction<>(100, 200) {
+    ItemAction<String> action =
+        new ItemAction<>(100, 200) {
           @Override
           protected void executeNow(String item) {
             x.incrementAndGet();
@@ -39,8 +39,8 @@ public class QueueActionTests {
   @Test
   public void timeout() {
     AtomicInteger x = new AtomicInteger(0);
-    QueueAction<String> action =
-        new QueueAction<>(100, 200) {
+    ItemAction<String> action =
+        new ItemAction<>(100, 200) {
           @Override
           protected void executeNow(String item) {
             x.incrementAndGet();
@@ -64,8 +64,8 @@ public class QueueActionTests {
   @Test
   public void rejected() {
     AtomicInteger x = new AtomicInteger(0);
-    QueueAction<String> action =
-        new QueueAction<String>(100, 1000) {
+    ItemAction<String> action =
+        new ItemAction<String>(100, 1000) {
           @Override
           protected void executeNow(String item) {
             x.incrementAndGet();

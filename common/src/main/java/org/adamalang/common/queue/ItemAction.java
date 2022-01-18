@@ -7,15 +7,15 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.grpc.client.contracts;
+package org.adamalang.common.queue;
 
 /** an unit of work that sits within a queue for processing */
-public abstract class QueueAction<T> {
+public abstract class ItemAction<T> {
   private final int errorTimeout;
   private final int errorRejected;
   private boolean alive;
 
-  public QueueAction(int errorTimeout, int errorRejected) {
+  public ItemAction(int errorTimeout, int errorRejected) {
     this.alive = true;
     this.errorTimeout = errorTimeout;
     this.errorRejected = errorRejected;

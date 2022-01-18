@@ -11,12 +11,11 @@ package org.adamalang.grpc.client;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.common.queue.ItemAction;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.adamalang.grpc.client.sm.Connection;
 import org.adamalang.grpc.client.sm.ConnectionBase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -71,7 +70,7 @@ public class Client {
 
   public void notifyDeployment(String target, String space) {
     metrics.client_notify_deploy_attempt.run();
-    finder.find(target, new QueueAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED) {
+    finder.find(target, new ItemAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED) {
       @Override
       protected void executeNow(InstanceClient client) {
         client.scanDeployments(space, new ScanDeploymentCallback() {
@@ -97,7 +96,7 @@ public class Client {
   public void randomBillingExchange(BillingStream billing) {
     engine.random(target -> {
       if (target != null) {
-        finder.find(target, new QueueAction<InstanceClient>(ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED) {
+        finder.find(target, new ItemAction<InstanceClient>(ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED) {
           @Override
           protected void executeNow(InstanceClient item) {
             item.startBillingExchange(billing);
@@ -121,7 +120,7 @@ public class Client {
   public void reflect(String space, String key, Callback<String> callback) {
     engine.get(space, key, (target) -> {
       if (target != null) {
-        finder.find(target, new QueueAction<>(ErrorCodes.API_REFLECT_TIMEOUT, ErrorCodes.API_REFLECT_REJECTED) {
+        finder.find(target, new ItemAction<>(ErrorCodes.API_REFLECT_TIMEOUT, ErrorCodes.API_REFLECT_REJECTED) {
           @Override
           protected void executeNow(InstanceClient client) {
             client.reflect(space, key, new Callback<String>() {
@@ -151,7 +150,7 @@ public class Client {
   public void create(String agent, String authority, String space, String key, String entropy, String arg, CreateCallback callback) {
     engine.get(space, key, (target) -> {
       if (target != null) {
-        finder.find(target, new QueueAction<>(ErrorCodes.API_CREATE_TIMEOUT, ErrorCodes.API_CREATE_REJECTED) {
+        finder.find(target, new ItemAction<>(ErrorCodes.API_CREATE_TIMEOUT, ErrorCodes.API_CREATE_REJECTED) {
           @Override
           protected void executeNow(InstanceClient client) {
             client.create(agent, authority, space, key, entropy, arg, callback);

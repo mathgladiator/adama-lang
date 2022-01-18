@@ -18,7 +18,7 @@ import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.InstanceClientFinder;
 import org.adamalang.grpc.client.contracts.CreateCallback;
-import org.adamalang.grpc.client.contracts.QueueAction;
+import org.adamalang.common.queue.ItemAction;
 import org.adamalang.grpc.client.contracts.SimpleEvents;
 import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
 import org.adamalang.grpc.client.routing.RoutingEngine;
@@ -157,7 +157,7 @@ public class ConnectionTests {
         CountDownLatch created = new CountDownLatch(1);
         finder.find(
             "127.0.0.1:30001",
-            new QueueAction<>(100, 200) {
+            new ItemAction<>(100, 200) {
               @Override
               protected void executeNow(InstanceClient client) {
                 System.err.println("executing create");

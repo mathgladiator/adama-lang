@@ -19,7 +19,7 @@ import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.InstanceClientFinder;
 import org.adamalang.grpc.client.contracts.Events;
 import org.adamalang.grpc.client.contracts.Lifecycle;
-import org.adamalang.grpc.client.contracts.QueueAction;
+import org.adamalang.common.queue.ItemAction;
 import org.adamalang.grpc.client.routing.MockSpaceTrackingEvents;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.adamalang.grpc.mocks.MockSimpleEvents;
@@ -61,7 +61,7 @@ public class ConnectionGiveUpOnConnectDeadTests {
       InstanceClientFinder finder =
           new InstanceClientFinder(metrics, null, servers[0].identity, finderExecutor, 2, fauxEngine, logger) {
             @Override
-            public void find(String target, QueueAction<InstanceClient> action) {
+            public void find(String target, ItemAction<InstanceClient> action) {
               // MachineIdentity identity,
               //      String target,
               //      SimpleExecutor executor,
