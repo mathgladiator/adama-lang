@@ -389,7 +389,7 @@ public class DurableLivingDocument {
   public void invalidate(Callback<Integer> callback) {
     final var request = forge("invalidate", null);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), callback, true);
+    ingest(NtClient.NO_ONE, request.toString(), callback, false);
   }
 
   public int getCodeCost() {
