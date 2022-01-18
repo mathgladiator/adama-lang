@@ -92,10 +92,11 @@ public class EngineTests {
       Thread.sleep(1000);
     }
     Assert.assertEquals(1, versionCount);
-    // this shutdown is very noisy
-    for (Engine engine : engines) {
-      engine.close();
+    for (int k = 1; k < engines.size(); k++) {
+      engines.get(k).close();
     }
+
+    engines.get(0).close();
   }
 
   private String prefixForLocalhost() {

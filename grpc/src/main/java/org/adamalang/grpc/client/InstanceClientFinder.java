@@ -241,6 +241,13 @@ public class InstanceClientFinder {
             action.killDueToReject();
           } else {
             buffer.add(action);
+            executor.schedule(new NamedRunnable("expire-action") {
+              @Override
+              public void execute() throws Exception {
+                action.killDueToTimeout();
+                buffer.remove(action);
+              }
+            }, 2500);
           }
         } else {
           action.killDueToReject();

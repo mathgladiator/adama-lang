@@ -17,9 +17,9 @@ import java.util.Objects;
 public class Instance implements Comparable<Instance> {
   public final String id;
   public final int monitoringPort;
-  private final String ip;
-  private final int port;
-  private final String role;
+  public final String ip;
+  public final int port;
+  public final String role;
   private int counter;
   private long witness;
 

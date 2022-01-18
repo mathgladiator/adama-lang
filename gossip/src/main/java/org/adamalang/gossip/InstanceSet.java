@@ -21,9 +21,9 @@ import java.util.TreeSet;
 
 /** a collection of instances */
 public class InstanceSet {
-  private final String hash;
-  private final ArrayList<Instance> instances;
-  private final TreeSet<String> ids;
+  public final ArrayList<Instance> instances;
+  public final TreeSet<String> ids;
+  public final String hash;
 
   public InstanceSet(TreeSet<Instance> instances, long now) {
     this.instances = new ArrayList<>(instances);

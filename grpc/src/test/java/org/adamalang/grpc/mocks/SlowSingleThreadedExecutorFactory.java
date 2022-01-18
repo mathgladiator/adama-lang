@@ -80,18 +80,17 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
     };
   }
 
-  private synchronized void add(Runnable command) {
-    if (command instanceof NamedRunnable) {
-      if (((NamedRunnable) command).name.startsWith("client-heartbeat")) {
-        return;
-      }
-      if (((NamedRunnable) command).name.startsWith("instance-client-heartbeat")) {
-        return;
-      }
-      System.err.println(name + "|ADD:" + ((NamedRunnable) command).name);
-    } else {
-      System.err.println(name + "|ADD:" + command);
+  private synchronized void add(NamedRunnable command) {
+    if (command.name.startsWith("client-heartbeat")) {
+      return;
     }
+    if (command.name.startsWith("instance-client-heartbeat")) {
+      return;
+    }
+    if (command.name.startsWith("expire-action")) {
+      return;
+    }
+    System.err.println(name + "|ADD:" + ((NamedRunnable) command).name);
     if (fast) {
       command.run();
       return;

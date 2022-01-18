@@ -21,7 +21,6 @@ import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.MetricsImpl;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.grpc.client.ClientMetrics;
-import org.adamalang.grpc.client.contracts.HeatMonitor;
 import org.adamalang.grpc.server.Server;
 import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBase;
@@ -40,12 +39,10 @@ import org.adamalang.runtime.sys.billing.DiskBillingBatchMaker;
 import org.adamalang.runtime.threads.ThreadedDataService;
 import org.adamalang.web.contracts.HtmlHandler;
 import org.adamalang.web.contracts.ServiceBase;
-import org.adamalang.web.contracts.ServiceConnection;
-import org.adamalang.web.io.ConnectionContext;
-import org.adamalang.web.io.JsonRequest;
-import org.adamalang.web.io.JsonResponder;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,6 +51,7 @@ import java.util.HashSet;
 import java.util.function.Consumer;
 
 public class Service {
+  private static final Logger LOGGER = LoggerFactory.getLogger(Service.class);
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
       serviceHelp(new String[0]);
@@ -232,7 +230,7 @@ public class Service {
                       deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {}));
                   service.deploy(deploymentMonitor);
                 } catch (Exception ex) {
-                  ex.printStackTrace();
+                  LOGGER.error("failed-scan-" + deployment.space, ex);
                 }
               }
             } else {
@@ -243,7 +241,7 @@ public class Service {
               service.deploy(deploymentMonitor);
             }
           } catch (Exception ex) {
-            ex.printStackTrace();
+            LOGGER.error("failed-scan-" + space, ex);
           }
         };
     File billingRoot = new File(billingRootPath);

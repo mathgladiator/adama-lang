@@ -17,10 +17,7 @@ import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
-import org.adamalang.overlord.roles.BillingAggregator;
-import org.adamalang.overlord.roles.CapacityManager;
-import org.adamalang.overlord.roles.DeploymentReconciliation;
-import org.adamalang.overlord.roles.PrometheusTargetMaker;
+import org.adamalang.overlord.roles.*;
 import org.adamalang.web.contracts.HtmlHandler;
 
 import java.io.File;
@@ -52,6 +49,9 @@ public class Overlord {
     // start aggregating bills from hosts and write them to database
     BillingAggregator.kickOff(metrics, client, dataBaseFront, handler);
 
+    // make a table of a dump of all gossip
+    GossipDumper.kickOff(metrics, engine, handler);
+
     // build the index
     StringBuilder indexHtmlBuilder = new StringBuilder();
     indexHtmlBuilder.append("<html><head><title>OVERLORD</title></head><body>\n");
@@ -60,6 +60,7 @@ public class Overlord {
     indexHtmlBuilder.append("<a href=\"/reconcile\">Deployment Reconciliation</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/targets\">Targets</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/billing\">Recent Billing Data</a><br />\n");
+    indexHtmlBuilder.append("<a href=\"/gossip\">Gossip Dump</a><br />\n");
     indexHtmlBuilder.append("</body></html>");
     String indexHtml = indexHtmlBuilder.toString();
     handler.put("/", indexHtml);

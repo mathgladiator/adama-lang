@@ -61,10 +61,12 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
 
       @Override
       public void failure(int code) {
-        System.err.println("Send failed");
+        System.err.println("Send failed: " + code);
       }
     });
-    agent.schedule(this, 2000);
+    if (alive.get()) {
+      agent.schedule(this, 2000);
+    }
   }
 
   public void kickOff() {
@@ -81,6 +83,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
 
   public void kill() {
     agent.shutdown();
+    alive.set(false);
   }
 
   @Override
@@ -100,6 +103,6 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
 
   @Override
   public void failure(int code) {
-    // TODO: try again
+    System.err.println("stream failure:" + code);
   }
 }

@@ -98,6 +98,27 @@ public class Engine implements AutoCloseable {
                     .build());
   }
 
+  public void summarizeHtml(Consumer<String> html) {
+    executor.execute(new NamedRunnable("summarizing-html") {
+      @Override
+      public void execute() throws Exception {
+        StringBuilder sbHtml = new StringBuilder();
+        sbHtml.append("<html><head><title>Gossip Summary</title></head><body><table>");
+        sbHtml.append("<tr><th>ID</th><th>Witness (ms ago)</th><th>IP</th><th>Port</th><th>Role</th><th>Counter</th></tr>");
+        for (Instance instance : chain.current().instances) {
+          sbHtml.append("<tr><td>").append(instance.id).append("</td>");
+          sbHtml.append("<td>").append(System.currentTimeMillis() - instance.witnessed()).append(" ms</td>");
+          sbHtml.append("<td>").append(instance.ip).append("</td>");
+          sbHtml.append("<td>").append(instance.port).append("</td>");
+          sbHtml.append("<td>").append(instance.role).append("</td>");
+          sbHtml.append("<td>").append(instance.counter()).append("</td></tr>");
+        }
+        sbHtml.append("</table></body></html>");
+        html.accept(sbHtml.toString());
+      }
+    });
+  }
+
   public void newApp(String role, int port, Consumer<Runnable> callback) {
     executor.execute(
         new NamedRunnable("engine-new-app") {
@@ -234,6 +255,15 @@ public class Engine implements AutoCloseable {
         });
   }
 
+  public void size(Consumer<Integer> onSize) {
+    executor.execute(new NamedRunnable("compute-size") {
+      @Override
+      public void execute() throws Exception {
+        onSize.accept(chain.current().instances.size());
+      }
+    });
+  }
+
   private void gossipInExecutor() {
     // heartbeat myself
     me.run();
@@ -244,6 +274,7 @@ public class Engine implements AutoCloseable {
       scheduleGossip();
       return;
     }
+    chain.scan();
     ClientObserver observer = new ClientObserver(executor, chain, metrics);
     StreamObserver<GossipReverse> interceptObserver =
         new StreamObserver<>() {

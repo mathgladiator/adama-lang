@@ -30,6 +30,7 @@ public abstract class QueueAction<T> {
   public void execute(T item) {
     if (alive) {
       executeNow(item);
+      alive = false;
     }
   }
 
@@ -37,14 +38,18 @@ public abstract class QueueAction<T> {
 
   /** how the timeout is executed */
   public void killDueToTimeout() {
-    alive = false;
-    failure(errorTimeout);
+    if (alive) {
+      alive = false;
+      failure(errorTimeout);
+    }
   }
 
   protected abstract void failure(int code);
 
   public void killDueToReject() {
-    alive = false;
-    failure(errorRejected);
+    if (alive) {
+      alive = false;
+      failure(errorRejected);
+    }
   }
 }

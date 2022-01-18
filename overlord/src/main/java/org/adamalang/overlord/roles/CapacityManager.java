@@ -11,7 +11,6 @@ package org.adamalang.overlord.roles;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.gossip.Engine;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.deployments.Deployments;
@@ -25,8 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.TreeSet;
-import java.util.function.Consumer;
 
 public class CapacityManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(CapacityManager.class);
@@ -132,7 +129,7 @@ public class CapacityManager {
       } catch (Exception ex) {
         metrics.capacity_monitor_sweep_failed.run();
       } finally{
-        executor.schedule(this, 1000 * 60 * 10 + delay);
+        executor.schedule(this, 1000 * 60 * 5 + delay);
       }
     }
   }

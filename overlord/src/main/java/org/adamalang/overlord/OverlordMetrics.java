@@ -46,6 +46,9 @@ public class OverlordMetrics {
   public final Runnable billing_fetch_failed;
   public final Runnable billing_fetch_finished;
 
+  public final Runnable gossip_dump;
+
+
   public OverlordMetrics(MetricsFactory factory) {
     targets_watcher_fired = factory.counter("overlord_targets_watcher_fired");
     targets_made = factory.counter("overlord_targets_made");
@@ -79,5 +82,6 @@ public class OverlordMetrics {
     billing_fetch_failed = factory.counter("billing_fetch_failed");
     billing_fetch_finished = factory.counter("billing_fetch_finished");
 
+    gossip_dump = factory.counter("gossip_dump");
   }
 }
