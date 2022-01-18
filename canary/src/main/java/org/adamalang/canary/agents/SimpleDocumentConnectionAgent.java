@@ -39,32 +39,31 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
 
   @Override
   public void execute() throws Exception {
-
-    ObjectNode send = Json.newJsonObject();
-    send.put("method", "connection/send");
-    send.put("connection", connectionId);
-    send.put("channel", "foo");
-    send.putObject("message");
-    long sendStart = System.currentTimeMillis();
-    connection.execute(send, new WebJsonStream() {
-      @Override
-      public void data(ObjectNode node) {
-        System.err.println("Data:" + node.toString());
-        long latency = System.currentTimeMillis() - sendStart;
-        System.err.println("Send latency:" + latency);
-      }
-
-      @Override
-      public void complete() {
-
-      }
-
-      @Override
-      public void failure(int code) {
-        System.err.println("Send failed: " + code);
-      }
-    });
     if (alive.get()) {
+      ObjectNode send = Json.newJsonObject();
+      send.put("method", "connection/send");
+      send.put("connection", connectionId);
+      send.put("channel", "foo");
+      send.putObject("message");
+      long sendStart = System.currentTimeMillis();
+      connection.execute(send, new WebJsonStream() {
+        @Override
+        public void data(ObjectNode node) {
+          System.err.println("Data:" + node.toString());
+          long latency = System.currentTimeMillis() - sendStart;
+          System.err.println("Send latency:" + latency);
+        }
+
+        @Override
+        public void complete() {
+
+        }
+
+        @Override
+        public void failure(int code) {
+          System.err.println("Send failed: " + code);
+        }
+      });
       agent.schedule(this, 2000);
     }
   }

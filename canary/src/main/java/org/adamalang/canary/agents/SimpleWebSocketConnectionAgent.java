@@ -60,11 +60,12 @@ public class SimpleWebSocketConnectionAgent implements WebLifecycle {
 
   @Override
   public void failure(Throwable t) {
-    disconnected();
+    System.err.println("failure:" + t.getMessage());
   }
 
   @Override
   public void disconnected() {
+    System.err.println("disconnected, scheduling retry");
     executor.execute(
         new NamedRunnable("disconnected-websocket-agent") {
           @Override
