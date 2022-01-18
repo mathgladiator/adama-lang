@@ -28,7 +28,7 @@ public class DiskBillingBatchMakerTests {
               100,
               space,
               "hash",
-              new PredictiveInventory.Billing(1000, 5234242, 4, 1000)));
+              new PredictiveInventory.Billing(1000, 5234242, 4, 1000, 128)));
       time.time += 1000;
     };
   }
@@ -53,7 +53,7 @@ public class DiskBillingBatchMakerTests {
       String batchId = maker.getNextAvailableBatchId();
       Assert.assertNotNull(batchId);
       Assert.assertEquals(
-          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}}",
+          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\"}}}",
           maker.getBatch(batchId));
       maker.deleteBatch(batchId);
     } finally {
@@ -93,7 +93,7 @@ public class DiskBillingBatchMakerTests {
       String batchId = maker.getNextAvailableBatchId();
       Assert.assertNotNull(batchId);
       Assert.assertEquals(
-          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}}",
+          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\"}}}",
           maker.getBatch(batchId));
       maker.deleteBatch(batchId);
     } finally {
@@ -162,7 +162,7 @@ public class DiskBillingBatchMakerTests {
       String batchId = maker.getNextAvailableBatchId();
       Assert.assertNotNull(batchId);
       Assert.assertEquals(
-          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\"}}}",
+          "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\"}}}",
           maker.getBatch(batchId));
       maker.deleteBatch(batchId);
     } finally {

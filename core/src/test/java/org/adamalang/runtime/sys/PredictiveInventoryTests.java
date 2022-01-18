@@ -64,12 +64,13 @@ public class PredictiveInventoryTests {
 
   @Test
   public void add() {
-    PredictiveInventory.Billing a = new PredictiveInventory.Billing(100, 1000, 5, 100);
-    PredictiveInventory.Billing b = new PredictiveInventory.Billing(1100, 21000, 51, 1100);
+    PredictiveInventory.Billing a = new PredictiveInventory.Billing(100, 1000, 5, 100, 41);
+    PredictiveInventory.Billing b = new PredictiveInventory.Billing(1100, 21000, 51, 1100, 91);
     PredictiveInventory.Billing s = PredictiveInventory.Billing.add(a, b);
     Assert.assertEquals(1200, s.memory);
     Assert.assertEquals(22000, s.cpu);
     Assert.assertEquals(56, s.count);
     Assert.assertEquals(1200, s.messages);
+    Assert.assertEquals(132, s.connections);
   }
 }

@@ -21,11 +21,11 @@ public class PeriodicBillReducerTests {
     time.set(42);
     PeriodicBillReducer reducer = new PeriodicBillReducer(time);
     Assert.assertEquals("{\"time\":\"42\",\"spaces\":{}}", reducer.toJson());
-    reducer.next(new Bill(1, 120, "space", "hash", new PredictiveInventory.Billing(100, 1000, 10, 200)));
-    reducer.next(new Bill(1, 120, "mush", "hash", new PredictiveInventory.Billing(100, 1000, 10, 200)));
-    reducer.next(new Bill(1, 120, "yo", "hash", new PredictiveInventory.Billing(0, 0, 0, 0)));
+    reducer.next(new Bill(1, 120, "space", "hash", new PredictiveInventory.Billing(100, 1000, 10, 200, 17)));
+    reducer.next(new Bill(1, 120, "mush", "hash", new PredictiveInventory.Billing(100, 1000, 10, 200, 18)));
+    reducer.next(new Bill(1, 120, "yo", "hash", new PredictiveInventory.Billing(0, 0, 0, 0, 0)));
     Assert.assertEquals(
-        "{\"time\":\"42\",\"spaces\":{\"mush\":{\"cpu\":\"1000\",\"messages\":\"200\",\"count_p95\":\"10\",\"memory_p95\":\"100\"},\"space\":{\"cpu\":\"1000\",\"messages\":\"200\",\"count_p95\":\"10\",\"memory_p95\":\"100\"}}}",
+        "{\"time\":\"42\",\"spaces\":{\"mush\":{\"cpu\":\"1000\",\"messages\":\"200\",\"count_p95\":\"10\",\"memory_p95\":\"100\",\"connections_p95\":\"18\"},\"space\":{\"cpu\":\"1000\",\"messages\":\"200\",\"count_p95\":\"10\",\"memory_p95\":\"100\",\"connections_p95\":\"17\"}}}",
         reducer.toJson());
   }
 }

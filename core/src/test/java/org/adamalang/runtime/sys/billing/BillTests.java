@@ -18,7 +18,7 @@ public class BillTests {
   @Test
   public void flow() {
     Bill bill =
-        new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000));
+        new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000, 13));
     Assert.assertEquals(42L, bill.time);
     Assert.assertEquals(123, bill.timeframe);
     Assert.assertEquals("space", bill.space);
@@ -33,44 +33,44 @@ public class BillTests {
   public void packings() {
     {
       Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000));
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000, 13));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"13\"]",
           bill.packup());
     }
     {
       Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 0, 0, 0));
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 0, 0, 0, 0));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"0\",\"0\",\"0\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"0\",\"0\",\"0\",\"0\"]",
           bill.packup());
     }
     {
       Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 200, 0, 0));
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 200, 0, 0, 0));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"200\",\"0\",\"0\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"200\",\"0\",\"0\",\"0\"]",
           bill.packup());
     }
     {
       Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 42, 0));
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 42, 0, 0));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"42\",\"0\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"42\",\"0\",\"0\"]",
           bill.packup());
     }
     {
       Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 0, 1000));
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 0, 1000, 0));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"1000\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"1000\",\"0\"]",
           bill.packup());
     }
     {
       Bill bill =
-          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 0, 0));
+          new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(0, 0, 0, 0, 13));
       Assert.assertEquals(
-          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"0\"]",
+          "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"0\",\"0\",\"0\",\"0\",\"13\"]",
           bill.packup());
     }
   }
@@ -78,7 +78,7 @@ public class BillTests {
   @Test
   public void unpack() {
     Bill bill =
-        new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000));
+        new Bill(42, 123, "space", "hash", new PredictiveInventory.Billing(100, 200, 42, 1000, 13));
     JsonStreamReader reader = new JsonStreamReader(bill.packup() + bill.packup() + bill.packup());
     Bill a = Bill.unpack(reader);
     Bill b = Bill.unpack(reader);
@@ -94,12 +94,18 @@ public class BillTests {
     Assert.assertEquals(200, a.cpu);
     Assert.assertEquals(42, a.count);
     Assert.assertEquals(1000, a.messages);
+    Assert.assertEquals(13, a.connections);
     Assert.assertNull(d);
   }
 
   @Test
   public void badversion() {
-    JsonStreamReader reader = new JsonStreamReader("[\"v1\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\"]" + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\"]" + "[\"v1\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\"]" + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\"]");
+    JsonStreamReader reader =
+        new JsonStreamReader(
+            "[\"v1\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\"]"
+                + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\"]"
+                + "[\"v1\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\"]"
+                + "[\"v0\",\"42\",\"123\",\"space\",\"hash\",\"100\",\"200\",\"42\",\"1000\",\"17\"]");
     Bill bad1 = Bill.unpack(reader);
     Bill a = Bill.unpack(reader);
     Bill bad2 = Bill.unpack(reader);
@@ -114,6 +120,7 @@ public class BillTests {
     Assert.assertEquals(200, a.cpu);
     Assert.assertEquals(42, a.count);
     Assert.assertEquals(1000, a.messages);
+    Assert.assertEquals(17, a.connections);
     Assert.assertEquals(42, b.time);
     Assert.assertEquals(123, b.timeframe);
     Assert.assertEquals("space", b.space);
@@ -122,5 +129,6 @@ public class BillTests {
     Assert.assertEquals(200, b.cpu);
     Assert.assertEquals(42, b.count);
     Assert.assertEquals(1000, b.messages);
+    Assert.assertEquals(17, b.connections);
   }
 }

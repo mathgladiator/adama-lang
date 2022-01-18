@@ -28,6 +28,7 @@ public class Bill {
   public final long cpu; // total --> sum
   public final long count; // standing --> p95
   public final long messages; // total --> sum
+  public final long connections; // standing --> p95
 
   public Bill(long time, long timeframe, String space, String hash, PredictiveInventory.Billing billing) {
     this.time = time;
@@ -38,6 +39,7 @@ public class Bill {
     this.cpu = billing.cpu;
     this.count = billing.count;
     this.messages = billing.messages;
+    this.connections = billing.connections;
   }
 
   public String packup() {
@@ -52,6 +54,7 @@ public class Bill {
     writer.writeLong(cpu);
     writer.writeLong(count);
     writer.writeLong(messages);
+    writer.writeLong(connections);
     writer.endArray();
     return writer.toString();
   }
@@ -69,13 +72,14 @@ public class Bill {
           long cpu = reader.readLong();
           long count = reader.readLong();
           long messages = reader.readLong();
+          long connections = reader.readLong();
           if (!reader.notEndOfArray()) {
             return new Bill(
                 time,
                 timeframe,
                 space,
                 hash,
-                new PredictiveInventory.Billing(memory, cpu, count, messages));
+                new PredictiveInventory.Billing(memory, cpu, count, messages, connections));
           }
         }
         while (reader.notEndOfArray()) {

@@ -351,8 +351,7 @@ public class CoreService {
                 metrics.createPrivateView.wrap(new Callback<>() {
                   @Override
                   public void success(PrivateView view) {
-                    CoreStream core = new CoreStream(metrics, who, inventory, document, view);
-                    stream.onSetupComplete(core);
+                    stream.onSetupComplete(new CoreStream(metrics, who, inventory, document, view));
                   }
 
                   @Override

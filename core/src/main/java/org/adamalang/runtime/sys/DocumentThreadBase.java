@@ -93,8 +93,9 @@ public class DocumentThreadBase {
       }
       accum.memory += document.getMemoryBytes();
       accum.ticks += document.getCodeCost();
-      accum.count++;
       document.zeroOutCodeCost();
+      accum.connections += document.getConnectionsCount();
+      accum.count++;
     }
     HashMap<String, PredictiveInventory> nextInventoryBySpace = new HashMap<>();
     for (Map.Entry<String, PredictiveInventory.PreciseSnapshotAccumulator> entry :

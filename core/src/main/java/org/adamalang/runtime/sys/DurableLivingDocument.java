@@ -387,6 +387,10 @@ public class DurableLivingDocument {
     document.__zeroOutCodeCost();
   }
 
+  public int getConnectionsCount() {
+    return document.__getConnectionsCount();
+  }
+
   public long getMemoryBytes() {
     return document.__memory();
   }

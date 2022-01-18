@@ -63,7 +63,7 @@ public class BillingStateMachine {
 
   private BillingStateMachine seed(Collection<String> spaces) {
     for (String space : spaces) {
-      accum.put(space, new PredictiveInventory.Billing(0, 0, 0, 0));
+      accum.put(space, new PredictiveInventory.Billing(0, 0, 0, 0, 0));
     }
     return this;
   }

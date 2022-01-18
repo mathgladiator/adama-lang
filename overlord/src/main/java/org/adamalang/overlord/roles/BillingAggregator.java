@@ -26,9 +26,7 @@ public class BillingAggregator {
       DataBase dataBaseFront,
       ConcurrentCachedHtmlHandler handler) {
     SimpleExecutor executor = SimpleExecutor.create("billing-aggregator");
-
     FixedHtmlStringLoggerTable table = new FixedHtmlStringLoggerTable(32, "target", "batch", "time");
-
     executor.schedule(new NamedRunnable("billing-fetch") {
       @Override
       public void execute() throws Exception {

@@ -25,12 +25,14 @@ public class PeriodicBillReducer {
     private long sumMessages;
     private ArrayList<Long> memorySamples;
     private ArrayList<Long> countSamples;
+    private ArrayList<Long> connectionsSamples;
 
     private PerSpaceReducer() {
       this.sumCPU = 0;
       this.sumMessages = 0;
       this.memorySamples = new ArrayList<>();
       this.countSamples = new ArrayList<>();
+      this.connectionsSamples = new ArrayList<>();
     }
 
     private String reduce() {
@@ -60,6 +62,12 @@ public class PeriodicBillReducer {
       if (memory95 != 0) {
         notZero = true;
       }
+      writer.writeObjectFieldIntro("connections_p95");
+      long connections95 = estimateP95(connectionsSamples);
+      writer.writeLong(connections95);
+      if (connections95 != 0) {
+        notZero = true;
+      }
       writer.endObject();
       if (notZero) {
         return writer.toString();
@@ -84,6 +92,7 @@ public class PeriodicBillReducer {
     space.sumMessages += bill.messages;
     space.memorySamples.add(bill.memory);
     space.countSamples.add(bill.count);
+    space.connectionsSamples.add(bill.connections);
   }
 
   public String toJson() {

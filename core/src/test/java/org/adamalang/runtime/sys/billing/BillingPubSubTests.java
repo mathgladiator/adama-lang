@@ -46,7 +46,7 @@ public class BillingPubSubTests {
       Assert.assertEquals(1, pubsub.size());
       Consumer<HashMap<String, PredictiveInventory.Billing>> publisher = pubsub.publisher();
       HashMap<String, PredictiveInventory.Billing> map = new HashMap<>();
-      map.put("space", new PredictiveInventory.Billing(0, 1, 2, 3));
+      map.put("space", new PredictiveInventory.Billing(0, 1, 2, 3, 4));
       for (int k = 0; k < 11; k++) {
         publisher.accept(map);
       }

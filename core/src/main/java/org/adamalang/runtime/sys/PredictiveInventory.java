@@ -20,6 +20,7 @@ public class PredictiveInventory {
   private long ticks_growth;
   private long messages;
   private long count;
+  private long connections;
   private final Snapshot[] snapshots;
 
   public PredictiveInventory() {
@@ -30,10 +31,11 @@ public class PredictiveInventory {
     this.messages = 0;
     this.count = 0;
     this.snapshots = new Snapshot[4];
+    this.connections = 0;
   }
 
   public Billing toBill() {
-    Billing billing = new Billing(memory, ticks, count, messages);
+    Billing billing = new Billing(memory, ticks, count, messages, connections);
     messages = 0;
     return billing;
   }
@@ -48,12 +50,14 @@ public class PredictiveInventory {
         new Snapshot(
             preciseSnapshotAccumulator.memory,
             preciseSnapshotAccumulator.ticks,
-            preciseSnapshotAccumulator.count);
+            preciseSnapshotAccumulator.count,
+            preciseSnapshotAccumulator.connections);
 
     // absorb the precision
     this.memory = preciseSnapshotAccumulator.memory;
     this.ticks = preciseSnapshotAccumulator.ticks;
     this.count = preciseSnapshotAccumulator.count;
+    this.connections = preciseSnapshotAccumulator.connections;
 
     // compute the average document size and use that as the estimate growth
     this.memory_growth = 0;
@@ -82,22 +86,28 @@ public class PredictiveInventory {
     this.messages++;
   }
 
+  public void connect() {
+    this.connections++;
+  }
+
   public static class Billing {
     public final long memory;
     public final long cpu;
     public final long count;
     public final long messages;
+    public final long connections;
 
-    public Billing(long memory, long cpu, long count, long messages) {
+    public Billing(long memory, long cpu, long count, long messages, long connections) {
       this.memory = memory;
       this.cpu = cpu;
       this.count = count;
       this.messages = messages;
+      this.connections = connections;
     }
 
     public static Billing add(Billing a, Billing b) {
       return new Billing(
-          a.memory + b.memory, a.cpu + b.cpu, a.count + b.count, a.messages + b.messages);
+          a.memory + b.memory, a.cpu + b.cpu, a.count + b.count, a.messages + b.messages, a.connections + b.connections);
     }
   }
 
@@ -105,11 +115,13 @@ public class PredictiveInventory {
     public long memory;
     public long ticks;
     public int count;
+    public long connections;
 
     public PreciseSnapshotAccumulator() {
       this.memory = 0;
       this.ticks = 0;
       this.count = 0;
+      this.connections = 0;
     }
   }
 
@@ -117,11 +129,13 @@ public class PredictiveInventory {
     private final long memory;
     private final long ticks;
     private final long count;
+    private final long connections;
 
-    public Snapshot(long memory, long ticks, long count) {
+    public Snapshot(long memory, long ticks, long count, long connections) {
       this.memory = memory;
       this.ticks = ticks;
       this.count = count;
+      this.connections = connections;
     }
   }
 }

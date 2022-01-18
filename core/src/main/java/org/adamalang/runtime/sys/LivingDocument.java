@@ -356,6 +356,15 @@ public abstract class LivingDocument implements RxParent {
     __code_cost = 0;
   }
 
+  /** get the number of connected clients */
+  public int __getConnectionsCount() {
+    int sumClients = 0;
+    for (Map.Entry<NtClient, ArrayList<PrivateView>> perClient : __trackedViews.entrySet()) {
+      sumClients += perClient.getValue().size();
+    }
+    return sumClients;
+  }
+
   /** code generated: get the tests for the document */
   public abstract String[] __getTests();
 
