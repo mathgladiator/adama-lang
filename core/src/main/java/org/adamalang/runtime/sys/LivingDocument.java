@@ -594,7 +594,11 @@ public abstract class LivingDocument implements RxParent {
   public abstract void __commit(String name, JsonStreamWriter forward, JsonStreamWriter reverse);
 
   public long __memory() {
-    return 384;
+    long memory = 384;
+    for (String dedupeKey : __dedupe.keySet()) {
+      memory += dedupeKey.length() * 2 + 16;
+    }
+    return memory;
   }
 
   /** exposed: @step; for testing */
@@ -1080,10 +1084,12 @@ public abstract class LivingDocument implements RxParent {
       long expireBefore = __time.get() - limit;
       forward.beginObject();
       reverse.beginObject();
+      boolean didNothing = true;
       Iterator<Map.Entry<String, Long>> it = __dedupe.entrySet().iterator();
       while (it.hasNext()) {
         Map.Entry<String, Long> entry = it.next();
         if (entry.getValue() < expireBefore) {
+          didNothing = false;
           it.remove();
           forward.writeObjectFieldIntro(entry.getKey());
           forward.writeNull();
@@ -1093,7 +1099,9 @@ public abstract class LivingDocument implements RxParent {
       }
       forward.endObject();
       reverse.endObject();
-
+      if (didNothing) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_EXPIRE_DID_NOTHING);
+      }
       __last_expire_time.set(expireBefore);
       __seq.bumpUpPre();
       __commit(null, forward, reverse);

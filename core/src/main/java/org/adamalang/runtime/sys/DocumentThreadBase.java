@@ -16,6 +16,7 @@ import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
@@ -50,13 +51,13 @@ public class DocumentThreadBase {
   }
 
   public void kickOffInventory() {
-    executor.execute(
+    executor.schedule(
         new NamedRunnable("base-inventory") {
           @Override
           public void execute() throws Exception {
             performInventory();
           }
-        });
+        }, 2500);
   }
 
   public PredictiveInventory getOrCreateInventory(String space) {
@@ -85,7 +86,10 @@ public class DocumentThreadBase {
   public void performInventory() {
     HashMap<String, PredictiveInventory.PreciseSnapshotAccumulator> accumulators =
         new HashMap<>(inventoryBySpace.size());
-    for (DurableLivingDocument document : map.values()) {
+    Iterator<Map.Entry<Key, DurableLivingDocument>> it = map.entrySet().iterator();
+    while (it.hasNext()) {
+      DurableLivingDocument document = it.next().getValue();
+      document.triggerExpire();
       PredictiveInventory.PreciseSnapshotAccumulator accum = accumulators.get(document.key.space);
       if (accum == null) {
         accum = new PredictiveInventory.PreciseSnapshotAccumulator();

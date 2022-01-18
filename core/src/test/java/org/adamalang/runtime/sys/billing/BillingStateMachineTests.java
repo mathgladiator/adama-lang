@@ -108,7 +108,7 @@ public class BillingStateMachineTests {
       bases[k].setInventoryMillisecondsSchedule(10, 5);
       bases[k].kickOffInventory();
     }
-    LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123;");
+    LivingDocumentFactory factory = LivingDocumentTests.compile("public int x = 123; @construct { transition #foo in 2; } #foo { transition #foo in 2; }");
     {
       CountDownLatch latch = new CountDownLatch(1);
       DurableLivingDocument.fresh(new Key("space", "key"), factory, NtClient.NO_ONE, "{}", null, null, bases[0], new Callback<DurableLivingDocument>() {
@@ -118,6 +118,7 @@ public class BillingStateMachineTests {
             @Override
             public void execute() throws Exception {
               bases[0].map.put(new Key("space", "key"), value);
+              value.connect(NtClient.NO_ONE, Callback.DONT_CARE_INTEGER);
               latch.countDown();
             }
           });
@@ -131,7 +132,7 @@ public class BillingStateMachineTests {
       Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
     }
     int attempts = 0;
-    while (attempts < 10) {
+    while (attempts < 50) {
       attempts++;
       AtomicReference<HashMap<String, PredictiveInventory.Billing>> billing = new AtomicReference<>(null);
       CountDownLatch latch = new CountDownLatch(1);
@@ -161,7 +162,7 @@ public class BillingStateMachineTests {
         Assert.assertEquals(1, billing.get().get("space").count);
         return;
       }
-      Thread.sleep(20);
+      Thread.sleep(500);
     }
     Assert.fail("never billed for the object");
   }

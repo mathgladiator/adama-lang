@@ -40,6 +40,7 @@ public class DurableLivingDocument {
   private Integer requiresInvalidateMilliseconds;
   private boolean inflightPatch;
   private boolean catastrophicFailureOccurred;
+  private long lastExpire;
 
   private DurableLivingDocument(
       final Key key,
@@ -54,6 +55,7 @@ public class DurableLivingDocument {
     this.pending = new ArrayDeque<>(2);
     this.inflightPatch = false;
     this.catastrophicFailureOccurred = false;
+    this.lastExpire = 0;
   }
 
   public static void fresh(
@@ -149,6 +151,14 @@ public class DurableLivingDocument {
     return writer;
   }
 
+  public void triggerExpire() {
+    long timeSinceLastExpire = base.time.nowMilliseconds() - lastExpire;
+    if (timeSinceLastExpire > 60000) {
+      lastExpire = base.time.nowMilliseconds();
+      expire(10 * 60 * 1000, Callback.DONT_CARE_INTEGER);
+    }
+  }
+
   private void finishSuccessDataServicePatch(
       Integer whenToInvalidateMilliseconds, Callback<Integer> callback, int seq) {
     this.requiresInvalidateMilliseconds = whenToInvalidateMilliseconds;
@@ -193,7 +203,11 @@ public class DurableLivingDocument {
     try {
       final var change = document.__transact(request.request, currentFactory);
       inflightPatch = true;
-
+      if (request.cleanupTest) {
+        if (document.__canRemoveFromMemory()) {
+          scheduleCleanup();
+        }
+      }
       if (change.update.requiresFutureInvalidation) {
         this.requiresInvalidateMilliseconds = change.update.whenToInvalidateMilliseconds;
       }
@@ -278,8 +292,7 @@ public class DurableLivingDocument {
                       writer.writeObjectFieldIntro("patch");
                       writer.injectJson(value.patch);
                       writer.endObject();
-                      executeNow(
-                          new IngestRequest(request.who, writer.toString(), request.callback));
+                      executeNow(new IngestRequest(request.who, writer.toString(), request.callback, false));
                     }
                   });
             }
@@ -330,8 +343,8 @@ public class DurableLivingDocument {
     }
   }
 
-  private void ingest(NtClient who, String requestJson, Callback<Integer> callback) {
-    IngestRequest request = new IngestRequest(who, requestJson, callback);
+  private void ingest(NtClient who, String requestJson, Callback<Integer> callback, boolean cleanupTest) {
+    IngestRequest request = new IngestRequest(who, requestJson, callback, cleanupTest);
     if (catastrophicFailureOccurred) {
       request.callback.failure(
           new ErrorCodeException(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
@@ -376,7 +389,7 @@ public class DurableLivingDocument {
   public void invalidate(Callback<Integer> callback) {
     final var request = forge("invalidate", null);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), callback);
+    ingest(NtClient.NO_ONE, request.toString(), callback, true);
   }
 
   public int getCodeCost() {
@@ -400,13 +413,13 @@ public class DurableLivingDocument {
     request.writeObjectFieldIntro("limit");
     request.writeLong(limit);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), callback);
+    ingest(NtClient.NO_ONE, request.toString(), callback, true);
   }
 
   public void connect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("connect", who);
     request.endObject();
-    ingest(who, request.toString(), callback);
+    ingest(who, request.toString(), callback, false);
   }
 
   public boolean isConnected(final NtClient who) {
@@ -434,6 +447,7 @@ public class DurableLivingDocument {
           public void execute() throws Exception {
             if (document.__canRemoveFromMemory()) {
               base.map.remove(key);
+
             }
           }
         },
@@ -443,10 +457,7 @@ public class DurableLivingDocument {
   public void disconnect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("disconnect", who);
     request.endObject();
-    ingest(who, request.toString(), callback);
-    if (document.__canRemoveFromMemory()) {
-      scheduleCleanup();
-    }
+    ingest(who, request.toString(), callback, true);
   }
 
   public void send(
@@ -465,7 +476,7 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("message");
     writer.injectJson(message);
     writer.endObject();
-    ingest(who, writer.toString(), callback);
+    ingest(who, writer.toString(), callback, false);
   }
 
   public void apply(NtClient who, String patch, Callback<Integer> callback) {
@@ -473,7 +484,7 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("patch");
     writer.injectJson(patch);
     writer.endObject();
-    ingest(who, writer.toString(), callback);
+    ingest(who, writer.toString(), callback, false);
   }
 
   public boolean canAttach(NtClient who) {
@@ -485,7 +496,7 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("asset");
     writer.writeNtAsset(asset);
     writer.endObject();
-    ingest(who, writer.toString(), callback);
+    ingest(who, writer.toString(), callback, false);
   }
 
   public String json() {
@@ -494,7 +505,7 @@ public class DurableLivingDocument {
     return writer.toString();
   }
 
-  public void postLoadReconcile() {
+  public void reconcileClients() {
     for (NtClient client : document.__reconcileClientsToForceDisconnect()) {
       disconnect(client, Callback.DONT_CARE_INTEGER);
     }
@@ -505,12 +516,14 @@ public class DurableLivingDocument {
     private final String request;
     private final Callback<Integer> callback;
     private int attempts;
+    public final boolean cleanupTest;
 
-    private IngestRequest(NtClient who, String request, Callback<Integer> callback) {
+    private IngestRequest(NtClient who, String request, Callback<Integer> callback, boolean cleanup) {
       this.who = who;
       this.request = request;
       this.callback = callback;
       this.attempts = 0;
+      this.cleanupTest = cleanup;
     }
 
     public boolean tryAgain() {

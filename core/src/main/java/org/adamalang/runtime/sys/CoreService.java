@@ -302,7 +302,7 @@ public class CoreService {
                                         new NamedRunnable("post-load-reconcile") {
                                           @Override
                                           public void execute() throws Exception {
-                                            _putForClosure.postLoadReconcile();
+                                            _putForClosure.reconcileClients();
                                           }
                                         },
                                         base.getMillisecondsAfterLoadForReconciliation());

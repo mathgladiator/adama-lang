@@ -34,6 +34,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class LivingDocumentTests {
   private static final NtAsset EXAMPLE =
@@ -554,13 +555,13 @@ public class LivingDocumentTests {
                 .get("__dedupe"));
     Assert.assertEquals(1, mapSend1.size());
     setup.time.time += 1000;
-    setup.document.expire(2000, new RealDocumentSetup.AssertInt(7));
+    setup.document.expire(2000, new RealDocumentSetup.AssertFailure(122412));
     HashMap<String, Object> mapSend2 =
         ((HashMap<String, Object>)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
                 .get("__dedupe"));
     Assert.assertEquals(1, mapSend1.size());
-    setup.document.expire(500, new RealDocumentSetup.AssertInt(9));
+    setup.document.expire(500, new RealDocumentSetup.AssertInt(7));
     HashMap<String, Object> mapSend3 =
         ((HashMap<String, Object>)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -601,6 +602,15 @@ public class LivingDocumentTests {
             .toString());
 
     int[] size = new int[] {3, 3, 3, 2, 2, 2, 1, 1, 0, 0};
+    HashSet<Integer> shouldFail = new HashSet<>();
+    shouldFail.add(0);
+    shouldFail.add(1);
+    shouldFail.add(3);
+    shouldFail.add(4);
+    shouldFail.add(6);
+    shouldFail.add(8);
+    shouldFail.add(9);
+    int expectedAt = 11;
     for (int k = 0; k < size.length; k++) {
       HashMap<String, Object> send =
           ((HashMap<String, Object>)
@@ -612,7 +622,13 @@ public class LivingDocumentTests {
         Assert.assertEquals(size[k], send.size());
       }
       setup.time.time += 100;
-      setup.document.expire(750, new RealDocumentSetup.AssertInt(11 + 2 * k));
+      System.out.println("WHITELIST:" + k);
+      if (shouldFail.contains(k)) {
+        setup.document.expire(750, new RealDocumentSetup.AssertFailure(122412));
+      } else {
+        setup.document.expire(750, new RealDocumentSetup.AssertInt(expectedAt));
+        expectedAt += 2;
+      }
     }
   }
 
