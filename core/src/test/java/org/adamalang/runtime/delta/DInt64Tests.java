@@ -34,5 +34,6 @@ public class DInt64Tests {
     db.show(5L, writer);
     db.show(5L, writer);
     Assert.assertEquals("\"1\"\"22\"\"3\"null\"4\"\"5\"", stream.toString());
+    Assert.assertEquals(40, db.__memory());
   }
 }

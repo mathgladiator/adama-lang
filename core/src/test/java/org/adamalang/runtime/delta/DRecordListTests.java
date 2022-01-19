@@ -32,6 +32,7 @@ public class DRecordListTests {
       walk.end(delta);
       delta.end();
       Assert.assertEquals("{\"42\":true,\"@o\":[42]}", stream.toString());
+      Assert.assertEquals(112, list.__memory());
     }
     {
       final var stream = new JsonStreamWriter();
@@ -47,6 +48,7 @@ public class DRecordListTests {
       walk.end(delta);
       delta.end();
       Assert.assertEquals("{\"10\":false,\"@o\":[10,42]}", stream.toString());
+      Assert.assertEquals(224, list.__memory());
     }
     {
       final var stream = new JsonStreamWriter();
@@ -59,6 +61,7 @@ public class DRecordListTests {
       walk.end(delta);
       delta.end();
       Assert.assertEquals("{\"@o\":[42],\"10\":null}", stream.toString());
+      Assert.assertEquals(112, list.__memory());
     }
     {
       final var stream = new JsonStreamWriter();
@@ -66,6 +69,7 @@ public class DRecordListTests {
       list.hide(writer);
       list.hide(writer);
       Assert.assertEquals("null", stream.toString());
+      Assert.assertEquals(0, list.__memory());
     }
   }
 

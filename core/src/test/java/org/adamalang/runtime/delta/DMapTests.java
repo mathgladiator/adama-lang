@@ -30,6 +30,7 @@ public class DMapTests {
       walk.end(delta);
       delta.end();
       Assert.assertEquals("{\"42\":true,\"1\":false}", stream.toString());
+      Assert.assertEquals(200, map.__memory());
     }
     {
       final var stream = new JsonStreamWriter();
@@ -42,6 +43,7 @@ public class DMapTests {
       walk.end(delta);
       delta.end();
       Assert.assertEquals("{}", stream.toString());
+      Assert.assertEquals(200, map.__memory());
     }
     {
       final var stream = new JsonStreamWriter();
@@ -53,6 +55,7 @@ public class DMapTests {
       walk.end(delta);
       delta.end();
       Assert.assertEquals("{\"42\":false,\"1\":null}", stream.toString());
+      Assert.assertEquals(120, map.__memory());
     }
     {
       final var stream = new JsonStreamWriter();
@@ -60,6 +63,7 @@ public class DMapTests {
       map.hide(writer);
       map.hide(writer);
       Assert.assertEquals("null", stream.toString());
+      Assert.assertEquals(40, map.__memory());
     }
   }
 }

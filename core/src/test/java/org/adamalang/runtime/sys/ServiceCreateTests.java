@@ -17,10 +17,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.mocks.MockInstantDataService;
-import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
-import org.adamalang.runtime.sys.mocks.MockRacerLivingDocumentFactoryFactory;
-import org.adamalang.runtime.sys.mocks.NullCallbackLatch;
+import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Test;
 
@@ -62,7 +59,31 @@ public class ServiceCreateTests {
       service.create(NtClient.NO_ONE, KEY, "{}", null, created1);
       created1.await_success();
       service.create(NtClient.NO_ONE, KEY, "{}", null, created2);
-      created2.await_failure();
+      created2.await_failure(667658);
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void cant_create_after_connect_series() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    try {
+      NullCallbackLatch created1 = new NullCallbackLatch();
+      NullCallbackLatch created2 = new NullCallbackLatch();
+      service.create(NtClient.NO_ONE, KEY, "{}", null, created1);
+      created1.await_success();
+      MockStreamback streamback = new MockStreamback();
+      Runnable latch1 = streamback.latchAt(2);
+      service.connect(NtClient.NO_ONE, KEY, streamback);
+      latch1.run();
+      service.create(NtClient.NO_ONE, KEY, "{}", null, created2);
+      created2.await_failure(130092);
     } finally {
       service.shutdown();
     }

@@ -38,5 +38,6 @@ public class DDynamicTests {
     db.show(A, writer);
     db.show(A, writer);
     Assert.assertEquals("falsenullfalsetruefalse", stream.toString());
+    Assert.assertEquals(42, db.__memory());
   }
 }

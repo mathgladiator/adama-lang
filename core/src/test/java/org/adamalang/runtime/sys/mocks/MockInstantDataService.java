@@ -35,12 +35,18 @@ public class MockInstantDataService implements DataService {
   private boolean infiniteSkip = false;
   private boolean crashSeqSkip = false;
   private int skipTrack = 0;
+  private int patchFailAt;
 
   public MockInstantDataService() {
     this.logByKey = new HashMap<>();
     log = new ArrayList<>();
     this.latches = new ArrayList<>();
     this.bootstrap = new ArrayList<>();
+    this.patchFailAt = Integer.MAX_VALUE;
+  }
+
+  public void setPatchFailureAt(int patchFailAt) {
+    this.patchFailAt = patchFailAt;
   }
 
   public void ready(Key key) {
@@ -94,6 +100,11 @@ public class MockInstantDataService implements DataService {
 
   @Override
   public synchronized void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
+    patchFailAt--;
+    if (patchFailAt < 0) {
+      callback.failure(new ErrorCodeException(9999));
+      return;
+    }
     println("PATCH:" + key.space + "/" + key.key + ":" + patch.seq + "->" + patch.redo);
     ArrayList<RemoteDocumentUpdate> log = logByKey.get(key);
     if (infiniteSkip) {

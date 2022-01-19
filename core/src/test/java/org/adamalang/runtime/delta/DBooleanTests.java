@@ -34,5 +34,6 @@ public class DBooleanTests {
     db.show(false, writer);
     db.show(false, writer);
     Assert.assertEquals("truefalsetruenulltruefalse", stream.toString());
+    Assert.assertEquals(40, db.__memory());
   }
 }

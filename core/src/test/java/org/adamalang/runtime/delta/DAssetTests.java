@@ -31,5 +31,6 @@ public class DAssetTests {
     Assert.assertEquals(
         "{\"id\":\"\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}null{\"id\":\"12\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}{\"id\":\"32\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}null",
         stream.toString());
+    Assert.assertEquals(32, da.__memory());
   }
 }

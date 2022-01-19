@@ -34,5 +34,6 @@ public class DInt32Tests {
     db.show(5, writer);
     db.show(5, writer);
     Assert.assertEquals("1223null45", stream.toString());
+    Assert.assertEquals(40, db.__memory());
   }
 }

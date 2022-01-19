@@ -29,5 +29,6 @@ public class DMaybeTests {
     final var c = db.get(DBoolean::new);
     Assert.assertTrue(a != c);
     Assert.assertEquals("null", stream.toString());
+    Assert.assertEquals(80, db.__memory());
   }
 }

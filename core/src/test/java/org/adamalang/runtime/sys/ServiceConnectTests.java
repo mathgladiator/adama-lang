@@ -148,6 +148,30 @@ public class ServiceConnectTests {
   }
 
   @Test
+  public void connect_view_failure() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    dataService.setPatchFailureAt(1);
+    dataService.initialize(KEY, wrap("{\"__constructed\":true}"), Callback.DONT_CARE_VOID);
+    dataService.patch(
+        KEY,
+        wrap(
+            "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
+        Callback.DONT_CARE_VOID);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    try {
+      MockStreamback streamback = new MockStreamback();
+      service.connect(NtClient.NO_ONE, KEY, streamback);
+      streamback.await_failure(9999);
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
   public void connect_attach_yay() throws Exception {
     LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_ATTACH);
     MockInstantLivingDocumentFactoryFactory factoryFactory =

@@ -29,6 +29,7 @@ public class DListTests {
       list.rectify(3, delta);
       delta.end();
       Assert.assertEquals("{\"0\":true,\"1\":false,\"2\":true,\"@s\":3}", stream.toString());
+      Assert.assertEquals(248, list.__memory());
     }
     {
       final var stream = new JsonStreamWriter();
@@ -41,6 +42,7 @@ public class DListTests {
       list.rectify(3, delta);
       delta.end();
       Assert.assertEquals("{}", stream.toString());
+      Assert.assertEquals(248, list.__memory());
     }
     {
       final var stream = new JsonStreamWriter();
@@ -52,6 +54,7 @@ public class DListTests {
       list.rectify(2, delta);
       delta.end();
       Assert.assertEquals("{\"1\":true,\"2\":null}", stream.toString());
+      Assert.assertEquals(248, list.__memory());
     }
     {
       final var stream = new JsonStreamWriter();
@@ -59,6 +62,7 @@ public class DListTests {
       list.hide(writer);
       list.hide(writer);
       Assert.assertEquals("null", stream.toString());
+      Assert.assertEquals(128, list.__memory());
     }
   }
 }
