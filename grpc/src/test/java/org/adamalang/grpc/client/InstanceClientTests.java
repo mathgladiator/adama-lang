@@ -63,14 +63,14 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10002,
-            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.1; } #p { x++; } ")) {
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       MockEvents events = new MockEvents();
-      Runnable happy = events.latchAt(5);
-      Runnable disconnect = events.latchAt(6);
-      Runnable reconnect = events.latchAt(8);
-      Runnable disconnectAgain = events.latchAt(9);
+      Runnable happy = events.latchAt(4);
+      Runnable disconnect = events.latchAt(5);
+      Runnable reconnect = events.latchAt(7);
+      Runnable disconnectAgain = events.latchAt(8);
       AtomicBoolean created = new AtomicBoolean(false);
       try (InstanceClient client =
           new InstanceClient(
@@ -112,11 +112,10 @@ public class InstanceClientTests {
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         events.assertWrite(2, "DELTA:{\"data\":{\"x\":124},\"seq\":5}");
         events.assertWrite(3, "DELTA:{\"seq\":6}");
-        events.assertWrite(4, "DELTA:{\"seq\":7}");
-        events.assertWrite(5, "DISCONNECTED");
-        events.assertWrite(6, "CONNECTED");
-        events.assertWrite(7, "DELTA:{\"data\":{\"x\":124},\"seq\":12}");
-        events.assertWrite(8, "DISCONNECTED");
+        events.assertWrite(4, "DISCONNECTED");
+        events.assertWrite(5, "CONNECTED");
+        events.assertWrite(6, "DELTA:{\"data\":{\"x\":124},\"seq\":12}");
+        events.assertWrite(7, "DISCONNECTED");
         Assert.assertEquals("CDCD", lifecycle.toString());
       }
     }
