@@ -18,9 +18,10 @@ public class CanaryConfig {
 
   public CanaryConfig() {
     this.endpoint = "http://adama-lb-us-east-2-2073537616.us-east-2.elb.amazonaws.com/s";
+    // TODO: need to measure the heat of the web tier because I suspect there is a cost in not caching tokens
     this.identities = new String[] {"eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiIxIiwiaXNzIjoiYWRhbWEifQ.eqo02oPRxALrmHUKRaUNHZWyr2cPLkP470gzuE1EjYEn1-VZDlYlh5cz-osZbdBSxuwC2nBKA7-_399kfCO-2A"};
     this.connections = 500;
-    this.documentsPerConnectionMinimum = 5;
-    this.documentsPerConnectionMaxmimum = 10;
+    this.documentsPerConnectionMinimum = 1;
+    this.documentsPerConnectionMaxmimum = 2;
   }
 }

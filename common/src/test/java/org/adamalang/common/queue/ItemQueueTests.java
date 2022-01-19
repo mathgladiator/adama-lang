@@ -10,6 +10,7 @@
 package org.adamalang.common.queue;
 
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,7 +25,7 @@ public class ItemQueueTests {
     private CountDownLatch done = new CountDownLatch(1);
 
     public MyItemAction() {
-      super(500, 1000);
+      super(500, 1000, new NoOpMetricsFactory().makeItemActionMonitor("x").start());
     }
 
     @Override
