@@ -203,9 +203,9 @@ public class Engine implements AutoCloseable {
         new NamedRunnable("schedule-gossip") {
           @Override
           public void execute() throws Exception {
-            int wait = 100;
+            int wait = 50;
             for (int k = 0; k < 4; k++) {
-              wait += jitter.nextInt(100);
+              wait += jitter.nextInt(50);
             }
             executor.schedule(
                 new NamedRunnable("gossip-round") {

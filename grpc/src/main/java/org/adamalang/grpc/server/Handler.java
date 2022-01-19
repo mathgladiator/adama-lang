@@ -9,10 +9,13 @@
  */
 package org.adamalang.grpc.server;
 
+import io.grpc.netty.shaded.io.netty.channel.unix.Errors;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.common.queue.ItemAction;
+import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.proto.*;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Streamback;
@@ -55,36 +58,43 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         new Key(request.getSpace(), request.getKey()),
         request.getArg(),
         fixEntropy(request.getEntropy()),
-        nexus.metrics.server_create.wrap(new Callback<>() {
-          @Override
-          public void success(Void value) {
-            responseObserver.onNext(CreateResponse.newBuilder().setSuccess(true).build());
-            responseObserver.onCompleted();
-          }
+        nexus.metrics.server_create.wrap(
+            new Callback<>() {
+              @Override
+              public void success(Void value) {
+                responseObserver.onNext(CreateResponse.newBuilder().setSuccess(true).build());
+                responseObserver.onCompleted();
+              }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            responseObserver.onNext(
-                CreateResponse.newBuilder().setSuccess(false).setFailureReason(ex.code).build());
-            responseObserver.onCompleted();
-          }
-        }));
+              @Override
+              public void failure(ErrorCodeException ex) {
+                responseObserver.onNext(
+                    CreateResponse.newBuilder()
+                        .setSuccess(false)
+                        .setFailureReason(ex.code)
+                        .build());
+                responseObserver.onCompleted();
+              }
+            }));
   }
 
   @Override
   public void reflect(ReflectRequest request, StreamObserver<ReflectResponse> responseObserver) {
-    nexus.service.reflect(new Key(request.getSpace(), request.getKey()), nexus.metrics.server_reflect.wrap(new Callback<>() {
-      @Override
-      public void success(String schema) {
-        responseObserver.onNext(ReflectResponse.newBuilder().setSchema(schema).build());
-        responseObserver.onCompleted();
-      }
+    nexus.service.reflect(
+        new Key(request.getSpace(), request.getKey()),
+        nexus.metrics.server_reflect.wrap(
+            new Callback<>() {
+              @Override
+              public void success(String schema) {
+                responseObserver.onNext(ReflectResponse.newBuilder().setSchema(schema).build());
+                responseObserver.onCompleted();
+              }
 
-      @Override
-      public void failure(ErrorCodeException ex) {
-        responseObserver.onError(ex);
-      }
-    }));
+              @Override
+              public void failure(ErrorCodeException ex) {
+                responseObserver.onError(ex);
+              }
+            }));
   }
 
   @Override
@@ -92,7 +102,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       StreamObserver<StreamMessageServer> responseObserver) {
     nexus.metrics.server_handlers_active.up();
     SimpleExecutor executor = executors[rng.nextInt(executors.length)];
-    ConcurrentHashMap<Long, CoreStream> streams = new ConcurrentHashMap<>();
+    ConcurrentHashMap<Long, LazyCoreStream> streams = new ConcurrentHashMap<>();
     AtomicBoolean alive = new AtomicBoolean(true);
     responseObserver.onNext(
         StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
@@ -142,7 +152,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
           return;
         }
         long id = payload.getId();
-        CoreStream stream = null;
+        LazyCoreStream stream = null;
         if (payload.hasAct()) {
           stream = streams.get(payload.getAct());
           if (stream == null) {
@@ -170,6 +180,8 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             {
               nexus.metrics.server_witness_packet_connect.run();
               StreamConnect connect = payload.getConnect();
+              LazyCoreStream lazy = new LazyCoreStream(executor);
+              streams.put(id, lazy);
               nexus.service.connect(
                   new NtClient(connect.getAgent(), connect.getAuthority()),
                   new Key(connect.getSpace(), connect.getKey()),
@@ -181,7 +193,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                             @Override
                             public void execute() throws Exception {
                               if (alive.get()) {
-                                streams.put(id, stream);
+                                lazy.ready(stream);
                               } else {
                                 stream.disconnect();
                               }
@@ -250,47 +262,68 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             }
           case ASK:
             {
-              nexus.metrics.server_witness_packet_can_attach.run();
-              stream.canAttach(
-                  new Callback<>() {
+              stream.execute(
+                  new ItemAction<>(ErrorCodes.GRPC_STREAM_ASK_TIMEOUT, ErrorCodes.GRPC_STREAM_ASK_REJECTED, nexus.metrics.server_stream_ask.start()) {
                     @Override
-                    public void success(Boolean value) {
-                      executor.execute(
-                          new NamedRunnable("handler-can-attach-success") {
+                    protected void executeNow(CoreStream stream) {
+                      stream.canAttach(
+                          new Callback<>() {
                             @Override
-                            public void execute() throws Exception {
-                              responseObserver.onNext(
-                                  StreamMessageServer.newBuilder()
-                                      .setId(id)
-                                      .setResponse(
-                                          StreamAskAttachmentResponse.newBuilder()
-                                              .setAllowed(value)
-                                              .build())
-                                      .build());
+                            public void success(Boolean value) {
+                              executor.execute(
+                                  new NamedRunnable("handler-can-attach-success") {
+                                    @Override
+                                    public void execute() throws Exception {
+                                      responseObserver.onNext(
+                                          StreamMessageServer.newBuilder()
+                                              .setId(id)
+                                              .setResponse(
+                                                  StreamAskAttachmentResponse.newBuilder()
+                                                      .setAllowed(value)
+                                                      .build())
+                                              .build());
+                                    }
+                                  });
+                            }
+
+                            @Override
+                            public void failure(ErrorCodeException ex) {
+                              executor.execute(
+                                  new NamedRunnable("handler-can-attach-failure") {
+                                    @Override
+                                    public void execute() throws Exception {
+                                      responseObserver.onNext(
+                                          StreamMessageServer.newBuilder()
+                                              .setId(id)
+                                              .setError(
+                                                  StreamError.newBuilder().setCode(ex.code).build())
+                                              .build());
+                                    }
+                                  });
                             }
                           });
                     }
 
                     @Override
-                    public void failure(ErrorCodeException ex) {
+                    protected void failure(int code) {
                       executor.execute(
-                          new NamedRunnable("handler-can-attach-failure") {
+                          new NamedRunnable("handler-can-attach-failure-queue") {
                             @Override
                             public void execute() throws Exception {
                               responseObserver.onNext(
                                   StreamMessageServer.newBuilder()
                                       .setId(id)
-                                      .setError(StreamError.newBuilder().setCode(ex.code).build())
+                                      .setError(StreamError.newBuilder().setCode(code).build())
                                       .build());
                             }
                           });
                     }
                   });
+
               return;
             }
           case ATTACH:
             {
-              nexus.metrics.server_witness_packet_attach.run();
               StreamAttach attach = payload.getAttach();
               NtAsset asset =
                   new NtAsset(
@@ -300,34 +333,59 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                       attach.getSize(),
                       attach.getMd5(),
                       attach.getSha384());
-              stream.attach(
-                  asset,
-                  new Callback<>() {
+              stream.execute(
+                  new ItemAction<CoreStream>(ErrorCodes.GRPC_STREAM_ATTACH_TIMEOUT, ErrorCodes.GRPC_STREAM_ATTACH_REJECTED, nexus.metrics.server_stream_attach.start()) {
                     @Override
-                    public void success(Integer value) {
-                      executor.execute(
-                          new NamedRunnable("handler-attach-success") {
+                    protected void executeNow(CoreStream stream) {
+                      stream.attach(
+                          asset,
+                          new Callback<>() {
                             @Override
-                            public void execute() throws Exception {
-                              responseObserver.onNext(
-                                  StreamMessageServer.newBuilder()
-                                      .setId(id)
-                                      .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
-                                      .build());
+                            public void success(Integer value) {
+                              executor.execute(
+                                  new NamedRunnable("handler-attach-success") {
+                                    @Override
+                                    public void execute() throws Exception {
+                                      responseObserver.onNext(
+                                          StreamMessageServer.newBuilder()
+                                              .setId(id)
+                                              .setResult(
+                                                  StreamSeqResult.newBuilder()
+                                                      .setSeq(value)
+                                                      .build())
+                                              .build());
+                                    }
+                                  });
+                            }
+
+                            @Override
+                            public void failure(ErrorCodeException ex) {
+                              executor.execute(
+                                  new NamedRunnable("handler-attach-failure") {
+                                    @Override
+                                    public void execute() throws Exception {
+                                      responseObserver.onNext(
+                                          StreamMessageServer.newBuilder()
+                                              .setId(id)
+                                              .setError(
+                                                  StreamError.newBuilder().setCode(ex.code).build())
+                                              .build());
+                                    }
+                                  });
                             }
                           });
                     }
 
                     @Override
-                    public void failure(ErrorCodeException ex) {
+                    protected void failure(int code) {
                       executor.execute(
-                          new NamedRunnable("handler-attach-failure") {
+                          new NamedRunnable("handler-attach-failure-queue") {
                             @Override
                             public void execute() throws Exception {
                               responseObserver.onNext(
                                   StreamMessageServer.newBuilder()
                                       .setId(id)
-                                      .setError(StreamError.newBuilder().setCode(ex.code).build())
+                                      .setError(StreamError.newBuilder().setCode(code).build())
                                       .build());
                             }
                           });
@@ -337,55 +395,87 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             }
           case SEND:
             {
-              nexus.metrics.server_witness_packet_send.run();
-              StreamSend send = payload.getSend();
-              String marker = null;
-              if (send.hasMarker()) {
-                marker = send.getMarker();
-              }
-              stream.send(
-                  send.getChannel(),
-                  marker,
-                  send.getMessage(),
-                  new Callback<>() {
+              stream.execute(
+                  new ItemAction<CoreStream>(ErrorCodes.GRPC_STREAM_SEND_TIMEOUT, ErrorCodes.GRPC_STREAM_SEND_REJECTED, nexus.metrics.server_stream_send.start()) {
                     @Override
-                    public void success(Integer value) {
-                      executor.execute(
-                          new NamedRunnable("stream-send-success") {
+                    protected void executeNow(CoreStream stream) {
+                      StreamSend send = payload.getSend();
+                      String marker = null;
+                      if (send.hasMarker()) {
+                        marker = send.getMarker();
+                      }
+                      stream.send(
+                          send.getChannel(),
+                          marker,
+                          send.getMessage(),
+                          new Callback<>() {
                             @Override
-                            public void execute() throws Exception {
-                              responseObserver.onNext(
-                                  StreamMessageServer.newBuilder()
-                                      .setId(id)
-                                      .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
-                                      .build());
+                            public void success(Integer value) {
+                              executor.execute(
+                                  new NamedRunnable("stream-send-success") {
+                                    @Override
+                                    public void execute() throws Exception {
+                                      responseObserver.onNext(
+                                          StreamMessageServer.newBuilder()
+                                              .setId(id)
+                                              .setResult(
+                                                  StreamSeqResult.newBuilder()
+                                                      .setSeq(value)
+                                                      .build())
+                                              .build());
+                                    }
+                                  });
+                            }
+
+                            @Override
+                            public void failure(ErrorCodeException exception) {
+                              executor.execute(
+                                  new NamedRunnable("stream-send-failure") {
+                                    @Override
+                                    public void execute() throws Exception {
+                                      responseObserver.onNext(
+                                          StreamMessageServer.newBuilder()
+                                              .setId(id)
+                                              .setError(
+                                                  StreamError.newBuilder()
+                                                      .setCode(exception.code)
+                                                      .build())
+                                              .build());
+                                    }
+                                  });
                             }
                           });
                     }
 
                     @Override
-                    public void failure(ErrorCodeException exception) {
+                    protected void failure(int code) {
                       executor.execute(
-                          new NamedRunnable("stream-send-failure") {
+                          new NamedRunnable("stream-send-failure-queue") {
                             @Override
                             public void execute() throws Exception {
                               responseObserver.onNext(
                                   StreamMessageServer.newBuilder()
                                       .setId(id)
-                                      .setError(
-                                          StreamError.newBuilder().setCode(exception.code).build())
+                                      .setError(StreamError.newBuilder().setCode(code).build())
                                       .build());
                             }
                           });
                     }
                   });
+
               return;
             }
           case DISCONNECT:
             {
-              nexus.metrics.server_witness_packet_disconnect.run();
-              stream.disconnect();
               streams.remove(payload.getAct());
+              LazyCoreStream _stream = stream;
+              executor.execute(
+                  new NamedRunnable("stream-send-failure-queue") {
+                    @Override
+                    public void execute() throws Exception {
+                      _stream.kill();
+                    }
+                  });
               return;
             }
         }
@@ -393,7 +483,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
       @Override
       public void onError(Throwable throwable) {
-        LOGGER.convertedToErrorCode(throwable, -1);
+        LOGGER.convertedToErrorCode(throwable, ErrorCodes.GRPC_HANDLER_EXCEPTION);
         onCompleted();
       }
 
@@ -407,8 +497,8 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             new NamedRunnable("stream-on-completed") {
               @Override
               public void execute() throws Exception {
-                for (CoreStream stream : streams.values()) {
-                  stream.disconnect();
+                for (LazyCoreStream stream : streams.values()) {
+                  stream.kill();
                 }
                 streams.clear();
                 responseObserver.onCompleted();
@@ -426,7 +516,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       responseObserver.onNext(ScanDeploymentsResponse.newBuilder().build());
       responseObserver.onCompleted();
     } catch (Exception ex) {
-      LOGGER.convertedToErrorCode(ex, -1);
+      LOGGER.convertedToErrorCode(ex, ErrorCodes.GRPC_HANDLER_SCAN_EXCEPTION);
       responseObserver.onError(ex);
     }
   }
@@ -512,6 +602,49 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       return entropy;
     } catch (NumberFormatException nfe) {
       return "" + entropy.hashCode();
+    }
+  }
+
+  private class LazyCoreStream {
+    private CoreStream stream;
+    private final ItemQueue<CoreStream> queue;
+    private boolean alive = true;
+
+    public LazyCoreStream(SimpleExecutor executor) {
+      this.stream = null;
+      this.queue = new ItemQueue<>(executor, 32, 2500);
+      this.alive = true;
+    }
+
+    public void execute(ItemAction<CoreStream> task) {
+      if (alive) {
+        if (stream != null) {
+          task.execute(stream);
+        } else {
+          queue.add(task);
+        }
+      } else {
+        task.killDueToReject();
+      }
+    }
+
+    public void ready(CoreStream stream) {
+      if (this.alive) {
+        this.stream = stream;
+        queue.ready(stream);
+      } else {
+        stream.disconnect();
+        queue.unready();
+      }
+    }
+
+    public void kill() {
+      if (this.alive) {
+        alive = false;
+        stream.disconnect();
+        queue.unready();
+        stream = null;
+      }
     }
   }
 }

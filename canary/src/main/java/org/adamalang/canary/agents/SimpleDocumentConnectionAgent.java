@@ -39,7 +39,6 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
 
   @Override
   public void execute() throws Exception {
-    /*
     if (alive.get()) {
       ObjectNode send = Json.newJsonObject();
       send.put("method", "connection/send");
@@ -65,9 +64,8 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
           System.err.println("Send failed: " + code);
         }
       });
-      agent.schedule(this, 2000);
+      agent.schedule(this, (int) (2500 + 2500 * Math.random()));
     }
-    */
   }
 
   public void kickOff() {
@@ -75,7 +73,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
     ObjectNode request = Json.newJsonObject();
     request.put("method", "connection/create");
     request.put("space", "demo1");
-    request.put("key", "key3");
+    request.put("key", "key5");
     request.put("identity", config.identities[(int) (config.identities.length * Math.random())]);
     kickoffStarted = System.currentTimeMillis();
     waitingForFirstData = true;
@@ -93,7 +91,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
       long connectLatency = System.currentTimeMillis() - kickoffStarted;
       System.err.println("Connect latency:" + connectLatency);
       waitingForFirstData = false;
-      agent.schedule(this, 250);
+      agent.schedule(this, 2000);
     }
     System.err.println("Data:" + node.toString());
   }
