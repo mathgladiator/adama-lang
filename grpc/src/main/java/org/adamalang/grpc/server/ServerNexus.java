@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 public class ServerNexus {
   public final MachineIdentity identity;
   public final CoreService service;
+  public final ServerMetrics metrics;
   public final MeteringPubSub meteringPubSub;
   public final DiskMeteringBatchMaker billingBatchMaker;
   public final DeploymentFactoryBase deploymentFactoryBase;
@@ -30,6 +31,7 @@ public class ServerNexus {
   public ServerNexus(
       MachineIdentity identity,
       CoreService service,
+      ServerMetrics metrics,
       DeploymentFactoryBase deploymentFactoryBase,
       Consumer<String> scanForDeployments,
       MeteringPubSub meteringPubSub,
@@ -38,6 +40,7 @@ public class ServerNexus {
       int handlerThreads) {
     this.identity = identity;
     this.service = service;
+    this.metrics = metrics;
     this.deploymentFactoryBase = deploymentFactoryBase;
     this.scanForDeployments = scanForDeployments;
     this.meteringPubSub = meteringPubSub;

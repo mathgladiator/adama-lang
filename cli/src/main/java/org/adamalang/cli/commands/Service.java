@@ -22,6 +22,7 @@ import org.adamalang.gossip.MetricsImpl;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.grpc.server.Server;
+import org.adamalang.grpc.server.ServerMetrics;
 import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
@@ -261,7 +262,7 @@ public class Service {
     scanForDeployments.accept("*");
     ServerNexus nexus =
         new ServerNexus(
-            identity, service, deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, port, 4);
+            identity, service, new ServerMetrics(prometheusMetricsFactory), deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, port, 4);
 
     Server server = new Server(nexus);
     server.start();

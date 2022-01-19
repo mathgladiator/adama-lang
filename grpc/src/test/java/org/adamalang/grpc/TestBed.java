@@ -12,6 +12,7 @@ package org.adamalang.grpc;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.server.Server;
+import org.adamalang.grpc.server.ServerMetrics;
 import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
@@ -73,7 +74,7 @@ public class TestBed implements AutoCloseable {
 
     this.identity = MachineIdentity.fromFile(prefixForLocalhost());
 
-    ServerNexus nexus = new ServerNexus(identity, coreService, base, (space) -> {
+    ServerNexus nexus = new ServerNexus(identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, (space) -> {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();
       }

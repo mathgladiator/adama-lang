@@ -55,7 +55,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         new Key(request.getSpace(), request.getKey()),
         request.getArg(),
         fixEntropy(request.getEntropy()),
-        new Callback<>() {
+        nexus.metrics.server_create.wrap(new Callback<>() {
           @Override
           public void success(Void value) {
             responseObserver.onNext(CreateResponse.newBuilder().setSuccess(true).build());
@@ -68,12 +68,12 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                 CreateResponse.newBuilder().setSuccess(false).setFailureReason(ex.code).build());
             responseObserver.onCompleted();
           }
-        });
+        }));
   }
 
   @Override
   public void reflect(ReflectRequest request, StreamObserver<ReflectResponse> responseObserver) {
-    nexus.service.reflect(new Key(request.getSpace(), request.getKey()), new Callback<>() {
+    nexus.service.reflect(new Key(request.getSpace(), request.getKey()), nexus.metrics.server_reflect.wrap(new Callback<>() {
       @Override
       public void success(String schema) {
         responseObserver.onNext(ReflectResponse.newBuilder().setSchema(schema).build());
@@ -84,12 +84,13 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       public void failure(ErrorCodeException ex) {
         responseObserver.onError(ex);
       }
-    });
+    }));
   }
 
   @Override
   public StreamObserver<StreamMessageClient> multiplexedProtocol(
       StreamObserver<StreamMessageServer> responseObserver) {
+    nexus.metrics.server_handlers_active.up();
     SimpleExecutor executor = executors[rng.nextInt(executors.length)];
     ConcurrentHashMap<Long, CoreStream> streams = new ConcurrentHashMap<>();
     AtomicBoolean alive = new AtomicBoolean(true);
@@ -167,6 +168,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         switch (payload.getByTypeCase()) {
           case CONNECT:
             {
+              nexus.metrics.server_witness_packet_connect.run();
               StreamConnect connect = payload.getConnect();
               nexus.service.connect(
                   new NtClient(connect.getAgent(), connect.getAuthority()),
@@ -248,6 +250,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             }
           case ASK:
             {
+              nexus.metrics.server_witness_packet_can_attach.run();
               stream.canAttach(
                   new Callback<>() {
                     @Override
@@ -287,6 +290,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             }
           case ATTACH:
             {
+              nexus.metrics.server_witness_packet_attach.run();
               StreamAttach attach = payload.getAttach();
               NtAsset asset =
                   new NtAsset(
@@ -333,6 +337,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             }
           case SEND:
             {
+              nexus.metrics.server_witness_packet_send.run();
               StreamSend send = payload.getSend();
               String marker = null;
               if (send.hasMarker()) {
@@ -378,6 +383,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             }
           case DISCONNECT:
             {
+              nexus.metrics.server_witness_packet_disconnect.run();
               stream.disconnect();
               streams.remove(payload.getAct());
               return;
@@ -393,7 +399,10 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
       @Override
       public void onCompleted() {
-        alive.set(false);
+        if (alive.get()) {
+          nexus.metrics.server_handlers_active.down();
+          alive.set(false);
+        }
         executor.execute(
             new NamedRunnable("stream-on-completed") {
               @Override
