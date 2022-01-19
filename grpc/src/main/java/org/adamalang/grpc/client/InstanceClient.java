@@ -293,6 +293,9 @@ public class InstanceClient implements AutoCloseable {
             if (downstream != null) {
               downstream.onCompleted();
             }
+            if (upstream != null) {
+              upstream.onCompleted();
+            }
           }
         });
   }
@@ -435,11 +438,15 @@ public class InstanceClient implements AutoCloseable {
               new NamedRunnable("client-established", target) {
                 @Override
                 public void execute() throws Exception {
-                  InstanceClient.this.upstream = MultiplexObserver.this.upstream;
-                  backoff = 1;
-                  lifecycle.connected(InstanceClient.this);
-                  if (monitor != null) {
-                    upstream.onNext(StreamMessageClient.newBuilder().setMonitor(RequestHeat.newBuilder().build()).build());
+                  if (alive.get()) {
+                    InstanceClient.this.upstream = MultiplexObserver.this.upstream;
+                    backoff = 1;
+                    lifecycle.connected(InstanceClient.this);
+                    if (monitor != null) {
+                      upstream.onNext(StreamMessageClient.newBuilder().setMonitor(RequestHeat.newBuilder().build()).build());
+                    }
+                  } else {
+                    MultiplexObserver.this.upstream.onCompleted();
                   }
                 }
               });
