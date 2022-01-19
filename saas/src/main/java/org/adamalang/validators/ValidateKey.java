@@ -15,8 +15,11 @@ import org.adamalang.common.Validators;
 
 public class ValidateKey {
   public static void validate(String key) throws ErrorCodeException {
+    if (key.length() == 0) {
+      throw new ErrorCodeException(ErrorCodes.API_INVALID_KEY_EMPTY);
+    }
     if (!Validators.simple(key, 511)) {
-      throw new ErrorCodeException(ErrorCodes.API_INVALID_KEY);
+      throw new ErrorCodeException(ErrorCodes.API_INVALID_KEY_NOT_SIMPLE);
     }
   }
 }
