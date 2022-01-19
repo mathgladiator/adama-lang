@@ -26,5 +26,9 @@ public interface MetricsFactory {
   /** produce a counter */
   Runnable counter(String name);
 
+  /** produce an inflight measurement */
   Inflight inflight(String name);
+
+  /** produce a monitor for an item action queue */
+  ItemActionMonitor makeItemActionMonitor(String name);
 }

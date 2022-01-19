@@ -11,6 +11,7 @@ package org.adamalang.grpc.client.sm;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.metrics.ItemActionMonitor;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.client.InstanceClient;
@@ -126,12 +127,13 @@ public class Connection {
 
   /** send the remote peer a message */
   public void send(String channel, String marker, String message, SeqCallback callback) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_send.start();
     base.executor.execute(
         new NamedRunnable("connection-send", key.space, key.key, channel) {
           @Override
           public void execute() throws Exception {
             bufferOrExecute(
-                new ItemAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED) {
+                new ItemAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED, mInstance) {
                   @Override
                   protected void executeNow(Remote remote) {
                     remote.send(channel, marker, message, callback);
@@ -155,13 +157,14 @@ public class Connection {
   }
 
   public void canAttach(AskAttachmentCallback callback) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_can_attach.start();
     base.executor.execute(
         new NamedRunnable("connection-can-attach", key.space, key.key) {
           @Override
           public void execute() throws Exception {
             bufferOrExecute(
                 new ItemAction<Remote>(
-                    ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED) {
+                    ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED, mInstance) {
                   @Override
                   protected void executeNow(Remote item) {
                     item.canAttach(callback);
@@ -184,13 +187,14 @@ public class Connection {
       String md5,
       String sha384,
       SeqCallback callback) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_attach.start();
     base.executor.execute(
         new NamedRunnable("connection-attach", key.space, key.key, id) {
           @Override
           public void execute() throws Exception {
             bufferOrExecute(
                 new ItemAction<Remote>(
-                    ErrorCodes.API_ATTACH_TIMEOUT, ErrorCodes.API_ATTACH_REJECTED) {
+                    ErrorCodes.API_ATTACH_TIMEOUT, ErrorCodes.API_ATTACH_REJECTED, mInstance) {
                   @Override
                   protected void executeNow(Remote item) {
                     item.attach(id, name, contentType, size, md5, sha384, callback);
@@ -286,6 +290,7 @@ public class Connection {
               backoffConnectPeer);
           backoffConnectPeer = (int) (backoffConnectPeer + Math.random() * backoffConnectPeer + 1);
         } else {
+          base.metrics.client_too_many_failures_disconnected_by_peer.run();
           handle_onError(ErrorCodes.STATE_MACHINE_UNABLE_TO_RECONNECT);
         }
         return;
@@ -335,6 +340,7 @@ public class Connection {
           backoffFindInstance);
       backoffFindInstance = (int) (backoffFindInstance + Math.random() * backoffFindInstance + 1);
     } else {
+      base.metrics.client_too_many_failures_finding_client.run();
       handle_onError(ErrorCodes.STATE_MACHINE_TOO_MANY_FAILURES);
     }
   }
@@ -389,9 +395,10 @@ public class Connection {
 
   private void fireFindClient() {
     state = Label.FindingClientWait;
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_find_client.start();
     base.mesh.find(
         target,
-        new ItemAction<>(ErrorCodes.INSTANCE_FINDER_TIMEOUT, ErrorCodes.INSTANCE_FINDER_REJECTED) {
+        new ItemAction<>(ErrorCodes.INSTANCE_FINDER_TIMEOUT, ErrorCodes.INSTANCE_FINDER_REJECTED, mInstance) {
           @Override
           protected void executeNow(InstanceClient client) {
             base.executor.execute(

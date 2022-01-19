@@ -9,21 +9,47 @@
  */
 package org.adamalang.grpc.client;
 
+import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.Inflight;
+import org.adamalang.common.metrics.ItemActionMonitor;
 import org.adamalang.common.metrics.MetricsFactory;
 
 public class ClientMetrics {
-  public final Runnable client_notify_deploy_attempt;
+  public final Inflight client_state_machines_alive;
+
+  public final ItemActionMonitor client_notify_deployment;
   public final Runnable client_notify_deploy_success;
   public final Runnable client_notify_deploy_failure_do;
   public final Runnable client_notify_deploy_failure_find;
-  public final Inflight client_state_machines_alive;
+
+  public final ItemActionMonitor client_find_client;
+  public final Runnable client_too_many_failures_finding_client;
+
+  public final ItemActionMonitor client_billing_exchange;
+
+  public final ItemActionMonitor client_reflection;
+  public final ItemActionMonitor client_create;
+  public final ItemActionMonitor client_connection_send;
+  public final ItemActionMonitor client_connection_attach;
+  public final ItemActionMonitor client_connection_can_attach;
+
+  public final Runnable client_too_many_failures_disconnected_by_peer;
+
 
   public ClientMetrics(MetricsFactory factory) {
-    client_notify_deploy_attempt = factory.counter("client_notify_deploy_attempt");
     client_notify_deploy_success = factory.counter("client_notify_deploy_success");
     client_notify_deploy_failure_do = factory.counter("client_notify_deploy_failure_do");
     client_notify_deploy_failure_find = factory.counter("client_notify_deploy_failure_find");
     client_state_machines_alive = factory.inflight("client_state_machines_alive");
+    client_too_many_failures_finding_client = factory.counter("client_too_many_failures_finding_client");
+    client_notify_deployment = factory.makeItemActionMonitor("client_notify_deployment");
+    client_billing_exchange = factory.makeItemActionMonitor("client_billing_exchange");
+    client_reflection = factory.makeItemActionMonitor("client_reflection");
+    client_create = factory.makeItemActionMonitor("client_create");
+    client_connection_send = factory.makeItemActionMonitor("client_connection_send");
+    client_connection_attach = factory.makeItemActionMonitor("client_connection_attach");
+    client_connection_can_attach = factory.makeItemActionMonitor("client_connection_can_attach");
+    client_find_client = factory.makeItemActionMonitor("client_find_client");
+    client_too_many_failures_disconnected_by_peer = factory.counter("client_too_many_failures_disconnected_by_peer");
   }
 }

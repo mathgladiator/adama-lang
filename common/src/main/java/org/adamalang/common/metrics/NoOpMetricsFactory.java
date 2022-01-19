@@ -99,4 +99,29 @@ public class NoOpMetricsFactory implements MetricsFactory {
       }
     };
   }
+
+  @Override
+  public ItemActionMonitor makeItemActionMonitor(String name) {
+    return new ItemActionMonitor() {
+      @Override
+      public ItemActionMonitorInstance start() {
+        return new ItemActionMonitorInstance() {
+          @Override
+          public void executed() {
+
+          }
+
+          @Override
+          public void rejected() {
+
+          }
+
+          @Override
+          public void timeout() {
+
+          }
+        };
+      }
+    };
+  }
 }

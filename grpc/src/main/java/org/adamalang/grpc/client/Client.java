@@ -11,6 +11,7 @@ package org.adamalang.grpc.client;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.common.metrics.ItemActionMonitor;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.client.routing.RoutingEngine;
@@ -69,8 +70,8 @@ public class Client {
   }
 
   public void notifyDeployment(String target, String space) {
-    metrics.client_notify_deploy_attempt.run();
-    finder.find(target, new ItemAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_notify_deployment.start();
+    finder.find(target, new ItemAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED, mInstance) {
       @Override
       protected void executeNow(InstanceClient client) {
         client.scanDeployments(space, new ScanDeploymentCallback() {
@@ -94,9 +95,10 @@ public class Client {
   }
 
   public void randomBillingExchange(BillingStream billing) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_billing_exchange.start();
     engine.random(target -> {
       if (target != null) {
-        finder.find(target, new ItemAction<InstanceClient>(ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED) {
+        finder.find(target, new ItemAction<InstanceClient>(ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED, mInstance) {
           @Override
           protected void executeNow(InstanceClient item) {
             item.startBillingExchange(billing);
@@ -118,9 +120,10 @@ public class Client {
   }
 
   public void reflect(String space, String key, Callback<String> callback) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_reflection.start();
     engine.get(space, key, (target) -> {
       if (target != null) {
-        finder.find(target, new ItemAction<>(ErrorCodes.API_REFLECT_TIMEOUT, ErrorCodes.API_REFLECT_REJECTED) {
+        finder.find(target, new ItemAction<>(ErrorCodes.API_REFLECT_TIMEOUT, ErrorCodes.API_REFLECT_REJECTED, mInstance) {
           @Override
           protected void executeNow(InstanceClient client) {
             client.reflect(space, key, new Callback<String>() {
@@ -148,9 +151,10 @@ public class Client {
   }
 
   public void create(String agent, String authority, String space, String key, String entropy, String arg, CreateCallback callback) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_create.start();
     engine.get(space, key, (target) -> {
       if (target != null) {
-        finder.find(target, new ItemAction<>(ErrorCodes.API_CREATE_TIMEOUT, ErrorCodes.API_CREATE_REJECTED) {
+        finder.find(target, new ItemAction<>(ErrorCodes.API_CREATE_TIMEOUT, ErrorCodes.API_CREATE_REJECTED, mInstance) {
           @Override
           protected void executeNow(InstanceClient client) {
             client.create(agent, authority, space, key, entropy, arg, callback);

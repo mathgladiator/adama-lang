@@ -73,7 +73,7 @@ public class InstanceClientFinderTests {
         CountDownLatch latchFound = new CountDownLatch(1);
         finder.find(
             "127.0.0.1:20005",
-            new ItemAction<>(100, 200) {
+            new ItemAction<>(100, 200, new NoOpMetricsFactory().makeItemActionMonitor("x").start()) {
               @Override
               protected void executeNow(InstanceClient item) {
                 latchFound.countDown();

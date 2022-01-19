@@ -9,16 +9,20 @@
  */
 package org.adamalang.common.queue;
 
+import org.adamalang.common.metrics.ItemActionMonitor;
+
 /** an unit of work that sits within a queue for processing */
 public abstract class ItemAction<T> {
   private final int errorTimeout;
   private final int errorRejected;
+  private final ItemActionMonitor.ItemActionMonitorInstance monitor;
   private boolean alive;
 
-  public ItemAction(int errorTimeout, int errorRejected) {
+  public ItemAction(int errorTimeout, int errorRejected, ItemActionMonitor.ItemActionMonitorInstance monitor) {
     this.alive = true;
     this.errorTimeout = errorTimeout;
     this.errorRejected = errorRejected;
+    this.monitor = monitor;
   }
 
   /** is the queue action alive */
@@ -31,6 +35,7 @@ public abstract class ItemAction<T> {
     if (alive) {
       executeNow(item);
       alive = false;
+      monitor.executed();
     }
   }
 
@@ -41,6 +46,7 @@ public abstract class ItemAction<T> {
     if (alive) {
       alive = false;
       failure(errorTimeout);
+      monitor.timeout();
     }
   }
 
@@ -50,6 +56,7 @@ public abstract class ItemAction<T> {
     if (alive) {
       alive = false;
       failure(errorRejected);
+      monitor.rejected();
     }
   }
 }

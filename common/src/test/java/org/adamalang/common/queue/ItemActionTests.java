@@ -9,17 +9,21 @@
  */
 package org.adamalang.common.queue;
 
+import org.adamalang.common.metrics.ItemActionMonitor;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ItemActionTests {
+
+  private static ItemActionMonitor.ItemActionMonitorInstance INSTANCE = new NoOpMetricsFactory().makeItemActionMonitor("x").start();
   @Test
   public void normal() {
     AtomicInteger x = new AtomicInteger(0);
     ItemAction<String> action =
-        new ItemAction<>(100, 200) {
+        new ItemAction<>(100, 200, INSTANCE) {
           @Override
           protected void executeNow(String item) {
             x.incrementAndGet();
@@ -40,7 +44,7 @@ public class ItemActionTests {
   public void timeout() {
     AtomicInteger x = new AtomicInteger(0);
     ItemAction<String> action =
-        new ItemAction<>(100, 200) {
+        new ItemAction<>(100, 200, INSTANCE) {
           @Override
           protected void executeNow(String item) {
             x.incrementAndGet();
@@ -65,7 +69,7 @@ public class ItemActionTests {
   public void rejected() {
     AtomicInteger x = new AtomicInteger(0);
     ItemAction<String> action =
-        new ItemAction<String>(100, 1000) {
+        new ItemAction<String>(100, 1000, INSTANCE) {
           @Override
           protected void executeNow(String item) {
             x.incrementAndGet();

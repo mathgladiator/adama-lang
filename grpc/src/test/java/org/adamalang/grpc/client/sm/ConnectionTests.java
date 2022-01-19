@@ -157,7 +157,7 @@ public class ConnectionTests {
         CountDownLatch created = new CountDownLatch(1);
         finder.find(
             "127.0.0.1:30001",
-            new ItemAction<>(100, 200) {
+            new ItemAction<>(100, 200, new NoOpMetricsFactory().makeItemActionMonitor("x").start()) {
               @Override
               protected void executeNow(InstanceClient client) {
                 System.err.println("executing create");
