@@ -28,8 +28,17 @@ public class CoreMetrics {
   public final CallbackMonitor deploy;
   public final CallbackMonitor createPrivateView;
   public final CallbackMonitor reflect;
+  public final CallbackMonitor catch_up_patch;
   public final Inflight inflight_streams;
   public final Inflight inflight_documents;
+  public final CallbackMonitor document_invalidate;
+  public final CallbackMonitor document_send;
+  public final CallbackMonitor document_attach;
+  public final CallbackMonitor document_apply;
+  public final CallbackMonitor document_disconnect;
+  public final CallbackMonitor document_connect;
+  public final CallbackMonitor document_expire;
+  public final Runnable document_queue_full;
 
   public CoreMetrics(MetricsFactory metricsFactory) {
     serviceCreate = metricsFactory.makeCallbackMonitor("core_service_create");
@@ -45,7 +54,18 @@ public class CoreMetrics {
     deploy = metricsFactory.makeCallbackMonitor("core_deploy");
     createPrivateView = metricsFactory.makeCallbackMonitor("core_create_private_view");
     reflect = metricsFactory.makeCallbackMonitor("core_reflect");
+    catch_up_patch = metricsFactory.makeCallbackMonitor("core_catch_up_patch");
+    document_invalidate = metricsFactory.makeCallbackMonitor("core_document_invalidate");
+    document_send = metricsFactory.makeCallbackMonitor("core_document_send");
+    document_attach = metricsFactory.makeCallbackMonitor("core_document_attach");
+    document_apply = metricsFactory.makeCallbackMonitor("core_document_apply");
+    document_disconnect = metricsFactory.makeCallbackMonitor("core_document_disconnect");
+    document_connect = metricsFactory.makeCallbackMonitor("core_document_connect");
+    document_expire = metricsFactory.makeCallbackMonitor("core_document_expire");
+
     inflight_streams = metricsFactory.inflight("core_inflight_streams");
     inflight_documents = metricsFactory.inflight("core_inflight_documents");
+
+    document_queue_full = metricsFactory.counter("core_document_full");
   }
 }

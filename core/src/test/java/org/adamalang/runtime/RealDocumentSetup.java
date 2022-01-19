@@ -141,6 +141,21 @@ public class RealDocumentSetup {
     }
   }
 
+  public static class AssertNoResponse implements Callback<Integer> {
+    public AssertNoResponse() {
+    }
+
+    @Override
+    public void success(Integer actual) {
+      Assert.fail();
+    }
+
+    @Override
+    public void failure(ErrorCodeException ex) {
+      Assert.fail();
+    }
+  }
+
   public static class ArrayPerspective implements Perspective {
     public final ArrayList<String> datum;
 

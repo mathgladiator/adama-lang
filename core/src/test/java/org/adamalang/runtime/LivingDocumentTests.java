@@ -493,6 +493,26 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void too_many_messages() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { }",
+            null,
+            false);
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
+    ((DumbDataService) setup.document.base.service).dropPatches = true;
+
+
+    for (int k = 0; k <= 128; k++) {
+      setup.document.send( NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertNoResponse());
+    }
+    for (int j = 0; j < 10; j++) {
+      setup.document.send(
+          NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(123004));
+    }
+  }
+
+  @Test
   @SuppressWarnings("unchecked")
   public void message_abort() throws Exception {
     final var setup =

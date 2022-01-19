@@ -51,6 +51,7 @@ public class DumbDataService implements DataService {
   private Object tree;
   private String data;
   private Consumer<RemoteDocumentUpdate> updates;
+  public boolean dropPatches = false;
 
   public DumbDataService(Consumer<RemoteDocumentUpdate> updates) {
     this.tree = new HashMap<String, Object>();
@@ -79,6 +80,9 @@ public class DumbDataService implements DataService {
 
   @Override
   public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
+    if (dropPatches) {
+      return;
+    }
     updates.accept(patch);
     JsonStreamReader reader = new JsonStreamReader(patch.redo);
     tree = JsonAlgebra.merge(tree, reader.readJavaTree());

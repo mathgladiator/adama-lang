@@ -52,7 +52,7 @@ public class DurableLivingDocument {
     this.currentFactory = currentFactory;
     this.base = base;
     this.requiresInvalidateMilliseconds = null;
-    this.pending = new ArrayDeque<>(2);
+    this.pending = new ArrayDeque<>(8);
     this.inflightPatch = false;
     this.catastrophicFailureOccurred = false;
     this.lastExpire = 0;
@@ -190,6 +190,7 @@ public class DurableLivingDocument {
   private void catastrophicFailure() {
     document.__nukeViews();
     base.map.remove(key);
+    base.metrics.inflight_documents.down();
     catastrophicFailureOccurred = true;
     while (pending.size() > 0) {
       pending
@@ -203,11 +204,6 @@ public class DurableLivingDocument {
     try {
       final var change = document.__transact(request.request, currentFactory);
       inflightPatch = true;
-      if (request.cleanupTest) {
-        if (document.__canRemoveFromMemory()) {
-          scheduleCleanup();
-        }
-      }
       if (change.update.requiresFutureInvalidation) {
         this.requiresInvalidateMilliseconds = change.update.whenToInvalidateMilliseconds;
       }
@@ -221,13 +217,18 @@ public class DurableLivingDocument {
                   new NamedRunnable("execute-now-patch-callback") {
                     @Override
                     public void execute() throws Exception {
-                      change.complete();
                       finishSuccessDataServicePatch(
                           change.update.requiresFutureInvalidation
                               ? change.update.whenToInvalidateMilliseconds
                               : null,
                           request.callback,
                           change.update.seq);
+                      change.complete();
+                      if (request.cleanupTest) {
+                        if (document.__canRemoveFromMemory()) {
+                          scheduleCleanup();
+                        }
+                      }
                     }
                   });
             }
@@ -249,7 +250,7 @@ public class DurableLivingDocument {
                             key,
                             DataService.ComputeMethod.HeadPatch,
                             document.__seq.get(),
-                            new Callback<>() {
+                            base.metrics.catch_up_patch.wrap(new Callback<>() {
                               @Override
                               public void success(DataService.LocalDocumentChange value) {
                                 base.executor.execute(
@@ -267,7 +268,7 @@ public class DurableLivingDocument {
                                 request.callback.failure(ex);
                                 catastrophicFailure();
                               }
-                            });
+                            }));
                       } else {
                         request.callback.failure(ex);
                         catastrophicFailure();
@@ -351,7 +352,12 @@ public class DurableLivingDocument {
       return;
     }
     if (inflightPatch) {
-      pending.add(request);
+      if (pending.size() >= 128) {
+        base.metrics.document_queue_full.run();
+        callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_QUEUE_BUSY_TOO_MANY_PENDING_ITEMS));
+      } else {
+        pending.add(request);
+      }
     } else {
       executeNow(request);
     }
@@ -389,7 +395,7 @@ public class DurableLivingDocument {
   public void invalidate(Callback<Integer> callback) {
     final var request = forge("invalidate", null);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), callback, false);
+    ingest(NtClient.NO_ONE, request.toString(), base.metrics.document_invalidate.wrap(callback), false);
   }
 
   public int getCodeCost() {
@@ -413,13 +419,13 @@ public class DurableLivingDocument {
     request.writeObjectFieldIntro("limit");
     request.writeLong(limit);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), callback, true);
+    ingest(NtClient.NO_ONE, request.toString(), base.metrics.document_expire.wrap(callback), true);
   }
 
   public void connect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("connect", who);
     request.endObject();
-    ingest(who, request.toString(), callback, false);
+    ingest(who, request.toString(), base.metrics.document_connect.wrap(callback), false);
   }
 
   public boolean isConnected(final NtClient who) {
@@ -457,7 +463,7 @@ public class DurableLivingDocument {
   public void disconnect(final NtClient who, Callback<Integer> callback) {
     final var request = forge("disconnect", who);
     request.endObject();
-    ingest(who, request.toString(), callback, true);
+    ingest(who, request.toString(), base.metrics.document_disconnect.wrap(callback), true);
   }
 
   public void send(
@@ -476,7 +482,7 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("message");
     writer.injectJson(message);
     writer.endObject();
-    ingest(who, writer.toString(), callback, false);
+    ingest(who, writer.toString(), base.metrics.document_send.wrap(callback), false);
   }
 
   public void apply(NtClient who, String patch, Callback<Integer> callback) {
@@ -484,7 +490,7 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("patch");
     writer.injectJson(patch);
     writer.endObject();
-    ingest(who, writer.toString(), callback, false);
+    ingest(who, writer.toString(), base.metrics.document_apply.wrap(callback), false);
   }
 
   public boolean canAttach(NtClient who) {
@@ -496,7 +502,7 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("asset");
     writer.writeNtAsset(asset);
     writer.endObject();
-    ingest(who, writer.toString(), callback, false);
+    ingest(who, writer.toString(), base.metrics.document_attach.wrap(callback), false);
   }
 
   public String json() {
