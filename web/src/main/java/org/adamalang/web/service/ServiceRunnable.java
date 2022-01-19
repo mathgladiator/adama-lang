@@ -14,6 +14,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.contracts.ServiceBase;
 
 import java.util.concurrent.CountDownLatch;
@@ -22,14 +23,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServiceRunnable implements Runnable {
   private final WebConfig webConfig;
+  private final WebMetrics metrics;
   private final ServiceBase base;
   private final CountDownLatch ready;
   private final AtomicBoolean started;
   private Channel channel;
   private boolean stopped;
 
-  public ServiceRunnable(final WebConfig webConfig, ServiceBase base) {
+  public ServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base) {
     this.webConfig = webConfig;
+    this.metrics = metrics;
     this.base = base;
     started = new AtomicBoolean();
     channel = null;
@@ -56,7 +59,7 @@ public class ServiceRunnable implements Runnable {
             final var b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .childHandler(new Initializer(webConfig, base));
+                .childHandler(new Initializer(webConfig, metrics, base));
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             // TODO: log information out

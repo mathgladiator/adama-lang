@@ -22,11 +22,13 @@ import org.slf4j.LoggerFactory;
 public class Initializer extends ChannelInitializer<SocketChannel> {
   private final Logger logger;
   private final WebConfig webConfig;
+  private final WebMetrics metrics;
   private final ServiceBase base;
 
-  public Initializer(final WebConfig webConfig, final ServiceBase base) {
+  public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base) {
     this.logger = LoggerFactory.getLogger("Initializer");
     this.webConfig = webConfig;
+    this.metrics = metrics;
     this.base = base;
   }
 
@@ -46,7 +48,7 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
             false,
             true,
             webConfig.timeoutWebsocketHandshake));
-    pipeline.addLast(new WebHandler(webConfig, base.html()));
-    pipeline.addLast(new WebSocketHandler(webConfig, base));
+    pipeline.addLast(new WebHandler(webConfig, metrics, base.html()));
+    pipeline.addLast(new WebSocketHandler(webConfig, metrics, base));
   }
 }

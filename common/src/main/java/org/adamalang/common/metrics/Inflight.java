@@ -7,15 +7,13 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.web.service;
+package org.adamalang.common.metrics;
 
-import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.web.service.mocks.MockServiceBase;
-import org.junit.Test;
+/** for measuring a resource which may be active in memory */
+public interface Inflight {
+  /** bump the resource up */
+  public void up();
 
-public class InitializerTests {
-  @Test
-  public void sanity() throws Exception {
-    new Initializer(WebConfigTests.mockConfig(WebConfigTests.Scenario.Dev), new WebMetrics(new NoOpMetricsFactory()), new MockServiceBase());
-  }
+  /** bump the resource down */
+  public void down();
 }

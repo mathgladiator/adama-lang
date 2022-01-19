@@ -41,6 +41,7 @@ import org.adamalang.web.contracts.HtmlHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
+import org.adamalang.web.service.WebMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,7 +139,7 @@ public class Service {
     co.intOf("http_port", 9089);
     WebConfig webConfig = new WebConfig(co);
     ServiceBase serviceBase = ServiceBase.JUST_HTML(handler);
-    final var runnable = new ServiceRunnable(webConfig, serviceBase);
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase);
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
@@ -340,7 +341,7 @@ public class Service {
     });
     */
 
-    final var runnable = new ServiceRunnable(webConfig, serviceBase);
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase);
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {

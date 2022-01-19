@@ -11,6 +11,7 @@ package org.adamalang.web.service;
 
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
 import org.adamalang.web.service.mocks.MockServiceBase;
@@ -22,7 +23,7 @@ public class WebHandlerTests {
     EventLoopGroup group = new NioEventLoopGroup();
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ProdScope);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, base);
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base);
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);

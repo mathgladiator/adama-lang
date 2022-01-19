@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(WebSocketHandler.class);
   private final WebConfig webConfig;
+  private final WebMetrics metrics;
   private final ServiceBase base;
   private boolean ended;
   private ServiceConnection connection;
@@ -40,8 +41,9 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   private AtomicLong latency;
   private boolean closed;
 
-  public WebSocketHandler(final WebConfig webConfig, final ServiceBase base) {
+  public WebSocketHandler(final WebConfig webConfig, WebMetrics metrics, final ServiceBase base) {
     this.webConfig = webConfig;
+    this.metrics = metrics;
     this.base = base;
     this.connection = null;
     this.ended = false;
@@ -49,6 +51,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     this.created = System.currentTimeMillis();
     this.latency = new AtomicLong();
     this.closed = false;
+    metrics.websockets_active.up();
   }
 
   @Override
@@ -59,11 +62,13 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   private void end(ChannelHandlerContext ctx) {
     final var connToKill = clean();
     if (connToKill != null) {
+      metrics.websockets_active_child_connections.down();
       connToKill.kill();
     }
     if (!closed) {
       ctx.close();
       closed = true;
+      metrics.websockets_active.down();
     }
   }
 
@@ -98,16 +103,19 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
 
       // establish the service
       connection = base.establish(context);
+      metrics.websockets_active_child_connections.up();
 
       // start the heartbeat loop
       Runnable heartbeatLoop =
           () -> {
             if (connection != null && !connection.keepalive()) {
+              metrics.websockets_heartbeat_failure.run();
               ctx.writeAndFlush(
                   new TextWebSocketFrame(
                       "{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}"));
               end(ctx);
             } else {
+              metrics.websockets_send_heartbeat.run();
               ctx.writeAndFlush(
                   new TextWebSocketFrame(
                       "{\"ping\":"

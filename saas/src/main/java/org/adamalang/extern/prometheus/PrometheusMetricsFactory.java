@@ -14,10 +14,7 @@ import io.prometheus.client.Gauge;
 import io.prometheus.client.Histogram;
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.hotspot.*;
-import org.adamalang.common.metrics.CallbackMonitor;
-import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.common.metrics.RequestResponseMonitor;
-import org.adamalang.common.metrics.StreamMonitor;
+import org.adamalang.common.metrics.*;
 
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -189,6 +186,22 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter start = Counter.build().name("raw_" + name).help("Raw counter for " + name).register();
     return () -> {
       start.inc();
+    };
+  }
+
+  @Override
+  public Inflight inflight(String name) {
+    Gauge inflight = Gauge.build().name("inf_" + name).help("Inflight measure for " + name).register();
+    return new Inflight() {
+      @Override
+      public void up() {
+        inflight.inc();
+      }
+
+      @Override
+      public void down() {
+        inflight.dec();
+      }
     };
   }
 }

@@ -47,5 +47,7 @@ public class NoOpMetricsFactoryTests {
     instance.failure(new ErrorCodeException(-1));
     Assert.assertEquals(3, sum.get());
     factory.counter("z").run();
+    factory.inflight("z").down();
+    factory.inflight("z").up();
   }
 }

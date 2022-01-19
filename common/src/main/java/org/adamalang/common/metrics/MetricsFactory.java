@@ -25,4 +25,6 @@ public interface MetricsFactory {
 
   /** produce a counter */
   Runnable counter(String name);
+
+  Inflight inflight(String name);
 }

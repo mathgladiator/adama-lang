@@ -84,4 +84,19 @@ public class NoOpMetricsFactory implements MetricsFactory {
   public Runnable counter(String name) {
     return () -> {};
   }
+
+  @Override
+  public Inflight inflight(String name) {
+    return new Inflight() {
+      @Override
+      public void up() {
+
+      }
+
+      @Override
+      public void down() {
+
+      }
+    };
+  }
 }

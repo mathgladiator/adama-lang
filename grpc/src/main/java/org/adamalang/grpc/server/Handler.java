@@ -91,7 +91,6 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   public StreamObserver<StreamMessageClient> multiplexedProtocol(
       StreamObserver<StreamMessageServer> responseObserver) {
     SimpleExecutor executor = executors[rng.nextInt(executors.length)];
-
     ConcurrentHashMap<Long, CoreStream> streams = new ConcurrentHashMap<>();
     AtomicBoolean alive = new AtomicBoolean(true);
     responseObserver.onNext(

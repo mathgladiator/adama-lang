@@ -14,6 +14,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
 import org.adamalang.web.service.mocks.MockServiceBase;
@@ -29,7 +30,7 @@ public class WebSocketHandlerTests {
     EventLoopGroup group = new NioEventLoopGroup();
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.DevScope);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, base);
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base);
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);

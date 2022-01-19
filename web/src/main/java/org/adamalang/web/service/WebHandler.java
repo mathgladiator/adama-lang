@@ -20,10 +20,12 @@ import java.nio.charset.StandardCharsets;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebConfig webConfig;
+  private final WebMetrics metrics;
   private final HtmlHandler html;
 
-  public WebHandler(WebConfig webConfig, HtmlHandler html) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, HtmlHandler html) {
     this.webConfig = webConfig;
+    this.metrics = metrics;
     this.html = html;
   }
 
