@@ -39,6 +39,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
 
   @Override
   public void execute() throws Exception {
+    /*
     if (alive.get()) {
       ObjectNode send = Json.newJsonObject();
       send.put("method", "connection/send");
@@ -66,6 +67,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
       });
       agent.schedule(this, 2000);
     }
+    */
   }
 
   public void kickOff() {

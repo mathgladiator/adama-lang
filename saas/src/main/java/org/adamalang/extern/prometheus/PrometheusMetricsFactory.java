@@ -142,6 +142,43 @@ public class PrometheusMetricsFactory implements MetricsFactory {
   }
 
   @Override
+  public ItemActionMonitor makeItemActionMonitor(String name) {
+    Counter start = Counter.build().name("im_" + name + "_start").help("Item Monitor started for " + name).register();
+    Counter executed = Counter.build().name("im_" + name + "_success").help("Item Monitor executed for " + name).register();
+    Counter rejected = Counter.build().name("im_" + name + "_failure").help("Item Monitor rejected for " + name).register();
+    Counter timeout = Counter.build().name("im_" + name + "_failure").help("Item Monitor timeout for " + name).register();
+    Gauge inflight = Gauge.build().name("im_" + name + "_inflight").help("Inprogress Item Monitors for " + name).register();
+    Histogram latency = Histogram.build().name("im_" + name + "_latency").help("Latency Item Monitor to succeed " + name).register();
+    return () -> {
+      start.inc();
+      inflight.inc();
+      Histogram.Timer timer = latency.startTimer();
+      return new ItemActionMonitor.ItemActionMonitorInstance() {
+        void fin() {
+          inflight.dec();
+          timer.close();
+        }
+        @Override
+        public void executed() {
+          executed.inc();
+          fin();
+        }
+
+        @Override
+        public void rejected() {
+          rejected.inc();
+          fin();
+        }
+
+        @Override
+        public void timeout() {
+          timeout.inc();
+          fin();
+        }
+      };
+    };
+  }
+  @Override
   public CallbackMonitor makeCallbackMonitor(String name) {
     Counter start = Counter.build().name("cb_" + name + "_start").help("Callback started for " + name).register();
     Counter success = Counter.build().name("cb_" + name + "_success").help("Callback success for " + name).register();

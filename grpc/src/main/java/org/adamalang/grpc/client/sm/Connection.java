@@ -12,6 +12,7 @@ package org.adamalang.grpc.client.sm;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.metrics.ItemActionMonitor;
+import org.adamalang.common.metrics.StreamMonitor;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.client.InstanceClient;
@@ -273,6 +274,8 @@ public class Connection {
   }
 
   private void handle_onDisconnected() {
+    queue.unready();
+    foundRemote = null;
     switch (state) {
       case FoundClientConnectingWait:
       case FoundClientConnectingTryNewTarget:
@@ -346,6 +349,7 @@ public class Connection {
   }
 
   private void fireConnectRemote() {
+    StreamMonitor.StreamMonitorInstance mInstance = base.metrics.client_open_document.start();
     foundClient.connect(
         agent,
         authority,
@@ -354,6 +358,7 @@ public class Connection {
         new Events() {
           @Override
           public void connected(Remote remote) {
+            mInstance.progress();
             base.executor.execute(
                 new NamedRunnable("connection-connected") {
                   @Override
@@ -366,11 +371,13 @@ public class Connection {
 
           @Override
           public void delta(String data) {
+            mInstance.progress();
             events.delta(data);
           }
 
           @Override
           public void error(int code) {
+            mInstance.failure(code);
             base.executor.execute(
                 new NamedRunnable("connection-error") {
                   @Override
@@ -382,6 +389,7 @@ public class Connection {
 
           @Override
           public void disconnected() {
+            mInstance.finish();
             base.executor.execute(
                 new NamedRunnable("connection-disconnected") {
                   @Override

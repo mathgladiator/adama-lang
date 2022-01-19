@@ -9,10 +9,7 @@
  */
 package org.adamalang.grpc.client;
 
-import org.adamalang.common.metrics.CallbackMonitor;
-import org.adamalang.common.metrics.Inflight;
-import org.adamalang.common.metrics.ItemActionMonitor;
-import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.metrics.*;
 
 public class ClientMetrics {
   public final Inflight client_state_machines_alive;
@@ -35,6 +32,7 @@ public class ClientMetrics {
 
   public final Runnable client_too_many_failures_disconnected_by_peer;
 
+  public final StreamMonitor client_open_document;
 
   public ClientMetrics(MetricsFactory factory) {
     client_notify_deploy_success = factory.counter("client_notify_deploy_success");
@@ -51,5 +49,6 @@ public class ClientMetrics {
     client_connection_can_attach = factory.makeItemActionMonitor("client_connection_can_attach");
     client_find_client = factory.makeItemActionMonitor("client_find_client");
     client_too_many_failures_disconnected_by_peer = factory.counter("client_too_many_failures_disconnected_by_peer");
+    client_open_document = factory.makeStreamMonitor("client_open_document");
   }
 }
