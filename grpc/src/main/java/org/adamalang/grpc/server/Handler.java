@@ -72,7 +72,20 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   }
 
   @Override
-  public void reflect(ReflectRequest request, StreamObserver<ReflectResponse> responseObserver) {}
+  public void reflect(ReflectRequest request, StreamObserver<ReflectResponse> responseObserver) {
+    nexus.service.reflect(new Key(request.getSpace(), request.getKey()), new Callback<>() {
+      @Override
+      public void success(String schema) {
+        responseObserver.onNext(ReflectResponse.newBuilder().setSchema(schema).build());
+        responseObserver.onCompleted();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responseObserver.onError(ex);
+      }
+    });
+  }
 
   @Override
   public StreamObserver<StreamMessageClient> multiplexedProtocol(
