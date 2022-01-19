@@ -31,22 +31,19 @@ public class Connection {
   private final String authority;
   private final Key key;
   private final SimpleEvents events;
-
+  // the buffer of actions to execute once we have a remote
+  private final ItemQueue<Remote> queue;
   // the state machine registers itself with the routing table which will tell it where to go
   Runnable unsubscribeFromRouting;
   boolean routingAlive;
-
   // the state machine is complicated because of the two stages.
   // first, we have to find a client
   // second, then using that client we have to connect
   private Label state;
-
   // the target provided by the routing table
   private String target;
   // the client found via the finder
   private InstanceClient foundClient;
-  // the buffer of actions to execute once we have a remote
-  private final ItemQueue<Remote> queue;
   // the remote to talk to the remote peer's connection
   private Remote foundRemote;
   // how long to wait on a failure to find an instance
@@ -128,13 +125,15 @@ public class Connection {
 
   /** send the remote peer a message */
   public void send(String channel, String marker, String message, SeqCallback callback) {
-    ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_send.start();
+    ItemActionMonitor.ItemActionMonitorInstance mInstance =
+        base.metrics.client_connection_send.start();
     base.executor.execute(
         new NamedRunnable("connection-send", key.space, key.key, channel) {
           @Override
           public void execute() throws Exception {
             bufferOrExecute(
-                new ItemAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED, mInstance) {
+                new ItemAction<>(
+                    ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED, mInstance) {
                   @Override
                   protected void executeNow(Remote remote) {
                     remote.send(channel, marker, message, callback);
@@ -158,14 +157,17 @@ public class Connection {
   }
 
   public void canAttach(AskAttachmentCallback callback) {
-    ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_can_attach.start();
+    ItemActionMonitor.ItemActionMonitorInstance mInstance =
+        base.metrics.client_connection_can_attach.start();
     base.executor.execute(
         new NamedRunnable("connection-can-attach", key.space, key.key) {
           @Override
           public void execute() throws Exception {
             bufferOrExecute(
                 new ItemAction<Remote>(
-                    ErrorCodes.API_CAN_ATTACH_TIMEOUT, ErrorCodes.API_CAN_ATTACH_REJECTED, mInstance) {
+                    ErrorCodes.API_CAN_ATTACH_TIMEOUT,
+                    ErrorCodes.API_CAN_ATTACH_REJECTED,
+                    mInstance) {
                   @Override
                   protected void executeNow(Remote item) {
                     item.canAttach(callback);
@@ -188,7 +190,8 @@ public class Connection {
       String md5,
       String sha384,
       SeqCallback callback) {
-    ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_attach.start();
+    ItemActionMonitor.ItemActionMonitorInstance mInstance =
+        base.metrics.client_connection_attach.start();
     base.executor.execute(
         new NamedRunnable("connection-attach", key.space, key.key, id) {
           @Override
@@ -406,7 +409,8 @@ public class Connection {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_find_client.start();
     base.mesh.find(
         target,
-        new ItemAction<>(ErrorCodes.INSTANCE_FINDER_TIMEOUT, ErrorCodes.INSTANCE_FINDER_REJECTED, mInstance) {
+        new ItemAction<>(
+            ErrorCodes.INSTANCE_FINDER_TIMEOUT, ErrorCodes.INSTANCE_FINDER_REJECTED, mInstance) {
           @Override
           protected void executeNow(InstanceClient client) {
             base.executor.execute(

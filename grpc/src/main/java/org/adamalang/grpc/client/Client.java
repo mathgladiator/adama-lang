@@ -18,7 +18,10 @@ import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.adamalang.grpc.client.sm.Connection;
 import org.adamalang.grpc.client.sm.ConnectionBase;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 public class Client {
@@ -62,57 +65,72 @@ public class Client {
   }
 
   public void getDeploymentTargets(String space, Consumer<String> stream) {
-    engine.list(space, targets -> finder.findCapacity(targets, (set) -> {
-      for (String target : set) {
-        stream.accept(target);
-      }
-    }, 3));
+    engine.list(
+        space,
+        targets ->
+            finder.findCapacity(
+                targets,
+                (set) -> {
+                  for (String target : set) {
+                    stream.accept(target);
+                  }
+                },
+                3));
   }
 
   public void notifyDeployment(String target, String space) {
-    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_notify_deployment.start();
-    finder.find(target, new ItemAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED, mInstance) {
-      @Override
-      protected void executeNow(InstanceClient client) {
-        client.scanDeployments(space, new ScanDeploymentCallback() {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance =
+        metrics.client_notify_deployment.start();
+    finder.find(
+        target,
+        new ItemAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED, mInstance) {
           @Override
-          public void success() {
-            metrics.client_notify_deploy_success.run();
-          }
+          protected void executeNow(InstanceClient client) {
+            client.scanDeployments(
+                space,
+                new ScanDeploymentCallback() {
+                  @Override
+                  public void success() {
+                    metrics.client_notify_deploy_success.run();
+                  }
 
-          @Override
-          public void failure() {
-            metrics.client_notify_deploy_failure_do.run();
-          }
-        });
-      }
-
-      @Override
-      protected void failure(int code) {
-        metrics.client_notify_deploy_failure_find.run();
-      }
-    });
-  }
-
-  public void randomBillingExchange(BillingStream billing) {
-    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_billing_exchange.start();
-    engine.random(target -> {
-      if (target != null) {
-        finder.find(target, new ItemAction<InstanceClient>(ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED, mInstance) {
-          @Override
-          protected void executeNow(InstanceClient item) {
-            item.startBillingExchange(billing);
+                  @Override
+                  public void failure() {
+                    metrics.client_notify_deploy_failure_do.run();
+                  }
+                });
           }
 
           @Override
           protected void failure(int code) {
-            billing.failure(code);
+            metrics.client_notify_deploy_failure_find.run();
           }
         });
-      } else {
-        billing.failure(ErrorCodes.API_BILLING_FAILED_FINDING_RANDOM_HOST);
-      }
-    });
+  }
+
+  public void randomBillingExchange(BillingStream billing) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_billing_exchange.start();
+    engine.random(
+        target -> {
+          if (target != null) {
+            finder.find(
+                target,
+                new ItemAction<InstanceClient>(
+                    ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED, mInstance) {
+                  @Override
+                  protected void executeNow(InstanceClient item) {
+                    item.startBillingExchange(billing);
+                  }
+
+                  @Override
+                  protected void failure(int code) {
+                    billing.failure(code);
+                  }
+                });
+          } else {
+            billing.failure(ErrorCodes.API_BILLING_FAILED_FINDING_RANDOM_HOST);
+          }
+        });
   }
 
   public Consumer<Collection<String>> getTargetPublisher() {
@@ -121,54 +139,76 @@ public class Client {
 
   public void reflect(String space, String key, Callback<String> callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_reflection.start();
-    engine.get(space, key, (target) -> {
-      if (target != null) {
-        finder.find(target, new ItemAction<>(ErrorCodes.API_REFLECT_TIMEOUT, ErrorCodes.API_REFLECT_REJECTED, mInstance) {
-          @Override
-          protected void executeNow(InstanceClient client) {
-            client.reflect(space, key, new Callback<String>() {
-              @Override
-              public void success(String value) {
-                callback.success(value);
-              }
+    engine.get(
+        space,
+        key,
+        (target) -> {
+          if (target != null) {
+            finder.find(
+                target,
+                new ItemAction<>(
+                    ErrorCodes.API_REFLECT_TIMEOUT, ErrorCodes.API_REFLECT_REJECTED, mInstance) {
+                  @Override
+                  protected void executeNow(InstanceClient client) {
+                    client.reflect(
+                        space,
+                        key,
+                        new Callback<String>() {
+                          @Override
+                          public void success(String value) {
+                            callback.success(value);
+                          }
 
-              @Override
-              public void failure(ErrorCodeException ex) {
-                callback.failure(ex);
-              }
-            });
-          }
+                          @Override
+                          public void failure(ErrorCodeException ex) {
+                            callback.failure(ex);
+                          }
+                        });
+                  }
 
-          @Override
-          protected void failure(int code) {
-            callback.failure(new ErrorCodeException(code));
+                  @Override
+                  protected void failure(int code) {
+                    callback.failure(new ErrorCodeException(code));
+                  }
+                });
+          } else {
+            callback.failure(new ErrorCodeException(ErrorCodes.API_REFLECT_CANT_FIND_CAPACITY));
           }
         });
-      } else {
-        callback.failure(new ErrorCodeException(ErrorCodes.API_REFLECT_CANT_FIND_CAPACITY));
-      }
-    });
   }
 
-  public void create(String agent, String authority, String space, String key, String entropy, String arg, CreateCallback callback) {
+  public void create(
+      String agent,
+      String authority,
+      String space,
+      String key,
+      String entropy,
+      String arg,
+      CreateCallback callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_create.start();
-    engine.get(space, key, (target) -> {
-      if (target != null) {
-        finder.find(target, new ItemAction<>(ErrorCodes.API_CREATE_TIMEOUT, ErrorCodes.API_CREATE_REJECTED, mInstance) {
-          @Override
-          protected void executeNow(InstanceClient client) {
-            client.create(agent, authority, space, key, entropy, arg, callback);
-          }
+    engine.get(
+        space,
+        key,
+        (target) -> {
+          if (target != null) {
+            finder.find(
+                target,
+                new ItemAction<>(
+                    ErrorCodes.API_CREATE_TIMEOUT, ErrorCodes.API_CREATE_REJECTED, mInstance) {
+                  @Override
+                  protected void executeNow(InstanceClient client) {
+                    client.create(agent, authority, space, key, entropy, arg, callback);
+                  }
 
-          @Override
-          protected void failure(int code) {
-            callback.error(code);
+                  @Override
+                  protected void failure(int code) {
+                    callback.error(code);
+                  }
+                });
+          } else {
+            callback.error(ErrorCodes.API_CREATE_CANT_FIND_CAPACITY);
           }
         });
-      } else {
-        callback.error(ErrorCodes.API_CREATE_CANT_FIND_CAPACITY);
-      }
-    });
   }
 
   public Connection connect(
