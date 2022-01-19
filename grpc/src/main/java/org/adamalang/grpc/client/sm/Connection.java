@@ -82,6 +82,7 @@ public class Connection {
           @Override
           public void execute() throws Exception {
             if (!routingAlive) {
+              base.metrics.client_state_machines_alive.up();
               routingAlive = true;
               events.connected();
               base.engine.subscribe(
@@ -210,6 +211,8 @@ public class Connection {
           @Override
           public void execute() throws Exception {
             if (routingAlive) {
+              base.metrics.client_state_machines_alive.down();
+              routingAlive = false;
               events.disconnected();
               switch (state) {
                 case Connected:
@@ -226,7 +229,6 @@ public class Connection {
                 unsubscribeFromRouting.run();
                 unsubscribeFromRouting = null;
               }
-              routingAlive = false;
             }
           }
         });
@@ -256,6 +258,7 @@ public class Connection {
   private void handle_onError(int code) {
     remoteDoDisconnect();
     if (routingAlive) {
+      base.metrics.client_state_machines_alive.down();
       routingAlive = false;
       if (unsubscribeFromRouting != null) {
         unsubscribeFromRouting.run();

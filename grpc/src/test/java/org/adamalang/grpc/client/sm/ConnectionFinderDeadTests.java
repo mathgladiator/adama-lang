@@ -79,7 +79,7 @@ public class ConnectionFinderDeadTests {
 
         gotNewTarget.run();
         newTargetBroadcast.run();
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         connection.open();
         ranStart.run();
@@ -165,7 +165,7 @@ public class ConnectionFinderDeadTests {
         engineDirect.integrate("127.0.0.1:32005", Collections.singleton("space"));
         gotNewTarget.run();
         newTargetBroadcast.run();
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         connection.open();
         ranStart.run();

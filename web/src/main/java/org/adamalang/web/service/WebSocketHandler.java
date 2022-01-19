@@ -66,9 +66,9 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       connToKill.kill();
     }
     if (!closed) {
-      ctx.close();
       closed = true;
       metrics.websockets_active.down();
+      ctx.close();
     }
   }
 

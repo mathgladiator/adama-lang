@@ -170,7 +170,7 @@ public class Client {
   public Connection connect(
       String agent, String authority, String space, String key, SimpleEvents events) {
     ConnectionBase base =
-        new ConnectionBase(engine, finder, executors[rng.nextInt(executors.length)]);
+        new ConnectionBase(metrics, engine, finder, executors[rng.nextInt(executors.length)]);
     Connection connection = new Connection(base, agent, authority, space, key, events);
     connection.open();
     return connection;

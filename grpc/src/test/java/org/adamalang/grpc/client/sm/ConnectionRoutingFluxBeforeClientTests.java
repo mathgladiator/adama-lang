@@ -79,7 +79,7 @@ public class ConnectionRoutingFluxBeforeClientTests {
         Runnable integrateFinalHost = directExector.latchAtAndDrain(9, 1);
         Runnable executeDisconnect = connectionExecutor.latchAtAndDrain(9, 1);
         Runnable broadcastFinalGain = directExector.latchAtAndDrain(10, 2);
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();

@@ -119,7 +119,7 @@ public class ConnectionTrafficShift {
         Runnable executeConnectAgain = finderExecutor.latchAtAndDrain(17, 1);
         Runnable pumpEvents = finderExecutor.latchAtAndDrain(19, 2);
         Runnable completeConnection = connectionExecutor.latchAtAndDrain(12, 1);
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();

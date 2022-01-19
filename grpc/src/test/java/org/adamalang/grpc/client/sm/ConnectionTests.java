@@ -72,7 +72,7 @@ public class ConnectionTests {
         InstanceClientFinder finder = new InstanceClientFinder(metrics, null, server.identity, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
         finder.sync(new TreeSet<>(Collections.singleton("127.0.0.1:30000")));
         Assert.assertTrue(primed.await(15000, TimeUnit.MILLISECONDS));
-        ConnectionBase base = new ConnectionBase(engine, finder, server.clientExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engine, finder, server.clientExecutor);
         CountDownLatch latch = new CountDownLatch(1);
         AtomicInteger codeFound = new AtomicInteger(0);
         new Connection(
@@ -188,7 +188,7 @@ public class ConnectionTests {
               }
             });
         Assert.assertTrue(created.await(1000, TimeUnit.MILLISECONDS));
-        ConnectionBase base = new ConnectionBase(engine, finder, server.clientExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engine, finder, server.clientExecutor);
         CountDownLatch latch = new CountDownLatch(1);
         CountDownLatch latchD = new CountDownLatch(1);
         Connection connection =

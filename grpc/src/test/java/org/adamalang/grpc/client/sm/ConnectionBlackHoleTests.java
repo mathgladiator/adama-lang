@@ -105,7 +105,7 @@ public class ConnectionBlackHoleTests {
         Runnable broadcastNewTarget = directExector.latchAtAndDrain(5, 1);
         Runnable connectionFoundNull = connectionExecutor.latchAtAndDrain(8, 1);
         Runnable connectionGotDisconnect = connectionExecutor.latchAtAndDrain(9, 1);
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
@@ -245,7 +245,7 @@ public class ConnectionBlackHoleTests {
         Runnable sendDisconnect = finderExecutor.latchAtAndDrain(11, 1);
         Runnable gotDisconnectSignalBack = finderExecutor.latchAtAndDrain(12, 1);
         Runnable connectionGotDisconnect = connectionExecutor.latchAtAndDrain(10, 1);
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
@@ -397,7 +397,7 @@ public class ConnectionBlackHoleTests {
         Runnable connectionGotBroadcast = connectionExecutor.latchAtAndDrain(10, 1);
         Runnable gotDisconnectSignalBack = finderExecutor.latchAtAndDrain(12, 1);
         Runnable connectionGotDisconnect = connectionExecutor.latchAtAndDrain(11, 1);
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();

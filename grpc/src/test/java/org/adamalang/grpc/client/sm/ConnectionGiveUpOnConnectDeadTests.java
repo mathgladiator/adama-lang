@@ -123,7 +123,7 @@ public class ConnectionGiveUpOnConnectDeadTests {
         engineDirect.integrate("127.0.0.1:15005", Collections.singleton("space"));
         subscribed.run();
         gotNewTarget.run();
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();

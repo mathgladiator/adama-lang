@@ -9,6 +9,7 @@
  */
 package org.adamalang.grpc.client;
 
+import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 
 public class ClientMetrics {
@@ -16,11 +17,13 @@ public class ClientMetrics {
   public final Runnable client_notify_deploy_success;
   public final Runnable client_notify_deploy_failure_do;
   public final Runnable client_notify_deploy_failure_find;
+  public final Inflight client_state_machines_alive;
 
   public ClientMetrics(MetricsFactory factory) {
     client_notify_deploy_attempt = factory.counter("client_notify_deploy_attempt");
     client_notify_deploy_success = factory.counter("client_notify_deploy_success");
     client_notify_deploy_failure_do = factory.counter("client_notify_deploy_failure_do");
     client_notify_deploy_failure_find = factory.counter("client_notify_deploy_failure_find");
+    client_state_machines_alive = factory.inflight("client_state_machines_alive");
   }
 }

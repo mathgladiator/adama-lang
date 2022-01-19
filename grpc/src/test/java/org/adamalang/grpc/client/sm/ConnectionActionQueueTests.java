@@ -101,7 +101,7 @@ public class ConnectionActionQueueTests {
         Runnable connectionComplete = connectionExecutor.latchAtAndDrain(6, 1);
         Runnable sends = finderExecutor.latchAtAndDrain(23, 17);
         Runnable results = finderExecutor.latchAtAndDrain(40, 17);
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         engineDirect.integrate("127.0.0.1:21005", Collections.singleton("space"));
         integrate.run();
         integrateBroadcast.run();

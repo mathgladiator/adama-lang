@@ -119,7 +119,7 @@ public class ConnectionFailOverTests {
         Runnable foundConnection = connectionExecutor.latchAtAndDrain(13, 1);
         Runnable connectionComplete = connectionExecutor.latchAtAndDrain(14, 1);
 
-        ConnectionBase base = new ConnectionBase(engineDirect, finder, connectionExecutor);
+        ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         Connection connection = new Connection(base, "who", "dev", "space", "key", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
