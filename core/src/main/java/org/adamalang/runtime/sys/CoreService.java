@@ -52,7 +52,7 @@ public class CoreService {
     bases = new DocumentThreadBase[nThreads];
     this.alive = new AtomicBoolean(true);
     for (int k = 0; k < nThreads; k++) {
-      bases[k] = new DocumentThreadBase(dataService, SimpleExecutor.create("core-" + k), time);
+      bases[k] = new DocumentThreadBase(dataService, metrics, SimpleExecutor.create("core-" + k), time);
       bases[k].kickOffInventory();
     }
     rng = new Random();
@@ -282,28 +282,22 @@ public class CoreService {
                           base,
                           metrics.documentLoad.wrap(new Callback<>() {
                             @Override
-                            public void success(DurableLivingDocument documentMade) {
+                            public void success(DurableLivingDocument document) {
                               // it was found, let's try to put it into memory
                               base.executor.execute(
                                   new NamedRunnable("document-made") {
                                     @Override
                                     public void execute() throws Exception {
-                                      // attempt to put
-                                      DurableLivingDocument documentPut =
-                                          base.map.put(key, documentMade);
-                                      if (documentPut == null) {
-                                        // the put was successful, so use the newly made document
-                                        documentPut = documentMade;
-                                      }
+                                      base.map.put(key, document);
+                                      metrics.inflight_documents.up();
                                       for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
-                                        callbackToSignal.success(documentPut);
+                                        callbackToSignal.success(document);
                                       }
-                                      DurableLivingDocument _putForClosure = documentPut;
                                       base.executor.schedule(
                                           new NamedRunnable("post-load-reconcile") {
                                             @Override
                                             public void execute() throws Exception {
-                                              _putForClosure.reconcileClients();
+                                              document.reconcileClients();
                                             }
                                           },
                                           base.getMillisecondsAfterLoadForReconciliation());

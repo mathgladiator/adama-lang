@@ -10,11 +10,13 @@
 package org.adamalang.runtime.sys.metering;
 
 import org.adamalang.common.*;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.sys.PredictiveInventory;
@@ -37,7 +39,7 @@ public class MeteringStateMachineTests {
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
           new DocumentThreadBase(
-              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME),
+              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
                 public void execute(NamedRunnable command) {
@@ -86,7 +88,7 @@ public class MeteringStateMachineTests {
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
           new DocumentThreadBase(
-              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME),
+              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
                 public void execute(NamedRunnable command) {
@@ -173,7 +175,7 @@ public class MeteringStateMachineTests {
     for (int k = 0; k < bases.length; k++) {
       bases[k] =
           new DocumentThreadBase(
-              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME),
+              new InMemoryDataService((x) -> x.run(), TimeSource.REAL_TIME), new CoreMetrics(new NoOpMetricsFactory()),
               new SimpleExecutor() {
                 @Override
                 public void execute(NamedRunnable command) {

@@ -10,12 +10,14 @@
 package org.adamalang.support.testgen;
 
 import org.adamalang.common.TimeSource;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
@@ -52,7 +54,7 @@ public class PhaseRun {
         new DumbDataService.DumbDurableLivingDocumentAcquire();
     try {
       Key key = new Key("0", "0");
-      DocumentThreadBase base = new DocumentThreadBase(dds, SimpleExecutor.NOW, time);
+      DocumentThreadBase base = new DocumentThreadBase(dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
       DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "0", monitor, base, acquire);
       DurableLivingDocument doc = acquire.get();
       outputFile.append("CPU:").append(doc.getCodeCost()).append("\n");

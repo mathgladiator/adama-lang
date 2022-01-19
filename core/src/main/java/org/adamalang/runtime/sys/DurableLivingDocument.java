@@ -447,7 +447,7 @@ public class DurableLivingDocument {
           public void execute() throws Exception {
             if (document.__canRemoveFromMemory()) {
               base.map.remove(key);
-
+              base.metrics.inflight_documents.down();
             }
           }
         },

@@ -29,6 +29,7 @@ public class CoreMetrics {
   public final CallbackMonitor createPrivateView;
   public final CallbackMonitor reflect;
   public final Inflight inflight_streams;
+  public final Inflight inflight_documents;
 
   public CoreMetrics(MetricsFactory metricsFactory) {
     serviceCreate = metricsFactory.makeCallbackMonitor("core_service_create");
@@ -45,5 +46,6 @@ public class CoreMetrics {
     createPrivateView = metricsFactory.makeCallbackMonitor("core_create_private_view");
     reflect = metricsFactory.makeCallbackMonitor("core_reflect");
     inflight_streams = metricsFactory.inflight("core_inflight_streams");
+    inflight_documents = metricsFactory.inflight("core_inflight_documents");
   }
 }

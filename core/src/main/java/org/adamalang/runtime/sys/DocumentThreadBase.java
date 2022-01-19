@@ -25,6 +25,7 @@ import java.util.function.Consumer;
  */
 public class DocumentThreadBase {
   public final DataService service;
+  public final CoreMetrics metrics;
   public final SimpleExecutor executor;
   public final HashMap<Key, DurableLivingDocument> map;
   public final HashMap<Key, ArrayList<Callback<DurableLivingDocument>>> mapInsertsInflight;
@@ -36,8 +37,9 @@ public class DocumentThreadBase {
   private int millisecondsToPerformInventory;
   private int millisecondsToPerformInventoryJitter;
 
-  public DocumentThreadBase(DataService service, SimpleExecutor executor, TimeSource time) {
+  public DocumentThreadBase(DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
     this.service = service;
+    this.metrics = metrics;
     this.executor = executor;
     this.time = time;
     this.map = new HashMap<>();

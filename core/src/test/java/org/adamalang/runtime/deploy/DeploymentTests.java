@@ -11,10 +11,12 @@ package org.adamalang.runtime.deploy;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.DocumentThreadBase;
 import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.runtime.sys.LivingDocument;
@@ -54,7 +56,7 @@ public class DeploymentTests {
 
               MockInstantDataService dataService = new MockInstantDataService();
               DocumentThreadBase docBase =
-                  new DocumentThreadBase(dataService, SimpleExecutor.NOW, new MockTime());
+                  new DocumentThreadBase(dataService, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, new MockTime());
               DurableLivingDocument.fresh(
                   new Key("space", "key"),
                   factory,
