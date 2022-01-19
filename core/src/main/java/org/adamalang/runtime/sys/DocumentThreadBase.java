@@ -9,16 +9,14 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
@@ -29,6 +27,7 @@ public class DocumentThreadBase {
   public final DataService service;
   public final SimpleExecutor executor;
   public final HashMap<Key, DurableLivingDocument> map;
+  public final HashMap<Key, ArrayList<Callback<DurableLivingDocument>>> mapInsertsInflight;
   public final TimeSource time;
   private final HashMap<String, PredictiveInventory> inventoryBySpace;
   private int millisecondsForCleanupCheck;
@@ -42,6 +41,7 @@ public class DocumentThreadBase {
     this.executor = executor;
     this.time = time;
     this.map = new HashMap<>();
+    this.mapInsertsInflight = new HashMap<>();
     this.inventoryBySpace = new HashMap<>();
     this.millisecondsForCleanupCheck = 2500;
     this.millisecondsAfterLoadForReconciliation = 2500;

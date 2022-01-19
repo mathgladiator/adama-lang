@@ -16,6 +16,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.extern.ProtectedUUID;
 import org.adamalang.grpc.client.contracts.CreateCallback;
 import org.adamalang.grpc.client.contracts.SeqCallback;
 import org.adamalang.grpc.client.contracts.SimpleEvents;
@@ -137,7 +138,7 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(AuthorityCreateRequest request, ClaimResultResponder responder) {
-    String authority = UUID.randomUUID().toString();
+    String authority = ProtectedUUID.generate();
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         Authorities.createAuthority(nexus.dataBaseManagement, request.who.id, authority);

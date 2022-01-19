@@ -17,6 +17,7 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -154,8 +155,6 @@ public class CoreService {
                                 new NamedRunnable("loaded-factory", key.space) {
                                   @Override
                                   public void execute() throws Exception {
-                                    base.map.put(key, document);
-                                    document.scheduleCleanup();
                                     callback.success(null);
                                   }
                                 });
@@ -195,7 +194,7 @@ public class CoreService {
 
           @Override
           public void failure(ErrorCodeException exOriginal) {
-            if (exOriginal.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
+            if (exOriginal.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED && canRetry) {
               livingDocumentFactoryFactory.fetch(
                   key,
                   metrics.factoryFetchConnect.wrap(new Callback<>() {
@@ -244,7 +243,7 @@ public class CoreService {
   }
 
   private void load(Key key, Callback<DurableLivingDocument> callbackReal) {
-    Callback<DurableLivingDocument> callback = metrics.serviceLoad.wrap(callbackReal);
+    Callback<DurableLivingDocument> callbackToQueue = metrics.serviceLoad.wrap(callbackReal);
 
     // bind to the thread
     int threadId = key.hashCode() % bases.length;
@@ -259,63 +258,78 @@ public class CoreService {
             // is document already loaded?
             DurableLivingDocument documentFetch = base.map.get(key);
             if (documentFetch != null) {
-              callback.success(documentFetch);
+              callbackToQueue.success(documentFetch);
               return;
             }
 
-            // let's load the factory and pull from source
-            livingDocumentFactoryFactory.fetch(
-                key,
-                metrics.factoryFetchLoad.wrap(new Callback<>() {
-                  @Override
-                  public void success(LivingDocumentFactory factory) {
-                    // pull from data source
-                    DurableLivingDocument.load(
-                        key,
-                        factory,
-                        null,
-                        base,
-                        metrics.documentLoad.wrap(new Callback<>() {
-                          @Override
-                          public void success(DurableLivingDocument documentMade) {
-                            // it was found, let's try to put it into memory
-                            base.executor.execute(
-                                new NamedRunnable("document-made") {
-                                  @Override
-                                  public void execute() throws Exception {
-                                    // attempt to put
-                                    DurableLivingDocument documentPut =
-                                        base.map.putIfAbsent(key, documentMade);
-                                    if (documentPut == null) {
-                                      // the put was successful, so use the newly made document
-                                      documentPut = documentMade;
+            ArrayList<Callback<DurableLivingDocument>> callbacks = base.mapInsertsInflight.get(key);
+            if (callbacks == null) {
+              callbacks = new ArrayList<>();
+              callbacks.add(callbackToQueue);
+              base.mapInsertsInflight.put(key, callbacks);
+
+              // let's load the factory and pull from source
+              livingDocumentFactoryFactory.fetch(
+                  key,
+                  metrics.factoryFetchLoad.wrap(new Callback<>() {
+                    @Override
+                    public void success(LivingDocumentFactory factory) {
+                      // pull from data source
+                      DurableLivingDocument.load(
+                          key,
+                          factory,
+                          null,
+                          base,
+                          metrics.documentLoad.wrap(new Callback<>() {
+                            @Override
+                            public void success(DurableLivingDocument documentMade) {
+                              // it was found, let's try to put it into memory
+                              base.executor.execute(
+                                  new NamedRunnable("document-made") {
+                                    @Override
+                                    public void execute() throws Exception {
+                                      // attempt to put
+                                      DurableLivingDocument documentPut =
+                                          base.map.put(key, documentMade);
+                                      if (documentPut == null) {
+                                        // the put was successful, so use the newly made document
+                                        documentPut = documentMade;
+                                      }
+                                      for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
+                                        callbackToSignal.success(documentPut);
+                                      }
+                                      DurableLivingDocument _putForClosure = documentPut;
+                                      base.executor.schedule(
+                                          new NamedRunnable("post-load-reconcile") {
+                                            @Override
+                                            public void execute() throws Exception {
+                                              _putForClosure.reconcileClients();
+                                            }
+                                          },
+                                          base.getMillisecondsAfterLoadForReconciliation());
                                     }
-                                    callback.success(documentPut);
-                                    DurableLivingDocument _putForClosure = documentPut;
-                                    base.executor.schedule(
-                                        new NamedRunnable("post-load-reconcile") {
-                                          @Override
-                                          public void execute() throws Exception {
-                                            _putForClosure.reconcileClients();
-                                          }
-                                        },
-                                        base.getMillisecondsAfterLoadForReconciliation());
-                                  }
-                                });
-                          }
+                                  });
+                            }
 
-                          @Override
-                          public void failure(ErrorCodeException ex) {
-                            callback.failure(ex);
-                          }
-                        }));
-                  }
+                            @Override
+                            public void failure(ErrorCodeException ex) {
+                              for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
+                                callbackToSignal.failure(ex);
+                              }
+                            }
+                          }));
+                    }
 
-                  @Override
-                  public void failure(ErrorCodeException ex) {
-                    callback.failure(ex);
-                  }
-                }));
+                    @Override
+                    public void failure(ErrorCodeException ex) {
+                      for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
+                        callbackToSignal.failure(ex);
+                      }
+                    }
+                  }));
+            } else {
+              callbacks.add(metrics.documentPiggyBack.wrap(callbackToQueue));
+            }
           }
         });
   }

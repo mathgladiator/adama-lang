@@ -51,7 +51,7 @@ public class ServiceImplicitCreateTests {
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
       dataService.assertLogAt(0, "INIT:space/key:0->{\"__constructed\":true}");
-      Assert.assertTrue(dataService.getLogAt(2).contains("\"__connection_id\":1,\"x\":42"));
+      Assert.assertTrue(dataService.getLogAt(3).contains("\"__connection_id\":1,\"x\":42"));
     } finally {
       service.shutdown();
     }
@@ -71,20 +71,19 @@ public class ServiceImplicitCreateTests {
       MockStreamback streamback2 = new MockStreamback();
       Runnable latchClient1 = streamback1.latchAt(2);
       Runnable latchClient2 = streamback2.latchAt(2);
-      Runnable bothAsking = dataService.latchAt(2);
-      Runnable bothCreating = dataService.latchAt(4);
-      Runnable latchData = realDataService.latchLogAt(5);
+      Runnable onlyOneAsks = dataService.latchAt(1);
+      Runnable bothTryToCreate = dataService.latchAt(3);
+      Runnable latchData = realDataService.latchLogAt(6);
       dataService.pause();
       service.connect(NtClient.NO_ONE, KEY, streamback1);
       service.connect(NtClient.NO_ONE, KEY, streamback2);
-      bothAsking.run();
+      onlyOneAsks.run();
       dataService.once();
-      dataService.once();
-      bothCreating.run();
+      bothTryToCreate.run();
       dataService.unpause();
+      latchData.run();
       latchClient1.run();
       latchClient2.run();
-      latchData.run();
       Assert.assertEquals("STATUS:Connected", streamback1.get(0));
       Assert.assertEquals("STATUS:Connected", streamback2.get(0));
     } finally {
@@ -139,14 +138,13 @@ public class ServiceImplicitCreateTests {
     try {
       MockStreamback streamback1 = new MockStreamback();
       MockStreamback streamback2 = new MockStreamback();
-      Runnable bothAsking = dataService.latchAt(2);
-      Runnable bothCreating = dataService.latchAt(4);
-      Runnable latchData = realDataService.latchLogAt(5);
+      Runnable bothAskingOnlyOne = dataService.latchAt(1);
+      Runnable bothCreating = dataService.latchAt(3);
+      Runnable latchData = realDataService.latchLogAt(4);
       dataService.pause();
       service.connect(NtClient.NO_ONE, KEY, streamback1);
       service.connect(NtClient.NO_ONE, KEY, streamback2);
-      bothAsking.run();
-      dataService.once();
+      bothAskingOnlyOne.run();
       dataService.once();
       bothCreating.run();
       dataService.unpause();

@@ -19,8 +19,8 @@ public class CanaryConfig {
   public CanaryConfig() {
     this.endpoint = "http://adama-lb-us-east-2-2073537616.us-east-2.elb.amazonaws.com/s";
     this.identities = new String[] {"eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiIxIiwiaXNzIjoiYWRhbWEifQ.eqo02oPRxALrmHUKRaUNHZWyr2cPLkP470gzuE1EjYEn1-VZDlYlh5cz-osZbdBSxuwC2nBKA7-_399kfCO-2A"};
-    this.connections = 2;
-    this.documentsPerConnectionMinimum = 2;
-    this.documentsPerConnectionMaxmimum = 5;
+    this.connections = 500;
+    this.documentsPerConnectionMinimum = 5;
+    this.documentsPerConnectionMaxmimum = 10;
   }
 }
