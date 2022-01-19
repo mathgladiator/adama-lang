@@ -43,10 +43,7 @@ public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
   @Override
   public void finish(String json) {
     metrics.finish();
-    executor.execute(
-        () -> {
-          map.remove(key);
-        });
+    executor.execute(() -> map.remove(key));
     responder.finish(json);
   }
 

@@ -47,6 +47,6 @@ public interface RootHandler {
 
   public AttachmentUploadHandler handle(AttachmentStartRequest request, SimpleResponder responder);
 
-public void disconnect();
+  public void disconnect();
 
 }

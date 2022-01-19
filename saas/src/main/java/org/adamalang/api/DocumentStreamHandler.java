@@ -11,12 +11,12 @@ package org.adamalang.api;
 
 
 public interface DocumentStreamHandler {
-public void bind();
+  public void bind();
 
   public void handle(ConnectionSendRequest request, SimpleResponder responder);
 
   public void handle(ConnectionEndRequest request, SimpleResponder responder);
 
-public void disconnect(long id);
+  public void disconnect(long id);
 
 }

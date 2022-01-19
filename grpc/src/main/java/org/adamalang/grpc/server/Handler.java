@@ -108,15 +108,24 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       @Override
       public void onNext(StreamMessageClient payload) {
         if (payload.hasMonitor()) {
-          executor.schedule(new NamedRunnable("measure-heat") {
-            @Override
-            public void execute() throws Exception {
-              if (alive.get()) {
-                responseObserver.onNext(StreamMessageServer.newBuilder().setHeat(HeatPayload.newBuilder().setCpu(MachineHeat.cpu()).setMemory(MachineHeat.memory()).build()).build());
-                executor.schedule(this, 100);
-              }
-            }
-          }, 250);
+          executor.schedule(
+              new NamedRunnable("measure-heat") {
+                @Override
+                public void execute() throws Exception {
+                  if (alive.get()) {
+                    responseObserver.onNext(
+                        StreamMessageServer.newBuilder()
+                            .setHeat(
+                                HeatPayload.newBuilder()
+                                    .setCpu(MachineHeat.cpu())
+                                    .setMemory(MachineHeat.memory())
+                                    .build())
+                            .build());
+                    executor.schedule(this, 100);
+                  }
+                }
+              },
+              250);
           return;
         }
         long id = payload.getId();
@@ -145,202 +154,222 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         }
         switch (payload.getByTypeCase()) {
           case CONNECT:
-            StreamConnect connect = payload.getConnect();
-            nexus.service.connect(
-                new NtClient(connect.getAgent(), connect.getAuthority()),
-                new Key(connect.getSpace(), connect.getKey()),
-                new Streamback() {
-                  @Override
-                  public void onSetupComplete(CoreStream stream) {
-                    streams.put(id, stream);
-                  }
+            {
+              StreamConnect connect = payload.getConnect();
+              nexus.service.connect(
+                  new NtClient(connect.getAgent(), connect.getAuthority()),
+                  new Key(connect.getSpace(), connect.getKey()),
+                  new Streamback() {
+                    @Override
+                    public void onSetupComplete(CoreStream stream) {
+                      executor.execute(
+                          new NamedRunnable("connected") {
+                            @Override
+                            public void execute() throws Exception {
+                              if (alive.get()) {
+                                streams.put(id, stream);
+                              } else {
+                                stream.disconnect();
+                              }
+                            }
+                          });
+                    }
 
-                  @Override
-                  public void status(StreamStatus status) {
-                    StreamStatusCode code =
-                        status == StreamStatus.Connected
-                            ? StreamStatusCode.Connected
-                            : StreamStatusCode.Disconnected;
-                    executor.execute(
-                        new NamedRunnable("handler-send-status") {
-                          @Override
-                          public void execute() throws Exception {
-                            responseObserver.onNext(
-                                StreamMessageServer.newBuilder()
-                                    .setId(id)
-                                    .setStatus(
-                                        org.adamalang.grpc.proto.StreamStatus.newBuilder()
-                                            .setCode(code)
-                                            .build())
-                                    .build());
-                            if (status == StreamStatus.Disconnected) {
+                    @Override
+                    public void status(StreamStatus status) {
+                      StreamStatusCode code =
+                          status == StreamStatus.Connected
+                              ? StreamStatusCode.Connected
+                              : StreamStatusCode.Disconnected;
+                      executor.execute(
+                          new NamedRunnable("handler-send-status") {
+                            @Override
+                            public void execute() throws Exception {
+                              responseObserver.onNext(
+                                  StreamMessageServer.newBuilder()
+                                      .setId(id)
+                                      .setStatus(
+                                          org.adamalang.grpc.proto.StreamStatus.newBuilder()
+                                              .setCode(code)
+                                              .build())
+                                      .build());
+                              if (status == StreamStatus.Disconnected) {
+                                streams.remove(id);
+                              }
+                            }
+                          });
+                    }
+
+                    @Override
+                    public void next(String data) {
+                      executor.execute(
+                          new NamedRunnable("handler-send-data") {
+                            @Override
+                            public void execute() throws Exception {
+                              responseObserver.onNext(
+                                  StreamMessageServer.newBuilder()
+                                      .setId(id)
+                                      .setData(StreamData.newBuilder().setDelta(data).build())
+                                      .build());
+                            }
+                          });
+                    }
+
+                    @Override
+                    public void failure(ErrorCodeException exception) {
+                      executor.execute(
+                          new NamedRunnable("handler-send-failure") {
+                            @Override
+                            public void execute() throws Exception {
+                              responseObserver.onNext(
+                                  StreamMessageServer.newBuilder()
+                                      .setId(id)
+                                      .setError(
+                                          StreamError.newBuilder().setCode(exception.code).build())
+                                      .build());
                               streams.remove(id);
                             }
-                          }
-                        });
-                  }
-
-                  @Override
-                  public void next(String data) {
-                    executor.execute(
-                        new NamedRunnable("handler-send-data") {
-                          @Override
-                          public void execute() throws Exception {
-                            responseObserver.onNext(
-                                StreamMessageServer.newBuilder()
-                                    .setId(id)
-                                    .setData(StreamData.newBuilder().setDelta(data).build())
-                                    .build());
-                          }
-                        });
-                  }
-
-                  @Override
-                  public void failure(ErrorCodeException exception) {
-                    executor.execute(
-                        new NamedRunnable("handler-send-failure") {
-                          @Override
-                          public void execute() throws Exception {
-                            responseObserver.onNext(
-                                StreamMessageServer.newBuilder()
-                                    .setId(id)
-                                    .setError(
-                                        StreamError.newBuilder().setCode(exception.code).build())
-                                    .build());
-                            streams.remove(id);
-                          }
-                        });
-                  }
-                });
-            return;
-          case ASK:
-            stream.canAttach(
-                new Callback<>() {
-                  @Override
-                  public void success(Boolean value) {
-                    executor.execute(
-                        new NamedRunnable("handler-can-attach-success") {
-                          @Override
-                          public void execute() throws Exception {
-                            responseObserver.onNext(
-                                StreamMessageServer.newBuilder()
-                                    .setId(id)
-                                    .setResponse(
-                                        StreamAskAttachmentResponse.newBuilder()
-                                            .setAllowed(value)
-                                            .build())
-                                    .build());
-                          }
-                        });
-                  }
-
-                  @Override
-                  public void failure(ErrorCodeException ex) {
-                    executor.execute(
-                        new NamedRunnable("handler-can-attach-failure") {
-                          @Override
-                          public void execute() throws Exception {
-                            responseObserver.onNext(
-                                StreamMessageServer.newBuilder()
-                                    .setId(id)
-                                    .setError(StreamError.newBuilder().setCode(ex.code).build())
-                                    .build());
-                          }
-                        });
-                  }
-                });
-            return;
-          case ATTACH:
-            StreamAttach attach = payload.getAttach();
-            NtAsset asset =
-                new NtAsset(
-                    attach.getId(),
-                    attach.getFilename(),
-                    attach.getContentType(),
-                    attach.getSize(),
-                    attach.getMd5(),
-                    attach.getSha384());
-            stream.attach(
-                asset,
-                new Callback<>() {
-                  @Override
-                  public void success(Integer value) {
-                    executor.execute(
-                        new NamedRunnable("handler-attach-success") {
-                          @Override
-                          public void execute() throws Exception {
-                            responseObserver.onNext(
-                                StreamMessageServer.newBuilder()
-                                    .setId(id)
-                                    .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
-                                    .build());
-                          }
-                        });
-                  }
-
-                  @Override
-                  public void failure(ErrorCodeException ex) {
-                    executor.execute(
-                        new NamedRunnable("handler-attach-failure") {
-                          @Override
-                          public void execute() throws Exception {
-                            responseObserver.onNext(
-                                StreamMessageServer.newBuilder()
-                                    .setId(id)
-                                    .setError(StreamError.newBuilder().setCode(ex.code).build())
-                                    .build());
-                          }
-                        });
-                  }
-                });
-            return;
-          case SEND:
-            StreamSend send = payload.getSend();
-            String marker = null;
-            if (send.hasMarker()) {
-              marker = send.getMarker();
+                          });
+                    }
+                  });
+              return;
             }
-            stream.send(
-                send.getChannel(),
-                marker,
-                send.getMessage(),
-                new Callback<>() {
-                  @Override
-                  public void success(Integer value) {
-                    executor.execute(
-                        new NamedRunnable("stream-send-success") {
-                          @Override
-                          public void execute() throws Exception {
-                            responseObserver.onNext(
-                                StreamMessageServer.newBuilder()
-                                    .setId(id)
-                                    .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
-                                    .build());
-                          }
-                        });
-                  }
+          case ASK:
+            {
+              stream.canAttach(
+                  new Callback<>() {
+                    @Override
+                    public void success(Boolean value) {
+                      executor.execute(
+                          new NamedRunnable("handler-can-attach-success") {
+                            @Override
+                            public void execute() throws Exception {
+                              responseObserver.onNext(
+                                  StreamMessageServer.newBuilder()
+                                      .setId(id)
+                                      .setResponse(
+                                          StreamAskAttachmentResponse.newBuilder()
+                                              .setAllowed(value)
+                                              .build())
+                                      .build());
+                            }
+                          });
+                    }
 
-                  @Override
-                  public void failure(ErrorCodeException exception) {
-                    executor.execute(
-                        new NamedRunnable("stream-send-failure") {
-                          @Override
-                          public void execute() throws Exception {
-                            responseObserver.onNext(
-                                StreamMessageServer.newBuilder()
-                                    .setId(id)
-                                    .setError(
-                                        StreamError.newBuilder().setCode(exception.code).build())
-                                    .build());
-                          }
-                        });
-                  }
-                });
-            return;
+                    @Override
+                    public void failure(ErrorCodeException ex) {
+                      executor.execute(
+                          new NamedRunnable("handler-can-attach-failure") {
+                            @Override
+                            public void execute() throws Exception {
+                              responseObserver.onNext(
+                                  StreamMessageServer.newBuilder()
+                                      .setId(id)
+                                      .setError(StreamError.newBuilder().setCode(ex.code).build())
+                                      .build());
+                            }
+                          });
+                    }
+                  });
+              return;
+            }
+          case ATTACH:
+            {
+              StreamAttach attach = payload.getAttach();
+              NtAsset asset =
+                  new NtAsset(
+                      attach.getId(),
+                      attach.getFilename(),
+                      attach.getContentType(),
+                      attach.getSize(),
+                      attach.getMd5(),
+                      attach.getSha384());
+              stream.attach(
+                  asset,
+                  new Callback<>() {
+                    @Override
+                    public void success(Integer value) {
+                      executor.execute(
+                          new NamedRunnable("handler-attach-success") {
+                            @Override
+                            public void execute() throws Exception {
+                              responseObserver.onNext(
+                                  StreamMessageServer.newBuilder()
+                                      .setId(id)
+                                      .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
+                                      .build());
+                            }
+                          });
+                    }
+
+                    @Override
+                    public void failure(ErrorCodeException ex) {
+                      executor.execute(
+                          new NamedRunnable("handler-attach-failure") {
+                            @Override
+                            public void execute() throws Exception {
+                              responseObserver.onNext(
+                                  StreamMessageServer.newBuilder()
+                                      .setId(id)
+                                      .setError(StreamError.newBuilder().setCode(ex.code).build())
+                                      .build());
+                            }
+                          });
+                    }
+                  });
+              return;
+            }
+          case SEND:
+            {
+              StreamSend send = payload.getSend();
+              String marker = null;
+              if (send.hasMarker()) {
+                marker = send.getMarker();
+              }
+              stream.send(
+                  send.getChannel(),
+                  marker,
+                  send.getMessage(),
+                  new Callback<>() {
+                    @Override
+                    public void success(Integer value) {
+                      executor.execute(
+                          new NamedRunnable("stream-send-success") {
+                            @Override
+                            public void execute() throws Exception {
+                              responseObserver.onNext(
+                                  StreamMessageServer.newBuilder()
+                                      .setId(id)
+                                      .setResult(StreamSeqResult.newBuilder().setSeq(value).build())
+                                      .build());
+                            }
+                          });
+                    }
+
+                    @Override
+                    public void failure(ErrorCodeException exception) {
+                      executor.execute(
+                          new NamedRunnable("stream-send-failure") {
+                            @Override
+                            public void execute() throws Exception {
+                              responseObserver.onNext(
+                                  StreamMessageServer.newBuilder()
+                                      .setId(id)
+                                      .setError(
+                                          StreamError.newBuilder().setCode(exception.code).build())
+                                      .build());
+                            }
+                          });
+                    }
+                  });
+              return;
+            }
           case DISCONNECT:
-            stream.disconnect();
-            streams.remove(payload.getAct());
-            return;
+            {
+              stream.disconnect();
+              streams.remove(payload.getAct());
+              return;
+            }
         }
       }
 
@@ -353,13 +382,14 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       @Override
       public void onCompleted() {
         alive.set(false);
-        for (CoreStream stream : streams.values()) {
-          stream.disconnect();
-        }
         executor.execute(
             new NamedRunnable("stream-on-completed") {
               @Override
               public void execute() throws Exception {
+                for (CoreStream stream : streams.values()) {
+                  stream.disconnect();
+                }
+                streams.clear();
                 responseObserver.onCompleted();
               }
             });

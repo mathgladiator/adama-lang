@@ -214,7 +214,7 @@ public class Connection {
               switch (state) {
                 case Connected:
                   state = Label.WaitingForDisconnect;
-                  foundRemote.disconnect();
+                  remoteDoDisconnect();
                   break;
                 default:
                   state = Label.NotConnected;
@@ -234,8 +234,10 @@ public class Connection {
 
   private void remoteDoDisconnect() {
     queue.unready();
-    foundRemote.disconnect();
-    foundRemote = null;
+    if (foundRemote != null) {
+      foundRemote.disconnect();
+      foundRemote = null;
+    }
   }
 
   private void handle_onFoundRemote() {
@@ -252,6 +254,7 @@ public class Connection {
   }
 
   private void handle_onError(int code) {
+    remoteDoDisconnect();
     if (routingAlive) {
       routingAlive = false;
       if (unsubscribeFromRouting != null) {

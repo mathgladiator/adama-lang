@@ -28,7 +28,7 @@ public class AssembleHandlers {
       java.append("\n");
       java.append("public interface ").append(root).append("Handler {\n");
       if (!root.equals("Root")) {
-        java.append("public void bind();\n\n");
+        java.append("  public void bind();\n\n");
       }
       for (Method method : byHandler.get(root)) {
         java.append("  public ");
@@ -44,9 +44,9 @@ public class AssembleHandlers {
             .append("Responder responder);\n\n");
       }
       if (root.equals("Root")) {
-        java.append("public void disconnect();\n\n");
+        java.append("  public void disconnect();\n\n");
       } else {
-        java.append("public void disconnect(long id);\n\n");
+        java.append("  public void disconnect(long id);\n\n");
       }
       java.append("}\n");
       files.put(root + "Handler.java", java.toString());
