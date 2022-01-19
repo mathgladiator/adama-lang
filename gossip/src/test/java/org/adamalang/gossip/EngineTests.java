@@ -95,7 +95,22 @@ public class EngineTests {
     for (int k = 1; k < engines.size(); k++) {
       engines.get(k).close();
     }
-
+    int timeout = 1000;
+    CountDownLatch latchClean = new CountDownLatch(1);
+    while (!latchClean.await(1000, TimeUnit.MILLISECONDS)) {
+      engines.get(0).size(new Consumer<Integer>() {
+        @Override
+        public void accept(Integer sz) {
+          if (sz == 1) {
+            latchClean.countDown();
+          }
+        }
+      });
+      timeout--;
+      if (timeout < 0) {
+        Assert.fail("failed to clean up");
+      }
+    }
     engines.get(0).close();
   }
 
