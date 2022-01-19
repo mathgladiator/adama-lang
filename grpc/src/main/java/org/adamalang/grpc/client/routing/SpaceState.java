@@ -13,7 +13,10 @@ import org.adamalang.common.Hashing;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 
 /** the collection of targets for a single space; core element of the routing table */

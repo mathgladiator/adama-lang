@@ -28,7 +28,6 @@ public class ServerMetrics {
     server_handlers_active = factory.inflight("server_handlers_active");
     server_witness_packet_connect = factory.counter("server_witness_packet_connect");
 
-
     server_create = factory.makeCallbackMonitor("server_create");
     server_reflect = factory.makeCallbackMonitor("server_reflect");
 

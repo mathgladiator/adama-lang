@@ -9,7 +9,6 @@
  */
 package org.adamalang.grpc.server;
 
-import io.grpc.netty.shaded.io.netty.channel.unix.Errors;
 import io.grpc.stub.StreamObserver;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
@@ -263,7 +262,10 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
           case ASK:
             {
               stream.execute(
-                  new ItemAction<>(ErrorCodes.GRPC_STREAM_ASK_TIMEOUT, ErrorCodes.GRPC_STREAM_ASK_REJECTED, nexus.metrics.server_stream_ask.start()) {
+                  new ItemAction<>(
+                      ErrorCodes.GRPC_STREAM_ASK_TIMEOUT,
+                      ErrorCodes.GRPC_STREAM_ASK_REJECTED,
+                      nexus.metrics.server_stream_ask.start()) {
                     @Override
                     protected void executeNow(CoreStream stream) {
                       stream.canAttach(
@@ -334,7 +336,10 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
                       attach.getMd5(),
                       attach.getSha384());
               stream.execute(
-                  new ItemAction<CoreStream>(ErrorCodes.GRPC_STREAM_ATTACH_TIMEOUT, ErrorCodes.GRPC_STREAM_ATTACH_REJECTED, nexus.metrics.server_stream_attach.start()) {
+                  new ItemAction<CoreStream>(
+                      ErrorCodes.GRPC_STREAM_ATTACH_TIMEOUT,
+                      ErrorCodes.GRPC_STREAM_ATTACH_REJECTED,
+                      nexus.metrics.server_stream_attach.start()) {
                     @Override
                     protected void executeNow(CoreStream stream) {
                       stream.attach(
@@ -396,7 +401,10 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
           case SEND:
             {
               stream.execute(
-                  new ItemAction<CoreStream>(ErrorCodes.GRPC_STREAM_SEND_TIMEOUT, ErrorCodes.GRPC_STREAM_SEND_REJECTED, nexus.metrics.server_stream_send.start()) {
+                  new ItemAction<CoreStream>(
+                      ErrorCodes.GRPC_STREAM_SEND_TIMEOUT,
+                      ErrorCodes.GRPC_STREAM_SEND_REJECTED,
+                      nexus.metrics.server_stream_send.start()) {
                     @Override
                     protected void executeNow(CoreStream stream) {
                       StreamSend send = payload.getSend();
@@ -606,8 +614,8 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   }
 
   private class LazyCoreStream {
-    private CoreStream stream;
     private final ItemQueue<CoreStream> queue;
+    private CoreStream stream;
     private boolean alive = true;
 
     public LazyCoreStream(SimpleExecutor executor) {

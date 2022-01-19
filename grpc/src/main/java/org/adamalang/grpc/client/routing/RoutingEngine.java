@@ -16,7 +16,6 @@ import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
 import org.adamalang.runtime.contracts.Key;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
@@ -43,30 +42,33 @@ public class RoutingEngine {
   }
 
   public void list(String space, Consumer<TreeSet<String>> callback) {
-    executor.execute(new NamedRunnable("listing-targets") {
-      @Override
-      public void execute() throws Exception {
-        callback.accept(table.targetsFor(space));
-      }
-    });
+    executor.execute(
+        new NamedRunnable("listing-targets") {
+          @Override
+          public void execute() throws Exception {
+            callback.accept(table.targetsFor(space));
+          }
+        });
   }
 
   public void random(Consumer<String> callback) {
-    executor.execute(new NamedRunnable("find-random-target") {
-      @Override
-      public void execute() throws Exception {
-        callback.accept(table.random());
-      }
-    });
+    executor.execute(
+        new NamedRunnable("find-random-target") {
+          @Override
+          public void execute() throws Exception {
+            callback.accept(table.random());
+          }
+        });
   }
 
   public void get(String space, String key, Consumer<String> callback) {
-    executor.execute(new NamedRunnable("get", space, key) {
-      @Override
-      public void execute() throws Exception {
-        callback.accept(table.get(space, key));
-      }
-    });
+    executor.execute(
+        new NamedRunnable("get", space, key) {
+          @Override
+          public void execute() throws Exception {
+            callback.accept(table.get(space, key));
+          }
+        });
   }
 
   public void integrate(String target, Collection<String> newSpaces) {
@@ -112,13 +114,15 @@ public class RoutingEngine {
           @Override
           public void execute() throws Exception {
             Runnable cancel = table.subscribe(key, subscriber);
-            onCancel.accept(() ->
-              executor.execute(new NamedRunnable("routing-unsubscribe") {
-                @Override
-                public void execute() throws Exception {
-                  cancel.run();
-                }
-              }));
+            onCancel.accept(
+                () ->
+                    executor.execute(
+                        new NamedRunnable("routing-unsubscribe") {
+                          @Override
+                          public void execute() throws Exception {
+                            cancel.run();
+                          }
+                        }));
           }
         });
   }

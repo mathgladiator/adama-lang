@@ -12,7 +12,6 @@ package org.adamalang.grpc.server;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import io.grpc.netty.shaded.io.netty.handler.ssl.ClientAuth;
-import org.adamalang.common.ExceptionRunnable;
 import org.adamalang.common.ExceptionSupplier;
 
 import java.io.IOException;
@@ -33,7 +32,8 @@ public class Server implements AutoCloseable {
     this.handler = new Handler(nexus);
     this.serverSupplier =
         ExceptionSupplier.TO_RUNTIME(
-            () -> NettyServerBuilder.forPort(nexus.port)
+            () ->
+                NettyServerBuilder.forPort(nexus.port)
                     .addService(handler)
                     .sslContext(
                         GrpcSslContexts //

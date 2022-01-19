@@ -23,6 +23,7 @@ public class RoutingTable {
   private final HashMap<String, TreeSet<String>> history;
   /** the routing table of spaces to their tables */
   private final HashMap<String, SpaceState> routing;
+
   private final Random rng;
 
   public RoutingTable(SpaceTrackingEvents events) {
@@ -34,6 +35,16 @@ public class RoutingTable {
 
   public TreeSet<String> targetsFor(String space) {
     return getOrCreateSpaceState(space).list();
+  }
+
+  private SpaceState getOrCreateSpaceState(String space) {
+    SpaceState state = routing.get(space);
+    if (state == null) {
+      state = new SpaceState();
+      routing.put(space, state);
+      events.gainInterestInSpace(space);
+    }
+    return state;
   }
 
   public String get(String space, String key) {
@@ -69,16 +80,6 @@ public class RoutingTable {
       }
       history.put(target, new TreeSet<>(spaces));
     }
-  }
-
-  private SpaceState getOrCreateSpaceState(String space) {
-    SpaceState state = routing.get(space);
-    if (state == null) {
-      state = new SpaceState();
-      routing.put(space, state);
-      events.gainInterestInSpace(space);
-    }
-    return state;
   }
 
   /** a target is no longer present */

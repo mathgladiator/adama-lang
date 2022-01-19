@@ -10,10 +10,10 @@
 package org.adamalang.grpc.client;
 
 import org.adamalang.common.*;
+import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.client.contracts.HeatMonitor;
 import org.adamalang.grpc.client.contracts.Lifecycle;
-import org.adamalang.common.queue.ItemAction;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 
 import java.util.*;
@@ -22,16 +22,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 /** You ask it for clients, and you get clients */
-
 public class InstanceClientFinder {
-  /** tests to write
-   + kill finder once a client is connected
-   + reject queue
-   + add after killing queue
-   + too many items in the queue
-   + fill queue with things, then disconnect the server on "finder-lost"; use sync
+  /**
+   * tests to write + kill finder once a client is connected + reject queue + add after killing
+   * queue + too many items in the queue + fill queue with things, then disconnect the server on
+   * "finder-lost"; use sync
    */
   private final ClientMetrics metrics;
+
   private final HeatMonitor monitor;
   private final MachineIdentity identity;
   private final RoutingEngine engine;
@@ -102,42 +100,20 @@ public class InstanceClientFinder {
     for (String target : targets) {
       find(target, null);
     }
-    mapExecutor.execute(new NamedRunnable("finder-cleaning") {
-      @Override
-      public void execute() throws Exception {
-        Iterator<Map.Entry<String, InstanceClientProxy>> it = clients.entrySet().iterator();
-        while (it.hasNext()) {
-          Map.Entry<String, InstanceClientProxy> entry = it.next();
-          if (!targets.contains(entry.getKey())) {
-            entry.getValue().close();
-            it.remove();
+    mapExecutor.execute(
+        new NamedRunnable("finder-cleaning") {
+          @Override
+          public void execute() throws Exception {
+            Iterator<Map.Entry<String, InstanceClientProxy>> it = clients.entrySet().iterator();
+            while (it.hasNext()) {
+              Map.Entry<String, InstanceClientProxy> entry = it.next();
+              if (!targets.contains(entry.getKey())) {
+                entry.getValue().close();
+                it.remove();
+              }
+            }
           }
-        }
-      }
-    });
-  }
-
-  public void findCapacity(TreeSet<String> existing, Consumer<TreeSet<String>> capacity, int n) {
-    if (existing.size() >= n) {
-      capacity.accept(existing);
-      return;
-    }
-    mapExecutor.execute(new NamedRunnable("finding-capacity") {
-      @Override
-      public void execute() throws Exception {
-        TreeSet<String> results = new TreeSet<>(existing);
-        String[] targets = new String[clients.size()];
-        int at = 0;
-        for (String target : clients.keySet()) {
-          targets[at] = target;
-          at++;
-        }
-        while (results.size() < n && results.size() < clients.size()) {
-          results.add(targets[rng.nextInt(targets.length)]);
-        }
-        capacity.accept(results);
-      }
-    });
+        });
   }
 
   public void find(String target, ItemAction<InstanceClient> action) {
@@ -160,15 +136,40 @@ public class InstanceClientFinder {
         });
   }
 
+  public void findCapacity(TreeSet<String> existing, Consumer<TreeSet<String>> capacity, int n) {
+    if (existing.size() >= n) {
+      capacity.accept(existing);
+      return;
+    }
+    mapExecutor.execute(
+        new NamedRunnable("finding-capacity") {
+          @Override
+          public void execute() throws Exception {
+            TreeSet<String> results = new TreeSet<>(existing);
+            String[] targets = new String[clients.size()];
+            int at = 0;
+            for (String target : clients.keySet()) {
+              targets[at] = target;
+              at++;
+            }
+            while (results.size() < n && results.size() < clients.size()) {
+              results.add(targets[rng.nextInt(targets.length)]);
+            }
+            capacity.accept(results);
+          }
+        });
+  }
+
   private class InstanceClientProxy implements Lifecycle {
     private final SimpleExecutor executor;
-    private InstanceClient createdClient;
+    private final InstanceClient createdClient;
     private InstanceClient client;
-    private ItemQueue<InstanceClient> queue;
+    private final ItemQueue<InstanceClient> queue;
 
     private InstanceClientProxy(String target) throws Exception {
       this.executor = clientExecutors[rng.nextInt(clientExecutors.length)];
-      this.createdClient = new InstanceClient(identity, metrics, monitor,  target, executor, this, logger);
+      this.createdClient =
+          new InstanceClient(identity, metrics, monitor, target, executor, this, logger);
       client = null;
       queue = new ItemQueue<>(this.executor, 16, 2500);
     }

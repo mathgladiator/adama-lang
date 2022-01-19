@@ -10,9 +10,9 @@
 package org.adamalang.grpc.client.contracts;
 
 public interface BillingStream {
-  public void handle(String target, String batch, Runnable after);
+  void handle(String target, String batch, Runnable after);
 
-  public void failure(int code);
+  void failure(int code);
 
-  public void finished();
+  void finished();
 }

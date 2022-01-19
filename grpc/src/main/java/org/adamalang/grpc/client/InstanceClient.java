@@ -61,9 +61,9 @@ public class InstanceClient implements AutoCloseable {
     this.monitor = monitor;
     ChannelCredentials credentials =
         TlsChannelCredentials.newBuilder()
-                             .keyManager(identity.getCert(), identity.getKey())
-                             .trustManager(identity.getTrust())
-                             .build();
+            .keyManager(identity.getCert(), identity.getKey())
+            .trustManager(identity.getTrust())
+            .build();
     this.channel = NettyChannelBuilder.forTarget(target, credentials).build();
     this.stub = AdamaGrpc.newStub(channel);
     this.rng = new Random();
@@ -148,107 +148,47 @@ public class InstanceClient implements AutoCloseable {
   }
 
   public void reflect(String space, String key, Callback<String> callback) {
-    executor.execute(new NamedRunnable("reflect") {
-      @Override
-      public void execute() throws Exception {
-        stub.reflect(ReflectRequest.newBuilder().setSpace(space).setKey(key).build(), new StreamObserver<ReflectResponse>() {
+    executor.execute(
+        new NamedRunnable("reflect") {
           @Override
-          public void onNext(ReflectResponse reflectResponse) {
-           callback.success(reflectResponse.getSchema());
-          }
+          public void execute() throws Exception {
+            stub.reflect(
+                ReflectRequest.newBuilder().setSpace(space).setKey(key).build(),
+                new StreamObserver<ReflectResponse>() {
+                  @Override
+                  public void onNext(ReflectResponse reflectResponse) {
+                    callback.success(reflectResponse.getSchema());
+                  }
 
-          @Override
-          public void onError(Throwable throwable) {
-            callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_REFLECT_UNKNOWN_EXCEPTION, throwable, logger));
-          }
+                  @Override
+                  public void onError(Throwable throwable) {
+                    callback.failure(
+                        ErrorCodeException.detectOrWrap(
+                            ErrorCodes.GRPC_REFLECT_UNKNOWN_EXCEPTION, throwable, logger));
+                  }
 
-          @Override
-          public void onCompleted() {
-
+                  @Override
+                  public void onCompleted() {}
+                });
           }
         });
-      }
-    });
-  }
-
-  private class BillingObserver implements StreamObserver<BillingReverse> {
-    private final BillingStream billingStream;
-    private StreamObserver<BillingForward> upstream;
-    private String batchRemoved;
-
-    public BillingObserver(BillingStream billingStream) {
-      this.billingStream = billingStream;
-      this.batchRemoved = null;
-    }
-
-    public void start(StreamObserver<BillingForward> upstream) {
-      this.upstream = upstream;
-      // start the conversation
-      upstream.onNext(BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
-    }
-
-    @Override
-    public void onNext(BillingReverse billingReverse) {
-      switch (billingReverse.getOperationCase()) {
-        case FOUND: {
-          executor.execute(new NamedRunnable("asking-to-remove") {
-            @Override
-            public void execute() throws Exception {
-              BillingBatchFound found = billingReverse.getFound();
-              BillingObserver.this.batchRemoved = found.getBatch();
-              upstream.onNext(BillingForward.newBuilder().setRemove(BillingDeleteBill.newBuilder().setId(found.getId()).build()).build());
-            }
-          });
-          return;
-        }
-        case REMOVED: {
-          executor.execute(new NamedRunnable("removing-batch") {
-            @Override
-            public void execute() throws Exception {
-              billingStream.handle(target, batchRemoved, () -> {
-                executor.execute(new NamedRunnable("batch-processed") {
-                  @Override
-                  public void execute() throws Exception {
-                    upstream.onNext(BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
-                  }
-                });
-              });
-            }
-          });
-          return;
-        }
-      }
-    }
-
-    @Override
-    public void onError(Throwable throwable) {
-      billingStream.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_BILLING_UNKNOWN_EXCEPTION, throwable, logger).code);
-    }
-
-    boolean completedThisSide = false;
-    @Override
-    public void onCompleted() {
-      billingStream.finished();
-      if (!completedThisSide) {
-        upstream.onCompleted();
-        completedThisSide = true;
-      }
-    }
   }
 
   public void startBillingExchange(BillingStream billingStream) {
-    executor.execute(new NamedRunnable("billing-exchange") {
-      @Override
-      public void execute() throws Exception {
-        BillingObserver observer = new BillingObserver(billingStream);
-        observer.start(stub.billingExchange(observer));
-      }
-    });
+    executor.execute(
+        new NamedRunnable("billing-exchange") {
+          @Override
+          public void execute() throws Exception {
+            BillingObserver observer = new BillingObserver(billingStream);
+            observer.start(stub.billingExchange(observer));
+          }
+        });
   }
 
   public void scanDeployments(String space, ScanDeploymentCallback callback) {
     stub.scanDeployments(
-        ScanDeploymentsRequest.newBuilder().setSpace(space).build(), ScanDeploymentCallback.WRAP(callback));
+        ScanDeploymentsRequest.newBuilder().setSpace(space).build(),
+        ScanDeploymentCallback.WRAP(callback));
   }
 
   /** connect to a document */
@@ -313,6 +253,89 @@ public class InstanceClient implements AutoCloseable {
       callback.error(ErrorCodes.GRPC_DISCONNECT);
     }
     outstanding.clear();
+  }
+
+  private class BillingObserver implements StreamObserver<BillingReverse> {
+    private final BillingStream billingStream;
+    boolean completedThisSide = false;
+    private StreamObserver<BillingForward> upstream;
+    private String batchRemoved;
+
+    public BillingObserver(BillingStream billingStream) {
+      this.billingStream = billingStream;
+      this.batchRemoved = null;
+    }
+
+    public void start(StreamObserver<BillingForward> upstream) {
+      this.upstream = upstream;
+      // start the conversation
+      upstream.onNext(
+          BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
+    }
+
+    @Override
+    public void onNext(BillingReverse billingReverse) {
+      switch (billingReverse.getOperationCase()) {
+        case FOUND:
+          {
+            executor.execute(
+                new NamedRunnable("asking-to-remove") {
+                  @Override
+                  public void execute() throws Exception {
+                    BillingBatchFound found = billingReverse.getFound();
+                    BillingObserver.this.batchRemoved = found.getBatch();
+                    upstream.onNext(
+                        BillingForward.newBuilder()
+                            .setRemove(BillingDeleteBill.newBuilder().setId(found.getId()).build())
+                            .build());
+                  }
+                });
+            return;
+          }
+        case REMOVED:
+          {
+            executor.execute(
+                new NamedRunnable("removing-batch") {
+                  @Override
+                  public void execute() throws Exception {
+                    billingStream.handle(
+                        target,
+                        batchRemoved,
+                        () -> {
+                          executor.execute(
+                              new NamedRunnable("batch-processed") {
+                                @Override
+                                public void execute() throws Exception {
+                                  upstream.onNext(
+                                      BillingForward.newBuilder()
+                                          .setBegin(BillingBegin.newBuilder().build())
+                                          .build());
+                                }
+                              });
+                        });
+                  }
+                });
+            return;
+          }
+      }
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+      billingStream.failure(
+          ErrorCodeException.detectOrWrap(
+                  ErrorCodes.GRPC_BILLING_UNKNOWN_EXCEPTION, throwable, logger)
+              .code);
+    }
+
+    @Override
+    public void onCompleted() {
+      billingStream.finished();
+      if (!completedThisSide) {
+        upstream.onCompleted();
+        completedThisSide = true;
+      }
+    }
   }
 
   public class InstanceRemote implements Remote {
@@ -443,7 +466,10 @@ public class InstanceClient implements AutoCloseable {
                     backoff = 1;
                     lifecycle.connected(InstanceClient.this);
                     if (monitor != null) {
-                      upstream.onNext(StreamMessageClient.newBuilder().setMonitor(RequestHeat.newBuilder().build()).build());
+                      upstream.onNext(
+                          StreamMessageClient.newBuilder()
+                              .setMonitor(RequestHeat.newBuilder().build())
+                              .build());
                     }
                   } else {
                     MultiplexObserver.this.upstream.onCompleted();
