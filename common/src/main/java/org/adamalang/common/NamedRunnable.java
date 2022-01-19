@@ -30,6 +30,7 @@ public abstract class NamedRunnable implements Runnable {
       execute();
     } catch (Exception ex) {
       LOGGER.convertedToErrorCode(ex, name.hashCode());
+      System.err.println("Exception[" + name + "]");
       ex.printStackTrace();
     }
   }
