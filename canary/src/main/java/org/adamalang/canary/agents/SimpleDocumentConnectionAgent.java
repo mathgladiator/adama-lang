@@ -73,7 +73,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
     ObjectNode request = Json.newJsonObject();
     request.put("method", "connection/create");
     request.put("space", "demo1");
-    request.put("key", "key7");
+    request.put("key", "key8");
     request.put("identity", config.identities[(int) (config.identities.length * Math.random())]);
     kickoffStarted = System.currentTimeMillis();
     waitingForFirstData = true;
@@ -103,5 +103,6 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
   @Override
   public void failure(int code) {
     System.err.println("stream failure:" + code);
+    alive.set(false);
   }
 }

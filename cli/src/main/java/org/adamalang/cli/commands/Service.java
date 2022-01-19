@@ -190,14 +190,6 @@ public class Service {
             TimeSource.REAL_TIME,
             coreThreads);
 
-    meteringPubSub.subscribe(
-        (bills) -> {
-          // TODO: log to disk
-          // TODO: once the disk has an hour of usage, summarize and send to S3
-          // TODO: submit to billing service
-          return true;
-        });
-
     engine.newApp(
         "adama",
         port,

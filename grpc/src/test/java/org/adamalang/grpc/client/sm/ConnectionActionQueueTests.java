@@ -99,8 +99,7 @@ public class ConnectionActionQueueTests {
         Runnable sendConnect = finderExecutor.latchAtAndDrain(5, 1);
         Runnable connectEstablish = finderExecutor.latchAtAndDrain(6, 1);
         Runnable connectionComplete = connectionExecutor.latchAtAndDrain(6, 1);
-        Runnable sends = finderExecutor.latchAtAndDrain(23, 17);
-        Runnable results = finderExecutor.latchAtAndDrain(40, 17);
+
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
         engineDirect.integrate("127.0.0.1:21005", Collections.singleton("space"));
         integrate.run();
@@ -178,8 +177,7 @@ public class ConnectionActionQueueTests {
         sendConnect.run();
         connectEstablish.run();
         connectionComplete.run();
-        sends.run();
-        results.run();
+        finderExecutor.goFast();
         eventsProducedData.run();
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         eventsGotUpdate.run();

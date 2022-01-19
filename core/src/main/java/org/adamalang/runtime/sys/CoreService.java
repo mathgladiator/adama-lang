@@ -205,6 +205,7 @@ public class CoreService {
                           stream.failure(exOriginal);
                           return;
                         }
+                        // IMPLICIT CREATE can create a connect storm
                         create(
                             who,
                             key,
@@ -268,6 +269,18 @@ public class CoreService {
               callbacks.add(callbackToQueue);
               base.mapInsertsInflight.put(key, callbacks);
 
+              Consumer<ErrorCodeException> failure = (ex) -> {
+                // TODO: if universal lookup error, then that will create a storm. Instead, signal a failure to the first once and then delay the others by various random times. Maybe just spread these errors out over a random time
+                base.executor.execute(new NamedRunnable("document-load-failure") {
+                  @Override
+                  public void execute() throws Exception {
+                    for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
+                      callbackToSignal.failure(ex);
+                    }
+                  }
+                });
+              };
+
               // let's load the factory and pull from source
               livingDocumentFactoryFactory.fetch(
                   key,
@@ -307,18 +320,14 @@ public class CoreService {
 
                             @Override
                             public void failure(ErrorCodeException ex) {
-                              for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
-                                callbackToSignal.failure(ex);
-                              }
+                              failure.accept(ex);
                             }
                           }));
                     }
 
                     @Override
                     public void failure(ErrorCodeException ex) {
-                      for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
-                        callbackToSignal.failure(ex);
-                      }
+                      failure.accept(ex);
                     }
                   }));
             } else {
