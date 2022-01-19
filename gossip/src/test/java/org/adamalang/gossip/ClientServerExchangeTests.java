@@ -72,7 +72,7 @@ public class ClientServerExchangeTests extends CommonTest {
     Assert.assertEquals("eb185Ztym02Bltf2zsaBlw==", X.current().hash());
     Assert.assertEquals("eb185Ztym02Bltf2zsaBlw==", Y.current().hash());
     Assert.assertEquals("eb185Ztym02Bltf2zsaBlw==", Z.current().hash());
-    for (int k = 0; k < 101; k++) {
+    for (int k = 0; k < 38; k++) {
       jump.run();
       b.run();
       c.run();
@@ -82,7 +82,7 @@ public class ClientServerExchangeTests extends CommonTest {
       X.gc();
       Y.gc();
       Z.gc();
-      if (k >= 25) {
+      if (k >= 10) {
         Assert.assertEquals("bB5OfNoxECzcmeJ2hDQrIA==", X.current().hash());
         Assert.assertEquals("eb185Ztym02Bltf2zsaBlw==", Y.current().hash());
         Assert.assertEquals("eb185Ztym02Bltf2zsaBlw==", Z.current().hash());

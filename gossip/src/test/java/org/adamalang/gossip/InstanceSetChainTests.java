@@ -45,18 +45,18 @@ public class InstanceSetChainTests extends CommonTest {
     MockTime time = new MockTime();
     InstanceSetChain chain = new InstanceSetChain(time);
     Assert.assertEquals("1B2M2Y8AsgTpgAmY7PhCfg==", chain.current().hash());
-    time.currentTime = 10000;
+    time.currentTime = 5000;
     chain.ingest(ENDPOINTS(A(), B()), Collections.emptySet());
     chain.current().ingest(counters(1000, 1000), time.nowMilliseconds());
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
-    time.currentTime = 25000;
-    Assert.assertEquals(10000, chain.scan());
+    time.currentTime = 15000;
+    Assert.assertEquals(5000, chain.scan());
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
-    time.currentTime = 35000;
-    Assert.assertEquals(10000, chain.scan());
+    time.currentTime = 15000;
+    Assert.assertEquals(5000, chain.scan());
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
-    time.currentTime = 35001;
-    Assert.assertEquals(35001, chain.scan());
+    time.currentTime = 15001;
+    Assert.assertEquals(15001, chain.scan());
     Assert.assertEquals("1B2M2Y8AsgTpgAmY7PhCfg==", chain.current().hash());
   }
 
@@ -66,15 +66,15 @@ public class InstanceSetChainTests extends CommonTest {
     InstanceSetChain chain = new InstanceSetChain(time);
     Assert.assertEquals("1B2M2Y8AsgTpgAmY7PhCfg==", chain.current().hash());
     chain.ingest(ENDPOINTS(A(), B()), Collections.emptySet());
-    time.currentTime = 10000;
+    time.currentTime = 5000;
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
     chain.current().ingest(counters(1000, 1000), time.nowMilliseconds());
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
-    time.currentTime = 30000;
+    time.currentTime = 10000;
     chain.ingest(ENDPOINTS(), Collections.singleton("id-a"));
     Assert.assertEquals("ltgPF0P/6UcAj3+6Mnd/sA==", chain.current().hash());
     Assert.assertEquals(0, chain.deletes().size());
-    time.currentTime = 30001;
+    time.currentTime = 15000;
     chain.ingest(ENDPOINTS(), Collections.singleton("id-a"));
     Assert.assertEquals("PlBLj9Ty9gKbLiKc59dLig==", chain.current().hash());
     Assert.assertEquals(1, chain.deletes().size());

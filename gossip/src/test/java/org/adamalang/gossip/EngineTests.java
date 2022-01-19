@@ -103,6 +103,8 @@ public class EngineTests {
         public void accept(Integer sz) {
           if (sz == 1) {
             latchClean.countDown();
+          } else {
+            System.err.println("SIZE@" + sz);
           }
         }
       });
@@ -112,6 +114,24 @@ public class EngineTests {
       }
     }
     engines.get(0).close();
+  }
+
+  @Test
+  public void summarize() throws Exception {
+    HashSet<String> initial = new HashSet<>();
+    initial.add("127.0.0.1:20000");
+    initial.add("127.0.0.1:20005");
+    MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockMetrics("app"));
+    app.start();
+    CountDownLatch latch = new CountDownLatch(1);
+    app.summarizeHtml(new Consumer<String>() {
+      @Override
+      public void accept(String s) {
+        latch.countDown();
+      }
+    });
+    Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
   }
 
   private String prefixForLocalhost() {
