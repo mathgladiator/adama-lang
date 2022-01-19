@@ -10,6 +10,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.common.metrics.CallbackMonitor;
+import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 
 /** metrics for the core adama service */
@@ -27,6 +28,7 @@ public class CoreMetrics {
   public final CallbackMonitor deploy;
   public final CallbackMonitor createPrivateView;
   public final CallbackMonitor reflect;
+  public final Inflight inflight_streams;
 
   public CoreMetrics(MetricsFactory metricsFactory) {
     serviceCreate = metricsFactory.makeCallbackMonitor("core_service_create");
@@ -42,5 +44,6 @@ public class CoreMetrics {
     deploy = metricsFactory.makeCallbackMonitor("core_deploy");
     createPrivateView = metricsFactory.makeCallbackMonitor("core_create_private_view");
     reflect = metricsFactory.makeCallbackMonitor("core_reflect");
+    inflight_streams = metricsFactory.inflight("core_inflight_streams");
   }
 }

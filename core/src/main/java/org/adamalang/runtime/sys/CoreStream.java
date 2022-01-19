@@ -39,6 +39,7 @@ public class CoreStream {
     this.view = view;
     inventory.message();
     inventory.connect();
+    metrics.inflight_streams.up();
   }
 
   /** send a message to the document */
@@ -77,6 +78,7 @@ public class CoreStream {
 
   /** disconnect this stream from the document */
   public void disconnect() {
+    metrics.inflight_streams.down();
     document.base.executor.execute(
         new NamedRunnable("core-stream-disconnect") {
           @Override
