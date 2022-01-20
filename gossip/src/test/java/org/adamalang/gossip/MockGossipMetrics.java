@@ -9,6 +9,7 @@
  */
 package org.adamalang.gossip;
 
+import org.adamalang.common.metrics.Inflight;
 import org.junit.Assert;
 
 public class MockGossipMetrics implements GossipMetrics {
@@ -81,5 +82,19 @@ public class MockGossipMetrics implements GossipMetrics {
 
   public void assertFlow(String expected) {
     Assert.assertEquals(expected, seq.toString());
+  }
+
+  public Inflight gossips_inflight() {
+    return new Inflight() {
+      @Override
+      public void up() {
+
+      }
+
+      @Override
+      public void down() {
+
+      }
+    };
   }
 }

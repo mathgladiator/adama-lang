@@ -274,6 +274,7 @@ public class Engine implements AutoCloseable {
       scheduleGossip();
       return;
     }
+    metrics.gossips_inflight().up();
     chain.scan();
     ClientObserver observer = new ClientObserver(executor, chain, metrics);
     StreamObserver<GossipReverse> interceptObserver =
@@ -292,6 +293,7 @@ public class Engine implements AutoCloseable {
                   @Override
                   public void execute() throws Exception {
                     if (!finished) {
+                      metrics.gossips_inflight().down();
                       observer.onError(throwable);
                       link.channel.shutdown();
                       links.remove(link.target);
@@ -309,6 +311,7 @@ public class Engine implements AutoCloseable {
                   @Override
                   public void execute() throws Exception {
                     if (!finished) {
+                      metrics.gossips_inflight().down();
                       observer.onCompleted();
                       doBroadcast();
                       scheduleGossip();

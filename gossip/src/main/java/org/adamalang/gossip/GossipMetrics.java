@@ -9,6 +9,8 @@
  */
 package org.adamalang.gossip;
 
+import org.adamalang.common.metrics.Inflight;
+
 /** how to learn of events happening during the mysterious gossip protocol */
 public interface GossipMetrics {
   // a round of gossip is being considered
@@ -31,4 +33,6 @@ public interface GossipMetrics {
   void bump_server_slow_gossip();
 
   void log_error(Throwable cause);
+
+  Inflight gossips_inflight();
 }

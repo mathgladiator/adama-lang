@@ -9,6 +9,7 @@
  */
 package org.adamalang.gossip;
 
+import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public class GossipMetricsImpl implements GossipMetrics {
   private final Runnable foundReverse;
   private final Runnable quickGossip;
   private final Runnable serverSlowGossip;
+  private final Inflight inflight;
 
   public GossipMetricsImpl(MetricsFactory factory) {
     wake = factory.counter("gossip_wake");
@@ -36,6 +38,7 @@ public class GossipMetricsImpl implements GossipMetrics {
     foundReverse = factory.counter("gossip_found_rev");
     quickGossip = factory.counter("gossip_quick");
     serverSlowGossip = factory.counter("gossip_slow_s");
+    inflight = factory.inflight("gossip_inflight");
   }
 
   @Override
@@ -86,5 +89,10 @@ public class GossipMetricsImpl implements GossipMetrics {
   @Override
   public void log_error(Throwable cause) {
     LOGGER.error("gossip-error", cause);
+  }
+
+  @Override
+  public Inflight gossips_inflight() {
+    return inflight;
   }
 }
