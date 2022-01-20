@@ -41,7 +41,7 @@ public class Engine implements AutoCloseable {
   private final GossipPartnerPicker picker;
   private final SimpleExecutor executor;
   private final String ip;
-  private final Metrics metrics;
+  private final GossipMetrics metrics;
   private final AtomicBoolean alive;
   private final Supplier<Server> serverSupplier;
   private final HashMap<String, Link> links;
@@ -51,7 +51,7 @@ public class Engine implements AutoCloseable {
   private Consumer<Collection<Endpoint>> watcher;
 
   public Engine(
-      MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, int monitoringPort,  Metrics metrics)
+      MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, int monitoringPort,  GossipMetrics metrics)
       throws Exception {
     this.credentials =
         TlsChannelCredentials.newBuilder() //
@@ -363,7 +363,7 @@ public class Engine implements AutoCloseable {
       this.target = target;
       this.channel =
           NettyChannelBuilder.forTarget(target, credentials)
-              .withOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 150)
+              .withOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1000)
               .build();
       this.stub = GossipGrpc.newStub(channel);
     }

@@ -10,7 +10,7 @@
 package org.adamalang.gossip;
 
 /** how to learn of events happening during the mysterious gossip protocol */
-public interface Metrics {
+public interface GossipMetrics {
   // a round of gossip is being considered
   void wake();
 

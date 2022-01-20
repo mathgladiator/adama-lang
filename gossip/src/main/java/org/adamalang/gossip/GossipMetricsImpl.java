@@ -13,8 +13,8 @@ import org.adamalang.common.metrics.MetricsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MetricsImpl implements Metrics {
-  private static final Logger LOGGER = LoggerFactory.getLogger(MetricsImpl.class);
+public class GossipMetricsImpl implements GossipMetrics {
+  private static final Logger LOGGER = LoggerFactory.getLogger(GossipMetricsImpl.class);
 
   private final Runnable wake;
   private final Runnable sadReturn;
@@ -26,7 +26,7 @@ public class MetricsImpl implements Metrics {
   private final Runnable quickGossip;
   private final Runnable serverSlowGossip;
 
-  public MetricsImpl(MetricsFactory factory) {
+  public GossipMetricsImpl(MetricsFactory factory) {
     wake = factory.counter("gossip_wake");
     sadReturn = factory.counter("gossip_sad");
     clientSlowGossip = factory.counter("gossip_slow_c");

@@ -35,7 +35,7 @@ public class EngineTests {
     initial.add("127.0.0.1:20005");
     MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
 
-    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockMetrics("app"));
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockGossipMetrics("app"));
     engines.add(app);
     app.start();
 
@@ -63,7 +63,7 @@ public class EngineTests {
     Engine lateEngine = null;
     for (int k = 0; k < 10; k++) {
       Engine engine =
-          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, -1, new MockMetrics("k:" + k));
+          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, -1, new MockGossipMetrics("k:" + k));
       engines.add(engine);
       if (k == 5) {
         lateEngine = engine;
@@ -122,7 +122,7 @@ public class EngineTests {
     initial.add("127.0.0.1:20000");
     initial.add("127.0.0.1:20005");
     MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
-    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockMetrics("app"));
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockGossipMetrics("app"));
     app.start();
     CountDownLatch latch = new CountDownLatch(1);
     app.summarizeHtml(new Consumer<String>() {
@@ -150,7 +150,7 @@ public class EngineTests {
     HashSet<String> initial = new HashSet<>();
     MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
     CountDownLatch latch = new CountDownLatch(2);
-    MockMetrics metrics = new MockMetrics() {
+    MockGossipMetrics metrics = new MockGossipMetrics() {
       @Override
       public void wake() {
         latch.countDown();
@@ -172,7 +172,7 @@ public class EngineTests {
     initial.add("127.0.0.1:20009");
     MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
 
-    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockMetrics("app"));
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockGossipMetrics("app"));
     engines.add(app);
     CountDownLatch latchForWatchingUpdate = new CountDownLatch(1);
     app.setWatcher(new Consumer<Collection<Endpoint>>() {
@@ -209,7 +209,7 @@ public class EngineTests {
     latchForSet.await(1000, TimeUnit.MILLISECONDS);
     for (int k = 0; k < 10; k++) {
       Engine engine =
-          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, -1, new MockMetrics("k:" + k));
+          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, -1, new MockGossipMetrics("k:" + k));
       engines.add(engine);
       engine.start();
     }

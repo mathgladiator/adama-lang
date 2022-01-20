@@ -23,11 +23,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ServerHandler extends GossipGrpc.GossipImplBase {
   private final SimpleExecutor executor;
   private final InstanceSetChain chain;
-  private final Metrics metrics;
+  private final GossipMetrics metrics;
   private final AtomicBoolean alive;
 
   public ServerHandler(
-      SimpleExecutor executor, InstanceSetChain chain, AtomicBoolean alive, Metrics metrics) {
+      SimpleExecutor executor, InstanceSetChain chain, AtomicBoolean alive, GossipMetrics metrics) {
     this.executor = executor;
     this.chain = chain;
     this.metrics = metrics;

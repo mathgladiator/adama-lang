@@ -21,7 +21,7 @@ public class ServerTests {
   @Test
   public void shutdownProducesQuickComplete() {
     AtomicBoolean alive = new AtomicBoolean(false);
-    ServerHandler handler = new ServerHandler(SimpleExecutor.NOW, null, alive, new MockMetrics());
+    ServerHandler handler = new ServerHandler(SimpleExecutor.NOW, null, alive, new MockGossipMetrics());
 
     AtomicBoolean done = new AtomicBoolean(false);
     handler.exchange(

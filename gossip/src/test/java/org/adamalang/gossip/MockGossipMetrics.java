@@ -11,16 +11,16 @@ package org.adamalang.gossip;
 
 import org.junit.Assert;
 
-public class MockMetrics implements Metrics {
+public class MockGossipMetrics implements GossipMetrics {
 
   private final String name;
   private final StringBuilder seq;
 
-  public MockMetrics() {
+  public MockGossipMetrics() {
     this("no-name");
   }
 
-  public MockMetrics(String name) {
+  public MockGossipMetrics(String name) {
     this.name = name;
     this.seq = new StringBuilder();
   }

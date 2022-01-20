@@ -20,7 +20,7 @@ public class ClientServerExchangeTests extends CommonTest {
 
   @Test
   public void errors() {
-    MockMetrics metrics = new MockMetrics();
+    MockGossipMetrics metrics = new MockGossipMetrics();
     MockTime timeX = new MockTime();
     InstanceSetChain X = new InstanceSetChain(timeX);
     ClientObserver observer = new ClientObserver(SimpleExecutor.NOW, X, metrics);
@@ -34,7 +34,7 @@ public class ClientServerExchangeTests extends CommonTest {
 
   @Test
   public void cross_propagte_deletes() {
-    MockMetrics metrics = new MockMetrics();
+    MockGossipMetrics metrics = new MockGossipMetrics();
     MockTime timeX = new MockTime();
     MockTime timeY = new MockTime();
     MockTime timeZ = new MockTime();
@@ -101,7 +101,7 @@ public class ClientServerExchangeTests extends CommonTest {
     Assert.assertEquals("bB5OfNoxECzcmeJ2hDQrIA==", Z.current().hash());
   }
 
-  private void exchange(InstanceSetChain X, InstanceSetChain Y, Metrics M) {
+  private void exchange(InstanceSetChain X, InstanceSetChain Y, GossipMetrics M) {
     ClientObserver observer = new ClientObserver(SimpleExecutor.NOW, X, M);
     ServerHandler serverHandler = new ServerHandler(SimpleExecutor.NOW, Y, new AtomicBoolean(true), M);
     observer.initiate(serverHandler.exchange(observer));
@@ -109,7 +109,7 @@ public class ClientServerExchangeTests extends CommonTest {
 
   @Test
   public void cross_propagte() {
-    MockMetrics metrics = new MockMetrics();
+    MockGossipMetrics metrics = new MockGossipMetrics();
     MockTime time = new MockTime();
     InstanceSetChain X = new InstanceSetChain(time);
     InstanceSetChain Y = new InstanceSetChain(time);
@@ -140,7 +140,7 @@ public class ClientServerExchangeTests extends CommonTest {
 
   @Test
   public void cross_propagte_very_slow() {
-    MockMetrics metrics = new MockMetrics();
+    MockGossipMetrics metrics = new MockGossipMetrics();
     MockTime time = new MockTime();
     InstanceSetChain X = new InstanceSetChain(time);
     InstanceSetChain Y = new InstanceSetChain(time);
@@ -175,7 +175,7 @@ public class ClientServerExchangeTests extends CommonTest {
 
   @Test
   public void simple_propagate() {
-    MockMetrics metrics = new MockMetrics();
+    MockGossipMetrics metrics = new MockGossipMetrics();
     MockTime time = new MockTime();
     InstanceSetChain X = new InstanceSetChain(time);
     InstanceSetChain Y = new InstanceSetChain(time);
@@ -200,7 +200,7 @@ public class ClientServerExchangeTests extends CommonTest {
 
   @Test
   public void exchange_empty() {
-    MockMetrics metrics = new MockMetrics();
+    MockGossipMetrics metrics = new MockGossipMetrics();
     MockTime time = new MockTime();
     InstanceSetChain X = new InstanceSetChain(time);
     InstanceSetChain Y = new InstanceSetChain(time);

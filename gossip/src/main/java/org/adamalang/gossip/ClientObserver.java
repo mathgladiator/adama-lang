@@ -21,12 +21,12 @@ import java.util.TreeSet;
 public class ClientObserver implements StreamObserver<GossipReverse> {
   private final SimpleExecutor executor;
   private final InstanceSetChain chain;
-  private final Metrics metrics;
+  private final GossipMetrics metrics;
   private StreamObserver<GossipForward> forward;
   private InstanceSet current;
   private boolean done;
 
-  public ClientObserver(SimpleExecutor executor, InstanceSetChain chain, Metrics metrics) {
+  public ClientObserver(SimpleExecutor executor, InstanceSetChain chain, GossipMetrics metrics) {
     this.executor = executor;
     this.chain = chain;
     this.metrics = metrics;
