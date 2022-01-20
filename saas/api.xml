@@ -297,6 +297,10 @@
     <responder name="simple">
     </responder>
 
+    <responder name="seq">
+        <field name="seq"/>
+    </responder>
+
     <responder name="plan">
         <field name="plan"/>
     </responder>
@@ -486,7 +490,7 @@
         </documentation>
     </method>
 
-    <method name="connection/send" responder="simple" handler="document-stream" find-by="connection"
+    <method name="connection/send" responder="seq" handler="document-stream" find-by="connection"
             error-find-by="457745">
         <parameter name="connection"/>
         <parameter name="channel"/>
@@ -501,7 +505,6 @@
         <documentation>
         </documentation>
     </method>
-
 
     <method name="attachment/start" responder="simple" create="attachment-upload">
         <parameter name="identity"/>

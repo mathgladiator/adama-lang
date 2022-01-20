@@ -444,11 +444,11 @@ public class RootHandlerImpl implements RootHandler {
       }
 
       @Override
-      public void handle(ConnectionSendRequest request, SimpleResponder responder) {
+      public void handle(ConnectionSendRequest request, SeqResponder responder) {
         connection.send(request.channel, null, request.message.toString(), new SeqCallback() {
           @Override
           public void success(int seq) {
-            responder.complete();
+            responder.complete(seq);
           }
 
           @Override

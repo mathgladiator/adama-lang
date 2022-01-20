@@ -343,7 +343,7 @@ public class ConnectionRouter {
               public void success(ConnectionSendRequest resolved) {
                 DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                 if (handlerToUse != null) {
-                  handlerToUse.handle(resolved,new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  handlerToUse.handle(resolved,new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
                 } else {
                   mInstance.failure(457745);
                   responder.error(new ErrorCodeException(457745));

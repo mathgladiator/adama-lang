@@ -13,7 +13,7 @@ package org.adamalang.api;
 public interface DocumentStreamHandler {
   public void bind();
 
-  public void handle(ConnectionSendRequest request, SimpleResponder responder);
+  public void handle(ConnectionSendRequest request, SeqResponder responder);
 
   public void handle(ConnectionEndRequest request, SimpleResponder responder);
 

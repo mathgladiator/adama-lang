@@ -49,9 +49,10 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
       connection.execute(send, new WebJsonStream() {
         @Override
         public void data(ObjectNode node) {
-          System.err.println("Data:" + node.toString());
+          System.err.println("RESP:" + node.toString());
           long latency = System.currentTimeMillis() - sendStart;
           System.err.println("Send latency:" + latency);
+          agent.schedule(SimpleDocumentConnectionAgent.this, (int) (2500 + 2500 * Math.random()));
         }
 
         @Override
@@ -64,7 +65,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
           System.err.println("Send failed: " + code);
         }
       });
-      agent.schedule(this, (int) (2500 + 2500 * Math.random()));
+
     }
   }
 
