@@ -67,10 +67,10 @@ public class InstanceClientTests {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       MockEvents events = new MockEvents();
-      Runnable happy = events.latchAt(4);
-      Runnable disconnect = events.latchAt(5);
-      Runnable reconnect = events.latchAt(7);
-      Runnable disconnectAgain = events.latchAt(8);
+      Runnable happy = events.latchAt(3);
+      Runnable disconnect = events.latchAt(4);
+      Runnable reconnect = events.latchAt(6);
+      Runnable disconnectAgain = events.latchAt(7);
       AtomicBoolean created = new AtomicBoolean(false);
       try (InstanceClient client =
           new InstanceClient(
@@ -111,11 +111,10 @@ public class InstanceClientTests {
         events.assertWrite(0, "CONNECTED");
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         events.assertWrite(2, "DELTA:{\"data\":{\"x\":124},\"seq\":5}");
-        events.assertWrite(3, "DELTA:{\"seq\":6}");
-        events.assertWrite(4, "DISCONNECTED");
-        events.assertWrite(5, "CONNECTED");
-        events.assertWrite(6, "DELTA:{\"data\":{\"x\":124},\"seq\":12}");
-        events.assertWrite(7, "DISCONNECTED");
+        events.assertWrite(3, "DISCONNECTED");
+        events.assertWrite(4, "CONNECTED");
+        events.assertWrite(5, "DELTA:{\"data\":{\"x\":124},\"seq\":13}");
+        events.assertWrite(6, "DISCONNECTED");
         Assert.assertEquals("CDCD", lifecycle.toString());
       }
     }

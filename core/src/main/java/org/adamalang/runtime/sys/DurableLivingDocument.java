@@ -166,6 +166,7 @@ public class DurableLivingDocument {
   private void finishSuccessDataServicePatchWhileInExecutor() {
     this.inflightPatch = false;
     if (pending.size() == 0) {
+      outstandingExecutionsWhichRequireDrain = 0;
       if (requiresInvalidateMilliseconds != null) {
         base.executor.schedule(
             new NamedRunnable("finish-success-patch") {

@@ -75,7 +75,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
     ObjectNode request = Json.newJsonObject();
     request.put("method", "connection/create");
     request.put("space", "demo1");
-    request.put("key", "key11");
+    request.put("key", "key2");
     request.put("identity", config.identities[(int) (config.identities.length * Math.random())]);
     kickoffStarted = System.currentTimeMillis();
     waitingForFirstData = true;
@@ -93,7 +93,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
       long connectLatency = System.currentTimeMillis() - kickoffStarted;
       System.err.println("Connect latency:" + connectLatency);
       waitingForFirstData = false;
-      agent.schedule(this, 2000);
+      agent.schedule(SimpleDocumentConnectionAgent.this, (int) (5000 + 5000 * Math.random()));
     }
     System.err.println("Data:" + node.toString());
   }
