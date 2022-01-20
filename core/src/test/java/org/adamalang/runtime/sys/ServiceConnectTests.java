@@ -201,8 +201,8 @@ public class ServiceConnectTests {
       cb1.await_success(-5);
       streamback.get().attach(new NtAsset("id", "name", "meme", 1, "", ""), cb2);
       cb2.await_success(5);
-      Assert.assertEquals("{\"data\":{\"x\":43},\"seq\":5}", streamback.get(2));
       latch2.run();
+      Assert.assertEquals("{\"data\":{\"x\":43},\"seq\":5}", streamback.get(2));
       streamback.get().disconnect();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
