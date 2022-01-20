@@ -151,9 +151,9 @@ public class ConnectionTrafficShift {
         executeSend.run();
         forwardSend.run();
         clientDataForward.run();
-        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
         sendSeqResult.run();
         eventsGotUpdate.run();
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
         cb1.assertSuccess(6);
         engineDirect.integrate("127.0.0.1:20006", Collections.singleton("space"));
         executorIntegrates.run();
