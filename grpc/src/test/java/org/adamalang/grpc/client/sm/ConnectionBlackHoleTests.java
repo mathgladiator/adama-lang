@@ -138,8 +138,8 @@ public class ConnectionBlackHoleTests {
         forwardSend.run();
         clientDataForward.run();
         finderExecutor.goFast();
-        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
         eventsGotUpdate.run();
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
         cb1.assertSuccess(6);
         engineDirect.remove("127.0.0.1:22005");
         executorIntegrates.run();
@@ -277,8 +277,8 @@ public class ConnectionBlackHoleTests {
         executeSend.run();
         forwardSend.run();
         clientDataForward.run();
-        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
         sendSeqResult.run();
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
         eventsGotUpdate.run();
         cb1.assertSuccess(6);
         engineDirect.remove("127.0.0.1:22005");
@@ -429,8 +429,8 @@ public class ConnectionBlackHoleTests {
         executeSend.run();
         forwardSend.run();
         clientDataForward.run();
-        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
         sendSeqResult.run();
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
         eventsGotUpdate.run();
         cb1.assertSuccess(6);
         engineDirect.remove("127.0.0.1:22005");
