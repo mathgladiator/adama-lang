@@ -20,7 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class PrometheusTargetMaker {
@@ -29,13 +31,19 @@ public class PrometheusTargetMaker {
   /** scan gossip table to make targets.json for promethesus */
   public static void kickOff(OverlordMetrics metrics, Engine engine, File targetsDestination, ConcurrentCachedHtmlHandler handler) {
     AtomicReference<String> lastWritten = new AtomicReference<>("");
+    HashMap<String, Endpoint> cached = new HashMap<>();
     engine.setWatcher(
-        (endpoints) -> {
+        (endpointsLatest) -> {
+          // this is a hack to keep everything available so things just don't go pop due to a gossip failure
+          // TODO: add a system here to keep an endpoint for at least an hour for monitoring
+          for (Endpoint endpoint : endpointsLatest) {
+            cached.put(endpoint.getIp() + ":" + endpoint.getPort(), endpoint);
+          }
           metrics.targets_watcher_fired.run();
           HashSet<String> seen = new HashSet<>();
           JsonStreamWriter writer = new JsonStreamWriter();
           writer.beginArray();
-          for (Endpoint endpoint : endpoints) {
+          for (Endpoint endpoint : cached.values()) {
             if (endpoint.getMonitoringPort() >= 0) {
               String target = endpoint.getIp() + ":" + endpoint.getMonitoringPort();
               if (seen.contains(target)) {

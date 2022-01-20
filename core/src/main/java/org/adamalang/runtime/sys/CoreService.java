@@ -59,12 +59,13 @@ public class CoreService {
     new NamedRunnable("metering-run") {
       @Override
       public void execute() {
+        long started = System.currentTimeMillis();
         NamedRunnable self = this;
         MeteringStateMachine.estimate(
             bases,
             livingDocumentFactoryFactory, samples -> {
               meteringEvent.accept(samples);
-              bases[rng.nextInt(bases.length)].executor.schedule(self, 1000);
+              bases[rng.nextInt(bases.length)].executor.schedule(self, Math.max(1000 - (System.currentTimeMillis() - started), 100));
             });
       }
     }.run();

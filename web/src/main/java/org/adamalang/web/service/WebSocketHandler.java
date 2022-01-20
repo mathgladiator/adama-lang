@@ -151,7 +151,6 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
         return;
       }
 
-      System.err.println("REQ:" + requestNode.toString());
       JsonRequest request = new JsonRequest(requestNode);
       final var id = request.id();
 
