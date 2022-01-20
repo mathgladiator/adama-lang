@@ -30,8 +30,7 @@ public class InMemoryDataServiceTests {
     AtomicInteger success = new AtomicInteger(0);
     Key key = new Key("space", "key");
     ds.initialize(key, update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"), bumpSuccess(success));
-    ds.patch(key, update(2, "{\"x\":2}", "{\"x\":1}"), bumpSuccess(success));
-    ds.patch(key, update(3, "{\"x\":3}", "{\"x\":2}"), bumpSuccess(success));
+    ds.patch(key, new DataService.RemoteDocumentUpdate[] {update(2, "{\"x\":2}", "{\"x\":1}"), update(3, "{\"x\":3}", "{\"x\":2}")}, bumpSuccess(success));
     ds.get(
         key,
         new Callback<>() {
@@ -48,7 +47,7 @@ public class InMemoryDataServiceTests {
         });
     ds.patch(
         key,
-        update(3, "{\"x\":3}", "{\"x\":2}"),
+        new DataService.RemoteDocumentUpdate[] { update(3, "{\"x\":3}", "{\"x\":2}") },
         new Callback<Void>() {
           @Override
           public void success(Void value) {
@@ -125,9 +124,9 @@ public class InMemoryDataServiceTests {
             Assert.fail();
           }
         });
-    ds.patch(key, updateActive(4, "{\"x\":4}", "{\"x\":3}", 42), bumpSuccess(success));
+    ds.patch(key, new DataService.RemoteDocumentUpdate[] { updateActive(4, "{\"x\":4}", "{\"x\":3}", 42) }, bumpSuccess(success));
     ds.delete(key, bumpSuccess(success));
-    Assert.assertEquals(11, success.get());
+    Assert.assertEquals(10, success.get());
   }
 
   public DataService.RemoteDocumentUpdate update(int seq, String redo, String undo) {
@@ -160,7 +159,7 @@ public class InMemoryDataServiceTests {
     Key key = new Key("space", "key");
     AtomicInteger failure = new AtomicInteger(0);
     ds.get(key, bumpFailureDoc(failure, 198705));
-    ds.patch(key, update(1, null, null), bumpFailure(failure, 144944));
+    ds.patch(key, new DataService.RemoteDocumentUpdate[] { update(1, null, null) }, bumpFailure(failure, 144944));
     ds.compute(key, null, 1, bumpFailureDoc(failure, 106546));
     ds.delete(key, bumpFailure(failure, 117816));
   }
@@ -208,8 +207,8 @@ public class InMemoryDataServiceTests {
         key,
         update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"),
         bumpFailure(failure, ErrorCodes.INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS));
-    ds.patch(key, update(2, "{\"x\":2}", "{\"x\":1}"), bumpSuccess(success));
-    ds.patch(key, update(3, "{\"x\":3}", "{\"x\":2}"), bumpSuccess(success));
+    ds.patch(key, new DataService.RemoteDocumentUpdate[] { update(2, "{\"x\":2}", "{\"x\":1}") }, bumpSuccess(success));
+    ds.patch(key, new DataService.RemoteDocumentUpdate[] { update(3, "{\"x\":3}", "{\"x\":2}") }, bumpSuccess(success));
     ds.compute(
         key, null, 1, bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_INVALID_METHOD));
     ds.compute(

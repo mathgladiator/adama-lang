@@ -56,7 +56,7 @@ public class ThreadedDataServiceTest {
         });
     ds.patch(
         key,
-        update,
+        new DataService.RemoteDocumentUpdate[] { update },
         new Callback<Void>() {
           @Override
           public void success(Void value) {

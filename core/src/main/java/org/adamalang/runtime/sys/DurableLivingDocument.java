@@ -213,7 +213,7 @@ public class DurableLivingDocument {
       }
       base.service.patch(
           key,
-          change.update,
+          new DataService.RemoteDocumentUpdate[] {change.update},
           base.metrics.document_execute_patch.wrap(new Callback<>() {
             @Override
             public void success(Void value) {

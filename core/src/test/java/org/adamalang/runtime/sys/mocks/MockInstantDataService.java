@@ -99,28 +99,32 @@ public class MockInstantDataService implements DataService {
   }
 
   @Override
-  public synchronized void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public synchronized void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
     patchFailAt--;
     if (patchFailAt < 0) {
       callback.failure(new ErrorCodeException(9999));
       return;
     }
-    println("PATCH:" + key.space + "/" + key.key + ":" + patch.seq + "->" + patch.redo);
     ArrayList<RemoteDocumentUpdate> log = logByKey.get(key);
-    if (infiniteSkip) {
-      callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
-      println("SKIP++");
-      return;
-    }
-    if (enableSeqSkip) {
-      if (patch.seq == seqToSkip) {
+    for (RemoteDocumentUpdate patch : patches) {
+      println("PATCH:" + key.space + "/" + key.key + ":" + patch.seq + "->" + patch.redo);
+      if (infiniteSkip) {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
-        println("SKIP");
+        println("SKIP++");
         return;
+      }
+      if (enableSeqSkip) {
+        if (patch.seq == seqToSkip) {
+          callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
+          println("SKIP");
+          return;
+        }
       }
     }
     if (key != null) {
-      log.add(patch);
+      for (RemoteDocumentUpdate patch : patches) {
+        log.add(patch);
+      }
       callback.success(null);
     } else {
       callback.failure(new ErrorCodeException(3));

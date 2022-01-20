@@ -28,6 +28,12 @@ public class BlockingDataServiceTests {
   private static final DataService.RemoteDocumentUpdate UPDATE_2 =
       new DataService.RemoteDocumentUpdate(
           2, null, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0);
+  private static final DataService.RemoteDocumentUpdate UPDATE_3 =
+      new DataService.RemoteDocumentUpdate(
+          3, null, "REQUEST", "{\"x\":3}", "{\"x\":2,\"z\":42}", true, 0);
+  private static final DataService.RemoteDocumentUpdate UPDATE_4 =
+      new DataService.RemoteDocumentUpdate(
+          4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0);
 
   @Test
   public void flow_1() throws Exception {
@@ -55,12 +61,12 @@ public class BlockingDataServiceTests {
 
         // update the key and put it in an active state
         SimpleMockCallback cb3 = new SimpleMockCallback();
-        service.patch(KEY_1, UPDATE_2, cb3);
+        service.patch(KEY_1, new DataService.RemoteDocumentUpdate[] { UPDATE_2 }, cb3);
         cb3.assertSuccess();
 
         // patching with same sequencer should fail
         SimpleMockCallback cb4 = new SimpleMockCallback();
-        service.patch(KEY_1, UPDATE_2, cb4);
+        service.patch(KEY_1, new DataService.RemoteDocumentUpdate[] { UPDATE_2 }, cb4);
         cb4.assertFailure(621580);
 
         // getting the data should return a composite
@@ -68,6 +74,15 @@ public class BlockingDataServiceTests {
         service.get(KEY_1, cb5);
         cb5.assertSuccess();
         Assert.assertEquals("{\"x\":2,\"y\":4}", cb5.value);
+
+        SimpleMockCallback cb5_X = new SimpleMockCallback();
+        service.patch(KEY_1, new DataService.RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb5_X);
+        cb5_X.assertSuccess();
+
+        SimpleDataCallback cb5_X2 = new SimpleDataCallback();
+        service.get(KEY_1, cb5_X2);
+        cb5_X2.assertSuccess();
+        Assert.assertEquals("{\"x\":4,\"y\":4}", cb5_X2.value);
 
         SimpleDataCallback cb6 = new SimpleDataCallback();
         service.compute(KEY_1, DataService.ComputeMethod.Rewind, 1, cb6);

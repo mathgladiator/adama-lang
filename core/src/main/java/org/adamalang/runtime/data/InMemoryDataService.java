@@ -75,7 +75,7 @@ public class InMemoryDataService implements DataService {
   }
 
   @Override
-  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
     executor.execute(
         () -> {
           InMemoryDocument document = datum.get(key);
@@ -84,16 +84,19 @@ public class InMemoryDataService implements DataService {
                 new ErrorCodeException(ErrorCodes.INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT));
             return;
           }
-          if (patch.seq != document.seq + 1) {
+          if (patches[0].seq != document.seq + 1) {
             callback.failure(
                 new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
             return;
           }
-          document.seq = patch.seq;
-          document.updates.add(patch);
-          if (patch.requiresFutureInvalidation) {
+          document.seq = patches[patches.length - 1].seq;
+          for (RemoteDocumentUpdate patch : patches) {
+            document.updates.add(patch);
+          }
+          if (patches[patches.length - 1].requiresFutureInvalidation) {
             document.active = true;
-            document.timeToWake = patch.whenToInvalidateMilliseconds + time.nowMilliseconds();
+            document.timeToWake =
+                patches[patches.length - 1].whenToInvalidateMilliseconds + time.nowMilliseconds();
           } else {
             document.active = false;
             document.timeToWake = 0L;

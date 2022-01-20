@@ -96,8 +96,8 @@ public class MockDelayDataService implements DataService {
   }
 
   @Override
-  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    enqueue(() -> parent.patch(key, patch, callback));
+  public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
+    enqueue(() -> parent.patch(key, patches, callback));
   }
 
   @Override

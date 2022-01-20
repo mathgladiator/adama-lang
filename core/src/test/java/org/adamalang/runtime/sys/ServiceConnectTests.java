@@ -75,7 +75,7 @@ public class ServiceConnectTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    dataService.initialize(KEY, wrap("{\"__constructed\":true}"), Callback.DONT_CARE_VOID);
+    dataService.initialize(KEY, wrap("{\"__constructed\":true}")[0], Callback.DONT_CARE_VOID);
     dataService.patch(
         KEY,
         wrap(
@@ -105,12 +105,12 @@ public class ServiceConnectTests {
     }
   }
 
-  public static DataService.RemoteDocumentUpdate wrap(String json) {
+  public static DataService.RemoteDocumentUpdate[] wrap(String json) {
     JsonStreamReader reader = new JsonStreamReader(json);
     Object obj = reader.readJavaTree();
     Integer seq = (Integer) (((HashMap<String, Object>) obj).get("__seq"));
-    return new DataService.RemoteDocumentUpdate(
-        seq == null ? 0 : seq, NtClient.NO_ONE, "setup", json, "{}", false, 0);
+    return new DataService.RemoteDocumentUpdate[] { new DataService.RemoteDocumentUpdate(
+        seq == null ? 0 : seq, NtClient.NO_ONE, "setup", json, "{}", false, 0) };
   }
 
   @Test
@@ -120,7 +120,7 @@ public class ServiceConnectTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    dataService.initialize(KEY, wrap("{\"__constructed\":true}"), Callback.DONT_CARE_VOID);
+    dataService.initialize(KEY, wrap("{\"__constructed\":true}")[0], Callback.DONT_CARE_VOID);
     dataService.patch(
         KEY,
         wrap(
@@ -155,7 +155,7 @@ public class ServiceConnectTests {
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
     dataService.setPatchFailureAt(1);
-    dataService.initialize(KEY, wrap("{\"__constructed\":true}"), Callback.DONT_CARE_VOID);
+    dataService.initialize(KEY, wrap("{\"__constructed\":true}")[0], Callback.DONT_CARE_VOID);
     dataService.patch(
         KEY,
         wrap(
@@ -178,7 +178,7 @@ public class ServiceConnectTests {
         new MockInstantLivingDocumentFactoryFactory(factory);
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
-    dataService.initialize(KEY, wrap("{\"__constructed\":true}"), Callback.DONT_CARE_VOID);
+    dataService.initialize(KEY, wrap("{\"__constructed\":true}")[0], Callback.DONT_CARE_VOID);
     dataService.patch(
         KEY,
         wrap(

@@ -28,7 +28,7 @@ public class MockFailureDataService implements DataService {
   }
 
   @Override
-  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
     callback.failure(new ErrorCodeException(999));
   }
 

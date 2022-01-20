@@ -38,7 +38,7 @@ public class ServiceDocumentControlTests {
     TimeSource time = new MockTime();
     MockInstantDataService dataService = new MockInstantDataService();
     dataService.initialize(
-        KEY, ServiceConnectTests.wrap("{\"__constructed\":true}"), Callback.DONT_CARE_VOID);
+        KEY, ServiceConnectTests.wrap("{\"__constructed\":true}")[0], Callback.DONT_CARE_VOID);
     dataService.patch(
         KEY,
         ServiceConnectTests.wrap(

@@ -69,8 +69,8 @@ public class ThreadedDataService implements DataService {
   }
 
   @Override
-  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    at(key, (service) -> service.patch(key, patch, callback));
+  public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
+    at(key, (service) -> service.patch(key, patches, callback));
   }
 
   @Override

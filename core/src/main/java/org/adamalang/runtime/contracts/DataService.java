@@ -21,8 +21,8 @@ public interface DataService {
   /** write the first entry for the document */
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback);
 
-  /** Apply a patch to the document using rfc7396 */
-  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback);
+  /** Apply a series of patches to the document using rfc7396 */
+  public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback);
 
   /** Compute the change the state of the document to the indicated seq by the given client */
   public void compute(

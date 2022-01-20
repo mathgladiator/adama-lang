@@ -75,17 +75,19 @@ public class DumbDataService implements DataService {
 
   @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    patch(key, patch, callback);
+    patch(key, new RemoteDocumentUpdate[] { patch }, callback);
   }
 
   @Override
-  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
     if (dropPatches) {
       return;
     }
-    updates.accept(patch);
-    JsonStreamReader reader = new JsonStreamReader(patch.redo);
-    tree = JsonAlgebra.merge(tree, reader.readJavaTree());
+    for (RemoteDocumentUpdate patch : patches) {
+      updates.accept(patch);
+      JsonStreamReader reader = new JsonStreamReader(patch.redo);
+      tree = JsonAlgebra.merge(tree, reader.readJavaTree());
+    }
     callback.success(null);
   }
 

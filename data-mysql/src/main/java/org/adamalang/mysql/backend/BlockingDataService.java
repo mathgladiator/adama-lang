@@ -18,6 +18,7 @@ import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.json.JsonAlgebra;
 
+import java.rmi.Remote;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -174,12 +175,15 @@ public class BlockingDataService implements DataService {
   }
 
   @Override
-  public void patch(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
+  public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
     dataBase.transact(
         (connection) -> {
+          RemoteDocumentUpdate first = patches[0];
+          RemoteDocumentUpdate last = patches[patches.length - 1];
+
           // read the index
           LookupResult lookup = lookup(connection, key);
-          if (lookup.head_seq + 1 != patch.seq) {
+          if (lookup.head_seq + 1 != first.seq) {
             throw new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF);
           }
 
@@ -190,18 +194,20 @@ public class BlockingDataService implements DataService {
                   .append(dataBase.databaseName)
                   .append("`.`index` ") //
                   .append("SET `head_seq`=")
-                  .append(patch.seq) //
+                  .append(last.seq) //
                   .append(", `invalidate`=")
-                  .append(patch.requiresFutureInvalidation ? 1 : 0) //
+                  .append(last.requiresFutureInvalidation ? 1 : 0) //
                   .append(", `when`='")
-                  .append(whenOf(patch)) //
+                  .append(whenOf(last)) //
                   .append("' WHERE `id`=")
                   .append(lookup.id)
                   .toString();
           DataBase.execute(connection, updateIndexSQL);
 
           // insert delta
-          insertDelta(connection, lookup.id, patch);
+          for (RemoteDocumentUpdate patch : patches) {
+            insertDelta(connection, lookup.id, patch);
+          }
           return null;
         },
         callback,
