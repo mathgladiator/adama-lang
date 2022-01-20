@@ -501,12 +501,16 @@ public class LivingDocumentTests {
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     ((DumbDataService) setup.document.base.service).dropPatches = true;
-    for (int k = 0; k <= 1024; k++) {
+    for (int k = 0; k <= 128; k++) {
       setup.document.send( NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertNoResponse());
+    }
+    for (int j = 0; j <= 127; j++) {
+      setup.document.send(
+          NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(123004));
     }
     for (int j = 0; j < 128; j++) {
       setup.document.send(
-          NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(123004));
+          NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(192639));
     }
   }
 

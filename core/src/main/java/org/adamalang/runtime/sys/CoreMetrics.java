@@ -40,6 +40,7 @@ public class CoreMetrics {
   public final CallbackMonitor document_expire;
   public final CallbackMonitor document_execute_patch;
   public final Runnable document_queue_full;
+  public final Runnable document_queue_running_behind;
   public final Runnable document_catastrophic_failure;
 
   public CoreMetrics(MetricsFactory metricsFactory) {
@@ -68,6 +69,7 @@ public class CoreMetrics {
     inflight_streams = metricsFactory.inflight("core_inflight_streams");
     inflight_documents = metricsFactory.inflight("core_inflight_documents");
     document_queue_full = metricsFactory.counter("core_document_full");
+    document_queue_running_behind = metricsFactory.counter("core_document_queue_running_behind");
     document_catastrophic_failure = metricsFactory.counter("core_document_catastrophic_failure");
   }
 }

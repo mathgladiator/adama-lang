@@ -63,6 +63,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
         @Override
         public void failure(int code) {
           System.err.println("Send failed: " + code);
+          agent.schedule(SimpleDocumentConnectionAgent.this, (int) (5000 + 5000 * Math.random()));
         }
       });
 

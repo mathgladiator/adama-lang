@@ -42,6 +42,7 @@ public class DurableLivingDocument {
   private boolean inflightPatch;
   private boolean catastrophicFailureOccurred;
   private long lastExpire;
+  private int outstandingExecutionsWhichRequireDrain;
 
   private DurableLivingDocument(
       final Key key,
@@ -57,6 +58,7 @@ public class DurableLivingDocument {
     this.inflightPatch = false;
     this.catastrophicFailureOccurred = false;
     this.lastExpire = 0;
+    this.outstandingExecutionsWhichRequireDrain = 0;
   }
 
   public static void fresh(
@@ -164,8 +166,8 @@ public class DurableLivingDocument {
       Integer whenToInvalidateMilliseconds, Callback<Integer> callback, int seq) {
     this.requiresInvalidateMilliseconds = whenToInvalidateMilliseconds;
     this.inflightPatch = false;
-
     if (pending.size() == 0) {
+      outstandingExecutionsWhichRequireDrain = 0;
       if (requiresInvalidateMilliseconds != null && requiresInvalidateMilliseconds == 0) {
         requiresInvalidateMilliseconds = null;
         invalidate(callback);
@@ -361,7 +363,13 @@ public class DurableLivingDocument {
       return;
     }
     if (inflightPatch) {
-      if (pending.size() >= 1024 && !forceIntoQueue) {
+      if (outstandingExecutionsWhichRequireDrain >= 256 && !forceIntoQueue) {
+        base.metrics.document_queue_running_behind.run();
+        callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_QUEUE_BUSY_WAY_BEHIND));
+        return;
+      }
+      outstandingExecutionsWhichRequireDrain++;
+      if (pending.size() >= 128 && !forceIntoQueue) {
         base.metrics.document_queue_full.run();
         callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_QUEUE_BUSY_TOO_MANY_PENDING_ITEMS));
       } else {
