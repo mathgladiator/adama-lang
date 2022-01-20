@@ -2777,13 +2777,13 @@ public class GeneratedAggregatesTests extends GeneratedBase {
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"x\":{\"0\":1,\"1\":4,\"2\":9,\"3\":16,\"@s\":4}},\"seq\":2}");
     gold.append("\n{\"command\":\"connect\",\"timestamp\":\"75\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"}}-->{\"__seq\":3,\"__connection_id\":1,\"__time\":\"75\",\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}} need:true in:0");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"-1034601897293430941\",\"__time\":\"100\"} need:false in:-100");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"-1034601897293430941\"} need:false in:-75");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"125\"}-->{\"__messages\":null,\"__seq\":5,\"__entropy\":\"7848011421992302230\",\"__time\":\"125\"} need:false in:-125");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":5}");
     gold.append("\n+ RANDO DELTA:{\"data\":{\"x\":{\"0\":1,\"1\":4,\"2\":9,\"3\":16,\"@s\":4}},\"seq\":5}");
     gold.append("\n{\"command\":\"connect\",\"timestamp\":\"150\",\"who\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}-->{\"__seq\":6,\"__connection_id\":2,\"__time\":\"150\",\"__clients\":{\"1\":{\"agent\":\"rando\",\"authority\":\"random-place\"}}} need:true in:0");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"175\"}-->{\"__messages\":null,\"__seq\":7,\"__entropy\":\"-8929183248358367000\",\"__time\":\"175\"} need:false in:-175");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"150\"}-->{\"__messages\":null,\"__seq\":7,\"__entropy\":\"-8929183248358367000\"} need:false in:-150");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":7}");
     gold.append("\n+ RANDO DELTA:{\"seq\":7}");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"200\"}-->{\"__messages\":null,\"__seq\":8,\"__entropy\":\"488730542833106255\",\"__time\":\"200\"} need:false in:-200");

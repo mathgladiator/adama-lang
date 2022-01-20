@@ -27,6 +27,7 @@ public class ErrorCodesTests {
     for (Field field : ErrorCodes.class.getFields()) {
       int v = (int) field.get(null);
       Assert.assertFalse("dupe:" + v, values.contains(v));
+      values.add(v);
     }
   }
 }

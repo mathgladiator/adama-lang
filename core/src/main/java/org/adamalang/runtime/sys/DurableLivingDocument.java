@@ -28,6 +28,7 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** A LivingDocument tied to a document id and DataService */
@@ -162,31 +163,21 @@ public class DurableLivingDocument {
     }
   }
 
-  private void finishSuccessDataServicePatchWhileInExecutor(
-      Integer whenToInvalidateMilliseconds, Callback<Integer> callback, int seq) {
-    this.requiresInvalidateMilliseconds = whenToInvalidateMilliseconds;
+  private void finishSuccessDataServicePatchWhileInExecutor() {
     this.inflightPatch = false;
     if (pending.size() == 0) {
-      outstandingExecutionsWhichRequireDrain = 0;
-      if (requiresInvalidateMilliseconds != null && requiresInvalidateMilliseconds == 0) {
-        requiresInvalidateMilliseconds = null;
-        invalidate(callback);
-      } else {
-        callback.success(seq);
-        if (requiresInvalidateMilliseconds != null) {
-          base.executor.schedule(
-              new NamedRunnable("finish-success-patch") {
-                @Override
-                public void execute() throws Exception {
-                  invalidate(Callback.DONT_CARE_INTEGER);
-                }
-              },
-              requiresInvalidateMilliseconds);
-        }
+      if (requiresInvalidateMilliseconds != null) {
+        base.executor.schedule(
+            new NamedRunnable("finish-success-patch") {
+              @Override
+              public void execute() throws Exception {
+                invalidate(Callback.DONT_CARE_INTEGER);
+              }
+            },
+            requiresInvalidateMilliseconds);
       }
     } else {
-      callback.success(seq);
-      executeNow(pending.removeFirst());
+      executeNow(new IngestRequest[] {pending.removeFirst()});
     }
   }
 
@@ -204,91 +195,165 @@ public class DurableLivingDocument {
     }
   }
 
-  private void executeNow(IngestRequest request) {
-    try {
-      final var change = document.__transact(request.request, currentFactory);
-      inflightPatch = true;
-      if (change.update.requiresFutureInvalidation) {
-        this.requiresInvalidateMilliseconds = change.update.whenToInvalidateMilliseconds;
+  private IngestRequest isolate(IngestRequest requestToFocus, IngestRequest[] all) {
+    for (IngestRequest otherRequest : all) {
+      if (otherRequest != requestToFocus) {
+        otherRequest.callback.failure(
+            new ErrorCodeException(ErrorCodes.DOCUMENT_QUEUE_CONFLICT_OPERATIONS));
       }
+    }
+    return requestToFocus;
+  }
+
+  private void executeNow(IngestRequest[] requests) {
+    IngestRequest lastRequest = null;
+    ArrayList<LivingDocumentChange> changes = new ArrayList<>();
+    Runnable revert = () -> {
+      for (int k = changes.size() - 1; k >= 0; k--) {
+        document.__insert(new JsonStreamReader(changes.get(k).update.undo));
+      }
+    };
+    try {
+      LivingDocumentChange last = null;
+      ArrayList<Callback<Integer>> callbacks = new ArrayList<>();
+      boolean requestsCleanUp = false;
+      for (IngestRequest request : requests) {
+        try {
+          if (request.cleanupTest) {
+            requestsCleanUp = true;
+          }
+          lastRequest = request;
+          last = document.__transact(request.request, currentFactory);
+          changes.add(last);
+          callbacks.add(request.callback);
+        } catch (ErrorCodeException ex) {
+          request.callback.failure(ex);
+        }
+      }
+      if (last == null) {
+        return;
+      }
+      final boolean shouldCleanUp = requestsCleanUp;
+      Consumer<ErrorCodeException> triggerFailure =
+          (ex2) -> {
+            base.executor.execute(
+                new NamedRunnable("catastrophic-failure") {
+                  @Override
+                  public void execute() throws Exception {
+                    for (Callback<Integer> callback : callbacks) {
+                      callback.failure(ex2);
+                    }
+                    catastrophicFailureWhileInExecutor();
+                  }
+                });
+          };
+      while (last.update.requiresFutureInvalidation
+          && last.update.whenToInvalidateMilliseconds == 0) {
+        // inject an invalidation
+        try {
+          last = document.__transact(forgeInvalidate(), currentFactory);
+          changes.add(last);
+        } catch (ErrorCodeException huh) {
+          triggerFailure.accept(huh);
+          return;
+        }
+      }
+      requiresInvalidateMilliseconds =
+          last.update.requiresFutureInvalidation ? last.update.whenToInvalidateMilliseconds : null;
+
+      inflightPatch = true;
+      DataService.RemoteDocumentUpdate[] patches =
+          new DataService.RemoteDocumentUpdate[changes.size()];
+      int at = 0;
+      for (LivingDocumentChange change : changes) {
+        patches[at] = change.update;
+        at++;
+      }
+      int seqToUse = last.update.seq;
+
       base.service.patch(
           key,
-          new DataService.RemoteDocumentUpdate[] {change.update},
-          base.metrics.document_execute_patch.wrap(new Callback<>() {
-            @Override
-            public void success(Void value) {
-              base.executor.execute(
-                  new NamedRunnable("execute-now-patch-callback") {
-                    @Override
-                    public void execute() throws Exception {
-                      finishSuccessDataServicePatchWhileInExecutor(
-                          change.update.requiresFutureInvalidation
-                              ? change.update.whenToInvalidateMilliseconds
-                              : null,
-                          request.callback,
-                          change.update.seq);
-                      change.complete();
-                      if (request.cleanupTest) {
-                        if (document.__canRemoveFromMemory()) {
-                          scheduleCleanup();
+          patches,
+          base.metrics.document_execute_patch.wrap(
+              new Callback<>() {
+                @Override
+                public void success(Void value) {
+                  base.executor.execute(
+                      new NamedRunnable("execute-now-patch-callback") {
+                        @Override
+                        public void execute() throws Exception {
+                          for (Callback<Integer> callback : callbacks) {
+                            callback.success(seqToUse);
+                          }
+                          finishSuccessDataServicePatchWhileInExecutor();
+                          for (LivingDocumentChange change : changes) {
+                            change.complete();
+                          }
+                          if (shouldCleanUp && document.__canRemoveFromMemory()) {
+                            scheduleCleanup();
+                          }
                         }
-                      }
-                    }
-                  });
-            }
+                      });
+                }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-              Consumer<ErrorCodeException> failure = (ex2) -> {
-                base.executor.execute(new NamedRunnable("catastrophic-failure") {
-                    @Override
-                    public void execute() throws Exception {
-                      request.callback.failure(ex2);
-                      catastrophicFailureWhileInExecutor();
-                    }
-                  });
-              };
-              base.executor.execute(
-                  new NamedRunnable("failed-patch") {
-                    @Override
-                    public void execute() throws Exception {
-                      if (ex.code == ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF) {
-                        if (!request.tryAgain()) {
-                          request.callback.failure(ex);
-                          catastrophicFailureWhileInExecutor();
-                          return;
-                        }
-                        document.__insert(new JsonStreamReader(change.update.undo));
-                        base.service.compute(
-                            key,
-                            DataService.ComputeMethod.HeadPatch,
-                            document.__seq.get(),
-                            base.metrics.catch_up_patch.wrap(new Callback<>() {
-                              @Override
-                              public void success(DataService.LocalDocumentChange value) {
-                                base.executor.execute(
-                                    new NamedRunnable("catch-up-for-failed-patch") {
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  base.executor.execute(
+                      new NamedRunnable("failed-patch") {
+                        @Override
+                        public void execute() throws Exception {
+                          if (ex.code == ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF) {
+                            for (IngestRequest request : requests) {
+                              if (!request.tryAgain()) {
+                                triggerFailure.accept(ex);
+                                return;
+                              }
+                            }
+                            revert.run();
+                            base.service.compute(
+                                key,
+                                DataService.ComputeMethod.HeadPatch,
+                                document.__seq.get(),
+                                base.metrics.catch_up_patch.wrap(
+                                    new Callback<>() {
                                       @Override
-                                      public void execute() throws Exception {
-                                        document.__insert(new JsonStreamReader(value.patch));
-                                        executeNow(request);
+                                      public void success(DataService.LocalDocumentChange value) {
+                                        base.executor.execute(
+                                            new NamedRunnable("catch-up-computed") {
+                                              @Override
+                                              public void execute() throws Exception {
+                                                document.__insert(
+                                                    new JsonStreamReader(value.patch));
+                                                IngestRequest[] requestsAfterCatchUp =
+                                                    new IngestRequest[requests.length + 1];
+                                                requestsAfterCatchUp[0] =
+                                                    new IngestRequest(
+                                                        NtClient.NO_ONE,
+                                                        forgeInvalidate(),
+                                                        Callback.DONT_CARE_INTEGER,
+                                                        false);
+                                                for (int j = 0; j < requests.length; j++) {
+                                                  requestsAfterCatchUp[j + 1] = requests[j];
+                                                }
+                                                executeNow(requestsAfterCatchUp);
+                                              }
+                                            });
                                       }
-                                    });
-                              }
 
-                              @Override
-                              public void failure(ErrorCodeException ex) {
-                                failure.accept(ex);
-                              }
-                            }));
-                      } else {
-                        failure.accept(ex);
-                      }
-                    }
-                  });
-            }
-          }));
+                                      @Override
+                                      public void failure(ErrorCodeException ex) {
+                                        triggerFailure.accept(ex);
+                                      }
+                                    }));
+                          } else {
+                            triggerFailure.accept(ex);
+                          }
+                        }
+                      });
+                }
+              }));
     } catch (PerformDocumentRewindException rewind) {
+      IngestRequest requestToActOn = isolate(lastRequest, requests);
       base.service.compute(
           key,
           DataService.ComputeMethod.Rewind,
@@ -300,11 +365,19 @@ public class DurableLivingDocument {
                   new NamedRunnable("document-rewind-success") {
                     @Override
                     public void execute() throws Exception {
-                      final var writer = forge("apply", request.who);
+                      revert.run();
+                      final var writer = forge("apply", requestToActOn.who);
                       writer.writeObjectFieldIntro("patch");
                       writer.injectJson(value.patch);
                       writer.endObject();
-                      executeNow(new IngestRequest(request.who, writer.toString(), request.callback, false));
+                      executeNow(
+                          new IngestRequest[] {
+                            new IngestRequest(
+                                requestToActOn.who,
+                                writer.toString(),
+                                requestToActOn.callback,
+                                false)
+                          });
                     }
                   });
             }
@@ -315,7 +388,9 @@ public class DurableLivingDocument {
                   new NamedRunnable("document-rewind-failure") {
                     @Override
                     public void execute() throws Exception {
-                      request.callback.failure(ex);
+                      for (IngestRequest request : requests) {
+                        request.callback.failure(ex);
+                      }
                       catastrophicFailureWhileInExecutor();
                     }
                   });
@@ -331,8 +406,10 @@ public class DurableLivingDocument {
                   new NamedRunnable("document-destroy-success") {
                     @Override
                     public void execute() throws Exception {
-                      request.callback.failure(
-                          new ErrorCodeException(ErrorCodes.DOCUMENT_SELF_DESTRUCT_SUCCESSFUL));
+                      for (IngestRequest request : requests) {
+                        request.callback.failure(
+                            new ErrorCodeException(ErrorCodes.DOCUMENT_SELF_DESTRUCT_SUCCESSFUL));
+                      }
                       catastrophicFailureWhileInExecutor();
                     }
                   });
@@ -344,18 +421,23 @@ public class DurableLivingDocument {
                   new NamedRunnable("document-destroy-failure") {
                     @Override
                     public void execute() throws Exception {
-                      request.callback.failure(ex);
+                      for (IngestRequest request : requests) {
+                        request.callback.failure(ex);
+                      }
                       catastrophicFailureWhileInExecutor();
                     }
                   });
             }
           });
-    } catch (ErrorCodeException ex) {
-      request.callback.failure(ex);
     }
   }
 
-  private void ingest(NtClient who, String requestJson, Callback<Integer> callback, boolean cleanupTest, boolean forceIntoQueue) {
+  private void ingest(
+      NtClient who,
+      String requestJson,
+      Callback<Integer> callback,
+      boolean cleanupTest,
+      boolean forceIntoQueue) {
     IngestRequest request = new IngestRequest(who, requestJson, callback, cleanupTest);
     if (catastrophicFailureOccurred) {
       request.callback.failure(
@@ -371,12 +453,13 @@ public class DurableLivingDocument {
       outstandingExecutionsWhichRequireDrain++;
       if (pending.size() >= 128 && !forceIntoQueue) {
         base.metrics.document_queue_full.run();
-        callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_QUEUE_BUSY_TOO_MANY_PENDING_ITEMS));
+        callback.failure(
+            new ErrorCodeException(ErrorCodes.DOCUMENT_QUEUE_BUSY_TOO_MANY_PENDING_ITEMS));
       } else {
         pending.add(request);
       }
     } else {
-      executeNow(request);
+      executeNow(new IngestRequest[] {request});
     }
   }
 
@@ -409,10 +492,19 @@ public class DurableLivingDocument {
     }
   }
 
-  public void invalidate(Callback<Integer> callback) {
+  private String forgeInvalidate() {
     final var request = forge("invalidate", null);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), base.metrics.document_invalidate.wrap(callback), false, true);
+    return request.toString();
+  }
+
+  public void invalidate(Callback<Integer> callback) {
+    ingest(
+        NtClient.NO_ONE,
+        forgeInvalidate(),
+        base.metrics.document_invalidate.wrap(callback),
+        false,
+        true);
   }
 
   public int getCodeCost() {
@@ -436,7 +528,12 @@ public class DurableLivingDocument {
     request.writeObjectFieldIntro("limit");
     request.writeLong(limit);
     request.endObject();
-    ingest(NtClient.NO_ONE, request.toString(), base.metrics.document_expire.wrap(callback), true, false);
+    ingest(
+        NtClient.NO_ONE,
+        request.toString(),
+        base.metrics.document_expire.wrap(callback),
+        true,
+        false);
   }
 
   public void connect(final NtClient who, Callback<Integer> callback) {
@@ -535,13 +632,14 @@ public class DurableLivingDocument {
   }
 
   private static class IngestRequest {
+    public final boolean cleanupTest;
     private final NtClient who;
     private final String request;
     private final Callback<Integer> callback;
     private int attempts;
-    public final boolean cleanupTest;
 
-    private IngestRequest(NtClient who, String request, Callback<Integer> callback, boolean cleanup) {
+    private IngestRequest(
+        NtClient who, String request, Callback<Integer> callback, boolean cleanup) {
       this.who = who;
       this.request = request;
       this.callback = callback;

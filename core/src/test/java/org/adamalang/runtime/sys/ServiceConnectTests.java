@@ -279,9 +279,9 @@ public class ServiceConnectTests {
       latch1.run();
       latch2.run();
       Assert.assertEquals("STATUS:Connected", streamback1.get(0));
-      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback1.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback1.get(1));
       Assert.assertEquals("STATUS:Connected", streamback2.get(0));
-      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback2.get(1));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback2.get(1));
     } finally {
       service.shutdown();
     }

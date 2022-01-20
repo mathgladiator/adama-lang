@@ -597,7 +597,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"one\",\"__constructed\":true,\"__entropy\":\"0\",\"i\":42,\"l\":\"314\",\"d\":2.71,\"b\":true,\"s\":\"Hi\"} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"two\",\"__next_time\":\"25\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\",\"i\":100,\"l\":\"4000000\",\"d\":3.14,\"b\":false,\"s\":\"There\"} need:true in:0");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\",\"i\":1000,\"l\":\"980000000000\",\"d\":42.13,\"b\":true,\"s\":\"Oh!!!\"} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"i\":1000,\"l\":\"980000000000\",\"d\":42.13,\"b\":true,\"s\":\"Oh!!!\"} need:false in:0");
     gold.append("\nCPU:20");
     gold.append("\nMEMORY:662");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"75\"} need:false in:-50");
@@ -1344,7 +1344,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"one\",\"__constructed\":true,\"__entropy\":\"0\",\"x\":{\"i\":42,\"l\":\"314\",\"d\":2.71,\"b\":true,\"s\":\"Hi\"}} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"two\",\"__next_time\":\"25\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\",\"x\":{\"i\":100,\"l\":\"4000000\",\"d\":3.14,\"b\":false,\"s\":\"There\"}} need:true in:0");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\",\"x\":{\"i\":1000,\"l\":\"980000000000\",\"d\":42.13,\"b\":true,\"s\":\"Oh!!!\"}} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"x\":{\"i\":1000,\"l\":\"980000000000\",\"d\":42.13,\"b\":true,\"s\":\"Oh!!!\"}} need:false in:0");
     gold.append("\nCPU:20");
     gold.append("\nMEMORY:752");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"75\"} need:false in:-50");
@@ -4014,7 +4014,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"one\",\"__constructed\":true,\"__entropy\":\"0\",\"__auto_table_row_id\":3,\"t\":{\"1\":{\"x\":1,\"id\":1},\"2\":{\"x\":2,\"id\":2},\"3\":{\"x\":3,\"id\":3}}} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"two\",\"__next_time\":\"25\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\",\"__auto_table_row_id\":6,\"t\":{\"4\":{\"x\":4,\"id\":4},\"5\":{\"x\":5,\"id\":5},\"6\":{\"x\":6,\"id\":6}}} need:true in:0");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\",\"__auto_table_row_id\":9,\"t\":{\"7\":{\"x\":7,\"id\":7},\"8\":{\"x\":8,\"id\":8},\"9\":{\"x\":9,\"id\":9}}} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__auto_table_row_id\":9,\"t\":{\"7\":{\"x\":7,\"id\":7},\"8\":{\"x\":8,\"id\":8},\"9\":{\"x\":9,\"id\":9}}} need:false in:0");
     gold.append("\nCPU:23");
     gold.append("\nMEMORY:1952");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"75\"} need:false in:-50");
@@ -4785,7 +4785,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"one\",\"__constructed\":true,\"__entropy\":\"0\",\"__auto_table_row_id\":3,\"t\":{\"1\":{\"x\":1,\"id\":1},\"2\":{\"x\":2,\"id\":2},\"3\":{\"x\":3,\"id\":3}}} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"two\",\"__next_time\":\"25\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\",\"__auto_table_row_id\":6,\"t\":{\"4\":{\"x\":4,\"id\":4},\"5\":{\"x\":5,\"id\":5},\"6\":{\"x\":6,\"id\":6}}} need:true in:0");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\",\"__auto_table_row_id\":9,\"t\":{\"7\":{\"x\":7,\"id\":7},\"8\":{\"x\":8,\"id\":8},\"9\":{\"x\":9,\"id\":9}}} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__auto_table_row_id\":9,\"t\":{\"7\":{\"x\":7,\"id\":7},\"8\":{\"x\":8,\"id\":8},\"9\":{\"x\":9,\"id\":9}}} need:false in:0");
     gold.append("\nCPU:23");
     gold.append("\nMEMORY:1952");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"75\"} need:false in:-50");
@@ -5407,7 +5407,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"one\",\"__constructed\":true,\"__entropy\":\"0\",\"input\":2} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"two\",\"__next_time\":\"25\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\",\"input\":3} need:true in:0");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\",\"input\":100} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"input\":100} need:false in:0");
     gold.append("\nCPU:8");
     gold.append("\nMEMORY:632");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"75\"} need:false in:-50");
@@ -6006,7 +6006,7 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"one\",\"__constructed\":true,\"__entropy\":\"0\",\"i\":42,\"l\":\"314\",\"d\":2.71,\"b\":true,\"s\":\"Hi\"} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"two\",\"__next_time\":\"25\",\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\",\"i\":null,\"l\":null,\"d\":null,\"b\":null,\"s\":null} need:true in:0");
-    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\",\"i\":1000,\"l\":\"980000000000\",\"d\":42.13,\"b\":true,\"s\":\"Oh!!!\"} need:false in:-25");
+    gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__state\":\"\",\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"i\":1000,\"l\":\"980000000000\",\"d\":42.13,\"b\":true,\"s\":\"Oh!!!\"} need:false in:0");
     gold.append("\nCPU:20");
     gold.append("\nMEMORY:1260");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"75\"}-->{\"__messages\":null,\"__seq\":3,\"__entropy\":\"-1034601897293430941\",\"__time\":\"75\"} need:false in:-50");

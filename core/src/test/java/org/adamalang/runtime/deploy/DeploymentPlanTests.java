@@ -114,6 +114,6 @@ public class DeploymentPlanTests {
 
   @Test
   public void must_be_json() {
-    parseTest("x", 116812);
+    parseTest("x", 146561);
   }
 }

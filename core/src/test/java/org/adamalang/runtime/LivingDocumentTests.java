@@ -443,7 +443,7 @@ public class LivingDocumentTests {
             null,
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(5));
+    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(4));
     String x =
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
             .get("x")
@@ -577,7 +577,7 @@ public class LivingDocumentTests {
                 .get("__dedupe"));
     Assert.assertEquals(1, mapSend1.size());
     setup.time.time += 1000;
-    setup.document.expire(2000, new RealDocumentSetup.AssertFailure(122412));
+    setup.document.expire(2000, new RealDocumentSetup.AssertFailure(131203));
     HashMap<String, Object> mapSend2 =
         ((HashMap<String, Object>)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -647,7 +647,7 @@ public class LivingDocumentTests {
       setup.time.time += 100;
       System.out.println("WHITELIST:" + k);
       if (shouldFail.contains(k)) {
-        setup.document.expire(750, new RealDocumentSetup.AssertFailure(122412));
+        setup.document.expire(750, new RealDocumentSetup.AssertFailure(131203));
       } else {
         setup.document.expire(750, new RealDocumentSetup.AssertInt(expectedAt));
         expectedAt += 2;
