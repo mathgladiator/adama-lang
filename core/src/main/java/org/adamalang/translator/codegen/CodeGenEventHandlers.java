@@ -33,7 +33,7 @@ public class CodeGenEventHandlers {
                 + connectCount
                 + "(NtClient "
                 + dce.clientVarToken.text
-                + ")");
+                + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         connectCount++;
       } else if (dce.which == DocumentEvent.ClientDisconnected) {

@@ -1166,7 +1166,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public boolean __onConnected__0(NtClient who){");
+    gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    return (who.equals(NtClient.NO_ONE));");
@@ -1848,7 +1848,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public boolean __onConnected__0(NtClient who){");
+    gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    return (who.equals(NtClient.NO_ONE));");
@@ -3615,7 +3615,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public boolean __onConnected__0(NtClient who){");
+    gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    return (who.equals(NtClient.NO_ONE));");
@@ -5748,7 +5748,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public boolean __onConnected__0(NtClient who){");
+    gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(2);");
     gold.append("\n    return true;");
@@ -7195,7 +7195,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public boolean __onConnected__0(NtClient who){");
+    gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(5);");
     gold.append("\n    return (who.equals(NtClient.NO_ONE));");

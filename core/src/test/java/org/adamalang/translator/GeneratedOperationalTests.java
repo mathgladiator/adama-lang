@@ -446,9 +446,9 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[\"setup\"]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__entropy\":\"0\"} need:true in:0");
-    gold.append("\nGOODWILL EXHAUSTED:org.adamalang.common.ErrorCodeException: code:134152:Good will exhausted:8,8 --> 8,12!!!");
+    gold.append("\nGOODWILL EXHAUSTED:org.adamalang.common.ErrorCodeException: code:904318:Good will exhausted:8,8 --> 8,12!!!");
     gold.append("\n!!!");
-    gold.append("\nRuntimeException:org.adamalang.common.ErrorCodeException: code:134152:Good will exhausted:8,8 --> 8,12!!!");
+    gold.append("\nRuntimeException:org.adamalang.common.ErrorCodeException: code:904318:Good will exhausted:8,8 --> 8,12!!!");
     gold.append("\n!!!");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");

@@ -33,6 +33,10 @@ public class ServiceConnectTests {
       "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_ATTACH =
       "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
+  private static final String CONNECT_CRASH =
+      "@can_create(who) { return true; } public int x; @connected(who) { x = 1; while(x > 0) { x = 2; } return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
+  private static final String CONNECT_CRASH_2 =
+      "@can_create(who) { return true; } public int x; @connected(who) { transition #crash; return who == @no_one; } #crash { x = 1; while(x > 0) { x = 2; } } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
 
   @Test
   public void connect_super_happy_connect() throws Exception {
@@ -63,6 +67,46 @@ public class ServiceConnectTests {
       streamback.get().disconnect();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void connect_crash() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(CONNECT_CRASH);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(NtClient.NO_ONE, KEY, "{}", null, created);
+      created.await_success();
+      MockStreamback streamback = new MockStreamback();
+      service.connect(NtClient.NO_ONE, KEY, streamback);
+      streamback.await_failure(904318);
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void connect_crash_invalidation() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(CONNECT_CRASH_2);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    try {
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(NtClient.NO_ONE, KEY, "{}", null, created);
+      created.await_success();
+      MockStreamback streamback = new MockStreamback();
+      service.connect(NtClient.NO_ONE, KEY, streamback);
+      streamback.await_failure(904318);
     } finally {
       service.shutdown();
     }

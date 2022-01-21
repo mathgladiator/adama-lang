@@ -645,7 +645,6 @@ public class LivingDocumentTests {
         Assert.assertEquals(size[k], send.size());
       }
       setup.time.time += 100;
-      System.out.println("WHITELIST:" + k);
       if (shouldFail.contains(k)) {
         setup.document.expire(750, new RealDocumentSetup.AssertFailure(131203));
       } else {
@@ -1147,6 +1146,12 @@ public class LivingDocumentTests {
     setup.document.connect(A, new RealDocumentSetup.AssertInt(7));
     setup.document.disconnect(A, new RealDocumentSetup.AssertInt(9));
     setup.assertCompare();
+  }
+
+  @Test
+  public void crash_infinite_transition() throws Exception {
+      final var setup = new RealDocumentSetup("@construct { } #next { while(true) {} } @connected(who) { transition #next; return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertFailure(904318));
   }
 
   @Test

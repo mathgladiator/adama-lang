@@ -260,8 +260,8 @@ public class DurableLivingDocument {
         try {
           last = document.__transact(forgeInvalidate(), currentFactory);
           changes.add(last);
-        } catch (ErrorCodeException huh) {
-          triggerFailure.accept(huh);
+        } catch (ErrorCodeException ex) {
+          triggerFailure.accept(ex);
           return;
         }
       }

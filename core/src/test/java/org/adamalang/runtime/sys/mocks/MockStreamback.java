@@ -105,13 +105,4 @@ public class MockStreamback implements Streamback {
       Assert.fail();
     }
   }
-
-  public void await_any_failure() {
-    try {
-      Assert.assertTrue(failed.await(2000, TimeUnit.MILLISECONDS));
-      Assert.assertTrue(failure.code >= 1);
-    } catch (InterruptedException ie) {
-      Assert.fail();
-    }
-  }
 }

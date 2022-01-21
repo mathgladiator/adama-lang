@@ -637,130 +637,134 @@ public abstract class LivingDocument implements RxParent {
   /** transaction: core API (New Version in Draft) */
   public LivingDocumentChange __transact(final String requestJson, LivingDocumentFactory factory)
       throws ErrorCodeException {
-    final var reader = new JsonStreamReader(requestJson);
-    String command = null;
-    Long timestamp = null;
-    Long limit = null;
-    NtClient who = null;
-    Object message = null;
-    NtMessageBase arg = null;
-    String channel = null;
-    String patch = null;
-    String entropy = null;
-    String marker = null;
-    NtAsset asset = null;
-    if (reader.startObject()) {
-      while (reader.notEndOfObject()) {
-        final var fieldName = reader.fieldName();
-        switch (fieldName) {
-          case "command":
-            command = reader.readString();
-            break;
-          case "marker":
-            marker = reader.readString();
-            break;
-          case "timestamp":
-            timestamp = reader.readLong();
-            break;
-          case "limit":
-            limit = reader.readLong();
-            break;
-          case "who":
-            who = reader.readNtClient();
-            break;
-          case "channel":
-            channel = reader.readString();
-            break;
-          case "entropy":
-            entropy = reader.readString();
-            break;
-          case "patch":
-            patch = reader.skipValueIntoJson();
-            break;
-          case "message":
-            message = __parse_message2(channel, reader);
-            break;
-          case "asset":
-            asset = reader.readNtAsset();
-            break;
-          case "arg": // for constructor
-            arg = __parse_construct_arg(reader);
-            break;
-          default:
-            throw new ErrorCodeException(
-                ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
+    try {
+      final var reader = new JsonStreamReader(requestJson);
+      String command = null;
+      Long timestamp = null;
+      Long limit = null;
+      NtClient who = null;
+      Object message = null;
+      NtMessageBase arg = null;
+      String channel = null;
+      String patch = null;
+      String entropy = null;
+      String marker = null;
+      NtAsset asset = null;
+      if (reader.startObject()) {
+        while (reader.notEndOfObject()) {
+          final var fieldName = reader.fieldName();
+          switch (fieldName) {
+            case "command":
+              command = reader.readString();
+              break;
+            case "marker":
+              marker = reader.readString();
+              break;
+            case "timestamp":
+              timestamp = reader.readLong();
+              break;
+            case "limit":
+              limit = reader.readLong();
+              break;
+            case "who":
+              who = reader.readNtClient();
+              break;
+            case "channel":
+              channel = reader.readString();
+              break;
+            case "entropy":
+              entropy = reader.readString();
+              break;
+            case "patch":
+              patch = reader.skipValueIntoJson();
+              break;
+            case "message":
+              message = __parse_message2(channel, reader);
+              break;
+            case "asset":
+              asset = reader.readNtAsset();
+              break;
+            case "arg": // for constructor
+              arg = __parse_construct_arg(reader);
+              break;
+            default:
+              throw new ErrorCodeException(
+                  ErrorCodes.LIVING_DOCUMENT_TRANSACTION_UNRECOGNIZED_FIELD_PRESENT);
+          }
         }
       }
+      if (command == null) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND);
+      }
+      if (timestamp == null) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP);
+      }
+      __time.set(timestamp);
+      switch (command) {
+        case "invalidate":
+          if (__monitor != null) {
+            return __transaction_invalidate_monitored(who, requestJson);
+          } else {
+            return __transaction_invalidate_body(who, requestJson);
+          }
+        case "construct":
+          if (who == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          }
+          if (__constructed.get()) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED);
+          }
+          if (arg == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG);
+          }
+          return __transaction_construct(requestJson, who, arg, entropy);
+        case "connect":
+          if (who == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          }
+          return __transaction_connect(requestJson, who);
+        case "disconnect":
+          if (who == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          }
+          return __transaction_disconnect(requestJson, who);
+        case "attach":
+          if (who == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          }
+          if (asset == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ASSET);
+          }
+          return __transaction_attach(requestJson, who, asset);
+        case "send":
+          if (who == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          }
+          if (channel == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL);
+          }
+          if (message == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE);
+          }
+          return __transaction_send(requestJson, who, marker, channel, timestamp, message, factory);
+        case "expire":
+          if (limit == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT);
+          }
+          return __transaction_expire(requestJson, limit);
+        case "apply":
+          if (who == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
+          }
+          if (patch == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PATCH);
+          }
+          return __transaction_apply_patch(requestJson, who, patch);
+      }
+      throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND);
+    } catch (GoodwillExhaustedException gee) {
+      throw new ErrorCodeException(ErrorCodes.API_GOODWILL_EXCEPTION, gee);
     }
-    if (command == null) {
-      throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_COMMAND_FOUND);
-    }
-    if (timestamp == null) {
-      throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP);
-    }
-    __time.set(timestamp);
-    switch (command) {
-      case "invalidate":
-        if (__monitor != null) {
-          return __transaction_invalidate_monitored(who, requestJson);
-        } else {
-          return __transaction_invalidate_body(who, requestJson);
-        }
-      case "construct":
-        if (who == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-        }
-        if (__constructed.get()) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED);
-        }
-        if (arg == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CONSTRUCTOR_ARG);
-        }
-        return __transaction_construct(requestJson, who, arg, entropy);
-      case "connect":
-        if (who == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-        }
-        return __transaction_connect(requestJson, who);
-      case "disconnect":
-        if (who == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-        }
-        return __transaction_disconnect(requestJson, who);
-      case "attach":
-        if (who == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-        }
-        if (asset == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_ASSET);
-        }
-        return __transaction_attach(requestJson, who, asset);
-      case "send":
-        if (who == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-        }
-        if (channel == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CHANNEL);
-        }
-        if (message == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE);
-        }
-        return __transaction_send(requestJson, who, marker, channel, timestamp, message, factory);
-      case "expire":
-        if (limit == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT);
-        }
-        return __transaction_expire(requestJson, limit);
-      case "apply":
-        if (who == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_CLIENT_AS_WHO);
-        }
-        if (patch == null) {
-          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_PATCH);
-        }
-        return __transaction_apply_patch(requestJson, who, patch);
-    }
-    throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_VALID_COMMAND_FOUND);
   }
 
   /** transaction: a person connects to document */

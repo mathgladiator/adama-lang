@@ -447,7 +447,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        return;");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  public boolean __onConnected__0(NtClient who){");
+    gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(9);");
     gold.append("\n    return (who.equals(NtClient.NO_ONE));");
@@ -2667,7 +2667,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n        return;");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  public boolean __onConnected__0(NtClient cv){");
+    gold.append("\n  public boolean __onConnected__0(NtClient cv) {");
     gold.append("\n    __code_cost += 5;");
     gold.append("\n    __track(123);");
     gold.append("\n    if ((owner.get().equals(NtClient.NO_ONE))) {");
@@ -4210,7 +4210,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public boolean __onConnected__0(NtClient who){");
+    gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
     gold.append("\n    return true;");
