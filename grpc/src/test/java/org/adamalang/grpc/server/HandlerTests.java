@@ -13,10 +13,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class HandlerTests {
-
   @Test
   public void entropy() {
-    Assert.assertEquals(120, Handler.fixEntropy("x"));
+    Assert.assertEquals("120", Handler.fixEntropy("x"));
     Assert.assertNull(Handler.fixEntropy(""));
   }
 }
