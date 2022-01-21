@@ -80,20 +80,30 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
     };
   }
 
-  private synchronized void add(NamedRunnable command) {
+  private void add(NamedRunnable command) {
+    NamedRunnable toRun = addSync(command);
+    if (toRun != null) {
+      toRun.run();
+    }
+  }
+
+  private synchronized NamedRunnable addSync(NamedRunnable command) {
     if (command.name.startsWith("client-heartbeat")) {
-      return;
+      return null;
     }
     if (command.name.startsWith("instance-client-heartbeat")) {
-      return;
+      return null;
     }
     if (command.name.startsWith("expire-action")) {
-      return;
+      return null;
     }
-    System.err.println(name + "|ADD:" + ((NamedRunnable) command).name);
+    if (command.name.startsWith("finder-proxy-add")) {
+      System.err.println(name + "|NOW:" + command);
+      return command;
+    }
+    System.err.println(name + "|ADD:" + command);
     if (fast) {
-      command.run();
-      return;
+      return command;
     }
     runnables.add(command);
     Iterator<CountDownLatch> it = latches.iterator();
@@ -104,6 +114,7 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
         it.remove();
       }
     }
+    return null;
   }
 
   @Override

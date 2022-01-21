@@ -175,7 +175,7 @@ public class InstanceClientFinder {
     @Override
     public void connected(InstanceClient client) {
       executor.execute(
-          new NamedRunnable("finder-found", client.target) {
+          new NamedRunnable("finder-proxy-connected", createdClient.target) {
             @Override
             public void execute() throws Exception {
               InstanceClientProxy.this.client = client;
@@ -192,7 +192,7 @@ public class InstanceClientFinder {
     @Override
     public void disconnected(InstanceClient client) {
       executor.execute(
-          new NamedRunnable("finder-lost-client", client.target) {
+          new NamedRunnable("finder-proxy-disconnected", createdClient.target) {
             @Override
             public void execute() throws Exception {
               // note: connecting will fill the engine
@@ -204,17 +204,29 @@ public class InstanceClientFinder {
     }
 
     public void close() {
-      createdClient.close();
-      client = null;
-      queue.unready();
+      executor.execute(
+          new NamedRunnable("finder-proxy-close", createdClient.target) {
+            @Override
+            public void execute() throws Exception {
+              createdClient.close();
+              client = null;
+              queue.unready();
+            }
+          });
+
     }
 
     public void add(ItemAction<InstanceClient> action) {
-      if (client != null) {
-        action.execute(client);
-      } else {
-        queue.add(action);
-      }
+      executor.execute(new NamedRunnable("finder-proxy-add", createdClient.target) {
+        @Override
+        public void execute() throws Exception {
+          if (client != null) {
+            action.execute(client);
+          } else {
+            queue.add(action);
+          }
+        }
+      });
     }
   }
 }

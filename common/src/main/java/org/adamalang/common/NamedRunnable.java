@@ -9,9 +9,12 @@
  */
 package org.adamalang.common;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /** for complex executor bouncing, this helps understand what is going on */
 public abstract class NamedRunnable implements Runnable {
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(NamedRunnable.class);
+  private final Logger LOGGER = LoggerFactory.getLogger("nrex");
   public final String name;
 
   public NamedRunnable(String first, String... tail) {
@@ -29,7 +32,7 @@ public abstract class NamedRunnable implements Runnable {
     try {
       execute();
     } catch (Exception ex) {
-      LOGGER.convertedToErrorCode(ex, name.hashCode());
+      LOGGER.error(name, ex);
     }
   }
 
