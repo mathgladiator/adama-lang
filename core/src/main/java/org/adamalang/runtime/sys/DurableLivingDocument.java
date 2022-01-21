@@ -178,7 +178,12 @@ public class DurableLivingDocument {
             requiresInvalidateMilliseconds);
       }
     } else {
-      executeNow(new IngestRequest[] {pending.removeFirst()});
+      // TODO: do all OR consider chunking it
+      IngestRequest[] remaining = new IngestRequest[pending.size()];
+      for (int at = 0; at < remaining.length; at++) {
+        remaining[at] = pending.removeFirst();
+      }
+      executeNow(remaining);
     }
   }
 
