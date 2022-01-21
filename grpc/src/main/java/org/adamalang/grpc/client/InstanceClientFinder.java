@@ -38,7 +38,6 @@ public class InstanceClientFinder {
   private final SimpleExecutor mapExecutor;
   private final ExceptionLogger logger;
   private final Random rng;
-  private final AtomicBoolean alive;
 
   public InstanceClientFinder(
       ClientMetrics metrics,
@@ -57,7 +56,6 @@ public class InstanceClientFinder {
     this.mapExecutor = threadFactory.makeSingle("instance-client-finder-main");
     this.logger = logger;
     this.rng = new Random();
-    this.alive = new AtomicBoolean(true);
   }
 
   public CountDownLatch shutdown() {
@@ -180,22 +178,15 @@ public class InstanceClientFinder {
           new NamedRunnable("finder-found", client.target) {
             @Override
             public void execute() throws Exception {
-              if (alive.get()) {
-                InstanceClientProxy.this.client = client;
-                queue.ready(client);
-
-              } else {
-                client.close();
-              }
+              InstanceClientProxy.this.client = client;
+              queue.ready(client);
             }
           });
     }
 
     @Override
     public void heartbeat(InstanceClient client, Collection<String> spaces) {
-      if (alive.get()) {
-        engine.integrate(client.target, spaces);
-      }
+      engine.integrate(createdClient.target, spaces);
     }
 
     @Override
@@ -204,7 +195,8 @@ public class InstanceClientFinder {
           new NamedRunnable("finder-lost-client", client.target) {
             @Override
             public void execute() throws Exception {
-              engine.remove(client.target);
+              // note: connecting will fill the engine
+              engine.remove(createdClient.target);
               InstanceClientProxy.this.client = null;
               queue.unready();
             }
@@ -221,11 +213,7 @@ public class InstanceClientFinder {
       if (client != null) {
         action.execute(client);
       } else {
-        if (createdClient.isAlive()) {
-          queue.add(action);
-        } else {
-          action.killDueToReject();
-        }
+        queue.add(action);
       }
     }
   }

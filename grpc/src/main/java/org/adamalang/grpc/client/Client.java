@@ -13,6 +13,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.ItemActionMonitor;
 import org.adamalang.common.queue.ItemAction;
+import org.adamalang.gossip.Engine;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.adamalang.grpc.client.sm.Connection;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
+/** the front-door to talking to the gRPC client. */
 public class Client {
   private final ClientMetrics metrics;
   private final SimpleExecutor routingExecutor;
@@ -62,6 +64,10 @@ public class Client {
             ExceptionLogger.FOR(Client.class));
     this.executors = SimpleExecutorFactory.DEFAULT.makeMany("connections", 2);
     this.rng = new Random();
+  }
+
+  public RoutingEngine routing() {
+    return engine;
   }
 
   public void getDeploymentTargets(String space, Consumer<String> stream) {

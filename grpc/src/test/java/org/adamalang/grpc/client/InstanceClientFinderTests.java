@@ -70,6 +70,12 @@ public class InstanceClientFinderTests {
       try {
         finder.sync(targets);
         Assert.assertTrue(primed.await(25000, TimeUnit.MILLISECONDS));
+        CountDownLatch latchFoundSame = new CountDownLatch(1);
+        finder.findCapacity(targets, (x) -> {
+          Assert.assertTrue(x == targets);
+          latchFoundSame.countDown();
+        }, targets.size() - 1);
+        Assert.assertTrue(latchFoundSame.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch latchFound = new CountDownLatch(1);
         finder.find(
             "127.0.0.1:20005",

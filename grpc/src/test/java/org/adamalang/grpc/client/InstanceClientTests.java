@@ -63,15 +63,16 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10002,
-            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+            "@can_create(who) { return true; } public int x; @construct { x = 123; } @connected(who) { x++; return true; }  ")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       MockEvents events = new MockEvents();
-      Runnable happy = events.latchAt(3);
-      Runnable disconnect = events.latchAt(4);
-      Runnable reconnect = events.latchAt(6);
-      Runnable disconnectAgain = events.latchAt(7);
+      Runnable happy = events.latchAt(2);
+      Runnable disconnect = events.latchAt(3);
+      Runnable reconnect = events.latchAt(4);
+      Runnable disconnectAgain = events.latchAt(6);
       AtomicBoolean created = new AtomicBoolean(false);
+      AtomicBoolean createdAgain = new AtomicBoolean(false);
       try (InstanceClient client =
           new InstanceClient(
               bed.identity, metrics, null,
@@ -85,8 +86,11 @@ public class InstanceClientTests {
                     AssertCreateSuccess success = new AssertCreateSuccess();
                     client.create("nope", "nope", "space", "1", "123", "{}", success);
                     success.await();
+                    client.connect("nope", "test", "space", "1", events);
+                  } else if (createdAgain.compareAndExchange(false, true) == false) {
+                    System.err.println("Connecting again");
+                    client.connect("nope", "test", "space", "1", events);
                   }
-                  client.connect("nope", "test", "space", "1", events);
                   lifecycle.connected(client);
                 }
 
@@ -109,10 +113,11 @@ public class InstanceClientTests {
         bed.stopServer();
         disconnectAgain.run();
         events.assertWrite(0, "CONNECTED");
-        events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
-        events.assertWrite(2, "DELTA:{\"data\":{\"x\":124},\"seq\":5}");
-        events.assertWrite(3, "DISCONNECTED");
-        events.assertWrite(4, "CONNECTED");
+        events.assertWrite(1, "DELTA:{\"data\":{\"x\":124},\"seq\":4}");
+        events.assertWrite(2, "DISCONNECTED");
+        events.assertWrite(3, "CONNECTED");
+        events.assertWrite(4, "DELTA:{\"data\":{\"x\":125},\"seq\":9}");
+        events.assertWrite(5, "DISCONNECTED");
         // I feel like batching is screwing with the sequencer, need to figure out how to reduce the invalidation load
         Assert.assertEquals("CDCD", lifecycle.toString());
       }

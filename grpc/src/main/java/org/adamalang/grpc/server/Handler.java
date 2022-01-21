@@ -601,7 +601,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     };
   }
 
-  private static String fixEntropy(String entropy) {
+  public static String fixEntropy(String entropy) {
     if ("".equals(entropy)) {
       return null;
     }
@@ -616,7 +616,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   private class LazyCoreStream {
     private final ItemQueue<CoreStream> queue;
     private CoreStream stream;
-    private boolean alive = true;
+    private boolean alive;
 
     public LazyCoreStream(SimpleExecutor executor) {
       this.stream = null;
