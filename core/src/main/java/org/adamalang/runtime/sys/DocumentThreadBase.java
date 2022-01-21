@@ -31,13 +31,14 @@ public class DocumentThreadBase {
   public final HashMap<Key, ArrayList<Callback<DurableLivingDocument>>> mapInsertsInflight;
   public final TimeSource time;
   private final HashMap<String, PredictiveInventory> inventoryBySpace;
+  private final Random rng;
   private int millisecondsForCleanupCheck;
   private int millisecondsAfterLoadForReconciliation;
-  private final Random rng;
   private int millisecondsToPerformInventory;
   private int millisecondsToPerformInventoryJitter;
 
-  public DocumentThreadBase(DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
+  public DocumentThreadBase(
+      DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
     this.service = service;
     this.metrics = metrics;
     this.executor = executor;
@@ -59,7 +60,8 @@ public class DocumentThreadBase {
           public void execute() throws Exception {
             performInventory();
           }
-        }, 2500);
+        },
+        2500);
   }
 
   public PredictiveInventory getOrCreateInventory(String space) {
@@ -71,7 +73,8 @@ public class DocumentThreadBase {
     return inventory;
   }
 
-  public void sampleMetering(Consumer<HashMap<String, PredictiveInventory.MeteringSample>> callback) {
+  public void sampleMetering(
+      Consumer<HashMap<String, PredictiveInventory.MeteringSample>> callback) {
     executor.execute(
         new NamedRunnable("base-meter-sampling") {
           @Override

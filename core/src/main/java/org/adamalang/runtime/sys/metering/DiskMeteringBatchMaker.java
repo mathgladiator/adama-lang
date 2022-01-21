@@ -15,22 +15,30 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.json.JsonStreamReader;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.UUID;
 
-/** writes billing information to disk for querying; this is designed to survive a process restart using a disk log */
+/**
+ * writes billing information to disk for querying; this is designed to survive a process restart
+ * using a disk log
+ */
 public class DiskMeteringBatchMaker {
   private final TimeSource time;
   private final SimpleExecutor executor;
   private final File root;
-  private File current;
+  private final long cutOffMilliseconds;
+  private final File current;
   private FileOutputStream output;
   private long oldestTime;
-  private final long cutOffMilliseconds;
 
-  public DiskMeteringBatchMaker(TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds) throws Exception {
+  public DiskMeteringBatchMaker(
+      TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds)
+      throws Exception {
     this.time = time;
     this.executor = executor;
     this.root = root;
@@ -49,7 +57,8 @@ public class DiskMeteringBatchMaker {
                 if (meterReading.time < oldestTime) {
                   oldestTime = meterReading.time;
                 }
-                transferStream.write((meterReading.packup() + "\n").getBytes(StandardCharsets.UTF_8));
+                transferStream.write(
+                    (meterReading.packup() + "\n").getBytes(StandardCharsets.UTF_8));
               }
             }
           }
@@ -61,12 +70,16 @@ public class DiskMeteringBatchMaker {
       }
     }
     this.output = new FileOutputStream(current, true);
-    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
-      @Override
-      public void run() throws Exception {
-        close();
-      }
-    })));
+    Runtime.getRuntime()
+        .addShutdownHook(
+            new Thread(
+                ExceptionRunnable.TO_RUNTIME(
+                    new ExceptionRunnable() {
+                      @Override
+                      public void run() throws Exception {
+                        close();
+                      }
+                    })));
   }
 
   public void close() throws Exception {

@@ -115,25 +115,6 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
-  public static class StaticState {
-    protected int __goodwillBudget;
-
-    public StaticState() {
-      this.__goodwillBudget = 25000;
-    }
-
-    public boolean __goodwill(
-        final int startLine, final int startPosition, final int endLine, final int endLinePosition) {
-      if (__goodwillBudget > 0) {
-        __goodwillBudget--;
-        if (__goodwillBudget == 0) {
-          throw new GoodwillExhaustedException(startLine, startPosition, endLine, endLinePosition);
-        }
-      }
-      return true;
-    }
-  }
-
   /** code generate: get strings that are part of the document */
   public abstract Set<String> __get_intern_strings();
 
@@ -143,7 +124,6 @@ public abstract class LivingDocument implements RxParent {
     forward.beginObject();
     forward.writeObjectFieldIntro("__messages");
     forward.writeNull();
-
     reverse.beginObject();
     __dumpMessages(reverse);
 
@@ -655,7 +635,8 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: core API (New Version in Draft) */
-  public LivingDocumentChange __transact(final String requestJson, LivingDocumentFactory factory) throws ErrorCodeException {
+  public LivingDocumentChange __transact(final String requestJson, LivingDocumentFactory factory)
+      throws ErrorCodeException {
     final var reader = new JsonStreamReader(requestJson);
     String command = null;
     Long timestamp = null;
@@ -1159,7 +1140,8 @@ public abstract class LivingDocument implements RxParent {
       __random = new Random(Long.parseLong(__entropy.get()));
       // they must be connected
       if (!__clients.containsKey(who) && !factory.canSendWhileDisconnected(who)) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
+        throw new ErrorCodeException(
+            ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
       }
       // create the delta
       final var forward = new JsonStreamWriter();
@@ -1231,5 +1213,27 @@ public abstract class LivingDocument implements RxParent {
     __assertionFailures = 0;
     __assertionTotal = 0;
     return stats;
+  }
+
+  public static class StaticState {
+    protected int __goodwillBudget;
+
+    public StaticState() {
+      this.__goodwillBudget = 25000;
+    }
+
+    public boolean __goodwill(
+        final int startLine,
+        final int startPosition,
+        final int endLine,
+        final int endLinePosition) {
+      if (__goodwillBudget > 0) {
+        __goodwillBudget--;
+        if (__goodwillBudget == 0) {
+          throw new GoodwillExhaustedException(startLine, startPosition, endLine, endLinePosition);
+        }
+      }
+      return true;
+    }
   }
 }

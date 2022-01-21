@@ -14,6 +14,7 @@ package org.adamalang.runtime.sys;
  * precise inventory
  */
 public class PredictiveInventory {
+  private final Snapshot[] snapshots;
   private long memory;
   private long ticks;
   private long memory_growth;
@@ -21,7 +22,6 @@ public class PredictiveInventory {
   private long messages;
   private long count;
   private long connections;
-  private final Snapshot[] snapshots;
 
   public PredictiveInventory() {
     this.memory = 0;
@@ -107,7 +107,11 @@ public class PredictiveInventory {
 
     public static MeteringSample add(MeteringSample a, MeteringSample b) {
       return new MeteringSample(
-          a.memory + b.memory, a.cpu + b.cpu, a.count + b.count, a.messages + b.messages, a.connections + b.connections);
+          a.memory + b.memory,
+          a.cpu + b.cpu,
+          a.count + b.count,
+          a.messages + b.messages,
+          a.connections + b.connections);
     }
   }
 

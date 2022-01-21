@@ -13,7 +13,10 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.PredictiveInventory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -57,7 +60,8 @@ public class MeteringPubSub {
         String space = sample.getKey();
         String hash = base.hashOf(space);
         if (hash != null) {
-          meterReading.add(new MeterReading(time.nowMilliseconds(), delta, space, hash, sample.getValue()));
+          meterReading.add(
+              new MeterReading(time.nowMilliseconds(), delta, space, hash, sample.getValue()));
         }
       }
       publish(meterReading);
@@ -73,5 +77,4 @@ public class MeteringPubSub {
       }
     }
   }
-
 }

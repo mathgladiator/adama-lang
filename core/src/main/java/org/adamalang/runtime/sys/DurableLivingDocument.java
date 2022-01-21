@@ -214,11 +214,12 @@ public class DurableLivingDocument {
   private void executeNow(IngestRequest[] requests) {
     IngestRequest lastRequest = null;
     ArrayList<LivingDocumentChange> changes = new ArrayList<>();
-    Runnable revert = () -> {
-      for (int k = changes.size() - 1; k >= 0; k--) {
-        document.__insert(new JsonStreamReader(changes.get(k).update.undo));
-      }
-    };
+    Runnable revert =
+        () -> {
+          for (int k = changes.size() - 1; k >= 0; k--) {
+            document.__insert(new JsonStreamReader(changes.get(k).update.undo));
+          }
+        };
     try {
       LivingDocumentChange last = null;
       ArrayList<Callback<Integer>> callbacks = new ArrayList<>();

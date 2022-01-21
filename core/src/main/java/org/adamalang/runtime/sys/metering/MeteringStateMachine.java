@@ -48,7 +48,9 @@ public class MeteringStateMachine {
             for (Map.Entry<String, PredictiveInventory.MeteringSample> entry : b.entrySet()) {
               PredictiveInventory.MeteringSample prior = accum.get(entry.getKey());
               if (prior != null) {
-                accum.put(entry.getKey(), PredictiveInventory.MeteringSample.add(prior, entry.getValue()));
+                accum.put(
+                    entry.getKey(),
+                    PredictiveInventory.MeteringSample.add(prior, entry.getValue()));
               } else {
                 accum.put(entry.getKey(), entry.getValue());
               }

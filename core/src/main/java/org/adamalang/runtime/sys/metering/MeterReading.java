@@ -28,7 +28,12 @@ public class MeterReading {
   public final long messages; // total --> sum
   public final long connections; // standing --> p95
 
-  public MeterReading(long time, long timeframe, String space, String hash, PredictiveInventory.MeteringSample meteringSample) {
+  public MeterReading(
+      long time,
+      long timeframe,
+      String space,
+      String hash,
+      PredictiveInventory.MeteringSample meteringSample) {
     this.time = time;
     this.timeframe = timeframe;
     this.space = space;
@@ -38,23 +43,6 @@ public class MeterReading {
     this.count = meteringSample.count;
     this.messages = meteringSample.messages;
     this.connections = meteringSample.connections;
-  }
-
-  public String packup() {
-    JsonStreamWriter writer = new JsonStreamWriter();
-    writer.beginArray();
-    writer.writeString("v0");
-    writer.writeLong(time);
-    writer.writeLong(timeframe);
-    writer.writeString(space);
-    writer.writeString(hash);
-    writer.writeLong(memory);
-    writer.writeLong(cpu);
-    writer.writeLong(count);
-    writer.writeLong(messages);
-    writer.writeLong(connections);
-    writer.endArray();
-    return writer.toString();
   }
 
   public static MeterReading unpack(JsonStreamReader reader) {
@@ -88,5 +76,22 @@ public class MeterReading {
       LOGGER.convertedToErrorCode(ex, -1);
     }
     return null;
+  }
+
+  public String packup() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginArray();
+    writer.writeString("v0");
+    writer.writeLong(time);
+    writer.writeLong(timeframe);
+    writer.writeString(space);
+    writer.writeString(hash);
+    writer.writeLong(memory);
+    writer.writeLong(cpu);
+    writer.writeLong(count);
+    writer.writeLong(messages);
+    writer.writeLong(connections);
+    writer.endArray();
+    return writer.toString();
   }
 }

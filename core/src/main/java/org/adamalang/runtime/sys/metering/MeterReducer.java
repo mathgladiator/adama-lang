@@ -16,16 +16,70 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-/** math for reducing a stream of billing updates for an hour into a summary using P95 for memory and count and SUM for cpu and messages */
+/**
+ * math for reducing a stream of billing updates for an hour into a summary using P95 for memory and
+ * count and SUM for cpu and messages
+ */
 public class MeterReducer {
   private final TimeSource time;
+  private final TreeMap<String, PerSpaceReducer> spaces;
+
+  public MeterReducer(final TimeSource time) {
+    this.time = time;
+    this.spaces = new TreeMap<>();
+  }
+
+  public static long estimateP95(ArrayList<Long> values) {
+    values.sort(Long::compareTo);
+    int index94 = Math.min((values.size() * 94) / 100, values.size() - 1);
+    int index96 = Math.min((values.size() * 96) / 100, values.size() - 1);
+    long avg = 0;
+    int n = 0;
+    for (int k = index94; k <= index96; k++) {
+      avg += values.get(k);
+      n++;
+    }
+    return avg / n;
+  }
+
+  public void next(MeterReading meterReading) {
+    PerSpaceReducer space = spaces.get(meterReading.space);
+    if (space == null) {
+      space = new PerSpaceReducer();
+      spaces.put(meterReading.space, space);
+    }
+    space.sumCPU += meterReading.cpu;
+    space.sumMessages += meterReading.messages;
+    space.memorySamples.add(meterReading.memory);
+    space.countSamples.add(meterReading.count);
+    space.connectionsSamples.add(meterReading.connections);
+  }
+
+  public String toJson() {
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("time");
+    writer.writeLong(time.nowMilliseconds());
+    writer.writeObjectFieldIntro("spaces");
+    writer.beginObject();
+    for (Map.Entry<String, PerSpaceReducer> space : spaces.entrySet()) {
+      String reduced = space.getValue().reduce();
+      if (reduced != null) {
+        writer.writeObjectFieldIntro(space.getKey());
+        writer.injectJson(reduced);
+      }
+    }
+    writer.endObject();
+    writer.endObject();
+    return writer.toString();
+  }
 
   private class PerSpaceReducer {
     private long sumCPU;
     private long sumMessages;
-    private ArrayList<Long> memorySamples;
-    private ArrayList<Long> countSamples;
-    private ArrayList<Long> connectionsSamples;
+    private final ArrayList<Long> memorySamples;
+    private final ArrayList<Long> countSamples;
+    private final ArrayList<Long> connectionsSamples;
 
     private PerSpaceReducer() {
       this.sumCPU = 0;
@@ -74,56 +128,5 @@ public class MeterReducer {
       }
       return null;
     }
-  }
-  private final TreeMap<String, PerSpaceReducer> spaces;
-
-  public MeterReducer(final TimeSource time) {
-    this.time = time;
-    this.spaces = new TreeMap<>();
-  }
-
-  public void next(MeterReading meterReading) {
-    PerSpaceReducer space = spaces.get(meterReading.space);
-    if (space == null) {
-      space = new PerSpaceReducer();
-      spaces.put(meterReading.space, space);
-    }
-    space.sumCPU += meterReading.cpu;
-    space.sumMessages += meterReading.messages;
-    space.memorySamples.add(meterReading.memory);
-    space.countSamples.add(meterReading.count);
-    space.connectionsSamples.add(meterReading.connections);
-  }
-
-  public String toJson() {
-    JsonStreamWriter writer = new JsonStreamWriter();
-    writer.beginObject();
-    writer.writeObjectFieldIntro("time");
-    writer.writeLong(time.nowMilliseconds());
-    writer.writeObjectFieldIntro("spaces");
-    writer.beginObject();
-    for (Map.Entry<String, PerSpaceReducer> space : spaces.entrySet()) {
-      String reduced = space.getValue().reduce();
-      if (reduced != null) {
-        writer.writeObjectFieldIntro(space.getKey());
-        writer.injectJson(reduced);
-      }
-    }
-    writer.endObject();
-    writer.endObject();
-    return writer.toString();
-  }
-
-  public static long estimateP95(ArrayList<Long> values) {
-    values.sort(Long::compareTo);
-    int index94 = Math.min((values.size() * 94) / 100, values.size() - 1);
-    int index96 = Math.min((values.size() * 96) / 100, values.size() - 1);
-    long avg = 0;
-    int n = 0;
-    for (int k = index94; k <= index96; k++) {
-      avg += values.get(k);
-      n++;
-    }
-    return avg / n;
   }
 }
