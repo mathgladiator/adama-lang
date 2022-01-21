@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -16,10 +17,7 @@ import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.mocks.LatchCallback;
-import org.adamalang.runtime.sys.mocks.MockInstantDataService;
-import org.adamalang.runtime.sys.mocks.MockInstantLivingDocumentFactoryFactory;
-import org.adamalang.runtime.sys.mocks.MockStreamback;
+import org.adamalang.runtime.sys.mocks.*;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,6 +27,8 @@ public class ServiceDocumentControlTests {
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }";
+  private static final String SIMPLE_CODE_MSG_PLUS =
+      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); } channel goo(M y) { x++; }";
 
   @Test
   public void rewind() throws Exception {
@@ -63,6 +63,55 @@ public class ServiceDocumentControlTests {
       streamback.get().disconnect();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void rewind_in_batch() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_PLUS);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService realDataService = new MockInstantDataService();
+    MockDelayDataService dataService = new MockDelayDataService(realDataService);
+    dataService.initialize(
+        KEY, ServiceConnectTests.wrap("{\"__constructed\":true}")[0], Callback.DONT_CARE_VOID);
+    dataService.patch(
+        KEY,
+        ServiceConnectTests.wrap(
+            "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
+        Callback.DONT_CARE_VOID);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    try {
+      MockStreamback streamback = new MockStreamback();
+      Runnable latch1 = streamback.latchAt(2);
+      Runnable latch2 = streamback.latchAt(4);
+      Runnable latch3 = streamback.latchAt(5);
+      service.connect(NtClient.NO_ONE, KEY, streamback);
+      streamback.await_began();
+      latch1.run();
+      Assert.assertEquals("STATUS:Connected", streamback.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback.get(1));
+      dataService.pause();
+
+      LatchCallback cb1 = new LatchCallback();
+      LatchCallback cb2 = new LatchCallback();
+      LatchCallback cb3 = new LatchCallback();
+      streamback.get().send("goo", null, "{}", cb1);
+      streamback.get().send("goo", null, "{}", cb2);
+      streamback.get().send("foo", null, "{}", cb3);
+      dataService.unpause();
+      cb1.await_success(5);
+      cb2.await_failure(159869);
+      cb3.await_success(6);
+      latch2.run();
+      Assert.assertEquals("{\"data\":{\"x\":43},\"seq\":5}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":1000},\"seq\":6}", streamback.get(3));
+      streamback.get().disconnect();
+      latch3.run();
+      Assert.assertEquals("STATUS:Disconnected", streamback.get(4));
     } finally {
       service.shutdown();
     }
