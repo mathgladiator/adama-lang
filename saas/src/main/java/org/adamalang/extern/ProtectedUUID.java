@@ -44,7 +44,7 @@ public class ProtectedUUID {
         sb.append(UUID_CODEC_BASE[(int) (trailer % m)]);
         trailer /= m;
       }
-      MessageDigest md = MessageDigest.getInstance("SHA256");
+      MessageDigest md = MessageDigest.getInstance("MD5");
       byte[] digest = md.digest(sb.toString().getBytes(StandardCharsets.UTF_8));
       sb.append('X');
       v = Math.abs(digest[0] + digest[1] * 256 + digest[2] * 256 * 256);
