@@ -84,7 +84,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
       final var parser = new Parser(tokenEngine);
       parser.document().accept(document);
       if (!document.check(state)) {
-        throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_TYPE_LANGUAGE);
+        throw new ErrorCodeException(ErrorCodes.DEPLOYMENT_CANT_TYPE_LANGUAGE, document.errorsJson());
       }
       final var java = document.compileJava(state);
       JsonStreamWriter reflection = new JsonStreamWriter();

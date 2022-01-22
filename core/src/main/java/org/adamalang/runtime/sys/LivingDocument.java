@@ -353,13 +353,13 @@ public abstract class LivingDocument implements RxParent {
       final int startLine, final int startPosition, final int endLine, final int endLinePosition) {
     if (__goodwillBudget > 0) {
       __goodwillBudget--;
-      if (__goodwillBudget == 0) {
-        if (__monitor != null) {
-          __monitor.goodwillFailureAt(startLine, startPosition, endLine, endLinePosition);
-        }
-        __revert();
-        throw new GoodwillExhaustedException(startLine, startPosition, endLine, endLinePosition);
+    }
+    if (__goodwillBudget == 0) {
+      if (__monitor != null) {
+        __monitor.goodwillFailureAt(startLine, startPosition, endLine, endLinePosition);
       }
+      __revert();
+      throw new GoodwillExhaustedException(startLine, startPosition, endLine, endLinePosition);
     }
     return true;
   }

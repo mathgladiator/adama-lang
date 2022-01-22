@@ -9,7 +9,10 @@
  */
 package org.adamalang.runtime.sys;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
@@ -20,6 +23,7 @@ import org.adamalang.runtime.natives.NtClient;
  * interaction model such that consumers don't need to think about how threading happens.
  */
 public class CoreStream {
+  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(CoreStream.class);
   private final CoreMetrics metrics;
   private final NtClient who;
   private final PredictiveInventory inventory;
@@ -60,7 +64,11 @@ public class CoreStream {
           @Override
           public void execute() throws Exception {
             inventory.message();
-            callback.success(document.canAttach(who));
+            try {
+              callback.success(document.canAttach(who));
+            } catch (Exception ex) {
+              callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.CORE_STREAM_CAN_ATTACH_UNKNOWN_EXCEPTION, ex, LOGGER));
+            }
           }
         });
   }

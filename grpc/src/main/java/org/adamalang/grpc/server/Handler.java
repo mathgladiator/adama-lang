@@ -586,6 +586,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
       @Override
       public void onError(Throwable throwable) {
         LOGGER.convertedToErrorCode(throwable, ErrorCodes.GRPC_BILLING_UNEXPECTED_ERROR);
+        onCompleted();
       }
 
       @Override
@@ -625,14 +626,10 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     }
 
     public void execute(ItemAction<CoreStream> task) {
-      if (alive) {
-        if (stream != null) {
-          task.execute(stream);
-        } else {
-          queue.add(task);
-        }
+      if (stream != null) {
+        task.execute(stream);
       } else {
-        task.killDueToReject();
+        queue.add(task);
       }
     }
 
@@ -649,9 +646,11 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     public void kill() {
       if (this.alive) {
         alive = false;
-        stream.disconnect();
+        if (stream != null) {
+          stream.disconnect();
+          stream = null;
+        }
         queue.unready();
-        stream = null;
       }
     }
   }
