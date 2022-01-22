@@ -34,17 +34,14 @@ public class InstanceClient implements AutoCloseable {
   private final ClientMetrics metrics;
   private final HeatMonitor monitor;
   private final Lifecycle lifecycle;
-  private final HashMap<Long, Events> documents;
-  private final HashMap<Long, SeqCallback> outstanding;
-  private final HashMap<Long, AskAttachmentCallback> asks;
   private final ManagedChannel channel;
   private final Random rng;
   private final ExceptionLogger logger;
-  private final AtomicLong nextId;
   private final AtomicBoolean alive;
   private StreamObserver<StreamMessageClient> upstream;
   private MultiplexObserver downstream;
   private int backoff;
+  private final CallbackTable table;
 
   public InstanceClient(
       MachineIdentity identity,
@@ -59,6 +56,7 @@ public class InstanceClient implements AutoCloseable {
     this.target = target;
     this.metrics = metrics;
     this.monitor = monitor;
+    this.table = new CallbackTable();
     ChannelCredentials credentials =
         TlsChannelCredentials.newBuilder()
             .keyManager(identity.getCert(), identity.getKey())
@@ -67,10 +65,6 @@ public class InstanceClient implements AutoCloseable {
     this.channel = NettyChannelBuilder.forTarget(target, credentials).build();
     this.stub = AdamaGrpc.newStub(channel);
     this.rng = new Random();
-    this.documents = new HashMap<>();
-    this.outstanding = new HashMap<>();
-    this.asks = new HashMap<>();
-    this.nextId = new AtomicLong(1);
     this.upstream = null;
     this.downstream = null;
     this.lifecycle = lifecycle;
@@ -193,13 +187,13 @@ public class InstanceClient implements AutoCloseable {
 
   /** connect to a document */
   public long connect(String agent, String authority, String space, String key, Events events) {
-    long docId = nextId.getAndIncrement();
+    long docId = table.id();
     executor.execute(
         new NamedRunnable("client-connect", target, space, key) {
           @Override
           public void execute() throws Exception {
             if (InstanceClient.this.upstream != null) {
-              documents.put(docId, events);
+              table.associate(docId, events);
               upstream.onNext(
                   StreamMessageClient.newBuilder()
                       .setId(docId)
@@ -234,21 +228,6 @@ public class InstanceClient implements AutoCloseable {
             }
           }
         });
-  }
-
-  private void killCallbacksWhileInExecutor() {
-    for (Events events : documents.values()) {
-      events.disconnected();
-    }
-    documents.clear();
-    for (AskAttachmentCallback callback : asks.values()) {
-      callback.error(ErrorCodes.GRPC_DISCONNECT);
-    }
-    asks.clear();
-    for (SeqCallback callback : outstanding.values()) {
-      callback.error(ErrorCodes.GRPC_DISCONNECT);
-    }
-    outstanding.clear();
   }
 
   private class BillingObserver implements StreamObserver<BillingReverse> {
@@ -343,13 +322,13 @@ public class InstanceClient implements AutoCloseable {
 
     @Override
     public void canAttach(AskAttachmentCallback callback) {
-      long askId = nextId.getAndIncrement();
+      long askId = table.id();
       executor.execute(
           new NamedRunnable("client-ask-attachment", target) {
             @Override
             public void execute() throws Exception {
               if (upstream != null) {
-                asks.put(askId, callback);
+                table.associate(askId, callback);
                 upstream.onNext(
                     StreamMessageClient.newBuilder()
                         .setId(askId)
@@ -372,13 +351,13 @@ public class InstanceClient implements AutoCloseable {
         String md5,
         String sha384,
         SeqCallback callback) {
-      long attachId = nextId.getAndIncrement();
+      long attachId = table.id();
       executor.execute(
           new NamedRunnable("client-attach", target) {
             @Override
             public void execute() throws Exception {
               if (upstream != null) {
-                outstanding.put(attachId, callback);
+                table.associate(attachId, callback);
                 upstream.onNext(
                     StreamMessageClient.newBuilder()
                         .setId(attachId)
@@ -402,13 +381,13 @@ public class InstanceClient implements AutoCloseable {
 
     @Override
     public void send(String channel, String marker, String message, SeqCallback callback) {
-      long sendId = nextId.getAndIncrement();
+      long sendId = table.id();
       executor.execute(
           new NamedRunnable("client-send", target, channel) {
             @Override
             public void execute() throws Exception {
               if (upstream != null) {
-                outstanding.put(sendId, callback);
+                table.associate(sendId, callback);
                 StreamSend.Builder send =
                     StreamSend.newBuilder().setChannel(channel).setMessage(message);
                 if (marker != null) {
@@ -436,7 +415,7 @@ public class InstanceClient implements AutoCloseable {
               if (upstream != null) {
                 upstream.onNext(
                     StreamMessageClient.newBuilder()
-                        .setId(nextId.getAndIncrement())
+                        .setId(table.id())
                         .setAct(docId)
                         .setDisconnect(StreamDisconnect.newBuilder().build())
                         .build());
@@ -496,7 +475,7 @@ public class InstanceClient implements AutoCloseable {
               new NamedRunnable("client-data", target) {
                 @Override
                 public void execute() throws Exception {
-                  Events events = documents.get(message.getId());
+                  Events events = table.documentsOf(message.getId());
                   if (events != null) {
                     events.delta(message.getData().getDelta());
                   }
@@ -508,21 +487,7 @@ public class InstanceClient implements AutoCloseable {
               new NamedRunnable("client-error", target) {
                 @Override
                 public void execute() throws Exception {
-                  Events events = documents.remove(message.getId());
-                  if (events != null) {
-                    events.error(message.getError().getCode());
-                    return;
-                  }
-                  SeqCallback callback = outstanding.remove(message.getId());
-                  if (callback != null) {
-                    callback.error(message.getError().getCode());
-                    return;
-                  }
-                  AskAttachmentCallback ask = asks.remove(message.getId());
-                  if (ask != null) {
-                    ask.error(message.getError().getCode());
-                    return;
-                  }
+                  table.error(message.getId(), message.getError().getCode());
                 }
               });
           return;
@@ -531,14 +496,7 @@ public class InstanceClient implements AutoCloseable {
               new NamedRunnable("client-ask-attachment-response", target) {
                 @Override
                 public void execute() throws Exception {
-                  AskAttachmentCallback callback = asks.remove(message.getId());
-                  if (callback != null) {
-                    if (message.getResponse().getAllowed()) {
-                      callback.allow();
-                    } else {
-                      callback.reject();
-                    }
-                  }
+                  table.finishAsk(message.getId(), message.getResponse().getAllowed());
                 }
               });
           return;
@@ -547,10 +505,7 @@ public class InstanceClient implements AutoCloseable {
               new NamedRunnable("client-seq-result", target) {
                 @Override
                 public void execute() throws Exception {
-                  SeqCallback callback = outstanding.remove(message.getId());
-                  if (callback != null) {
-                    callback.success(message.getResult().getSeq());
-                  }
+                  table.finishSeq(message.getId(), message.getResult().getSeq());
                 }
               });
           return;
@@ -560,15 +515,12 @@ public class InstanceClient implements AutoCloseable {
                 @Override
                 public void execute() throws Exception {
                   if (message.getStatus().getCode() == StreamStatusCode.Connected) {
-                    Events events = documents.get(message.getId());
+                    Events events = table.documentsOf(message.getId());
                     if (events != null) {
                       events.connected(new InstanceRemote(message.getId()));
                     }
                   } else {
-                    Events events = documents.remove(message.getId());
-                    if (events != null) {
-                      events.disconnected();
-                    }
+                    table.disconnectDocument(message.getId());
                   }
                 }
               });
@@ -593,7 +545,7 @@ public class InstanceClient implements AutoCloseable {
               downstream = null;
               upstream = null;
               InstanceClient.this.upstream = null;
-              killCallbacksWhileInExecutor();
+              table.kill();
               if (send) {
                 lifecycle.disconnected(InstanceClient.this);
               }

@@ -125,6 +125,7 @@ public class ClientTests {
         Assert.assertTrue(latchGotConnected.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertTrue(latchGotData.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch latchGotReflection = new CountDownLatch(1);
+        CountDownLatch latchFailedOnReflectionBadSpace = new CountDownLatch(1);
         client.reflect("space", "key", new Callback<String>() {
           @Override
           public void success(String value) {
@@ -136,7 +137,19 @@ public class ClientTests {
 
           }
         });
+        client.reflect("nope", "key", new Callback<String>() {
+          @Override
+          public void success(String value) {
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.assertEquals(969806, ex.code);
+            latchFailedOnReflectionBadSpace.countDown();
+          }
+        });
         Assert.assertTrue(latchGotReflection.await(5000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(latchFailedOnReflectionBadSpace.await(5000, TimeUnit.MILLISECONDS));
         connection.close();
         Assert.assertTrue(latchGotDisconnect.await(5000, TimeUnit.MILLISECONDS));
       } finally{

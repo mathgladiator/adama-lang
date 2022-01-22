@@ -9,7 +9,6 @@
  */
 package org.adamalang.grpc.client;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -155,7 +154,7 @@ public class InstanceClientTests {
             public void connected(Remote remote) {
               remote.send(
                   "foo",
-                  null,
+                  "marker",
                   "{\"z\":\"100\"}",
                   new SeqCallback() {
                     @Override
