@@ -45,13 +45,15 @@ Expanding on this, I'm not happy with all the modules, but I'll share where thin
 | <font color="green">data-mysql</font> | 100% | 16 |
 | <font color="green">errors</font> | 100% | 2 |
 | <font color="green">gossip</font> | 100% | 31 |
-| <font color="red">grpc</font> | 80%  | 40 |
+| <font color="green">grpc</font> | 100% <s>80%</s> | 62 <s>40</s> |
 | <font color="orange">lsp</font> | 97% | 29 |
 | <font color="red">overlord</font> | 0% | 0 |
-| <font color="red">saas</font> | 22% | 3 |
+| <font color="red">saas</font> | 29% | 13 |
 | <font color="green">web</font> | 100% | 33 |
 
-At this moment, there are 2,966 unit tests for this SaaS that has yet to launch. As a launch requirement, the modules **grpc**, **saas**, **cli**, and **overlord** will require at least 95% test coverage.
+*update: grpc went from red to green on 1/22/2022*
+
+At this moment, there are 2,966 unit tests for this SaaS that has yet to launch. As a launch requirement, the modules <s>**grpc**,</s> **saas**, **cli**, and **overlord** will require at least 95% test coverage.
 
 I intend to rewrite **apikit** at a future date with testability in mind as well as producing great error messages. Fortunately, its artifacts will be covered via **saas** module.
 

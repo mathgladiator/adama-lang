@@ -106,6 +106,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   }
 
   public Iterator<String> execute(String requestJson) {
+    System.err.println("EXECUTE:" + requestJson);
     JsonRequest request = new JsonRequest(Json.parseJsonObject(requestJson));
     SyncIterator iterator = new SyncIterator();
     connection.execute(request, iterator);
@@ -158,6 +159,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     }
 
     private synchronized void write(String data) {
+      System.err.println("WRITING:" + data);
       d.add(data);
       if (latch != null) {
         latch.countDown();

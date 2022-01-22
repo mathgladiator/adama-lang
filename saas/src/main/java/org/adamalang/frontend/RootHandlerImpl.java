@@ -138,9 +138,9 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public void handle(AuthorityCreateRequest request, ClaimResultResponder responder) {
-    String authority = ProtectedUUID.generate();
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
+        String authority = ProtectedUUID.generate();
         Authorities.createAuthority(nexus.dataBaseManagement, request.who.id, authority);
         responder.complete(authority);
       } else {
