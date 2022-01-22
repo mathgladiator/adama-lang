@@ -18,9 +18,15 @@ import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.proto.*;
+import org.junit.Assert;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NaughtyServer extends AdamaGrpc.AdamaImplBase implements AutoCloseable {
   private final Server server;
@@ -32,6 +38,7 @@ public class NaughtyServer extends AdamaGrpc.AdamaImplBase implements AutoClosea
     public int port;
     public boolean sendEstablish;
     public boolean happyBillingDemo;
+    public HashSet<String> inventory;
 
     public NaughtyBits() {
      port = 12121;
@@ -46,6 +53,15 @@ public class NaughtyServer extends AdamaGrpc.AdamaImplBase implements AutoClosea
 
     public NaughtyBits billing(boolean happyBillingDemo) {
       this.happyBillingDemo = happyBillingDemo;
+      return this;
+    }
+
+    public NaughtyBits inventory(String... inventory) {
+      HashSet<String> items = new HashSet<>();
+      for (String item : inventory) {
+        items.add(item);
+      }
+      this.inventory = items;
       return this;
     }
 
@@ -84,11 +100,35 @@ public class NaughtyServer extends AdamaGrpc.AdamaImplBase implements AutoClosea
     responseObserver.onError(new NullPointerException());
   }
 
+  private CountDownLatch gotResponseObserver = new CountDownLatch(1);
+  private AtomicReference<StreamObserver<StreamMessageServer>> foundResponseObserver = new AtomicReference<>();
+
+  public StreamObserver<StreamMessageServer> getResponder() throws Exception {
+    Assert.assertTrue(gotResponseObserver.await(1000, TimeUnit.MILLISECONDS));
+    return foundResponseObserver.get();
+  }
+
+  private CountDownLatch completed = new CountDownLatch(1);
+
+  public void awaitCompletion() throws Exception {
+    Assert.assertTrue(completed.await(5000, TimeUnit.MILLISECONDS));
+  }
+
+  @Override
+  public void scanDeployments(ScanDeploymentsRequest request, StreamObserver<ScanDeploymentsResponse> responseObserver) {
+    responseObserver.onError(new NullPointerException());
+  }
+
   @Override
   public StreamObserver<StreamMessageClient> multiplexedProtocol(StreamObserver<StreamMessageServer> responseObserver) {
+    foundResponseObserver.set(responseObserver);
+    gotResponseObserver.countDown();
     if (bits.sendEstablish) {
       responseObserver.onNext(
           StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
+    }
+    if (bits.inventory != null) {
+      responseObserver.onNext(StreamMessageServer.newBuilder().setHeartbeat(InventoryHeartbeat.newBuilder().addAllSpaces(bits.inventory).build()).build());
     }
     return new StreamObserver<StreamMessageClient>() {
       @Override
@@ -98,12 +138,11 @@ public class NaughtyServer extends AdamaGrpc.AdamaImplBase implements AutoClosea
 
       @Override
       public void onError(Throwable throwable) {
-
       }
 
       @Override
       public void onCompleted() {
-
+        completed.countDown();
       }
     };
   }

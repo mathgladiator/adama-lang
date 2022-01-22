@@ -16,6 +16,8 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.contracts.*;
 import org.adamalang.grpc.mocks.*;
+import org.adamalang.grpc.proto.Establish;
+import org.adamalang.grpc.proto.StreamMessageServer;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,7 +38,14 @@ public class InstanceClientTests {
             "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       try (InstanceClient client =
-          new InstanceClient(bed.identity, metrics, null, "127.0.0.1:10001", bed.clientExecutor, lifecycle, new StdErrLogger())) {
+          new InstanceClient(
+              bed.identity,
+              metrics,
+              null,
+              "127.0.0.1:10001",
+              bed.clientExecutor,
+              lifecycle,
+              new StdErrLogger())) {
         {
           AssertCreateFailure failure = new AssertCreateFailure();
           client.create("nope", "nope", "space", "1", null, "{}", failure);
@@ -79,7 +88,9 @@ public class InstanceClientTests {
       AtomicBoolean createdAgain = new AtomicBoolean(false);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10002",
               bed.clientExecutor,
               new Lifecycle() {
@@ -122,7 +133,8 @@ public class InstanceClientTests {
         events.assertWrite(3, "CONNECTED");
         events.assertWrite(4, "DELTA:{\"data\":{\"x\":125},\"seq\":9}");
         events.assertWrite(5, "DISCONNECTED");
-        // I feel like batching is screwing with the sequencer, need to figure out how to reduce the invalidation load
+        // I feel like batching is screwing with the sequencer, need to figure out how to reduce the
+        // invalidation load
         Assert.assertEquals("CDCD", lifecycle.toString());
       }
     }
@@ -162,7 +174,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(4);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10003",
               bed.clientExecutor,
               new Lifecycle() {
@@ -245,7 +259,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10004",
               bed.clientExecutor,
               new Lifecycle() {
@@ -314,7 +330,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10005",
               bed.clientExecutor,
               new Lifecycle() {
@@ -397,7 +415,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(4);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10006",
               bed.clientExecutor,
               new Lifecycle() {
@@ -481,7 +501,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10007",
               bed.clientExecutor,
               new Lifecycle() {
@@ -569,7 +591,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10008",
               bed.clientExecutor,
               new Lifecycle() {
@@ -660,7 +684,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10009",
               bed.clientExecutor,
               new Lifecycle() {
@@ -748,7 +774,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10010",
               bed.clientExecutor,
               new Lifecycle() {
@@ -805,7 +833,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(1);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10011",
               bed.clientExecutor,
               new Lifecycle() {
@@ -844,25 +874,30 @@ public class InstanceClientTests {
       CountDownLatch latch = new CountDownLatch(3);
       try (InstanceClient client =
           new InstanceClient(
-              bed.identity, metrics, null,
+              bed.identity,
+              metrics,
+              null,
               "127.0.0.1:10012",
               bed.clientExecutor,
               new Lifecycle() {
                 @Override
                 public void connected(InstanceClient client) {
-                  client.scanDeployments("space",
+                  client.scanDeployments(
+                      "space",
                       new ScanDeploymentCallback() {
                         @Override
                         public void success() {
                           System.err.println("first good");
                           latch.countDown();
-                          client.scanDeployments("space",
+                          client.scanDeployments(
+                              "space",
                               new ScanDeploymentCallback() {
                                 @Override
                                 public void success() {
                                   System.err.println("second good");
                                   latch.countDown();
-                                  client.scanDeployments("space",
+                                  client.scanDeployments(
+                                      "space",
                                       new ScanDeploymentCallback() {
                                         @Override
                                         public void success() {}
@@ -904,36 +939,38 @@ public class InstanceClientTests {
   public void heatMonitoring() throws Exception {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
-             new TestBed(
-                 10012,
-                 "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+        new TestBed(
+            10012,
+            "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       CountDownLatch latch = new CountDownLatch(3);
-      HeatMonitor monitor = new HeatMonitor() {
-        @Override
-        public void heat(String target, double cpu, double memory) {
-          latch.countDown();
-        }
-      };
+      HeatMonitor monitor =
+          new HeatMonitor() {
+            @Override
+            public void heat(String target, double cpu, double memory) {
+              latch.countDown();
+            }
+          };
       try (InstanceClient client =
-               new InstanceClient(
-                   bed.identity, metrics, monitor,
-                   "127.0.0.1:10012",
-                   bed.clientExecutor,
-                   new Lifecycle() {
-                     @Override
-                     public void connected(InstanceClient client) {
-                     }
+          new InstanceClient(
+              bed.identity,
+              metrics,
+              monitor,
+              "127.0.0.1:10012",
+              bed.clientExecutor,
+              new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {}
 
-                     @Override
-                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+                @Override
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
-                     @Override
-                     public void disconnected(InstanceClient client) {}
-                   },
-                   (t, errorCode) -> {
-                     System.err.println("EXCEPTION:" + t.getMessage());
-                   })) {
+                @Override
+                public void disconnected(InstanceClient client) {}
+              },
+              (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+              })) {
         bed.startServer();
         Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
         bed.stopServer();
@@ -947,39 +984,42 @@ public class InstanceClientTests {
     try (NaughtyServer server = NaughtyServer.start().port(11100).establish(true).build()) {
       CountDownLatch avail = new CountDownLatch(1);
       try (InstanceClient client =
-               new InstanceClient(
-                   server.identity, metrics, null,
-                   "127.0.0.1:11100",
-                   server.clientExecutor,
-                   new Lifecycle() {
-                     @Override
-                     public void connected(InstanceClient client) {
-                       avail.countDown();
-                     }
+          new InstanceClient(
+              server.identity,
+              metrics,
+              null,
+              "127.0.0.1:11100",
+              server.clientExecutor,
+              new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {
+                  avail.countDown();
+                }
 
-                     @Override
-                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+                @Override
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
-                     @Override
-                     public void disconnected(InstanceClient client) {}
-                   },
-                   (t, errorCode) -> {
-                     System.err.println("EXCEPTION:" + t.getMessage());
-                   })) {
+                @Override
+                public void disconnected(InstanceClient client) {}
+              },
+              (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+              })) {
         Assert.assertTrue(avail.await(2000, TimeUnit.MILLISECONDS));
         CountDownLatch failed = new CountDownLatch(1);
-        client.reflect("space", "key", new Callback<String>() {
-          @Override
-          public void success(String value) {
+        client.reflect(
+            "space",
+            "key",
+            new Callback<String>() {
+              @Override
+              public void success(String value) {}
 
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            Assert.assertEquals(791567, ex.code);
-            failed.countDown();
-          }
-        });
+              @Override
+              public void failure(ErrorCodeException ex) {
+                Assert.assertEquals(791567, ex.code);
+                failed.countDown();
+              }
+            });
         Assert.assertTrue(failed.await(2000, TimeUnit.MILLISECONDS));
       }
     }
@@ -990,47 +1030,47 @@ public class InstanceClientTests {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (NaughtyServer server = NaughtyServer.start().port(11101).establish(false).build()) {
       try (InstanceClient client =
-               new InstanceClient(
-                   server.identity, metrics, null,
-                   "127.0.0.1:11101",
-                   server.clientExecutor,
-                   new Lifecycle() {
-                     @Override
-                     public void connected(InstanceClient client) {
-                     }
+          new InstanceClient(
+              server.identity,
+              metrics,
+              null,
+              "127.0.0.1:11101",
+              server.clientExecutor,
+              new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {}
 
-                     @Override
-                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+                @Override
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
-                     @Override
-                     public void disconnected(InstanceClient client) {}
-                   },
-                   (t, errorCode) -> {
-                     System.err.println("EXCEPTION:" + t.getMessage());
-                   })) {
+                @Override
+                public void disconnected(InstanceClient client) {}
+              },
+              (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+              })) {
         CountDownLatch disconnect = new CountDownLatch(1);
-         client.connect("a", "a", "space", "key", new Events() {
-           @Override
-           public void connected(Remote remote) {
+        client.connect(
+            "a",
+            "a",
+            "space",
+            "key",
+            new Events() {
+              @Override
+              public void connected(Remote remote) {}
 
-           }
+              @Override
+              public void delta(String data) {}
 
-           @Override
-           public void delta(String data) {
+              @Override
+              public void error(int code) {}
 
-           }
-
-           @Override
-           public void error(int code) {
-
-           }
-
-           @Override
-           public void disconnected() {
-             disconnect.countDown();
-           }
-         });
-         Assert.assertTrue(disconnect.await(5000, TimeUnit.MILLISECONDS));
+              @Override
+              public void disconnected() {
+                disconnect.countDown();
+              }
+            });
+        Assert.assertTrue(disconnect.await(5000, TimeUnit.MILLISECONDS));
       }
     }
   }
@@ -1038,49 +1078,51 @@ public class InstanceClientTests {
   @Test
   public void sampleBillingExchangeHappy() throws Exception {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
-    try (NaughtyServer server = NaughtyServer.start().port(11102).establish(true).billing(true).build()) {
+    try (NaughtyServer server =
+        NaughtyServer.start().port(11102).establish(true).billing(true).build()) {
       CountDownLatch avail = new CountDownLatch(1);
       try (InstanceClient client =
-               new InstanceClient(
-                   server.identity, metrics, null,
-                   "127.0.0.1:11102",
-                   server.clientExecutor,
-                   new Lifecycle() {
-                     @Override
-                     public void connected(InstanceClient client) {
-                       avail.countDown();
-                     }
+          new InstanceClient(
+              server.identity,
+              metrics,
+              null,
+              "127.0.0.1:11102",
+              server.clientExecutor,
+              new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {
+                  avail.countDown();
+                }
 
-                     @Override
-                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+                @Override
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
-                     @Override
-                     public void disconnected(InstanceClient client) {}
-                   },
-                   (t, errorCode) -> {
-                     System.err.println("EXCEPTION:" + t.getMessage());
-                   })) {
+                @Override
+                public void disconnected(InstanceClient client) {}
+              },
+              (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+              })) {
         Assert.assertTrue(avail.await(2000, TimeUnit.MILLISECONDS));
         CountDownLatch finished = new CountDownLatch(1);
         ArrayList<String> handled = new ArrayList<>();
-        client.startBillingExchange(new BillingStream() {
-          @Override
-          public void handle(String target, String batch, Runnable after) {
-            handled.add(target + ":" + batch);
-            System.err.println("SEE:" + target + ":" + batch);
-            after.run();
-          }
+        client.startBillingExchange(
+            new BillingStream() {
+              @Override
+              public void handle(String target, String batch, Runnable after) {
+                handled.add(target + ":" + batch);
+                System.err.println("SEE:" + target + ":" + batch);
+                after.run();
+              }
 
-          @Override
-          public void failure(int code) {
+              @Override
+              public void failure(int code) {}
 
-          }
-
-          @Override
-          public void finished() {
-            finished.countDown();
-          }
-        });
+              @Override
+              public void finished() {
+                finished.countDown();
+              }
+            });
         Assert.assertTrue(finished.await(2000, TimeUnit.MILLISECONDS));
         Assert.assertEquals(5, handled.size());
         Assert.assertEquals("127.0.0.1:11102:batch:4", handled.get(0));
@@ -1095,49 +1137,89 @@ public class InstanceClientTests {
   @Test
   public void sampleBillingExchangeSad() throws Exception {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
-    try (NaughtyServer server = NaughtyServer.start().port(11102).establish(true).billing(false).build()) {
+    try (NaughtyServer server =
+        NaughtyServer.start().port(11103).establish(true).billing(false).build()) {
       CountDownLatch avail = new CountDownLatch(1);
       try (InstanceClient client =
-               new InstanceClient(
-                   server.identity, metrics, null,
-                   "127.0.0.1:11102",
-                   server.clientExecutor,
-                   new Lifecycle() {
-                     @Override
-                     public void connected(InstanceClient client) {
-                       avail.countDown();
-                     }
+          new InstanceClient(
+              server.identity,
+              metrics,
+              null,
+              "127.0.0.1:11103",
+              server.clientExecutor,
+              new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {
+                  avail.countDown();
+                }
 
-                     @Override
-                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+                @Override
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
 
-                     @Override
-                     public void disconnected(InstanceClient client) {}
-                   },
-                   (t, errorCode) -> {
-                     System.err.println("EXCEPTION:" + t.getMessage());
-                   })) {
+                @Override
+                public void disconnected(InstanceClient client) {}
+              },
+              (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+              })) {
         Assert.assertTrue(avail.await(2000, TimeUnit.MILLISECONDS));
         CountDownLatch finished = new CountDownLatch(1);
-        client.startBillingExchange(new BillingStream() {
-          @Override
-          public void handle(String target, String batch, Runnable after) {
-            after.run();
-          }
+        client.startBillingExchange(
+            new BillingStream() {
+              @Override
+              public void handle(String target, String batch, Runnable after) {
+                after.run();
+              }
 
-          @Override
-          public void failure(int code) {
-            Assert.assertEquals(782348, code);
-            finished.countDown();
-          }
+              @Override
+              public void failure(int code) {
+                Assert.assertEquals(782348, code);
+                finished.countDown();
+              }
 
-          @Override
-          public void finished() {
-          }
-        });
+              @Override
+              public void finished() {}
+            });
         Assert.assertTrue(finished.await(2000, TimeUnit.MILLISECONDS));
       }
     }
   }
 
+  @Test
+  public void lateClientBinding() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    try (NaughtyServer server = NaughtyServer.start().port(11104).establish(false).build()) {
+      CountDownLatch avail = new CountDownLatch(1);
+      try (InstanceClient client =
+          new InstanceClient(
+              server.identity,
+              metrics,
+              null,
+              "127.0.0.1:11104",
+              server.clientExecutor,
+              new Lifecycle() {
+                @Override
+                public void connected(InstanceClient client) {
+                  avail.countDown();
+                }
+
+                @Override
+                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+
+                @Override
+                public void disconnected(InstanceClient client) {}
+              },
+              (t, errorCode) -> {
+                System.err.println("EXCEPTION:" + t.getMessage());
+              })) {
+        client.close();
+        server
+            .getResponder()
+            .onNext(
+                StreamMessageServer.newBuilder()
+                    .setEstablish(Establish.newBuilder().build())
+                    .build());
+      }
+    }
+  }
 }

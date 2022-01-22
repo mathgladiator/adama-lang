@@ -467,8 +467,6 @@ public class InstanceClient implements AutoCloseable {
                               .setMonitor(RequestHeat.newBuilder().build())
                               .build());
                     }
-                  } else {
-                    MultiplexObserver.this.upstream.onCompleted();
                   }
                 }
               });
