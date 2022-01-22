@@ -82,7 +82,7 @@ public class TestBed implements AutoCloseable {
     this.server = new Server(nexus);
   }
 
-  private String prefixForLocalhost() {
+  public static String prefixForLocalhost() {
     for (String search : new String[] {"./", "../", "./grpc/"}) {
       String candidate = search + "localhost.identity";
       File file = new File(candidate);

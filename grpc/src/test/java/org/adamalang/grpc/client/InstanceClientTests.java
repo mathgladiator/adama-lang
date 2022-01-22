@@ -9,6 +9,9 @@
  */
 package org.adamalang.grpc.client;
 
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.TestBed;
 import org.adamalang.grpc.client.contracts.*;
@@ -16,6 +19,7 @@ import org.adamalang.grpc.mocks.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -936,4 +940,204 @@ public class InstanceClientTests {
       }
     }
   }
+
+  @Test
+  public void naughtyFailureReflection() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    try (NaughtyServer server = NaughtyServer.start().port(11100).establish(true).build()) {
+      CountDownLatch avail = new CountDownLatch(1);
+      try (InstanceClient client =
+               new InstanceClient(
+                   server.identity, metrics, null,
+                   "127.0.0.1:11100",
+                   server.clientExecutor,
+                   new Lifecycle() {
+                     @Override
+                     public void connected(InstanceClient client) {
+                       avail.countDown();
+                     }
+
+                     @Override
+                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+
+                     @Override
+                     public void disconnected(InstanceClient client) {}
+                   },
+                   (t, errorCode) -> {
+                     System.err.println("EXCEPTION:" + t.getMessage());
+                   })) {
+        Assert.assertTrue(avail.await(2000, TimeUnit.MILLISECONDS));
+        CountDownLatch failed = new CountDownLatch(1);
+        client.reflect("space", "key", new Callback<String>() {
+          @Override
+          public void success(String value) {
+
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            Assert.assertEquals(791567, ex.code);
+            failed.countDown();
+          }
+        });
+        Assert.assertTrue(failed.await(2000, TimeUnit.MILLISECONDS));
+      }
+    }
+  }
+
+  @Test
+  public void naughtyFailureConnectNotReady() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    try (NaughtyServer server = NaughtyServer.start().port(11101).establish(false).build()) {
+      try (InstanceClient client =
+               new InstanceClient(
+                   server.identity, metrics, null,
+                   "127.0.0.1:11101",
+                   server.clientExecutor,
+                   new Lifecycle() {
+                     @Override
+                     public void connected(InstanceClient client) {
+                     }
+
+                     @Override
+                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+
+                     @Override
+                     public void disconnected(InstanceClient client) {}
+                   },
+                   (t, errorCode) -> {
+                     System.err.println("EXCEPTION:" + t.getMessage());
+                   })) {
+        CountDownLatch disconnect = new CountDownLatch(1);
+         client.connect("a", "a", "space", "key", new Events() {
+           @Override
+           public void connected(Remote remote) {
+
+           }
+
+           @Override
+           public void delta(String data) {
+
+           }
+
+           @Override
+           public void error(int code) {
+
+           }
+
+           @Override
+           public void disconnected() {
+             disconnect.countDown();
+           }
+         });
+         Assert.assertTrue(disconnect.await(5000, TimeUnit.MILLISECONDS));
+      }
+    }
+  }
+
+  @Test
+  public void sampleBillingExchangeHappy() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    try (NaughtyServer server = NaughtyServer.start().port(11102).establish(true).billing(true).build()) {
+      CountDownLatch avail = new CountDownLatch(1);
+      try (InstanceClient client =
+               new InstanceClient(
+                   server.identity, metrics, null,
+                   "127.0.0.1:11102",
+                   server.clientExecutor,
+                   new Lifecycle() {
+                     @Override
+                     public void connected(InstanceClient client) {
+                       avail.countDown();
+                     }
+
+                     @Override
+                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+
+                     @Override
+                     public void disconnected(InstanceClient client) {}
+                   },
+                   (t, errorCode) -> {
+                     System.err.println("EXCEPTION:" + t.getMessage());
+                   })) {
+        Assert.assertTrue(avail.await(2000, TimeUnit.MILLISECONDS));
+        CountDownLatch finished = new CountDownLatch(1);
+        ArrayList<String> handled = new ArrayList<>();
+        client.startBillingExchange(new BillingStream() {
+          @Override
+          public void handle(String target, String batch, Runnable after) {
+            handled.add(target + ":" + batch);
+            System.err.println("SEE:" + target + ":" + batch);
+            after.run();
+          }
+
+          @Override
+          public void failure(int code) {
+
+          }
+
+          @Override
+          public void finished() {
+            finished.countDown();
+          }
+        });
+        Assert.assertTrue(finished.await(2000, TimeUnit.MILLISECONDS));
+        Assert.assertEquals(5, handled.size());
+        Assert.assertEquals("127.0.0.1:11102:batch:4", handled.get(0));
+        Assert.assertEquals("127.0.0.1:11102:batch:3", handled.get(1));
+        Assert.assertEquals("127.0.0.1:11102:batch:2", handled.get(2));
+        Assert.assertEquals("127.0.0.1:11102:batch:1", handled.get(3));
+        Assert.assertEquals("127.0.0.1:11102:batch:0", handled.get(4));
+      }
+    }
+  }
+
+  @Test
+  public void sampleBillingExchangeSad() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    try (NaughtyServer server = NaughtyServer.start().port(11102).establish(true).billing(false).build()) {
+      CountDownLatch avail = new CountDownLatch(1);
+      try (InstanceClient client =
+               new InstanceClient(
+                   server.identity, metrics, null,
+                   "127.0.0.1:11102",
+                   server.clientExecutor,
+                   new Lifecycle() {
+                     @Override
+                     public void connected(InstanceClient client) {
+                       avail.countDown();
+                     }
+
+                     @Override
+                     public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+
+                     @Override
+                     public void disconnected(InstanceClient client) {}
+                   },
+                   (t, errorCode) -> {
+                     System.err.println("EXCEPTION:" + t.getMessage());
+                   })) {
+        Assert.assertTrue(avail.await(2000, TimeUnit.MILLISECONDS));
+        CountDownLatch finished = new CountDownLatch(1);
+        client.startBillingExchange(new BillingStream() {
+          @Override
+          public void handle(String target, String batch, Runnable after) {
+            after.run();
+          }
+
+          @Override
+          public void failure(int code) {
+            Assert.assertEquals(782348, code);
+            finished.countDown();
+          }
+
+          @Override
+          public void finished() {
+          }
+        });
+        Assert.assertTrue(finished.await(2000, TimeUnit.MILLISECONDS));
+      }
+    }
+  }
+
 }

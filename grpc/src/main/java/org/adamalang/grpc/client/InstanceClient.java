@@ -219,10 +219,6 @@ public class InstanceClient implements AutoCloseable {
     return docId;
   }
 
-  public boolean isAlive() {
-    return alive.get();
-  }
-
   @Override
   public void close() {
     executor.execute(

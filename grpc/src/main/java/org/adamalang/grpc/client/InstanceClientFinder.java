@@ -18,7 +18,6 @@ import org.adamalang.grpc.client.routing.RoutingEngine;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 /** You ask it for clients, and you get clients */
@@ -161,8 +160,8 @@ public class InstanceClientFinder {
   private class InstanceClientProxy implements Lifecycle {
     private final SimpleExecutor executor;
     private final InstanceClient createdClient;
-    private InstanceClient client;
     private final ItemQueue<InstanceClient> queue;
+    private InstanceClient client;
 
     private InstanceClientProxy(String target) throws Exception {
       this.executor = clientExecutors[rng.nextInt(clientExecutors.length)];
@@ -213,20 +212,20 @@ public class InstanceClientFinder {
               queue.unready();
             }
           });
-
     }
 
     public void add(ItemAction<InstanceClient> action) {
-      executor.execute(new NamedRunnable("finder-proxy-add", createdClient.target) {
-        @Override
-        public void execute() throws Exception {
-          if (client != null) {
-            action.execute(client);
-          } else {
-            queue.add(action);
-          }
-        }
-      });
+      executor.execute(
+          new NamedRunnable("finder-proxy-add", createdClient.target) {
+            @Override
+            public void execute() throws Exception {
+              if (client != null) {
+                action.execute(client);
+              } else {
+                queue.add(action);
+              }
+            }
+          });
     }
   }
 }
