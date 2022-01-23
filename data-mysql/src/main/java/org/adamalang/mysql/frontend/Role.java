@@ -15,8 +15,7 @@ import org.adamalang.common.ErrorCodeException;
 import java.util.Locale;
 
 public enum Role {
-  None(0x00),
-  Developer(0x01);
+  None(0x00), Developer(0x01);
 
   public int role;
 

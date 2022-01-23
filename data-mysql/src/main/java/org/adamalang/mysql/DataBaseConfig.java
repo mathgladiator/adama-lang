@@ -11,7 +11,6 @@ package org.adamalang.mysql;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.adamalang.common.ConfigObject;
-import org.adamalang.common.Json;
 
 /** defines the config for the mysql data service */
 public class DataBaseConfig {

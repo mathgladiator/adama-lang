@@ -18,7 +18,6 @@ import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.json.JsonAlgebra;
 
-import java.rmi.Remote;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,38 +35,20 @@ public class BlockingDataService implements DataService {
 
   @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
-    dataBase.transact(
-        (connection) -> {
-          // look up the index to get the id
-          LookupResult lookup = lookup(connection, key);
-          String walkRedoSQL =
-              new StringBuilder("SELECT `redo` FROM `")
-                  .append(dataBase.databaseName)
-                  .append("`.`deltas` WHERE `parent`=")
-                  .append(lookup.id)
-                  .append(" ORDER BY `seq_begin`")
-                  .toString();
-          AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
-          DataBase.walk(
-              connection,
-              (rs) -> {
-                merge.next(rs.getString(1));
-              },
-              walkRedoSQL);
-          return new LocalDocumentChange(merge.finish());
-        },
-        callback,
-        ErrorCodes.GET_FAILURE);
+    dataBase.transact((connection) -> {
+      // look up the index to get the id
+      LookupResult lookup = lookup(connection, key);
+      String walkRedoSQL = new StringBuilder("SELECT `redo` FROM `").append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id).append(" ORDER BY `seq_begin`").toString();
+      AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
+      DataBase.walk(connection, (rs) -> {
+        merge.next(rs.getString(1));
+      }, walkRedoSQL);
+      return new LocalDocumentChange(merge.finish());
+    }, callback, ErrorCodes.GET_FAILURE);
   }
 
-  public LookupResult lookup(Connection connection, Key key)
-      throws SQLException, ErrorCodeException {
-    PreparedStatement statement =
-        connection.prepareStatement(
-            new StringBuilder("SELECT `id`, `head_seq` FROM `")
-                .append(dataBase.databaseName)
-                .append("`.`index` WHERE `space`=? AND `key`=? LIMIT 1")
-                .toString());
+  public LookupResult lookup(Connection connection, Key key) throws SQLException, ErrorCodeException {
+    PreparedStatement statement = connection.prepareStatement(new StringBuilder("SELECT `id`, `head_seq` FROM `").append(dataBase.databaseName).append("`.`index` WHERE `space`=? AND `key`=? LIMIT 1").toString());
     try {
       statement.setString(1, key.space);
       statement.setString(2, key.key);
@@ -90,72 +71,46 @@ public class BlockingDataService implements DataService {
 
   @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    dataBase.transact(
-        (connection) -> {
-          // build the sql into insert
-          String insertIndexSQL =
-              new StringBuilder() //
-                  .append("INSERT INTO `")
-                  .append(dataBase.databaseName)
-                  .append("`.`index` (") //
-                  .append("`space`, `key`, `head_seq`, `invalidate`, `when`) VALUES (?, ?, ") //
-                  .append("'")
-                  .append(patch.seq)
-                  .append("', ") //
-                  .append("'")
-                  .append(patch.requiresFutureInvalidation ? "1" : "0")
-                  .append("', ") //
-                  .append("'")
-                  .append(whenOf(patch))
-                  .append("')") //
-                  .toString();
+    dataBase.transact((connection) -> {
+      // build the sql into insert
+      String insertIndexSQL = new StringBuilder() //
+                                                  .append("INSERT INTO `").append(dataBase.databaseName).append("`.`index` (") //
+                                                  .append("`space`, `key`, `head_seq`, `invalidate`, `when`) VALUES (?, ?, ") //
+                                                  .append("'").append(patch.seq).append("', ") //
+                                                  .append("'").append(patch.requiresFutureInvalidation ? "1" : "0").append("', ") //
+                                                  .append("'").append(whenOf(patch)).append("')") //
+                                                  .toString();
 
-          // execute the insert
-          PreparedStatement statementInsertIndex =
-              connection.prepareStatement(insertIndexSQL, Statement.RETURN_GENERATED_KEYS);
-          try {
-            statementInsertIndex.setString(1, key.space);
-            statementInsertIndex.setString(2, key.key);
-            statementInsertIndex.execute();
+      // execute the insert
+      PreparedStatement statementInsertIndex = connection.prepareStatement(insertIndexSQL, Statement.RETURN_GENERATED_KEYS);
+      try {
+        statementInsertIndex.setString(1, key.space);
+        statementInsertIndex.setString(2, key.key);
+        statementInsertIndex.execute();
 
-            // insert the delta
-            int parent = DataBase.getInsertId(statementInsertIndex);
-            insertDelta(connection, parent, patch);
-          } finally {
-            statementInsertIndex.close();
-          }
+        // insert the delta
+        int parent = DataBase.getInsertId(statementInsertIndex);
+        insertDelta(connection, parent, patch);
+      } finally {
+        statementInsertIndex.close();
+      }
 
-          return null;
-        },
-        callback,
-        ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
+      return null;
+    }, callback, ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
   }
 
   private String whenOf(RemoteDocumentUpdate patch) {
-    return dateFormat.format(
-        new Date(
-            System.currentTimeMillis()
-                + (patch.requiresFutureInvalidation ? patch.whenToInvalidateMilliseconds : 0)));
+    return dateFormat.format(new Date(System.currentTimeMillis() + (patch.requiresFutureInvalidation ? patch.whenToInvalidateMilliseconds : 0)));
   }
 
   /** internal: insert a delta */
-  private void insertDelta(Connection connection, int parent, RemoteDocumentUpdate patch)
-      throws SQLException {
-    String insertDeltaSQL =
-        new StringBuilder() //
-            .append("INSERT INTO `")
-            .append(dataBase.databaseName)
-            .append("`.`deltas` (") //
-            .append(
-                "`parent`, `seq_begin`, `seq_end`, `who_agent`, `who_authority`, `request`, `redo`, `undo`, `history_ptr`) VALUES (") //
-            .append(parent)
-            .append(", '")
-            .append(patch.seq)
-            .append("', '")
-            .append(patch.seq)
-            .append("', ") //
-            .append("?, ?, ?, ?, ?, '')") //
-            .toString();
+  private void insertDelta(Connection connection, int parent, RemoteDocumentUpdate patch) throws SQLException {
+    String insertDeltaSQL = new StringBuilder() //
+                                                .append("INSERT INTO `").append(dataBase.databaseName).append("`.`deltas` (") //
+                                                .append("`parent`, `seq_begin`, `seq_end`, `who_agent`, `who_authority`, `request`, `redo`, `undo`, `history_ptr`) VALUES (") //
+                                                .append(parent).append(", '").append(patch.seq).append("', '").append(patch.seq).append("', ") //
+                                                .append("?, ?, ?, ?, ?, '')") //
+                                                .toString();
     PreparedStatement statement = connection.prepareStatement(insertDeltaSQL);
     try {
       if (patch.who != null) {
@@ -176,174 +131,112 @@ public class BlockingDataService implements DataService {
 
   @Override
   public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
-    dataBase.transact(
-        (connection) -> {
-          RemoteDocumentUpdate first = patches[0];
-          RemoteDocumentUpdate last = patches[patches.length - 1];
+    dataBase.transact((connection) -> {
+      RemoteDocumentUpdate first = patches[0];
+      RemoteDocumentUpdate last = patches[patches.length - 1];
 
-          // read the index
-          LookupResult lookup = lookup(connection, key);
-          if (lookup.head_seq + 1 != first.seq) {
-            throw new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF);
-          }
+      // read the index
+      LookupResult lookup = lookup(connection, key);
+      if (lookup.head_seq + 1 != first.seq) {
+        throw new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF);
+      }
 
-          // update the index
-          String updateIndexSQL =
-              new StringBuilder() //
-                  .append("UPDATE `")
-                  .append(dataBase.databaseName)
-                  .append("`.`index` ") //
-                  .append("SET `head_seq`=")
-                  .append(last.seq) //
-                  .append(", `invalidate`=")
-                  .append(last.requiresFutureInvalidation ? 1 : 0) //
-                  .append(", `when`='")
-                  .append(whenOf(last)) //
-                  .append("' WHERE `id`=")
-                  .append(lookup.id)
-                  .toString();
-          DataBase.execute(connection, updateIndexSQL);
+      // update the index
+      String updateIndexSQL = new StringBuilder() //
+                                                  .append("UPDATE `").append(dataBase.databaseName).append("`.`index` ") //
+                                                  .append("SET `head_seq`=").append(last.seq) //
+                                                  .append(", `invalidate`=").append(last.requiresFutureInvalidation ? 1 : 0) //
+                                                  .append(", `when`='").append(whenOf(last)) //
+                                                  .append("' WHERE `id`=").append(lookup.id).toString();
+      DataBase.execute(connection, updateIndexSQL);
 
-          // insert delta
-          for (RemoteDocumentUpdate patch : patches) {
-            insertDelta(connection, lookup.id, patch);
-          }
-          return null;
-        },
-        callback,
-        ErrorCodes.PATCH_FAILURE);
+      // insert delta
+      for (RemoteDocumentUpdate patch : patches) {
+        insertDelta(connection, lookup.id, patch);
+      }
+      return null;
+    }, callback, ErrorCodes.PATCH_FAILURE);
   }
 
   @Override
-  public void compute(
-      Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
-    dataBase.transact(
-        (connection) -> {
-          // look up the index to get the id
-          LookupResult lookup = lookup(connection, key);
+  public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
+    dataBase.transact((connection) -> {
+      // look up the index to get the id
+      LookupResult lookup = lookup(connection, key);
 
-          if (method == ComputeMethod.HeadPatch) {
-            String walkUndoSQL =
-                new StringBuilder("SELECT `redo` FROM `") //
-                    .append(dataBase.databaseName)
-                    .append("`.`deltas` WHERE `parent`=")
-                    .append(lookup.id) //
-                    .append(" AND `seq_begin` > ")
-                    .append(seq) //
-                    .append(" ORDER BY `seq_begin` DESC")
-                    .toString();
-            AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
-            DataBase.walk(
-                connection,
-                (rs) -> {
-                  redo.next(rs.getString(1));
-                },
-                walkUndoSQL);
-            if (redo.empty()) {
-              throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_PATCH);
-            }
-            return new LocalDocumentChange(redo.finish());
-          }
+      if (method == ComputeMethod.HeadPatch) {
+        String walkUndoSQL = new StringBuilder("SELECT `redo` FROM `") //
+                                                                       .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                                                                       .append(" AND `seq_begin` > ").append(seq) //
+                                                                       .append(" ORDER BY `seq_begin` DESC").toString();
+        AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
+        DataBase.walk(connection, (rs) -> {
+          redo.next(rs.getString(1));
+        }, walkUndoSQL);
+        if (redo.empty()) {
+          throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_PATCH);
+        }
+        return new LocalDocumentChange(redo.finish());
+      }
 
-          if (method == ComputeMethod.Rewind) {
-            String walkUndoSQL =
-                new StringBuilder("SELECT `undo` FROM `") //
-                    .append(dataBase.databaseName)
-                    .append("`.`deltas` WHERE `parent`=")
-                    .append(lookup.id) //
-                    .append(" AND `seq_begin` >= ")
-                    .append(seq) //
-                    .append(" ORDER BY `seq_begin` DESC")
-                    .toString();
-            AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
-            DataBase.walk(
-                connection,
-                (rs) -> {
-                  undo.next(rs.getString(1));
-                },
-                walkUndoSQL);
-            if (undo.empty()) {
-              throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_REWIND);
-            }
-            return new LocalDocumentChange(undo.finish());
-          }
+      if (method == ComputeMethod.Rewind) {
+        String walkUndoSQL = new StringBuilder("SELECT `undo` FROM `") //
+                                                                       .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                                                                       .append(" AND `seq_begin` >= ").append(seq) //
+                                                                       .append(" ORDER BY `seq_begin` DESC").toString();
+        AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
+        DataBase.walk(connection, (rs) -> {
+          undo.next(rs.getString(1));
+        }, walkUndoSQL);
+        if (undo.empty()) {
+          throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_REWIND);
+        }
+        return new LocalDocumentChange(undo.finish());
+      }
 
-          if (method == ComputeMethod.Unsend) {
-            String getUndoSQL =
-                new StringBuilder("SELECT `undo` FROM `") //
-                    .append(dataBase.databaseName)
-                    .append("`.`deltas` WHERE `parent`=")
-                    .append(lookup.id) //
-                    .append(" AND `seq_begin` = ")
-                    .append(seq) //
-                    .append(" AND `seq_end` = ")
-                    .append(seq)
-                    .toString();
+      if (method == ComputeMethod.Unsend) {
+        String getUndoSQL = new StringBuilder("SELECT `undo` FROM `") //
+                                                                      .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                                                                      .append(" AND `seq_begin` = ").append(seq) //
+                                                                      .append(" AND `seq_end` = ").append(seq).toString();
 
-            String walkRedoSQL =
-                new StringBuilder("SELECT `redo` FROM `") //
-                    .append(dataBase.databaseName)
-                    .append("`.`deltas` WHERE `parent`=")
-                    .append(lookup.id) //
-                    .append(" AND `seq_begin` > ")
-                    .append(seq) //
-                    .append(" ORDER BY `seq_begin` ASC")
-                    .toString();
-            AtomicReference<AutoMorphicAccumulator<String>> unsend = new AtomicReference<>();
-            int count =
-                DataBase.walk(
-                    connection,
-                    (rs1) -> {
-                      unsend.set(JsonAlgebra.rollUndoForwardAccumulator(rs1.getString(1)));
-                      DataBase.walk(
-                          connection,
-                          (rs2) -> {
-                            unsend.get().next(rs2.getString(1));
-                          },
-                          walkRedoSQL);
-                    },
-                    getUndoSQL);
-            if (count == 0) {
-              throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_UNSEND);
-            }
-            return new LocalDocumentChange(unsend.get().finish());
-          }
-          throw new ErrorCodeException(ErrorCodes.COMPUTE_UNKNOWN_METHOD);
-        },
-        callback,
-        ErrorCodes.COMPUTE_FAILURE);
+        String walkRedoSQL = new StringBuilder("SELECT `redo` FROM `") //
+                                                                       .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+                                                                       .append(" AND `seq_begin` > ").append(seq) //
+                                                                       .append(" ORDER BY `seq_begin` ASC").toString();
+        AtomicReference<AutoMorphicAccumulator<String>> unsend = new AtomicReference<>();
+        int count = DataBase.walk(connection, (rs1) -> {
+          unsend.set(JsonAlgebra.rollUndoForwardAccumulator(rs1.getString(1)));
+          DataBase.walk(connection, (rs2) -> {
+            unsend.get().next(rs2.getString(1));
+          }, walkRedoSQL);
+        }, getUndoSQL);
+        if (count == 0) {
+          throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_UNSEND);
+        }
+        return new LocalDocumentChange(unsend.get().finish());
+      }
+      throw new ErrorCodeException(ErrorCodes.COMPUTE_UNKNOWN_METHOD);
+    }, callback, ErrorCodes.COMPUTE_FAILURE);
   }
 
   @Override
   public void delete(Key key, Callback<Void> callback) {
-    dataBase.transact(
-        (connection) -> {
-          // read the index
-          LookupResult lookup = lookup(connection, key);
-          // update the index
-          String deleteIndexSQL =
-              new StringBuilder() //
-                  .append("DELETE FROM `")
-                  .append(dataBase.databaseName)
-                  .append("`.`index` ") //
-                  .append("WHERE `id`=")
-                  .append(lookup.id)
-                  .toString();
-          DataBase.execute(connection, deleteIndexSQL);
-          // build a list of all the history pointers and put them into a garbage collection queue
-          String deleteDeltasSQL =
-              new StringBuilder() //
-                  .append("DELETE FROM `")
-                  .append(dataBase.databaseName)
-                  .append("`.`deltas` ") //
-                  .append("WHERE `parent`=")
-                  .append(lookup.id)
-                  .toString();
-          DataBase.execute(connection, deleteDeltasSQL);
-          return null;
-        },
-        callback,
-        ErrorCodes.DELETE_FAILURE);
+    dataBase.transact((connection) -> {
+      // read the index
+      LookupResult lookup = lookup(connection, key);
+      // update the index
+      String deleteIndexSQL = new StringBuilder() //
+                                                  .append("DELETE FROM `").append(dataBase.databaseName).append("`.`index` ") //
+                                                  .append("WHERE `id`=").append(lookup.id).toString();
+      DataBase.execute(connection, deleteIndexSQL);
+      // build a list of all the history pointers and put them into a garbage collection queue
+      String deleteDeltasSQL = new StringBuilder() //
+                                                   .append("DELETE FROM `").append(dataBase.databaseName).append("`.`deltas` ") //
+                                                   .append("WHERE `parent`=").append(lookup.id).toString();
+      DataBase.execute(connection, deleteDeltasSQL);
+      return null;
+    }, callback, ErrorCodes.DELETE_FAILURE);
   }
 
   public static class LookupResult {
