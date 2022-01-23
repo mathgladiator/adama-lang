@@ -9,5 +9,24 @@
  */
 package org.adamalang.transforms;
 
+import org.adamalang.common.ErrorCodeException;
+import org.junit.Assert;
+import org.junit.Test;
+
 public class AuthenticatorTests {
+  @Test
+  public void tokenParsing() {
+    try {
+      new Authenticator.ParsedToken("{}");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(995342, ece.code);
+    }
+    try {
+      new Authenticator.ParsedToken("x.x.x");
+      Assert.fail();
+    } catch (ErrorCodeException ece) {
+      Assert.assertEquals(908303, ece.code);
+    }
+  }
 }

@@ -21,19 +21,22 @@ import org.adamalang.web.io.*;
   * A public key will be held onto for 30 days. */
 public class InitGenerateIdentityRequest {
   public final Long connection;
+  public final Boolean revoke;
   public final String code;
 
-  public InitGenerateIdentityRequest(final Long connection, final String code) {
+  public InitGenerateIdentityRequest(final Long connection, final Boolean revoke, final String code) {
     this.connection = connection;
+    this.revoke = revoke;
     this.code = code;
   }
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<InitGenerateIdentityRequest> callback) {
     try {
       final Long connection = request.getLong("connection", true, 405505);
+      final Boolean revoke = request.getBoolean("revoke", false, 0);
       final String code = request.getString("code", true, 455681);
       nexus.executor.execute(() -> {
-        callback.success(new InitGenerateIdentityRequest(connection, code));
+        callback.success(new InitGenerateIdentityRequest(connection, revoke, code));
       });
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {

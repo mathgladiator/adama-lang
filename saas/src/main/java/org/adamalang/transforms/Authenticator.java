@@ -78,16 +78,16 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
   }
 
   /** a pre-validated parsed token; we parse to find which keys to look up */
-  public class ParsedToken {
+  public static class ParsedToken {
     public final String iss;
     public final String sub;
 
     public ParsedToken(String token) throws ErrorCodeException {
       String[] parts = token.split(Pattern.quote("."));
       if (parts.length == 3) {
-        String middle = new String(Base64.getDecoder().decode(parts[1]));
-        JsonMapper mapper = new JsonMapper();
         try {
+          String middle = new String(Base64.getDecoder().decode(parts[1]));
+          JsonMapper mapper = new JsonMapper();
           JsonNode tree = mapper.readTree(middle);
           if (tree != null && tree.isObject()) {
             JsonNode _iss = tree.get("iss");

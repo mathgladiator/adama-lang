@@ -9,10 +9,14 @@
  */
 package org.adamalang;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.adamalang.common.Json;
+import org.adamalang.transforms.results.Keystore;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.security.PrivateKey;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
@@ -50,11 +54,30 @@ public class EndToEnd_AuthorityTests {
       Iterator<String> c6 =
           fe.execute("{\"id\":6,\"method\":\"authority/create\",\"identity\":\"" + identity1 + "\"}");
       authorityCreatedLog = c6.next();
+      authority = authorityCreatedLog.split(Pattern.quote("\""))[3];
       Assert.assertTrue(authorityCreatedLog.startsWith("FINISH:{\"authority\":\""));
-      // TODO: SET
-      // TODO: GET
-      // TODO: FORGE AN IDENTITY
-      // TODO: VALIDATE IDENTITY IS INVALID AGAINST THE ABOVE FUNCTIONS
+      Iterator<String> c7 = fe.execute("{\"id\":6,\"method\":\"authority/set\",\"identity\":\"" + identity1 + "\",\"authority\":\"nope\",\"keystore\":\"\"}");
+      Assert.assertEquals("ERROR:457743", c7.next());
+      Iterator<String> c8 = fe.execute("{\"id\":6,\"method\":\"authority/set\",\"identity\":\"" + identity1 + "\",\"authority\":\""+authority+"\",\"keystore\":\"{}\"}");
+      Assert.assertEquals("ERROR:457743", c8.next());
+      Iterator<String> c9 = fe.execute("{\"id\":6,\"method\":\"authority/get\",\"identity\":\"" + identity1 + "\",\"authority\":\""+authority+"\"}");
+      Assert.assertEquals("FINISH:{\"keystore\":{}}", c9.next());
+      Keystore ks = Keystore.parse("{}");
+      String privateKeyFile = ks.generate(authority);
+      Iterator<String> c10 = fe.execute("{\"id\":6,\"method\":\"authority/set\",\"identity\":\"" + identity1 + "\",\"authority\":\""+authority+"\",\"key-store\":"+ks.persist()+"}");
+      Assert.assertEquals("FINISH:{}", c10.next());
+      PrivateKey key = Keystore.parsePrivateKey(Json.parseJsonObject(privateKeyFile));
+      String newIdentity = Jwts.builder().setSubject("me").setIssuer(authority).signWith(key).compact();
+      Iterator<String> c11 = fe.execute("{\"id\":3,\"method\":\"authority/create\",\"identity\":\"" + newIdentity + "\"}");
+      Assert.assertEquals("ERROR:990208", c11.next());
+      Iterator<String> c12 = fe.execute("{\"id\":3,\"method\":\"authority/list\",\"identity\":\"" + newIdentity + "\"}");
+      Assert.assertEquals("ERROR:904223", c12.next());
+      Iterator<String> c13 = fe.execute("{\"id\":6,\"method\":\"authority/set\",\"identity\":\"" + newIdentity + "\",\"authority\":\""+authority+"\",\"key-store\":"+ks.persist()+"}");
+      Assert.assertEquals("ERROR:970780", c13.next());
+      Iterator<String> c14 = fe.execute("{\"id\":6,\"method\":\"authority/get\",\"identity\":\"" + newIdentity + "\",\"authority\":\""+authority+"\"}");
+      Assert.assertEquals("ERROR:978992", c14.next());
+      Iterator<String> c15 = fe.execute("{\"id\":6,\"method\":\"authority/destroy\",\"identity\":\"" + newIdentity + "\",\"authority\":\""+authority+"\"}");
+      Assert.assertEquals("ERROR:901144", c15.next());
     }
   }
 }

@@ -68,6 +68,20 @@ public class JsonRequest {
     return fieldNode.textValue();
   }
 
+  public Boolean getBoolean(String field, boolean mustExist, int errorIfDoesnt)
+      throws ErrorCodeException {
+    final var fieldNode = node.get(field);
+    if (fieldNode == null
+        || fieldNode.isNull()
+        || !fieldNode.isBoolean()) {
+      if (mustExist) {
+        throw new ErrorCodeException(errorIfDoesnt);
+      }
+      return null;
+    }
+    return fieldNode.booleanValue();
+  }
+
   public Long getLong(String field, boolean mustExist, int errorIfDoesnt)
       throws ErrorCodeException {
     final var fieldNode = node.get(field);

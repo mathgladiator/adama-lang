@@ -14,6 +14,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
+import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
 /**  */
@@ -38,6 +39,7 @@ public class SpaceSetRequest {
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
+      ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final ObjectNode plan = request.getObject("plan", true, 425999);
       _latch.with(() -> new SpaceSetRequest(identity, who.get(), space, policy.get(), plan));

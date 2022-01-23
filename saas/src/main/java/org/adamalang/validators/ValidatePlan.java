@@ -11,17 +11,17 @@ package org.adamalang.validators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
+import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ValidatePlan {
+  private static final AtomicInteger validationClassId = new AtomicInteger(0);
+
   public static void validate(ObjectNode node) throws ErrorCodeException {
-    new DeploymentPlan(
-        node.toString(),
-        new ExceptionLogger() {
-          @Override
-          public void convertedToErrorCode(Throwable t, int errorCode) {}
-        });
-    // TODO: validate everything compiles
+    DeploymentPlan localPlan = new DeploymentPlan(node.toString(), (t, c) -> t.printStackTrace());
+    new DeploymentFactory(
+        "name", "prefix", validationClassId, null, localPlan);
   }
 }

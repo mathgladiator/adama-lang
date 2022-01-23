@@ -13,6 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
+import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
 /**  */
@@ -39,6 +40,7 @@ public class DocumentListRequest {
       final String identity = request.getString("identity", true, 458759);
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String space = request.getString("space", true, 461828);
+      ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String marker = request.getString("marker", false, 0);
       final Integer limit = request.getInteger("limit", false, 0);

@@ -76,6 +76,20 @@ public class JsonRequestTests {
     Assert.assertNull(request.getString("t", false, 123));
   }
 
+
+  @Test
+  public void getBoolean() throws Exception {
+    JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":\"xyz\"}"));
+    Assert.assertTrue(request.getBoolean("x", true, 123));
+    Assert.assertNull(request.getBoolean("y", false, -1));
+    Assert.assertNull(request.getBoolean("z", false, -1));
+    try {
+      Assert.assertNull(request.getBoolean("y", true, -123));
+    } catch (ErrorCodeException exc) {
+      Assert.assertEquals(-123, exc.code);
+    }
+  }
+
   @Test
   public void getInteger() throws Exception {
     JsonRequest request =

@@ -24,6 +24,7 @@ public class ValidateKeyTests {
     try {
       sb.append("a");
       ValidateKey.validate(sb.toString());
+      Assert.fail();
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(946192, ece.code);
     }

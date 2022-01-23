@@ -117,6 +117,9 @@ public class AssembleRequestTypes {
           case JsonObject:
             java.append("request.getObject(\"");
             break;
+          case Boolean:
+            java.append("request.getBoolean(\"");
+            break;
           default:
             throw new RuntimeException();
         }

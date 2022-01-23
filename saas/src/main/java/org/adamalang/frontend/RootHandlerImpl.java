@@ -36,19 +36,19 @@ import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.MessageDigest;
-import java.util.*;
+import java.util.Base64;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RootHandlerImpl implements RootHandler {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(RootHandlerImpl.class);
   private final ExternNexus nexus;
   private final Random rng;
-  private final AtomicInteger validationClassId;
 
   public RootHandlerImpl(ExternNexus nexus) throws Exception {
     this.nexus = nexus;
     this.rng = new Random();
-    validationClassId = new AtomicInteger(0);
   }
 
   @Override
@@ -64,19 +64,23 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void handle(InitRevokeAllRequest request, SimpleResponder responder) {
-        if (generatedCode.equals(request.code)) {
-          try {
-            Users.removeAllKeys(nexus.dataBaseManagement, startRequest.userId);
-            Users.validateUser(nexus.dataBaseManagement, startRequest.userId);
-          } catch (Exception ex) {
-            responder.error(
-                ErrorCodeException.detectOrWrap(
-                    ErrorCodes.API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION, ex, LOGGER));
-            return;
+        try {
+          if (generatedCode.equals(request.code)) {
+            try {
+              Users.removeAllKeys(nexus.dataBaseManagement, startRequest.userId);
+              Users.validateUser(nexus.dataBaseManagement, startRequest.userId);
+              responder.complete();
+            } catch (Exception ex) {
+              responder.error(
+                  ErrorCodeException.detectOrWrap(
+                      ErrorCodes.API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION, ex, LOGGER));
+              return;
+            }
+          } else {
+            responder.error(new ErrorCodeException(ErrorCodes.API_INIT_REVOKE_ALL_CODE_MISMATCH));
           }
-          responder.complete();
-        } else {
-          responder.error(new ErrorCodeException(ErrorCodes.API_INIT_REVOKE_ALL_CODE_MISMATCH));
+        } finally {
+          startResponder.complete();
         }
       }
 
@@ -88,6 +92,9 @@ public class RootHandlerImpl implements RootHandler {
             String publicKey =
                 new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
             try {
+              if (request.revoke != null && request.revoke) {
+                Users.removeAllKeys(nexus.dataBaseManagement, startRequest.userId);
+              }
               Users.addKey(
                   nexus.dataBaseManagement,
                   startRequest.userId,
@@ -159,7 +166,11 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: setKeystore validates ownership
-        Authorities.setKeystore(nexus.dataBaseManagement, request.who.id, request.authority, request.keyStore.toString());
+        Authorities.setKeystore(
+            nexus.dataBaseManagement,
+            request.who.id,
+            request.authority,
+            request.keyStore.toString());
         responder.complete();
       } else {
         responder.error(
@@ -177,7 +188,10 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: getKeystorePublic validates ownership
-        responder.complete(Json.parseJsonObject(Authorities.getKeystorePublic(nexus.dataBaseManagement, request.who.id, request.authority)));
+        responder.complete(
+            Json.parseJsonObject(
+                Authorities.getKeystorePublic(
+                    nexus.dataBaseManagement, request.who.id, request.authority)));
       } else {
         responder.error(
             new ErrorCodeException(ErrorCodes.API_GET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
@@ -229,13 +243,8 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(SpaceCreateRequest request, SimpleResponder responder) {
     try {
-      if (Validators.simple(request.space, 127)) {
-        Spaces.createSpace(nexus.dataBaseManagement, request.who.id, request.space);
-        responder.complete();
-      } else {
-        responder.error(
-            new ErrorCodeException(ErrorCodes.API_SPACE_CREATE_INVALID_NAME));
-      }
+      Spaces.createSpace(nexus.dataBaseManagement, request.who.id, request.space);
+      responder.complete();
     } catch (Exception ex) {
       responder.error(
           ErrorCodeException.detectOrWrap(
@@ -247,7 +256,8 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(SpaceGetRequest request, PlanResponder responder) {
     try {
       if (request.policy.canUserGetPlan(request.who)) {
-        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.dataBaseManagement, request.policy.id)));
+        responder.complete(
+            Json.parseJsonObject(Spaces.getPlan(nexus.dataBaseManagement, request.policy.id)));
       } else {
         responder.error(
             new ErrorCodeException(ErrorCodes.API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE));
@@ -269,21 +279,23 @@ public class RootHandlerImpl implements RootHandler {
         digest.digest(planJson.getBytes(StandardCharsets.UTF_8));
         String hash = Hashing.finishAndEncode(digest);
         // validate the plan
-        DeploymentPlan localPlan = new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());
-        new DeploymentFactory(request.space, "Space_" + request.space, validationClassId, null, localPlan);
+
         // Change the master plan
         Spaces.setPlan(nexus.dataBaseManagement, request.policy.id, planJson, hash);
         // iterate the targets with this space loaded
-        nexus.client.getDeploymentTargets(request.space, (target) -> {
-          try {
-            // persist the deployment binding
-            Deployments.deploy(nexus.dataBaseDeployments, request.space, target, hash, planJson);
-            // notify the client of an update
-            nexus.client.notifyDeployment(target, request.space);
-          } catch (Exception ex) {
-            ex.printStackTrace();
-          }
-        });
+        nexus.client.getDeploymentTargets(
+            request.space,
+            (target) -> {
+              try {
+                // persist the deployment binding
+                Deployments.deploy(
+                    nexus.dataBaseDeployments, request.space, target, hash, planJson);
+                // notify the client of an update
+                nexus.client.notifyDeployment(target, request.space);
+              } catch (Exception ex) {
+                ex.printStackTrace();
+              }
+            });
         responder.complete();
       } else {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
@@ -306,14 +318,17 @@ public class RootHandlerImpl implements RootHandler {
         // change the owner to 0 to block creation
         // TODO: a periodic clean up job will need to happen to delete spaces with owner 0
         //       we do this now for privacy reasons such that a data race doesn't leak information
-        Spaces.changePrimaryOwner(nexus.dataBaseBackend, request.policy.id, request.policy.owner, 0);
+        Spaces.changePrimaryOwner(
+            nexus.dataBaseBackend, request.policy.id, request.policy.owner, 0);
         // remove all machines handling this
         Deployments.undeployAll(nexus.dataBaseDeployments, request.space);
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NO_PERMISSION));
       }
     } catch (Exception ex) {
-      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(
+          ErrorCodeException.detectOrWrap(
+              ErrorCodes.API_SPACE_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -337,23 +352,28 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(SpaceReflectRequest request, ReflectionResponder responder) {
     if (request.policy.canUserSeeReflection(request.who)) {
-      nexus.client.reflect(request.space, request.key, new Callback<String>() {
-        @Override
-        public void success(String value) {
-          try {
-            responder.complete(Json.parseJsonObject(value));
-          } catch (RuntimeException failedToParse) {
-            responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_INTERNAL_ERROR_JSON));
-          }
-        }
+      nexus.client.reflect(
+          request.space,
+          request.key,
+          new Callback<String>() {
+            @Override
+            public void success(String value) {
+              try {
+                responder.complete(Json.parseJsonObject(value));
+              } catch (RuntimeException failedToParse) {
+                responder.error(
+                    new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_INTERNAL_ERROR_JSON));
+              }
+            }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          responder.error(ex);
-        }
-      });
+            @Override
+            public void failure(ErrorCodeException ex) {
+              responder.error(ex);
+            }
+          });
     } else {
-      responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_NO_PERMISSION_TO_EXECUTE));
+      responder.error(
+          new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_NO_PERMISSION_TO_EXECUTE));
     }
   }
 
@@ -382,19 +402,28 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(DocumentCreateRequest request, SimpleResponder responder) {
     try {
-      nexus.client.create(request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new CreateCallback() {
-        @Override
-        public void created() {
-          responder.complete();
-        }
+      nexus.client.create(
+          request.who.who.agent,
+          request.who.who.authority,
+          request.space,
+          request.key,
+          request.entropy,
+          request.arg.toString(),
+          new CreateCallback() {
+            @Override
+            public void created() {
+              responder.complete();
+            }
 
-        @Override
-        public void error(int code) {
-          responder.error(new ErrorCodeException(code));
-        }
-      });
+            @Override
+            public void error(int code) {
+              responder.error(new ErrorCodeException(code));
+            }
+          });
     } catch (Exception ex) {
-      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(
+          ErrorCodeException.detectOrWrap(
+              ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -402,7 +431,9 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(DocumentListRequest request, KeyListingResponder responder) {
     try {
       if (request.policy.canUserSeeKeyListing(request.who)) {
-        for (BackendOperations.DocumentIndex item : BackendOperations.list(nexus.dataBaseBackend, request.space, request.marker, request.limit)) {
+        for (BackendOperations.DocumentIndex item :
+            BackendOperations.list(
+                nexus.dataBaseBackend, request.space, request.marker, request.limit)) {
           responder.next(item.key, item.created, item.updated, item.seq);
         }
         responder.finish();
@@ -410,7 +441,9 @@ public class RootHandlerImpl implements RootHandler {
         responder.error(new ErrorCodeException(ErrorCodes.API_LIST_DOCUMENTS_NO_PERMISSION));
       }
     } catch (Exception ex) {
-      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(
+          ErrorCodeException.detectOrWrap(
+              ErrorCodes.API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -418,44 +451,53 @@ public class RootHandlerImpl implements RootHandler {
   public DocumentStreamHandler handle(ConnectionCreateRequest request, DataResponder responder) {
     return new DocumentStreamHandler() {
       private Connection connection;
+
       @Override
       public void bind() {
-        connection = nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, new SimpleEvents() {
-          @Override
-          public void connected() {
+        connection =
+            nexus.client.connect(
+                request.who.who.agent,
+                request.who.who.authority,
+                request.space,
+                request.key,
+                new SimpleEvents() {
+                  @Override
+                  public void connected() {}
 
-          }
+                  @Override
+                  public void delta(String data) {
+                    responder.next(Json.parseJsonObject(data));
+                  }
 
-          @Override
-          public void delta(String data) {
-            responder.next(Json.parseJsonObject(data));
-          }
+                  @Override
+                  public void error(int code) {
+                    responder.error(new ErrorCodeException(code));
+                  }
 
-          @Override
-          public void error(int code) {
-            responder.error(new ErrorCodeException(code));
-          }
-
-          @Override
-          public void disconnected() {
-            responder.finish();
-          }
-        });
+                  @Override
+                  public void disconnected() {
+                    responder.finish();
+                  }
+                });
       }
 
       @Override
       public void handle(ConnectionSendRequest request, SeqResponder responder) {
-        connection.send(request.channel, null, request.message.toString(), new SeqCallback() {
-          @Override
-          public void success(int seq) {
-            responder.complete(seq);
-          }
+        connection.send(
+            request.channel,
+            null,
+            request.message.toString(),
+            new SeqCallback() {
+              @Override
+              public void success(int seq) {
+                responder.complete(seq);
+              }
 
-          @Override
-          public void error(int code) {
-            responder.error(new ErrorCodeException(code));
-          }
-        });
+              @Override
+              public void error(int code) {
+                responder.error(new ErrorCodeException(code));
+              }
+            });
       }
 
       // TODO: attach, canAttach
@@ -479,18 +521,20 @@ public class RootHandlerImpl implements RootHandler {
       File file;
       MessageDigest digestMD5;
       MessageDigest digestSHA384;
+
       @Override
       public void bind() {
         try {
           id = UUID.randomUUID().toString();
           File root = new File("inflight");
-          file = new File(root,id + ".upload");
+          file = new File(root, id + ".upload");
           file.deleteOnExit();
           digestMD5 = MessageDigest.getInstance("MD5");
           digestSHA384 = MessageDigest.getInstance("SHA-384");
           output = new FileOutputStream(file);
         } catch (Exception ex) {
-          responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_FAILED_BIND, ex, LOGGER));
+          responder.error(
+              ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_FAILED_BIND, ex, LOGGER));
         }
       }
 
@@ -509,7 +553,9 @@ public class RootHandlerImpl implements RootHandler {
             chunkResponder.complete();
           }
         } catch (Exception ex) {
-          chunkResponder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_CHUNK_UNKNOWN_EXCEPTION, ex, LOGGER));
+          chunkResponder.error(
+              ErrorCodeException.detectOrWrap(
+                  ErrorCodes.API_ASSET_CHUNK_UNKNOWN_EXCEPTION, ex, LOGGER));
         }
       }
 
