@@ -66,7 +66,7 @@ public class Main {
     System.out.println("    " + Util.prefix("adama", Util.ANSI.Green) + " " + Util.prefix("[SUBCOMMAND]", Util.ANSI.Magenta));
     System.out.println();
     System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println( "    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
+    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(Util.prefix("SUBCOMMANDS:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("authority", Util.ANSI.Green) + "         Manage authorities");

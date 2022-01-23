@@ -29,15 +29,7 @@ public class ParameterDefinition {
   public final int errorCodeIfMissing;
   public final HashSet<String> skipTransformOnMethods;
 
-  public ParameterDefinition(
-      final String name,
-      Type type,
-      boolean optional,
-      Transform transform,
-      Validator validator,
-      String documentation,
-      int errorCodeIfMissing,
-      final HashSet<String> skipTransformOnMethods) {
+  public ParameterDefinition(final String name, Type type, boolean optional, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods) {
     this.name = name;
     this.camelName = Common.camelize(name, true);
     this.type = type;
@@ -89,53 +81,47 @@ public class ParameterDefinition {
         }
         Element childElement = (Element) childNode;
         switch (childElement.getTagName()) {
-          case "documentation":
-            {
-              documentation = childElement.getTextContent();
+          case "documentation": {
+            documentation = childElement.getTextContent();
+          }
+          break;
+          case "validate": {
+            String service = childElement.getAttribute("service");
+            if (service == null) {
+              throw new Exception("validate needs a service");
             }
-            break;
-          case "validate":
-            {
-              String service = childElement.getAttribute("service");
-              if (service == null) {
-                throw new Exception("validate needs a service");
-              }
-              validator = new Validator(service);
+            validator = new Validator(service);
+          }
+          break;
+          case "skip-transform": {
+            String methodOn = childElement.getAttribute("on");
+            if (methodOn == null || "".equals(methodOn)) {
+              throw new Exception("skip-transform needs a on to identify a method");
             }
-            break;
-          case "skip-transform":
-            {
-              String methodOn = childElement.getAttribute("on");
-              if (methodOn == null || "".equals(methodOn)) {
-                throw new Exception("skip-transform needs a on to identify a method");
-              }
-              skipTransforms.add(methodOn);
+            skipTransforms.add(methodOn);
+          }
+          break;
+          case "transform": {
+            String service = childElement.getAttribute("service");
+            if (service == null) {
+              throw new Exception("transform needs a service");
             }
-            break;
-          case "transform":
-            {
-              String service = childElement.getAttribute("service");
-              if (service == null) {
-                throw new Exception("transform needs a service");
-              }
-              String outputName = childElement.getAttribute("output-name");
-              if (outputName == null) {
-                throw new Exception("transform needs an output-name");
-              }
-              String outputJavaName = childElement.getAttribute("output-java-type");
-              if (outputJavaName == null) {
-                throw new Exception("transform needs an output-java-type");
-              }
-              String errorCodeOnFailureRaw = childElement.getAttribute("error-code");
-              if (errorCodeOnFailureRaw == null) {
-                throw new Exception("transform needs an error-code");
-              }
-              int errorCodeOnFailure = Integer.parseInt(errorCodeOnFailureRaw);
-              transform =
-                  new Transform(
-                      name, type, service, outputName, outputJavaName, errorCodeOnFailure);
+            String outputName = childElement.getAttribute("output-name");
+            if (outputName == null) {
+              throw new Exception("transform needs an output-name");
             }
-            break;
+            String outputJavaName = childElement.getAttribute("output-java-type");
+            if (outputJavaName == null) {
+              throw new Exception("transform needs an output-java-type");
+            }
+            String errorCodeOnFailureRaw = childElement.getAttribute("error-code");
+            if (errorCodeOnFailureRaw == null) {
+              throw new Exception("transform needs an error-code");
+            }
+            int errorCodeOnFailure = Integer.parseInt(errorCodeOnFailureRaw);
+            transform = new Transform(name, type, service, outputName, outputJavaName, errorCodeOnFailure);
+          }
+          break;
         }
       }
       if (documentation == null) {
@@ -144,16 +130,7 @@ public class ParameterDefinition {
       if (errorCodeIfMissing == 0 && !optional) {
         throw new Exception("non-optional parameter is missing non-zero error code:" + name);
       }
-      ParameterDefinition definition =
-          new ParameterDefinition(
-              name,
-              type,
-              optional,
-              transform,
-              validator,
-              documentation,
-              errorCodeIfMissing,
-              skipTransforms);
+      ParameterDefinition definition = new ParameterDefinition(name, type, optional, transform, validator, documentation, errorCodeIfMissing, skipTransforms);
       if (parameters.containsKey(name)) {
         throw new Exception("parameter already defined: " + name);
       }

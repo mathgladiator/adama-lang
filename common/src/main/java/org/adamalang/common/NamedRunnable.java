@@ -14,8 +14,8 @@ import org.slf4j.LoggerFactory;
 
 /** for complex executor bouncing, this helps understand what is going on */
 public abstract class NamedRunnable implements Runnable {
-  private final Logger LOGGER = LoggerFactory.getLogger("nrex");
   public final String name;
+  private final Logger LOGGER = LoggerFactory.getLogger("nrex");
 
   public NamedRunnable(String first, String... tail) {
     StringBuilder sb = new StringBuilder();

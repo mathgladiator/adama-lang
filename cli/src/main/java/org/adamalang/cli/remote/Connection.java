@@ -10,23 +10,18 @@
 package org.adamalang.cli.remote;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.netty.channel.Channel;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.adamalang.common.Json;
 import org.adamalang.web.client.WebClientConnection;
 import org.adamalang.web.contracts.WebJsonStream;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /** a single connection to a remote Web Proxy host */
 public class Connection implements AutoCloseable {
-  private WebClientConnection connection;
+  private final WebClientConnection connection;
 
   public Connection(WebClientConnection connection) {
     this.connection = connection;

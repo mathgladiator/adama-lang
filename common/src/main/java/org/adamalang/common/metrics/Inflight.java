@@ -12,8 +12,8 @@ package org.adamalang.common.metrics;
 /** for measuring a resource which may be active in memory */
 public interface Inflight {
   /** bump the resource up */
-  public void up();
+  void up();
 
   /** bump the resource down */
-  public void down();
+  void down();
 }

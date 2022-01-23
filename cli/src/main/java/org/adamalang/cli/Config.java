@@ -12,7 +12,6 @@ package org.adamalang.cli;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.common.ConfigObject;
 import org.adamalang.common.Json;
 
 import java.io.File;
@@ -63,10 +62,6 @@ public class Config {
     this.cache = config;
   }
 
-  public ObjectNode read() {
-    return cache;
-  }
-
   public String get_string(String field, String defaultValue) {
     JsonNode node = read().get(field);
     if (node == null || node.isNull()) {
@@ -77,6 +72,10 @@ public class Config {
       }
     }
     return node.textValue();
+  }
+
+  public ObjectNode read() {
+    return cache;
   }
 
   public int get_int(String field, int defaultValue) {

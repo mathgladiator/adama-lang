@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AssembleResponders {
-  public static Map<String, String> make(String packageName, Map<String, Responder> responders)
-      throws Exception {
+  public static Map<String, String> make(String packageName, Map<String, Responder> responders) throws Exception {
     HashMap<String, String> files = new HashMap<>();
     for (Responder responder : responders.values()) {
       StringBuilder java = new StringBuilder();
@@ -30,13 +29,10 @@ public class AssembleResponders {
       java.append("public class ").append(responder.camelName).append("Responder {\n");
       java.append("  public final JsonResponder responder;\n");
       java.append("\n");
-      java.append("  public ")
-          .append(responder.camelName)
-          .append("Responder(JsonResponder responder) {\n");
+      java.append("  public ").append(responder.camelName).append("Responder(JsonResponder responder) {\n");
       java.append("    this.responder = responder;\n");
       java.append("  }\n\n");
-      String[] names =
-          responder.stream ? new String[] {"next", "finish"} : new String[] {"complete"};
+      String[] names = responder.stream ? new String[]{"next", "finish"} : new String[]{"complete"};
       for (String mName : names) {
         boolean terminal = !mName.equals("next");
 
@@ -58,17 +54,9 @@ public class AssembleResponders {
             java.append("    if (").append(fd.camelName).append(" != null) {\n");
           }
           if (fd.type == Type.JsonObject) {
-            java.append(ext + "    _obj.set(\"")
-                .append(fd.name)
-                .append("\", ")
-                .append(fd.camelName)
-                .append(");\n");
+            java.append(ext + "    _obj.set(\"").append(fd.name).append("\", ").append(fd.camelName).append(");\n");
           } else {
-            java.append(ext + "    _obj.put(\"")
-                .append(fd.name)
-                .append("\", ")
-                .append(fd.camelName)
-                .append(");\n");
+            java.append(ext + "    _obj.put(\"").append(fd.name).append("\", ").append(fd.camelName).append(");\n");
           }
           if (fd.optional) {
             java.append("    }\n");

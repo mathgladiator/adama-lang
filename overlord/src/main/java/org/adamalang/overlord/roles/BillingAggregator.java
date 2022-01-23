@@ -20,11 +20,7 @@ import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 
 public class BillingAggregator {
-  public static void kickOff(
-      OverlordMetrics metrics,
-      Client client,
-      DataBase dataBaseFront,
-      ConcurrentCachedHtmlHandler handler) {
+  public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBaseFront, ConcurrentCachedHtmlHandler handler) {
     SimpleExecutor executor = SimpleExecutor.create("billing-aggregator");
     FixedHtmlStringLoggerTable table = new FixedHtmlStringLoggerTable(32, "target", "batch", "time");
     executor.schedule(new NamedRunnable("billing-fetch") {
@@ -32,6 +28,8 @@ public class BillingAggregator {
       public void execute() throws Exception {
         NamedRunnable self = this;
         client.randomBillingExchange(new BillingStream() {
+          private boolean gotFinished = false;
+
           @Override
           public void handle(String target, String batch, Runnable after) {
             metrics.billing_fetch_found.run();
@@ -57,8 +55,6 @@ public class BillingAggregator {
             metrics.billing_fetch_failed.run();
             finished();
           }
-
-          private boolean gotFinished = false;
 
           @Override
           public void finished() {

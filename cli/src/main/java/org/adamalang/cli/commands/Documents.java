@@ -40,23 +40,36 @@ public class Documents {
     }
   }
 
-  private static void documentsList(Config config, String[] args) throws Exception {
+  public static void documentsHelp(String[] args) {
+    if (args.length > 0) {
+      String command = Util.normalize(args[0]);
+    }
+    System.out.println(Util.prefix("Interact with documents in a limited fashion", Util.ANSI.Green));
+    System.out.println();
+    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("adama documents", Util.ANSI.Green) + " " + Util.prefix("[SPACESUBCOMMAND]", Util.ANSI.Magenta));
+    System.out.println();
+    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
+    System.out.println();
+    System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("connect", Util.ANSI.Green) + "           Connect to a document");
+    System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Create a document");
+  }
+
+  private static void documentsConnect(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
-    String marker = Util.extractWithDefault("--marker", "-m", null, args);
-    int limit = Integer.parseInt(Util.extractWithDefault("--limit", "-l", "1000", args));
+    String key = Util.extractOrCrash("--key", "-k", args);
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
-        request.put("method", "document/list");
+        request.put("method", "connection/create");
         request.put("identity", identity);
         request.put("space", space);
-        if (marker != null) {
-          request.put("marker", marker);
-        }
-        request.put("limit", limit);
-        connection.stream(request, (item) -> {
-          System.err.println(item.toPrettyString());
+        request.put("key", key);
+        connection.stream(request, (response) -> {
+          System.err.println(response.toPrettyString());
         });
       }
     }
@@ -85,38 +98,25 @@ public class Documents {
     }
   }
 
-  private static void documentsConnect(Config config, String[] args) throws Exception {
+  private static void documentsList(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
-    String key = Util.extractOrCrash("--key", "-k", args);
+    String marker = Util.extractWithDefault("--marker", "-m", null, args);
+    int limit = Integer.parseInt(Util.extractWithDefault("--limit", "-l", "1000", args));
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
-        request.put("method", "connection/create");
+        request.put("method", "document/list");
         request.put("identity", identity);
         request.put("space", space);
-        request.put("key", key);
-        connection.stream(request, (response) -> {
-          System.err.println(response.toPrettyString());
+        if (marker != null) {
+          request.put("marker", marker);
+        }
+        request.put("limit", limit);
+        connection.stream(request, (item) -> {
+          System.err.println(item.toPrettyString());
         });
       }
     }
-  }
-
-  public static void documentsHelp(String[] args) {
-    if (args.length > 0) {
-      String command = Util.normalize(args[0]);
-    }
-    System.out.println(Util.prefix("Interact with documents in a limited fashion", Util.ANSI.Green));
-    System.out.println();
-    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama documents", Util.ANSI.Green) + " " + Util.prefix("[SPACESUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println();
-    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
-    System.out.println();
-    System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("connect", Util.ANSI.Green) + "           Connect to a document");
-    System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Create a document");
   }
 }

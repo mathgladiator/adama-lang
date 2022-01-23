@@ -17,28 +17,26 @@ import java.util.concurrent.TimeUnit;
 /** wraps Java executor for time and simplifies for Adama */
 public interface SimpleExecutor {
   /** a default instance for doing things NOW */
-  SimpleExecutor NOW =
-      new SimpleExecutor() {
-        @Override
-        public void execute(NamedRunnable command) {
-          command.run();
-        }
+  SimpleExecutor NOW = new SimpleExecutor() {
+    @Override
+    public void execute(NamedRunnable command) {
+      command.run();
+    }
 
-        @Override
-        public void schedule(NamedRunnable command, long milliseconds) {
-          // no-op
-        }
+    @Override
+    public void schedule(NamedRunnable command, long milliseconds) {
+      // no-op
+    }
 
-        @Override
-        public CountDownLatch shutdown() {
-          return new CountDownLatch(0);
-        }
-      };
+    @Override
+    public CountDownLatch shutdown() {
+      return new CountDownLatch(0);
+    }
+  };
 
   // TODO: INSTRUMENT THIS
   static SimpleExecutor create(String name) {
-    ScheduledExecutorService realExecutor =
-        Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(name));
+    ScheduledExecutorService realExecutor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory(name));
     return new SimpleExecutor() {
       @Override
       public void execute(NamedRunnable command) {
@@ -53,11 +51,10 @@ public interface SimpleExecutor {
       @Override
       public CountDownLatch shutdown() {
         CountDownLatch latch = new CountDownLatch(1);
-        realExecutor.execute(
-            () -> {
-              latch.countDown();
-              realExecutor.shutdown();
-            });
+        realExecutor.execute(() -> {
+          latch.countDown();
+          realExecutor.shutdown();
+        });
         return latch;
       }
     };

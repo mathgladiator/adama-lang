@@ -15,14 +15,6 @@ import org.adamalang.common.ErrorCodeException;
 /** monitor a callback */
 public abstract class CallbackMonitor {
 
-  public abstract CallbackMonitorInstance start();
-
-  public interface CallbackMonitorInstance {
-    void success();
-
-    void failure(int code);
-  }
-
   public <T> Callback<T> wrap(Callback<T> callback) {
     CallbackMonitorInstance instance = start();
     return new Callback<T>() {
@@ -38,5 +30,13 @@ public abstract class CallbackMonitor {
         callback.failure(ex);
       }
     };
+  }
+
+  public abstract CallbackMonitorInstance start();
+
+  public interface CallbackMonitorInstance {
+    void success();
+
+    void failure(int code);
   }
 }

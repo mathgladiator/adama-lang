@@ -19,29 +19,28 @@ import java.util.function.Function;
 public interface Callback<T> {
   ExceptionLogger LOGGER = ExceptionLogger.FOR(Callback.class);
 
-  Callback<Integer> DONT_CARE_INTEGER =
-      new Callback<Integer>() {
-        @Override
-        public void success(Integer value) {}
+  Callback<Integer> DONT_CARE_INTEGER = new Callback<Integer>() {
+    @Override
+    public void success(Integer value) {
+    }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          LOGGER.convertedToErrorCode(ex, -1);
-        }
-      };
-  Callback<Void> DONT_CARE_VOID =
-      new Callback<Void>() {
-        @Override
-        public void success(Void value) {}
+    @Override
+    public void failure(ErrorCodeException ex) {
+      LOGGER.convertedToErrorCode(ex, -1);
+    }
+  };
+  Callback<Void> DONT_CARE_VOID = new Callback<Void>() {
+    @Override
+    public void success(Void value) {
+    }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          LOGGER.convertedToErrorCode(ex, -1);
-        }
-      };
+    @Override
+    public void failure(ErrorCodeException ex) {
+      LOGGER.convertedToErrorCode(ex, -1);
+    }
+  };
 
-  static <In, Out> Callback<In> transform(
-      Callback<Out> output, int exceptionErrorCode, Function<In, Out> f) {
+  static <In, Out> Callback<In> transform(Callback<Out> output, int exceptionErrorCode, Function<In, Out> f) {
     return new Callback<>() {
       @Override
       public void success(In value) {
@@ -65,27 +64,24 @@ public interface Callback<T> {
   /** the action failed outright, and the reason is the exception */
   void failure(ErrorCodeException ex);
 
-  static <T> Callback<T> bind(
-      ScheduledExecutorService service, int exceptionErrorCode, Callback<T> next) {
+  static <T> Callback<T> bind(ScheduledExecutorService service, int exceptionErrorCode, Callback<T> next) {
     return new Callback<T>() {
       @Override
       public void success(T value) {
-        service.execute(
-            () -> {
-              try {
-                next.success(value);
-              } catch (Throwable ex) {
-                next.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex, LOGGER));
-              }
-            });
+        service.execute(() -> {
+          try {
+            next.success(value);
+          } catch (Throwable ex) {
+            next.failure(ErrorCodeException.detectOrWrap(exceptionErrorCode, ex, LOGGER));
+          }
+        });
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        service.execute(
-            () -> {
-              next.failure(ex);
-            });
+        service.execute(() -> {
+          next.failure(ex);
+        });
       }
     };
   }

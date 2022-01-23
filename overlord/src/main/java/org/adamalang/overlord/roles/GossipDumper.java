@@ -16,10 +16,7 @@ import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
 
 public class GossipDumper {
-  public static void kickOff(
-      OverlordMetrics metrics,
-      Engine engine,
-      ConcurrentCachedHtmlHandler handler) {
+  public static void kickOff(OverlordMetrics metrics, Engine engine, ConcurrentCachedHtmlHandler handler) {
     SimpleExecutor executor = SimpleExecutor.create("scan-gossip");
     executor.schedule(new NamedRunnable("dump-gossip") {
       @Override

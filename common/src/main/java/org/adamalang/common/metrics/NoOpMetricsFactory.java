@@ -82,7 +82,8 @@ public class NoOpMetricsFactory implements MetricsFactory {
 
   @Override
   public Runnable counter(String name) {
-    return () -> {};
+    return () -> {
+    };
   }
 
   @Override

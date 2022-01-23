@@ -32,7 +32,7 @@ public class CanaryLoadGenTool {
       connections[k].kickOff();
     }
     CountDownLatch quitter = new CountDownLatch(1);
-    while(!quitter.await(1000, TimeUnit.MILLISECONDS)) {
+    while (!quitter.await(1000, TimeUnit.MILLISECONDS)) {
     }
   }
 }

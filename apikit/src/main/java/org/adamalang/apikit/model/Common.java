@@ -25,9 +25,7 @@ public class Common {
       if (lowerFirst) {
         result.append(part.toLowerCase(Locale.ROOT));
       } else {
-        result.append(
-            part.substring(0, 1).toUpperCase(Locale.ROOT)
-                + part.substring(1).toLowerCase(Locale.ROOT));
+        result.append(part.substring(0, 1).toUpperCase(Locale.ROOT) + part.substring(1).toLowerCase(Locale.ROOT));
       }
       lowerFirst = false;
     }

@@ -10,22 +10,21 @@
 package org.adamalang.common;
 
 public interface SimpleExecutorFactory {
-  SimpleExecutorFactory DEFAULT =
-      new SimpleExecutorFactory() {
-        @Override
-        public SimpleExecutor makeSingle(String name) {
-          return SimpleExecutor.create(name);
-        }
+  SimpleExecutorFactory DEFAULT = new SimpleExecutorFactory() {
+    @Override
+    public SimpleExecutor makeSingle(String name) {
+      return SimpleExecutor.create(name);
+    }
 
-        @Override
-        public SimpleExecutor[] makeMany(String prefix, int nThreads) {
-          SimpleExecutor[] executors = new SimpleExecutor[nThreads];
-          for (int k = 0; k < nThreads; k++) {
-            executors[k] = SimpleExecutor.create(prefix + "-" + nThreads);
-          }
-          return executors;
-        }
-      };
+    @Override
+    public SimpleExecutor[] makeMany(String prefix, int nThreads) {
+      SimpleExecutor[] executors = new SimpleExecutor[nThreads];
+      for (int k = 0; k < nThreads; k++) {
+        executors[k] = SimpleExecutor.create(prefix + "-" + nThreads);
+      }
+      return executors;
+    }
+  };
 
   SimpleExecutor makeSingle(String name);
 

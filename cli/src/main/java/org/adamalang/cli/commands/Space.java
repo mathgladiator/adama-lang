@@ -26,8 +26,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Space {
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
-        spaceHelp(args);
-        return;
+      spaceHelp(args);
+      return;
     }
     String command = Util.normalize(args[0]);
     String[] next = Util.tail(args);
@@ -59,6 +59,28 @@ public class Space {
     }
   }
 
+  public static void spaceHelp(String[] args) {
+    if (args.length > 0) {
+      String command = Util.normalize(args[0]);
+    }
+    System.out.println(Util.prefix("Adama organizes documents into spaces, and spaces can be managed with this tool.", Util.ANSI.Green));
+    System.out.println();
+    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("adama space", Util.ANSI.Green) + " " + Util.prefix("[SPACESUBCOMMAND]", Util.ANSI.Magenta));
+    System.out.println();
+    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
+    System.out.println();
+    System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Create a new space");
+    System.out.println("    " + Util.prefix("delete", Util.ANSI.Green) + "            Deletes an empty space");
+    System.out.println("    " + Util.prefix("deploy", Util.ANSI.Green) + "            Deploy a plan to a space");
+    System.out.println("    " + Util.prefix("download", Util.ANSI.Green) + "          Download a space's plan");
+    System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List spaces available to your account");
+    System.out.println("    " + Util.prefix("set-role", Util.ANSI.Green) + "          Share/unshare a space with another developer");
+    System.out.println("    " + Util.prefix("help", Util.ANSI.Green) + "              Show this helpful message");
+  }
+
   private static void spaceCreate(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
@@ -78,13 +100,13 @@ public class Space {
     }
   }
 
-  private static void spaceDownload(Config config, String[] args) throws Exception {
+  private static void spaceDelete(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
-        request.put("method", "space/get");
+        request.put("method", "space/delete");
         request.put("identity", identity);
         request.put("space", space);
         ObjectNode response = connection.execute(request);
@@ -99,7 +121,7 @@ public class Space {
     String singleFile = Util.extractWithDefault("--file", "-f", null, args);
     final String planJson;
     if (singleFile != null) {
-      String singleScript = Files.readString(new File(singleFile).toPath());;
+      String singleScript = Files.readString(new File(singleFile).toPath());
       ObjectNode plan = Json.newJsonObject();
       plan.putObject("versions").put("file", singleScript);
       plan.put("default", "file");
@@ -128,32 +150,15 @@ public class Space {
     }
   }
 
-  private static void spaceDelete(Config config, String[] args) throws Exception {
+  private static void spaceDownload(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode request = Json.newJsonObject();
-        request.put("method", "space/delete");
+        request.put("method", "space/get");
         request.put("identity", identity);
         request.put("space", space);
-        ObjectNode response = connection.execute(request);
-        System.err.println(response.toPrettyString());
-      }
-    }
-  }
-
-  private static void spaceReflect(Config config, String[] args) throws Exception {
-    String identity = config.get_string("identity", null);
-    String space = Util.extractOrCrash("--space", "-s", args);
-    String key = Util.extractWithDefault("--key", "-k", "", args);
-    try (WebSocketClient client = new WebSocketClient(config)) {
-      try (Connection connection = client.open()) {
-        ObjectNode request = Json.newJsonObject();
-        request.put("method", "space/reflect");
-        request.put("identity", identity);
-        request.put("space", space);
-        request.put("key", key);
         ObjectNode response = connection.execute(request);
         System.err.println(response.toPrettyString());
       }
@@ -182,6 +187,23 @@ public class Space {
     }
   }
 
+  private static void spaceReflect(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String key = Util.extractWithDefault("--key", "-k", "", args);
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/reflect");
+        request.put("identity", identity);
+        request.put("space", space);
+        request.put("key", key);
+        ObjectNode response = connection.execute(request);
+        System.err.println(response.toPrettyString());
+      }
+    }
+  }
+
   private static void spaceSetRole(Config config, String[] args) throws Exception {
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
@@ -199,27 +221,5 @@ public class Space {
         System.err.println(response.toPrettyString());
       }
     }
-  }
-
-  public static void spaceHelp(String[] args) {
-    if (args.length > 0) {
-      String command = Util.normalize(args[0]);
-    }
-    System.out.println(Util.prefix("Adama organizes documents into spaces, and spaces can be managed with this tool.", Util.ANSI.Green));
-    System.out.println("");
-    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama space", Util.ANSI.Green) + " " + Util.prefix("[SPACESUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println("");
-    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
-    System.out.println("");
-    System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Create a new space");
-    System.out.println("    " + Util.prefix("delete", Util.ANSI.Green) + "            Deletes an empty space");
-    System.out.println("    " + Util.prefix("deploy", Util.ANSI.Green) + "            Deploy a plan to a space");
-    System.out.println("    " + Util.prefix("download", Util.ANSI.Green) + "          Download a space's plan");
-    System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List spaces available to your account");
-    System.out.println("    " + Util.prefix("set-role", Util.ANSI.Green) + "          Share/unshare a space with another developer");
-    System.out.println("    " + Util.prefix("help", Util.ANSI.Green) + "              Show this helpful message");
   }
 }

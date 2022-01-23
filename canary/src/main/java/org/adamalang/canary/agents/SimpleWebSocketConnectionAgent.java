@@ -66,25 +66,22 @@ public class SimpleWebSocketConnectionAgent implements WebLifecycle {
   @Override
   public void disconnected() {
     System.err.println("disconnected, scheduling retry");
-    executor.execute(
-        new NamedRunnable("disconnected-websocket-agent") {
+    executor.execute(new NamedRunnable("disconnected-websocket-agent") {
+      @Override
+      public void execute() throws Exception {
+        if (agents != null) {
+          for (int j = 0; j < agents.length; j++) {
+            agents[j].kill();
+          }
+          agents = null;
+        }
+        executor.schedule(new NamedRunnable("retry") {
           @Override
           public void execute() throws Exception {
-            if (agents != null) {
-              for (int j = 0; j < agents.length; j++) {
-                agents[j].kill();
-              }
-              agents = null;
-            }
-            executor.schedule(
-                new NamedRunnable("retry") {
-                  @Override
-                  public void execute() throws Exception {
-                    base.open(config.endpoint, SimpleWebSocketConnectionAgent.this);
-                  }
-                },
-                2500);
+            base.open(config.endpoint, SimpleWebSocketConnectionAgent.this);
           }
-        });
+        }, 2500);
+      }
+    });
   }
 }

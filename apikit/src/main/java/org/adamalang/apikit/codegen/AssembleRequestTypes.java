@@ -31,18 +31,10 @@ public class AssembleRequestTypes {
       java.append("/** ").append(fixDocumentation(method.documentation.trim())).append(" */\n");
       java.append("public class ").append(method.camelName).append("Request {\n");
       for (ParameterDefinition parameter : method.parameters) {
-        java.append("  public final ")
-            .append(parameter.type.javaType())
-            .append(" ")
-            .append(parameter.camelName)
-            .append(";\n");
+        java.append("  public final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName).append(";\n");
         Transform transform = parameter.getTransform(method.name);
         if (transform != null) {
-          java.append("  public final ")
-              .append(transform.shortOutputJavaType)
-              .append(" ")
-              .append(transform.outputName)
-              .append(";\n");
+          java.append("  public final ").append(transform.shortOutputJavaType).append(" ").append(transform.outputName).append(";\n");
         }
       }
       java.append("\n");
@@ -53,57 +45,32 @@ public class AssembleRequestTypes {
           java.append(", ");
         }
         first = false;
-        java.append("final ")
-            .append(parameter.type.javaType())
-            .append(" ")
-            .append(parameter.camelName);
+        java.append("final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName);
         Transform transform = parameter.getTransform(method.name);
         if (transform != null) {
-          java.append(", final ")
-              .append(transform.shortOutputJavaType)
-              .append(" ")
-              .append(transform.outputName);
+          java.append(", final ").append(transform.shortOutputJavaType).append(" ").append(transform.outputName);
         }
       }
       java.append(") {\n");
       int outstandingCallCount = 0;
       for (ParameterDefinition parameter : method.parameters) {
-        java.append("    this.")
-            .append(parameter.camelName)
-            .append(" = ")
-            .append(parameter.camelName)
-            .append(";\n");
+        java.append("    this.").append(parameter.camelName).append(" = ").append(parameter.camelName).append(";\n");
         Transform transform = parameter.getTransform(method.name);
         if (transform != null) {
           outstandingCallCount++;
-          java.append("    this.")
-              .append(transform.outputName)
-              .append(" = ")
-              .append(transform.outputName)
-              .append(";\n");
+          java.append("    this.").append(transform.outputName).append(" = ").append(transform.outputName).append(";\n");
         }
       }
       java.append("  }\n");
       java.append("\n");
 
-      java.append(
-              "  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<")
-          .append(method.camelName)
-          .append("Request> callback) {\n");
+      java.append("  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<").append(method.camelName).append("Request> callback) {\n");
       java.append("    try {\n");
       if (outstandingCallCount > 0) {
-        java.append("      final BulkLatch<")
-            .append(method.camelName)
-            .append("Request> _latch = new BulkLatch<>(nexus.executor, ")
-            .append(outstandingCallCount)
-            .append(", callback);\n");
+        java.append("      final BulkLatch<").append(method.camelName).append("Request> _latch = new BulkLatch<>(nexus.executor, ").append(outstandingCallCount).append(", callback);\n");
       }
       for (ParameterDefinition parameter : method.parameters) {
-        java.append("      final ")
-            .append(parameter.type.javaType())
-            .append(" ")
-            .append(parameter.camelName)
-            .append(" = ");
+        java.append("      final ").append(parameter.type.javaType()).append(" ").append(parameter.camelName).append(" = ");
         switch (parameter.type) {
           case String:
             java.append("request.getString(\"");
@@ -123,26 +90,13 @@ public class AssembleRequestTypes {
           default:
             throw new RuntimeException();
         }
-        java.append(parameter.name)
-            .append("\", ")
-            .append(parameter.optional ? "false" : "true")
-            .append(", ")
-            .append(parameter.errorCodeIfMissing)
-            .append(");\n");
+        java.append(parameter.name).append("\", ").append(parameter.optional ? "false" : "true").append(", ").append(parameter.errorCodeIfMissing).append(");\n");
         if (parameter.validator != null) {
-          java.append("      ")
-              .append(parameter.validator.shortServiceName)
-              .append(".validate(")
-              .append(parameter.camelName)
-              .append(");\n");
+          java.append("      ").append(parameter.validator.shortServiceName).append(".validate(").append(parameter.camelName).append(");\n");
         }
         Transform transform = parameter.getTransform(method.name);
         if (transform != null) {
-          java.append("      final LatchRefCallback<")
-              .append(transform.shortOutputJavaType)
-              .append("> ")
-              .append(transform.outputName)
-              .append(" = new LatchRefCallback<>(_latch);\n");
+          java.append("      final LatchRefCallback<").append(transform.shortOutputJavaType).append("> ").append(transform.outputName).append(" = new LatchRefCallback<>(_latch);\n");
         }
       }
       if (outstandingCallCount > 0) {
@@ -177,13 +131,7 @@ public class AssembleRequestTypes {
       for (ParameterDefinition parameter : method.parameters) {
         Transform transform = parameter.getTransform(method.name);
         if (transform != null) {
-          java.append("      nexus.")
-              .append(transform.fieldInputName)
-              .append(".execute(")
-              .append(parameter.camelName)
-              .append(", ")
-              .append(transform.outputName)
-              .append(");\n");
+          java.append("      nexus.").append(transform.fieldInputName).append(".execute(").append(parameter.camelName).append(", ").append(transform.outputName).append(");\n");
         }
       }
       java.append("    } catch (ErrorCodeException ece) {\n");

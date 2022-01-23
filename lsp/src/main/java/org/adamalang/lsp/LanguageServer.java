@@ -20,17 +20,14 @@ public class LanguageServer {
     while (true) {
       Socket client = server.accept();
       System.err.println("connected");
-      Thread clientThread =
-          new Thread(
-              () -> {
-                try {
-                  new AdamaLanguageServerProtocol(classNameId)
-                      .drive(client.getInputStream(), client.getOutputStream());
-                } catch (Exception ex) {
-                  ex.printStackTrace();
-                }
-                forceClose(client);
-              });
+      Thread clientThread = new Thread(() -> {
+        try {
+          new AdamaLanguageServerProtocol(classNameId).drive(client.getInputStream(), client.getOutputStream());
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+        forceClose(client);
+      });
       clientThread.setName("lsp-client-thread-" + client.getLocalPort());
       clientThread.start();
     }

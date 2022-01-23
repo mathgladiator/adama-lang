@@ -15,33 +15,13 @@ import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class HeatTable {
 
-  private class HeatSample {
-    double cpu;
-    double memory;
-    long time;
-
-    public HeatSample(double cpu, double memory) {
-      this.cpu = cpu;
-      this.memory = memory;
-      this.time = System.currentTimeMillis();
-    }
-
-    public void update(double cpu, double memory) {
-      this.cpu = cpu;
-      this.memory = memory;
-      this.time = System.currentTimeMillis();
-    }
-  }
-
-  private HashMap<String, HeatSample> samples;
   private final SimpleExecutor executor;
+  private final HashMap<String, HeatSample> samples;
   private Consumer<String> targetHot;
-
   public HeatTable(ConcurrentCachedHtmlHandler handler) {
     this.executor = SimpleExecutor.create("heat-table");
     this.samples = new HashMap<>();
@@ -86,5 +66,23 @@ public class HeatTable {
         }
       }
     });
+  }
+
+  private class HeatSample {
+    double cpu;
+    double memory;
+    long time;
+
+    public HeatSample(double cpu, double memory) {
+      this.cpu = cpu;
+      this.memory = memory;
+      this.time = System.currentTimeMillis();
+    }
+
+    public void update(double cpu, double memory) {
+      this.cpu = cpu;
+      this.memory = memory;
+      this.time = System.currentTimeMillis();
+    }
   }
 }

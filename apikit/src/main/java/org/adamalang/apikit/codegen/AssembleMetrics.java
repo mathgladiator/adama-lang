@@ -41,5 +41,5 @@ public class AssembleMetrics {
     metrics.append("  }\n");
     metrics.append("}\n");
     return metrics.toString();
-    }
+  }
 }

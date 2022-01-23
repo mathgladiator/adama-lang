@@ -16,8 +16,6 @@ import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
 
-import java.util.logging.ConsoleHandler;
-
 public class Init {
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
@@ -39,13 +37,18 @@ public class Init {
     }
   }
 
-  private static String readEmail(Config config) {
+  public static void initHelp() {
+    System.out.println(Util.prefix("Initiate the local configuration file", Util.ANSI.Green));
     System.out.println();
-    System.out.print(Util.prefix("   Email:", Util.ANSI.Yellow));
-    String email = System.console().readLine();
-    // TODO: rough validate email
-    // TODO: if blank, then try to pull from config
-    return email;
+    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("adama code", Util.ANSI.Green) + " " + Util.prefix("[INITSUBCOMMAND]", Util.ANSI.Magenta));
+    System.out.println();
+    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
+    System.out.println();
+    System.out.println(Util.prefix("INITSUBCOMMAND:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("start", Util.ANSI.Green) + "             Connect this machine to the remote resource (interactive)");
+    System.out.println("    " + Util.prefix("revoke", Util.ANSI.Green) + "            Revoke all machines for your account (interactive)");
   }
 
   private static void initStart(Config config) throws Exception {
@@ -57,7 +60,8 @@ public class Init {
         requestStart.put("email", email);
         long initConnectionId = connection.open(requestStart, (o) -> {
 
-        }, (ex) -> {});
+        }, (ex) -> {
+        });
 
         System.out.println();
         System.out.print(Util.prefix("    Code:", Util.ANSI.Yellow));
@@ -85,7 +89,8 @@ public class Init {
         requestStart.put("email", email);
         long initConnectionId = connection.open(requestStart, (o) -> {
 
-        }, (ex) -> {});
+        }, (ex) -> {
+        });
 
         System.out.println();
         System.out.print(Util.prefix("    Code:", Util.ANSI.Yellow));
@@ -106,17 +111,12 @@ public class Init {
     }
   }
 
-  public static void initHelp() {
-    System.out.println(Util.prefix("Initiate the local configuration file", Util.ANSI.Green));
-    System.out.println("");
-    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama code", Util.ANSI.Green) + " " + Util.prefix("[INITSUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println("");
-    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
-    System.out.println("");
-    System.out.println(Util.prefix("INITSUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("start", Util.ANSI.Green) + "             Connect this machine to the remote resource (interactive)");
-    System.out.println("    " + Util.prefix("revoke", Util.ANSI.Green) + "            Revoke all machines for your account (interactive)");
+  private static String readEmail(Config config) {
+    System.out.println();
+    System.out.print(Util.prefix("   Email:", Util.ANSI.Yellow));
+    String email = System.console().readLine();
+    // TODO: rough validate email
+    // TODO: if blank, then try to pull from config
+    return email;
   }
 }

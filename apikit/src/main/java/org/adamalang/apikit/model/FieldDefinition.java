@@ -62,11 +62,10 @@ public class FieldDefinition {
         }
         Element childElement = (Element) childNode;
         switch (childElement.getTagName()) {
-          case "documentation":
-            {
-              documentation = childElement.getTextContent();
-            }
-            break;
+          case "documentation": {
+            documentation = childElement.getTextContent();
+          }
+          break;
         }
       }
       if (documentation == null) {

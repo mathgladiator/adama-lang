@@ -8,7 +8,9 @@
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
 package org.adamalang.common.jvm;
+
 import com.sun.management.OperatingSystemMXBean;
+
 import javax.management.MBeanServerConnection;
 import java.lang.management.ManagementFactory;
 

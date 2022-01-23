@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /** a very dumb handler with no logic; just show what is in the map */
 public class ConcurrentCachedHtmlHandler implements HtmlHandler {
-  private ConcurrentHashMap<String, String> uris;
+  private final ConcurrentHashMap<String, String> uris;
 
   public ConcurrentCachedHtmlHandler() {
     this.uris = new ConcurrentHashMap<>();

@@ -32,8 +32,7 @@ public class Responder {
     this.fields = fields;
   }
 
-  public static Map<String, Responder> respondersOf(
-      Document document, Map<String, FieldDefinition> fields) throws Exception {
+  public static Map<String, Responder> respondersOf(Document document, Map<String, FieldDefinition> fields) throws Exception {
     TreeMap<String, Responder> responders = new TreeMap<>();
     NodeList list = document.getElementsByTagName("responder");
     for (int k = 0; k < list.getLength(); k++) {
@@ -54,26 +53,21 @@ public class Responder {
         }
         Element childElement = (Element) childNode;
         switch (childElement.getTagName()) {
-          case "field":
-            {
-              String fieldName = childElement.getAttribute("name");
-              if (fieldName == null) {
-                throw new Exception("field must have a name");
-              }
-              FieldDefinition fieldToUse = fields.get(fieldName);
-              if (fieldToUse == null) {
-                throw new Exception("field must be valid");
-              }
-              fieldsForThisResponder.add(fieldToUse);
+          case "field": {
+            String fieldName = childElement.getAttribute("name");
+            if (fieldName == null) {
+              throw new Exception("field must have a name");
             }
-            break;
+            FieldDefinition fieldToUse = fields.get(fieldName);
+            if (fieldToUse == null) {
+              throw new Exception("field must be valid");
+            }
+            fieldsForThisResponder.add(fieldToUse);
+          }
+          break;
         }
       }
-      Responder responder =
-          new Responder(
-              name,
-              stream,
-              fieldsForThisResponder.toArray(new FieldDefinition[fieldsForThisResponder.size()]));
+      Responder responder = new Responder(name, stream, fieldsForThisResponder.toArray(new FieldDefinition[fieldsForThisResponder.size()]));
       responders.put(responder.name, responder);
     }
     return responders;

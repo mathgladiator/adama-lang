@@ -79,13 +79,10 @@ public class Tool {
     // write out the nexus
 
     for (Map.Entry<String, String> request : apiOutput.entrySet()) {
-      Files.writeString(
-          new File(outputPath, request.getKey()).toPath(),
-          DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
+      Files.writeString(new File(outputPath, request.getKey()).toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
     }
     // TODO: move to Schema
-    Files.writeString(
-        new File("apikit/docs/src/reference.md").toPath(), AssembleAPIDocs.docify(methods));
+    Files.writeString(new File("apikit/docs/src/reference.md").toPath(), AssembleAPIDocs.docify(methods));
   }
 
   private static Document load(InputStream input) throws Exception {

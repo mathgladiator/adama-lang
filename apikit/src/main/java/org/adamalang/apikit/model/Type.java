@@ -10,11 +10,7 @@
 package org.adamalang.apikit.model;
 
 public enum Type {
-  String,
-  Boolean,
-  Long,
-  Integer,
-  JsonObject;
+  String, Boolean, Long, Integer, JsonObject;
 
   public static Type of(String parameterType) throws Exception {
     switch (parameterType) {

@@ -37,11 +37,7 @@ public class AssembleHandlers {
         } else {
           java.append("void");
         }
-        java.append(" handle(")
-            .append(method.camelName)
-            .append("Request request, ")
-            .append(method.responder.camelName)
-            .append("Responder responder);\n\n");
+        java.append(" handle(").append(method.camelName).append("Request request, ").append(method.responder.camelName).append("Responder responder);\n\n");
       }
       if (root.equals("Root")) {
         java.append("  public void disconnect();\n\n");

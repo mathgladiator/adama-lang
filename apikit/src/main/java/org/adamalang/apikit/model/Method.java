@@ -31,17 +31,7 @@ public class Method {
   public final boolean destroy;
   public final boolean callOnDisconnect;
 
-  public Method(
-      String name,
-      ParameterDefinition[] parameters,
-      String documentation,
-      Responder responder,
-      String handler,
-      String create,
-      String findBy,
-      int errorCantFindBy,
-      boolean destroy,
-      boolean callOnDisconnect) {
+  public Method(String name, ParameterDefinition[] parameters, String documentation, Responder responder, String handler, String create, String findBy, int errorCantFindBy, boolean destroy, boolean callOnDisconnect) {
     this.name = name;
     this.camelName = Common.camelize(name);
     this.parameters = parameters;
@@ -55,11 +45,7 @@ public class Method {
     this.callOnDisconnect = callOnDisconnect;
   }
 
-  public static Method[] methodsOf(
-      Document document,
-      Map<String, ParameterDefinition> parameters,
-      Map<String, Responder> responders)
-      throws Exception {
+  public static Method[] methodsOf(Document document, Map<String, ParameterDefinition> parameters, Map<String, Responder> responders) throws Exception {
     NodeList list = document.getElementsByTagName("method");
     ArrayList<Method> methodsArrayList = new ArrayList<>();
     for (int k = 0; k < list.getLength(); k++) {
@@ -122,18 +108,7 @@ public class Method {
       if (documentation == null) {
         throw new Exception("method has no documentation");
       }
-      methodsArrayList.add(
-          new Method(
-              name,
-              parametersArrayList.toArray(new ParameterDefinition[parametersArrayList.size()]),
-              documentation,
-              responder,
-              handlerValue,
-              createValue,
-              findByValue,
-              errorCantFindBy,
-              destroy,
-              callOnDisconnect));
+      methodsArrayList.add(new Method(name, parametersArrayList.toArray(new ParameterDefinition[parametersArrayList.size()]), documentation, responder, handlerValue, createValue, findByValue, errorCantFindBy, destroy, callOnDisconnect));
     }
     return methodsArrayList.toArray(new Method[methodsArrayList.size()]);
   }

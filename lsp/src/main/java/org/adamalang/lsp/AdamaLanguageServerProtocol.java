@@ -35,8 +35,7 @@ public class AdamaLanguageServerProtocol {
   }
 
   public void drive(InputStream input, OutputStream output) throws Exception {
-    BufferedReader reader =
-        new BufferedReader(new InputStreamReader(new BufferedInputStream(input)));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(input)));
     HashMap<String, String> headers = new HashMap<>();
     String line;
     while ((line = reader.readLine()) != null) {
@@ -62,8 +61,7 @@ public class AdamaLanguageServerProtocol {
       } else {
         int kColon = line.indexOf(":");
         if (kColon > 0) {
-          headers.put(
-              line.substring(0, kColon).trim().toLowerCase(), line.substring(kColon + 1).trim());
+          headers.put(line.substring(0, kColon).trim().toLowerCase(), line.substring(kColon + 1).trim());
         } else {
           throw new IOException("failed to read a colon in header");
         }
@@ -87,19 +85,16 @@ public class AdamaLanguageServerProtocol {
 
     String method = request.get("method").textValue();
     switch (method) {
-      case "initialize":
-        {
-          ObjectNode response = craftResponse(request, true);
-          ObjectNode sync =
-              response.putObject("result").putObject("capabilities").putObject("textDocumentSync");
-          sync.put("openClose", true);
-          sync.put("change", 1);
-          return response;
-        }
-      case "initialized":
-        {
-          return null;
-        }
+      case "initialize": {
+        ObjectNode response = craftResponse(request, true);
+        ObjectNode sync = response.putObject("result").putObject("capabilities").putObject("textDocumentSync");
+        sync.put("openClose", true);
+        sync.put("change", 1);
+        return response;
+      }
+      case "initialized": {
+        return null;
+      }
       case "textDocument/didOpen":
       case "textDocument/didChange":
         ObjectNode response = craftResponse(request, true);

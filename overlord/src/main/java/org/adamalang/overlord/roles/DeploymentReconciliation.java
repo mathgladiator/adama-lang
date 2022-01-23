@@ -33,10 +33,7 @@ public class DeploymentReconciliation {
   }
 
   private enum StateLabel {
-    Initialized,
-    GotTargets,
-    Stable,
-    Reconciled,
+    Initialized, GotTargets, Stable, Reconciled,
   }
 
   private static class StateMachine {
@@ -91,15 +88,13 @@ public class DeploymentReconciliation {
         metrics.reconcile_failed_listing.run();
         table.row("failed-reconciliation", ex.getMessage());
         LOGGER.error("failed-reconciliation", ex);
-        offload.schedule(
-            new NamedRunnable("try-reconcile-again") {
-              @Override
-              public void execute() throws Exception {
-                reconcileWhileInExecutor(lockedAt);
-              }
-            },
-            2500);
-      } finally{
+        offload.schedule(new NamedRunnable("try-reconcile-again") {
+          @Override
+          public void execute() throws Exception {
+            reconcileWhileInExecutor(lockedAt);
+          }
+        }, 2500);
+      } finally {
         makeReport();
       }
     }
@@ -117,36 +112,33 @@ public class DeploymentReconciliation {
     }
 
     public void setTargets(Collection<String> newTargets) {
-      offload.execute(
-          new NamedRunnable("got-targets-from-gossip") {
+      offload.execute(new NamedRunnable("got-targets-from-gossip") {
+        @Override
+        public void execute() throws Exception {
+          StringBuilder newTargetsAsString = new StringBuilder();
+          boolean append = false;
+          for (String target : new TreeSet<>(newTargets)) {
+            if (append) {
+              newTargetsAsString.append(", ");
+            }
+            append = true;
+            newTargetsAsString.append(target);
+          }
+          table.row("got-targets", newTargetsAsString.toString());
+          makeReport();
+          metrics.reconcile_start.run();
+          targets.clear();
+          targets.addAll(newTargets);
+          StateMachine.this.lastGotTargets = System.currentTimeMillis();
+          StateMachine.this.label = StateLabel.GotTargets;
+          offload.schedule(new NamedRunnable("stability-check") {
             @Override
             public void execute() throws Exception {
-              StringBuilder newTargetsAsString = new StringBuilder();
-              boolean append = false;
-              for (String target : new TreeSet<>(newTargets)) {
-                if (append) {
-                  newTargetsAsString.append(", ");
-                }
-                append = true;
-                newTargetsAsString.append(target);
-              }
-              table.row("got-targets", newTargetsAsString.toString());
-              makeReport();
-              metrics.reconcile_start.run();
-              targets.clear();
-              targets.addAll(newTargets);
-              StateMachine.this.lastGotTargets = System.currentTimeMillis();
-              StateMachine.this.label = StateLabel.GotTargets;
-              offload.schedule(
-                  new NamedRunnable("stability-check") {
-                    @Override
-                    public void execute() throws Exception {
-                      stabilityCheckWhileInExecutor();
-                    }
-                  },
-                  5000);
+              stabilityCheckWhileInExecutor();
             }
-          });
+          }, 5000);
+        }
+      });
     }
 
     public void stop() {

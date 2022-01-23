@@ -28,6 +28,20 @@ import java.util.Date;
 public class CapacityManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(CapacityManager.class);
 
+  public static void kickOffReturnHotTargetEvent(OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHtmlHandler handler, HeatTable heatTable) {
+    SimpleExecutor executor = SimpleExecutor.create("capacity-management");
+    CoreCapacityManagementTask task = new CoreCapacityManagementTask(executor, metrics, client, deploymentsDatabase, frontendDatabase, handler);
+    executor.schedule(task, 1000);
+    heatTable.setHeatWarning((target) -> {
+      executor.execute(new NamedRunnable("found-hot-target") {
+        @Override
+        public void execute() throws Exception {
+          task.warn(target);
+        }
+      });
+    });
+  }
+
   private static class CoreCapacityManagementTask extends NamedRunnable {
     private final SimpleExecutor executor;
     private final OverlordMetrics metrics;
@@ -95,15 +109,13 @@ public class CapacityManager {
       } catch (Exception ex) {
         metrics.capacity_monitor_failed_space.run();
         if (retryAvailable) {
-          executor.schedule(
-              new NamedRunnable("inspecting-again", space) {
-                @Override
-                public void execute() throws Exception {
-                  metrics.capacity_monitor_retry_space.run();
-                  simpleCapacityCheck(space, false);
-                }
-              },
-              2000);
+          executor.schedule(new NamedRunnable("inspecting-again", space) {
+            @Override
+            public void execute() throws Exception {
+              metrics.capacity_monitor_retry_space.run();
+              simpleCapacityCheck(space, false);
+            }
+          }, 2000);
         }
       }
     }
@@ -116,7 +128,8 @@ public class CapacityManager {
         for (final String spaceName : Spaces.listAllSpaceNames(frontendDatabase)) {
           metrics.capacity_monitor_queue_space.run();
           executor.schedule(new NamedRunnable("inspecting", spaceName) {
-            String spaceToCheck = spaceName;
+            final String spaceToCheck = spaceName;
+
             @Override
             public void execute() throws Exception {
               metrics.capacity_monitor_dequeue_space.run();
@@ -128,23 +141,9 @@ public class CapacityManager {
         metrics.capacity_monitor_sweep_finished.run();
       } catch (Exception ex) {
         metrics.capacity_monitor_sweep_failed.run();
-      } finally{
+      } finally {
         executor.schedule(this, 1000 * 60 * 5 + delay);
       }
     }
-  }
-
-  public static void kickOffReturnHotTargetEvent(OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHtmlHandler handler, HeatTable heatTable) {
-    SimpleExecutor executor = SimpleExecutor.create("capacity-management");
-    CoreCapacityManagementTask task = new CoreCapacityManagementTask(executor, metrics, client, deploymentsDatabase, frontendDatabase, handler);
-    executor.schedule(task, 1000);
-    heatTable.setHeatWarning((target) -> {
-      executor.execute(new NamedRunnable("found-hot-target") {
-        @Override
-        public void execute() throws Exception {
-          task.warn(target);
-        }
-      });
-    });
   }
 }

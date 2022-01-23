@@ -28,11 +28,14 @@ import software.amazon.awssdk.services.elasticloadbalancingv2.model.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
 public class Fleet {
+  public Fleet() {
+    super();
+  }
+
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
       fleetsHelp(args);
@@ -57,61 +60,22 @@ public class Fleet {
     }
   }
 
-  private static Ec2Client getEC2(Config config) {
-    String accessKeyId = config.get_string("aws_ec2_access_key_id", null);
-    String secretAccessKey = config.get_string("aws_ec2_secret_access_key", null);
-    String region = config.get_string("aws_ec2_region", null);
-    if (accessKeyId == null || secretAccessKey == null || region == null) {
-      throw new NullPointerException("not configured for fleet management");
+  public static void fleetsHelp(String[] args) {
+    if (args.length > 0) {
+      String command = Util.normalize(args[0]);
     }
-
-    AwsCredentialsProvider provider = new AwsCredentialsProvider() {
-      @Override
-      public AwsCredentials resolveCredentials() {
-        return new AwsCredentials() {
-          @Override
-          public String accessKeyId() {
-            return accessKeyId;
-          }
-
-          @Override
-          public String secretAccessKey() {
-            return secretAccessKey;
-          }
-        };
-      }
-    };
-
-    return Ec2Client.builder().credentialsProvider(provider).region(Region.of(region)).build();
-  }
-
-
-  private static ElasticLoadBalancingV2Client getELB(Config config) {
-    String accessKeyId = config.get_string("aws_ec2_access_key_id", null);
-    String secretAccessKey = config.get_string("aws_ec2_secret_access_key", null);
-    String region = config.get_string("aws_ec2_region", null);
-    if (accessKeyId == null || secretAccessKey == null || region == null) {
-      throw new NullPointerException("not configured for fleet management");
-    }
-
-    AwsCredentialsProvider provider = new AwsCredentialsProvider() {
-      @Override
-      public AwsCredentials resolveCredentials() {
-        return new AwsCredentials() {
-          @Override
-          public String accessKeyId() {
-            return accessKeyId;
-          }
-
-          @Override
-          public String secretAccessKey() {
-            return secretAccessKey;
-          }
-        };
-      }
-    };
-
-    return ElasticLoadBalancingV2Client.builder().credentialsProvider(provider).region(Region.of(region)).build();
+    System.out.println(Util.prefix("Interact with a fleet via EC2", Util.ANSI.Green));
+    System.out.println();
+    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("adama fleet", Util.ANSI.Green) + " " + Util.prefix("[FLEETSUBCOMMAND]", Util.ANSI.Magenta));
+    System.out.println();
+    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
+    System.out.println();
+    System.out.println(Util.prefix("FLEETSUBCOMMAND:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("configure", Util.ANSI.Green) + "         Configure your CLI");
+    System.out.println("    " + Util.prefix("deploy", Util.ANSI.Green) + "            Generate a fleet config and deploy the jar");
+    System.out.println("    " + Util.prefix("show", Util.ANSI.Green) + "              Show the current capacity in the given region");
   }
 
   private static void fleetConfigure(Config config, String[] args) throws Exception {
@@ -168,48 +132,6 @@ public class Fleet {
         }
       }
     }
-  }
-
-  private static String roleOf(Instance instance) {
-    String role = "unknown";
-    for (Tag tag : instance.tags()) {
-      if ("role".equals(tag.key())) {
-        role = tag.value();
-      }
-    }
-    return role;
-  }
-
-  private static void fleetDeployUpdateELB(Config config, HashSet<String> frontendInstances) {
-    ElasticLoadBalancingV2Client elb = getELB(config);
-    String loadBalancerArn = config.get_string("loadbalancer-arn", null);
-    if (loadBalancerArn == null) {
-      throw new NullPointerException("config has no 'loadbalancer-arn'");
-    }
-    ArrayList<TargetDescription> toRemove = new ArrayList<>();
-    ArrayList<TargetDescription> toAdd = new ArrayList<>();
-    for (TargetHealthDescription health : elb.describeTargetHealth(DescribeTargetHealthRequest.builder().targetGroupArn(loadBalancerArn).build()).targetHealthDescriptions()) {
-      if (frontendInstances.contains(health.target().id())) {
-        frontendInstances.remove(health.target().id());
-      } else {
-        toRemove.add(health.target());
-      }
-    }
-    for (String idToAdd : frontendInstances) {
-      toAdd.add(TargetDescription.builder().id(idToAdd).port(8080).build());
-    }
-    if (toAdd.size() > 0) {
-      elb.registerTargets(RegisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toAdd).build());
-      System.err.println("registered " + toAdd.size() + " targets");
-    }
-    if (toRemove.size() > 0) {
-      elb.deregisterTargets(DeregisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toRemove).build());
-      System.err.println("deregistered " + toRemove.size() + " targets");
-    }
-  }
-
-  public Fleet() {
-    super();
   }
 
   private static void fleetDeploy(Config config, String[] args) throws Exception {
@@ -269,7 +191,7 @@ public class Fleet {
       }
       Files.writeString(new File("staging/" + instance.privateIpAddress() + ".json").toPath(), configTemplate.toPrettyString());
       Files.writeString(new File("staging/" + instance.privateIpAddress() + ".sh").toPath(), "#!/bin/sh\nmv adama-new.jar adama.jar\njava -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/home/ec2-user/ -jar adama.jar service auto\n");
-      Security.newServer(new String[] { "--ip", instance.privateIpAddress(), "--out", "staging/" + instance.privateIpAddress() + ".identity"});
+      Security.newServer(new String[]{"--ip", instance.privateIpAddress(), "--out", "staging/" + instance.privateIpAddress() + ".identity"});
       commands.append("echo Uploading to ").append(instance.publicIpAddress()).append("\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".identity ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/me.identity\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".json ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/.adama\n");
@@ -295,21 +217,97 @@ public class Fleet {
     Files.writeString(new File("execute.sh").toPath(), commands.toString());
   }
 
-  public static void fleetsHelp(String[] args) {
-    if (args.length > 0) {
-      String command = Util.normalize(args[0]);
+  private static Ec2Client getEC2(Config config) {
+    String accessKeyId = config.get_string("aws_ec2_access_key_id", null);
+    String secretAccessKey = config.get_string("aws_ec2_secret_access_key", null);
+    String region = config.get_string("aws_ec2_region", null);
+    if (accessKeyId == null || secretAccessKey == null || region == null) {
+      throw new NullPointerException("not configured for fleet management");
     }
-    System.out.println(Util.prefix("Interact with a fleet via EC2", Util.ANSI.Green));
-    System.out.println();
-    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama fleet", Util.ANSI.Green) + " " + Util.prefix("[FLEETSUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println();
-    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
-    System.out.println();
-    System.out.println(Util.prefix("FLEETSUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("configure", Util.ANSI.Green) + "         Configure your CLI");
-    System.out.println("    " + Util.prefix("deploy", Util.ANSI.Green) + "            Generate a fleet config and deploy the jar");
-    System.out.println("    " + Util.prefix("show", Util.ANSI.Green) + "              Show the current capacity in the given region");
+
+    AwsCredentialsProvider provider = new AwsCredentialsProvider() {
+      @Override
+      public AwsCredentials resolveCredentials() {
+        return new AwsCredentials() {
+          @Override
+          public String accessKeyId() {
+            return accessKeyId;
+          }
+
+          @Override
+          public String secretAccessKey() {
+            return secretAccessKey;
+          }
+        };
+      }
+    };
+
+    return Ec2Client.builder().credentialsProvider(provider).region(Region.of(region)).build();
+  }
+
+  private static String roleOf(Instance instance) {
+    String role = "unknown";
+    for (Tag tag : instance.tags()) {
+      if ("role".equals(tag.key())) {
+        role = tag.value();
+      }
+    }
+    return role;
+  }
+
+  private static void fleetDeployUpdateELB(Config config, HashSet<String> frontendInstances) {
+    ElasticLoadBalancingV2Client elb = getELB(config);
+    String loadBalancerArn = config.get_string("loadbalancer-arn", null);
+    if (loadBalancerArn == null) {
+      throw new NullPointerException("config has no 'loadbalancer-arn'");
+    }
+    ArrayList<TargetDescription> toRemove = new ArrayList<>();
+    ArrayList<TargetDescription> toAdd = new ArrayList<>();
+    for (TargetHealthDescription health : elb.describeTargetHealth(DescribeTargetHealthRequest.builder().targetGroupArn(loadBalancerArn).build()).targetHealthDescriptions()) {
+      if (frontendInstances.contains(health.target().id())) {
+        frontendInstances.remove(health.target().id());
+      } else {
+        toRemove.add(health.target());
+      }
+    }
+    for (String idToAdd : frontendInstances) {
+      toAdd.add(TargetDescription.builder().id(idToAdd).port(8080).build());
+    }
+    if (toAdd.size() > 0) {
+      elb.registerTargets(RegisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toAdd).build());
+      System.err.println("registered " + toAdd.size() + " targets");
+    }
+    if (toRemove.size() > 0) {
+      elb.deregisterTargets(DeregisterTargetsRequest.builder().targetGroupArn(loadBalancerArn).targets(toRemove).build());
+      System.err.println("deregistered " + toRemove.size() + " targets");
+    }
+  }
+
+  private static ElasticLoadBalancingV2Client getELB(Config config) {
+    String accessKeyId = config.get_string("aws_ec2_access_key_id", null);
+    String secretAccessKey = config.get_string("aws_ec2_secret_access_key", null);
+    String region = config.get_string("aws_ec2_region", null);
+    if (accessKeyId == null || secretAccessKey == null || region == null) {
+      throw new NullPointerException("not configured for fleet management");
+    }
+
+    AwsCredentialsProvider provider = new AwsCredentialsProvider() {
+      @Override
+      public AwsCredentials resolveCredentials() {
+        return new AwsCredentials() {
+          @Override
+          public String accessKeyId() {
+            return accessKeyId;
+          }
+
+          @Override
+          public String secretAccessKey() {
+            return secretAccessKey;
+          }
+        };
+      }
+    };
+
+    return ElasticLoadBalancingV2Client.builder().credentialsProvider(provider).region(Region.of(region)).build();
   }
 }

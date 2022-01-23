@@ -22,19 +22,10 @@ public class Transform {
   public final String shortOutputJavaType;
   public final int errorCode;
 
-  public Transform(
-      String inputName,
-      Type inputType,
-      String service,
-      String outputName,
-      String outputJavaType,
-      int errorCode) {
+  public Transform(String inputName, Type inputType, String service, String outputName, String outputJavaType, int errorCode) {
     this.inputName = inputName;
     String camelInputName = Common.camelize(inputName);
-    this.fieldInputName =
-        camelInputName.substring(0, 1).toLowerCase(Locale.ROOT)
-            + camelInputName.substring(1)
-            + "Service";
+    this.fieldInputName = camelInputName.substring(0, 1).toLowerCase(Locale.ROOT) + camelInputName.substring(1) + "Service";
     this.inputType = inputType;
     this.service = service;
     int lastDotService = service.lastIndexOf('.');
