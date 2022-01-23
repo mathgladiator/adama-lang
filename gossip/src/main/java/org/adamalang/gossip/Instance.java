@@ -50,14 +50,7 @@ public class Instance implements Comparable<Instance> {
   }
 
   public Endpoint toEndpoint() {
-    return Endpoint.newBuilder()
-        .setId(id)
-        .setIp(ip)
-        .setPort(port)
-        .setMonitoringPort(monitoringPort)
-        .setRole(role)
-        .setCounter(counter)
-        .build();
+    return Endpoint.newBuilder().setId(id).setIp(ip).setPort(port).setMonitoringPort(monitoringPort).setRole(role).setCounter(counter).build();
   }
 
   /**

@@ -21,8 +21,7 @@ public class GossipPartnerPicker {
   private final HashMap<String, Integer> counts;
   private String cachedPeersHash;
 
-  public GossipPartnerPicker(
-      String self, InstanceSetChain chain, HashSet<String> initial, Random rng) {
+  public GossipPartnerPicker(String self, InstanceSetChain chain, HashSet<String> initial, Random rng) {
     this.self = self;
     this.chain = chain;
     this.initial = initial;

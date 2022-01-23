@@ -15,11 +15,14 @@ import org.adamalang.gossip.proto.GossipForward;
 /** used when the server is shutting down */
 public class SilentGossipForwardObserver implements StreamObserver<GossipForward> {
   @Override
-  public void onNext(GossipForward gossipForward) {}
+  public void onNext(GossipForward gossipForward) {
+  }
 
   @Override
-  public void onError(Throwable throwable) {}
+  public void onError(Throwable throwable) {
+  }
 
   @Override
-  public void onCompleted() {}
+  public void onCompleted() {
+  }
 }

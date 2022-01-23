@@ -26,8 +26,7 @@ public class ServerHandler extends GossipGrpc.GossipImplBase {
   private final GossipMetrics metrics;
   private final AtomicBoolean alive;
 
-  public ServerHandler(
-      SimpleExecutor executor, InstanceSetChain chain, AtomicBoolean alive, GossipMetrics metrics) {
+  public ServerHandler(SimpleExecutor executor, InstanceSetChain chain, AtomicBoolean alive, GossipMetrics metrics) {
     this.executor = executor;
     this.chain = chain;
     this.metrics = metrics;
@@ -45,89 +44,52 @@ public class ServerHandler extends GossipGrpc.GossipImplBase {
 
       @Override
       public void onNext(GossipForward gossipForward) {
-        executor.execute(
-            new NamedRunnable("gossip-server-on-next") {
-              @Override
-              public void execute() throws Exception {
-                switch (gossipForward.getChatterCase()) {
-                  case START:
-                    {
-                      metrics.bump_start();
-                      BeginGossip start = gossipForward.getStart();
-                      chain.ingest(
-                          start.getRecentEndpointsList(),
-                          new HashSet<>(start.getRecentDeletesList()));
-                      set = chain.find(start.getHash());
-                      if (set != null) {
-                        responseObserver.onNext(
-                            GossipReverse.newBuilder()
-                                .setOptimisticReturn(
-                                    HashFoundRequestForwardQuickGossip.newBuilder()
-                                        .addAllCounters(set.counters())
-                                        .addAllRecentDeletes(chain.deletes())
-                                        .addAllMissingEndpoints(chain.missing(set))
-                                        .build())
-                                .build());
-                      } else {
-                        set = chain.current();
-                        responseObserver.onNext(
-                            GossipReverse.newBuilder()
-                                .setSadReturn(
-                                    HashNotFoundReverseConversation.newBuilder()
-                                        .setHash(set.hash())
-                                        .addAllRecentEndpoints(chain.recent())
-                                        .addAllRecentDeletes(chain.deletes())
-                                        .build())
-                                .build());
-                      }
-                      return;
-                    }
-                  case FOUND_REVERSE:
-                    {
-                      metrics.bump_found_reverse();
-                      ReverseHashFound reverseHashFound = gossipForward.getFoundReverse();
-                      set.ingest(reverseHashFound.getCountersList(), chain.now());
-                      chain.ingest(
-                          reverseHashFound.getMissingEndpointsList(), Collections.emptySet());
-                      responseObserver.onNext(
-                          GossipReverse.newBuilder()
-                              .setTurnTables(
-                                  ReverseHashFound.newBuilder()
-                                      .addAllCounters(set.counters())
-                                      .addAllMissingEndpoints(chain.missing(set))
-                                      .build())
-                              .build());
-                      responseObserver.onCompleted();
-                      return;
-                    }
-                  case QUICK_GOSSIP:
-                    {
-                      metrics.bump_quick_gossip();
-                      set.ingest(gossipForward.getQuickGossip().getCountersList(), chain.now());
-                      responseObserver.onCompleted();
-                      return;
-                    }
-                  case SLOW_GOSSIP:
-                    {
-                      metrics.bump_server_slow_gossip();
-                      TreeSet<String> incoming = new TreeSet<>();
-                      for (Endpoint ep : gossipForward.getSlowGossip().getAllEndpointsList()) {
-                        incoming.add(ep.getId());
-                      }
-                      chain.ingest(
-                          gossipForward.getSlowGossip().getAllEndpointsList(),
-                          Collections.emptySet());
-                      responseObserver.onNext(
-                          GossipReverse.newBuilder()
-                              .setSlowGossip(
-                                  SlowGossip.newBuilder().addAllAllEndpoints(chain.all()).build())
-                              .build());
-                      responseObserver.onCompleted();
-                      return;
-                    }
+        executor.execute(new NamedRunnable("gossip-server-on-next") {
+          @Override
+          public void execute() throws Exception {
+            switch (gossipForward.getChatterCase()) {
+              case START: {
+                metrics.bump_start();
+                BeginGossip start = gossipForward.getStart();
+                chain.ingest(start.getRecentEndpointsList(), new HashSet<>(start.getRecentDeletesList()));
+                set = chain.find(start.getHash());
+                if (set != null) {
+                  responseObserver.onNext(GossipReverse.newBuilder().setOptimisticReturn(HashFoundRequestForwardQuickGossip.newBuilder().addAllCounters(set.counters()).addAllRecentDeletes(chain.deletes()).addAllMissingEndpoints(chain.missing(set)).build()).build());
+                } else {
+                  set = chain.current();
+                  responseObserver.onNext(GossipReverse.newBuilder().setSadReturn(HashNotFoundReverseConversation.newBuilder().setHash(set.hash()).addAllRecentEndpoints(chain.recent()).addAllRecentDeletes(chain.deletes()).build()).build());
                 }
+                return;
               }
-            });
+              case FOUND_REVERSE: {
+                metrics.bump_found_reverse();
+                ReverseHashFound reverseHashFound = gossipForward.getFoundReverse();
+                set.ingest(reverseHashFound.getCountersList(), chain.now());
+                chain.ingest(reverseHashFound.getMissingEndpointsList(), Collections.emptySet());
+                responseObserver.onNext(GossipReverse.newBuilder().setTurnTables(ReverseHashFound.newBuilder().addAllCounters(set.counters()).addAllMissingEndpoints(chain.missing(set)).build()).build());
+                responseObserver.onCompleted();
+                return;
+              }
+              case QUICK_GOSSIP: {
+                metrics.bump_quick_gossip();
+                set.ingest(gossipForward.getQuickGossip().getCountersList(), chain.now());
+                responseObserver.onCompleted();
+                return;
+              }
+              case SLOW_GOSSIP: {
+                metrics.bump_server_slow_gossip();
+                TreeSet<String> incoming = new TreeSet<>();
+                for (Endpoint ep : gossipForward.getSlowGossip().getAllEndpointsList()) {
+                  incoming.add(ep.getId());
+                }
+                chain.ingest(gossipForward.getSlowGossip().getAllEndpointsList(), Collections.emptySet());
+                responseObserver.onNext(GossipReverse.newBuilder().setSlowGossip(SlowGossip.newBuilder().addAllAllEndpoints(chain.all()).build()).build());
+                responseObserver.onCompleted();
+                return;
+              }
+            }
+          }
+        });
       }
 
       @Override
@@ -136,7 +98,8 @@ public class ServerHandler extends GossipGrpc.GossipImplBase {
       }
 
       @Override
-      public void onCompleted() {}
+      public void onCompleted() {
+      }
     };
   }
 }

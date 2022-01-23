@@ -20,13 +20,12 @@ public class GarbageMap<T> implements Iterable<T> {
   private final LinkedHashMap<String, AgingItem> items;
 
   public GarbageMap(int maxSize) {
-    this.items =
-        new LinkedHashMap<>(maxSize, 0.75f, true) {
-          @Override
-          protected boolean removeEldestEntry(Map.Entry<String, AgingItem> eldest) {
-            return this.size() > maxSize;
-          }
-        };
+    this.items = new LinkedHashMap<>(maxSize, 0.75f, true) {
+      @Override
+      protected boolean removeEldestEntry(Map.Entry<String, AgingItem> eldest) {
+        return this.size() > maxSize;
+      }
+    };
   }
 
   public Collection<String> keys() {

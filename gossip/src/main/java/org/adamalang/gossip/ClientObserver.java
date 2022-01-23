@@ -40,94 +40,59 @@ public class ClientObserver implements StreamObserver<GossipReverse> {
 
   public void initiate(StreamObserver<GossipForward> forward) {
     this.forward = forward;
-    executor.execute(
-        new NamedRunnable("client-gossip-initiate") {
-          @Override
-          public void execute() throws Exception {
-            current = chain.current();
-            forward.onNext(
-                GossipForward.newBuilder()
-                    .setStart(
-                        BeginGossip.newBuilder()
-                            .setHash(current.hash())
-                            .addAllRecentDeletes(chain.deletes())
-                            .addAllRecentEndpoints(chain.recent())
-                            .build())
-                    .build());
-          }
-        });
+    executor.execute(new NamedRunnable("client-gossip-initiate") {
+      @Override
+      public void execute() throws Exception {
+        current = chain.current();
+        forward.onNext(GossipForward.newBuilder().setStart(BeginGossip.newBuilder().setHash(current.hash()).addAllRecentDeletes(chain.deletes()).addAllRecentEndpoints(chain.recent()).build()).build());
+      }
+    });
   }
 
   @Override
   public void onNext(GossipReverse gossipReverse) {
-    executor.execute(
-        new NamedRunnable("observer-on-next") {
-          @Override
-          public void execute() throws Exception {
-            switch (gossipReverse.getChatterCase()) {
-              case SAD_RETURN:
-                {
-                  metrics.bump_sad_return();
-                  HashNotFoundReverseConversation reverse = gossipReverse.getSadReturn();
-                  chain.ingest(
-                      reverse.getRecentEndpointsList(),
-                      new TreeSet<>(reverse.getRecentDeletesList()));
-                  current = chain.find(reverse.getHash());
-                  if (current != null) {
-                    forward.onNext(
-                        GossipForward.newBuilder()
-                            .setFoundReverse(
-                                ReverseHashFound.newBuilder()
-                                    .addAllCounters(current.counters())
-                                    .addAllMissingEndpoints(chain.missing(current))
-                                    .build())
-                            .build());
-                  } else {
-                    forward.onNext(
-                        GossipForward.newBuilder()
-                            .setSlowGossip(
-                                SlowGossip.newBuilder().addAllAllEndpoints(chain.all()).build())
-                            .build());
-                  }
-                  return;
-                }
-              case SLOW_GOSSIP:
-                {
-                  metrics.bump_client_slow_gossip();
-                  chain.ingest(
-                      gossipReverse.getSlowGossip().getAllEndpointsList(), Collections.emptySet());
-                  forward.onCompleted();
-                  return;
-                }
-              case OPTIMISTIC_RETURN:
-                {
-                  metrics.bump_optimistic_return();
-                  HashFoundRequestForwardQuickGossip found = gossipReverse.getOptimisticReturn();
-                  current.ingest(found.getCountersList(), chain.now());
-                  chain.ingest(
-                      found.getMissingEndpointsList(), new TreeSet<>(found.getRecentDeletesList()));
-                  forward.onNext(
-                      GossipForward.newBuilder()
-                          .setQuickGossip(
-                              ForwardQuickGossip.newBuilder()
-                                  .addAllCounters(current.counters())
-                                  .build())
-                          .build());
-                  forward.onCompleted();
-                  return;
-                }
-              case TURN_TABLES:
-                {
-                  metrics.bump_turn_tables();
-                  ReverseHashFound found = gossipReverse.getTurnTables();
-                  current.ingest(found.getCountersList(), chain.now());
-                  chain.ingest(found.getMissingEndpointsList(), Collections.emptySet());
-                  forward.onCompleted();
-                  return;
-                }
+    executor.execute(new NamedRunnable("observer-on-next") {
+      @Override
+      public void execute() throws Exception {
+        switch (gossipReverse.getChatterCase()) {
+          case SAD_RETURN: {
+            metrics.bump_sad_return();
+            HashNotFoundReverseConversation reverse = gossipReverse.getSadReturn();
+            chain.ingest(reverse.getRecentEndpointsList(), new TreeSet<>(reverse.getRecentDeletesList()));
+            current = chain.find(reverse.getHash());
+            if (current != null) {
+              forward.onNext(GossipForward.newBuilder().setFoundReverse(ReverseHashFound.newBuilder().addAllCounters(current.counters()).addAllMissingEndpoints(chain.missing(current)).build()).build());
+            } else {
+              forward.onNext(GossipForward.newBuilder().setSlowGossip(SlowGossip.newBuilder().addAllAllEndpoints(chain.all()).build()).build());
             }
+            return;
           }
-        });
+          case SLOW_GOSSIP: {
+            metrics.bump_client_slow_gossip();
+            chain.ingest(gossipReverse.getSlowGossip().getAllEndpointsList(), Collections.emptySet());
+            forward.onCompleted();
+            return;
+          }
+          case OPTIMISTIC_RETURN: {
+            metrics.bump_optimistic_return();
+            HashFoundRequestForwardQuickGossip found = gossipReverse.getOptimisticReturn();
+            current.ingest(found.getCountersList(), chain.now());
+            chain.ingest(found.getMissingEndpointsList(), new TreeSet<>(found.getRecentDeletesList()));
+            forward.onNext(GossipForward.newBuilder().setQuickGossip(ForwardQuickGossip.newBuilder().addAllCounters(current.counters()).build()).build());
+            forward.onCompleted();
+            return;
+          }
+          case TURN_TABLES: {
+            metrics.bump_turn_tables();
+            ReverseHashFound found = gossipReverse.getTurnTables();
+            current.ingest(found.getCountersList(), chain.now());
+            chain.ingest(found.getMissingEndpointsList(), Collections.emptySet());
+            forward.onCompleted();
+            return;
+          }
+        }
+      }
+    });
   }
 
   @Override
@@ -137,12 +102,11 @@ public class ClientObserver implements StreamObserver<GossipReverse> {
 
   @Override
   public void onCompleted() {
-    executor.execute(
-        new NamedRunnable("observer-on-finished") {
-          @Override
-          public void execute() throws Exception {
-            done = true;
-          }
-        });
+    executor.execute(new NamedRunnable("observer-on-finished") {
+      @Override
+      public void execute() throws Exception {
+        done = true;
+      }
+    });
   }
 }
