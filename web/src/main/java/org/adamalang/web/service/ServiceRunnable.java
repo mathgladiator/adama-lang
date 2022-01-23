@@ -14,14 +14,16 @@ import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.web.contracts.ServiceBase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServiceRunnable implements Runnable {
+  private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRunnable.class);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final ServiceBase base;
@@ -51,19 +53,19 @@ public class ServiceRunnable implements Runnable {
   @Override
   public void run() {
     if (!started.compareAndExchange(false, true)) {
+      LOGGER.info("starting-web-proxy");
       try {
         try {
           final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
           final EventLoopGroup workerGroup = new NioEventLoopGroup();
           try {
             final var b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
-                .channel(NioServerSocketChannel.class)
-                .childHandler(new Initializer(webConfig, metrics, base));
+            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, metrics, base));
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
-            // TODO: log information out
+            LOGGER.info("channel-registered");
             ch.closeFuture().sync();
+            LOGGER.info("channel-close-futured-syncd");
           } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

@@ -47,29 +47,28 @@ public class BulkLatch<T> {
    * a service completed either successfully (newErrorCode == null) or not (newErrorCode != null)
    */
   public void countdown(Integer newErrorCode) {
-    executor.execute(
-        () -> {
-          // something bad happened
-          if (newErrorCode != null) {
-            // absorb the error code
-            if (errorCode == null) {
-              errorCode = newErrorCode;
-            } else {
-              // if conflicts, pick the smallest error code
-              if (newErrorCode < errorCode) {
-                errorCode = newErrorCode;
-              }
-            }
+    executor.execute(() -> {
+      // something bad happened
+      if (newErrorCode != null) {
+        // absorb the error code
+        if (errorCode == null) {
+          errorCode = newErrorCode;
+        } else {
+          // if conflicts, pick the smallest error code
+          if (newErrorCode < errorCode) {
+            errorCode = newErrorCode;
           }
-          outstanding--;
-          if (outstanding == 0) {
-            if (errorCode == null) {
-              T value = supply.get();
-              callback.success(value);
-            } else {
-              callback.failure(new ErrorCodeException(errorCode));
-            }
-          }
-        });
+        }
+      }
+      outstanding--;
+      if (outstanding == 0) {
+        if (errorCode == null) {
+          T value = supply.get();
+          callback.success(value);
+        } else {
+          callback.failure(new ErrorCodeException(errorCode));
+        }
+      }
+    });
   }
 }

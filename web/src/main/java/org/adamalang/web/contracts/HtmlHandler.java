@@ -10,7 +10,7 @@
 package org.adamalang.web.contracts;
 
 public interface HtmlHandler {
-  public String handle(String uri);
+  HtmlHandler NULL = uri -> null;
 
-  public static final HtmlHandler NULL = uri -> null;
+  String handle(String uri);
 }

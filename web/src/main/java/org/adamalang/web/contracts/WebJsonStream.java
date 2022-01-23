@@ -13,9 +13,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** a very simple stream for the client to get a json stream from the web proxy */
 public interface WebJsonStream {
-  public void data(ObjectNode node);
+  void data(ObjectNode node);
 
-  public void complete();
+  void complete();
 
-  public void failure(int code);
+  void failure(int code);
 }

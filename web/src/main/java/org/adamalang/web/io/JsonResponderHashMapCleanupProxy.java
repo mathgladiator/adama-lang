@@ -50,10 +50,9 @@ public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
   @Override
   public void error(ErrorCodeException ex) {
     metrics.failure(ex.code);
-    executor.execute(
-        () -> {
-          map.remove(key);
-        });
+    executor.execute(() -> {
+      map.remove(key);
+    });
     responder.error(ex);
   }
 }

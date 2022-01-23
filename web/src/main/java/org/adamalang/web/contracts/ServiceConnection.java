@@ -16,11 +16,11 @@ import org.adamalang.web.io.JsonResponder;
 public interface ServiceConnection {
 
   /** the client is executing a single request */
-  public void execute(JsonRequest request, JsonResponder responder);
+  void execute(JsonRequest request, JsonResponder responder);
 
   /** periodically, make sure the client and downstream services are healthy */
-  public boolean keepalive();
+  boolean keepalive();
 
   /** the connection has been severed */
-  public void kill();
+  void kill();
 }

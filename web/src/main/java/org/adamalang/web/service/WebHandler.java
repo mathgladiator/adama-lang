@@ -56,16 +56,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 
-  private static void sendWithKeepAlive(
-      final WebConfig webConfig,
-      final ChannelHandlerContext ctx,
-      final FullHttpRequest req,
-      final FullHttpResponse res) {
+  private static void sendWithKeepAlive(final WebConfig webConfig, final ChannelHandlerContext ctx, final FullHttpRequest req, final FullHttpResponse res) {
     final var responseStatus = res.status();
-    String origin = req.headers().get("origin");
-    if (origin != null) {
-      res.headers().set("Access-Control-Allow-Origin", origin);
-    }
     final var keepAlive = HttpUtil.isKeepAlive(req) && responseStatus.code() == 200;
     HttpUtil.setKeepAlive(res, keepAlive);
     final var future = ctx.writeAndFlush(res);

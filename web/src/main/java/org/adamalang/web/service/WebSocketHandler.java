@@ -34,11 +34,11 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final ServiceBase base;
+  private final long created;
+  private final AtomicLong latency;
   private boolean ended;
   private ServiceConnection connection;
   private ScheduledFuture<?> future;
-  private long created;
-  private AtomicLong latency;
   private boolean closed;
 
   public WebSocketHandler(final WebConfig webConfig, WebMetrics metrics, final ServiceBase base) {
@@ -106,40 +106,24 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       metrics.websockets_active_child_connections.up();
 
       // start the heartbeat loop
-      Runnable heartbeatLoop =
-          () -> {
-            if (connection != null && !connection.keepalive()) {
-              metrics.websockets_heartbeat_failure.run();
-              ctx.writeAndFlush(
-                  new TextWebSocketFrame(
-                      "{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}"));
-              end(ctx);
-            } else {
-              metrics.websockets_send_heartbeat.run();
-              ctx.writeAndFlush(
-                  new TextWebSocketFrame(
-                      "{\"ping\":"
-                          + (System.currentTimeMillis() - created)
-                          + ",\"latency\":\""
-                          + latency.get()
-                          + "\"}"));
-            }
-          };
+      Runnable heartbeatLoop = () -> {
+        if (connection != null && !connection.keepalive()) {
+          metrics.websockets_heartbeat_failure.run();
+          ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"disconnected\",\"reason\":\"keepalive-failure\"}"));
+          end(ctx);
+        } else {
+          metrics.websockets_send_heartbeat.run();
+          ctx.writeAndFlush(new TextWebSocketFrame("{\"ping\":" + (System.currentTimeMillis() - created) + ",\"latency\":\"" + latency.get() + "\"}"));
+        }
+      };
 
       // schedule the heartbeat loop
-      future =
-          ctx.executor()
-              .scheduleAtFixedRate(
-                  heartbeatLoop,
-                  webConfig.heartbeatTimeMilliseconds,
-                  webConfig.heartbeatTimeMilliseconds,
-                  TimeUnit.MILLISECONDS);
+      future = ctx.executor().scheduleAtFixedRate(heartbeatLoop, webConfig.heartbeatTimeMilliseconds, webConfig.heartbeatTimeMilliseconds, TimeUnit.MILLISECONDS);
     }
   }
 
   @Override
-  protected void channelRead0(final ChannelHandlerContext ctx, final WebSocketFrame frame)
-      throws Exception {
+  protected void channelRead0(final ChannelHandlerContext ctx, final WebSocketFrame frame) throws Exception {
     try {
       if (!(frame instanceof TextWebSocketFrame)) {
         throw new ErrorCodeException(ErrorCodes.ONLY_ACCEPTS_TEXT_FRAMES);
@@ -150,42 +134,30 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
         latency.set(System.currentTimeMillis() - created - requestNode.get("ping").asLong());
         return;
       }
-
       JsonRequest request = new JsonRequest(requestNode);
       final var id = request.id();
-
       // tie a responder to the request
-      final JsonResponder responder =
-          new JsonResponder() {
-            @Override
-            public void stream(String json) {
-              ctx.writeAndFlush(
-                  new TextWebSocketFrame(
-                      "{\"deliver\":" + id + ",\"done\":false,\"response\":" + json + "}"));
-            }
+      final JsonResponder responder = new JsonResponder() {
+        @Override
+        public void stream(String json) {
+          ctx.writeAndFlush(new TextWebSocketFrame("{\"deliver\":" + id + ",\"done\":false,\"response\":" + json + "}"));
+        }
 
-            @Override
-            public void finish(String json) {
-              ctx.writeAndFlush(
-                  new TextWebSocketFrame(
-                      "{\"deliver\":" + id + ",\"done\":true,\"response\":" + json + "}"));
-            }
+        @Override
+        public void finish(String json) {
+          ctx.writeAndFlush(new TextWebSocketFrame("{\"deliver\":" + id + ",\"done\":true,\"response\":" + json + "}"));
+        }
 
-            @Override
-            public void error(ErrorCodeException ex) {
-              ctx.writeAndFlush(
-                  new TextWebSocketFrame("{\"failure\":" + id + ",\"reason\":" + ex.code + "}"));
-            }
-          };
-
+        @Override
+        public void error(ErrorCodeException ex) {
+          ctx.writeAndFlush(new TextWebSocketFrame("{\"failure\":" + id + ",\"reason\":" + ex.code + "}"));
+        }
+      };
       // execute the request
       connection.execute(request, responder);
-
     } catch (Exception ex) {
       ErrorCodeException codedException = ErrorCodeException.detectOrWrap(ErrorCodes.UNCAUGHT_EXCEPTION_WEB_SOCKET, ex, LOGGER);
-      ctx.writeAndFlush(
-          new TextWebSocketFrame(
-              "{\"status\":\"disconnected\",\"reason\":" + codedException.code + "}"));
+      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"disconnected\",\"reason\":" + codedException.code + "}"));
       end(ctx);
     }
   }

@@ -15,11 +15,14 @@ public class NoOpJsonResponder implements JsonResponder {
   public static final NoOpJsonResponder INSTANCE = new NoOpJsonResponder();
 
   @Override
-  public void stream(String json) {}
+  public void stream(String json) {
+  }
 
   @Override
-  public void finish(String json) {}
+  public void finish(String json) {
+  }
 
   @Override
-  public void error(ErrorCodeException ex) {}
+  public void error(ErrorCodeException ex) {
+  }
 }

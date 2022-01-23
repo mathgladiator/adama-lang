@@ -13,11 +13,11 @@ import org.adamalang.web.client.WebClientConnection;
 
 /** lifecycle of a connection */
 public interface WebLifecycle {
-  public void connected(WebClientConnection connection);
+  void connected(WebClientConnection connection);
 
-  public void ping(int latency);
+  void ping(int latency);
 
-  public void failure(Throwable t);
+  void failure(Throwable t);
 
-  public void disconnected();
+  void disconnected();
 }

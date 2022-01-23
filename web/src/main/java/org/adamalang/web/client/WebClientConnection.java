@@ -22,7 +22,7 @@ public class WebClientConnection {
   private final ChannelHandlerContext ctx;
   private final AtomicInteger idgen;
   private final ConcurrentHashMap<Integer, WebJsonStream> streams;
-  private Runnable close;
+  private final Runnable close;
 
   WebClientConnection(final ChannelHandlerContext ctx, ConcurrentHashMap<Integer, WebJsonStream> streams, Runnable close) {
     this.ctx = ctx;

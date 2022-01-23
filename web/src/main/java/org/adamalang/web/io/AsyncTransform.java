@@ -16,5 +16,5 @@ import org.adamalang.common.Callback;
 public interface AsyncTransform<In, Out> {
 
   /** go forth and execute the transformation */
-  public void execute(In parameter, Callback<Out> callback);
+  void execute(In parameter, Callback<Out> callback);
 }

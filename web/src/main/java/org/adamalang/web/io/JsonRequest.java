@@ -25,12 +25,9 @@ public class JsonRequest {
     return getInteger("id", true, ErrorCodes.USERLAND_REQUEST_NO_ID_PROPERTY);
   }
 
-  public Integer getInteger(String field, boolean mustExist, int errorIfDoesnt)
-      throws ErrorCodeException {
+  public Integer getInteger(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
     final var fieldNode = node.get(field);
-    if (fieldNode == null
-        || fieldNode.isNull()
-        || !(fieldNode.isNumber() && fieldNode.isIntegralNumber() || fieldNode.isTextual())) {
+    if (fieldNode == null || fieldNode.isNull() || !(fieldNode.isNumber() && fieldNode.isIntegralNumber() || fieldNode.isTextual())) {
       if (mustExist) {
         throw new ErrorCodeException(errorIfDoesnt);
       } else {
@@ -51,12 +48,9 @@ public class JsonRequest {
     return getString("method", true, ErrorCodes.USERLAND_REQUEST_NO_METHOD_PROPERTY);
   }
 
-  public String getString(String field, boolean mustExist, int errorIfDoesnt)
-      throws ErrorCodeException {
+  public String getString(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
     final var fieldNode = node.get(field);
-    if (fieldNode == null
-        || fieldNode.isNull()
-        || !(fieldNode.isTextual() || fieldNode.isNumber())) {
+    if (fieldNode == null || fieldNode.isNull() || !(fieldNode.isTextual() || fieldNode.isNumber())) {
       if (mustExist) {
         throw new ErrorCodeException(errorIfDoesnt);
       }
@@ -68,12 +62,9 @@ public class JsonRequest {
     return fieldNode.textValue();
   }
 
-  public Boolean getBoolean(String field, boolean mustExist, int errorIfDoesnt)
-      throws ErrorCodeException {
+  public Boolean getBoolean(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
     final var fieldNode = node.get(field);
-    if (fieldNode == null
-        || fieldNode.isNull()
-        || !fieldNode.isBoolean()) {
+    if (fieldNode == null || fieldNode.isNull() || !fieldNode.isBoolean()) {
       if (mustExist) {
         throw new ErrorCodeException(errorIfDoesnt);
       }
@@ -82,12 +73,9 @@ public class JsonRequest {
     return fieldNode.booleanValue();
   }
 
-  public Long getLong(String field, boolean mustExist, int errorIfDoesnt)
-      throws ErrorCodeException {
+  public Long getLong(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
     final var fieldNode = node.get(field);
-    if (fieldNode == null
-        || fieldNode.isNull()
-        || !(fieldNode.isNumber() && fieldNode.isIntegralNumber() || fieldNode.isTextual())) {
+    if (fieldNode == null || fieldNode.isNull() || !(fieldNode.isNumber() && fieldNode.isIntegralNumber() || fieldNode.isTextual())) {
       if (mustExist) {
         throw new ErrorCodeException(errorIfDoesnt);
       } else {
@@ -104,8 +92,7 @@ public class JsonRequest {
     return fieldNode.longValue();
   }
 
-  public ObjectNode getObject(String field, boolean mustExist, int errorIfDoesnt)
-      throws ErrorCodeException {
+  public ObjectNode getObject(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
     final var fieldNode = node.get(field);
     if (fieldNode == null || fieldNode.isNull() || !fieldNode.isObject()) {
       if (mustExist) {
