@@ -13,7 +13,7 @@ import org.adamalang.runtime.contracts.DeltaNode;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 
 /** a boolean that will respect privacy and sends state to client only on changes */
-public class DBoolean  implements DeltaNode  {
+public class DBoolean implements DeltaNode {
   private Boolean prior;
 
   public DBoolean() {

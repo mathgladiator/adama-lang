@@ -25,7 +25,7 @@ public enum JsonTokenType {
   /** is the token hidden from the parse tree */
   public final boolean hidden;
 
-  private JsonTokenType(final boolean hidden) {
+  JsonTokenType(final boolean hidden) {
     this.hidden = hidden;
   }
 }

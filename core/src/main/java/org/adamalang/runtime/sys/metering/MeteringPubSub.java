@@ -60,8 +60,7 @@ public class MeteringPubSub {
         String space = sample.getKey();
         String hash = base.hashOf(space);
         if (hash != null) {
-          meterReading.add(
-              new MeterReading(time.nowMilliseconds(), delta, space, hash, sample.getValue()));
+          meterReading.add(new MeterReading(time.nowMilliseconds(), delta, space, hash, sample.getValue()));
         }
       }
       publish(meterReading);

@@ -30,12 +30,7 @@ public class CoreStream {
   private final DurableLivingDocument document;
   private final PrivateView view;
 
-  public CoreStream(
-      CoreMetrics metrics,
-      NtClient who,
-      PredictiveInventory inventory,
-      DurableLivingDocument document,
-      PrivateView view) {
+  public CoreStream(CoreMetrics metrics, NtClient who, PredictiveInventory inventory, DurableLivingDocument document, PrivateView view) {
     this.metrics = metrics;
     this.who = who;
     this.inventory = inventory;
@@ -48,65 +43,61 @@ public class CoreStream {
 
   /** send a message to the document */
   public void send(String channel, String marker, String message, Callback<Integer> callback) {
-    document.base.executor.execute(
-        new NamedRunnable("core-stream-send") {
-          @Override
-          public void execute() throws Exception {
-            inventory.message();
-            document.send(who, marker, channel, message, callback);
-          }
-        });
+    document.base.executor.execute(new NamedRunnable("core-stream-send") {
+      @Override
+      public void execute() throws Exception {
+        inventory.message();
+        document.send(who, marker, channel, message, callback);
+      }
+    });
   }
 
   public void canAttach(Callback<Boolean> callback) {
-    document.base.executor.execute(
-        new NamedRunnable("core-stream-can-attach") {
-          @Override
-          public void execute() throws Exception {
-            inventory.message();
-            try {
-              callback.success(document.canAttach(who));
-            } catch (Exception ex) {
-              callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.CORE_STREAM_CAN_ATTACH_UNKNOWN_EXCEPTION, ex, LOGGER));
-            }
-          }
-        });
+    document.base.executor.execute(new NamedRunnable("core-stream-can-attach") {
+      @Override
+      public void execute() throws Exception {
+        inventory.message();
+        try {
+          callback.success(document.canAttach(who));
+        } catch (Exception ex) {
+          callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.CORE_STREAM_CAN_ATTACH_UNKNOWN_EXCEPTION, ex, LOGGER));
+        }
+      }
+    });
   }
 
   public void attach(NtAsset asset, Callback<Integer> callback) {
-    document.base.executor.execute(
-        new NamedRunnable("core-stream-attach") {
-          @Override
-          public void execute() throws Exception {
-            inventory.message();
-            document.attach(who, asset, callback);
-          }
-        });
+    document.base.executor.execute(new NamedRunnable("core-stream-attach") {
+      @Override
+      public void execute() throws Exception {
+        inventory.message();
+        document.attach(who, asset, callback);
+      }
+    });
   }
 
   /** disconnect this stream from the document */
   public void disconnect() {
     metrics.inflight_streams.down();
-    document.base.executor.execute(
-        new NamedRunnable("core-stream-disconnect") {
-          @Override
-          public void execute() throws Exception {
-            // TODO: routing changes introduce DB churn, so we should introduce a way to disconnect
-            // documents that is silent
-            // account for the disconnect message
-            inventory.message();
-            // disconnect this view
-            view.kill();
-            // clean up and keep things tidy
-            if (document.garbageCollectPrivateViewsFor(who) == 0) {
-              // falling edge disconnects the person
-              document.disconnect(who, Callback.DONT_CARE_INTEGER);
-            } else {
-              document.invalidate(Callback.DONT_CARE_INTEGER);
-            }
-            // tell the client
-            view.perspective.disconnect();
-          }
-        });
+    document.base.executor.execute(new NamedRunnable("core-stream-disconnect") {
+      @Override
+      public void execute() throws Exception {
+        // TODO: routing changes introduce DB churn, so we should introduce a way to disconnect
+        // documents that is silent
+        // account for the disconnect message
+        inventory.message();
+        // disconnect this view
+        view.kill();
+        // clean up and keep things tidy
+        if (document.garbageCollectPrivateViewsFor(who) == 0) {
+          // falling edge disconnects the person
+          document.disconnect(who, Callback.DONT_CARE_INTEGER);
+        } else {
+          document.invalidate(Callback.DONT_CARE_INTEGER);
+        }
+        // tell the client
+        view.perspective.disconnect();
+      }
+    });
   }
 }

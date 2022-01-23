@@ -22,10 +22,12 @@ import java.util.function.Function;
 
 /** a list backed by nothing */
 public class EmptyNtList<T> implements NtList<T> {
-  public EmptyNtList() {}
+  public EmptyNtList() {
+  }
 
   @Override
-  public void __delete() {}
+  public void __delete() {
+  }
 
   @Override
   public NtList<T> get() {
@@ -38,7 +40,8 @@ public class EmptyNtList<T> implements NtList<T> {
   }
 
   @Override
-  public void map(final Consumer<T> t) {}
+  public void map(final Consumer<T> t) {
+  }
 
   @Override
   public NtList<T> orderBy(final boolean done, final Comparator<T> cmp) {
@@ -46,8 +49,7 @@ public class EmptyNtList<T> implements NtList<T> {
   }
 
   @Override
-  public <TIn, TOut> NtMap<TIn, TOut> reduce(
-      final Function<T, TIn> domain, final Function<NtList<T>, TOut> reducer) {
+  public <TIn, TOut> NtMap<TIn, TOut> reduce(final Function<T, TIn> domain, final Function<NtList<T>, TOut> reducer) {
     return new NtMap<>();
   }
 

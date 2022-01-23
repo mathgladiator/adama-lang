@@ -49,6 +49,16 @@ public class DRecordList<dRecordTy extends DeltaNode> implements DeltaNode {
     }
   }
 
+  /** memory usage */
+  @Override
+  public long __memory() {
+    long memory = order.size() * 32;
+    for (Map.Entry<Integer, dRecordTy> entry : cache.entrySet()) {
+      memory += 40 + entry.getValue().__memory();
+    }
+    return memory;
+  }
+
   public class Walk {
     private final ArrayList<Integer> newOrdering;
     private final Iterator<Integer> oldOrderingIt;
@@ -141,15 +151,5 @@ public class DRecordList<dRecordTy extends DeltaNode> implements DeltaNode {
         }
       }
     }
-  }
-
-  /** memory usage */
-  @Override
-  public long __memory() {
-    long memory = order.size() * 32;
-    for (Map.Entry<Integer, dRecordTy> entry : cache.entrySet()) {
-      memory += 40 + entry.getValue().__memory();
-    }
-    return memory;
   }
 }

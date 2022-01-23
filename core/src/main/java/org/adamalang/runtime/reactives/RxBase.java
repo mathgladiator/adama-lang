@@ -33,8 +33,8 @@ public abstract class RxBase {
   }
 
   /** commit the changes to the object, and emit a delta */
-  public abstract void __commit(
-      String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta);
+  public abstract void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta);
+
   /** take a dump of the data */
   public abstract void __dump(JsonStreamWriter writer);
 

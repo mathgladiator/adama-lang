@@ -40,20 +40,13 @@ public class CoreService {
    * @param time the source of time
    * @param nThreads the number of threads to use
    */
-  public CoreService(
-      CoreMetrics metrics,
-      LivingDocumentFactoryFactory livingDocumentFactoryFactory,
-      Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent,
-      DataService dataService,
-      TimeSource time,
-      int nThreads) {
+  public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, DataService dataService, TimeSource time, int nThreads) {
     this.metrics = metrics;
     this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
     bases = new DocumentThreadBase[nThreads];
     this.alive = new AtomicBoolean(true);
     for (int k = 0; k < nThreads; k++) {
-      bases[k] =
-          new DocumentThreadBase(dataService, metrics, SimpleExecutor.create("core-" + k), time);
+      bases[k] = new DocumentThreadBase(dataService, metrics, SimpleExecutor.create("core-" + k), time);
       bases[k].kickOffInventory();
     }
     rng = new Random();
@@ -62,14 +55,10 @@ public class CoreService {
       public void execute() {
         long started = System.currentTimeMillis();
         NamedRunnable self = this;
-        MeteringStateMachine.estimate(
-            bases,
-            livingDocumentFactoryFactory,
-            samples -> {
-              meteringEvent.accept(samples);
-              bases[rng.nextInt(bases.length)].executor.schedule(
-                  self, Math.max(1000 - (System.currentTimeMillis() - started), 100));
-            });
+        MeteringStateMachine.estimate(bases, livingDocumentFactoryFactory, samples -> {
+          meteringEvent.accept(samples);
+          bases[rng.nextInt(bases.length)].executor.schedule(self, Math.max(1000 - (System.currentTimeMillis() - started), 100));
+        });
       }
     }.run();
   }
@@ -90,102 +79,82 @@ public class CoreService {
     Callback<String> callback = metrics.reflect.wrap(callbackReal);
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
-    base.executor.execute(
-        new NamedRunnable("reflect", key.space) {
+    base.executor.execute(new NamedRunnable("reflect", key.space) {
+      @Override
+      public void execute() throws Exception {
+        livingDocumentFactoryFactory.fetch(key, new Callback<LivingDocumentFactory>() {
           @Override
-          public void execute() throws Exception {
-            livingDocumentFactoryFactory.fetch(
-                key,
-                new Callback<LivingDocumentFactory>() {
-                  @Override
-                  public void success(LivingDocumentFactory value) {
-                    callback.success(value.reflection);
-                  }
+          public void success(LivingDocumentFactory value) {
+            callback.success(value.reflection);
+          }
 
-                  @Override
-                  public void failure(ErrorCodeException ex) {
-                    callback.failure(ex);
-                  }
-                });
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
           }
         });
+      }
+    });
   }
 
   /** create a document */
-  public void create(
-      NtClient who, Key key, String arg, String entropy, Callback<Void> callbackReal) {
+  public void create(NtClient who, Key key, String arg, String entropy, Callback<Void> callbackReal) {
     Callback<Void> callback = metrics.serviceCreate.wrap(callbackReal);
     // jump into thread caching which thread
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
-    base.executor.execute(
-        new NamedRunnable("create", key.space) {
+    base.executor.execute(new NamedRunnable("create", key.space) {
+      @Override
+      public void execute() throws Exception {
+        // the document already exists
+        if (base.map.containsKey(key)) {
+          callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED));
+          return;
+        }
+        // estimate the impact
+        base.getOrCreateInventory(key.space).grow();
+        // fetch the factory
+        livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchCreate.wrap(new Callback<LivingDocumentFactory>() {
           @Override
-          public void execute() throws Exception {
-            // the document already exists
-            if (base.map.containsKey(key)) {
-              callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED));
+          public void success(LivingDocumentFactory factory) {
+            try {
+              if (!factory.canCreate(who)) {
+                callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_REJECTED_CREATION));
+                return;
+              }
+            } catch (ErrorCodeException exNew) {
+              callback.failure(exNew);
               return;
             }
-            // estimate the impact
-            base.getOrCreateInventory(key.space).grow();
-            // fetch the factory
-            livingDocumentFactoryFactory.fetch(
-                key,
-                metrics.factoryFetchCreate.wrap(
-                    new Callback<LivingDocumentFactory>() {
-                      @Override
-                      public void success(LivingDocumentFactory factory) {
-                        try {
-                          if (!factory.canCreate(who)) {
-                            callback.failure(
-                                new ErrorCodeException(
-                                    ErrorCodes.SERVICE_DOCUMENT_REJECTED_CREATION));
-                            return;
-                          }
-                        } catch (ErrorCodeException exNew) {
-                          callback.failure(exNew);
-                          return;
-                        }
-                        // bring the document into existence
-                        DurableLivingDocument.fresh(
-                            key,
-                            factory,
-                            who,
-                            arg,
-                            entropy,
-                            null,
-                            base,
-                            metrics.documentFresh.wrap(
-                                new Callback<>() {
-                                  @Override
-                                  public void success(DurableLivingDocument document) {
-                                    // jump into the thread; note, the data service must ensure this
-                                    // will
-                                    // succeed once
-                                    base.executor.execute(
-                                        new NamedRunnable("loaded-factory", key.space) {
-                                          @Override
-                                          public void execute() throws Exception {
-                                            callback.success(null);
-                                          }
-                                        });
-                                  }
+            // bring the document into existence
+            DurableLivingDocument.fresh(key, factory, who, arg, entropy, null, base, metrics.documentFresh.wrap(new Callback<>() {
+              @Override
+              public void success(DurableLivingDocument document) {
+                // jump into the thread; note, the data service must ensure this
+                // will
+                // succeed once
+                base.executor.execute(new NamedRunnable("loaded-factory", key.space) {
+                  @Override
+                  public void execute() throws Exception {
+                    callback.success(null);
+                  }
+                });
+              }
 
-                                  @Override
-                                  public void failure(ErrorCodeException ex) {
-                                    callback.failure(ex);
-                                  }
-                                }));
-                      }
-
-                      @Override
-                      public void failure(ErrorCodeException ex) {
-                        callback.failure(ex);
-                      }
-                    }));
+              @Override
+              public void failure(ErrorCodeException ex) {
+                callback.failure(ex);
+              }
+            }));
           }
-        });
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        }));
+      }
+    });
   }
 
   /** connect the given person to the document hooking up a streamback */
@@ -196,65 +165,54 @@ public class CoreService {
   /** internal: do the connect with retry */
   private void connect(NtClient who, Key key, Streamback stream, boolean canRetry) {
     // TODO: instrument the stream
-    load(
-        key,
-        new Callback<>() {
-          @Override
-          public void success(DurableLivingDocument document) {
-            connectDirectMustBeInDocumentBase(who, document, stream);
-          }
+    load(key, new Callback<>() {
+      @Override
+      public void success(DurableLivingDocument document) {
+        connectDirectMustBeInDocumentBase(who, document, stream);
+      }
 
-          @Override
-          public void failure(ErrorCodeException exOriginal) {
-            if (exOriginal.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED && canRetry) {
-              livingDocumentFactoryFactory.fetch(
-                  key,
-                  metrics.factoryFetchConnect.wrap(
-                      new Callback<>() {
-                        @Override
-                        public void success(LivingDocumentFactory factory) {
-                          try {
-                            if (!factory.canInvent(who)) {
-                              stream.failure(exOriginal);
-                              return;
-                            }
-                            // IMPLICIT CREATE can create a connect storm
-                            create(
-                                who,
-                                key,
-                                "{}",
-                                null,
-                                metrics.implicitCreate.wrap(
-                                    new Callback<Void>() {
-                                      @Override
-                                      public void success(Void value) {
-                                        connect(who, key, stream, false);
-                                      }
+      @Override
+      public void failure(ErrorCodeException exOriginal) {
+        if (exOriginal.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED && canRetry) {
+          livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchConnect.wrap(new Callback<>() {
+            @Override
+            public void success(LivingDocumentFactory factory) {
+              try {
+                if (!factory.canInvent(who)) {
+                  stream.failure(exOriginal);
+                  return;
+                }
+                // IMPLICIT CREATE can create a connect storm
+                create(who, key, "{}", null, metrics.implicitCreate.wrap(new Callback<Void>() {
+                  @Override
+                  public void success(Void value) {
+                    connect(who, key, stream, false);
+                  }
 
-                                      @Override
-                                      public void failure(ErrorCodeException ex) {
-                                        if (ex.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE) {
-                                          connect(who, key, stream, false);
-                                        } else {
-                                          stream.failure(exOriginal);
-                                        }
-                                      }
-                                    }));
-                          } catch (ErrorCodeException exNew) {
-                            stream.failure(exNew);
-                          }
-                        }
-
-                        @Override
-                        public void failure(ErrorCodeException ex) {
-                          stream.failure(exOriginal);
-                        }
-                      }));
-              return;
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    if (ex.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE) {
+                      connect(who, key, stream, false);
+                    } else {
+                      stream.failure(exOriginal);
+                    }
+                  }
+                }));
+              } catch (ErrorCodeException exNew) {
+                stream.failure(exNew);
+              }
             }
-            stream.failure(exOriginal);
-          }
-        });
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              stream.failure(exOriginal);
+            }
+          }));
+          return;
+        }
+        stream.failure(exOriginal);
+      }
+    });
   }
 
   private void load(Key key, Callback<DurableLivingDocument> callbackReal) {
@@ -265,143 +223,118 @@ public class CoreService {
     DocumentThreadBase base = bases[threadId];
 
     // jump into thread
-    base.executor.execute(
-        new NamedRunnable("load", key.space, key.key) {
-          @Override
-          public void execute() throws Exception {
+    base.executor.execute(new NamedRunnable("load", key.space, key.key) {
+      @Override
+      public void execute() throws Exception {
 
-            // is document already loaded?
-            DurableLivingDocument documentFetch = base.map.get(key);
-            if (documentFetch != null) {
-              callbackToQueue.success(documentFetch);
-              return;
+        // is document already loaded?
+        DurableLivingDocument documentFetch = base.map.get(key);
+        if (documentFetch != null) {
+          callbackToQueue.success(documentFetch);
+          return;
+        }
+
+        ArrayList<Callback<DurableLivingDocument>> callbacks = base.mapInsertsInflight.get(key);
+        if (callbacks == null) {
+          callbacks = new ArrayList<>();
+          callbacks.add(callbackToQueue);
+          base.mapInsertsInflight.put(key, callbacks);
+
+          Consumer<ErrorCodeException> failure = (ex) -> {
+            // TODO: if universal lookup error, then that will create a storm. Instead,
+            // signal a failure to the first once and then delay the others by various
+            // random times. Maybe just spread these errors out over a random time
+            base.executor.execute(new NamedRunnable("document-load-failure") {
+              @Override
+              public void execute() throws Exception {
+                for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
+                  callbackToSignal.failure(ex);
+                }
+              }
+            });
+          };
+
+          // let's load the factory and pull from source
+          livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchLoad.wrap(new Callback<>() {
+            @Override
+            public void success(LivingDocumentFactory factory) {
+              // pull from data source
+              DurableLivingDocument.load(key, factory, null, base, metrics.documentLoad.wrap(new Callback<>() {
+                @Override
+                public void success(DurableLivingDocument document) {
+                  // it was found, let's try to put it into memory
+                  base.executor.execute(new NamedRunnable("document-made") {
+                    @Override
+                    public void execute() throws Exception {
+                      base.map.put(key, document);
+                      metrics.inflight_documents.up();
+                      for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
+                        callbackToSignal.success(document);
+                      }
+                      base.executor.schedule(new NamedRunnable("post-load-reconcile") {
+                        @Override
+                        public void execute() throws Exception {
+                          document.reconcileClients();
+                        }
+                      }, base.getMillisecondsAfterLoadForReconciliation());
+                    }
+                  });
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  failure.accept(ex);
+                }
+              }));
             }
 
-            ArrayList<Callback<DurableLivingDocument>> callbacks = base.mapInsertsInflight.get(key);
-            if (callbacks == null) {
-              callbacks = new ArrayList<>();
-              callbacks.add(callbackToQueue);
-              base.mapInsertsInflight.put(key, callbacks);
-
-              Consumer<ErrorCodeException> failure =
-                  (ex) -> {
-                    // TODO: if universal lookup error, then that will create a storm. Instead,
-                    // signal a failure to the first once and then delay the others by various
-                    // random times. Maybe just spread these errors out over a random time
-                    base.executor.execute(
-                        new NamedRunnable("document-load-failure") {
-                          @Override
-                          public void execute() throws Exception {
-                            for (Callback<DurableLivingDocument> callbackToSignal :
-                                base.mapInsertsInflight.remove(key)) {
-                              callbackToSignal.failure(ex);
-                            }
-                          }
-                        });
-                  };
-
-              // let's load the factory and pull from source
-              livingDocumentFactoryFactory.fetch(
-                  key,
-                  metrics.factoryFetchLoad.wrap(
-                      new Callback<>() {
-                        @Override
-                        public void success(LivingDocumentFactory factory) {
-                          // pull from data source
-                          DurableLivingDocument.load(
-                              key,
-                              factory,
-                              null,
-                              base,
-                              metrics.documentLoad.wrap(
-                                  new Callback<>() {
-                                    @Override
-                                    public void success(DurableLivingDocument document) {
-                                      // it was found, let's try to put it into memory
-                                      base.executor.execute(
-                                          new NamedRunnable("document-made") {
-                                            @Override
-                                            public void execute() throws Exception {
-                                              base.map.put(key, document);
-                                              metrics.inflight_documents.up();
-                                              for (Callback<DurableLivingDocument>
-                                                  callbackToSignal :
-                                                      base.mapInsertsInflight.remove(key)) {
-                                                callbackToSignal.success(document);
-                                              }
-                                              base.executor.schedule(
-                                                  new NamedRunnable("post-load-reconcile") {
-                                                    @Override
-                                                    public void execute() throws Exception {
-                                                      document.reconcileClients();
-                                                    }
-                                                  },
-                                                  base.getMillisecondsAfterLoadForReconciliation());
-                                            }
-                                          });
-                                    }
-
-                                    @Override
-                                    public void failure(ErrorCodeException ex) {
-                                      failure.accept(ex);
-                                    }
-                                  }));
-                        }
-
-                        @Override
-                        public void failure(ErrorCodeException ex) {
-                          failure.accept(ex);
-                        }
-                      }));
-            } else {
-              callbacks.add(metrics.documentPiggyBack.wrap(callbackToQueue));
+            @Override
+            public void failure(ErrorCodeException ex) {
+              failure.accept(ex);
             }
-          }
-        });
+          }));
+        } else {
+          callbacks.add(metrics.documentPiggyBack.wrap(callbackToQueue));
+        }
+      }
+    });
   }
 
   /** internal: send connection to the document if not joined, then join */
-  private void connectDirectMustBeInDocumentBase(
-      NtClient who, DurableLivingDocument document, Streamback stream) {
+  private void connectDirectMustBeInDocumentBase(NtClient who, DurableLivingDocument document, Streamback stream) {
     PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
-    Callback<Integer> onConnected =
-        new Callback<>() {
+    Callback<Integer> onConnected = new Callback<>() {
+      @Override
+      public void success(Integer value) {
+        stream.status(Streamback.StreamStatus.Connected);
+        document.createPrivateView(who, new Perspective() {
           @Override
-          public void success(Integer value) {
-            stream.status(Streamback.StreamStatus.Connected);
-            document.createPrivateView(
-                who,
-                new Perspective() {
-                  @Override
-                  public void data(String data) {
-                    stream.next(data);
-                  }
+          public void data(String data) {
+            stream.next(data);
+          }
 
-                  @Override
-                  public void disconnect() {
-                    stream.status(Streamback.StreamStatus.Disconnected);
-                  }
-                },
-                metrics.createPrivateView.wrap(
-                    new Callback<>() {
-                      @Override
-                      public void success(PrivateView view) {
-                        stream.onSetupComplete(
-                            new CoreStream(metrics, who, inventory, document, view));
-                      }
-
-                      @Override
-                      public void failure(ErrorCodeException ex) {
-                        stream.failure(ex);
-                      }
-                    }));
+          @Override
+          public void disconnect() {
+            stream.status(Streamback.StreamStatus.Disconnected);
+          }
+        }, metrics.createPrivateView.wrap(new Callback<>() {
+          @Override
+          public void success(PrivateView view) {
+            stream.onSetupComplete(new CoreStream(metrics, who, inventory, document, view));
           }
 
           @Override
           public void failure(ErrorCodeException ex) {
             stream.failure(ex);
           }
-        };
+        }));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        stream.failure(ex);
+      }
+    };
 
     // are we already connected, then execute now
     if (document.isConnected(who)) {
@@ -423,60 +356,51 @@ public class CoreService {
   public void deploy(DeploymentMonitor monitor) {
     for (int kThread = 0; kThread < bases.length; kThread++) {
       final int kThreadLocal = kThread;
-      bases[kThread].executor.execute(
-          new NamedRunnable("deploy-" + kThreadLocal) {
-            @Override
-            public void execute() throws Exception {
-              for (Map.Entry<Key, DurableLivingDocument> entry :
-                  bases[kThreadLocal].map.entrySet()) {
-                deploy(bases[kThreadLocal], entry.getKey(), entry.getValue(), monitor);
-              }
-            }
-          });
+      bases[kThread].executor.execute(new NamedRunnable("deploy-" + kThreadLocal) {
+        @Override
+        public void execute() throws Exception {
+          for (Map.Entry<Key, DurableLivingDocument> entry : bases[kThreadLocal].map.entrySet()) {
+            deploy(bases[kThreadLocal], entry.getKey(), entry.getValue(), monitor);
+          }
+        }
+      });
     }
   }
 
   /** internal: deploy a specific document */
-  private void deploy(
-      DocumentThreadBase base, Key key, DurableLivingDocument document, DeploymentMonitor monitor) {
-    livingDocumentFactoryFactory.fetch(
-        key,
-        metrics.factoryFetchDeploy.wrap(
-            new Callback<>() {
-              @Override
-              public void success(LivingDocumentFactory newFactory) {
-                base.executor.execute(
-                    new NamedRunnable("deploy", key.space, key.key) {
-                      @Override
-                      public void execute() throws Exception {
-                        boolean toChange = document.getCurrentFactory() != newFactory;
-                        monitor.bumpDocument(toChange);
-                        if (toChange) {
-                          try {
-                            document.deploy(
-                                newFactory,
-                                metrics.deploy.wrap(
-                                    new Callback<Integer>() {
-                                      @Override
-                                      public void success(Integer value) {}
+  private void deploy(DocumentThreadBase base, Key key, DurableLivingDocument document, DeploymentMonitor monitor) {
+    livingDocumentFactoryFactory.fetch(key, metrics.factoryFetchDeploy.wrap(new Callback<>() {
+      @Override
+      public void success(LivingDocumentFactory newFactory) {
+        base.executor.execute(new NamedRunnable("deploy", key.space, key.key) {
+          @Override
+          public void execute() throws Exception {
+            boolean toChange = document.getCurrentFactory() != newFactory;
+            monitor.bumpDocument(toChange);
+            if (toChange) {
+              try {
+                document.deploy(newFactory, metrics.deploy.wrap(new Callback<Integer>() {
+                  @Override
+                  public void success(Integer value) {
+                  }
 
-                                      @Override
-                                      public void failure(ErrorCodeException ex) {
-                                        monitor.witnessException(ex);
-                                      }
-                                    }));
-                          } catch (ErrorCodeException ex) {
-                            monitor.witnessException(ex);
-                          }
-                        }
-                      }
-                    });
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    monitor.witnessException(ex);
+                  }
+                }));
+              } catch (ErrorCodeException ex) {
                 monitor.witnessException(ex);
               }
-            }));
+            }
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        monitor.witnessException(ex);
+      }
+    }));
   }
 }

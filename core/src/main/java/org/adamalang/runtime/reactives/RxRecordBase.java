@@ -13,8 +13,7 @@ import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 
 /** the base object for generated record types */
-public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase
-    implements Comparable<Ty>, RxParent, RxChild {
+public abstract class RxRecordBase<Ty extends RxRecordBase> extends RxBase implements Comparable<Ty>, RxParent, RxChild {
   protected boolean __isDying;
   private boolean __alive;
 

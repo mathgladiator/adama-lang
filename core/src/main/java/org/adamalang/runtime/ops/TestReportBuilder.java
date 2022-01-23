@@ -30,7 +30,7 @@ public class TestReportBuilder {
     if (dump.size() > 0) {
       JsonStreamWriter writer = new JsonStreamWriter();
       writer.writeTree(dump);
-      report.append("...DUMP:").append(writer.toString()).append("\n");
+      report.append("...DUMP:").append(writer).append("\n");
     }
     dumps.put(name, dump);
   }
@@ -41,10 +41,7 @@ public class TestReportBuilder {
 
   public void end(final AssertionStats stats) {
     if (stats.total > 0) {
-      report
-          .append(" = ")
-          .append(Math.round((stats.total - stats.failures) * 1000.0 / stats.total) / 10.0)
-          .append("%");
+      report.append(" = ").append(Math.round((stats.total - stats.failures) * 1000.0 / stats.total) / 10.0).append("%");
       if (stats.failures > 0) {
         report.append(" (HAS FAILURES)");
       }

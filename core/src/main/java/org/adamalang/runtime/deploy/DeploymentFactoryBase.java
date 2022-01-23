@@ -30,11 +30,6 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
     this.spaces = new ConcurrentHashMap<>();
   }
 
-  @Override
-  public Collection<String> spacesAvailable() {
-    return spaces.keySet();
-  }
-
   public String hashOf(String space) {
     DeploymentFactory factory = this.spaces.get(space);
     if (factory != null) {
@@ -53,8 +48,7 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
       }
     }
     spacePrefix.append("_");
-    DeploymentFactory newFactory =
-        new DeploymentFactory(space, spacePrefix.toString(), newClassId, prior, plan);
+    DeploymentFactory newFactory = new DeploymentFactory(space, spacePrefix.toString(), newClassId, prior, plan);
     spaces.put(space, newFactory);
   }
 
@@ -66,5 +60,10 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
       return;
     }
     factory.fetch(key, callback);
+  }
+
+  @Override
+  public Collection<String> spacesAvailable() {
+    return spaces.keySet();
   }
 }

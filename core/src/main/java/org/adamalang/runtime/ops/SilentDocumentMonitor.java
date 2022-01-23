@@ -14,27 +14,24 @@ import org.adamalang.runtime.contracts.DocumentMonitor;
 /** a monitor which does nothing */
 public class SilentDocumentMonitor implements DocumentMonitor {
   @Override
-  public void assertFailureAt(
-      final int startLine,
-      final int startPosition,
-      final int endLine,
-      final int endLinePosition,
-      final int total,
-      final int failures) {}
+  public void assertFailureAt(final int startLine, final int startPosition, final int endLine, final int endLinePosition, final int total, final int failures) {
+  }
 
   @Override
-  public void goodwillFailureAt(
-      final int startLine, final int startPosition, final int endLine, final int endLinePosition) {}
+  public void goodwillFailureAt(final int startLine, final int startPosition, final int endLine, final int endLinePosition) {
+  }
 
   @Override
-  public void pop(final long time, final boolean exception) {}
+  public void pop(final long time, final boolean exception) {
+  }
 
   @Override
-  public void push(final String label) {}
+  public void push(final String label) {
+  }
 
   @Override
-  public void registerTableColumnIndexEffectiveness(
-      final String tableName, final String colummName, final int total, final int effectiveness) {}
+  public void registerTableColumnIndexEffectiveness(final String tableName, final String colummName, final int total, final int effectiveness) {
+  }
 
   @Override
   public boolean shouldMeasureTableColumnIndexEffectiveness() {

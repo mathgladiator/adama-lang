@@ -24,8 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 /** a reactive table */
-public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase
-    implements Iterable<Ty>, RxParent, RxChild {
+public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iterable<Ty>, RxParent, RxChild {
   public final LivingDocument document;
   public final Function<RxParent, Ty> maker;
   public final String className;
@@ -35,12 +34,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase
   private final TreeSet<Ty> unknowns;
 
   @SuppressWarnings("unchecked")
-  public RxTable(
-      final LivingDocument document,
-      final RxParent owner,
-      final String className,
-      final Function<RxParent, Ty> maker,
-      final int indicies) {
+  public RxTable(final LivingDocument document, final RxParent owner, final String className, final Function<RxParent, Ty> maker, final int indicies) {
     super(owner);
     this.document = document;
     this.className = className;
@@ -237,10 +231,7 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase
 
   public Ty getById(final int id) {
     final var obj = itemsByKey.get(id);
-    if (obj != null) {
-      return obj;
-    }
-    return null;
+    return obj;
   }
 
   public ReactiveIndex<Ty> getIndex(final short column) {
@@ -261,28 +252,27 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase
       return this;
     }
     final var prior = new AtomicReference<TreeSet<Ty>>(null);
-    filter.scopeByIndicies(
-        (column, value) -> {
-          final var specific = indices[column].of(value);
-          if (specific == null) { // no index available
-            prior.set(new TreeSet<>());
-            return;
-          }
-          if (prior.get() == null) {
-            // just use the index
-            prior.set(specific);
-          } else {
-            final var common = new TreeSet<Ty>();
-            if (specific != null) {
-              for (final Ty item : specific) {
-                if (prior.get().contains(item)) {
-                  common.add(item);
-                }
-              }
+    filter.scopeByIndicies((column, value) -> {
+      final var specific = indices[column].of(value);
+      if (specific == null) { // no index available
+        prior.set(new TreeSet<>());
+        return;
+      }
+      if (prior.get() == null) {
+        // just use the index
+        prior.set(specific);
+      } else {
+        final var common = new TreeSet<Ty>();
+        if (specific != null) {
+          for (final Ty item : specific) {
+            if (prior.get().contains(item)) {
+              common.add(item);
             }
-            prior.set(common);
           }
-        });
+        }
+        prior.set(common);
+      }
+    });
     if (prior.get() == null) {
       return this;
     }

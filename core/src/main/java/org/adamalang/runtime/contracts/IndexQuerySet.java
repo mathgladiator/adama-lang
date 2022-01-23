@@ -15,5 +15,5 @@ public interface IndexQuerySet {
    * intersect the set with the given index (via index datastrcture) and the given value.
    * INDEX_FIELD == VALUE
    */
-  public void intersect(int column, int value);
+  void intersect(int column, int value);
 }

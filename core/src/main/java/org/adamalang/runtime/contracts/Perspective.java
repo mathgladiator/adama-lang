@@ -15,18 +15,19 @@ package org.adamalang.runtime.contracts;
  */
 public interface Perspective {
   /** a dead perspective, not useful except for people that don't care about the data */
-  public static final Perspective DEAD =
-      new Perspective() {
-        @Override
-        public void data(String data) {}
+  Perspective DEAD = new Perspective() {
+    @Override
+    public void data(String data) {
+    }
 
-        @Override
-        public void disconnect() {}
-      };
+    @Override
+    public void disconnect() {
+    }
+  };
 
   /** new data for the user */
-  public void data(String data);
+  void data(String data);
 
   /** the server disconnected the stream */
-  public void disconnect();
+  void disconnect();
 }

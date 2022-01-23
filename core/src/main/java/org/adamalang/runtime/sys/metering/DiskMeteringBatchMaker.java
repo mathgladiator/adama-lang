@@ -36,9 +36,7 @@ public class DiskMeteringBatchMaker {
   private FileOutputStream output;
   private long oldestTime;
 
-  public DiskMeteringBatchMaker(
-      TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds)
-      throws Exception {
+  public DiskMeteringBatchMaker(TimeSource time, SimpleExecutor executor, File root, long cutOffMilliseconds) throws Exception {
     this.time = time;
     this.executor = executor;
     this.root = root;
@@ -57,8 +55,7 @@ public class DiskMeteringBatchMaker {
                 if (meterReading.time < oldestTime) {
                   oldestTime = meterReading.time;
                 }
-                transferStream.write(
-                    (meterReading.packup() + "\n").getBytes(StandardCharsets.UTF_8));
+                transferStream.write((meterReading.packup() + "\n").getBytes(StandardCharsets.UTF_8));
               }
             }
           }
@@ -70,16 +67,12 @@ public class DiskMeteringBatchMaker {
       }
     }
     this.output = new FileOutputStream(current, true);
-    Runtime.getRuntime()
-        .addShutdownHook(
-            new Thread(
-                ExceptionRunnable.TO_RUNTIME(
-                    new ExceptionRunnable() {
-                      @Override
-                      public void run() throws Exception {
-                        close();
-                      }
-                    })));
+    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
+      @Override
+      public void run() throws Exception {
+        close();
+      }
+    })));
   }
 
   public void close() throws Exception {
@@ -89,46 +82,45 @@ public class DiskMeteringBatchMaker {
 
   public void write(MeterReading meterReading) {
     byte[] meterBytes = (meterReading.packup() + "\n").getBytes(StandardCharsets.UTF_8);
-    this.executor.execute(
-        new NamedRunnable("billing-add-sample") {
-          @Override
-          public void execute() throws Exception {
-            output.write(meterBytes);
-            // we don't flush for performance reasons, and we are willing to let records slide on a
-            // problem
-            long delta = time.nowMilliseconds() - oldestTime;
-            if (delta > cutOffMilliseconds) {
-              String batchId = UUID.randomUUID() + "_" + time.nowMilliseconds();
-              File cuttingBatch = new File(root, "CUT-" + batchId);
-              try {
-                output.flush();
-                output.close();
-                current.renameTo(cuttingBatch);
-                oldestTime = time.nowMilliseconds();
-                output = new FileOutputStream(current, true);
-                MeterReducer reducer = new MeterReducer(time);
-                try (FileReader reader = new FileReader(cuttingBatch)) {
-                  try (BufferedReader buffered = new BufferedReader(reader)) {
-                    String ln;
-                    while ((ln = buffered.readLine()) != null) {
-                      MeterReading meterReading = MeterReading.unpack(new JsonStreamReader(ln));
-                      if (meterReading != null) {
-                        reducer.next(meterReading);
-                      }
-                    }
+    this.executor.execute(new NamedRunnable("billing-add-sample") {
+      @Override
+      public void execute() throws Exception {
+        output.write(meterBytes);
+        // we don't flush for performance reasons, and we are willing to let records slide on a
+        // problem
+        long delta = time.nowMilliseconds() - oldestTime;
+        if (delta > cutOffMilliseconds) {
+          String batchId = UUID.randomUUID() + "_" + time.nowMilliseconds();
+          File cuttingBatch = new File(root, "CUT-" + batchId);
+          try {
+            output.flush();
+            output.close();
+            current.renameTo(cuttingBatch);
+            oldestTime = time.nowMilliseconds();
+            output = new FileOutputStream(current, true);
+            MeterReducer reducer = new MeterReducer(time);
+            try (FileReader reader = new FileReader(cuttingBatch)) {
+              try (BufferedReader buffered = new BufferedReader(reader)) {
+                String ln;
+                while ((ln = buffered.readLine()) != null) {
+                  MeterReading meterReading = MeterReading.unpack(new JsonStreamReader(ln));
+                  if (meterReading != null) {
+                    reducer.next(meterReading);
                   }
                 }
-                File inflightSummary = new File(root, "TEMP-SUMMARY-" + batchId);
-                File finalSummary = new File(root, "SUMMARY-" + batchId);
-                Files.writeString(inflightSummary.toPath(), reducer.toJson());
-                inflightSummary.renameTo(finalSummary);
-              } finally {
-                // if we fail, then we simply delete the batch
-                cuttingBatch.delete();
               }
             }
+            File inflightSummary = new File(root, "TEMP-SUMMARY-" + batchId);
+            File finalSummary = new File(root, "SUMMARY-" + batchId);
+            Files.writeString(inflightSummary.toPath(), reducer.toJson());
+            inflightSummary.renameTo(finalSummary);
+          } finally {
+            // if we fail, then we simply delete the batch
+            cuttingBatch.delete();
           }
-        });
+        }
+      }
+    });
   }
 
   public String getNextAvailableBatchId() {

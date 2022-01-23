@@ -19,19 +19,18 @@ public interface DataService {
   void get(Key key, Callback<LocalDocumentChange> callback);
 
   /** write the first entry for the document */
-  public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback);
+  void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback);
 
   /** Apply a series of patches to the document using rfc7396 */
-  public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback);
+  void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback);
 
   /** Compute the change the state of the document to the indicated seq by the given client */
-  public void compute(
-      Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback);
+  void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback);
 
   /** Delete the document given by the ID */
   void delete(Key key, Callback<Void> callback);
 
-  public static enum ComputeMethod {
+  enum ComputeMethod {
     /** patch the local document to be up to date after the given sequencer */
     HeadPatch,
     /** rewind the document to the given sequencer */
@@ -41,7 +40,7 @@ public interface DataService {
   }
 
   /** the local copy of the document should be changed by incorporating the given patch */
-  public static class LocalDocumentChange {
+  class LocalDocumentChange {
     public final String patch;
 
     public LocalDocumentChange(String patch) {
@@ -50,7 +49,7 @@ public interface DataService {
   }
 
   /** the remote copy should change */
-  public static class RemoteDocumentUpdate {
+  class RemoteDocumentUpdate {
     /** the request that is changing the document */
     public final String request;
 
@@ -78,14 +77,7 @@ public interface DataService {
      */
     public final int whenToInvalidateMilliseconds;
 
-    public RemoteDocumentUpdate(
-        final int seq,
-        NtClient who,
-        final String request,
-        final String redo,
-        final String undo,
-        final boolean requiresFutureInvalidation,
-        int whenToInvalidateMilliseconds) {
+    public RemoteDocumentUpdate(final int seq, NtClient who, final String request, final String redo, final String undo, final boolean requiresFutureInvalidation, int whenToInvalidateMilliseconds) {
       this.seq = seq;
       this.who = who;
       this.request = request;

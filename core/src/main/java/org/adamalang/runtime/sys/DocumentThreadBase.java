@@ -37,8 +37,7 @@ public class DocumentThreadBase {
   private int millisecondsToPerformInventory;
   private int millisecondsToPerformInventoryJitter;
 
-  public DocumentThreadBase(
-      DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
+  public DocumentThreadBase(DataService service, CoreMetrics metrics, SimpleExecutor executor, TimeSource time) {
     this.service = service;
     this.metrics = metrics;
     this.executor = executor;
@@ -54,14 +53,12 @@ public class DocumentThreadBase {
   }
 
   public void kickOffInventory() {
-    executor.schedule(
-        new NamedRunnable("base-inventory") {
-          @Override
-          public void execute() throws Exception {
-            performInventory();
-          }
-        },
-        2500);
+    executor.schedule(new NamedRunnable("base-inventory") {
+      @Override
+      public void execute() throws Exception {
+        performInventory();
+      }
+    }, 2500);
   }
 
   public PredictiveInventory getOrCreateInventory(String space) {
@@ -73,24 +70,21 @@ public class DocumentThreadBase {
     return inventory;
   }
 
-  public void sampleMetering(
-      Consumer<HashMap<String, PredictiveInventory.MeteringSample>> callback) {
-    executor.execute(
-        new NamedRunnable("base-meter-sampling") {
-          @Override
-          public void execute() throws Exception {
-            HashMap<String, PredictiveInventory.MeteringSample> result = new HashMap<>();
-            for (Map.Entry<String, PredictiveInventory> entry : inventoryBySpace.entrySet()) {
-              result.put(entry.getKey(), entry.getValue().sample());
-            }
-            callback.accept(result);
-          }
-        });
+  public void sampleMetering(Consumer<HashMap<String, PredictiveInventory.MeteringSample>> callback) {
+    executor.execute(new NamedRunnable("base-meter-sampling") {
+      @Override
+      public void execute() throws Exception {
+        HashMap<String, PredictiveInventory.MeteringSample> result = new HashMap<>();
+        for (Map.Entry<String, PredictiveInventory> entry : inventoryBySpace.entrySet()) {
+          result.put(entry.getKey(), entry.getValue().sample());
+        }
+        callback.accept(result);
+      }
+    });
   }
 
   public void performInventory() {
-    HashMap<String, PredictiveInventory.PreciseSnapshotAccumulator> accumulators =
-        new HashMap<>(inventoryBySpace.size());
+    HashMap<String, PredictiveInventory.PreciseSnapshotAccumulator> accumulators = new HashMap<>(inventoryBySpace.size());
     Iterator<Map.Entry<Key, DurableLivingDocument>> it = map.entrySet().iterator();
     while (it.hasNext()) {
       DurableLivingDocument document = it.next().getValue();
@@ -107,24 +101,19 @@ public class DocumentThreadBase {
       accum.count++;
     }
     HashMap<String, PredictiveInventory> nextInventoryBySpace = new HashMap<>();
-    for (Map.Entry<String, PredictiveInventory.PreciseSnapshotAccumulator> entry :
-        accumulators.entrySet()) {
+    for (Map.Entry<String, PredictiveInventory.PreciseSnapshotAccumulator> entry : accumulators.entrySet()) {
       PredictiveInventory inventory = getOrCreateInventory(entry.getKey());
       inventory.accurate(entry.getValue());
       nextInventoryBySpace.put(entry.getKey(), inventory);
     }
     inventoryBySpace.clear();
     inventoryBySpace.putAll(nextInventoryBySpace);
-    executor.schedule(
-        new NamedRunnable("base-inventory-scheduled") {
-          @Override
-          public void execute() throws Exception {
-            performInventory();
-          }
-        },
-        millisecondsToPerformInventory
-            + rng.nextInt(millisecondsToPerformInventoryJitter)
-            + rng.nextInt(millisecondsToPerformInventoryJitter));
+    executor.schedule(new NamedRunnable("base-inventory-scheduled") {
+      @Override
+      public void execute() throws Exception {
+        performInventory();
+      }
+    }, millisecondsToPerformInventory + rng.nextInt(millisecondsToPerformInventoryJitter) + rng.nextInt(millisecondsToPerformInventoryJitter));
   }
 
   public int getMillisecondsForCleanupCheck() {

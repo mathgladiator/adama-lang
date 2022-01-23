@@ -28,12 +28,7 @@ public class MeterReading {
   public final long messages; // total --> sum
   public final long connections; // standing --> p95
 
-  public MeterReading(
-      long time,
-      long timeframe,
-      String space,
-      String hash,
-      PredictiveInventory.MeteringSample meteringSample) {
+  public MeterReading(long time, long timeframe, String space, String hash, PredictiveInventory.MeteringSample meteringSample) {
     this.time = time;
     this.timeframe = timeframe;
     this.space = space;
@@ -60,12 +55,7 @@ public class MeterReading {
           long messages = reader.readLong();
           long connections = reader.readLong();
           if (!reader.notEndOfArray()) {
-            return new MeterReading(
-                time,
-                timeframe,
-                space,
-                hash,
-                new PredictiveInventory.MeteringSample(memory, cpu, count, messages, connections));
+            return new MeterReading(time, timeframe, space, hash, new PredictiveInventory.MeteringSample(memory, cpu, count, messages, connections));
           }
         }
         while (reader.notEndOfArray()) {

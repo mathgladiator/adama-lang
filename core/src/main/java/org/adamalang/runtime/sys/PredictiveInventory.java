@@ -46,12 +46,7 @@ public class PredictiveInventory {
     for (int k = 0; k < snapshots.length - 1; k++) {
       snapshots[k] = snapshots[k + 1];
     }
-    snapshots[snapshots.length - 1] =
-        new Snapshot(
-            preciseSnapshotAccumulator.memory,
-            preciseSnapshotAccumulator.ticks,
-            preciseSnapshotAccumulator.count,
-            preciseSnapshotAccumulator.connections);
+    snapshots[snapshots.length - 1] = new Snapshot(preciseSnapshotAccumulator.memory, preciseSnapshotAccumulator.ticks, preciseSnapshotAccumulator.count, preciseSnapshotAccumulator.connections);
 
     // absorb the precision
     this.memory = preciseSnapshotAccumulator.memory;
@@ -106,12 +101,7 @@ public class PredictiveInventory {
     }
 
     public static MeteringSample add(MeteringSample a, MeteringSample b) {
-      return new MeteringSample(
-          a.memory + b.memory,
-          a.cpu + b.cpu,
-          a.count + b.count,
-          a.messages + b.messages,
-          a.connections + b.connections);
+      return new MeteringSample(a.memory + b.memory, a.cpu + b.cpu, a.count + b.count, a.messages + b.messages, a.connections + b.connections);
     }
   }
 

@@ -24,8 +24,7 @@ public class NtComplex {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     NtComplex ntComplex = (NtComplex) o;
-    return Double.compare(ntComplex.real, real) == 0
-        && Double.compare(ntComplex.imaginary, imaginary) == 0;
+    return Double.compare(ntComplex.real, real) == 0 && Double.compare(ntComplex.imaginary, imaginary) == 0;
   }
 
   public long memory() {

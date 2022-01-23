@@ -33,13 +33,16 @@ public class RxGuard extends RxBase implements RxChild {
   }
 
   @Override
-  public void __dump(final JsonStreamWriter writer) {}
+  public void __dump(final JsonStreamWriter writer) {
+  }
 
   @Override
-  public void __insert(final JsonStreamReader reader) {}
+  public void __insert(final JsonStreamReader reader) {
+  }
 
   @Override
-  public void __patch(JsonStreamReader reader) {}
+  public void __patch(JsonStreamReader reader) {
+  }
 
   @Override
   public void __revert() {

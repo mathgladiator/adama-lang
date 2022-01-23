@@ -271,8 +271,6 @@ public class JsonStreamWriter {
   }
 
   public enum CommaStateMachine {
-    FirstItemSkipComma,
-    IntroduceComma,
-    None
+    FirstItemSkipComma, IntroduceComma, None
   }
 }

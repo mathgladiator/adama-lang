@@ -18,8 +18,7 @@ import java.util.function.Function;
 public class Utility {
 
   /** convert the maybe of one type into the maybe of another */
-  public static <TyIn, TyOut> NtMaybe<TyOut> convertMaybe(
-      final NtMaybe<TyIn> in, final Function<TyIn, TyOut> conv) {
+  public static <TyIn, TyOut> NtMaybe<TyOut> convertMaybe(final NtMaybe<TyIn> in, final Function<TyIn, TyOut> conv) {
     if (in.has()) {
       return new NtMaybe<>(conv.apply(in.get()));
     } else {
@@ -38,10 +37,7 @@ public class Utility {
     return output;
   }
 
-  public static <TyIn, TyOut> TyOut[] convertMultiple(
-      final Iterable<TyIn> source,
-      final Function<Integer, TyOut[]> makeArray,
-      final Function<TyIn, TyOut> conv) {
+  public static <TyIn, TyOut> TyOut[] convertMultiple(final Iterable<TyIn> source, final Function<Integer, TyOut[]> makeArray, final Function<TyIn, TyOut> conv) {
     final var out = new ArrayList<TyOut>();
     for (final TyIn item : source) {
       out.add(conv.apply(item));
@@ -49,10 +45,7 @@ public class Utility {
     return out.toArray(makeArray.apply(out.size()));
   }
 
-  public static <TyIn, TyOut> TyOut[] convertMultiple(
-      final TyIn[] source,
-      final Function<Integer, TyOut[]> makeArray,
-      final Function<TyIn, TyOut> conv) {
+  public static <TyIn, TyOut> TyOut[] convertMultiple(final TyIn[] source, final Function<Integer, TyOut[]> makeArray, final Function<TyIn, TyOut> conv) {
     final var result = makeArray.apply(source.length);
     for (var k = 0; k < source.length; k++) {
       result[k] = conv.apply(source[k]);

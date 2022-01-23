@@ -30,12 +30,7 @@ public class AsyncTask {
   private AsyncAction action;
 
   /** Construct the task around a message */
-  public AsyncTask(
-      final int messageId,
-      final NtClient who,
-      final String channel,
-      final long timestamp,
-      final Object message) {
+  public AsyncTask(final int messageId, final NtClient who, final String channel, final long timestamp, final Object message) {
     this.messageId = messageId;
     this.who = who;
     this.channel = channel;

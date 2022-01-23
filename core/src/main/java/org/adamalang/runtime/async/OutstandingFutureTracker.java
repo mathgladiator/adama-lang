@@ -50,9 +50,7 @@ public class OutstandingFutureTracker {
     final var clientsBlocking = new HashSet<NtClient>();
     for (final OutstandingFuture exist : created) {
       if (exist.outstanding()) {
-        if (!clientsBlocking.contains(exist.who)) {
-          clientsBlocking.add(exist.who);
-        }
+        clientsBlocking.add(exist.who);
         if (exist.who.equals(who)) {
           writer.injectJson(exist.json);
         }

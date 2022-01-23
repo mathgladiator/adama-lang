@@ -11,16 +11,7 @@ package org.adamalang.runtime.exceptions;
 
 /** an infinite loop or just too much compute was used. */
 public class GoodwillExhaustedException extends RuntimeException {
-  public GoodwillExhaustedException(
-      final int startLine, final int startPosition, final int endLine, final int endLinePosition) {
-    super(
-        "Good will exhausted:"
-            + startLine
-            + ","
-            + startPosition
-            + " --> "
-            + endLine
-            + ","
-            + endLinePosition);
+  public GoodwillExhaustedException(final int startLine, final int startPosition, final int endLine, final int endLinePosition) {
+    super("Good will exhausted:" + startLine + "," + startPosition + " --> " + endLine + "," + endLinePosition);
   }
 }

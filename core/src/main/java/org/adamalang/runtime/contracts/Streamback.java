@@ -27,8 +27,7 @@ public interface Streamback {
   void failure(ErrorCodeException exception);
 
   /** the stream has a status representing what is happening at the given moment */
-  public static enum StreamStatus {
-    Connected,
-    Disconnected;
+  enum StreamStatus {
+    Connected, Disconnected
   }
 }

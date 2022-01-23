@@ -18,5 +18,5 @@ import org.adamalang.runtime.exceptions.AbortMessageException;
 @FunctionalInterface
 public interface AsyncAction {
   /** execute the given task, and maybe abort */
-  public void execute() throws AbortMessageException;
+  void execute() throws AbortMessageException;
 }

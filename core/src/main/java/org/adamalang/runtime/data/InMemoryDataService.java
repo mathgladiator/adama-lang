@@ -41,162 +41,145 @@ public class InMemoryDataService implements DataService {
 
   @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
-    executor.execute(
-        () -> {
-          InMemoryDocument document = datum.get(key);
-          if (document == null) {
-            callback.failure(
-                new ErrorCodeException(ErrorCodes.INMEMORY_DATA_GET_CANT_FIND_DOCUMENT));
-            return;
-          }
-          AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
-          for (RemoteDocumentUpdate update : document.updates) {
-            merge.next(update.redo);
-          }
-          callback.success(new LocalDocumentChange(merge.finish()));
-        });
+    executor.execute(() -> {
+      InMemoryDocument document = datum.get(key);
+      if (document == null) {
+        callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_GET_CANT_FIND_DOCUMENT));
+        return;
+      }
+      AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
+      for (RemoteDocumentUpdate update : document.updates) {
+        merge.next(update.redo);
+      }
+      callback.success(new LocalDocumentChange(merge.finish()));
+    });
   }
 
   @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    executor.execute(
-        () -> {
-          if (datum.containsKey(key)) {
-            callback.failure(
-                new ErrorCodeException(ErrorCodes.INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS));
-            return;
-          }
-          InMemoryDocument document = new InMemoryDocument();
-          document.seq = patch.seq;
-          document.updates.add(patch);
-          datum.put(key, document);
-          callback.success(null);
-        });
+    executor.execute(() -> {
+      if (datum.containsKey(key)) {
+        callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS));
+        return;
+      }
+      InMemoryDocument document = new InMemoryDocument();
+      document.seq = patch.seq;
+      document.updates.add(patch);
+      datum.put(key, document);
+      callback.success(null);
+    });
   }
 
   @Override
   public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
-    executor.execute(
-        () -> {
-          InMemoryDocument document = datum.get(key);
-          if (document == null) {
-            callback.failure(
-                new ErrorCodeException(ErrorCodes.INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT));
-            return;
-          }
-          if (patches[0].seq != document.seq + 1) {
-            callback.failure(
-                new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
-            return;
-          }
-          document.seq = patches[patches.length - 1].seq;
-          for (RemoteDocumentUpdate patch : patches) {
-            document.updates.add(patch);
-          }
-          if (patches[patches.length - 1].requiresFutureInvalidation) {
-            document.active = true;
-            document.timeToWake =
-                patches[patches.length - 1].whenToInvalidateMilliseconds + time.nowMilliseconds();
-          } else {
-            document.active = false;
-            document.timeToWake = 0L;
-          }
-          callback.success(null);
-        });
+    executor.execute(() -> {
+      InMemoryDocument document = datum.get(key);
+      if (document == null) {
+        callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT));
+        return;
+      }
+      if (patches[0].seq != document.seq + 1) {
+        callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
+        return;
+      }
+      document.seq = patches[patches.length - 1].seq;
+      for (RemoteDocumentUpdate patch : patches) {
+        document.updates.add(patch);
+      }
+      if (patches[patches.length - 1].requiresFutureInvalidation) {
+        document.active = true;
+        document.timeToWake = patches[patches.length - 1].whenToInvalidateMilliseconds + time.nowMilliseconds();
+      } else {
+        document.active = false;
+        document.timeToWake = 0L;
+      }
+      callback.success(null);
+    });
   }
 
   @Override
-  public void compute(
-      Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
-    executor.execute(
-        () -> {
-          InMemoryDocument document = datum.get(key);
-          if (document == null) {
-            callback.failure(
-                new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_CANT_FIND_DOCUMENT));
-            return;
+  public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
+    executor.execute(() -> {
+      InMemoryDocument document = datum.get(key);
+      if (document == null) {
+        callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_CANT_FIND_DOCUMENT));
+        return;
+      }
+      if (method == ComputeMethod.HeadPatch) {
+        AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
+        // get items in order
+        for (RemoteDocumentUpdate update : document.updates) {
+          if (update.seq > seq) {
+            redo.next(update.redo);
           }
-          if (method == ComputeMethod.HeadPatch) {
-            AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
-            // get items in order
-            for (RemoteDocumentUpdate update : document.updates) {
-              if (update.seq > seq) {
-                redo.next(update.redo);
-              }
-            }
-            if (redo.empty()) {
-              callback.failure(
-                  new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_PATCH_NOTHING_TODO));
-              return;
-            }
-            callback.success(new LocalDocumentChange(redo.finish()));
-            return;
+        }
+        if (redo.empty()) {
+          callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_PATCH_NOTHING_TODO));
+          return;
+        }
+        callback.success(new LocalDocumentChange(redo.finish()));
+        return;
+      }
+      if (method == ComputeMethod.Rewind) {
+        Stack<RemoteDocumentUpdate> toUndo = new Stack<>();
+        // get items in order
+        for (RemoteDocumentUpdate update : document.updates) {
+          if (update.seq >= seq) {
+            toUndo.push(update);
           }
-          if (method == ComputeMethod.Rewind) {
-            Stack<RemoteDocumentUpdate> toUndo = new Stack<>();
-            // get items in order
-            for (RemoteDocumentUpdate update : document.updates) {
-              if (update.seq >= seq) {
-                toUndo.push(update);
-              }
-            }
-            // walk them backwards to build appropriate undo
-            AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
-            while (!toUndo.empty()) {
-              undo.next(toUndo.pop().undo);
-            }
-            if (undo.empty()) {
-              callback.failure(
-                  new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
-              return;
-            }
-            callback.success(new LocalDocumentChange(undo.finish()));
-            return;
+        }
+        // walk them backwards to build appropriate undo
+        AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
+        while (!toUndo.empty()) {
+          undo.next(toUndo.pop().undo);
+        }
+        if (undo.empty()) {
+          callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
+          return;
+        }
+        callback.success(new LocalDocumentChange(undo.finish()));
+        return;
+      }
+      if (method == ComputeMethod.Unsend) {
+        RemoteDocumentUpdate start = null;
+        ArrayList<RemoteDocumentUpdate> redos = new ArrayList<>();
+        // get items in order
+        for (RemoteDocumentUpdate update : document.updates) {
+          if (update.seq == seq) {
+            start = update;
+          } else if (update.seq > seq) {
+            redos.add(update);
           }
-          if (method == ComputeMethod.Unsend) {
-            RemoteDocumentUpdate start = null;
-            ArrayList<RemoteDocumentUpdate> redos = new ArrayList<>();
-            // get items in order
-            for (RemoteDocumentUpdate update : document.updates) {
-              if (update.seq == seq) {
-                start = update;
-              } else if (update.seq > seq) {
-                redos.add(update);
-              }
-            }
+        }
 
-            if (start == null) {
-              callback.failure(
-                  new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_UNSEND_FAILED_TO_FIND));
-              return;
-            }
+        if (start == null) {
+          callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_UNSEND_FAILED_TO_FIND));
+          return;
+        }
 
-            AutoMorphicAccumulator<String> unsend =
-                JsonAlgebra.rollUndoForwardAccumulator(start.undo);
-            for (RemoteDocumentUpdate redo : redos) {
-              unsend.next(redo.redo);
-            }
-            callback.success(new LocalDocumentChange(unsend.finish()));
-            return;
-          }
+        AutoMorphicAccumulator<String> unsend = JsonAlgebra.rollUndoForwardAccumulator(start.undo);
+        for (RemoteDocumentUpdate redo : redos) {
+          unsend.next(redo.redo);
+        }
+        callback.success(new LocalDocumentChange(unsend.finish()));
+        return;
+      }
 
-          callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_INVALID_METHOD));
-        });
+      callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_INVALID_METHOD));
+    });
   }
 
   @Override
   public void delete(Key key, Callback<Void> callback) {
-    executor.execute(
-        () -> {
-          InMemoryDocument document = datum.remove(key);
-          if (document == null) {
-            callback.failure(
-                new ErrorCodeException(ErrorCodes.INMEMORY_DATA_DELETE_CANT_FIND_DOCUMENT));
-            return;
-          } else {
-            callback.success(null);
-          }
-        });
+    executor.execute(() -> {
+      InMemoryDocument document = datum.remove(key);
+      if (document == null) {
+        callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_DELETE_CANT_FIND_DOCUMENT));
+        return;
+      } else {
+        callback.success(null);
+      }
+    });
   }
 
   private static class InMemoryDocument {

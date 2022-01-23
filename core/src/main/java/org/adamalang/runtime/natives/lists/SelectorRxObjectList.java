@@ -47,8 +47,7 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
     if (this.finalized == null) {
       finalized = new ArrayList<>();
       if (filter != null) {
-        if (table.document.__monitor != null
-            && table.document.__monitor.shouldMeasureTableColumnIndexEffectiveness()) {
+        if (table.document.__monitor != null && table.document.__monitor.shouldMeasureTableColumnIndexEffectiveness()) {
           final var clause = filter.getIndices();
           final var effectiveness = makeEffectiveness(clause);
           var TOTAL = 0;
@@ -70,8 +69,7 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
           }
           if (columns != null) {
             for (var candidate = 0; candidate < effectiveness.length; candidate++) {
-              table.document.__monitor.registerTableColumnIndexEffectiveness(
-                  table.className, columns[clause[2 * candidate]], TOTAL, effectiveness[candidate]);
+              table.document.__monitor.registerTableColumnIndexEffectiveness(table.className, columns[clause[2 * candidate]], TOTAL, effectiveness[candidate]);
             }
           }
         } else {
@@ -103,8 +101,7 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
     return x;
   }
 
-  private static boolean crazyCandidate(
-      final int[] clause, final int[] value, final int[] effectiveness) {
+  private static boolean crazyCandidate(final int[] clause, final int[] value, final int[] effectiveness) {
     var result = true;
     for (var k = 0; k + 1 < clause.length; k += 2) {
       if (value[clause[k]] != clause[k + 1]) {
@@ -141,8 +138,7 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   }
 
   @Override
-  public <TIn, TOut> NtMap<TIn, TOut> reduce(
-      final Function<Ty, TIn> domain, final Function<NtList<Ty>, TOut> reducer) {
+  public <TIn, TOut> NtMap<TIn, TOut> reduce(final Function<Ty, TIn> domain, final Function<NtList<Ty>, TOut> reducer) {
     ensureFinalized();
     return new ArrayNtList<>(finalized).reduce(domain, reducer);
   }

@@ -75,11 +75,11 @@ public class MeterReducer {
   }
 
   private class PerSpaceReducer {
-    private long sumCPU;
-    private long sumMessages;
     private final ArrayList<Long> memorySamples;
     private final ArrayList<Long> countSamples;
     private final ArrayList<Long> connectionsSamples;
+    private long sumCPU;
+    private long sumMessages;
 
     private PerSpaceReducer() {
       this.sumCPU = 0;

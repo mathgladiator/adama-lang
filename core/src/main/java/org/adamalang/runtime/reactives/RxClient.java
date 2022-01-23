@@ -17,8 +17,7 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
 
 /** a reactive client */
-public class RxClient extends RxBase
-    implements Comparable<RxClient>, CanGetAndSet<NtClient>, Indexable {
+public class RxClient extends RxBase implements Comparable<RxClient>, CanGetAndSet<NtClient>, Indexable {
   private NtClient backup;
   private NtClient value;
 

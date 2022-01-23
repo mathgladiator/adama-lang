@@ -10,4 +10,5 @@
 package org.adamalang.runtime.exceptions;
 
 /** a message was aborted, and must be deleted */
-public class AbortMessageException extends Exception {}
+public class AbortMessageException extends Exception {
+}

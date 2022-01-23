@@ -12,5 +12,5 @@ package org.adamalang.runtime.contracts;
 /** the parent (or data owner) of a reactive data type */
 public interface RxParent {
   /** make this item dirty */
-  public void __raiseDirty();
+  void __raiseDirty();
 }

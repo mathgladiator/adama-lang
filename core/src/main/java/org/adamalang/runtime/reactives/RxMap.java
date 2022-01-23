@@ -21,8 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /** a reactive map */
-public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase
-    implements Iterable<Map.Entry<DomainTy, RangeTy>>, RxParent, RxChild {
+public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase implements Iterable<Map.Entry<DomainTy, RangeTy>>, RxParent, RxChild {
   public final Codec<DomainTy, RangeTy> codec;
   public final LinkedHashMap<DomainTy, RangeTy> deleted;
   public final HashSet<DomainTy> created;
@@ -189,12 +188,12 @@ public class RxMap<DomainTy, RangeTy extends RxBase> extends RxBase
     return objects.size();
   }
 
-  public static interface Codec<DomainTy, RangeTy extends RxBase> {
-    public RangeTy make(RxParent maker);
+  public interface Codec<DomainTy, RangeTy extends RxBase> {
+    RangeTy make(RxParent maker);
 
-    public String toStr(DomainTy key);
+    String toStr(DomainTy key);
 
-    public DomainTy fromStr(String key);
+    DomainTy fromStr(String key);
   }
 
   public abstract static class IntegerCodec<R extends RxBase> implements Codec<Integer, R> {

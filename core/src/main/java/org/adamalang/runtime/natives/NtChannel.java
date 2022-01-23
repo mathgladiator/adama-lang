@@ -25,8 +25,7 @@ public class NtChannel<T> {
   }
 
   /** from a list of options, choose $limit of them */
-  public SimpleFuture<NtMaybe<T>> choose(
-      final NtClient who, final NtMessageBase[] optionsRaw, final int limit) {
+  public SimpleFuture<NtMaybe<T>> choose(final NtClient who, final NtMessageBase[] optionsRaw, final int limit) {
     final var actualLimit = Math.min(limit, optionsRaw.length);
     if (actualLimit == 0) {
       return new SimpleFuture<>(sink.channel, who, new NtMaybe<>());

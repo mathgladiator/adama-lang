@@ -32,10 +32,12 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   }
 
   @Override
-  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {}
+  public void __commit(String name, JsonStreamWriter forwardDelta, JsonStreamWriter reverseDelta) {
+  }
 
   @Override
-  public void __dump(final JsonStreamWriter writer) {}
+  public void __dump(final JsonStreamWriter writer) {
+  }
 
   @Override
   public void __insert(final JsonStreamReader reader) {
@@ -48,7 +50,8 @@ public class RxLazy<Ty> extends RxBase implements RxChild {
   }
 
   @Override
-  public void __revert() {}
+  public void __revert() {
+  }
 
   @Override
   public boolean __raiseInvalid() {

@@ -64,8 +64,7 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
   }
 
   @Override
-  public <TIn, TOut> NtMap<TIn, TOut> reduce(
-      final Function<Ty, TIn> domainExtract, final Function<NtList<Ty>, TOut> reducer) {
+  public <TIn, TOut> NtMap<TIn, TOut> reduce(final Function<Ty, TIn> domainExtract, final Function<NtList<Ty>, TOut> reducer) {
     final var map = new NtMap<TIn, TOut>();
     final var shredded = new TreeMap<TIn, ArrayList<Ty>>();
     for (final Ty item : list) {

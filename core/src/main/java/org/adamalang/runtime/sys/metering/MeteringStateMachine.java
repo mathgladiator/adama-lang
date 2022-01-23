@@ -25,39 +25,31 @@ public class MeteringStateMachine {
   private final HashMap<String, PredictiveInventory.MeteringSample> accum;
   private int at;
 
-  private MeteringStateMachine(
-      DocumentThreadBase[] bases,
-      Consumer<HashMap<String, PredictiveInventory.MeteringSample>> onFinalSampling) {
+  private MeteringStateMachine(DocumentThreadBase[] bases, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> onFinalSampling) {
     this.bases = bases;
     this.at = 0;
     this.onFinalSampling = onFinalSampling;
     this.accum = new HashMap<>();
   }
 
-  public static void estimate(
-      DocumentThreadBase[] bases,
-      LivingDocumentFactoryFactory factory,
-      Consumer<HashMap<String, PredictiveInventory.MeteringSample>> onFinalSampling) {
+  public static void estimate(DocumentThreadBase[] bases, LivingDocumentFactoryFactory factory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> onFinalSampling) {
     new MeteringStateMachine(bases, onFinalSampling).seed(factory.spacesAvailable()).next();
   }
 
   private void next() {
     if (at < bases.length) {
-      bases[at].sampleMetering(
-          (b) -> {
-            for (Map.Entry<String, PredictiveInventory.MeteringSample> entry : b.entrySet()) {
-              PredictiveInventory.MeteringSample prior = accum.get(entry.getKey());
-              if (prior != null) {
-                accum.put(
-                    entry.getKey(),
-                    PredictiveInventory.MeteringSample.add(prior, entry.getValue()));
-              } else {
-                accum.put(entry.getKey(), entry.getValue());
-              }
-            }
-            at++;
-            next();
-          });
+      bases[at].sampleMetering((b) -> {
+        for (Map.Entry<String, PredictiveInventory.MeteringSample> entry : b.entrySet()) {
+          PredictiveInventory.MeteringSample prior = accum.get(entry.getKey());
+          if (prior != null) {
+            accum.put(entry.getKey(), PredictiveInventory.MeteringSample.add(prior, entry.getValue()));
+          } else {
+            accum.put(entry.getKey(), entry.getValue());
+          }
+        }
+        at++;
+        next();
+      });
     } else {
       onFinalSampling.accept(accum);
     }

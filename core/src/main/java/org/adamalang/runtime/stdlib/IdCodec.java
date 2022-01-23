@@ -15,13 +15,8 @@ package org.adamalang.runtime.stdlib;
  * system like S3
  */
 public class IdCodec {
-  private static char[] TABLE_INT_TO_CH =
-      new char[] {
-        'A', 'J', '8', 'N', 'F', 'W', 'S', 'X', '7', 'D', 'Q', 'M', 'R', 'P', 'Y', 'E', 'I', 'O',
-        '3', '5', 'C', 'V', '6', 'B', 'H', 'T', '2', 'U', 'K', 'L', '9', '4', 'G'
-      };
-  ;
-  private static int[] TABLE_CH_TO_INT = buildDecoderTable(TABLE_INT_TO_CH);
+  private static final char[] TABLE_INT_TO_CH = new char[]{'A', 'J', '8', 'N', 'F', 'W', 'S', 'X', '7', 'D', 'Q', 'M', 'R', 'P', 'Y', 'E', 'I', 'O', '3', '5', 'C', 'V', '6', 'B', 'H', 'T', '2', 'U', 'K', 'L', '9', '4', 'G'};
+  private static final int[] TABLE_CH_TO_INT = buildDecoderTable(TABLE_INT_TO_CH);
 
   private static int[] buildDecoderTable(char[] table) {
     int[] decoder = new int[40];

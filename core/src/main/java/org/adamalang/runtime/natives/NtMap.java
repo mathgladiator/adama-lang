@@ -37,15 +37,13 @@ public class NtMap<TIn, TOut> implements Iterable<Map.Entry<TIn, TOut>> {
 
   public NtMaybe<TOut> lookup(final TIn key) {
     final var data = storage.get(key);
-    return new NtMaybe<>(data)
-        .withAssignChain(
-            update -> {
-              if (update == null) {
-                storage.remove(key);
-              } else {
-                storage.put(key, update);
-              }
-            });
+    return new NtMaybe<>(data).withAssignChain(update -> {
+      if (update == null) {
+        storage.remove(key);
+      } else {
+        storage.put(key, update);
+      }
+    });
   }
 
   public Iterable<Map.Entry<TIn, TOut>> entries() {

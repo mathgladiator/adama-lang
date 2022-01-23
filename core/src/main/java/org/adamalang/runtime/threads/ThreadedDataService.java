@@ -30,8 +30,7 @@ public class ThreadedDataService implements DataService {
     this.executors = new ExecutorService[nThread];
     this.services = new DataService[nThread];
     for (int k = 0; k < nThread; k++) {
-      this.executors[k] =
-          Executors.newSingleThreadExecutor(new NamedThreadFactory("dataservice-" + k));
+      this.executors[k] = Executors.newSingleThreadExecutor(new NamedThreadFactory("dataservice-" + k));
       this.services[k] = dataServiceSupplier.get();
     }
   }
@@ -40,11 +39,10 @@ public class ThreadedDataService implements DataService {
     CountDownLatch latch = new CountDownLatch(executors.length);
     for (int k = 0; k < executors.length; k++) {
       ExecutorService executor = executors[k];
-      executor.execute(
-          () -> {
-            executor.shutdown();
-            latch.countDown();
-          });
+      executor.execute(() -> {
+        executor.shutdown();
+        latch.countDown();
+      });
     }
     return latch;
   }
@@ -57,10 +55,9 @@ public class ThreadedDataService implements DataService {
   /** internal: enter an executor for the given key */
   private void at(Key key, Consumer<DataService> next) {
     int tId = key.hashCode() % executors.length;
-    executors[tId].execute(
-        () -> {
-          next.accept(services[tId]);
-        });
+    executors[tId].execute(() -> {
+      next.accept(services[tId]);
+    });
   }
 
   @Override
@@ -74,8 +71,7 @@ public class ThreadedDataService implements DataService {
   }
 
   @Override
-  public void compute(
-      Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
+  public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
     at(key, (service) -> service.compute(key, method, seq, callback));
   }
 

@@ -39,11 +39,6 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
   public final DeploymentPlan plan;
   private final HashMap<String, LivingDocumentFactory> factories;
 
-  @Override
-  public Collection<String> spacesAvailable() {
-    return Collections.singleton(name);
-  }
-
   /**
    * @param spacePrefix - used for debugging by generating a relevant class name
    * @param newClassId - generates a unique number for the class name
@@ -51,8 +46,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
    * @param plan - the plan to compile
    * @throws ErrorCodeException
    */
-  public DeploymentFactory(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan)
-      throws ErrorCodeException {
+  public DeploymentFactory(String name, String spacePrefix, AtomicInteger newClassId, DeploymentFactory prior, DeploymentPlan plan) throws ErrorCodeException {
     this.name = name;
     this.factories = new HashMap<>();
     for (Map.Entry<String, String> entry : plan.versions.entrySet()) {
@@ -72,8 +66,7 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
     this.plan = plan;
   }
 
-  public static LivingDocumentFactory compile(String className, final String code)
-      throws ErrorCodeException {
+  public static LivingDocumentFactory compile(String className, final String code) throws ErrorCodeException {
     try {
       final var options = CompilerOptions.start().make();
       final var globals = GlobalObjectPool.createPoolWithStdLib();
@@ -99,5 +92,10 @@ public class DeploymentFactory implements LivingDocumentFactoryFactory {
   public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
     String versionToUse = plan.pickVersion(key.key);
     callback.success(factories.get(versionToUse));
+  }
+
+  @Override
+  public Collection<String> spacesAvailable() {
+    return Collections.singleton(name);
   }
 }

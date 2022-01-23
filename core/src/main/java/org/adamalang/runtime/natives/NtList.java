@@ -18,28 +18,27 @@ import java.util.function.Function;
 
 /** the core list abstraction */
 public interface NtList<Ty> extends Iterable<Ty> {
-  public void __delete();
+  void __delete();
 
-  public NtList<Ty> get();
+  NtList<Ty> get();
 
-  public NtMaybe<Ty> lookup(int k);
+  NtMaybe<Ty> lookup(int k);
 
-  public void map(Consumer<Ty> t);
+  void map(Consumer<Ty> t);
 
-  public NtList<Ty> orderBy(boolean done, Comparator<Ty> cmp);
+  NtList<Ty> orderBy(boolean done, Comparator<Ty> cmp);
 
-  public <TIn, TOut> NtMap<TIn, TOut> reduce(
-      Function<Ty, TIn> domain, Function<NtList<Ty>, TOut> reducer);
+  <TIn, TOut> NtMap<TIn, TOut> reduce(Function<Ty, TIn> domain, Function<NtList<Ty>, TOut> reducer);
 
-  public NtList<Ty> shuffle(boolean done, Random rng);
+  NtList<Ty> shuffle(boolean done, Random rng);
 
-  public int size();
+  int size();
 
-  public NtList<Ty> skipAndLimit(boolean done, int skip, int limit);
+  NtList<Ty> skipAndLimit(boolean done, int skip, int limit);
 
-  public Ty[] toArray(Function<Integer, Object> arrayMaker);
+  Ty[] toArray(Function<Integer, Object> arrayMaker);
 
-  public <Out> NtList<Out> transform(Function<Ty, Out> t);
+  <Out> NtList<Out> transform(Function<Ty, Out> t);
 
-  public NtList<Ty> where(boolean done, WhereClause<Ty> filter);
+  NtList<Ty> where(boolean done, WhereClause<Ty> filter);
 }
