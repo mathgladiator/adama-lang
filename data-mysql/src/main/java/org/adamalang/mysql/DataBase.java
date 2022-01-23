@@ -53,8 +53,7 @@ public class DataBase implements AutoCloseable {
     }
   }
 
-  public static int walk(Connection connection, SQLConsumer action, String sql)
-      throws SQLException {
+  public static int walk(Connection connection, SQLConsumer action, String sql) throws SQLException {
     int count = 0;
     try (Statement statement = connection.createStatement()) {
       try (ResultSet row = statement.executeQuery(sql)) {
