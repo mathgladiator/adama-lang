@@ -79,19 +79,19 @@ public class DefineDocumentEvent extends Definition {
         case AskCreation:
           environment.document.createError(
               this,
-              String.format("The @can_create handler must return a boolean"),
+              String.format("The 'create' policy must return a boolean"),
               "DocumentEvents");
           return;
         case AskInvention:
           environment.document.createError(
               this,
-              String.format("The @can_invent handler must return a boolean"),
+              String.format("The 'invent' policy must return a boolean"),
               "DocumentEvents");
           return;
         case AskSendWhileDisconnected:
           environment.document.createError(
               this,
-              String.format("The @can_send_while_disconnected handler must return a boolean"),
+              String.format("The 'send' policy must return a boolean"),
               "DocumentEvents");
           return;
         case AskAssetAttachment:

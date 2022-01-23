@@ -9,7 +9,6 @@
  */
 package org.adamalang.runtime.sys;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
@@ -27,15 +26,15 @@ public class ServiceCrashCreationTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG_VAR1 =
-      "@can_create(who) { while(true) {} return true; } @can_invent(who) { while(true) {} return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create(who) { while(true) {} return true; } invent(who) { while(true) {} return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_MSG_VAR2 =
-      "@can_create(who) { for(;;) {} return true; } @can_invent(who) { for(;;) {} return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create(who) { for(;;) {} return true; } invent(who) { for(;;) {} return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_MSG_VAR3 =
-      "@can_create(who) { do {} while (true); return true; } @can_invent(who) { do {} while (true); return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create(who) { do {} while (true); return true; } invent(who) { do {} while (true); return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_MSG_VAR4 =
-      "@can_create(who) { for(;1 < 2;) {} return true; } @can_invent(who) { for(;1 < 2;) {} return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create(who) { for(;1 < 2;) {} return true; } invent(who) { for(;1 < 2;) {} return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String REJECT =
-      "@can_create(who) { return false; } @can_invent(who) { return false; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create(who) { return false; } invent(who) { return false; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
 
   @Test
   public void cant_create_reject() throws Exception {

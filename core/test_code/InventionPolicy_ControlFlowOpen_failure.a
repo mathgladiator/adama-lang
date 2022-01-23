@@ -1,5 +1,7 @@
-@can_invent (who) {
-  if (1 == 2) {
-    return false;
+@static {
+  invent (who) {
+    if (1 == 2) {
+      return false;
+    }
   }
 }

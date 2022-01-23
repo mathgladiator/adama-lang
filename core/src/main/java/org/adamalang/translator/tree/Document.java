@@ -228,6 +228,12 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   @Override
+  public void add(DefineStatic ds) {
+    typeCheckOrder.add((env) -> ds.typing(env));
+    events.addAll(ds.events);
+  }
+
+  @Override
   public void add(final DefineFunction func) {
     functionsDefines.add(func.name);
     if (channelsThatAreFutures.contains(func.name)) {

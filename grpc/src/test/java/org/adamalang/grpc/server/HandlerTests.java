@@ -39,8 +39,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class HandlerTests {
-  private static final String BAD_CODE = "@can_attach(who) { int x = 1; while(true) { x++; } return true; } @attached(who, what) { while(true) {} } @can_create(who) { return true; } @connected(who) { return true; } message M {} channel foo(M y) { while(true) {} }  ";
-  private static final String OK_CODE = "@can_attach(who) { return true; } @attached(who, what) { } @can_create(who) { return true; } @connected(who) { return true; } message M {} channel foo(M y) { }";
+  private static final String BAD_CODE = "@can_attach(who) { int x = 1; while(true) { x++; } return true; } @attached(who, what) { while(true) {} } @static { create(who) { return true; } } @connected(who) { return true; } message M {} channel foo(M y) { while(true) {} }  ";
+  private static final String OK_CODE = "@can_attach(who) { return true; } @attached(who, what) { } @static { create(who) { return true; } } @connected(who) { return true; } message M {} channel foo(M y) { }";
 
   @Test
   public void entropy() {

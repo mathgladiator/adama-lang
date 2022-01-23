@@ -1,5 +1,7 @@
-@can_invent (who) {
-  return true;
+@static {
+  invent (who) {
+    return true;
+  }
 }
 
 message X {}

@@ -65,7 +65,7 @@ public class Environment {
     return new Environment(document, state, null);
   }
 
-  /** get the root environment for the document; this is for static methods like @can_create */
+  /** get the root environment for the document; this is for static methods like @static { create(who) { ... } } */
   public Environment staticPolicy() {
     return new Environment(document, state, null).scopeAsReadOnlyBoundary();
   }

@@ -66,7 +66,9 @@ public class Parser {
   public ArrayList<FunctionArg> arg_list() throws AdamaLangException {
     final var list = new ArrayList<FunctionArg>();
     final var peekCheck = tokens.peek();
-    if (peekCheck == null) { return list; }
+    if (peekCheck == null) {
+      return list;
+    }
     if (peekCheck.isSymbolWithTextEq(")")) {
       return list;
     }
@@ -94,12 +96,17 @@ public class Parser {
     if (token.isSymbolWithTextEq(".")) {
       final var newTail = tokens.pop();
       if (newTail != null) {
+        if (newTail.minorType != MinorTokenType.NumberIsInteger) {
+          throw new ParseException(
+              "Parser was expecting an atomic expression, but got end of stream instead.",
+              tokens.getLastTokenIfAvailable());
+        }
         token =
             Token.mergeAdjacentTokens(
                 token,
                 newTail,
                 newTail.majorType,
-                newTail.minorType == MinorTokenType.NumberIsInteger ? MinorTokenType.NumberIsDouble : newTail.minorType);
+                MinorTokenType.NumberIsDouble);
       }
     }
     if (token.isLabel()) {
@@ -230,7 +237,8 @@ public class Parser {
           commaToken = current;
           current = tokens.pop();
         } else if (!current.isSymbolWithTextEq("}")) {
-          throw new ParseException("Parser expected a `}` or `,`, but instead got `" + current.text + "`", current);
+          throw new ParseException(
+              "Parser expected a `}` or `,`, but instead got `" + current.text + "`", current);
         }
       }
       if (current == null) {
@@ -265,7 +273,9 @@ public class Parser {
     } else if (token.isSymbolWithTextEq("(")) {
       final var expr = expression();
       final var endParen = tokens.pop();
-      if (endParen == null) { throw new ParseException("Parser expected a ), but instead got end of stream.", token); }
+      if (endParen == null) {
+        throw new ParseException("Parser expected a ), but instead got end of stream.", token);
+      }
       if (endParen.isSymbolWithTextEq(")")) {
         return new Parentheses(token, expr, endParen);
       } else {
@@ -414,6 +424,48 @@ public class Parser {
         leftSide, secondPartOfForLoop, !secondPartOfForLoop ? consumeExpectedSymbol(";") : null);
   }
 
+  public Consumer<TopLevelDocumentHandler> define_static(Token staticToken)
+      throws AdamaLangException {
+    var open = consumeExpectedSymbol("{");
+    blackhole_commas(open);
+    ArrayList<Definition> definitions = new ArrayList<>();
+
+    var nextOrClose = tokens.pop();
+    while (!nextOrClose.isSymbolWithTextEq("}")) {
+      if (!nextOrClose.isIdentifier("create", "invent", "send")) {
+        throw new ParseException(
+            "Parser was expecting a static definition. Candidates are create, invent, send",
+            tokens.getLastTokenIfAvailable());
+      }
+      switch (nextOrClose.text) {
+        case "create":
+          {
+            definitions.add(define_document_event_raw(nextOrClose, DocumentEvent.AskCreation));
+            break;
+          }
+        case "invent":
+          {
+            definitions.add(define_document_event_raw(nextOrClose, DocumentEvent.AskInvention));
+            break;
+          }
+        case "send":
+          {
+            definitions.add(
+                define_document_event_raw(nextOrClose, DocumentEvent.AskSendWhileDisconnected));
+            break;
+          }
+      }
+      nextOrClose = tokens.pop();
+      if (nextOrClose == null) {
+        throw new ParseException(
+            "Parser was expecting either a Symbol=} or an Identifer to define a new enum label, but got end of stream instead.",
+            tokens.getLastTokenIfAvailable());
+      }
+    }
+    DefineStatic staticDefn = new DefineStatic(staticToken, open, definitions, nextOrClose);
+    return (handler) -> handler.add(staticDefn);
+  }
+
   public Consumer<TopLevelDocumentHandler> define() throws AdamaLangException {
     // define a state machine transition
     var op = tokens.popIf(Token::isLabel);
@@ -430,10 +482,8 @@ public class Parser {
                     "@connected",
                     "@disconnected",
                     "@attached",
-                    "@can_attach",
-                    "@can_invent",
-                    "@can_send_while_disconnected",
-                    "@can_create"));
+                    "@static",
+                    "@can_attach"));
     if (op == null) {
       op =
           tokens.popIf(
@@ -482,12 +532,8 @@ public class Parser {
           return define_document_event(op, DocumentEvent.AssetAttachment);
         case "@can_attach":
           return define_document_event(op, DocumentEvent.AskAssetAttachment);
-        case "@can_create":
-          return define_document_event(op, DocumentEvent.AskCreation);
-        case "@can_invent":
-          return define_document_event(op, DocumentEvent.AskInvention);
-        case "@can_send_while_disconnected":
-          return define_document_event(op, DocumentEvent.AskSendWhileDisconnected);
+        case "@static":
+          return define_static(op);
         case "import":
           {
             final var importName = tokens.pop();
@@ -552,23 +598,20 @@ public class Parser {
         semicolonToken);
   }
 
-  public Consumer<TopLevelDocumentHandler> define_document_event(
+  public DefineDocumentEvent define_document_event_raw(
       final Token eventToken, final DocumentEvent which) throws AdamaLangException {
     final var openParen = consumeExpectedSymbol("(");
     final var name = id();
     final var commaToken = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
     final var parameterNameToken = commaToken != null ? id() : null;
     final var closeParen = consumeExpectedSymbol(")");
-    final var dce =
-        new DefineDocumentEvent(
-            eventToken,
-            which,
-            openParen,
-            name,
-            commaToken,
-            parameterNameToken,
-            closeParen,
-            block());
+    return new DefineDocumentEvent(
+        eventToken, which, openParen, name, commaToken, parameterNameToken, closeParen, block());
+  }
+
+  public Consumer<TopLevelDocumentHandler> define_document_event(
+      final Token eventToken, final DocumentEvent which) throws AdamaLangException {
+    final var dce = define_document_event_raw(eventToken, which);
     return doc -> doc.add(dce);
   }
 
@@ -801,7 +844,9 @@ public class Parser {
     final var handler = new DefineHandler(channelToken, name);
     final var openParen = consumeExpectedSymbol("(");
     final var nextType = tokens.pop();
-    if (nextType == null) { throw new ParseException("Parser expected a type, but instead got end of stream", openParen); }
+    if (nextType == null) {
+      throw new ParseException("Parser expected a type, but instead got end of stream", openParen);
+    }
     if ("client".equals(nextType.text)) {
       final var clientType = nextType;
       final var clientVar = id();
@@ -1360,7 +1405,10 @@ public class Parser {
           return new PostfixMutate(result, op);
         } else if (op.isSymbolWithTextEq(".")) {
           final var field = tokens.pop();
-          if (field == null) { throw new ParseException("Parser was expecting an identifier, but instead got end of stream.", op); }
+          if (field == null) {
+            throw new ParseException(
+                "Parser was expecting an identifier, but instead got end of stream.", op);
+          }
           result = new FieldLookup(result, op, field);
         } else if (op.isSymbolWithTextEq("[")) {
           final var arg = expression();
@@ -1635,16 +1683,12 @@ public class Parser {
       default:
         final var futureToken = tokens.peek(1);
         if (token.isIdentifier() && futureToken != null) {
-          if (futureToken.isIdentifier("iterate")) { return false; }
           if (futureToken.isIdentifier()) {
             return true;
           }
           if (futureToken.isSymbolWithTextEq("[")) {
             final var futureFutureToken = tokens.peek(2);
-            if (futureFutureToken != null && futureFutureToken.isSymbolWithTextEq("]")) {
-              return true;
-            }
-            return false;
+            return futureFutureToken != null && futureFutureToken.isSymbolWithTextEq("]");
           }
         }
         return false;

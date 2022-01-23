@@ -726,7 +726,7 @@ public class LivingDocumentTests {
 
   @Test
   public void blind_send_with_policy() throws Exception {
-    final var setup = new RealDocumentSetup("@can_send_while_disconnected(who) { return true; } @construct {} @connected(who) { return true; } message M {} channel<M> foo;");
+    final var setup = new RealDocumentSetup("@static { send(who) { return true; } } @construct {} @connected(who) { return true; } message M {} channel<M> foo;");
     setup.document.send(
         NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(3));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(5));

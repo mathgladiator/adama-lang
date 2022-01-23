@@ -1,4 +1,6 @@
-@can_invent (who) {
-  let x = Time.now();
-  return false;
+@static {
+  invent (who) {
+    let x = Time.now();
+    return false;
+  }
 }

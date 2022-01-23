@@ -47,7 +47,7 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BlindSendPolicy_ControlFlowOpen_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":35},\"end\":{\"line\":4,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_send_while_disconnected handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":13},\"end\":{\"line\":5,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'send' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -525,7 +525,7 @@ public class GeneratedBlindSendPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BlindSendPolicy_TimeNotStatic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12},\"end\":{\"line\":2,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":2,\"character\":12},\"end\":{\"line\":2,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

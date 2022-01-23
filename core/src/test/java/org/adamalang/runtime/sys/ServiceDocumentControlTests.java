@@ -9,7 +9,6 @@
  */
 package org.adamalang.runtime.sys;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -26,9 +25,9 @@ public class ServiceDocumentControlTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
-      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }";
+      "@static { create(who) { return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }";
   private static final String SIMPLE_CODE_MSG_PLUS =
-      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); } channel goo(M y) { x++; }";
+      "@static { create(who) { return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); } channel goo(M y) { x++; }";
 
   @Test
   public void rewind() throws Exception {

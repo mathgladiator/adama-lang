@@ -26,7 +26,7 @@ public class ServiceCatastropheTests {
   private static final NtClient BOB = new NtClient("bob", "test");
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
-      "@can_create(who) { return true; } public int x; @connected(who) { x += 1; return true; } @disconnected(who) { x -= 1; } message M {} channel foo(M y) { x += 1000; }";
+      "@static { create(who) { return true; } } public int x; @connected(who) { x += 1; return true; } @disconnected(who) { x -= 1; } message M {} channel foo(M y) { x += 1000; }";
 
   @Test
   public void connect_failures_trigger_reload() throws Exception {

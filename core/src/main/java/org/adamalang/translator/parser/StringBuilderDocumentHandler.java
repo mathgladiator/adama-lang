@@ -119,4 +119,9 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   public void add(DefineRPC rpc) {
     rpc.emit(this);
   }
+
+  @Override
+  public void add(DefineStatic ds) {
+    ds.emit(this);
+  }
 }

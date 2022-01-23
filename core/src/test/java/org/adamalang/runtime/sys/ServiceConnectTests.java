@@ -30,13 +30,13 @@ public class ServiceConnectTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
-      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create(who) { return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_ATTACH =
-      "@can_create(who) { return true; } public int x; @connected(who) { x = 42; return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
+      "@static { create(who) { return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
   private static final String CONNECT_CRASH =
-      "@can_create(who) { return true; } public int x; @connected(who) { x = 1; while(x > 0) { x = 2; } return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
+      "@static { create(who) { return true; } } public int x; @connected(who) { x = 1; while(x > 0) { x = 2; } return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
   private static final String CONNECT_CRASH_2 =
-      "@can_create(who) { return true; } public int x; @connected(who) { transition #crash; return who == @no_one; } #crash { x = 1; while(x > 0) { x = 2; } } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
+      "@static { create(who) { return true; } } public int x; @connected(who) { transition #crash; return who == @no_one; } #crash { x = 1; while(x > 0) { x = 2; } } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
 
   @Test
   public void connect_super_happy_connect() throws Exception {

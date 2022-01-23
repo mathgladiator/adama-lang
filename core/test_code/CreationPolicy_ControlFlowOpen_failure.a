@@ -1,5 +1,7 @@
-@can_create (who) {
-  if (1 == 2) {
-    return false;
+@static {
+  create (who) {
+    if (1 == 2) {
+      return false;
+    }
   }
 }

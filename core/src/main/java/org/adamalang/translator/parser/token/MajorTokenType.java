@@ -34,7 +34,7 @@ public enum MajorTokenType {
   /** is the token hidden from the parse tree */
   public final boolean hidden;
 
-  private MajorTokenType(final boolean hidden) {
+  MajorTokenType(final boolean hidden) {
     this.hidden = hidden;
   }
 }

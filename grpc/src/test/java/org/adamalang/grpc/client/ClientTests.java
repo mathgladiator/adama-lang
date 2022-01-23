@@ -34,7 +34,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12500,
-                 "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       Client client = new Client(bed.identity, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
@@ -163,7 +163,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12500,
-                 "@can_create(who) { return true; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       Client client = new Client(bed.identity, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
         CountDownLatch latch1Failed = new CountDownLatch(1);
@@ -221,7 +221,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12501,
-                 "@can_create(who) { return false; } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       Client client = new Client(bed.identity, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {

@@ -19,35 +19,37 @@ import org.adamalang.translator.tree.types.traits.IsStructure;
 
 /** the Parser will pump these messages */
 public interface TopLevelDocumentHandler {
-  public void add(BubbleDefinition bd);
+  void add(BubbleDefinition bd);
 
-  public void add(DefineConstructor dc);
+  void add(DefineConstructor dc);
 
-  public void add(DefineCustomPolicy customPolicy);
+  void add(DefineCustomPolicy customPolicy);
 
-  public void add(DefineDispatcher dd);
+  void add(DefineDispatcher dd);
 
-  public void add(DefineDocumentEvent dce);
+  void add(DefineDocumentEvent dce);
 
-  public void add(DefineFunction func);
+  void add(DefineFunction func);
 
-  public void add(DefineHandler handler);
+  void add(DefineHandler handler);
 
-  public void add(DefineStateTransition transition);
+  void add(DefineStateTransition transition);
 
-  public void add(DefineTest test);
+  void add(DefineTest test);
 
-  public void add(FieldDefinition fd);
+  void add(FieldDefinition fd);
 
-  public void add(ImportDocument importDocument);
+  void add(ImportDocument importDocument);
 
-  public void add(IsEnum storage);
+  void add(IsEnum storage);
 
-  public void add(IsStructure storage);
+  void add(IsStructure storage);
 
-  public void add(Token token);
+  void add(Token token);
 
-  public void add(AugmentViewerState avs);
+  void add(AugmentViewerState avs);
 
-  public void add(DefineRPC rpc);
+  void add(DefineRPC rpc);
+
+  void add(DefineStatic ds);
 }

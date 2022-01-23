@@ -47,7 +47,7 @@ public class GeneratedInventionPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:InventionPolicy_ControlFlowOpen_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":18},\"end\":{\"line\":4,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_invent handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":15},\"end\":{\"line\":5,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'invent' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -87,7 +87,7 @@ public class GeneratedInventionPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:InventionPolicy_NotSimpleConstructor_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":18},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Invention requires all constructors to not accept messages (INVENT)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":15},\"end\":{\"line\":3,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"Invention requires all constructors to not accept messages (INVENT)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -565,7 +565,7 @@ public class GeneratedInventionPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:InventionPolicy_TimeNotStatic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":12},\"end\":{\"line\":2,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Global 'Time' lacks 'now' (GlobalLookup)\"},{\"range\":{\"start\":{\"line\":2,\"character\":12},\"end\":{\"line\":2,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

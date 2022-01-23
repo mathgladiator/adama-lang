@@ -1,3 +1,5 @@
-@can_send_while_disconnected (who) {
-  return true;
+@static {
+  send (who) {
+    return true;
+  }
 }
