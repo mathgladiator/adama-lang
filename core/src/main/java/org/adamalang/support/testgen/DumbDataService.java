@@ -23,35 +23,35 @@ import java.util.HashSet;
 import java.util.function.Consumer;
 
 public class DumbDataService implements DataService {
-  public static final Callback<PrivateView> NOOPPrivateView =
-      new Callback<PrivateView>() {
+  public static final Callback<PrivateView> NOOPPrivateView = new Callback<PrivateView>() {
 
-        @Override
-        public void success(PrivateView value) {}
+    @Override
+    public void success(PrivateView value) {
+    }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          throw new RuntimeException(ex);
-        }
-      };
-  public static final Callback<Integer> NOOPINT =
-      new Callback<Integer>() {
+    @Override
+    public void failure(ErrorCodeException ex) {
+      throw new RuntimeException(ex);
+    }
+  };
+  public static final Callback<Integer> NOOPINT = new Callback<Integer>() {
 
-        @Override
-        public void success(Integer value) {}
+    @Override
+    public void success(Integer value) {
+    }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          throw new RuntimeException(ex);
-        }
-      };
+    @Override
+    public void failure(ErrorCodeException ex) {
+      throw new RuntimeException(ex);
+    }
+  };
   public final HashSet<Key> deleted;
   public boolean deletesWork = true;
   public boolean computesWork = true;
+  public boolean dropPatches = false;
   private Object tree;
   private String data;
-  private Consumer<RemoteDocumentUpdate> updates;
-  public boolean dropPatches = false;
+  private final Consumer<RemoteDocumentUpdate> updates;
 
   public DumbDataService(Consumer<RemoteDocumentUpdate> updates) {
     this.tree = new HashMap<String, Object>();
@@ -75,7 +75,7 @@ public class DumbDataService implements DataService {
 
   @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    patch(key, new RemoteDocumentUpdate[] { patch }, callback);
+    patch(key, new RemoteDocumentUpdate[]{patch}, callback);
   }
 
   @Override
@@ -92,8 +92,7 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void compute(
-      Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
+  public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
     if (computesWork) {
       if (method == ComputeMethod.Rewind) {
         callback.success(new LocalDocumentChange("{\"x\":1000}"));

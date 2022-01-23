@@ -17,7 +17,7 @@ import java.nio.file.Files;
 import java.util.regex.Pattern;
 
 public class TestClass {
-  private static String WTF = "" + (char) 92;
+  private static final String WTF = "" + (char) 92;
   private final String clazz;
   private final StringBuilder outputFile;
   private int testId;
@@ -29,8 +29,7 @@ public class TestClass {
     outputFile.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
     outputFile.append("package org.adamalang.translator;\n\n");
     outputFile.append("import org.junit.Test;\n\n");
-    outputFile.append(
-        String.format("public class Generated%sTests extends GeneratedBase {\n", clazz));
+    outputFile.append(String.format("public class Generated%sTests extends GeneratedBase {\n", clazz));
   }
 
   public boolean addTest(final TestFile test) throws IOException {
@@ -43,15 +42,7 @@ public class TestClass {
     outputFile.append("    }\n");
     final var correctedPath = "./test_code/" + test.filename();
     final var correctedFile = new File(correctedPath);
-    outputFile.append(
-        String.format(
-            "    cached_"
-                + varName
-                + " = generateTestOutput("
-                + test.success
-                + ", \"%s\", \"%s\");\n",
-            varName,
-            correctedPath));
+    outputFile.append(String.format("    cached_" + varName + " = generateTestOutput(" + test.success + ", \"%s\", \"%s\");\n", varName, correctedPath));
     outputFile.append("    return cached_" + varName + ";\n");
     outputFile.append("  }\n\n");
     if (test.success) {
@@ -89,9 +80,7 @@ public class TestClass {
     outputFile.append("  public void stable_" + varName + "() {\n");
     outputFile.append("    String live = get_" + varName + "();\n");
     outputFile.append("    StringBuilder gold = new StringBuilder();\n");
-    final var gold =
-        TestForge.forge(
-            test.success, varName, correctedFile.toPath(), correctedFile.getParentFile().toPath());
+    final var gold = TestForge.forge(test.success, varName, correctedFile.toPath(), correctedFile.getParentFile().toPath());
     final var lines = gold.split("\n");
     for (var k = 0; k < lines.length; k++) {
       lines[k] = lines[k].stripTrailing();
@@ -109,14 +98,13 @@ public class TestClass {
 
   public static String escapeLine(final String line) {
     return line //
-        .replaceAll(Pattern.quote(WTF), WTF + WTF + WTF + WTF) //
-        .replaceAll("\"", WTF + WTF + "\"") //
-    ;
+                .replaceAll(Pattern.quote(WTF), WTF + WTF + WTF + WTF) //
+                .replaceAll("\"", WTF + WTF + "\"") //
+        ;
   }
 
   public void finish(final File root) throws IOException {
     outputFile.append("}\n");
-    Files.writeString(
-        new File(root, "Generated" + clazz + "Tests.java").toPath(), outputFile.toString());
+    Files.writeString(new File(root, "Generated" + clazz + "Tests.java").toPath(), outputFile.toString());
   }
 }

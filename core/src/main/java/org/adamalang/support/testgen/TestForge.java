@@ -24,8 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 public class TestForge {
-  public static String forge(
-      final boolean emission, final String className, final Path path, final Path inputRoot) {
+  public static String forge(final boolean emission, final String className, final Path path, final Path inputRoot) {
     final var outputFile = new StringBuilder();
     final var passedTests = new AtomicBoolean(true);
     try {
@@ -37,33 +36,13 @@ public class TestForge {
         factory = PhaseCompile.go(className, java, outputFile);
       }
       if (factory != null) {
-        final SilentDocumentMonitor monitor =
-            new SilentDocumentMonitor() {
-              @Override
-              public void assertFailureAt(
-                  final int startLine,
-                  final int startPosition,
-                  final int endLine,
-                  final int endLinePosition,
-                  final int total,
-                  final int failures) {
-                outputFile.append(
-                    "ASSERT FAILURE:"
-                        + startLine
-                        + ","
-                        + startPosition
-                        + " --> "
-                        + endLine
-                        + ","
-                        + endLinePosition
-                        + " ("
-                        + failures
-                        + "/"
-                        + total
-                        + ")\n");
-                passedTests.set(false);
-              }
-            };
+        final SilentDocumentMonitor monitor = new SilentDocumentMonitor() {
+          @Override
+          public void assertFailureAt(final int startLine, final int startPosition, final int endLine, final int endLinePosition, final int total, final int failures) {
+            outputFile.append("ASSERT FAILURE:" + startLine + "," + startPosition + " --> " + endLine + "," + endLinePosition + " (" + failures + "/" + total + ")\n");
+            passedTests.set(false);
+          }
+        };
         PhaseReflect.go(results, outputFile);
         PhaseRun.go(factory, monitor, passedTests, outputFile);
         PhaseTest.go(factory, monitor, passedTests, outputFile);
@@ -81,22 +60,19 @@ public class TestForge {
       outputFile.append("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!").append("\n");
       outputFile.append("!!EXCEPTION!!!!!!!!!!!!!!!!!!").append("\n");
       outputFile.append("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!").append("\n");
-      outputFile
-          .append(String.format("path: %s failed due to to exception", className))
-          .append("\n");
+      outputFile.append(String.format("path: %s failed due to to exception", className)).append("\n");
       final var memory = new ByteArrayOutputStream();
       final var writer = new PrintWriter(memory);
       ioe.printStackTrace(writer);
       writer.flush();
-      outputFile.append(new String(memory.toByteArray())).append("\n");
+      outputFile.append(memory.toString()).append("\n");
     }
-    return outputFile
-        .toString() //
-        .replaceAll(Pattern.quote("\\\\test_code\\\\"), "/test_code/") //
-        .replaceAll(Pattern.quote("\\test_code\\"), "/test_code/") //
-        .replaceAll(Pattern.quote("\\\\\\\\test_code"), "/test_code") //
-        .replaceAll(Pattern.quote("\\\\test_code"), "/test_code") //
-        .replaceAll(Pattern.quote("\\test_code"), "/test_code"); //
+    return outputFile.toString() //
+                     .replaceAll(Pattern.quote("\\\\test_code\\\\"), "/test_code/") //
+                     .replaceAll(Pattern.quote("\\test_code\\"), "/test_code/") //
+                     .replaceAll(Pattern.quote("\\\\\\\\test_code"), "/test_code") //
+                     .replaceAll(Pattern.quote("\\\\test_code"), "/test_code") //
+                     .replaceAll(Pattern.quote("\\test_code"), "/test_code"); //
   }
 
   public static TreeMap<String, TestClass> scan(final File root) throws IOException {
@@ -124,8 +100,7 @@ public class TestForge {
         classMap.put(test.clazz, testClass);
       }
       boolean result = testClass.addTest(test);
-      System.out.println(
-          (test.success == result) ? "\u001b[32mGOOD\u001b[0m" : "\u001b[31mBAD\u001b[0m");
+      System.out.println((test.success == result) ? "\u001b[32mGOOD\u001b[0m" : "\u001b[31mBAD\u001b[0m");
     }
     return classMap;
   }

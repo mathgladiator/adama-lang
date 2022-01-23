@@ -17,8 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class PhaseEmission {
-  public static void go(final String filename, final Path path, final StringBuilder outputFile)
-      throws Exception {
+  public static void go(final String filename, final Path path, final StringBuilder outputFile) throws Exception {
     outputFile.append("--EMISSION-----------------------------------------").append("\n");
     final var esb = new StringBuilderDocumentHandler();
     final var readIn = Files.readString(path);
@@ -28,8 +27,7 @@ public class PhaseEmission {
     report(readIn, esb.builder.toString(), outputFile);
   }
 
-  public static void report(
-      final String readIn, final String result, final StringBuilder outputFile) {
+  public static void report(final String readIn, final String result, final StringBuilder outputFile) {
     if (!result.equals(readIn)) {
       outputFile.append("!!!Emission Failure!!!\n");
       outputFile.append("==========================================================\n");

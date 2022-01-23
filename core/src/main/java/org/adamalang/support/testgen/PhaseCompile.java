@@ -16,8 +16,7 @@ import java.io.PrintStream;
 import java.util.regex.Pattern;
 
 public class PhaseCompile {
-  public static LivingDocumentFactory go(
-      final String className, final String java, final StringBuilder outputFile) throws Exception {
+  public static LivingDocumentFactory go(final String className, final String java, final StringBuilder outputFile) throws Exception {
     final var memoryResultsCompiler = new ByteArrayOutputStream();
     final var ps = new PrintStream(memoryResultsCompiler);
     final var oldErr = System.err;
@@ -31,7 +30,7 @@ public class PhaseCompile {
     } finally {
       ps.flush();
       System.setErr(oldErr);
-      String[] lines = new String(memoryResultsCompiler.toByteArray()).split(Pattern.quote("\n"));
+      String[] lines = memoryResultsCompiler.toString().split(Pattern.quote("\n"));
       for (String lineX : lines) {
         String line = lineX.trim();
         if (!line.contains("Error during class instrumentation") && line.length() > 0) {

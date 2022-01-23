@@ -81,14 +81,11 @@ public class GenerateLanguageTests {
         document.importFile(testFile.toString(), DocumentPosition.ZERO);
         document.setClassName("XClass");
         document.check(state);
-        final var issues =
-            (ArrayList<HashMap<String, Object>>)
-                new JsonStreamReader(document.errorsJson()).readJavaTree();
+        final var issues = (ArrayList<HashMap<String, Object>>) new JsonStreamReader(document.errorsJson()).readJavaTree();
         for (int j = 0; j < issues.size(); j++) {
           writer.print(testFile.toString().replaceAll(Pattern.quote("\\"), "/"));
           HashMap<String, Object> node = issues.get(j);
-          HashMap<String, HashMap<String, Object>> range =
-              (HashMap<String, HashMap<String, Object>>) node.get("range");
+          HashMap<String, HashMap<String, Object>> range = (HashMap<String, HashMap<String, Object>>) node.get("range");
           writer.print(",");
           writer.print(range.get("start").get("line").toString());
           writer.print(",");
@@ -106,6 +103,6 @@ public class GenerateLanguageTests {
       }
     }
     writer.flush();
-    Files.writeString(new File(outputErrorFile).toPath(), new String(memory.toByteArray()));
+    Files.writeString(new File(outputErrorFile).toPath(), memory.toString());
   }
 }
