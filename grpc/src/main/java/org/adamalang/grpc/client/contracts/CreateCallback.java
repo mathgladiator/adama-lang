@@ -30,14 +30,12 @@ public interface CreateCallback {
 
       @Override
       public void onError(Throwable throwable) {
-        callback.error(
-            ErrorCodeException.detectOrWrap(
-                    ErrorCodes.GRPC_CREATE_UNKNOWN_EXCEPTION, throwable, logger)
-                .code);
+        callback.error(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_CREATE_UNKNOWN_EXCEPTION, throwable, logger).code);
       }
 
       @Override
-      public void onCompleted() {}
+      public void onCompleted() {
+      }
     };
   }
 

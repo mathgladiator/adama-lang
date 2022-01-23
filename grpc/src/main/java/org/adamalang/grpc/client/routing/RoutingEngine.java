@@ -27,12 +27,7 @@ public class RoutingEngine {
   private final int broadcastDelayJitter;
   private boolean broadcastInflight;
 
-  public RoutingEngine(
-      ClientMetrics metrics,
-      SimpleExecutor executor,
-      SpaceTrackingEvents events,
-      int broadcastDelayOffset,
-      int broadcastDelayJitter) {
+  public RoutingEngine(ClientMetrics metrics, SimpleExecutor executor, SpaceTrackingEvents events, int broadcastDelayOffset, int broadcastDelayJitter) {
     this.metrics = metrics;
     this.executor = executor;
     this.table = new RoutingTable(events);
@@ -42,88 +37,77 @@ public class RoutingEngine {
   }
 
   public void list(String space, Consumer<TreeSet<String>> callback) {
-    executor.execute(
-        new NamedRunnable("listing-targets") {
-          @Override
-          public void execute() throws Exception {
-            callback.accept(table.targetsFor(space));
-          }
-        });
+    executor.execute(new NamedRunnable("listing-targets") {
+      @Override
+      public void execute() throws Exception {
+        callback.accept(table.targetsFor(space));
+      }
+    });
   }
 
   public void random(Consumer<String> callback) {
-    executor.execute(
-        new NamedRunnable("find-random-target") {
-          @Override
-          public void execute() throws Exception {
-            callback.accept(table.random());
-          }
-        });
+    executor.execute(new NamedRunnable("find-random-target") {
+      @Override
+      public void execute() throws Exception {
+        callback.accept(table.random());
+      }
+    });
   }
 
   public void get(String space, String key, Consumer<String> callback) {
-    executor.execute(
-        new NamedRunnable("get", space, key) {
-          @Override
-          public void execute() throws Exception {
-            callback.accept(table.get(space, key));
-          }
-        });
+    executor.execute(new NamedRunnable("get", space, key) {
+      @Override
+      public void execute() throws Exception {
+        callback.accept(table.get(space, key));
+      }
+    });
   }
 
   public void integrate(String target, Collection<String> newSpaces) {
-    executor.execute(
-        new NamedRunnable("routing-integrate", target) {
-          @Override
-          public void execute() throws Exception {
-            table.integrate(target, newSpaces);
-            scheduleBroadcastWhileInExecutor();
-          }
-        });
+    executor.execute(new NamedRunnable("routing-integrate", target) {
+      @Override
+      public void execute() throws Exception {
+        table.integrate(target, newSpaces);
+        scheduleBroadcastWhileInExecutor();
+      }
+    });
   }
 
   private void scheduleBroadcastWhileInExecutor() {
     if (!broadcastInflight) {
       broadcastInflight = true;
-      executor.schedule(
-          new NamedRunnable("routing-broadcast") {
-            @Override
-            public void execute() throws Exception {
-              table.broadcast();
-              broadcastInflight = false;
-            }
-          },
-          (int) (broadcastDelayOffset + Math.random() * broadcastDelayJitter));
+      executor.schedule(new NamedRunnable("routing-broadcast") {
+        @Override
+        public void execute() throws Exception {
+          table.broadcast();
+          broadcastInflight = false;
+        }
+      }, (int) (broadcastDelayOffset + Math.random() * broadcastDelayJitter));
     }
   }
 
   public void remove(String target) {
-    executor.execute(
-        new NamedRunnable("routing-remove", target) {
-          @Override
-          public void execute() throws Exception {
-            table.remove(target);
-            scheduleBroadcastWhileInExecutor();
-          }
-        });
+    executor.execute(new NamedRunnable("routing-remove", target) {
+      @Override
+      public void execute() throws Exception {
+        table.remove(target);
+        scheduleBroadcastWhileInExecutor();
+      }
+    });
   }
 
   public void subscribe(Key key, Consumer<String> subscriber, Consumer<Runnable> onCancel) {
-    executor.execute(
-        new NamedRunnable("routing-subscribe", key.space, key.key) {
+    executor.execute(new NamedRunnable("routing-subscribe", key.space, key.key) {
+      @Override
+      public void execute() throws Exception {
+        Runnable cancel = table.subscribe(key, subscriber);
+        onCancel.accept(() -> executor.execute(new NamedRunnable("routing-unsubscribe") {
           @Override
           public void execute() throws Exception {
-            Runnable cancel = table.subscribe(key, subscriber);
-            onCancel.accept(
-                () ->
-                    executor.execute(
-                        new NamedRunnable("routing-unsubscribe") {
-                          @Override
-                          public void execute() throws Exception {
-                            cancel.run();
-                          }
-                        }));
+            cancel.run();
           }
-        });
+        }));
+      }
+    });
   }
 }

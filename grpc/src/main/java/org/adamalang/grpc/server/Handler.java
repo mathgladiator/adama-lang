@@ -52,102 +52,72 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
   @Override
   public void create(CreateRequest request, StreamObserver<CreateResponse> responseObserver) {
-    nexus.service.create(
-        new NtClient(request.getAgent(), request.getAuthority()),
-        new Key(request.getSpace(), request.getKey()),
-        request.getArg(),
-        fixEntropy(request.getEntropy()),
-        nexus.metrics.server_create.wrap(
-            new Callback<>() {
-              @Override
-              public void success(Void value) {
-                responseObserver.onNext(CreateResponse.newBuilder().setSuccess(true).build());
-                responseObserver.onCompleted();
-              }
+    nexus.service.create(new NtClient(request.getAgent(), request.getAuthority()), new Key(request.getSpace(), request.getKey()), request.getArg(), fixEntropy(request.getEntropy()), nexus.metrics.server_create.wrap(new Callback<>() {
+      @Override
+      public void success(Void value) {
+        responseObserver.onNext(CreateResponse.newBuilder().setSuccess(true).build());
+        responseObserver.onCompleted();
+      }
 
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responseObserver.onNext(
-                    CreateResponse.newBuilder()
-                        .setSuccess(false)
-                        .setFailureReason(ex.code)
-                        .build());
-                responseObserver.onCompleted();
-              }
-            }));
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responseObserver.onNext(CreateResponse.newBuilder().setSuccess(false).setFailureReason(ex.code).build());
+        responseObserver.onCompleted();
+      }
+    }));
   }
 
   @Override
   public void reflect(ReflectRequest request, StreamObserver<ReflectResponse> responseObserver) {
-    nexus.service.reflect(
-        new Key(request.getSpace(), request.getKey()),
-        nexus.metrics.server_reflect.wrap(
-            new Callback<>() {
-              @Override
-              public void success(String schema) {
-                responseObserver.onNext(ReflectResponse.newBuilder().setSchema(schema).build());
-                responseObserver.onCompleted();
-              }
+    nexus.service.reflect(new Key(request.getSpace(), request.getKey()), nexus.metrics.server_reflect.wrap(new Callback<>() {
+      @Override
+      public void success(String schema) {
+        responseObserver.onNext(ReflectResponse.newBuilder().setSchema(schema).build());
+        responseObserver.onCompleted();
+      }
 
-              @Override
-              public void failure(ErrorCodeException ex) {
-                responseObserver.onError(ex);
-              }
-            }));
+      @Override
+      public void failure(ErrorCodeException ex) {
+        responseObserver.onError(ex);
+      }
+    }));
   }
 
   @Override
-  public StreamObserver<StreamMessageClient> multiplexedProtocol(
-      StreamObserver<StreamMessageServer> responseObserver) {
+  public StreamObserver<StreamMessageClient> multiplexedProtocol(StreamObserver<StreamMessageServer> responseObserver) {
     nexus.metrics.server_handlers_active.up();
     SimpleExecutor executor = executors[rng.nextInt(executors.length)];
     ConcurrentHashMap<Long, LazyCoreStream> streams = new ConcurrentHashMap<>();
     AtomicBoolean alive = new AtomicBoolean(true);
-    responseObserver.onNext(
-        StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
-    nexus.meteringPubSub.subscribe(
-        (bills) -> {
-          if (alive.get()) {
-            ArrayList<String> spaces = new ArrayList<>();
-            for (MeterReading meterReading : bills) {
-              spaces.add(meterReading.space);
-            }
-            executor.execute(
-                new NamedRunnable("handler-send-heartbeat") {
-                  @Override
-                  public void execute() throws Exception {
-                    responseObserver.onNext(
-                        StreamMessageServer.newBuilder()
-                            .setHeartbeat(
-                                InventoryHeartbeat.newBuilder().addAllSpaces(spaces).build())
-                            .build());
-                  }
-                });
+    responseObserver.onNext(StreamMessageServer.newBuilder().setEstablish(Establish.newBuilder().build()).build());
+    nexus.meteringPubSub.subscribe((bills) -> {
+      if (alive.get()) {
+        ArrayList<String> spaces = new ArrayList<>();
+        for (MeterReading meterReading : bills) {
+          spaces.add(meterReading.space);
+        }
+        executor.execute(new NamedRunnable("handler-send-heartbeat") {
+          @Override
+          public void execute() throws Exception {
+            responseObserver.onNext(StreamMessageServer.newBuilder().setHeartbeat(InventoryHeartbeat.newBuilder().addAllSpaces(spaces).build()).build());
           }
-          return alive.get();
         });
+      }
+      return alive.get();
+    });
     return new StreamObserver<>() {
       @Override
       public void onNext(StreamMessageClient payload) {
         if (payload.hasMonitor()) {
-          executor.schedule(
-              new NamedRunnable("measure-heat") {
-                @Override
-                public void execute() throws Exception {
-                  if (alive.get()) {
-                    responseObserver.onNext(
-                        StreamMessageServer.newBuilder()
-                            .setHeat(
-                                HeatPayload.newBuilder()
-                                    .setCpu(MachineHeat.cpu())
-                                    .setMemory(MachineHeat.memory())
-                                    .build())
-                            .build());
-                    executor.schedule(this, 100);
-                  }
-                }
-              },
-              250);
+          executor.schedule(new NamedRunnable("measure-heat") {
+            @Override
+            public void execute() throws Exception {
+              if (alive.get()) {
+                responseObserver.onNext(StreamMessageServer.newBuilder().setHeat(HeatPayload.newBuilder().setCpu(MachineHeat.cpu()).setMemory(MachineHeat.memory()).build()).build());
+                executor.schedule(this, 100);
+              }
+            }
+          }, 250);
           return;
         }
         long id = payload.getId();
@@ -155,337 +125,210 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
         if (payload.hasAct()) {
           stream = streams.get(payload.getAct());
           if (stream == null) {
-            executor.execute(
-                new NamedRunnable("error-no-stream-for-act") {
-                  @Override
-                  public void execute() throws Exception {
-                    responseObserver.onNext(
-                        StreamMessageServer.newBuilder()
-                            .setId(id)
-                            .setError(
-                                StreamError.newBuilder()
-                                    .setCode(
-                                        ErrorCodes
-                                            .GRPC_COMMON_FAILED_TO_FIND_STREAM_USING_GIVEN_ACT)
-                                    .build())
-                            .build());
-                  }
-                });
+            executor.execute(new NamedRunnable("error-no-stream-for-act") {
+              @Override
+              public void execute() throws Exception {
+                responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ErrorCodes.GRPC_COMMON_FAILED_TO_FIND_STREAM_USING_GIVEN_ACT).build()).build());
+              }
+            });
             return;
           }
         }
         switch (payload.getByTypeCase()) {
-          case CONNECT:
-            {
-              nexus.metrics.server_witness_packet_connect.run();
-              StreamConnect connect = payload.getConnect();
-              LazyCoreStream lazy = new LazyCoreStream(executor);
-              streams.put(id, lazy);
-              nexus.service.connect(
-                  new NtClient(connect.getAgent(), connect.getAuthority()),
-                  new Key(connect.getSpace(), connect.getKey()),
-                  new Streamback() {
-                    @Override
-                    public void onSetupComplete(CoreStream stream) {
-                      executor.execute(
-                          new NamedRunnable("connected") {
-                            @Override
-                            public void execute() throws Exception {
-                              if (alive.get()) {
-                                lazy.ready(stream);
-                              } else {
-                                stream.disconnect();
-                              }
-                            }
-                          });
+          case CONNECT: {
+            nexus.metrics.server_witness_packet_connect.run();
+            StreamConnect connect = payload.getConnect();
+            LazyCoreStream lazy = new LazyCoreStream(executor);
+            streams.put(id, lazy);
+            nexus.service.connect(new NtClient(connect.getAgent(), connect.getAuthority()), new Key(connect.getSpace(), connect.getKey()), new Streamback() {
+              @Override
+              public void onSetupComplete(CoreStream stream) {
+                executor.execute(new NamedRunnable("connected") {
+                  @Override
+                  public void execute() throws Exception {
+                    if (alive.get()) {
+                      lazy.ready(stream);
+                    } else {
+                      stream.disconnect();
                     }
+                  }
+                });
+              }
 
-                    @Override
-                    public void status(StreamStatus status) {
-                      StreamStatusCode code =
-                          status == StreamStatus.Connected
-                              ? StreamStatusCode.Connected
-                              : StreamStatusCode.Disconnected;
-                      executor.execute(
-                          new NamedRunnable("handler-send-status") {
-                            @Override
-                            public void execute() throws Exception {
-                              responseObserver.onNext(
-                                  StreamMessageServer.newBuilder()
-                                      .setId(id)
-                                      .setStatus(
-                                          org.adamalang.grpc.proto.StreamStatus.newBuilder()
-                                              .setCode(code)
-                                              .build())
-                                      .build());
-                              if (status == StreamStatus.Disconnected) {
-                                streams.remove(id);
-                              }
-                            }
-                          });
+              @Override
+              public void status(StreamStatus status) {
+                StreamStatusCode code = status == StreamStatus.Connected ? StreamStatusCode.Connected : StreamStatusCode.Disconnected;
+                executor.execute(new NamedRunnable("handler-send-status") {
+                  @Override
+                  public void execute() throws Exception {
+                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setStatus(org.adamalang.grpc.proto.StreamStatus.newBuilder().setCode(code).build()).build());
+                    if (status == StreamStatus.Disconnected) {
+                      streams.remove(id);
                     }
+                  }
+                });
+              }
 
-                    @Override
-                    public void next(String data) {
-                      executor.execute(
-                          new NamedRunnable("handler-send-data") {
-                            @Override
-                            public void execute() throws Exception {
-                              responseObserver.onNext(
-                                  StreamMessageServer.newBuilder()
-                                      .setId(id)
-                                      .setData(StreamData.newBuilder().setDelta(data).build())
-                                      .build());
-                            }
-                          });
-                    }
+              @Override
+              public void next(String data) {
+                executor.execute(new NamedRunnable("handler-send-data") {
+                  @Override
+                  public void execute() throws Exception {
+                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setData(StreamData.newBuilder().setDelta(data).build()).build());
+                  }
+                });
+              }
 
-                    @Override
-                    public void failure(ErrorCodeException exception) {
-                      executor.execute(
-                          new NamedRunnable("handler-send-failure") {
-                            @Override
-                            public void execute() throws Exception {
-                              responseObserver.onNext(
-                                  StreamMessageServer.newBuilder()
-                                      .setId(id)
-                                      .setError(
-                                          StreamError.newBuilder().setCode(exception.code).build())
-                                      .build());
-                              streams.remove(id);
-                            }
-                          });
-                    }
-                  });
-              return;
-            }
-          case ASK:
-            {
-              stream.execute(
-                  new ItemAction<>(
-                      ErrorCodes.GRPC_STREAM_ASK_TIMEOUT,
-                      ErrorCodes.GRPC_STREAM_ASK_REJECTED,
-                      nexus.metrics.server_stream_ask.start()) {
-                    @Override
-                    protected void executeNow(CoreStream stream) {
-                      stream.canAttach(
-                          new Callback<>() {
-                            @Override
-                            public void success(Boolean value) {
-                              executor.execute(
-                                  new NamedRunnable("handler-can-attach-success") {
-                                    @Override
-                                    public void execute() throws Exception {
-                                      responseObserver.onNext(
-                                          StreamMessageServer.newBuilder()
-                                              .setId(id)
-                                              .setResponse(
-                                                  StreamAskAttachmentResponse.newBuilder()
-                                                      .setAllowed(value)
-                                                      .build())
-                                              .build());
-                                    }
-                                  });
-                            }
-
-                            @Override
-                            public void failure(ErrorCodeException ex) {
-                              executor.execute(
-                                  new NamedRunnable("handler-can-attach-failure") {
-                                    @Override
-                                    public void execute() throws Exception {
-                                      responseObserver.onNext(
-                                          StreamMessageServer.newBuilder()
-                                              .setId(id)
-                                              .setError(
-                                                  StreamError.newBuilder().setCode(ex.code).build())
-                                              .build());
-                                    }
-                                  });
-                            }
-                          });
-                    }
-
-                    @Override
-                    protected void failure(int code) {
-                      executor.execute(
-                          new NamedRunnable("handler-can-attach-failure-queue") {
-                            @Override
-                            public void execute() throws Exception {
-                              responseObserver.onNext(
-                                  StreamMessageServer.newBuilder()
-                                      .setId(id)
-                                      .setError(StreamError.newBuilder().setCode(code).build())
-                                      .build());
-                            }
-                          });
-                    }
-                  });
-
-              return;
-            }
-          case ATTACH:
-            {
-              StreamAttach attach = payload.getAttach();
-              NtAsset asset =
-                  new NtAsset(
-                      attach.getId(),
-                      attach.getFilename(),
-                      attach.getContentType(),
-                      attach.getSize(),
-                      attach.getMd5(),
-                      attach.getSha384());
-              stream.execute(
-                  new ItemAction<CoreStream>(
-                      ErrorCodes.GRPC_STREAM_ATTACH_TIMEOUT,
-                      ErrorCodes.GRPC_STREAM_ATTACH_REJECTED,
-                      nexus.metrics.server_stream_attach.start()) {
-                    @Override
-                    protected void executeNow(CoreStream stream) {
-                      stream.attach(
-                          asset,
-                          new Callback<>() {
-                            @Override
-                            public void success(Integer value) {
-                              executor.execute(
-                                  new NamedRunnable("handler-attach-success") {
-                                    @Override
-                                    public void execute() throws Exception {
-                                      responseObserver.onNext(
-                                          StreamMessageServer.newBuilder()
-                                              .setId(id)
-                                              .setResult(
-                                                  StreamSeqResult.newBuilder()
-                                                      .setSeq(value)
-                                                      .build())
-                                              .build());
-                                    }
-                                  });
-                            }
-
-                            @Override
-                            public void failure(ErrorCodeException ex) {
-                              executor.execute(
-                                  new NamedRunnable("handler-attach-failure") {
-                                    @Override
-                                    public void execute() throws Exception {
-                                      responseObserver.onNext(
-                                          StreamMessageServer.newBuilder()
-                                              .setId(id)
-                                              .setError(
-                                                  StreamError.newBuilder().setCode(ex.code).build())
-                                              .build());
-                                    }
-                                  });
-                            }
-                          });
-                    }
-
-                    @Override
-                    protected void failure(int code) {
-                      executor.execute(
-                          new NamedRunnable("handler-attach-failure-queue") {
-                            @Override
-                            public void execute() throws Exception {
-                              responseObserver.onNext(
-                                  StreamMessageServer.newBuilder()
-                                      .setId(id)
-                                      .setError(StreamError.newBuilder().setCode(code).build())
-                                      .build());
-                            }
-                          });
-                    }
-                  });
-              return;
-            }
-          case SEND:
-            {
-              stream.execute(
-                  new ItemAction<CoreStream>(
-                      ErrorCodes.GRPC_STREAM_SEND_TIMEOUT,
-                      ErrorCodes.GRPC_STREAM_SEND_REJECTED,
-                      nexus.metrics.server_stream_send.start()) {
-                    @Override
-                    protected void executeNow(CoreStream stream) {
-                      StreamSend send = payload.getSend();
-                      String marker = null;
-                      if (send.hasMarker()) {
-                        marker = send.getMarker();
+              @Override
+              public void failure(ErrorCodeException exception) {
+                executor.execute(new NamedRunnable("handler-send-failure") {
+                  @Override
+                  public void execute() throws Exception {
+                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(exception.code).build()).build());
+                    streams.remove(id);
+                  }
+                });
+              }
+            });
+            return;
+          }
+          case ASK: {
+            stream.execute(new ItemAction<>(ErrorCodes.GRPC_STREAM_ASK_TIMEOUT, ErrorCodes.GRPC_STREAM_ASK_REJECTED, nexus.metrics.server_stream_ask.start()) {
+              @Override
+              protected void executeNow(CoreStream stream) {
+                stream.canAttach(new Callback<>() {
+                  @Override
+                  public void success(Boolean value) {
+                    executor.execute(new NamedRunnable("handler-can-attach-success") {
+                      @Override
+                      public void execute() throws Exception {
+                        responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResponse(StreamAskAttachmentResponse.newBuilder().setAllowed(value).build()).build());
                       }
-                      stream.send(
-                          send.getChannel(),
-                          marker,
-                          send.getMessage(),
-                          new Callback<>() {
-                            @Override
-                            public void success(Integer value) {
-                              executor.execute(
-                                  new NamedRunnable("stream-send-success") {
-                                    @Override
-                                    public void execute() throws Exception {
-                                      responseObserver.onNext(
-                                          StreamMessageServer.newBuilder()
-                                              .setId(id)
-                                              .setResult(
-                                                  StreamSeqResult.newBuilder()
-                                                      .setSeq(value)
-                                                      .build())
-                                              .build());
-                                    }
-                                  });
-                            }
+                    });
+                  }
 
-                            @Override
-                            public void failure(ErrorCodeException exception) {
-                              executor.execute(
-                                  new NamedRunnable("stream-send-failure") {
-                                    @Override
-                                    public void execute() throws Exception {
-                                      responseObserver.onNext(
-                                          StreamMessageServer.newBuilder()
-                                              .setId(id)
-                                              .setError(
-                                                  StreamError.newBuilder()
-                                                      .setCode(exception.code)
-                                                      .build())
-                                              .build());
-                                    }
-                                  });
-                            }
-                          });
-                    }
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    executor.execute(new NamedRunnable("handler-can-attach-failure") {
+                      @Override
+                      public void execute() throws Exception {
+                        responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ex.code).build()).build());
+                      }
+                    });
+                  }
+                });
+              }
 
-                    @Override
-                    protected void failure(int code) {
-                      executor.execute(
-                          new NamedRunnable("stream-send-failure-queue") {
-                            @Override
-                            public void execute() throws Exception {
-                              responseObserver.onNext(
-                                  StreamMessageServer.newBuilder()
-                                      .setId(id)
-                                      .setError(StreamError.newBuilder().setCode(code).build())
-                                      .build());
-                            }
-                          });
-                    }
-                  });
+              @Override
+              protected void failure(int code) {
+                executor.execute(new NamedRunnable("handler-can-attach-failure-queue") {
+                  @Override
+                  public void execute() throws Exception {
+                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(code).build()).build());
+                  }
+                });
+              }
+            });
 
-              return;
-            }
-          case DISCONNECT:
-            {
-              streams.remove(payload.getAct());
-              LazyCoreStream _stream = stream;
-              executor.execute(
-                  new NamedRunnable("stream-send-failure-queue") {
-                    @Override
-                    public void execute() throws Exception {
-                      _stream.kill();
-                    }
-                  });
-              return;
-            }
+            return;
+          }
+          case ATTACH: {
+            StreamAttach attach = payload.getAttach();
+            NtAsset asset = new NtAsset(attach.getId(), attach.getFilename(), attach.getContentType(), attach.getSize(), attach.getMd5(), attach.getSha384());
+            stream.execute(new ItemAction<CoreStream>(ErrorCodes.GRPC_STREAM_ATTACH_TIMEOUT, ErrorCodes.GRPC_STREAM_ATTACH_REJECTED, nexus.metrics.server_stream_attach.start()) {
+              @Override
+              protected void executeNow(CoreStream stream) {
+                stream.attach(asset, new Callback<>() {
+                  @Override
+                  public void success(Integer value) {
+                    executor.execute(new NamedRunnable("handler-attach-success") {
+                      @Override
+                      public void execute() throws Exception {
+                        responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResult(StreamSeqResult.newBuilder().setSeq(value).build()).build());
+                      }
+                    });
+                  }
+
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    executor.execute(new NamedRunnable("handler-attach-failure") {
+                      @Override
+                      public void execute() throws Exception {
+                        responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(ex.code).build()).build());
+                      }
+                    });
+                  }
+                });
+              }
+
+              @Override
+              protected void failure(int code) {
+                executor.execute(new NamedRunnable("handler-attach-failure-queue") {
+                  @Override
+                  public void execute() throws Exception {
+                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(code).build()).build());
+                  }
+                });
+              }
+            });
+            return;
+          }
+          case SEND: {
+            stream.execute(new ItemAction<CoreStream>(ErrorCodes.GRPC_STREAM_SEND_TIMEOUT, ErrorCodes.GRPC_STREAM_SEND_REJECTED, nexus.metrics.server_stream_send.start()) {
+              @Override
+              protected void executeNow(CoreStream stream) {
+                StreamSend send = payload.getSend();
+                String marker = null;
+                if (send.hasMarker()) {
+                  marker = send.getMarker();
+                }
+                stream.send(send.getChannel(), marker, send.getMessage(), new Callback<>() {
+                  @Override
+                  public void success(Integer value) {
+                    executor.execute(new NamedRunnable("stream-send-success") {
+                      @Override
+                      public void execute() throws Exception {
+                        responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setResult(StreamSeqResult.newBuilder().setSeq(value).build()).build());
+                      }
+                    });
+                  }
+
+                  @Override
+                  public void failure(ErrorCodeException exception) {
+                    executor.execute(new NamedRunnable("stream-send-failure") {
+                      @Override
+                      public void execute() throws Exception {
+                        responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(exception.code).build()).build());
+                      }
+                    });
+                  }
+                });
+              }
+
+              @Override
+              protected void failure(int code) {
+                executor.execute(new NamedRunnable("stream-send-failure-queue") {
+                  @Override
+                  public void execute() throws Exception {
+                    responseObserver.onNext(StreamMessageServer.newBuilder().setId(id).setError(StreamError.newBuilder().setCode(code).build()).build());
+                  }
+                });
+              }
+            });
+
+            return;
+          }
+          case DISCONNECT: {
+            streams.remove(payload.getAct());
+            LazyCoreStream _stream = stream;
+            executor.execute(new NamedRunnable("stream-send-failure-queue") {
+              @Override
+              public void execute() throws Exception {
+                _stream.kill();
+              }
+            });
+            return;
+          }
         }
       }
 
@@ -501,24 +344,22 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
           nexus.metrics.server_handlers_active.down();
           alive.set(false);
         }
-        executor.execute(
-            new NamedRunnable("stream-on-completed") {
-              @Override
-              public void execute() throws Exception {
-                for (LazyCoreStream stream : streams.values()) {
-                  stream.kill();
-                }
-                streams.clear();
-                responseObserver.onCompleted();
-              }
-            });
+        executor.execute(new NamedRunnable("stream-on-completed") {
+          @Override
+          public void execute() throws Exception {
+            for (LazyCoreStream stream : streams.values()) {
+              stream.kill();
+            }
+            streams.clear();
+            responseObserver.onCompleted();
+          }
+        });
       }
     };
   }
 
   @Override
-  public void scanDeployments(
-      ScanDeploymentsRequest request, StreamObserver<ScanDeploymentsResponse> responseObserver) {
+  public void scanDeployments(ScanDeploymentsRequest request, StreamObserver<ScanDeploymentsResponse> responseObserver) {
     try {
       nexus.scanForDeployments.accept(request.getSpace());
       responseObserver.onNext(ScanDeploymentsResponse.newBuilder().build());
@@ -530,50 +371,36 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   }
 
   @Override
-  public StreamObserver<BillingForward> billingExchange(
-      StreamObserver<BillingReverse> responseObserver) {
+  public StreamObserver<BillingForward> billingExchange(StreamObserver<BillingReverse> responseObserver) {
     SimpleExecutor executor = executors[rng.nextInt(executors.length)];
     return new StreamObserver<BillingForward>() {
       private boolean sentComplete = false;
 
       @Override
       public void onNext(BillingForward billingForward) {
-        executor.execute(
-            new NamedRunnable("processing-billing-next") {
-              @Override
-              public void execute() throws Exception {
-                switch (billingForward.getOperationCase()) {
-                  case BEGIN:
-                    {
-                      String id = nexus.billingBatchMaker.getNextAvailableBatchId();
-                      if (id != null) {
-                        String batch = nexus.billingBatchMaker.getBatch(id);
-                        responseObserver.onNext(
-                            BillingReverse.newBuilder()
-                                .setFound(
-                                    BillingBatchFound.newBuilder()
-                                        .setId(id)
-                                        .setBatch(batch)
-                                        .build())
-                                .build());
-                      } else {
-                        sendCompleteWhileInExecutor();
-                      }
-                      return;
-                    }
-                  case REMOVE:
-                    {
-                      BillingDeleteBill deleteBill = billingForward.getRemove();
-                      nexus.billingBatchMaker.deleteBatch(deleteBill.getId());
-                      responseObserver.onNext(
-                          BillingReverse.newBuilder()
-                              .setRemoved(BillingBatchRemoved.newBuilder().build())
-                              .build());
-                      return;
-                    }
+        executor.execute(new NamedRunnable("processing-billing-next") {
+          @Override
+          public void execute() throws Exception {
+            switch (billingForward.getOperationCase()) {
+              case BEGIN: {
+                String id = nexus.billingBatchMaker.getNextAvailableBatchId();
+                if (id != null) {
+                  String batch = nexus.billingBatchMaker.getBatch(id);
+                  responseObserver.onNext(BillingReverse.newBuilder().setFound(BillingBatchFound.newBuilder().setId(id).setBatch(batch).build()).build());
+                } else {
+                  sendCompleteWhileInExecutor();
                 }
+                return;
               }
-            });
+              case REMOVE: {
+                BillingDeleteBill deleteBill = billingForward.getRemove();
+                nexus.billingBatchMaker.deleteBatch(deleteBill.getId());
+                responseObserver.onNext(BillingReverse.newBuilder().setRemoved(BillingBatchRemoved.newBuilder().build()).build());
+                return;
+              }
+            }
+          }
+        });
       }
 
       private void sendCompleteWhileInExecutor() {
@@ -591,13 +418,12 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
       @Override
       public void onCompleted() {
-        executor.execute(
-            new NamedRunnable("processing-client-closed") {
-              @Override
-              public void execute() throws Exception {
-                sendCompleteWhileInExecutor();
-              }
-            });
+        executor.execute(new NamedRunnable("processing-client-closed") {
+          @Override
+          public void execute() throws Exception {
+            sendCompleteWhileInExecutor();
+          }
+        });
       }
     };
   }

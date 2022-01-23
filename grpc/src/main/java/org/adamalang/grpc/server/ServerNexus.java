@@ -28,16 +28,7 @@ public class ServerNexus {
   public final int port;
   public final int handlerThreads;
 
-  public ServerNexus(
-      MachineIdentity identity,
-      CoreService service,
-      ServerMetrics metrics,
-      DeploymentFactoryBase deploymentFactoryBase,
-      Consumer<String> scanForDeployments,
-      MeteringPubSub meteringPubSub,
-      DiskMeteringBatchMaker billingBatchMaker,
-      int port,
-      int handlerThreads) {
+  public ServerNexus(MachineIdentity identity, CoreService service, ServerMetrics metrics, DeploymentFactoryBase deploymentFactoryBase, Consumer<String> scanForDeployments, MeteringPubSub meteringPubSub, DiskMeteringBatchMaker billingBatchMaker, int port, int handlerThreads) {
     this.identity = identity;
     this.service = service;
     this.metrics = metrics;

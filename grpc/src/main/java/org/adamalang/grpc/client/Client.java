@@ -36,31 +36,20 @@ public class Client {
   public Client(MachineIdentity identity, ClientMetrics metrics, HeatMonitor monitor) {
     this.metrics = metrics;
     this.routingExecutor = SimpleExecutor.create("routing");
-    this.engine =
-        new RoutingEngine(
-            metrics,
-            routingExecutor,
-            new SpaceTrackingEvents() {
-              @Override
-              public void gainInterestInSpace(String space) {}
+    this.engine = new RoutingEngine(metrics, routingExecutor, new SpaceTrackingEvents() {
+      @Override
+      public void gainInterestInSpace(String space) {
+      }
 
-              @Override
-              public void shareTargetsFor(String space, Set<String> targets) {}
+      @Override
+      public void shareTargetsFor(String space, Set<String> targets) {
+      }
 
-              @Override
-              public void lostInterestInSpace(String space) {}
-            },
-            250,
-            250);
-    this.finder =
-        new InstanceClientFinder(
-            metrics,
-            monitor,
-            identity,
-            SimpleExecutorFactory.DEFAULT,
-            4,
-            engine,
-            ExceptionLogger.FOR(Client.class));
+      @Override
+      public void lostInterestInSpace(String space) {
+      }
+    }, 250, 250);
+    this.finder = new InstanceClientFinder(metrics, monitor, identity, SimpleExecutorFactory.DEFAULT, 4, engine, ExceptionLogger.FOR(Client.class));
     this.executors = SimpleExecutorFactory.DEFAULT.makeMany("connections", 2);
     this.rng = new Random();
   }
@@ -70,72 +59,57 @@ public class Client {
   }
 
   public void getDeploymentTargets(String space, Consumer<String> stream) {
-    engine.list(
-        space,
-        targets ->
-            finder.findCapacity(
-                targets,
-                (set) -> {
-                  for (String target : set) {
-                    stream.accept(target);
-                  }
-                },
-                3));
+    engine.list(space, targets -> finder.findCapacity(targets, (set) -> {
+      for (String target : set) {
+        stream.accept(target);
+      }
+    }, 3));
   }
 
   public void notifyDeployment(String target, String space) {
-    ItemActionMonitor.ItemActionMonitorInstance mInstance =
-        metrics.client_notify_deployment.start();
-    finder.find(
-        target,
-        new ItemAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED, mInstance) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_notify_deployment.start();
+    finder.find(target, new ItemAction<>(ErrorCodes.API_DEPLOY_TIMEOUT, ErrorCodes.API_DEPLOY_REJECTED, mInstance) {
+      @Override
+      protected void executeNow(InstanceClient client) {
+        client.scanDeployments(space, new ScanDeploymentCallback() {
           @Override
-          protected void executeNow(InstanceClient client) {
-            client.scanDeployments(
-                space,
-                new ScanDeploymentCallback() {
-                  @Override
-                  public void success() {
-                    metrics.client_notify_deploy_success.run();
-                  }
-
-                  @Override
-                  public void failure() {
-                    metrics.client_notify_deploy_failure_do.run();
-                  }
-                });
+          public void success() {
+            metrics.client_notify_deploy_success.run();
           }
 
           @Override
-          protected void failure(int code) {
-            metrics.client_notify_deploy_failure_find.run();
+          public void failure() {
+            metrics.client_notify_deploy_failure_do.run();
           }
         });
+      }
+
+      @Override
+      protected void failure(int code) {
+        metrics.client_notify_deploy_failure_find.run();
+      }
+    });
   }
 
   public void randomBillingExchange(BillingStream billing) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_billing_exchange.start();
-    engine.random(
-        target -> {
-          if (target != null) {
-            finder.find(
-                target,
-                new ItemAction<InstanceClient>(
-                    ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED, mInstance) {
-                  @Override
-                  protected void executeNow(InstanceClient item) {
-                    item.startBillingExchange(billing);
-                  }
+    engine.random(target -> {
+      if (target != null) {
+        finder.find(target, new ItemAction<InstanceClient>(ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED, mInstance) {
+          @Override
+          protected void executeNow(InstanceClient item) {
+            item.startBillingExchange(billing);
+          }
 
-                  @Override
-                  protected void failure(int code) {
-                    billing.failure(code);
-                  }
-                });
-          } else {
-            billing.failure(ErrorCodes.API_BILLING_FAILED_FINDING_RANDOM_HOST);
+          @Override
+          protected void failure(int code) {
+            billing.failure(code);
           }
         });
+      } else {
+        billing.failure(ErrorCodes.API_BILLING_FAILED_FINDING_RANDOM_HOST);
+      }
+    });
   }
 
   public Consumer<Collection<String>> getTargetPublisher() {
@@ -144,82 +118,58 @@ public class Client {
 
   public void reflect(String space, String key, Callback<String> callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_reflection.start();
-    engine.get(
-        space,
-        key,
-        (target) -> {
-          if (target != null) {
-            finder.find(
-                target,
-                new ItemAction<>(
-                    ErrorCodes.API_REFLECT_TIMEOUT, ErrorCodes.API_REFLECT_REJECTED, mInstance) {
-                  @Override
-                  protected void executeNow(InstanceClient client) {
-                    client.reflect(
-                        space,
-                        key,
-                        new Callback<String>() {
-                          @Override
-                          public void success(String value) {
-                            callback.success(value);
-                          }
+    engine.get(space, key, (target) -> {
+      if (target != null) {
+        finder.find(target, new ItemAction<>(ErrorCodes.API_REFLECT_TIMEOUT, ErrorCodes.API_REFLECT_REJECTED, mInstance) {
+          @Override
+          protected void executeNow(InstanceClient client) {
+            client.reflect(space, key, new Callback<String>() {
+              @Override
+              public void success(String value) {
+                callback.success(value);
+              }
 
-                          @Override
-                          public void failure(ErrorCodeException ex) {
-                            callback.failure(ex);
-                          }
-                        });
-                  }
+              @Override
+              public void failure(ErrorCodeException ex) {
+                callback.failure(ex);
+              }
+            });
+          }
 
-                  @Override
-                  protected void failure(int code) {
-                    callback.failure(new ErrorCodeException(code));
-                  }
-                });
-          } else {
-            callback.failure(new ErrorCodeException(ErrorCodes.API_REFLECT_CANT_FIND_CAPACITY));
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
           }
         });
+      } else {
+        callback.failure(new ErrorCodeException(ErrorCodes.API_REFLECT_CANT_FIND_CAPACITY));
+      }
+    });
   }
 
-  public void create(
-      String agent,
-      String authority,
-      String space,
-      String key,
-      String entropy,
-      String arg,
-      CreateCallback callback) {
+  public void create(String agent, String authority, String space, String key, String entropy, String arg, CreateCallback callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_create.start();
-    engine.get(
-        space,
-        key,
-        (target) -> {
-          if (target != null) {
-            finder.find(
-                target,
-                new ItemAction<>(
-                    ErrorCodes.API_CREATE_TIMEOUT, ErrorCodes.API_CREATE_REJECTED, mInstance) {
-                  @Override
-                  protected void executeNow(InstanceClient client) {
-                    client.create(agent, authority, space, key, entropy, arg, callback);
-                  }
+    engine.get(space, key, (target) -> {
+      if (target != null) {
+        finder.find(target, new ItemAction<>(ErrorCodes.API_CREATE_TIMEOUT, ErrorCodes.API_CREATE_REJECTED, mInstance) {
+          @Override
+          protected void executeNow(InstanceClient client) {
+            client.create(agent, authority, space, key, entropy, arg, callback);
+          }
 
-                  @Override
-                  protected void failure(int code) {
-                    callback.error(code);
-                  }
-                });
-          } else {
-            callback.error(ErrorCodes.API_CREATE_CANT_FIND_CAPACITY);
+          @Override
+          protected void failure(int code) {
+            callback.error(code);
           }
         });
+      } else {
+        callback.error(ErrorCodes.API_CREATE_CANT_FIND_CAPACITY);
+      }
+    });
   }
 
-  public Connection connect(
-      String agent, String authority, String space, String key, SimpleEvents events) {
-    ConnectionBase base =
-        new ConnectionBase(metrics, engine, finder, executors[rng.nextInt(executors.length)]);
+  public Connection connect(String agent, String authority, String space, String key, SimpleEvents events) {
+    ConnectionBase base = new ConnectionBase(metrics, engine, finder, executors[rng.nextInt(executors.length)]);
     Connection connection = new Connection(base, agent, authority, space, key, events);
     connection.open();
     return connection;

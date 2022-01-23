@@ -26,7 +26,8 @@ public interface ScanDeploymentCallback {
       }
 
       @Override
-      public void onCompleted() {}
+      public void onCompleted() {
+      }
     };
   }
 

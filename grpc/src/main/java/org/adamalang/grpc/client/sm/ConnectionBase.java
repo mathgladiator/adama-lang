@@ -28,11 +28,7 @@ public class ConnectionBase {
   // how we handle thread safety and time
   public final SimpleExecutor executor;
 
-  public ConnectionBase(
-      ClientMetrics metrics,
-      RoutingEngine engine,
-      InstanceClientFinder mesh,
-      SimpleExecutor executor) {
+  public ConnectionBase(ClientMetrics metrics, RoutingEngine engine, InstanceClientFinder mesh, SimpleExecutor executor) {
     this.metrics = metrics;
     this.engine = engine;
     this.mesh = mesh;
