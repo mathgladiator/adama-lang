@@ -424,6 +424,13 @@ public class Parser {
         leftSide, secondPartOfForLoop, !secondPartOfForLoop ? consumeExpectedSymbol(";") : null);
   }
 
+  public DocumentConfig define_config(final Token nameToken) throws AdamaLangException {
+    final var equals = consumeExpectedSymbol("=");
+    final var expr = expression();
+    final var semicolon = consumeExpectedSymbol(";");
+    return new DocumentConfig(nameToken, equals, expr, semicolon);
+  }
+
   public Consumer<TopLevelDocumentHandler> define_static(Token staticToken)
       throws AdamaLangException {
     var open = consumeExpectedSymbol("{");
@@ -432,28 +439,25 @@ public class Parser {
 
     var nextOrClose = tokens.pop();
     while (!nextOrClose.isSymbolWithTextEq("}")) {
-      if (!nextOrClose.isIdentifier("create", "invent", "send")) {
+      if (!nextOrClose.isIdentifier("create", "invent", "send", "maximum_history")) {
         throw new ParseException(
             "Parser was expecting a static definition. Candidates are create, invent, send",
             tokens.getLastTokenIfAvailable());
       }
       switch (nextOrClose.text) {
         case "create":
-          {
             definitions.add(define_document_event_raw(nextOrClose, DocumentEvent.AskCreation));
             break;
-          }
         case "invent":
-          {
             definitions.add(define_document_event_raw(nextOrClose, DocumentEvent.AskInvention));
             break;
-          }
         case "send":
-          {
             definitions.add(
                 define_document_event_raw(nextOrClose, DocumentEvent.AskSendWhileDisconnected));
             break;
-          }
+        case "maximum_history":
+            definitions.add(define_config(nextOrClose));
+            break;
       }
       nextOrClose = tokens.pop();
       if (nextOrClose == null) {

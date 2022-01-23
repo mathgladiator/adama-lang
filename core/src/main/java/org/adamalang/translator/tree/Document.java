@@ -24,6 +24,7 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.*;
+import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
@@ -67,6 +68,7 @@ public class Document implements TopLevelDocumentHandler {
   private final ArrayList<Consumer<Environment>> typeCheckOrder;
   private int autoClassId;
   private String className;
+  public final HashMap<String, Expression> configs;
 
   public Document() {
     autoClassId = 0;
@@ -92,6 +94,7 @@ public class Document implements TopLevelDocumentHandler {
     functionDefinitions = new ArrayList<>();
     functionTypes = new HashMap<>();
     functionsDefines = new HashSet<>();
+    configs = new HashMap<>();
     viewerType =
         new TyNativeMessage(
             TypeBehavior.ReadOnlyNativeValue,
@@ -231,6 +234,9 @@ public class Document implements TopLevelDocumentHandler {
   public void add(DefineStatic ds) {
     typeCheckOrder.add((env) -> ds.typing(env));
     events.addAll(ds.events);
+    for (DocumentConfig config : ds.configs) {
+      configs.put(config.name.text, config.value);
+    }
   }
 
   @Override
@@ -569,6 +575,7 @@ public class Document implements TopLevelDocumentHandler {
     CodeGenMessageHandling.writeMessageHandlers(sb, environment);
     CodeGenStateMachine.writeStateMachine(sb, environment);
     CodeGenEventHandlers.writeEventHandlers(sb, environment);
+    CodeGenConfig.writeConfig(sb, environment);
     CodeGenTests.writeTests(sb, environment);
     CodeGenConstructor.writeConstructors(sb, environment);
     // code snippets which are done after everything

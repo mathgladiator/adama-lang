@@ -71,6 +71,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
     gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.HashMap;");
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
@@ -538,6 +539,10 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
+    gold.append("\n  public static HashMap<String, Object> __config() {");
+    gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
+    gold.append("\n  }");
     gold.append("\n  public void __test_drive_it(TestReportBuilder report) {");
     gold.append("\n    report.begin(\"drive_it\");");
     gold.append("\n    {");
@@ -692,6 +697,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
     gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.HashMap;");
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
@@ -1066,6 +1072,10 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
+    gold.append("\n  public static HashMap<String, Object> __config() {");
+    gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
     gold.append("\n    return new String[] {};");
@@ -1144,6 +1154,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
     gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.HashMap;");
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
@@ -1794,6 +1805,10 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
+    gold.append("\n  public static HashMap<String, Object> __config() {");
+    gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
     gold.append("\n    return new String[] {};");
@@ -1900,6 +1915,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
     gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.HashMap;");
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
@@ -2325,6 +2341,10 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
+    gold.append("\n  public static HashMap<String, Object> __config() {");
+    gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
     gold.append("\n    return new String[] {};");
@@ -2438,6 +2458,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
     gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.HashMap;");
     gold.append("\nimport java.util.HashSet;");
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
@@ -2909,6 +2930,10 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
+    gold.append("\n  public static HashMap<String, Object> __config() {");
+    gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
+    gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
     gold.append("\n    return new String[] {};");

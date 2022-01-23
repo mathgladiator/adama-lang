@@ -1,0 +1,5 @@
+public int x = 123;
+
+@static {
+  maximum_history = x;
+}

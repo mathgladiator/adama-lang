@@ -11,46 +11,86 @@ package org.adamalang.translator;
 
 import org.junit.Test;
 
-public class GeneratedOperationsTests extends GeneratedBase {
-  private String cached_AdditionBulk_1 = null;
-  private String get_AdditionBulk_1() {
-    if (cached_AdditionBulk_1 != null) {
-      return cached_AdditionBulk_1;
+public class GeneratedPolicyTests extends GeneratedBase {
+  private String cached_EmptyEnvironment_1 = null;
+  private String get_EmptyEnvironment_1() {
+    if (cached_EmptyEnvironment_1 != null) {
+      return cached_EmptyEnvironment_1;
     }
-    cached_AdditionBulk_1 = generateTestOutput(true, "AdditionBulk_1", "./test_code/Operations_AdditionBulk_success.a");
-    return cached_AdditionBulk_1;
+    cached_EmptyEnvironment_1 = generateTestOutput(false, "EmptyEnvironment_1", "./test_code/Policy_EmptyEnvironment_failure.a");
+    return cached_EmptyEnvironment_1;
   }
 
   @Test
-  public void testAdditionBulkEmission() {
-    assertEmissionGood(get_AdditionBulk_1());
+  public void testEmptyEnvironmentFailure() {
+    assertLiveFail(get_EmptyEnvironment_1());
   }
 
   @Test
-  public void testAdditionBulkSuccess() {
-    assertLivePass(get_AdditionBulk_1());
+  public void testEmptyEnvironmentNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_EmptyEnvironment_1());
   }
 
   @Test
-  public void testAdditionBulkGoodWillHappy() {
-    assertGoodWillHappy(get_AdditionBulk_1());
+  public void testEmptyEnvironmentExceptionFree() {
+    assertExceptionFree(get_EmptyEnvironment_1());
   }
 
   @Test
-  public void testAdditionBulkExceptionFree() {
-    assertExceptionFree(get_AdditionBulk_1());
+  public void testEmptyEnvironmentTODOFree() {
+    assertTODOFree(get_EmptyEnvironment_1());
   }
 
   @Test
-  public void testAdditionBulkTODOFree() {
-    assertTODOFree(get_AdditionBulk_1());
-  }
-
-  @Test
-  public void stable_AdditionBulk_1() {
-    String live = get_AdditionBulk_1();
+  public void stable_EmptyEnvironment_1() {
+    String live = get_EmptyEnvironment_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:Operations_AdditionBulk_success.a");
+    gold.append("Path:Policy_EmptyEnvironment_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":3,\"character\":20},\"end\":{\"line\":3,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The variable 'x' was not defined (VariableLookup)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_Happy_2 = null;
+  private String get_Happy_2() {
+    if (cached_Happy_2 != null) {
+      return cached_Happy_2;
+    }
+    cached_Happy_2 = generateTestOutput(true, "Happy_2", "./test_code/Policy_Happy_success.a");
+    return cached_Happy_2;
+  }
+
+  @Test
+  public void testHappyEmission() {
+    assertEmissionGood(get_Happy_2());
+  }
+
+  @Test
+  public void testHappySuccess() {
+    assertLivePass(get_Happy_2());
+  }
+
+  @Test
+  public void testHappyGoodWillHappy() {
+    assertGoodWillHappy(get_Happy_2());
+  }
+
+  @Test
+  public void testHappyExceptionFree() {
+    assertExceptionFree(get_Happy_2());
+  }
+
+  @Test
+  public void testHappyTODOFree() {
+    assertTODOFree(get_Happy_2());
+  }
+
+  @Test
+  public void stable_Happy_2() {
+    String live = get_Happy_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Policy_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
     gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -76,36 +116,14 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class AdditionBulk_1 extends LivingDocument {");
-    gold.append("\n  private final RxInt32 x;");
-    gold.append("\n  private final RxInt32 y;");
-    gold.append("\n  private final RxLazy<Integer> z;");
-    gold.append("\n  private final RxDouble u;");
-    gold.append("\n  private final RxDouble v;");
-    gold.append("\n  private final RxLazy<Double> w;");
+    gold.append("\npublic class Happy_2 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
-    gold.append("\n    __sum += x.__memory();");
-    gold.append("\n    __sum += y.__memory();");
-    gold.append("\n    __sum += z.__memory();");
-    gold.append("\n    __sum += u.__memory();");
-    gold.append("\n    __sum += v.__memory();");
-    gold.append("\n    __sum += w.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public AdditionBulk_1(DocumentMonitor __monitor) {");
+    gold.append("\n  public Happy_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
-    gold.append("\n    x = new RxInt32(this, 0);");
-    gold.append("\n    y = new RxInt32(this, 0);");
-    gold.append("\n    z = new RxLazy<Integer>(this, () -> (x.get() + y.get()));");
-    gold.append("\n    x.__subscribe(z);");
-    gold.append("\n    y.__subscribe(z);");
-    gold.append("\n    u = new RxDouble(this, 0.0);");
-    gold.append("\n    v = new RxDouble(this, 0.0);");
-    gold.append("\n    w = new RxLazy<Double>(this, () -> (u.get() + v.get()));");
-    gold.append("\n    u.__subscribe(w);");
-    gold.append("\n    v.__subscribe(w);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -115,18 +133,6 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
-    gold.append("\n          case \"x\":");
-    gold.append("\n            x.__insert(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"y\":");
-    gold.append("\n            y.__insert(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"u\":");
-    gold.append("\n            u.__insert(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"v\":");
-    gold.append("\n            v.__insert(__reader);");
-    gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__insert(__reader);");
     gold.append("\n            break;");
@@ -184,18 +190,6 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n      while(__reader.notEndOfObject()) {");
     gold.append("\n        String __fieldName = __reader.fieldName();");
     gold.append("\n        switch (__fieldName) {");
-    gold.append("\n          case \"x\":");
-    gold.append("\n            x.__patch(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"y\":");
-    gold.append("\n            y.__patch(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"u\":");
-    gold.append("\n            u.__patch(__reader);");
-    gold.append("\n            break;");
-    gold.append("\n          case \"v\":");
-    gold.append("\n            v.__patch(__reader);");
-    gold.append("\n            break;");
     gold.append("\n          case \"__state\":");
     gold.append("\n            __state.__patch(__reader);");
     gold.append("\n            break;");
@@ -250,14 +244,6 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
     gold.append("\n    __writer.beginObject();");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"x\");");
-    gold.append("\n    x.__dump(__writer);");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"y\");");
-    gold.append("\n    y.__dump(__writer);");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"u\");");
-    gold.append("\n    u.__dump(__writer);");
-    gold.append("\n    __writer.writeObjectFieldIntro(\"v\");");
-    gold.append("\n    v.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
     gold.append("\n    __state.__dump(__writer);");
     gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
@@ -301,10 +287,6 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
     gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
     gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
-    gold.append("\n    x.__commit(\"x\", __forward, __reverse);");
-    gold.append("\n    y.__commit(\"y\", __forward, __reverse);");
-    gold.append("\n    u.__commit(\"u\", __forward, __reverse);");
-    gold.append("\n    v.__commit(\"v\", __forward, __reverse);");
     gold.append("\n    /* root */");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -321,15 +303,11 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n    __message_id.__revert();");
     gold.append("\n    __time.__revert();");
     gold.append("\n    __auto_table_row_id.__revert();");
-    gold.append("\n    x.__revert();");
-    gold.append("\n    y.__revert();");
-    gold.append("\n    u.__revert();");
-    gold.append("\n    v.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaAdditionBulk_1 implements DeltaNode {");
+    gold.append("\n  private class DeltaHappy_2 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaAdditionBulk_1() {");
+    gold.append("\n    private DeltaHappy_2() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -337,7 +315,7 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(AdditionBulk_1 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Happy_2 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -360,8 +338,8 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    AdditionBulk_1 __self = this;");
-    gold.append("\n    DeltaAdditionBulk_1 __state = new DeltaAdditionBulk_1();");
+    gold.append("\n    Happy_2 __self = this;");
+    gold.append("\n    DeltaHappy_2 __state = new DeltaHappy_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -458,50 +436,21 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
     gold.append("\n  public static HashMap<String, Object> __config() {");
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
+    gold.append("\n    __map.put(\"maximum_history\", 1 + 1);");
     gold.append("\n    return __map;");
-    gold.append("\n  }");
-    gold.append("\n  public void __test_PrimaryTest(TestReportBuilder report) {");
-    gold.append("\n    report.begin(\"PrimaryTest\");");
-    gold.append("\n    {");
-    gold.append("\n      __code_cost += 3;");
-    gold.append("\n      __track(0);");
-    gold.append("\n      __assert_truth(x.get() == 3, 16, 2, 16, 16);");
-    gold.append("\n      __track(1);");
-    gold.append("\n      __assert_truth(y.get() == 6, 17, 2, 17, 16);");
-    gold.append("\n    }");
-    gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public String[] __getTests() {");
-    gold.append("\n    return new String[] {\"PrimaryTest\"};");
+    gold.append("\n    return new String[] {};");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public void __test(TestReportBuilder report, String testName) {");
-    gold.append("\n    switch(testName) {");
-    gold.append("\n      case \"PrimaryTest\":");
-    gold.append("\n          __test_PrimaryTest(report);");
-    gold.append("\n          return;");
-    gold.append("\n    }");
-    gold.append("\n  }");
-    gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
-    gold.append("\n    __code_cost += 5;");
-    gold.append("\n    __track(2);");
-    gold.append("\n    x.set(1 + 2);");
-    gold.append("\n    __track(3);");
-    gold.append("\n    y.set(x.get() + 3);");
-    gold.append("\n    __track(4);");
-    gold.append("\n    u.set(4.0 + 5.0);");
-    gold.append("\n    __track(5);");
-    gold.append("\n    v.set(u.get() + 6.0);");
-    gold.append("\n  }");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __construct_intern(NtClient who, NtMessageBase message) {}");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
     gold.append("\n    __reader.skipValue();");
     gold.append("\n    return NtMessageBase.NULL;");
-    gold.append("\n  }");
-    gold.append("\n  @Override");
-    gold.append("\n  protected void __construct_intern(NtClient __who, NtMessageBase __object) {");
-    gold.append("\n    __construct_0(__who, __object);");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");
     gold.append("\n}");
@@ -512,10 +461,10 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0} need:true in:0");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:5");
-    gold.append("\nMEMORY:672");
+    gold.append("\nCPU:0");
+    gold.append("\nMEMORY:384");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":2}");
     gold.append("\nNO_ONE was DENIED");
@@ -526,14 +475,13 @@ public class GeneratedOperationsTests extends GeneratedBase {
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
     gold.append("\n+ RANDO DELTA:{\"seq\":4}");
-    gold.append("\nMEMORY:790");
+    gold.append("\nMEMORY:502");
     gold.append("\n--JAVA RESULTS-------------------------------------");
-    gold.append("\n{\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
     gold.append("\n--DUMP RESULTS-------------------------------------");
-    gold.append("\n{\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
-    gold.append("\n{\"x\":3,\"y\":6,\"u\":9.0,\"v\":15.0,\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
-    gold.append("\nTEST[PrimaryTest] = 100.0%");
     gold.append("\n");
     gold.append("\nSuccess");
     assertStable(live, gold);

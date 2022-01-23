@@ -1,0 +1,3 @@
+@static {
+  maximum_history = 1 + 1;
+}

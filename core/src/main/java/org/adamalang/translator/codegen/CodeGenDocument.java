@@ -31,6 +31,7 @@ public class CodeGenDocument {
     sb.append("import java.util.function.Function;").writeNewline();
     sb.append("import java.util.ArrayList;").writeNewline();
     sb.append("import java.util.Comparator;").writeNewline();
+    sb.append("import java.util.HashMap;").writeNewline();
     sb.append("import java.util.HashSet;").writeNewline();
     sb.append("import java.util.Map;").writeNewline();
     sb.append("import java.util.Set;").writeNewline();
