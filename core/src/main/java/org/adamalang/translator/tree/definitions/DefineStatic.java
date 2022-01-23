@@ -2,18 +2,18 @@ package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.Document;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class DefineStatic extends Definition {
-
   private final Token staticToken;
   private final Token openToken;
   private final ArrayList<Definition> definitions;
   private final Token closeToken;
-
   public final ArrayList<DefineDocumentEvent> events;
+  public final ArrayList<DocumentConfig> configs;
 
   public DefineStatic(Token staticToken, Token openToken, ArrayList<Definition> definitions, Token closeToken) {
     this.staticToken = staticToken;
@@ -21,11 +21,16 @@ public class DefineStatic extends Definition {
     this.definitions = definitions;
     this.closeToken = closeToken;
     this.events = new ArrayList<>();
+    this.configs = new ArrayList<>();
     for (Definition definition : definitions) {
       if (definition instanceof DefineDocumentEvent) {
         events.add((DefineDocumentEvent) definition);
       }
+      if (definition instanceof DocumentConfig) {
+        configs.add((DocumentConfig) definition);
+      }
     }
+    ingest(staticToken, openToken, closeToken);
   }
 
   @Override
