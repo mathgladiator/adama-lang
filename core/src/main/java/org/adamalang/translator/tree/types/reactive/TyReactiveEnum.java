@@ -23,9 +23,8 @@ import org.adamalang.translator.tree.types.shared.EnumStorage;
 import org.adamalang.translator.tree.types.traits.IsEnum;
 import org.adamalang.translator.tree.types.traits.IsOrderable;
 
-public class TyReactiveEnum extends TySimpleReactive
-    implements IsOrderable, //
-        IsEnum //
+public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
+    IsEnum //
 {
   public final String name;
   public final EnumStorage storage;
@@ -42,8 +41,7 @@ public class TyReactiveEnum extends TySimpleReactive
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveEnum(token, storage).withPosition(position);
   }
 
@@ -59,9 +57,7 @@ public class TyReactiveEnum extends TySimpleReactive
 
   @Override
   public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
-    return new EnumConstant(
-            Token.WRAP(name), Token.WRAP("::"), Token.WRAP(storage.getDefaultLabel()))
-        .withPosition(forWhatExpression);
+    return new EnumConstant(Token.WRAP(name), Token.WRAP("::"), Token.WRAP(storage.getDefaultLabel())).withPosition(forWhatExpression);
   }
 
   @Override
@@ -76,7 +72,6 @@ public class TyReactiveEnum extends TySimpleReactive
 
   @Override
   public TyType typeAfterGet(final Environment environment) {
-    return new TyNativeEnum(TypeBehavior.ReadOnlyNativeValue, token, token, token, storage, token)
-        .withPosition(this);
+    return new TyNativeEnum(TypeBehavior.ReadOnlyNativeValue, token, token, token, storage, token).withPosition(this);
   }
 }

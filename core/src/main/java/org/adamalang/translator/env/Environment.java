@@ -35,8 +35,7 @@ public class Environment {
   private Function<String, TyType> trap = null;
   private Consumer<String> watch = null;
 
-  private Environment(
-      final Document document, final EnvironmentState state, final Environment parent) {
+  private Environment(final Document document, final EnvironmentState state, final Environment parent) {
     this.document = document;
     this.state = state;
     variables = new HashMap<>();
@@ -81,19 +80,13 @@ public class Environment {
   }
 
   /** define a variable within the environment */
-  public Environment define(
-      final String name,
-      final TyType type,
-      final boolean isReadonly,
-      final DocumentPosition position) {
+  public Environment define(final String name, final TyType type, final boolean isReadonly, final DocumentPosition position) {
     if (variables.containsKey(name)) {
-      document.createError(
-          position, String.format("Variable '%s' was already defined", name), "EnvironmentDefine");
+      document.createError(position, String.format("Variable '%s' was already defined", name), "EnvironmentDefine");
       return this;
     }
     if (type == null) {
-      document.createError(
-          position, String.format("Variable '%s' has no backing type", name), "EnvironmentDefine");
+      document.createError(position, String.format("Variable '%s' has no backing type", name), "EnvironmentDefine");
     }
     variables.put(name, type);
     if (isReadonly) {
@@ -114,11 +107,7 @@ public class Environment {
   }
 
   /** look up the type of the given variable; will throw issues */
-  public TyType lookup(
-      final String name,
-      final boolean compute,
-      final DocumentPosition position,
-      final boolean silent) {
+  public TyType lookup(final String name, final boolean compute, final DocumentPosition position, final boolean silent) {
     // something is watching what flows pass this
     if (watch != null) {
       watch.accept(name);
@@ -127,11 +116,8 @@ public class Environment {
     var result = variables.get(name);
     if (result != null) {
       // is the current environment
-      if (!compute
-          && (readonly.contains(name) || result.behavior == TypeBehavior.ReadOnlyNativeValue)
-          && !silent) {
-        document.createError(
-            position, String.format("The variable '%s' is readonly", name), "VariableLookup");
+      if (!compute && (readonly.contains(name) || result.behavior == TypeBehavior.ReadOnlyNativeValue) && !silent) {
+        document.createError(position, String.format("The variable '%s' is readonly", name), "VariableLookup");
       }
       return result;
     }
@@ -143,10 +129,7 @@ public class Environment {
     if (result == null && parent != null) {
       result = parent.lookup(name, compute, position, silent);
       if (result != null && !compute && state.isReadonly() && !silent) {
-        document.createError(
-            position,
-            String.format("The variable '%s' is readonly due to the environment", name),
-            "VariableLookup");
+        document.createError(position, String.format("The variable '%s' is readonly due to the environment", name), "VariableLookup");
       }
     }
     // then it must be a function
@@ -167,10 +150,7 @@ public class Environment {
   /** assert the environment must be a compute environment */
   public Environment mustBeComputeContext(final DocumentPosition position) {
     if (!state.isContextComputation()) {
-      document.createError(
-          position,
-          String.format("Expression expected to be computed, rather than assigned to"),
-          "Environment");
+      document.createError(position, String.format("Expression expected to be computed, rather than assigned to"), "Environment");
     }
     return this;
   }

@@ -29,15 +29,13 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** The type representing a utf-8 encoded string. This uses the native 'String' java type. */
-public class TyNativeString extends TySimpleNative
-    implements IsNativeValue,
-        DetailHasDeltaType, //
-        CanBeMapDomain, //
-        DetailTypeHasMethods, //
-        DetailSpecialMultiplyOp, //
-        DetailEqualityTestingRequiresWrapping, //
-        DetailComparisonTestingRequiresWrapping, //
-        AssignmentViaNative //
+public class TyNativeString extends TySimpleNative implements IsNativeValue, DetailHasDeltaType, //
+    CanBeMapDomain, //
+    DetailTypeHasMethods, //
+    DetailSpecialMultiplyOp, //
+    DetailEqualityTestingRequiresWrapping, //
+    DetailComparisonTestingRequiresWrapping, //
+    AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
@@ -63,8 +61,7 @@ public class TyNativeString extends TySimpleNative
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeString(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -106,16 +103,7 @@ public class TyNativeString extends TySimpleNative
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("length".equals(name)) {
-      return new TyNativeFunctional(
-          "length",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance(
-                  "size",
-                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token)
-                      .withPosition(this),
-                  new ArrayList<>(),
-                  true)),
-          FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }

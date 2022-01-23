@@ -18,7 +18,7 @@ public class ByteArrayClassLoader extends URLClassLoader {
   private final Map<String, byte[]> classes;
 
   public ByteArrayClassLoader(final Map<String, byte[]> classes) {
-    super(new URL[] {}, ClassLoader.getSystemClassLoader());
+    super(new URL[]{}, ClassLoader.getSystemClassLoader());
     this.classes = classes;
   }
 

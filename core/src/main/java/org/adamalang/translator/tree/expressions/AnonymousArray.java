@@ -26,12 +26,7 @@ import java.util.function.Consumer;
 
 /** an anonymous array of items [item1, item2, ..., itemN] */
 public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping {
-  private static final TyNativeMessage EMPTY_MESSAGE =
-      new TyNativeMessage(
-          TypeBehavior.ReadOnlyNativeValue,
-          null,
-          Token.WRAP("__EmptyMessageNoArgs_"),
-          new StructureStorage(StorageSpecialization.Message, true, null));
+  private static final TyNativeMessage EMPTY_MESSAGE = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__EmptyMessageNoArgs_"), new StructureStorage(StorageSpecialization.Message, true, null));
   public final ArrayList<TokenizedItem<Expression>> elements;
   public Token closeBracketToken;
   public Token openBracketToken;
@@ -107,8 +102,7 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
       if (firstExpr instanceof SupportsTwoPhaseTyping) {
         proposal = ((SupportsTwoPhaseTyping) firstExpr).estimateType(environment);
       } else {
-        proposal =
-            firstExpr.typing(environment, suggestion instanceof TyNativeArray ? environment.rules.ExtractEmbeddedType(suggestion, false) : null);
+        proposal = firstExpr.typing(environment, suggestion instanceof TyNativeArray ? environment.rules.ExtractEmbeddedType(suggestion, false) : null);
       }
     }
     if (proposal == null) {
@@ -124,8 +118,7 @@ public class AnonymousArray extends Expression implements SupportsTwoPhaseTyping
       proposal = environment.rules.GetMaxType(proposal, candidate, false);
     }
     if (proposal != null) {
-      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, proposal.withPosition(this), null)
-          .withPosition(this);
+      return new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, proposal.withPosition(this), null).withPosition(this);
     } else {
       return null;
     }

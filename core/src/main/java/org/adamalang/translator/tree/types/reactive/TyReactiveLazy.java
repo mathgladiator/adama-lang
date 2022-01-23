@@ -21,8 +21,7 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
 
-public class TyReactiveLazy extends TyType
-    implements DetailContainsAnEmbeddedType, DetailComputeRequiresGet // to get the native value
+public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedType, DetailComputeRequiresGet // to get the native value
 {
   public final TyType computedType;
 
@@ -52,8 +51,7 @@ public class TyReactiveLazy extends TyType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveLazy(computedType).withPosition(position);
   }
 
@@ -62,21 +60,13 @@ public class TyReactiveLazy extends TyType
     computedType.typing(environment);
     var typedAs = environment.rules.Resolve(computedType, false);
     if (!(typedAs instanceof DetailHasDeltaType)) {
-      environment.document.createError(
-          this,
-          String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()),
-          "Lazy");
+      environment.document.createError(this, String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()), "Lazy");
       return;
     }
     while (typedAs instanceof DetailContainsAnEmbeddedType) {
-      typedAs =
-          environment.rules.Resolve(
-              ((DetailContainsAnEmbeddedType) typedAs).getEmbeddedType(environment), false);
+      typedAs = environment.rules.Resolve(((DetailContainsAnEmbeddedType) typedAs).getEmbeddedType(environment), false);
       if (!(typedAs instanceof DetailHasDeltaType)) {
-        environment.document.createError(
-            this,
-            String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()),
-            "Lazy");
+        environment.document.createError(this, String.format("Lazy type has inappropriate type `%s`", computedType.getAdamaType()), "Lazy");
         return;
       }
     }

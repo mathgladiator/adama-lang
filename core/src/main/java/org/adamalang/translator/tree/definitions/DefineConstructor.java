@@ -34,16 +34,7 @@ public class DefineConstructor extends Definition {
   public TyType unifiedMessageType;
   public String unifiedMessageTypeNameToUse;
 
-  public DefineConstructor(
-      final Token constructToken,
-      final Token openParenToken,
-      final Token clientTypeToken,
-      final Token clientVarToken,
-      final Token commaToken,
-      final Token messageTypeToken,
-      final Token messageNameToken,
-      final Token endParenToken,
-      final Block code) {
+  public DefineConstructor(final Token constructToken, final Token openParenToken, final Token clientTypeToken, final Token clientVarToken, final Token commaToken, final Token messageTypeToken, final Token messageNameToken, final Token endParenToken, final Block code) {
     this.constructToken = constructToken;
     this.openParenToken = openParenToken;
     this.clientTypeToken = clientTypeToken;

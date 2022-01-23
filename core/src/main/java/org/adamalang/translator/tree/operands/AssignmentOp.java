@@ -16,7 +16,7 @@ public enum AssignmentOp {
   MultiplyBy("*=", ".opMultBy"), //
   Set("=", ".set"), //
   SubtractFrom("-=", ".opSubFrom") //
-;
+  ;
 
   public final String js;
   public final String notNative;

@@ -28,8 +28,7 @@ public class UseCustomPolicy extends Policy {
   public final TokenizedItem<Token>[] policyToCheckTokens;
   private final HashSet<String> globals;
 
-  public UseCustomPolicy(
-      final Token customToken, final TokenizedItem<Token>[] policyToCheckTokens) {
+  public UseCustomPolicy(final Token customToken, final TokenizedItem<Token>[] policyToCheckTokens) {
     this.customToken = customToken;
     policyToChecks = new ArrayList<>();
     ingest(customToken);
@@ -62,16 +61,14 @@ public class UseCustomPolicy extends Policy {
         globals.add(policyToCheck);
         dcp = environment.document.root.storage.policies.get(policyToCheck);
         if (dcp == null) {
-          environment.document.createError(
-              this, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
+          environment.document.createError(this, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
         }
       }
     }
   }
 
   @Override
-  public boolean writePrivacyCheckGuard(
-      final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
+  public boolean writePrivacyCheckGuard(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
     sb.append("if (");
     var first = true;
     for (final String policyToCheck : policyToChecks) {

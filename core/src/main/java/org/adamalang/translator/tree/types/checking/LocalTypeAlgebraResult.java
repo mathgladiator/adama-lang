@@ -25,11 +25,7 @@ public class LocalTypeAlgebraResult {
   public TyType typeRight = null;
   CanTestEqualityResult equalityResult = CanTestEqualityResult.No;
 
-  public LocalTypeAlgebraResult(
-      final Environment environment,
-      final Expression operation,
-      final Expression left,
-      final Expression right) {
+  public LocalTypeAlgebraResult(final Environment environment, final Expression operation, final Expression left, final Expression right) {
     this.environment = environment;
     this.operation = operation;
     this.left = left;

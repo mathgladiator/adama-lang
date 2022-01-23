@@ -35,12 +35,11 @@ public class PrivatePolicy extends Policy {
   }
 
   @Override
-  public void typing(
-      final Environment environment, final StructureStorage owningStructureStorage) {}
+  public void typing(final Environment environment, final StructureStorage owningStructureStorage) {
+  }
 
   @Override
-  public boolean writePrivacyCheckGuard(
-      final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
+  public boolean writePrivacyCheckGuard(final StringBuilderWithTabs sb, final FieldDefinition field, final Environment environment) {
     return false;
   }
 

@@ -32,16 +32,7 @@ public class For extends Statement {
   public Expression condition;
   public Statement initial;
 
-  public For(
-      final Token forToken,
-      final Token openParen,
-      final Statement initial,
-      final Token noInitialSemicolon,
-      final Expression condition,
-      final Token endConditionSemicolon,
-      final Statement advance,
-      final Token endParen,
-      final Block code) {
+  public For(final Token forToken, final Token openParen, final Statement initial, final Token noInitialSemicolon, final Expression condition, final Token endConditionSemicolon, final Statement advance, final Token endParen, final Block code) {
     this.forToken = forToken;
     ingest(forToken);
     this.openParen = openParen;
@@ -82,8 +73,7 @@ public class For extends Statement {
       initial.typing(next);
     }
     if (condition != null) {
-      final var conditionType =
-          condition.typing(next.scopeWithComputeContext(ComputeContext.Computation), null);
+      final var conditionType = condition.typing(next.scopeWithComputeContext(ComputeContext.Computation), null);
       environment.rules.IsBoolean(conditionType, false);
     }
     if (advance != null) {

@@ -14,8 +14,7 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 
 public class RuleSetCompare {
-  public static boolean CanCompare(
-      final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
+  public static boolean CanCompare(final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
     if (typeA != null && typeB != null) {
       final var aInteger = RuleSetCommon.IsInteger(environment, typeA, true);
       final var bInteger = RuleSetCommon.IsInteger(environment, typeB, true);
@@ -34,12 +33,7 @@ public class RuleSetCompare {
         return true;
       }
       if (!silent) {
-        environment.document.createError(
-            DocumentPosition.sum(typeA, typeB),
-            String.format(
-                "The type '%s' is unable to be compared with type '%s'.",
-                typeA.getAdamaType(), typeB.getAdamaType()),
-            "Compare");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("The type '%s' is unable to be compared with type '%s'.", typeA.getAdamaType(), typeB.getAdamaType()), "Compare");
       }
     }
     return false;

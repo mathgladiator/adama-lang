@@ -10,5 +10,5 @@
 package org.adamalang.translator.tree.types.traits;
 
 public interface CanBeMapDomain {
-  public String getRxStringCodexName();
+  String getRxStringCodexName();
 }

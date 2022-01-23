@@ -15,8 +15,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanMathResult;
 
 public class RuleSetSubtract {
-  public static CanMathResult CanSubstract(
-      final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
+  public static CanMathResult CanSubstract(final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
     if (typeA != null && typeB != null) {
       final var aInteger = RuleSetCommon.IsInteger(environment, typeA, true);
       final var bInteger = RuleSetCommon.IsInteger(environment, typeB, true);
@@ -38,12 +37,7 @@ public class RuleSetSubtract {
         }
       }
       if (!silent) {
-        environment.document.createError(
-            DocumentPosition.sum(typeA, typeB),
-            String.format(
-                "The types '%s' and '%s' are unable to be subtracted with the - operator.",
-                typeA.getAdamaType(), typeB.getAdamaType()),
-            "Subtracted");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("The types '%s' and '%s' are unable to be subtracted with the - operator.", typeA.getAdamaType(), typeB.getAdamaType()), "Subtracted");
       }
     }
     return CanMathResult.No;

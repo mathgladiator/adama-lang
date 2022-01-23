@@ -21,8 +21,7 @@ public class ImportDocument extends DocumentPosition {
   public final Token importToken;
   public final Token semicolonToken;
 
-  public ImportDocument(
-      final Token importToken, final Token filenameToken, final Token semicolonToken) {
+  public ImportDocument(final Token importToken, final Token filenameToken, final Token semicolonToken) {
     this.importToken = importToken;
     this.filenameToken = filenameToken;
     this.semicolonToken = semicolonToken;

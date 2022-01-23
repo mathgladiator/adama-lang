@@ -26,8 +26,7 @@ public class EnumConstant extends Expression {
   public final Token valueToken;
   private int foundValue;
 
-  public EnumConstant(
-      final Token enumTypeNameToken, final Token colonsToken, final Token valueToken) {
+  public EnumConstant(final Token enumTypeNameToken, final Token colonsToken, final Token valueToken) {
     this.enumTypeNameToken = enumTypeNameToken;
     this.colonsToken = colonsToken;
     this.valueToken = valueToken;
@@ -51,12 +50,7 @@ public class EnumConstant extends Expression {
     if (isEnum != null) {
       final var valueFound = isEnum.storage().options.get(value);
       if (valueFound == null) {
-        environment.document.createError(
-            this,
-            String.format(
-                "Type lookup failure: unable to find value '%s' within the enumeration '%s'",
-                value, isEnum.name()),
-            "Enumerations");
+        environment.document.createError(this, String.format("Type lookup failure: unable to find value '%s' within the enumeration '%s'", value, isEnum.name()), "Enumerations");
       } else {
         foundValue = valueFound;
       }

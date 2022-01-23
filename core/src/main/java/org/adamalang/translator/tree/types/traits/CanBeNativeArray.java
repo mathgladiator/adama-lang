@@ -9,4 +9,5 @@
  */
 package org.adamalang.translator.tree.types.traits;
 
-public interface CanBeNativeArray {}
+public interface CanBeNativeArray {
+}

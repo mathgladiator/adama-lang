@@ -18,8 +18,7 @@ public class IndexDefinition extends StructureComponent {
   public final Token nameToken;
   public final Token semicolonToken;
 
-  public IndexDefinition(
-      final Token indexToken, final Token nameToken, final Token semicolonToken) {
+  public IndexDefinition(final Token indexToken, final Token nameToken, final Token semicolonToken) {
     this.indexToken = indexToken;
     this.nameToken = nameToken;
     this.semicolonToken = semicolonToken;

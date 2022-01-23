@@ -48,11 +48,7 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
   }
 
   /** add a field to this object */
-  public void add(
-      final Token commaToken,
-      final Token fieldToken,
-      final Token colonToken,
-      final Expression expression) {
+  public void add(final Token commaToken, final Token fieldToken, final Token colonToken, final Expression expression) {
     rawFields.add(new RawField(commaToken, fieldToken, colonToken, expression));
     fields.put(fieldToken.text, expression);
     ingest(commaToken);
@@ -97,21 +93,13 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
     environment.mustBeComputeContext(this);
     final var storage = new StructureStorage(StorageSpecialization.Message, true, null);
     for (final Map.Entry<String, Expression> entry : fields.entrySet()) {
-      final var type =
-          entry.getValue() instanceof SupportsTwoPhaseTyping
-              ? ((SupportsTwoPhaseTyping) entry.getValue()).estimateType(environment)
-              : entry.getValue().typing(environment, null);
+      final var type = entry.getValue() instanceof SupportsTwoPhaseTyping ? ((SupportsTwoPhaseTyping) entry.getValue()).estimateType(environment) : entry.getValue().typing(environment, null);
       final var p = new PrivatePolicy(null);
       p.ingest(entry.getValue());
       final var fd = FieldDefinition.invent(type, entry.getKey());
       storage.add(fd);
     }
-    return new TyNativeMessage(
-            TypeBehavior.ReadOnlyNativeValue,
-            null,
-            Token.WRAP("_AnonObjConvert_" + environment.autoVariable()),
-            storage)
-        .withPosition(this);
+    return new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("_AnonObjConvert_" + environment.autoVariable()), storage).withPosition(this);
   }
 
   @Override
@@ -119,23 +107,18 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
     cachedType = newType.withPosition(this);
     if (environment.rules.IsNativeMessage(newType, false)) {
       final var other = (TyNativeMessage) newType;
-      for (final Map.Entry<String, FieldDefinition> otherField :
-          other.storage().fields.entrySet()) {
+      for (final Map.Entry<String, FieldDefinition> otherField : other.storage().fields.entrySet()) {
         var myField = fields.get(otherField.getKey());
         final var otherFieldType = otherField.getValue().type;
         if (myField == null) {
           if (otherFieldType != null) {
-            final var newValue =
-                ((DetailInventDefaultValueExpression) otherFieldType)
-                    .inventDefaultValueExpression(this);
+            final var newValue = ((DetailInventDefaultValueExpression) otherFieldType).inventDefaultValueExpression(this);
             fields.put(otherField.getKey(), newValue);
           }
         } else {
-          if (otherFieldType instanceof TyNativeMaybe
-              && !(myField.typing(environment, null) instanceof TyNativeMaybe)) {
+          if (otherFieldType instanceof TyNativeMaybe && !(myField.typing(environment, null) instanceof TyNativeMaybe)) {
             if (myField instanceof SupportsTwoPhaseTyping) {
-              ((SupportsTwoPhaseTyping) myField)
-                  .upgradeType(environment, ((TyNativeMaybe) otherFieldType).tokenElementType.item);
+              ((SupportsTwoPhaseTyping) myField).upgradeType(environment, ((TyNativeMaybe) otherFieldType).tokenElementType.item);
             }
             myField = new MaybeLift(null, null, null, myField, null);
             myField.typing(environment, otherFieldType);
@@ -179,11 +162,7 @@ public class AnonymousObject extends Expression implements SupportsTwoPhaseTypin
     public final Expression expression;
     public final Token fieldToken;
 
-    public RawField(
-        final Token commaToken,
-        final Token fieldToken,
-        final Token colonToken,
-        final Expression expression) {
+    public RawField(final Token commaToken, final Token fieldToken, final Token colonToken, final Expression expression) {
       this.commaToken = commaToken;
       this.fieldToken = fieldToken;
       this.colonToken = colonToken;

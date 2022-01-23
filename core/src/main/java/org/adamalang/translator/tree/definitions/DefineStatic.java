@@ -11,19 +11,18 @@ package org.adamalang.translator.tree.definitions;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
-import org.adamalang.translator.tree.Document;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 /** group all the static methods and properties here */
 public class DefineStatic extends Definition {
+  public final ArrayList<DefineDocumentEvent> events;
+  public final ArrayList<DocumentConfig> configs;
   private final Token staticToken;
   private final Token openToken;
   private final ArrayList<Definition> definitions;
   private final Token closeToken;
-  public final ArrayList<DefineDocumentEvent> events;
-  public final ArrayList<DocumentConfig> configs;
 
   public DefineStatic(Token staticToken, Token openToken, ArrayList<Definition> definitions, Token closeToken) {
     this.staticToken = staticToken;

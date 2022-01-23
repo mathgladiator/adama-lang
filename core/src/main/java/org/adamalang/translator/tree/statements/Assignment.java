@@ -38,14 +38,7 @@ public class Assignment extends Statement {
   public Expression altExpression;
   private LocalTypeAssignmentResult result;
 
-  public Assignment(
-      final Expression ref,
-      final Token opToken,
-      final Expression expression,
-      Token asToken,
-      Token ingestionDefine,
-      final Token trailingToken,
-      final boolean inForLoop) {
+  public Assignment(final Expression ref, final Token opToken, final Expression expression, Token asToken, Token ingestionDefine, final Token trailingToken, final boolean inForLoop) {
     this.ref = ref;
     this.expression = expression;
     this.opToken = opToken;
@@ -91,22 +84,9 @@ public class Assignment extends Statement {
           boolean isArray = environment.rules.IngestionRightSideRequiresIteration(exprType);
           environment.rules.IsTable(refType, false);
           if (isArray) {
-            environment.define(
-                ingestionDefine.text,
-                new TyNativeArray(
-                    TypeBehavior.ReadOnlyNativeValue,
-                    new TyNativeInteger(
-                        TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine),
-                    ingestionDefine),
-                true,
-                this);
+            environment.define(ingestionDefine.text, new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine), ingestionDefine), true, this);
           } else {
-            environment.define(
-                ingestionDefine.text,
-                new TyNativeInteger(
-                    TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine),
-                true,
-                this);
+            environment.define(ingestionDefine.text, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, ingestionDefine, ingestionDefine), true, this);
           }
         }
         break;
@@ -149,28 +129,15 @@ public class Assignment extends Statement {
       sb.append(op.notNative).append("(");
       expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
       sb.append(");");
-    } else if ((result.assignResult == CanAssignResult.YesWithTransformSetter
-            || result.assignResult == CanAssignResult.YesWithTransformThenMakeSetter)
-        && result.ltype != null) {
+    } else if ((result.assignResult == CanAssignResult.YesWithTransformSetter || result.assignResult == CanAssignResult.YesWithTransformThenMakeSetter) && result.ltype != null) {
       final var varToCache = "_auto_" + environment.autoVariable();
       final var varToIterate = "_auto_" + environment.autoVariable();
       final var embeddedType = ((TyNativeList) result.ltype).getEmbeddedType(environment);
       if (embeddedType != null) {
-        sb.append(result.ltype.getJavaConcreteType(environment))
-            .append(" ")
-            .append(varToCache)
-            .append(" = ");
+        sb.append(result.ltype.getJavaConcreteType(environment)).append(" ").append(varToCache).append(" = ");
         ref.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Assignment));
         sb.append(";").writeNewline();
-        sb.append("for (")
-            .append(embeddedType.getJavaConcreteType(environment))
-            .append(" ")
-            .append(varToIterate)
-            .append(" : ")
-            .append(varToCache)
-            .append(") {")
-            .tabUp()
-            .writeNewline();
+        sb.append("for (").append(embeddedType.getJavaConcreteType(environment)).append(" ").append(varToIterate).append(" : ").append(varToCache).append(") {").tabUp().writeNewline();
         sb.append(varToIterate);
         if (result.assignResult == CanAssignResult.YesWithTransformThenMakeSetter) {
           sb.append(".make()");

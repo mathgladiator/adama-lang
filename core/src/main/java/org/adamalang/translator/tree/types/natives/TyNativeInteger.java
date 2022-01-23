@@ -28,19 +28,17 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.function.Consumer;
 
 /** Represents the integral with 32 bits of storage; this uses the 'int' java type */
-public class TyNativeInteger extends TySimpleNative
-    implements IsNativeValue, //
-        CanBeMapDomain, //
-        DetailHasDeltaType, //
-        DetailTypeHasMethods, //
-        IsOrderable, //
-        AssignmentViaNative //
+public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
+    CanBeMapDomain, //
+    DetailHasDeltaType, //
+    DetailTypeHasMethods, //
+    IsOrderable, //
+    AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeInteger(
-      final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+  public TyNativeInteger(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "int", "Integer");
     this.readonlyToken = readonlyToken;
     this.token = token;
@@ -61,8 +59,7 @@ public class TyNativeInteger extends TySimpleNative
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeInteger(newBehavior, readonlyToken, token).withPosition(position);
   }
 

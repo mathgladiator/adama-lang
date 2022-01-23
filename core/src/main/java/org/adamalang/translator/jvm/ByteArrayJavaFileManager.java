@@ -31,8 +31,7 @@ public class ByteArrayJavaFileManager extends ForwardingJavaFileManager {
     classes = new TreeMap<>();
   }
 
-  public static ArrayList<JavaFileObject> turnIntoCompUnits(
-      final String fileName, final String code) {
+  public static ArrayList<JavaFileObject> turnIntoCompUnits(final String fileName, final String code) {
     final var compUnits = new ArrayList<JavaFileObject>();
     compUnits.add(new SingleSourceJavaObject(fileName, code));
     return compUnits;
@@ -43,17 +42,13 @@ public class ByteArrayJavaFileManager extends ForwardingJavaFileManager {
   }
 
   @Override
-  public JavaFileObject getJavaFileForOutput(
-      final JavaFileManager.Location location,
-      final String className,
-      final Kind kind,
-      final FileObject sibling)
-      throws IOException {
+  public JavaFileObject getJavaFileForOutput(final JavaFileManager.Location location, final String className, final Kind kind, final FileObject sibling) throws IOException {
     return new ClassByteArrayOutputBuffer(className);
   }
 
   @Override
-  public void flush() throws IOException {}
+  public void flush() throws IOException {
+  }
 
   @Override
   public void close() throws IOException {
@@ -64,9 +59,7 @@ public class ByteArrayJavaFileManager extends ForwardingJavaFileManager {
     final String source;
 
     SingleSourceJavaObject(final String fileName, final String code) {
-      super(
-          URI.create(new StringBuilder().append("code:///").append(fileName).toString()),
-          Kind.SOURCE);
+      super(URI.create(new StringBuilder().append("code:///").append(fileName).toString()), Kind.SOURCE);
       source = code;
     }
 

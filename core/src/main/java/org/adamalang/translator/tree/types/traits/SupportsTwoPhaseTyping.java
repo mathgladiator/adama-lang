@@ -14,7 +14,7 @@ import org.adamalang.translator.tree.types.TyType;
 
 /** this contract enables expressions to be typed */
 public interface SupportsTwoPhaseTyping {
-  public TyType estimateType(Environment environment);
+  TyType estimateType(Environment environment);
 
-  public void upgradeType(Environment environment, TyType newType);
+  void upgradeType(Environment environment, TyType newType);
 }

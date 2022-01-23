@@ -14,10 +14,9 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.natives.*;
-import org.adamalang.translator.tree.types.structures.FieldDefinition;
-import org.adamalang.translator.tree.types.structures.StorageSpecialization;
-import org.adamalang.translator.tree.types.structures.StructureStorage;
+import org.adamalang.translator.tree.types.natives.TyNativeAsset;
+import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
+import org.adamalang.translator.tree.types.natives.TyNativeClient;
 
 import java.util.function.Consumer;
 
@@ -32,15 +31,7 @@ public class DefineDocumentEvent extends Definition {
   public final Token openParen;
   public final DocumentEvent which;
 
-  public DefineDocumentEvent(
-      final Token eventToken,
-      final DocumentEvent which,
-      final Token openParen,
-      final Token clientVarToken,
-      final Token commaToken,
-      final Token parameterNameToken,
-      final Token closeParen,
-      final Block code) {
+  public DefineDocumentEvent(final Token eventToken, final DocumentEvent which, final Token openParen, final Token clientVarToken, final Token commaToken, final Token parameterNameToken, final Token closeParen, final Block code) {
     this.eventToken = eventToken;
     this.which = which;
     this.openParen = openParen;
@@ -71,34 +62,19 @@ public class DefineDocumentEvent extends Definition {
     if (codeControlFlow == ControlFlow.Open) {
       switch (which) {
         case ClientConnected:
-          environment.document.createError(
-              this,
-              String.format("The @connected handler must return a boolean"),
-              "DocumentEvents");
+          environment.document.createError(this, String.format("The @connected handler must return a boolean"), "DocumentEvents");
           return;
         case AskCreation:
-          environment.document.createError(
-              this,
-              String.format("The 'create' policy must return a boolean"),
-              "DocumentEvents");
+          environment.document.createError(this, String.format("The 'create' policy must return a boolean"), "DocumentEvents");
           return;
         case AskInvention:
-          environment.document.createError(
-              this,
-              String.format("The 'invent' policy must return a boolean"),
-              "DocumentEvents");
+          environment.document.createError(this, String.format("The 'invent' policy must return a boolean"), "DocumentEvents");
           return;
         case AskSendWhileDisconnected:
-          environment.document.createError(
-              this,
-              String.format("The 'send' policy must return a boolean"),
-              "DocumentEvents");
+          environment.document.createError(this, String.format("The 'send' policy must return a boolean"), "DocumentEvents");
           return;
         case AskAssetAttachment:
-          environment.document.createError(
-              this,
-              String.format("The @can_attach handler must return a boolean"),
-              "DocumentEvents");
+          environment.document.createError(this, String.format("The @can_attach handler must return a boolean"), "DocumentEvents");
           return;
       }
     }
@@ -107,37 +83,19 @@ public class DefineDocumentEvent extends Definition {
   public Environment nextEnvironment(final Environment environment) {
     if (which == DocumentEvent.AskCreation || which == DocumentEvent.AskInvention || which == DocumentEvent.AskSendWhileDisconnected) {
       Environment next = environment.staticPolicy().scopeStatic();
-      next.setReturnType(
-          new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken));
-      next.define(
-          clientVarToken.text,
-          new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken)
-              .withPosition(this),
-          true,
-          this);
+      next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken));
+      next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
       return next;
     }
     boolean readonly = which == DocumentEvent.AskAssetAttachment;
     final var next = readonly ? environment.scopeAsReadOnlyBoundary() : environment.scope();
     if (which == DocumentEvent.ClientConnected || which == DocumentEvent.AskAssetAttachment) {
-      next.setReturnType(
-          new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken)
-              .withPosition(this));
+      next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this));
     }
     if (which == DocumentEvent.AssetAttachment && commaToken != null) {
-      next.define(
-          parameterNameToken.text,
-          new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken)
-              .withPosition(this),
-          true,
-          this);
+      next.define(parameterNameToken.text, new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
     }
-    next.define(
-        clientVarToken.text,
-        new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken)
-            .withPosition(this),
-        true,
-        this);
+    next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
     return next;
   }
 }

@@ -22,11 +22,9 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.function.Consumer;
 
-public class TyNativeReactiveRecordPtr extends TyType
-    implements //
-        AssignmentViaNative, //
-        DetailTypeHasMethods,
-        DetailContainsAnEmbeddedType //
+public class TyNativeReactiveRecordPtr extends TyType implements //
+    AssignmentViaNative, //
+    DetailTypeHasMethods, DetailContainsAnEmbeddedType //
 {
   public final TyReactiveRecord source;
 
@@ -57,8 +55,7 @@ public class TyNativeReactiveRecordPtr extends TyType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeReactiveRecordPtr(newBehavior, source).withPosition(position);
   }
 

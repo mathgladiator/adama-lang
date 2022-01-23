@@ -31,8 +31,7 @@ public abstract class TyType extends DocumentPosition {
 
   public abstract String getJavaConcreteType(Environment environment);
 
-  public abstract TyType makeCopyWithNewPosition(
-      DocumentPosition position, TypeBehavior newBehavior);
+  public abstract TyType makeCopyWithNewPosition(DocumentPosition position, TypeBehavior newBehavior);
 
   public abstract void typing(Environment environment);
 

@@ -22,8 +22,7 @@ public class AlterControlFlow extends Statement {
   public final Token semicolonToken;
   public final Token token;
 
-  public AlterControlFlow(
-      final Token token, final AlterControlFlowMode how, final Token semicolonToken) {
+  public AlterControlFlow(final Token token, final AlterControlFlowMode how, final Token semicolonToken) {
     this.token = token;
     this.how = how;
     this.semicolonToken = semicolonToken;
@@ -40,14 +39,10 @@ public class AlterControlFlow extends Statement {
   @Override
   public ControlFlow typing(final Environment environment) {
     if (how == AlterControlFlowMode.Abort && !environment.state.isMessageHandler()) {
-      environment.document.createError(
-          this, String.format("Can only 'abort' from a message handler"), "EvaluationContext");
+      environment.document.createError(this, String.format("Can only 'abort' from a message handler"), "EvaluationContext");
     }
     if (how == AlterControlFlowMode.Block && !environment.state.isStateMachineTransition()) {
-      environment.document.createError(
-          this,
-          String.format("Can only 'block' from a state machine transition"),
-          "EvaluationContext");
+      environment.document.createError(this, String.format("Can only 'block' from a state machine transition"), "EvaluationContext");
     }
     if (how == AlterControlFlowMode.Abort || how == AlterControlFlowMode.Block) {
       return ControlFlow.Returns;

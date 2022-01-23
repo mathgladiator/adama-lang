@@ -13,16 +13,14 @@ import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.types.traits.CanBeNativeArray;
 import org.adamalang.translator.tree.types.traits.details.DetailInventDefaultValueExpression;
 
-public abstract class TySimpleNative extends TyType
-    implements //
-        CanBeNativeArray, //
-        DetailInventDefaultValueExpression //
+public abstract class TySimpleNative extends TyType implements //
+    CanBeNativeArray, //
+    DetailInventDefaultValueExpression //
 {
   private final String javaBoxType;
   private final String javaConcreteType;
 
-  public TySimpleNative(
-      final TypeBehavior behavior, final String javaConcreteType, final String javaBoxType) {
+  public TySimpleNative(final TypeBehavior behavior, final String javaConcreteType, final String javaBoxType) {
     super(behavior);
     this.javaConcreteType = javaConcreteType;
     this.javaBoxType = javaBoxType;
@@ -39,5 +37,6 @@ public abstract class TySimpleNative extends TyType
   }
 
   @Override
-  public void typing(final Environment environment) {}
+  public void typing(final Environment environment) {
+  }
 }

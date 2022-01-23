@@ -15,8 +15,7 @@ import org.adamalang.translator.tree.types.natives.TyNativeArray;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 
 public class RuleSetIterable {
-  public static boolean IsIterable(
-      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsIterable(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);
@@ -24,12 +23,7 @@ public class RuleSetIterable {
         return true;
       }
       if (!silent) {
-        environment.document.createError(
-            tyTypeOriginal,
-            String.format(
-                "Type check failure: must be either an array or list to use index lookup[]; instead got '%s'.",
-                tyTypeOriginal.getAdamaType()),
-            "RuleSetIterable");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: must be either an array or list to use index lookup[]; instead got '%s'.", tyTypeOriginal.getAdamaType()), "RuleSetIterable");
       }
     }
     return false;

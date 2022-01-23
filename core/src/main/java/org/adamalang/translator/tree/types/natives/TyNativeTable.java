@@ -27,23 +27,18 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeTable extends TyType
-    implements //
-        AssignmentViaSetter, //
-        DetailContainsAnEmbeddedType, //
-        DetailNativeDeclarationIsNotStandard, //
-        DetailTypeHasMethods //
+public class TyNativeTable extends TyType implements //
+    AssignmentViaSetter, //
+    DetailContainsAnEmbeddedType, //
+    DetailNativeDeclarationIsNotStandard, //
+    DetailTypeHasMethods //
 {
   public final String messageName;
   public final TokenizedItem<Token> messageNameToken;
   public final Token readonlyToken;
   public final Token tableToken;
 
-  public TyNativeTable(
-      final TypeBehavior behavior,
-      final Token readonlyToken,
-      final Token tableToken,
-      final TokenizedItem<Token> messageNameToken) {
+  public TyNativeTable(final TypeBehavior behavior, final Token readonlyToken, final Token tableToken, final TokenizedItem<Token> messageNameToken) {
     super(behavior);
     this.tableToken = tableToken;
     this.readonlyToken = readonlyToken;
@@ -80,10 +75,8 @@ public class TyNativeTable extends TyType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeTable(newBehavior, readonlyToken, tableToken, messageNameToken)
-        .withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeTable(newBehavior, readonlyToken, tableToken, messageNameToken).withPosition(position);
   }
 
   @Override
@@ -117,33 +110,16 @@ public class TyNativeTable extends TyType
 
   @Override
   public String getStringWhenValueNotProvided(final Environment environment) {
-    return "new "
-        + getJavaBoxType(environment)
-        + "(() -> new RTx"
-        + messageNameToken.item.text
-        + "())";
+    return "new " + getJavaBoxType(environment) + "(() -> new RTx" + messageNameToken.item.text + "())";
   }
 
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctional(
-          "size",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance(
-                  "size",
-                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, messageNameToken.item)
-                      .withPosition(this),
-                  new ArrayList<>(),
-                  true)),
-          FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, messageNameToken.item).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("delete".equals(name)) {
-      return new TyNativeFunctional(
-          "delete",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance("size", null, new ArrayList<>(), false)),
-          FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", null, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

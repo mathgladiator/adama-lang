@@ -23,10 +23,9 @@ import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbedd
 
 import java.util.function.Consumer;
 
-public class TyReactiveMaybe extends TyType
-    implements DetailContainsAnEmbeddedType, //
-        DetailComputeRequiresGet, //
-        AssignmentViaSetter //
+public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedType, //
+    DetailComputeRequiresGet, //
+    AssignmentViaSetter //
 {
   public final Token maybeToken;
   public final TokenizedItem<TyType> tokenizedElementType;
@@ -69,8 +68,7 @@ public class TyReactiveMaybe extends TyType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveMaybe(maybeToken, tokenizedElementType).withPosition(position);
   }
 
@@ -94,14 +92,9 @@ public class TyReactiveMaybe extends TyType
   public TyType typeAfterGet(final Environment environment) {
     final var elementType = environment.rules.Resolve(tokenizedElementType.item, false);
     if (elementType instanceof TyReactiveRecord) {
-      return new TyNativeMaybe(
-          TypeBehavior.ReadWriteNative, null, maybeToken, new TokenizedItem<>(elementType));
+      return new TyNativeMaybe(TypeBehavior.ReadWriteNative, null, maybeToken, new TokenizedItem<>(elementType));
     } else {
-      return new TyNativeMaybe(
-          TypeBehavior.ReadWriteNative,
-          null,
-          maybeToken,
-          new TokenizedItem<>(((DetailComputeRequiresGet) elementType).typeAfterGet(environment)));
+      return new TyNativeMaybe(TypeBehavior.ReadWriteNative, null, maybeToken, new TokenizedItem<>(((DetailComputeRequiresGet) elementType).typeAfterGet(environment)));
     }
   }
 }

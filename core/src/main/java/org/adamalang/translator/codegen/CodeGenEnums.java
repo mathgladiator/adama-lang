@@ -21,29 +21,17 @@ import java.util.Map;
 
 /** generates the code to support enumerations */
 public class CodeGenEnums {
-  public static void writeDispatchers(
-      final StringBuilderWithTabs sb,
-      final EnumStorage storage,
-      final HashMap<String, ArrayList<DefineDispatcher>> multi,
-      final String name,
-      final Environment environment) {
+  public static void writeDispatchers(final StringBuilderWithTabs sb, final EnumStorage storage, final HashMap<String, ArrayList<DefineDispatcher>> multi, final String name, final Environment environment) {
     for (final Map.Entry<String, ArrayList<DefineDispatcher>> entry : multi.entrySet()) {
-      writeDispatcher(
-          sb, storage, entry.getValue(), storage.getId(name, entry.getKey()), environment);
+      writeDispatcher(sb, storage, entry.getValue(), storage.getId(name, entry.getKey()), environment);
     }
   }
 
-  public static void writeDispatcher(
-      final StringBuilderWithTabs sb,
-      final EnumStorage storage,
-      final ArrayList<DefineDispatcher> dispatchers,
-      final int dispatcherIndex,
-      final Environment environment) {
+  public static void writeDispatcher(final StringBuilderWithTabs sb, final EnumStorage storage, final ArrayList<DefineDispatcher> dispatchers, final int dispatcherIndex, final Environment environment) {
     // write the individual functions
     final var firstDispatcher = dispatchers.get(0);
     DefineDispatcher catchAll = null;
-    for (final DefineDispatcher potential :
-        storage.findFindingDispatchers(dispatchers, storage.getDefaultLabel(), true).values()) {
+    for (final DefineDispatcher potential : storage.findFindingDispatchers(dispatchers, storage.getDefaultLabel(), true).values()) {
       final var takeIt = catchAll == null || potential.valueToken != null && storage.getDefaultLabel().equals(potential.valueToken.text) && potential.starToken == null;
       if (takeIt) {
         catchAll = potential;
@@ -59,11 +47,7 @@ public class CodeGenEnums {
       if (dispatcher.starToken != null && dispatcher.valueToken == null) {
         catchAll = dispatcher;
       }
-      sb.append(" __IND_DISPATCH_")
-          .append(dispatcherIndex + "_")
-          .append(dispatcher.functionName.text)
-          .append("__" + dispatcher.positionIndex)
-          .append("(");
+      sb.append(" __IND_DISPATCH_").append(dispatcherIndex + "_").append(dispatcher.functionName.text).append("__" + dispatcher.positionIndex).append("(");
       sb.append("int self");
       for (final FunctionArg arg : dispatcher.args) {
         sb.append(", ");
@@ -79,35 +63,22 @@ public class CodeGenEnums {
     } else {
       sb.append(firstDispatcher.returnType.getJavaConcreteType(environment));
     }
-    sb.append(" __DISPATCH_")
-        .append(dispatcherIndex + "_")
-        .append(firstDispatcher.functionName.text)
-        .append("(int __value");
+    sb.append(" __DISPATCH_").append(dispatcherIndex + "_").append(firstDispatcher.functionName.text).append("(int __value");
     for (final FunctionArg arg : firstDispatcher.args) {
       sb.append(", ");
       sb.append(arg.type.getJavaConcreteType(environment)).append(" ").append(arg.argName);
     }
     sb.append(") {").tabUp().writeNewline();
     for (final Map.Entry<String, Integer> option : storage.options.entrySet()) {
-      final var matches =
-          storage.findFindingDispatchers(
-              dispatchers, option.getKey(), firstDispatcher.returnType == null);
-      sb.append("if (__value == ")
-          .append(option.getValue() + "")
-          .append(") {")
-          .tabUp()
-          .writeNewline();
+      final var matches = storage.findFindingDispatchers(dispatchers, option.getKey(), firstDispatcher.returnType == null);
+      sb.append("if (__value == ").append(option.getValue() + "").append(") {").tabUp().writeNewline();
       var atSpecifc = 0;
       for (final Map.Entry<String, DefineDispatcher> associatedDispatcher : matches.entrySet()) {
         atSpecifc++;
         if (associatedDispatcher.getValue().returnType != null) {
           sb.append("return ");
         }
-        sb.append("__IND_DISPATCH_")
-            .append(dispatcherIndex + "_")
-            .append(firstDispatcher.functionName.text)
-            .append("__" + associatedDispatcher.getValue().positionIndex)
-            .append("(__value");
+        sb.append("__IND_DISPATCH_").append(dispatcherIndex + "_").append(firstDispatcher.functionName.text).append("__" + associatedDispatcher.getValue().positionIndex).append("(__value");
         for (final FunctionArg arg : associatedDispatcher.getValue().args) {
           sb.append(", ");
           sb.append(arg.argName);
@@ -127,11 +98,7 @@ public class CodeGenEnums {
     if (catchAll.returnType != null) {
       sb.append("return ");
     }
-    sb.append("__IND_DISPATCH_")
-        .append(dispatcherIndex + "_")
-        .append(firstDispatcher.functionName.text)
-        .append("__" + catchAll.positionIndex)
-        .append("(__value");
+    sb.append("__IND_DISPATCH_").append(dispatcherIndex + "_").append(firstDispatcher.functionName.text).append("__" + catchAll.positionIndex).append("(__value");
     for (final FunctionArg arg : catchAll.args) {
       sb.append(", ");
       sb.append(arg.argName);
@@ -141,17 +108,8 @@ public class CodeGenEnums {
   }
 
   /** write an enum array out, maybe it filtered by prefix */
-  public static void writeEnumArray(
-      final StringBuilderWithTabs sb,
-      final String name,
-      final String id,
-      final String prefix,
-      final EnumStorage storage) {
-    sb.append("private static final int [] __")
-        .append(id)
-        .append("_")
-        .append(name)
-        .append(" = new int[] {");
+  public static void writeEnumArray(final StringBuilderWithTabs sb, final String name, final String id, final String prefix, final EnumStorage storage) {
+    sb.append("private static final int [] __").append(id).append("_").append(name).append(" = new int[] {");
     final var filtered = new ArrayList<Map.Entry<String, Integer>>();
     for (final Map.Entry<String, Integer> option : storage.options.entrySet()) {
       if (option.getKey().startsWith(prefix)) {

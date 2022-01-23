@@ -19,7 +19,6 @@ import java.lang.annotation.Target;
 /**
  * override the name of the method in Adama. This is useful for mapping multiple functions to the
  * same name such that overloading can do magic.
- */
-public @interface UseName {
-  public String name();
+ */ public @interface UseName {
+  String name();
 }

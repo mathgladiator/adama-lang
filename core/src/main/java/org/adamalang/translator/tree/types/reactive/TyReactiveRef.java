@@ -52,8 +52,7 @@ public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveRef(refToken).withPosition(position);
   }
 

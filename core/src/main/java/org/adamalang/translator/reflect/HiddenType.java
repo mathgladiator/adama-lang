@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.METHOD})
-/** a type that is hidden by type erasure */
-public @interface HiddenType {
+/** a type that is hidden by type erasure */ public @interface HiddenType {
   Class<?> clazz();
 }

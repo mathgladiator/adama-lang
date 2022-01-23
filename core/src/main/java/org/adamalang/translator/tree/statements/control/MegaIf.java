@@ -39,8 +39,7 @@ public class MegaIf extends Statement {
   }
 
   /** add an 'else if' branch */
-  public void add(
-      final Token elseToken, final Token ifToken, final Condition condition, final Block code) {
+  public void add(final Token elseToken, final Token ifToken, final Condition condition, final Block code) {
     branches.add(new If(elseToken, ifToken, condition, code));
     ingest(condition);
     ingest(code);
@@ -63,17 +62,11 @@ public class MegaIf extends Statement {
     for (final If branch : branches) {
       if (branch.condition.name != null) {
         final var compute = environment.scopeWithComputeContext(ComputeContext.Computation);
-        branch.condition.maybeType =
-            branch.condition.expression.typing(compute, null /* no suggestion */);
+        branch.condition.maybeType = branch.condition.expression.typing(compute, null /* no suggestion */);
         if (environment.rules.IsMaybe(branch.condition.maybeType, false)) {
-          branch.condition.elementType =
-              ((DetailContainsAnEmbeddedType) branch.condition.maybeType).getEmbeddedType(compute);
+          branch.condition.elementType = ((DetailContainsAnEmbeddedType) branch.condition.maybeType).getEmbeddedType(compute);
           if (branch.condition.elementType != null) {
-            compute.define(
-                branch.condition.name,
-                branch.condition.elementType,
-                false,
-                branch.condition.elementType);
+            compute.define(branch.condition.name, branch.condition.elementType, false, branch.condition.elementType);
           }
         } else {
           branch.condition.maybeType = null;
@@ -82,9 +75,7 @@ public class MegaIf extends Statement {
           flow = ControlFlow.Open;
         }
       } else {
-        final var expressionType =
-            branch.condition.expression.typing(
-                environment.scopeWithComputeContext(ComputeContext.Computation), null /* nope */);
+        final var expressionType = branch.condition.expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null /* nope */);
         environment.rules.IsBoolean(expressionType, false);
         if (branch.code.typing(environment) == ControlFlow.Open) {
           flow = ControlFlow.Open;
@@ -106,13 +97,8 @@ public class MegaIf extends Statement {
     var first = true;
     for (final If branch : branches) {
       if (branch.condition.name != null && branch.condition.maybeType != null) {
-        branch.condition.generatedVariable =
-            "_AutoCondition" + branch.condition.name + "_" + environment.autoVariable();
-        sb.append(branch.condition.maybeType.getJavaConcreteType(environment))
-            .append(" ")
-            .append(branch.condition.generatedVariable)
-            .append(";")
-            .writeNewline();
+        branch.condition.generatedVariable = "_AutoCondition" + branch.condition.name + "_" + environment.autoVariable();
+        sb.append(branch.condition.maybeType.getJavaConcreteType(environment)).append(" ").append(branch.condition.generatedVariable).append(";").writeNewline();
       }
     }
     for (final If branch : branches) {
@@ -124,27 +110,15 @@ public class MegaIf extends Statement {
       }
       if (branch.condition.name != null && branch.condition.maybeType != null) {
         sb.append("(").append(branch.condition.generatedVariable).append(" = ");
-        branch.condition.expression.writeJava(
-            sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+        branch.condition.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         sb.append(").has()) {").tabUp().writeNewline();
-        sb.append(branch.condition.elementType.getJavaConcreteType(environment))
-            .append(" ")
-            .append(branch.condition.name)
-            .append(" = ")
-            .append(branch.condition.generatedVariable)
-            .append(".get();")
-            .writeNewline();
+        sb.append(branch.condition.elementType.getJavaConcreteType(environment)).append(" ").append(branch.condition.name).append(" = ").append(branch.condition.generatedVariable).append(".get();").writeNewline();
         final var next = environment.scope();
-        next.define(
-            branch.condition.name,
-            branch.condition.elementType,
-            false,
-            branch.condition.elementType);
+        next.define(branch.condition.name, branch.condition.elementType, false, branch.condition.elementType);
         branch.code.specialWriteJava(sb, next, false, true);
         sb.append("}");
       } else {
-        branch.condition.expression.writeJava(
-            sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+        branch.condition.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         sb.append(") ");
         branch.code.writeJava(sb, environment);
       }
@@ -173,12 +147,7 @@ public class MegaIf extends Statement {
     private String generatedVariable;
     private TyType maybeType;
 
-    public Condition(
-        final Token openParen,
-        final Expression expression,
-        final Token asToken,
-        final Token nameToken,
-        final Token closeParen) {
+    public Condition(final Token openParen, final Expression expression, final Token asToken, final Token nameToken, final Token closeParen) {
       this.openParen = openParen;
       this.expression = expression;
       this.asToken = asToken;
@@ -210,8 +179,7 @@ public class MegaIf extends Statement {
     public final Token elseToken;
     public final Token ifToken;
 
-    public If(
-        final Token elseToken, final Token ifToken, final Condition condition, final Block code) {
+    public If(final Token elseToken, final Token ifToken, final Condition condition, final Block code) {
       this.elseToken = elseToken;
       this.ifToken = ifToken;
       this.condition = condition;

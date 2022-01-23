@@ -28,12 +28,7 @@ public class While extends Statement {
   public final Token openParen;
   public final Token whileToken;
 
-  public While(
-      final Token whileToken,
-      final Token openParen,
-      final Expression condition,
-      final Token endParen,
-      final Block code) {
+  public While(final Token whileToken, final Token openParen, final Expression condition, final Token endParen, final Block code) {
     this.whileToken = whileToken;
     ingest(whileToken);
     this.openParen = openParen;
@@ -55,8 +50,7 @@ public class While extends Statement {
 
   @Override
   public ControlFlow typing(final Environment environment) {
-    final var conditionType =
-        condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+    final var conditionType = condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     environment.rules.IsBoolean(conditionType, false);
     code.typing(environment);
     return ControlFlow.Open;

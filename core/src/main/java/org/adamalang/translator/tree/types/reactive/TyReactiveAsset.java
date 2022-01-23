@@ -32,8 +32,7 @@ public class TyReactiveAsset extends TySimpleReactive implements IsOrderable {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveAsset(token).withPosition(position);
   }
 

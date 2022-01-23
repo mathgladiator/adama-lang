@@ -15,8 +15,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanMathResult;
 
 public class RuleSetMultiply {
-  public static CanMathResult CanMultiply(
-      final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
+  public static CanMathResult CanMultiply(final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
     if (typeA != null && typeB != null) {
       final var aInteger = RuleSetCommon.IsInteger(environment, typeA, true);
       final var bInteger = RuleSetCommon.IsInteger(environment, typeB, true);
@@ -47,12 +46,7 @@ public class RuleSetMultiply {
         }
       }
       if (!silent) {
-        environment.document.createError(
-            DocumentPosition.sum(typeA, typeB),
-            String.format(
-                "Type check failure: the types '%s' and '%s' are unable to be multiplied with the * operator.",
-                typeA.getAdamaType(), typeB.getAdamaType()),
-            "Multiply");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: the types '%s' and '%s' are unable to be multiplied with the * operator.", typeA.getAdamaType(), typeB.getAdamaType()), "Multiply");
       }
     }
     return CanMathResult.No;

@@ -38,11 +38,7 @@ public class IndexLookup extends Expression {
   private IndexLookupStyle lookupStyle;
   private String castArg;
 
-  public IndexLookup(
-      final Expression expression,
-      final Token bracketOpenToken,
-      final Expression arg,
-      final Token bracketCloseToken) {
+  public IndexLookup(final Expression expression, final Token bracketOpenToken, final Expression arg, final Token bracketCloseToken) {
     this.expression = expression;
     this.bracketOpenToken = bracketOpenToken;
     this.arg = arg;
@@ -69,32 +65,20 @@ public class IndexLookup extends Expression {
     TyType resultType = null;
     if (environment.rules.IsMap(typeExpr)) {
       final var mapType = (IsMap) typeExpr;
-      final var typeArg =
-          arg.typing(
-              environment.scopeWithComputeContext(ComputeContext.Computation),
-              mapType.getDomainType(environment));
-      if (environment.state.isContextAssignment()
-          && RuleSetMap.IsReactiveMap(environment, typeExpr)) {
+      final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), mapType.getDomainType(environment));
+      if (environment.state.isContextAssignment() && RuleSetMap.IsReactiveMap(environment, typeExpr)) {
         TyType domainType = mapType.getDomainType(environment);
         if (domainType instanceof TyNativeLong && typeArg instanceof TyNativeInteger) {
           castArg = "long";
         }
         lookupStyle = IndexLookupStyle.ExpressionGetOrCreateMethod;
-        if (environment.rules.CanTypeAStoreTypeB(
-            mapType.getDomainType(environment), typeArg, StorageTweak.None, false)) {
+        if (environment.rules.CanTypeAStoreTypeB(mapType.getDomainType(environment), typeArg, StorageTweak.None, false)) {
           resultType = mapType.getRangeType(environment);
         }
       } else {
         lookupStyle = IndexLookupStyle.ExpressionLookupMethod;
-        if (environment.rules.CanTypeAStoreTypeB(
-            mapType.getDomainType(environment), typeArg, StorageTweak.None, false)) {
-          resultType =
-              new TyNativeMaybe(
-                      TypeBehavior.ReadOnlyNativeValue,
-                      null,
-                      null,
-                      new TokenizedItem<>(mapType.getRangeType(environment)))
-                  .withPosition(this);
+        if (environment.rules.CanTypeAStoreTypeB(mapType.getDomainType(environment), typeArg, StorageTweak.None, false)) {
+          resultType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(mapType.getRangeType(environment))).withPosition(this);
         }
       }
     } else {
@@ -102,22 +86,12 @@ public class IndexLookup extends Expression {
       if (typeExpr instanceof DetailIndexLookup) {
         lookupStyle = ((DetailIndexLookup) typeExpr).getLookupStyle(environment);
       }
-      final var typeArg =
-          arg.typing(
-              environment.scopeWithComputeContext(ComputeContext.Computation),
-              new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null));
+      final var typeArg = arg.typing(environment.scopeWithComputeContext(ComputeContext.Computation), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null));
       environment.rules.IsInteger(typeArg, false);
       if (typeExpr != null && typeExpr instanceof DetailContainsAnEmbeddedType) {
-        final var elementType =
-            ((DetailContainsAnEmbeddedType) typeExpr).getEmbeddedType(environment);
+        final var elementType = ((DetailContainsAnEmbeddedType) typeExpr).getEmbeddedType(environment);
         if (elementType != null) {
-          resultType =
-              new TyNativeMaybe(
-                      TypeBehavior.ReadOnlyNativeValue,
-                      null,
-                      null,
-                      new TokenizedItem<>(elementType))
-                  .withPosition(this);
+          resultType = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(elementType)).withPosition(this);
         }
       }
     }

@@ -15,8 +15,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanMathResult;
 
 public class RuleSetAddition {
-  public static CanMathResult CanAdd(
-      final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
+  public static CanMathResult CanAdd(final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
     if (typeA != null && typeB != null) {
       final var aInteger = RuleSetCommon.IsInteger(environment, typeA, true);
       final var bInteger = RuleSetCommon.IsInteger(environment, typeB, true);
@@ -49,12 +48,7 @@ public class RuleSetAddition {
       if (aReactiveList) {
         final var subTypeA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
         if (subTypeA != null) {
-          final var childToRight =
-              CanAdd(
-                  environment,
-                  subTypeA.makeCopyWithNewPosition(typeA, typeA.behavior),
-                  typeB,
-                  silent);
+          final var childToRight = CanAdd(environment, subTypeA.makeCopyWithNewPosition(typeA, typeA.behavior), typeB, silent);
           if (childToRight != CanMathResult.No) {
             return RuleSetMath.UpgradeToList(childToRight);
           }
@@ -62,30 +56,21 @@ public class RuleSetAddition {
       }
       if (!silent) {
         StringBuilder error = new StringBuilder();
-        error.append(
-            String.format(
-                "The types '%s' and '%s' are unable to be added with the + operator.",
-                typeA.getAdamaType(), typeB.getAdamaType()));
+        error.append(String.format("The types '%s' and '%s' are unable to be added with the + operator.", typeA.getAdamaType(), typeB.getAdamaType()));
         if (aInteger) {
-          error.append(
-              "\n\tThe left hand side has a numeric type of 'int' which can be added with types: 'int', 'double', or 'string'.");
+          error.append("\n\tThe left hand side has a numeric type of 'int' which can be added with types: 'int', 'double', or 'string'.");
         } else if (aDouble) {
-          error.append(
-              "\n\tThe left hand side has a numeric type of 'double' which can be added with types: 'int, 'double', or 'string'.");
+          error.append("\n\tThe left hand side has a numeric type of 'double' which can be added with types: 'int, 'double', or 'string'.");
         } else if (aLong) {
-          error.append(
-              "\n\tThe left hand side has a numeric type of 'long' which can be added with types: 'int', 'long', or 'string'.");
+          error.append("\n\tThe left hand side has a numeric type of 'long' which can be added with types: 'int', 'long', or 'string'.");
         } else if (aBool) {
-          error.append(
-              "\n\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'.");
+          error.append("\n\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'.");
         } else if (aString) {
-          error.append(
-              "\n\tThe left hand side is a string which may be added with types: bool, int, double ");
+          error.append("\n\tThe left hand side is a string which may be added with types: bool, int, double ");
         } else {
           error.append("\n\tThe left hand side has a type that is unable to the added.");
         }
-        environment.document.createError(
-            DocumentPosition.sum(typeA, typeB), error.toString(), "ADD01");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), error.toString(), "ADD01");
       }
     }
     return CanMathResult.No;

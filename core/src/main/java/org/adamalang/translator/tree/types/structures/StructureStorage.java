@@ -43,10 +43,7 @@ public class StructureStorage extends DocumentPosition {
   public Token closeBraceToken;
   private boolean typedAlready;
 
-  public StructureStorage(
-      final StorageSpecialization specialization,
-      final boolean anonymous,
-      final Token openBraceToken) {
+  public StructureStorage(final StorageSpecialization specialization, final boolean anonymous, final Token openBraceToken) {
     this.specialization = specialization;
     this.anonymous = anonymous;
     this.openBraceToken = openBraceToken;
@@ -70,8 +67,7 @@ public class StructureStorage extends DocumentPosition {
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
     writer.beginObject();
     for (FieldDefinition fd : fieldsByOrder) {
-      if (specialization == StorageSpecialization.Record
-          && (fd.policy == null || fd.policy instanceof PrivatePolicy)) {
+      if (specialization == StorageSpecialization.Record && (fd.policy == null || fd.policy instanceof PrivatePolicy)) {
         continue;
       }
 
@@ -108,24 +104,17 @@ public class StructureStorage extends DocumentPosition {
   public void add(final BubbleDefinition bd, final ArrayList<Consumer<Environment>> order) {
     emissions.add(emit -> bd.emit(emit));
     ingest(bd);
-    order.add(
-        env -> {
-          bd.typing(
-              env.watch(
-                  name -> {
-                    if (!env.document.functionTypes.containsKey(name)) {
-                      bd.variablesToWatch.add(name);
-                    }
-                  }));
-        });
+    order.add(env -> {
+      bd.typing(env.watch(name -> {
+        if (!env.document.functionTypes.containsKey(name)) {
+          bd.variablesToWatch.add(name);
+        }
+      }));
+    });
     if (has(bd.nameToken.text)) {
-      order.add(
-          env -> {
-            env.document.createError(
-                bd,
-                String.format("Bubble '%s' was already defined", bd.nameToken.text),
-                "StructureDefine");
-          });
+      order.add(env -> {
+        env.document.createError(bd, String.format("Bubble '%s' was already defined", bd.nameToken.text), "StructureDefine");
+      });
       return;
     }
     bubbles.put(bd.nameToken.text, bd);
@@ -140,18 +129,15 @@ public class StructureStorage extends DocumentPosition {
     emissions.add(emit -> dm.emit(emit));
     ingest(dm);
     methods.add(dm);
-    typeCheckOrder.add(
-        env -> {
-          final var foi = dm.typing(env);
-          var functional = methodTypes.get(dm.name);
-          if (functional == null) {
-            functional =
-                new TyNativeFunctional(
-                    dm.name, new ArrayList<>(), FunctionStyleJava.ExpressionThenNameWithArgs);
-            methodTypes.put(dm.name, functional);
-          }
-          functional.overloads.add(foi);
-        });
+    typeCheckOrder.add(env -> {
+      final var foi = dm.typing(env);
+      var functional = methodTypes.get(dm.name);
+      if (functional == null) {
+        functional = new TyNativeFunctional(dm.name, new ArrayList<>(), FunctionStyleJava.ExpressionThenNameWithArgs);
+        methodTypes.put(dm.name, functional);
+      }
+      functional.overloads.add(foi);
+    });
   }
 
   /** add the given field to the record */
@@ -164,30 +150,22 @@ public class StructureStorage extends DocumentPosition {
     emissions.add(emit -> fd.emit(emit));
     ingest(fd);
     if (has(fd.nameToken.text)) {
-      order.add(
-          env -> {
-            env.document.createError(
-                fd,
-                String.format("Field '%s' was already defined", fd.nameToken.text),
-                "StructureDefine");
-          });
+      order.add(env -> {
+        env.document.createError(fd, String.format("Field '%s' was already defined", fd.nameToken.text), "StructureDefine");
+      });
       return;
     }
     if (fd.defaultValueOverride != null) {
       fieldsWithDefaults.add(fd.name);
     }
-    order.add(
-        env -> {
-          fd.typing(
-              env.watch(
-                  name -> {
-                    if (!env.document.functionTypes.containsKey(name)) {
-                      fd.variablesToWatch.add(name);
-                    }
-                  }),
-              this);
-          env.define(fd.name, fd.type, false, fd);
-        });
+    order.add(env -> {
+      fd.typing(env.watch(name -> {
+        if (!env.document.functionTypes.containsKey(name)) {
+          fd.variablesToWatch.add(name);
+        }
+      }), this);
+      env.define(fd.name, fd.type, false, fd);
+    });
     fields.put(fd.name, fd);
     fieldsByOrder.add(fd);
   }
@@ -197,37 +175,21 @@ public class StructureStorage extends DocumentPosition {
     if (!indexSet.contains(indexDefn.nameToken.text)) {
       indices.add(indexDefn);
       indexSet.add(indexDefn.nameToken.text);
-      typeCheckOrder.add(
-          env -> {
-            final var fd = fields.get(indexDefn.nameToken.text);
-            if (fd == null) {
-              env.document.createError(
-                  indexDefn,
-                  String.format("Index could not find field '%s'", indexDefn.nameToken.text),
-                  "StructureDefine");
-            } else {
-              final var canBeIndex =
-                  fd.type instanceof TyReactiveInteger
-                      || fd.type instanceof TyReactiveEnum
-                      || fd.type instanceof TyReactiveClient;
-              if (!canBeIndex) {
-                env.document.createError(
-                    indexDefn,
-                    String.format(
-                        "Index for field '%s' is not possible due to type",
-                        indexDefn.nameToken.text, fd.type.getAdamaType()),
-                    "StructureDefine");
-              }
-            }
-          });
+      typeCheckOrder.add(env -> {
+        final var fd = fields.get(indexDefn.nameToken.text);
+        if (fd == null) {
+          env.document.createError(indexDefn, String.format("Index could not find field '%s'", indexDefn.nameToken.text), "StructureDefine");
+        } else {
+          final var canBeIndex = fd.type instanceof TyReactiveInteger || fd.type instanceof TyReactiveEnum || fd.type instanceof TyReactiveClient;
+          if (!canBeIndex) {
+            env.document.createError(indexDefn, String.format("Index for field '%s' is not possible due to type", indexDefn.nameToken.text, fd.type.getAdamaType()), "StructureDefine");
+          }
+        }
+      });
     } else {
-      typeCheckOrder.add(
-          env -> {
-            env.document.createError(
-                indexDefn,
-                String.format("Index was already defined: '%s'", indexDefn.nameToken.text),
-                "StructureDefine");
-          });
+      typeCheckOrder.add(env -> {
+        env.document.createError(indexDefn, String.format("Index was already defined: '%s'", indexDefn.nameToken.text), "StructureDefine");
+      });
     }
   }
 
@@ -235,20 +197,15 @@ public class StructureStorage extends DocumentPosition {
   public void addPolicy(final DefineCustomPolicy policy) {
     emissions.add(emit -> policy.emit(emit));
     if (policies.containsKey(policy.name.text)) {
-      typeCheckOrder.add(
-          env -> {
-            env.document.createError(
-                policy,
-                String.format("Policy '%s' was already defined", policy.name.text),
-                "RecordMethodDefine");
-          });
+      typeCheckOrder.add(env -> {
+        env.document.createError(policy, String.format("Policy '%s' was already defined", policy.name.text), "RecordMethodDefine");
+      });
       return;
     }
     policies.put(policy.name.text, policy);
-    typeCheckOrder.add(
-        env -> {
-          policy.typeCheck(env);
-        });
+    typeCheckOrder.add(env -> {
+      policy.typeCheck(env);
+    });
   }
 
   public void emit(final Consumer<Token> yielder) {
@@ -266,8 +223,7 @@ public class StructureStorage extends DocumentPosition {
 
   public void finalizeRecord() {
     if (!fields.containsKey("id")) {
-      final var fakeId =
-          FieldDefinition.invent(new TyReactiveInteger(null).withPosition(this), "id");
+      final var fakeId = FieldDefinition.invent(new TyReactiveInteger(null).withPosition(this), "id");
       fakeId.ingest(this);
       fields.put("id", fakeId);
       fieldsByOrder.add(fakeId);
@@ -281,34 +237,36 @@ public class StructureStorage extends DocumentPosition {
     return storage;
   }
 
-  public void markPolicyForVisibility(
-      final Token requireToken, final Token policyToCheckToken, final Token semicolon) {
-    emissions.add(
-        yielder -> {
-          yielder.accept(requireToken);
-          yielder.accept(policyToCheckToken);
-          yielder.accept(semicolon);
-        });
+  public void markPolicyForVisibility(final Token requireToken, final Token policyToCheckToken, final Token semicolon) {
+    emissions.add(yielder -> {
+      yielder.accept(requireToken);
+      yielder.accept(policyToCheckToken);
+      yielder.accept(semicolon);
+    });
     final var policyToCheck = policyToCheckToken.text;
 
     policiesForVisibility.add(policyToCheck);
-    typeCheckOrder.add(
-        env -> {
-          if (!policies.containsKey(policyToCheck)) {
-            final var dp = new DocumentPosition();
-            dp.ingest(requireToken);
-            dp.ingest(semicolon);
-            env.document.createError(
-                dp, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
-          }
-        });
+    typeCheckOrder.add(env -> {
+      if (!policies.containsKey(policyToCheck)) {
+        final var dp = new DocumentPosition();
+        dp.ingest(requireToken);
+        dp.ingest(semicolon);
+        env.document.createError(dp, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
+      }
+    });
   }
 
   /** is the other record type the same as this type. Must be exact. */
   public boolean match(final StructureStorage other, final Environment environment) {
-    if (specialization != other.specialization) { return false; }
-    if (fields.size() != other.fields.size()) { return false; }
-    if (fieldsWithDefaults.size() > 0 || other.fieldsWithDefaults.size() > 0) { return false; }
+    if (specialization != other.specialization) {
+      return false;
+    }
+    if (fields.size() != other.fields.size()) {
+      return false;
+    }
+    if (fieldsWithDefaults.size() > 0 || other.fieldsWithDefaults.size() > 0) {
+      return false;
+    }
     final var thisIt = fields.values().iterator();
     final var thisOther = other.fields.values().iterator();
     while (thisIt.hasNext() && thisOther.hasNext()) {

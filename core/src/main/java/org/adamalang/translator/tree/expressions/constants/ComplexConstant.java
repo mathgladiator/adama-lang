@@ -42,8 +42,7 @@ public class ComplexConstant extends Expression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     environment.mustBeComputeContext(this);
-    return new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, tokens[0])
-        .withPosition(this);
+    return new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, tokens[0]).withPosition(this);
   }
 
   @Override

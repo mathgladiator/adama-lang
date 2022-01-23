@@ -70,11 +70,7 @@ public class Block extends Statement {
     specialWriteJava(sb, environment, true, true);
   }
 
-  public void specialWriteJava(
-      final StringBuilderWithTabs sb,
-      final Environment environment,
-      final boolean brace,
-      final boolean tabDownOnEnd) {
+  public void specialWriteJava(final StringBuilderWithTabs sb, final Environment environment, final boolean brace, final boolean tabDownOnEnd) {
     final var child = environment.scope();
     final var n = statements.size();
     if (n == 0 && brace) {

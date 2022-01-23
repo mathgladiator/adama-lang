@@ -18,7 +18,7 @@ public enum CanBumpResult {
 
   public final boolean reactive;
 
-  private CanBumpResult(final boolean reactive) {
+  CanBumpResult(final boolean reactive) {
     this.reactive = reactive;
   }
 }

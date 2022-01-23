@@ -31,8 +31,7 @@ public class TyReactiveComplex extends TySimpleReactive {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveComplex(token).withPosition(position);
   }
 

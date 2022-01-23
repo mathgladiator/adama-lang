@@ -9,4 +9,5 @@
  */
 package org.adamalang.translator.tree.types.traits.assign;
 
-public interface AssignmentViaSetter {}
+public interface AssignmentViaSetter {
+}

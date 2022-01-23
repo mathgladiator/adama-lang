@@ -27,12 +27,7 @@ public class TransitionStateMachine extends Statement {
   public final Token transitionToken;
   private final Expression evaluateIn;
 
-  public TransitionStateMachine(
-      final Token transitionToken,
-      final Expression next,
-      final Token inToken,
-      final Expression evaluateIn,
-      final Token semicolonToken) {
+  public TransitionStateMachine(final Token transitionToken, final Expression next, final Token inToken, final Expression evaluateIn, final Token semicolonToken) {
     this.transitionToken = transitionToken;
     ingest(transitionToken);
     this.next = next;

@@ -24,10 +24,9 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
 
-public class TyNativeClient extends TySimpleNative
-    implements DetailHasDeltaType, //
-        DetailEqualityTestingRequiresWrapping, //
-        AssignmentViaNative //
+public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType, //
+    DetailEqualityTestingRequiresWrapping, //
+    AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
@@ -53,8 +52,7 @@ public class TyNativeClient extends TySimpleNative
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeClient(newBehavior, readonlyToken, token).withPosition(position);
   }
 

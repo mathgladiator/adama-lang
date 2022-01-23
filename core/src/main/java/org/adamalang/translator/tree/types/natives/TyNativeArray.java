@@ -27,21 +27,19 @@ import org.adamalang.translator.tree.types.traits.details.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeArray extends TyType
-    implements //
-        AssignmentViaNative, //
-        DetailContainsAnEmbeddedType, //
-        DetailHasDeltaType, //
-        DetailIndexLookup, //
-        DetailInventDefaultValueExpression, //
-        DetailNativeDeclarationIsNotStandard, //
-        DetailTypeHasMethods //
+public class TyNativeArray extends TyType implements //
+    AssignmentViaNative, //
+    DetailContainsAnEmbeddedType, //
+    DetailHasDeltaType, //
+    DetailIndexLookup, //
+    DetailInventDefaultValueExpression, //
+    DetailNativeDeclarationIsNotStandard, //
+    DetailTypeHasMethods //
 {
   public final Token arrayToken;
   public final TyType elementType;
 
-  public TyNativeArray(
-      final TypeBehavior behavior, final TyType elementType, final Token arrayToken) {
+  public TyNativeArray(final TypeBehavior behavior, final TyType elementType, final Token arrayToken) {
     super(behavior);
     this.elementType = elementType;
     this.arrayToken = arrayToken;
@@ -71,11 +69,8 @@ public class TyNativeArray extends TyType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeArray(
-            newBehavior, elementType.makeCopyWithNewPosition(position, newBehavior), arrayToken)
-        .withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeArray(newBehavior, elementType.makeCopyWithNewPosition(position, newBehavior), arrayToken).withPosition(position);
   }
 
   @Override
@@ -135,16 +130,7 @@ public class TyNativeArray extends TyType
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement(
-          "length",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance(
-                  "length",
-                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, arrayToken)
-                      .withPosition(this),
-                  new ArrayList<>(),
-                  false)),
-          FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("length", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, arrayToken).withPosition(this), new ArrayList<>(), false)), FunctionStyleJava.None);
     }
     return environment.state.globals.findExtension(this, name);
   }

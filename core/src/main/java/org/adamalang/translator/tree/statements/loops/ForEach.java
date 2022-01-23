@@ -34,14 +34,7 @@ public class ForEach extends Statement {
   public final Token variableToken;
   private TyType elementType;
 
-  public ForEach(
-      final Token foreachToken,
-      final Token openParen,
-      final Token variableToken,
-      final Token inToken,
-      final Expression iterable,
-      final Token endParen,
-      final Block code) {
+  public ForEach(final Token foreachToken, final Token openParen, final Token variableToken, final Token inToken, final Expression iterable, final Token endParen, final Block code) {
     this.foreachToken = foreachToken;
     this.openParen = openParen;
     variable = variableToken.text;
@@ -69,10 +62,7 @@ public class ForEach extends Statement {
 
   @Override
   public ControlFlow typing(final Environment environment) {
-    final var type =
-        iterable.typing(
-            environment.scopeWithComputeContext(ComputeContext.Computation),
-            null /* we know nothing to suggest */);
+    final var type = iterable.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null /* we know nothing to suggest */);
     if (type != null && environment.rules.IsIterable(type, false)) {
       elementType = ((DetailContainsAnEmbeddedType) type).getEmbeddedType(environment);
       if (elementType != null) {
@@ -87,11 +77,7 @@ public class ForEach extends Statement {
   @Override
   public void writeJava(final StringBuilderWithTabs sb, final Environment environment) {
     if (elementType != null) {
-      sb.append("for(")
-          .append(elementType.getJavaBoxType(environment))
-          .append(" ")
-          .append(variable)
-          .append(" : ");
+      sb.append("for(").append(elementType.getJavaBoxType(environment)).append(" ").append(variable).append(" : ");
       iterable.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
       sb.append(") ");
       final var next = environment.scopeWithComputeContext(ComputeContext.Computation);

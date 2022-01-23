@@ -26,22 +26,16 @@ import org.adamalang.translator.tree.types.traits.details.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeMaybe extends TyType
-    implements DetailContainsAnEmbeddedType, //
-        DetailNativeDeclarationIsNotStandard, //
-        DetailHasDeltaType, //
-        DetailInventDefaultValueExpression,
-        AssignmentViaSetter, //
-        DetailTypeHasMethods {
+public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedType, //
+    DetailNativeDeclarationIsNotStandard, //
+    DetailHasDeltaType, //
+    DetailInventDefaultValueExpression, AssignmentViaSetter, //
+    DetailTypeHasMethods {
   public final Token maybeToken;
   public final Token readonlyToken;
   public final TokenizedItem<TyType> tokenElementType;
 
-  public TyNativeMaybe(
-      final TypeBehavior behavior,
-      final Token readonlyToken,
-      final Token maybeToken,
-      final TokenizedItem<TyType> tokenElementType) {
+  public TyNativeMaybe(final TypeBehavior behavior, final Token readonlyToken, final Token maybeToken, final TokenizedItem<TyType> tokenElementType) {
     super(behavior);
     this.readonlyToken = readonlyToken;
     this.maybeToken = maybeToken;
@@ -87,15 +81,8 @@ public class TyNativeMaybe extends TyType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeMaybe(
-            newBehavior,
-            readonlyToken,
-            maybeToken,
-            new TokenizedItem<>(
-                tokenElementType.item.makeCopyWithNewPosition(position, newBehavior)))
-        .withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeMaybe(newBehavior, readonlyToken, maybeToken, new TokenizedItem<>(tokenElementType.item.makeCopyWithNewPosition(position, newBehavior))).withPosition(position);
   }
 
   @Override
@@ -143,31 +130,15 @@ public class TyNativeMaybe extends TyType
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("delete".equals(name)) {
-      return new TyNativeFunctional(
-          "delete",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance("size", null, new ArrayList<>(), false)),
-          FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", null, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("has".equals(name)) {
-      return new TyNativeFunctional(
-          "has",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance(
-                  "has",
-                  new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null),
-                  new ArrayList<>(),
-                  false)),
-          FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("has", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("has", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("getOrDefaultTo".equals(name)) {
       ArrayList<TyType> args = new ArrayList<>();
       args.add(tokenElementType.item);
-      return new TyNativeFunctional(
-          "getOrDefaultTo",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, false)),
-          FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }

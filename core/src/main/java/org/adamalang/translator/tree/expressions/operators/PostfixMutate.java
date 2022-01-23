@@ -44,18 +44,13 @@ public class PostfixMutate extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    final var result =
-        expression.typing(
-            environment.scopeWithComputeContext(ComputeContext.Assignment),
-            null /* no suggestion makes sense */);
+    final var result = expression.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null /* no suggestion makes sense */);
     bumpResult = environment.rules.CanBumpNumeric(result, false);
     if (bumpResult == CanBumpResult.No) {
       return null;
     }
     if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) {
-      return ((DetailComputeRequiresGet) result)
-          .typeAfterGet(environment)
-          .makeCopyWithNewPosition(this, result.behavior);
+      return ((DetailComputeRequiresGet) result).typeAfterGet(environment).makeCopyWithNewPosition(this, result.behavior);
     }
     return result.makeCopyWithNewPosition(this, result.behavior);
   }

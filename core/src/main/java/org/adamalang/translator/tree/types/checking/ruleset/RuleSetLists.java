@@ -14,8 +14,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 
 public class RuleSetLists {
-  public static boolean IsNativeListOfStructure(
-      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsNativeListOfStructure(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     if (tyTypeOriginal != null) {
       final var tyType = RuleSetCommon.Resolve(environment, tyTypeOriginal, silent);
       if (IsNativeList(environment, tyType, silent)) {
@@ -28,8 +27,7 @@ public class RuleSetLists {
     return false;
   }
 
-  private static boolean IsNativeList(
-      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  private static boolean IsNativeList(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);
@@ -37,19 +35,13 @@ public class RuleSetLists {
         return true;
       }
       if (!silent) {
-        environment.document.createError(
-            tyTypeOriginal,
-            String.format(
-                "Type check failure: expected an list, but was actually type '%s'.",
-                tyTypeOriginal.getAdamaType()),
-            "RuleSetArray");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: expected an list, but was actually type '%s'.", tyTypeOriginal.getAdamaType()), "RuleSetArray");
       }
     }
     return false;
   }
 
-  static boolean TestReactiveList(
-      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  static boolean TestReactiveList(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);

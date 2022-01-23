@@ -16,8 +16,7 @@ import org.adamalang.translator.tree.definitions.DocumentEvent;
 
 /** responsible for writing event handlers */
 public class CodeGenEventHandlers {
-  public static void writeEventHandlers(
-      final StringBuilderWithTabs sb, final Environment environment) {
+  public static void writeEventHandlers(final StringBuilderWithTabs sb, final Environment environment) {
     // there can be multiple connected and disconnected handlers, we iterate them
     var connectCount = 0;
     var disconnectCount = 0;
@@ -28,68 +27,31 @@ public class CodeGenEventHandlers {
     var askSendWhileDisconnected = 0;
     for (final DefineDocumentEvent dce : environment.document.events) {
       if (dce.which == DocumentEvent.ClientConnected) {
-        sb.append(
-            "public boolean __onConnected__"
-                + connectCount
-                + "(NtClient "
-                + dce.clientVarToken.text
-                + ") ");
+        sb.append("public boolean __onConnected__" + connectCount + "(NtClient " + dce.clientVarToken.text + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         connectCount++;
       } else if (dce.which == DocumentEvent.ClientDisconnected) {
-        sb.append(
-            "public void __onDisconnected__"
-                + disconnectCount
-                + "(NtClient "
-                + dce.clientVarToken.text
-                + ") ");
+        sb.append("public void __onDisconnected__" + disconnectCount + "(NtClient " + dce.clientVarToken.text + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         disconnectCount++;
       } else if (dce.which == DocumentEvent.AskCreation) {
-        sb.append(
-            "public static boolean __onCanCreate__"
-                + askCreationCount
-                + "(StaticState __static_state, NtClient "
-                + dce.clientVarToken.text
-                + ") ");
+        sb.append("public static boolean __onCanCreate__" + askCreationCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askCreationCount++;
       } else if (dce.which == DocumentEvent.AskInvention) {
-        sb.append(
-            "public static boolean __onCanInvent__"
-                + askInventionCount
-                + "(StaticState __static_state, NtClient "
-                + dce.clientVarToken.text
-                + ")").tabUp().writeNewline();
+        sb.append("public static boolean __onCanInvent__" + askInventionCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ")").tabUp().writeNewline();
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askInventionCount++;
       } else if (dce.which == DocumentEvent.AskSendWhileDisconnected) {
-        sb.append(
-            "public static boolean __onCanSendWhileDisconnected__"
-                + askSendWhileDisconnected
-                + "(StaticState __static_state, NtClient "
-                + dce.clientVarToken.text
-                + ")").tabUp().writeNewline();
+        sb.append("public static boolean __onCanSendWhileDisconnected__" + askSendWhileDisconnected + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ")").tabUp().writeNewline();
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askSendWhileDisconnected++;
       } else if (dce.which == DocumentEvent.AskAssetAttachment) {
-        sb.append(
-            "public boolean __onCanAssetAttached__"
-                + askAssetAttachCount
-                + "(NtClient "
-                + dce.clientVarToken.text
-                + ") ");
+        sb.append("public boolean __onCanAssetAttached__" + askAssetAttachCount + "(NtClient " + dce.clientVarToken.text + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askAssetAttachCount++;
       } else if (dce.which == DocumentEvent.AssetAttachment) {
-        sb.append(
-            "public void __onAssetAttached__"
-                + disconnectCount
-                + "(NtClient "
-                + dce.clientVarToken.text
-                + ", NtAsset "
-                + dce.parameterNameToken.text
-                + ") ");
+        sb.append("public void __onAssetAttached__" + disconnectCount + "(NtClient " + dce.clientVarToken.text + ", NtAsset " + dce.parameterNameToken.text + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         assetAttachCount++;
       }
@@ -138,9 +100,7 @@ public class CodeGenEventHandlers {
     sb.append("}").writeNewline();
 
     // inject the can create policy
-    sb.append("public static boolean __onCanCreate(NtClient __client) {")
-        .tabUp()
-        .writeNewline();
+    sb.append("public static boolean __onCanCreate(NtClient __client) {").tabUp().writeNewline();
     if (askCreationCount > 0) {
       sb.append("boolean __result = false;").writeNewline();
       sb.append("StaticState __static_state = new StaticState();").writeNewline();
@@ -159,9 +119,7 @@ public class CodeGenEventHandlers {
     sb.append("}").writeNewline();
 
     // inject the can invent a topic when the document doesn't exist
-    sb.append("public static boolean __onCanInvent(NtClient __client) {")
-      .tabUp()
-      .writeNewline();
+    sb.append("public static boolean __onCanInvent(NtClient __client) {").tabUp().writeNewline();
     if (askInventionCount > 0) {
       sb.append("boolean __result = false;").writeNewline();
       sb.append("StaticState __static_state = new StaticState();").writeNewline();
@@ -180,9 +138,7 @@ public class CodeGenEventHandlers {
     sb.append("}").writeNewline();
 
     // inject the can send to the document when it doesn't exist
-    sb.append("public static boolean __onCanSendWhileDisconnected(NtClient __client) {")
-      .tabUp()
-      .writeNewline();
+    sb.append("public static boolean __onCanSendWhileDisconnected(NtClient __client) {").tabUp().writeNewline();
     if (askSendWhileDisconnected > 0) {
       sb.append("boolean __result = false;").writeNewline();
       sb.append("StaticState __static_state = new StaticState();").writeNewline();
@@ -203,12 +159,9 @@ public class CodeGenEventHandlers {
     // join the disconnected handlers into one
     sb.append("@Override").writeNewline();
     if (assetAttachCount == 0) {
-      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}")
-          .writeNewline();
+      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}").writeNewline();
     } else {
-      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {")
-          .tabUp()
-          .writeNewline();
+      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {").tabUp().writeNewline();
       for (var k = 0; k < assetAttachCount; k++) {
         sb.append("__onAssetAttached__" + k + "(__cvalue, __asset);");
         if (k == assetAttachCount - 1) {

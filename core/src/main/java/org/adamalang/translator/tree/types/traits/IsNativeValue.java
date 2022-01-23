@@ -9,4 +9,5 @@
  */
 package org.adamalang.translator.tree.types.traits;
 
-public interface IsNativeValue {}
+public interface IsNativeValue {
+}

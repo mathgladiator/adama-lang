@@ -23,8 +23,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class EnumStorage extends DocumentPosition {
-  public final LinkedHashMap<String, HashMap<String, ArrayList<DefineDispatcher>>>
-      dispatchersByNameThenSignature;
+  public final LinkedHashMap<String, HashMap<String, ArrayList<DefineDispatcher>>> dispatchersByNameThenSignature;
   public final HashSet<String> duplicates;
   public final LinkedHashMap<String, Integer> options;
   private final ArrayList<Consumer<Consumer<Token>>> emissions;
@@ -62,24 +61,18 @@ public class EnumStorage extends DocumentPosition {
     writer.endObject();
   }
 
-  public void add(
-      final Token isDefault,
-      final Token optionToken,
-      final Token colonToken,
-      final Token valueToken,
-      final int value) {
+  public void add(final Token isDefault, final Token optionToken, final Token colonToken, final Token valueToken, final int value) {
     ingest(isDefault);
-    emissions.add(
-        yielder -> {
-          if (isDefault != null) {
-            yielder.accept(isDefault);
-          }
-          yielder.accept(optionToken);
-          if (colonToken != null) {
-            yielder.accept(colonToken);
-            yielder.accept(valueToken);
-          }
-        });
+    emissions.add(yielder -> {
+      if (isDefault != null) {
+        yielder.accept(isDefault);
+      }
+      yielder.accept(optionToken);
+      if (colonToken != null) {
+        yielder.accept(colonToken);
+        yielder.accept(valueToken);
+      }
+    });
     if (options.containsKey(optionToken.text) || options.containsValue(value)) {
       duplicates.add(optionToken.text);
     }
@@ -123,8 +116,7 @@ public class EnumStorage extends DocumentPosition {
     for (final Map.Entry<String, ArrayList<DefineDispatcher>> dispatchers : possible.entrySet()) {
       overloads.add(dispatchers.getValue().get(0).computeFunctionOverloadInstance());
     }
-    return new TyNativeFunctional(
-        name, overloads, FunctionStyleJava.InjectNameThenExpressionAndArgs);
+    return new TyNativeFunctional(name, overloads, FunctionStyleJava.InjectNameThenExpressionAndArgs);
   }
 
   public void emit(final Consumer<Token> yielder) {
@@ -143,24 +135,16 @@ public class EnumStorage extends DocumentPosition {
 
   public void typing(final Environment environment) {
     if (options.size() == 0) {
-      environment.document.createError(
-          this, String.format("enum '%s' has no values", name), "EnumStorage");
+      environment.document.createError(this, String.format("enum '%s' has no values", name), "EnumStorage");
     }
-    for (final Map.Entry<String, HashMap<String, ArrayList<DefineDispatcher>>> dispatcherMap :
-        dispatchersByNameThenSignature.entrySet()) {
-      for (final Map.Entry<String, ArrayList<DefineDispatcher>> dispatchers :
-          dispatcherMap.getValue().entrySet()) {
+    for (final Map.Entry<String, HashMap<String, ArrayList<DefineDispatcher>>> dispatcherMap : dispatchersByNameThenSignature.entrySet()) {
+      for (final Map.Entry<String, ArrayList<DefineDispatcher>> dispatchers : dispatcherMap.getValue().entrySet()) {
         final var firstDispatcher = dispatchers.getValue().get(0);
         // validate the values
         final var coverage = new HashSet<String>();
         for (final DefineDispatcher dd : dispatchers.getValue()) {
           if (!valueFound(dd, coverage)) {
-            environment.document.createError(
-                dd,
-                String.format(
-                    "Dispatcher '%s' has a value prefix '%s' which does not relate to any value within enum '%s'",
-                    dd.functionName.text, dd.valueToken.text, dd.enumNameToken.text),
-                "EnumStorage");
+            environment.document.createError(dd, String.format("Dispatcher '%s' has a value prefix '%s' which does not relate to any value within enum '%s'", dd.functionName.text, dd.valueToken.text, dd.enumNameToken.text), "EnumStorage");
           }
         }
         // make sure we have coverage
@@ -177,60 +161,26 @@ public class EnumStorage extends DocumentPosition {
         }
         for (final DefineDispatcher other : dispatchers.getValue()) {
           if (firstDispatcher.returnType != null && other.returnType != null) {
-            final var checkF2Oret =
-                environment.rules.CanTypeAStoreTypeB(
-                    firstDispatcher.returnType, other.returnType, StorageTweak.None, true);
-            final var checkO2Fret =
-                environment.rules.CanTypeAStoreTypeB(
-                    other.returnType, firstDispatcher.returnType, StorageTweak.None, true);
+            final var checkF2Oret = environment.rules.CanTypeAStoreTypeB(firstDispatcher.returnType, other.returnType, StorageTweak.None, true);
+            final var checkO2Fret = environment.rules.CanTypeAStoreTypeB(other.returnType, firstDispatcher.returnType, StorageTweak.None, true);
             if (!checkF2Oret || !checkO2Fret) {
-              environment.document.createError(
-                  firstDispatcher,
-                  String.format(
-                      "Dispatcher '%s' do not agree on return type.",
-                      firstDispatcher.functionName.text),
-                  "EnumStorage");
-              environment.document.createError(
-                  other,
-                  String.format(
-                      "Dispatcher '%s' do not agree on return type.",
-                      firstDispatcher.functionName.text),
-                  "EnumStorage");
+              environment.document.createError(firstDispatcher, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
+              environment.document.createError(other, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
             }
           } else if (!(firstDispatcher.returnType == null && other.returnType == null)) {
-            environment.document.createError(
-                firstDispatcher,
-                String.format(
-                    "Dispatcher '%s' do not agree on return type.",
-                    firstDispatcher.functionName.text),
-                "EnumStorage");
-            environment.document.createError(
-                other,
-                String.format(
-                    "Dispatcher '%s' do not agree on return type.",
-                    firstDispatcher.functionName.text),
-                "EnumStorage");
+            environment.document.createError(firstDispatcher, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
+            environment.document.createError(other, String.format("Dispatcher '%s' do not agree on return type.", firstDispatcher.functionName.text), "EnumStorage");
           }
         }
         if (firstDispatcher.returnType != null) {
           for (final String value : options.keySet()) {
             if (findFindingDispatchers(dispatchers.getValue(), value, false).size() > 1) {
-              environment.document.createError(
-                  firstDispatcher,
-                  String.format(
-                      "Dispatcher '%s' returns and matches too many for '%s'",
-                      firstDispatcher.functionName.text, value),
-                  "EnumStorage");
+              environment.document.createError(firstDispatcher, String.format("Dispatcher '%s' returns and matches too many for '%s'", firstDispatcher.functionName.text, value), "EnumStorage");
             }
           }
         }
         if (missing != null) {
-          environment.document.createError(
-              this,
-              String.format(
-                  "Enum '%s' has a dispatcher '%s' which is incomplete and lacks: %s.",
-                  name, dispatcherMap.getKey(), missing.toString()),
-              "EnumStorage");
+          environment.document.createError(this, String.format("Enum '%s' has a dispatcher '%s' which is incomplete and lacks: %s.", name, dispatcherMap.getKey(), missing), "EnumStorage");
         }
       }
     }
@@ -255,10 +205,7 @@ public class EnumStorage extends DocumentPosition {
     return result;
   }
 
-  public TreeMap<String, DefineDispatcher> findFindingDispatchers(
-      final ArrayList<DefineDispatcher> dispatchers,
-      final String option,
-      final boolean includeCatchAll) {
+  public TreeMap<String, DefineDispatcher> findFindingDispatchers(final ArrayList<DefineDispatcher> dispatchers, final String option, final boolean includeCatchAll) {
     final var matches = new TreeMap<String, DefineDispatcher>();
     for (final DefineDispatcher dispatcher : dispatchers) {
       if (dispatcher.starToken == null) {

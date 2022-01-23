@@ -16,8 +16,7 @@ import org.adamalang.translator.tree.types.checking.properties.CanTestEqualityRe
 import org.adamalang.translator.tree.types.traits.IsEnum;
 
 public class RuleSetEquality {
-  public static CanTestEqualityResult CanTestEquality(
-      final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
+  public static CanTestEqualityResult CanTestEquality(final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
     if (typeA != null && typeB != null) {
       final var aInteger = RuleSetCommon.IsInteger(environment, typeA, true);
       final var bInteger = RuleSetCommon.IsInteger(environment, typeB, true);
@@ -31,7 +30,9 @@ public class RuleSetEquality {
       }
       final var aLong = RuleSetCommon.IsLong(environment, typeA, true);
       final var bLong = RuleSetCommon.IsLong(environment, typeB, true);
-      if ((aInteger || aLong) && (bInteger || bLong)) { return CanTestEqualityResult.Yes; }
+      if ((aInteger || aLong) && (bInteger || bLong)) {
+        return CanTestEqualityResult.Yes;
+      }
       final var aNumber = RuleSetCommon.IsNumeric(environment, typeA, true);
       final var bNumber = RuleSetCommon.IsNumeric(environment, typeB, true);
       if (aNumber && bNumber) {
@@ -74,22 +75,12 @@ public class RuleSetEquality {
         if (((IsEnum) typeA).name().equals(((IsEnum) typeB).name())) {
           return CanTestEqualityResult.Yes;
         } else if (!silent) {
-          environment.document.createError(
-              DocumentPosition.sum(typeA, typeB),
-              String.format(
-                  "Type check failure: enum types are incompatible '%s' vs '%s'.",
-                  typeA.getAdamaType(), typeB.getAdamaType()),
-              "RuleSetEquality");
+          environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetEquality");
         }
         return CanTestEqualityResult.No;
       }
       if (!silent) {
-        environment.document.createError(
-            DocumentPosition.sum(typeA, typeB),
-            String.format(
-                "Type check failure: unable to compare types '%s' and '%s' for equality.",
-                typeA.getAdamaType(), typeB.getAdamaType()),
-            "RuleSetEquality");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("Type check failure: unable to compare types '%s' and '%s' for equality.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetEquality");
       }
     }
     return CanTestEqualityResult.No;

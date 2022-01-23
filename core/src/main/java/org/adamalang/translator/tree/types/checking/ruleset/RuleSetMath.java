@@ -20,37 +20,21 @@ import org.adamalang.translator.tree.types.natives.TyNativeLong;
 import org.adamalang.translator.tree.types.natives.TyNativeString;
 
 public class RuleSetMath {
-  public static TyType InventMathType(
-      final Environment environment,
-      final TyType typeA,
-      final TyType typeB,
-      final CanMathResult result) {
+  public static TyType InventMathType(final Environment environment, final TyType typeA, final TyType typeB, final CanMathResult result) {
     TyType resultType = null;
     switch (result) {
       case YesAndResultIsInteger:
-        resultType =
-            new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int"))
-                .withPosition(typeA)
-                .withPosition(typeB);
+        resultType = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int")).withPosition(typeA).withPosition(typeB);
         break;
       case YesAndResultIsLong:
-        resultType =
-            new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("long"))
-                .withPosition(typeA)
-                .withPosition(typeB);
+        resultType = new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("long")).withPosition(typeA).withPosition(typeB);
         break;
       case YesAndResultIsDouble:
-        resultType =
-            new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("double"))
-                .withPosition(typeA)
-                .withPosition(typeB);
+        resultType = new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("double")).withPosition(typeA).withPosition(typeB);
         break;
       case YesAndResultIsString:
       case YesAndResultIsStringRepetitionUsingSpecialMultiplyOp:
-        resultType =
-            new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"))
-                .withPosition(typeA)
-                .withPosition(typeB);
+        resultType = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string")).withPosition(typeA).withPosition(typeB);
         break;
     }
     return resultType;

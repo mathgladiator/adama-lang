@@ -14,8 +14,7 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
 
 public class RuleSetArray {
-  public static boolean IsNativeArrayOfStructure(
-      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsNativeArrayOfStructure(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);
@@ -29,20 +28,14 @@ public class RuleSetArray {
     return false;
   }
 
-  public static boolean IsNativeArray(
-      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsNativeArray(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);
       if (tyType != null && tyType instanceof TyNativeArray) {
         return true;
       } else if (!silent) {
-        environment.document.createError(
-            tyTypeOriginal,
-            String.format(
-                "Type check failure: expected an array, but was actually type '%s'.",
-                tyTypeOriginal.getAdamaType()),
-            "RuleSetArray");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: expected an array, but was actually type '%s'.", tyTypeOriginal.getAdamaType()), "RuleSetArray");
       }
     }
     return false;

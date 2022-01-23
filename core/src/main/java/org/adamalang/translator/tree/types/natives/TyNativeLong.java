@@ -28,13 +28,12 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.function.Consumer;
 
 /** Represents the integral with 64 bits of storage; this uses the 'long' java type */
-public class TyNativeLong extends TySimpleNative
-    implements IsNativeValue, //
-        CanBeMapDomain, //
-        DetailHasDeltaType, //
-        DetailTypeHasMethods, //
-        IsOrderable, //
-        AssignmentViaNative //
+public class TyNativeLong extends TySimpleNative implements IsNativeValue, //
+    CanBeMapDomain, //
+    DetailHasDeltaType, //
+    DetailTypeHasMethods, //
+    IsOrderable, //
+    AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
@@ -60,8 +59,7 @@ public class TyNativeLong extends TySimpleNative
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeLong(newBehavior, readonlyToken, token).withPosition(position);
   }
 

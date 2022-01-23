@@ -37,8 +37,7 @@ public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrd
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveStateMachineRef(token).withPosition(position);
   }
 

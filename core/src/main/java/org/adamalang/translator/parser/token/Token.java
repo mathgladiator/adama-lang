@@ -40,16 +40,9 @@ public class Token implements Comparable<Token> {
   public ArrayList<Token> nonSemanticTokensAfter;
   /** hidden tokens which are prior (i.e. left) of this token (if available) */
   public ArrayList<Token> nonSemanticTokensPrior;
+
   /** construct a token */
-  public Token(
-      final String sourceName,
-      final String text,
-      final MajorTokenType majorType,
-      final MinorTokenType minorType,
-      final int lineStart,
-      final int charStart,
-      final int lineEnd,
-      final int charEnd) {
+  public Token(final String sourceName, final String text, final MajorTokenType majorType, final MinorTokenType minorType, final int lineStart, final int charStart, final int lineEnd, final int charEnd) {
     this.sourceName = sourceName;
     this.text = text;
     this.majorType = majorType;
@@ -63,21 +56,8 @@ public class Token implements Comparable<Token> {
   }
 
   /** helper for merging two adjacent tokens */
-  public static Token mergeAdjacentTokens(
-      final Token left,
-      final Token right,
-      final MajorTokenType newMajorType,
-      final MinorTokenType newMinorType) {
-    final var token =
-        new Token(
-            left.sourceName,
-            left.text + right.text,
-            newMajorType,
-            newMinorType,
-            left.lineStart,
-            left.charStart,
-            right.lineEnd,
-            right.charEnd);
+  public static Token mergeAdjacentTokens(final Token left, final Token right, final MajorTokenType newMajorType, final MinorTokenType newMinorType) {
+    final var token = new Token(left.sourceName, left.text + right.text, newMajorType, newMinorType, left.lineStart, left.charStart, right.lineEnd, right.charEnd);
     token.nonSemanticTokensPrior = left.nonSemanticTokensPrior;
     token.nonSemanticTokensAfter = right.nonSemanticTokensAfter;
     return token;
@@ -89,8 +69,7 @@ public class Token implements Comparable<Token> {
 
   /** clone the token with new text */
   public Token cloneWithNewText(String newText) {
-    return new Token(
-        sourceName, newText, majorType, minorType, lineStart, charStart, lineEnd, charEnd);
+    return new Token(sourceName, newText, majorType, minorType, lineStart, charStart, lineEnd, charEnd);
   }
 
   /** internal: adds a hidden token after this token */
@@ -127,12 +106,7 @@ public class Token implements Comparable<Token> {
       return false;
     }
     final var token = (Token) o;
-    return lineStart == token.lineStart
-        && lineEnd == token.lineEnd
-        && charStart == token.charStart
-        && charEnd == token.charEnd
-        && Objects.equals(sourceName, token.sourceName)
-        && Objects.equals(text, token.text);
+    return lineStart == token.lineStart && lineEnd == token.lineEnd && charStart == token.charStart && charEnd == token.charEnd && Objects.equals(sourceName, token.sourceName) && Objects.equals(text, token.text);
   }
 
   @Override
@@ -210,18 +184,7 @@ public class Token implements Comparable<Token> {
   /** helpful to indicate where in a file (0-indexed) an issue happened */
   public String toExceptionMessageTrailer() {
     final var str = new StringBuilder();
-    str.append(" {Token: `")
-        .append(text)
-        .append("` @ (")
-        .append(lineStart)
-        .append(",")
-        .append(charStart)
-        .append(") -> (")
-        .append(lineEnd)
-        .append(",")
-        .append(charEnd)
-        .append("): ")
-        .append(majorType);
+    str.append(" {Token: `").append(text).append("` @ (").append(lineStart).append(",").append(charStart).append(") -> (").append(lineEnd).append(",").append(charEnd).append("): ").append(majorType);
     if (minorType != null) {
       str.append(":").append(minorType);
     }

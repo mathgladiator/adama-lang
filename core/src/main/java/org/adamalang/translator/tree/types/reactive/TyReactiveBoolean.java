@@ -37,8 +37,7 @@ public class TyReactiveBoolean extends TySimpleReactive implements IsOrderable /
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveBoolean(token).withPosition(position);
   }
 

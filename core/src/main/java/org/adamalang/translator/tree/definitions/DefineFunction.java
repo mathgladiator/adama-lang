@@ -39,17 +39,7 @@ public class DefineFunction extends Definition {
   private boolean beenGivenId;
   private int uniqueFunctionId;
 
-  public DefineFunction(
-      final Token functionTypeToken,
-      final FunctionSpecialization specialization,
-      final Token nameToken,
-      final Token openParen,
-      final ArrayList<FunctionArg> args,
-      final Token closeParen,
-      final Token introReturnType,
-      final TyType returnType,
-      final Token readOnlyToken,
-      final Block code) {
+  public DefineFunction(final Token functionTypeToken, final FunctionSpecialization specialization, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introReturnType, final TyType returnType, final Token readOnlyToken, final Block code) {
     this.functionTypeToken = functionTypeToken;
     this.specialization = specialization;
     this.nameToken = nameToken;
@@ -102,13 +92,7 @@ public class DefineFunction extends Definition {
     }
     final var flow = code.typing(prepareEnvironment(environment));
     if (returnType != null && flow == ControlFlow.Open) {
-      environment.document.createError(
-          this,
-          String.format(
-              "The %s '%s' does not return in all cases",
-              specialization == FunctionSpecialization.Pure ? "function" : "procedure",
-              nameToken.text),
-          "FunctionDefine");
+      environment.document.createError(this, String.format("The %s '%s' does not return in all cases", specialization == FunctionSpecialization.Pure ? "function" : "procedure", nameToken.text), "FunctionDefine");
     }
   }
 
@@ -134,11 +118,7 @@ public class DefineFunction extends Definition {
       }
     }
     for (final FunctionArg arg : args) {
-      toUse.define(
-          arg.argName,
-          arg.type,
-          pure || readOnlyToken != null || arg.type instanceof TyNativeMessage,
-          arg.type);
+      toUse.define(arg.argName, arg.type, pure || readOnlyToken != null || arg.type instanceof TyNativeMessage, arg.type);
     }
     toUse.setReturnType(returnType);
     return toUse;
@@ -149,12 +129,7 @@ public class DefineFunction extends Definition {
     for (final FunctionArg arg : args) {
       argTypes.add(arg.type);
     }
-    FunctionOverloadInstance foi =
-        new FunctionOverloadInstance(
-            "__FUNC_" + uniqueFunctionId + "_" + name,
-            returnType,
-            argTypes,
-            specialization == FunctionSpecialization.Pure);
+    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure);
     foi.ingest(this);
     return foi;
   }

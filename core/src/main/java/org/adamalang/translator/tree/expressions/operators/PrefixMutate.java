@@ -46,8 +46,7 @@ public class PrefixMutate extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    final var newContext =
-        op.requiresAssignment ? ComputeContext.Assignment : ComputeContext.Computation;
+    final var newContext = op.requiresAssignment ? ComputeContext.Assignment : ComputeContext.Computation;
     TyType result = null;
     if (op == PrefixMutateOp.BumpUp || op == PrefixMutateOp.BumpDown) {
       result = expression.typing(environment.scopeWithComputeContext(newContext), null);
@@ -63,17 +62,14 @@ public class PrefixMutate extends Expression {
       return null;
     }
     if (result instanceof DetailComputeRequiresGet && bumpResult.reactive) {
-      return ((DetailComputeRequiresGet) result)
-          .typeAfterGet(environment)
-          .makeCopyWithNewPosition(this, result.behavior);
+      return ((DetailComputeRequiresGet) result).typeAfterGet(environment).makeCopyWithNewPosition(this, result.behavior);
     }
     return result.makeCopyWithNewPosition(this, result.behavior);
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    final var newContext =
-        op.requiresAssignment ? ComputeContext.Assignment : ComputeContext.Computation;
+    final var newContext = op.requiresAssignment ? ComputeContext.Assignment : ComputeContext.Computation;
     switch (bumpResult) {
       case YesWithNative:
         sb.append(op.javaOp);

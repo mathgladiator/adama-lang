@@ -15,20 +15,14 @@ import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.reactive.TyReactiveMaybe;
 
 public class RuleSetMaybe {
-  public static boolean IsMaybe(
-      final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsMaybe(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = RuleSetCommon.Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeMaybe || tyType instanceof TyReactiveMaybe) {
         return true;
       }
       if (!silent) {
-        environment.document.createError(
-            tyTypeOriginal,
-            String.format(
-                "Type check failure: the type '%s' was expected to be a maybe<?>",
-                tyTypeOriginal.getAdamaType()),
-            "RuleSetMaybe");
+        environment.document.createError(tyTypeOriginal, String.format("Type check failure: the type '%s' was expected to be a maybe<?>", tyTypeOriginal.getAdamaType()), "RuleSetMaybe");
       }
     }
     return false;

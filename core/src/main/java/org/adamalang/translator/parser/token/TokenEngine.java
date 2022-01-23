@@ -35,9 +35,7 @@ public class TokenEngine {
 
   private void witness(final Token token) {
     if (token.majorType.hidden) {
-      if (currentToken != null
-          && nonsemanticForwardingTokens == null
-          && (token.minorType == MinorTokenType.CommentEndOfLine || token.minorType == null)) {
+      if (currentToken != null && nonsemanticForwardingTokens == null && (token.minorType == MinorTokenType.CommentEndOfLine || token.minorType == null)) {
         currentToken.addHiddenTokenAfter(token);
       } else {
         forwardToken(token);
@@ -132,21 +130,15 @@ public class TokenEngine {
     return;
   }
 
-  public Token popNextAdjSymbolPairIf(final Function<Token, Boolean> condition)
-      throws AdamaLangException {
+  public Token popNextAdjSymbolPairIf(final Function<Token, Boolean> condition) throws AdamaLangException {
     final var candidate1 = peek(0);
     final var candidate2 = peek(1);
-    if (candidate1 != null
-        && candidate2 != null
-        && candidate1.isSymbol()
-        && candidate2.isSymbol()) {
+    if (candidate1 != null && candidate2 != null && candidate1.isSymbol() && candidate2.isSymbol()) {
       // whitespace (or a comment) exists between the tokens, so don't merge them
       if (candidate1.nonSemanticTokensAfter != null || candidate2.nonSemanticTokensPrior != null) {
         return null;
       }
-      final var merge =
-          Token.mergeAdjacentTokens(
-              candidate1, candidate2, candidate1.majorType, candidate1.minorType);
+      final var merge = Token.mergeAdjacentTokens(candidate1, candidate2, candidate1.majorType, candidate1.minorType);
       final var result = condition.apply(merge);
       if (result != null && result) {
         pop();

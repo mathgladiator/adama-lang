@@ -25,8 +25,7 @@ import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNativeOnly
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaSetter;
 
 public class RuleSetAssignment {
-  private static CanAssignResult CanAssignBase(
-      final Environment environment, final TyType left, final TyType right, final boolean silent) {
+  private static CanAssignResult CanAssignBase(final Environment environment, final TyType left, final TyType right, final boolean silent) {
     if (left instanceof AssignmentViaSetter) {
       if (left instanceof TyReactiveMaybe) {
         if (right instanceof TyNativeMaybe || right instanceof TyReactiveMaybe) {
@@ -40,9 +39,10 @@ public class RuleSetAssignment {
     return CanAssignResult.No;
   }
 
-  public static CanAssignResult CanAssignWithAdd(
-      final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) { return CanAssignResult.No; }
+  public static CanAssignResult CanAssignWithAdd(final Environment environment, final TyType left, final TyType right, final boolean silent) {
+    if (left == null || right == null) {
+      return CanAssignResult.No;
+    }
     var result = TestAssignReactively(environment, left, right);
     if (result != CanAssignResult.No) {
       return result;
@@ -54,17 +54,14 @@ public class RuleSetAssignment {
     if (result != CanAssignResult.No) {
       return result;
     }
-    environment.document.createError(
-        left,
-        String.format(
-            "The type '%s' is not applicable for add based assignment (+=)", left.getAdamaType()),
-        "Assignment");
+    environment.document.createError(left, String.format("The type '%s' is not applicable for add based assignment (+=)", left.getAdamaType()), "Assignment");
     return CanAssignResult.No;
   }
 
-  public static CanAssignResult CanAssignWithMult(
-      final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) { return CanAssignResult.No; }
+  public static CanAssignResult CanAssignWithMult(final Environment environment, final TyType left, final TyType right, final boolean silent) {
+    if (left == null || right == null) {
+      return CanAssignResult.No;
+    }
     var result = TestAssignReactively(environment, left, right);
     if (result != CanAssignResult.No) {
       return result;
@@ -76,17 +73,11 @@ public class RuleSetAssignment {
     if (result != CanAssignResult.No) {
       return result;
     }
-    environment.document.createError(
-        left,
-        String.format(
-            "The type '%s' is not applicable for multiplication based assignment (*=)",
-            left.getAdamaType()),
-        "Assignment");
+    environment.document.createError(left, String.format("The type '%s' is not applicable for multiplication based assignment (*=)", left.getAdamaType()), "Assignment");
     return CanAssignResult.No;
   }
 
-  public static CanAssignResult CanAssignWithSet(
-      final Environment environment, final TyType left, final TyType right, final boolean silent) {
+  public static CanAssignResult CanAssignWithSet(final Environment environment, final TyType left, final TyType right, final boolean silent) {
     if (left == null || right == null) {
       return CanAssignResult.No;
     }
@@ -101,16 +92,14 @@ public class RuleSetAssignment {
     if (result != CanAssignResult.No) {
       return result;
     }
-    environment.document.createError(
-        left,
-        String.format("The type '%s' is not applicable for assignment (=)", left.getAdamaType()),
-        "Assignment");
+    environment.document.createError(left, String.format("The type '%s' is not applicable for assignment (=)", left.getAdamaType()), "Assignment");
     return CanAssignResult.No;
   }
 
-  public static CanAssignResult CanAssignWithSubtract(
-      final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) { return CanAssignResult.No; }
+  public static CanAssignResult CanAssignWithSubtract(final Environment environment, final TyType left, final TyType right, final boolean silent) {
+    if (left == null || right == null) {
+      return CanAssignResult.No;
+    }
     var result = TestAssignReactively(environment, left, right);
     if (result != CanAssignResult.No) {
       return result;
@@ -122,21 +111,11 @@ public class RuleSetAssignment {
     if (result != CanAssignResult.No) {
       return result;
     }
-    environment.document.createError(
-        left,
-        String.format(
-            "The type '%s' is not applicable for subtract based assignment (-=)",
-            left.getAdamaType()),
-        "Assignment");
+    environment.document.createError(left, String.format("The type '%s' is not applicable for subtract based assignment (-=)", left.getAdamaType()), "Assignment");
     return CanAssignResult.No;
   }
 
-  public static boolean CanTypeAStoreTypeB(
-      final Environment environment,
-      final TyType originalTypeA,
-      final TyType originalTypeB,
-      final StorageTweak tweak,
-      final boolean silent) {
+  public static boolean CanTypeAStoreTypeB(final Environment environment, final TyType originalTypeA, final TyType originalTypeB, final StorageTweak tweak, final boolean silent) {
     final var typeA = RuleSetCommon.Resolve(environment, originalTypeA, silent);
     final var typeB = RuleSetCommon.Resolve(environment, originalTypeB, silent);
     if (typeA == null || typeB == null) {
@@ -204,12 +183,7 @@ public class RuleSetAssignment {
         return true;
       }
       if (!silent) {
-        environment.document.createError(
-            originalTypeA,
-            String.format(
-                "Type check failure: enum types are incompatible '%s' vs '%s'.",
-                originalTypeA.getAdamaType(), originalTypeB.getAdamaType()),
-            "Assignment");
+        environment.document.createError(originalTypeA, String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()), "Assignment");
       }
     }
     if (RuleSetCommon.AreBothChannelTypesCompatible(environment, typeA, typeB)) {
@@ -220,8 +194,7 @@ public class RuleSetAssignment {
     if (aEmbedAssign == bEmbedAssign && aEmbedAssign != AssignableEmbedType.None) {
       final var childA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
       final var childB = RuleSetCommon.ExtractEmbeddedType(environment, typeB, silent);
-      if (CanTypeAStoreTypeB(environment, childA, childB, tweak, true)
-          && CanTypeAStoreTypeB(environment, childB, childA, tweak, true)) {
+      if (CanTypeAStoreTypeB(environment, childA, childB, tweak, true) && CanTypeAStoreTypeB(environment, childB, childA, tweak, true)) {
         return true;
       }
     }
@@ -230,34 +203,10 @@ public class RuleSetAssignment {
     if (aMap && bMap) {
       final var mapA = (IsMap) typeA;
       final var mapB = (IsMap) typeB;
-      final var ab1 =
-          CanTypeAStoreTypeB(
-              environment,
-              mapA.getDomainType(environment),
-              mapB.getDomainType(environment),
-              tweak,
-              true);
-      final var ab2 =
-          CanTypeAStoreTypeB(
-              environment,
-              mapB.getDomainType(environment),
-              mapA.getDomainType(environment),
-              tweak,
-              true);
-      final var ab3 =
-          CanTypeAStoreTypeB(
-              environment,
-              mapA.getRangeType(environment),
-              mapB.getRangeType(environment),
-              tweak,
-              true);
-      final var ab4 =
-          CanTypeAStoreTypeB(
-              environment,
-              mapB.getRangeType(environment),
-              mapA.getRangeType(environment),
-              tweak,
-              true);
+      final var ab1 = CanTypeAStoreTypeB(environment, mapA.getDomainType(environment), mapB.getDomainType(environment), tweak, true);
+      final var ab2 = CanTypeAStoreTypeB(environment, mapB.getDomainType(environment), mapA.getDomainType(environment), tweak, true);
+      final var ab3 = CanTypeAStoreTypeB(environment, mapA.getRangeType(environment), mapB.getRangeType(environment), tweak, true);
+      final var ab4 = CanTypeAStoreTypeB(environment, mapB.getRangeType(environment), mapA.getRangeType(environment), tweak, true);
       if (ab1 && ab2 && ab3 && ab4) {
         return true;
       }
@@ -267,17 +216,10 @@ public class RuleSetAssignment {
     if (aTable && bTable) {
       return ((TyNativeTable) typeA).messageName.equals(((TyNativeTable) typeB).messageName);
     }
-    final var aMaybe =
-        aEmbedAssign == AssignableEmbedType.Maybe && RuleSetMaybe.IsMaybe(environment, typeA, true);
+    final var aMaybe = aEmbedAssign == AssignableEmbedType.Maybe && RuleSetMaybe.IsMaybe(environment, typeA, true);
     if (aMaybe && bEmbedAssign == AssignableEmbedType.None) {
-      if (typeA instanceof TyReactiveMaybe
-          && (typeB instanceof TyReactiveRecord || typeB instanceof TyNativeReactiveRecordPtr)) {
-        environment.document.createError(
-            originalTypeA,
-            String.format(
-                "Type check failure: the type '%s' is unable to store type '%s'.",
-                originalTypeA.getAdamaType(), originalTypeB.getAdamaType()),
-            "TypeCheckReferencesX");
+      if (typeA instanceof TyReactiveMaybe && (typeB instanceof TyReactiveRecord || typeB instanceof TyNativeReactiveRecordPtr)) {
+        environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()), "TypeCheckReferencesX");
         return false;
       }
       final var childA = RuleSetCommon.ExtractEmbeddedType(environment, typeA, silent);
@@ -302,12 +244,7 @@ public class RuleSetAssignment {
       }
     }
     if (!silent) {
-      environment.document.createError(
-          originalTypeA,
-          String.format(
-              "Type check failure: the type '%s' is unable to store type '%s'.",
-              originalTypeA.getAdamaType(), originalTypeB.getAdamaType()),
-          "TypeCheckReferences");
+      environment.document.createError(originalTypeA, String.format("Type check failure: the type '%s' is unable to store type '%s'.", originalTypeA.getAdamaType(), originalTypeB.getAdamaType()), "TypeCheckReferences");
     }
     return false;
   }
@@ -331,8 +268,7 @@ public class RuleSetAssignment {
     return AssignableEmbedType.None;
   }
 
-  private static CanAssignResult TestAssignReactively(
-      final Environment environment, final TyType left, final TyType right) {
+  private static CanAssignResult TestAssignReactively(final Environment environment, final TyType left, final TyType right) {
     //  && !RuleSetLists.TestReactiveList(environment, right, true)
     if (RuleSetLists.TestReactiveList(environment, left, true)) {
       final var childA = RuleSetCommon.ExtractEmbeddedType(environment, left, true);

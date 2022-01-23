@@ -34,15 +34,7 @@ public class FieldDefinition extends StructureComponent {
   public final LinkedHashSet<String> variablesToWatch;
   public TyType type;
 
-  public FieldDefinition(
-      final Policy policy,
-      final Token introToken,
-      final TyType type,
-      final Token nameToken,
-      final Token equalsToken,
-      final Expression computeExpression,
-      final Expression defaultValueOverride,
-      final Token semicolonToken) {
+  public FieldDefinition(final Policy policy, final Token introToken, final TyType type, final Token nameToken, final Token equalsToken, final Expression computeExpression, final Expression defaultValueOverride, final Token semicolonToken) {
     this.policy = policy;
     this.introToken = introToken;
     this.type = type;
@@ -123,12 +115,7 @@ public class FieldDefinition extends StructureComponent {
       type = environment.rules.Resolve(type, false);
     }
     if (type == null && computeExpression != null) {
-      type =
-          computeExpression.typing(
-              environment
-                  .scopeReactiveExpression()
-                  .scopeWithComputeContext(ComputeContext.Computation),
-              null /* no suggestion makes sense */);
+      type = computeExpression.typing(environment.scopeReactiveExpression().scopeWithComputeContext(ComputeContext.Computation), null /* no suggestion makes sense */);
       if (type != null) {
         type = new TyReactiveLazy(type).withPosition(type);
       }
@@ -136,8 +123,7 @@ public class FieldDefinition extends StructureComponent {
     if (type != null) {
       type.typing(environment);
       if (defaultValueOverride != null) {
-        final var defType =
-            defaultValueOverride.typing(environment, null /* no suggestion makes sense */);
+        final var defType = defaultValueOverride.typing(environment, null /* no suggestion makes sense */);
         if (defType != null) {
           environment.rules.CanTypeAStoreTypeB(type, defType, StorageTweak.None, false);
         }

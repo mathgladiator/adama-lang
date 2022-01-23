@@ -26,10 +26,7 @@ public class TyNativeFunctional extends TyType {
   public final ArrayList<FunctionOverloadInstance> overloads;
   public final FunctionStyleJava style;
 
-  public TyNativeFunctional(
-      final String name,
-      final ArrayList<FunctionOverloadInstance> overloads,
-      final FunctionStyleJava style) {
+  public TyNativeFunctional(final String name, final ArrayList<FunctionOverloadInstance> overloads, final FunctionStyleJava style) {
     super(TypeBehavior.ReadOnlyNativeValue);
     this.name = name;
     this.overloads = overloads;
@@ -57,8 +54,7 @@ public class TyNativeFunctional extends TyType {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeFunctional(name, overloads, style).withPosition(position);
   }
 
@@ -83,10 +79,7 @@ public class TyNativeFunctional extends TyType {
   }
 
   /** find the right instance basedd on the given types */
-  public FunctionOverloadInstance find(
-      final DocumentPosition position,
-      final ArrayList<TyType> argTypes,
-      final Environment environment) {
+  public FunctionOverloadInstance find(final DocumentPosition position, final ArrayList<TyType> argTypes, final Environment environment) {
     var result = overloads.get(0);
     var score = (argTypes.size() + 1) * (argTypes.size() + 1);
     for (final FunctionOverloadInstance candidate : overloads) {

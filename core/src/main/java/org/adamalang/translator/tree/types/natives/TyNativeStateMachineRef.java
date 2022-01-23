@@ -29,18 +29,16 @@ import java.util.function.Consumer;
  * The type representing a valid reference in the state machine; this uses the native 'String' java
  * type
  */
-public class TyNativeStateMachineRef extends TySimpleNative
-    implements //
-        IsNativeValue, //
-        DetailHasDeltaType, //
-        DetailEqualityTestingRequiresWrapping, //
-        AssignmentViaNative //
+public class TyNativeStateMachineRef extends TySimpleNative implements //
+    IsNativeValue, //
+    DetailHasDeltaType, //
+    DetailEqualityTestingRequiresWrapping, //
+    AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeStateMachineRef(
-      final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+  public TyNativeStateMachineRef(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "String", "String");
     this.readonlyToken = readonlyToken;
     this.token = token;
@@ -61,8 +59,7 @@ public class TyNativeStateMachineRef extends TySimpleNative
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeStateMachineRef(newBehavior, readonlyToken, token).withPosition(position);
   }
 

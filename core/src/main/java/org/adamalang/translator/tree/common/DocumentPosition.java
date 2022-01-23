@@ -67,7 +67,6 @@ public class DocumentPosition {
 
   /**
    * ingest the tokens and the bounds of the tokens
-   *
    * @param tokens an array of tokens
    */
   public DocumentPosition ingest(final Token... tokens) {

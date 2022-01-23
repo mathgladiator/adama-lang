@@ -36,20 +36,11 @@ public class LivingDocumentFactory {
   private final Method inventionPolicyMethod;
   private final Method canSendWhileDisconnectPolicyMethod;
 
-  public LivingDocumentFactory(final String className, final String javaSource, String reflection)
-      throws ErrorCodeException {
+  public LivingDocumentFactory(final String className, final String javaSource, String reflection) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
     final var diagnostics = new DiagnosticCollector<JavaFileObject>();
-    final var fileManager =
-        new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
-    final var task =
-        compiler.getTask(
-            null,
-            fileManager,
-            diagnostics,
-            null,
-            null,
-            ByteArrayJavaFileManager.turnIntoCompUnits(className + ".java", javaSource));
+    final var fileManager = new ByteArrayJavaFileManager(compiler.getStandardFileManager(null, null, null));
+    final var task = compiler.getTask(null, fileManager, diagnostics, null, null, ByteArrayJavaFileManager.turnIntoCompUnits(className + ".java", javaSource));
     if (task.call() == false) {
       for (final Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
         System.err.println(diagnostic.toString());
@@ -96,22 +87,16 @@ public class LivingDocumentFactory {
   }
 
   @SuppressWarnings("unchecked")
-  public void populateTestReport(
-      final TestReportBuilder report, final DocumentMonitor monitor, final String entropy)
-      throws Exception {
+  public void populateTestReport(final TestReportBuilder report, final DocumentMonitor monitor, final String entropy) throws Exception {
     var candidate = prepareTestCandidate(monitor, entropy);
     final var tests = candidate.__getTests();
     for (final String test : tests) {
-      report.annotate(
-          test,
-          (HashMap<String, Object>)
-              new JsonStreamReader(candidate.__run_test(report, test)).readJavaTree());
+      report.annotate(test, (HashMap<String, Object>) new JsonStreamReader(candidate.__run_test(report, test)).readJavaTree());
       candidate = prepareTestCandidate(monitor, entropy);
     }
   }
 
-  private LivingDocument prepareTestCandidate(final DocumentMonitor monitor, final String entropy)
-      throws Exception {
+  private LivingDocument prepareTestCandidate(final DocumentMonitor monitor, final String entropy) throws Exception {
     final var candidate = create(monitor);
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.beginObject();

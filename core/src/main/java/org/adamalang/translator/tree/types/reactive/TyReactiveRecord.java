@@ -33,19 +33,17 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeProducesRoot
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyReactiveRecord extends TyType
-    implements IsStructure, //
-        DetailHasDeltaType, //
-        DetailTypeProducesRootLevelCode, //
-        DetailTypeHasMethods {
+public class TyReactiveRecord extends TyType implements IsStructure, //
+    DetailHasDeltaType, //
+    DetailTypeProducesRootLevelCode, //
+    DetailTypeHasMethods {
   public String name;
   public Token nameToken;
   public Token recordToken;
   public StructureStorage storage;
   private boolean typedAlready;
 
-  public TyReactiveRecord(
-      final Token recordToken, final Token nameToken, final StructureStorage storage) {
+  public TyReactiveRecord(final Token recordToken, final Token nameToken, final StructureStorage storage) {
     super(TypeBehavior.ReadWriteWithSetGet);
     this.recordToken = recordToken;
     this.nameToken = nameToken;
@@ -61,27 +59,12 @@ public class TyReactiveRecord extends TyType
   public void compile(final StringBuilderWithTabs sb, final Environment environment) {
     final var classFields = new StringBuilderWithTabs().tabUp().tabUp();
     final var classConstructor = new StringBuilderWithTabs().tabUp().tabUp().tabUp();
-    CodeGenRecords.writeCommonBetweenRecordAndRoot(
-        storage, classConstructor, classFields, environment.scope(), true);
+    CodeGenRecords.writeCommonBetweenRecordAndRoot(storage, classConstructor, classFields, environment.scope(), true);
     classConstructor.append("if (__owner instanceof RxTable) {").tabUp().writeNewline();
     var colNum = 0;
     for (final IndexDefinition idefn : storage.indices) {
-      classFields
-          .append("private final ReactiveIndexInvalidator __INDEX_")
-          .append(idefn.nameToken.text)
-          .append(";")
-          .writeNewline();
-      classConstructor
-          .append("__INDEX_")
-          .append(idefn.nameToken.text)
-          .append(" = new ReactiveIndexInvalidator(((RxTable<RTx")
-          .append(name)
-          .append(">)(__owner)).getIndex((short)")
-          .append("" + colNum)
-          .append("), this) {")
-          .tabUp()
-          .tabUp()
-          .writeNewline();
+      classFields.append("private final ReactiveIndexInvalidator __INDEX_").append(idefn.nameToken.text).append(";").writeNewline();
+      classConstructor.append("__INDEX_").append(idefn.nameToken.text).append(" = new ReactiveIndexInvalidator(((RxTable<RTx").append(name).append(">)(__owner)).getIndex((short)").append("" + colNum).append("), this) {").tabUp().tabUp().writeNewline();
       classConstructor.append("@Override").writeNewline();
       classConstructor.append("public int pullValue() {").tabUp().writeNewline();
       classConstructor.append("  return ").append(idefn.nameToken.text).append(".get()");
@@ -94,31 +77,18 @@ public class TyReactiveRecord extends TyType
       classConstructor.append(";").tabDown().writeNewline();
       classConstructor.append("}").tabDown().writeNewline();
       classConstructor.append("};").tabDown().writeNewline();
-      classConstructor
-          .append(idefn.nameToken.text)
-          .append(".__subscribe(__INDEX_")
-          .append(idefn.nameToken.text)
-          .append(");")
-          .writeNewline();
+      classConstructor.append(idefn.nameToken.text).append(".__subscribe(__INDEX_").append(idefn.nameToken.text).append(");").writeNewline();
       colNum++;
     }
     classConstructor.append("/* ok */").tabDown().writeNewline();
     classConstructor.append("} else {").tabUp().writeNewline();
     for (final IndexDefinition idefn : storage.indices) {
-      classConstructor
-          .append("__INDEX_")
-          .append(idefn.nameToken.text)
-          .append(" = null;")
-          .writeNewline();
+      classConstructor.append("__INDEX_").append(idefn.nameToken.text).append(" = null;").writeNewline();
     }
     classConstructor.append("/* ok */").tabDown().writeNewline();
     classConstructor.append("}").writeNewline();
     CodeGenRecords.writeIndexConstant(name, storage, sb, environment);
-    sb.append("private class RTx" + name + " extends RxRecordBase<RTx")
-        .append(name)
-        .append("> {")
-        .tabUp()
-        .writeNewline();
+    sb.append("private class RTx" + name + " extends RxRecordBase<RTx").append(name).append("> {").tabUp().writeNewline();
     sb.append(classFields.toString());
     sb.append("private RTx" + name + "(RxParent __owner) {");
     final var classConstructorStripped = classConstructor.toString().stripTrailing();
@@ -185,8 +155,7 @@ public class TyReactiveRecord extends TyType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveRecord(recordToken, nameToken, storage).withPosition(position);
   }
 
@@ -224,11 +193,7 @@ public class TyReactiveRecord extends TyType
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if (!environment.state.isPure()) {
       if ("delete".equals(name) && storage.specialization == StorageSpecialization.Record) {
-        return new TyNativeFunctionInternalFieldReplacement(
-            "__delete",
-            FunctionOverloadInstance.WRAP(
-                new FunctionOverloadInstance("__delete", null, new ArrayList<>(), false)),
-            FunctionStyleJava.ExpressionThenArgs);
+        return new TyNativeFunctionInternalFieldReplacement("__delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__delete", null, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
       }
       return storage.methodTypes.get(name);
     }

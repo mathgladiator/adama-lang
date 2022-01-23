@@ -48,25 +48,15 @@ public class Return extends Statement {
     final var expectedReturnType = environment.getMostRecentReturnType();
     if (expression != null) {
       if (expectedReturnType != null) {
-        final var givenReturnType =
-            expression.typing(
-                environment.scopeWithComputeContext(ComputeContext.Computation),
-                expectedReturnType);
-        if (!environment.rules.CanTypeAStoreTypeB(
-            expectedReturnType, givenReturnType, StorageTweak.None, false)) {
+        final var givenReturnType = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), expectedReturnType);
+        if (!environment.rules.CanTypeAStoreTypeB(expectedReturnType, givenReturnType, StorageTweak.None, false)) {
           return ControlFlow.Open;
         }
       } else {
-        environment.document.createError(
-            this, String.format("The return statement expects no expression"), "ReturnFlow");
+        environment.document.createError(this, String.format("The return statement expects no expression"), "ReturnFlow");
       }
     } else if (expectedReturnType != null) {
-      environment.document.createError(
-          this,
-          String.format(
-              "The return statement expected an expression of type `%s`",
-              expectedReturnType.getAdamaType()),
-          "ReturnFlow");
+      environment.document.createError(this, String.format("The return statement expected an expression of type `%s`", expectedReturnType.getAdamaType()), "ReturnFlow");
     }
     return ControlFlow.Returns;
   }

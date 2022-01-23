@@ -28,18 +28,16 @@ import java.util.function.Consumer;
 /**
  * Represents the type for a boolean value (true/false); this uses the native 'boolean' java type
  */
-public class TyNativeBoolean extends TySimpleNative
-    implements //
-        DetailHasDeltaType, //
-        DetailTypeHasMethods, //
-        IsNativeValue, //
-        AssignmentViaNative //
+public class TyNativeBoolean extends TySimpleNative implements //
+    DetailHasDeltaType, //
+    DetailTypeHasMethods, //
+    IsNativeValue, //
+    AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeBoolean(
-      final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+  public TyNativeBoolean(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "boolean", "Boolean");
     this.token = token;
     this.readonlyToken = readonlyToken;
@@ -60,8 +58,7 @@ public class TyNativeBoolean extends TySimpleNative
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeBoolean(newBehavior, readonlyToken, token).withPosition(position);
   }
 

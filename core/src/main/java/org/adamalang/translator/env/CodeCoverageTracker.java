@@ -27,7 +27,6 @@ public class CodeCoverageTracker {
 
   /**
    * track the given position and associate to an integer for tracking purposes
-   *
    * @param position the position to register
    * @return the index to track
    */

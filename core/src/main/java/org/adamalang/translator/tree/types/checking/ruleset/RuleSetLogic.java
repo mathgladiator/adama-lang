@@ -14,20 +14,14 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.types.TyType;
 
 public class RuleSetLogic {
-  public static boolean CanUseLogic(
-      final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
+  public static boolean CanUseLogic(final Environment environment, final TyType typeA, final TyType typeB, final boolean silent) {
     if (typeA != null && typeB != null) {
       final var aBoolean = RuleSetCommon.IsBoolean(environment, typeA, silent);
       final var bBoolean = RuleSetCommon.IsBoolean(environment, typeB, silent);
       if (aBoolean && bBoolean) {
         return true;
       } else if (!silent) {
-        environment.document.createError(
-            DocumentPosition.sum(typeA, typeB),
-            String.format(
-                "The types '%s' and '%s' are unable to be joined with logical operators (&&, ||).\n\tBoth left and right hand side of the operator must be of type 'bool'.",
-                typeA.getAdamaType(), typeB.getAdamaType()),
-            "RuleSetLogic");
+        environment.document.createError(DocumentPosition.sum(typeA, typeB), String.format("The types '%s' and '%s' are unable to be joined with logical operators (&&, ||).\n\tBoth left and right hand side of the operator must be of type 'bool'.", typeA.getAdamaType(), typeB.getAdamaType()), "RuleSetLogic");
       }
     }
     return false;

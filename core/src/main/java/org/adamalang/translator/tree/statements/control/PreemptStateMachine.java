@@ -25,8 +25,7 @@ public class PreemptStateMachine extends Statement {
   public final Token transitionToken;
   private final Expression next;
 
-  public PreemptStateMachine(
-      final Token transitionToken, final Expression next, final Token semicolonToken) {
+  public PreemptStateMachine(final Token transitionToken, final Expression next, final Token semicolonToken) {
     this.transitionToken = transitionToken;
     ingest(transitionToken);
     this.next = next;

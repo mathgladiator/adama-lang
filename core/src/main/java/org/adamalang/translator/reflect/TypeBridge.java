@@ -23,8 +23,7 @@ public class TypeBridge {
 
   public static TyType getAdamaSubType(String core, final Class<?>[] hiddenTypes) {
     if (hiddenTypes == null || hiddenTypes.length == 0) {
-      throw new RuntimeException(
-          core + " requires @HiddenType/@HiddenTypes annotation because Java sucks");
+      throw new RuntimeException(core + " requires @HiddenType/@HiddenTypes annotation because Java sucks");
     }
     Class<?> head = hiddenTypes[0];
     Class<?>[] tail = new Class[hiddenTypes.length - 1];
@@ -53,12 +52,10 @@ public class TypeBridge {
       return null;
     } else if (NtList.class == x) {
       TyType subType = getAdamaSubType("NtList<>", hiddenTypes);
-      return new TyNativeList(
-          TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(subType));
+      return new TyNativeList(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(subType));
     } else if (NtMaybe.class == x) {
       TyType subType = getAdamaSubType("NtMaybe<>", hiddenTypes);
-      return new TyNativeMaybe(
-          TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(subType));
+      return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(subType));
     }
     throw new RuntimeException("can't find:" + x.toString());
   }

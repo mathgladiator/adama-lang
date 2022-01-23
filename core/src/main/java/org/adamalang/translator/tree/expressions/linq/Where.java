@@ -54,12 +54,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
   private String iterType;
   private StructureStorage structureStorage;
 
-  public Where(
-      final Expression sql,
-      final Token tokenWhere,
-      final Token aliasToken,
-      final Token colonToken,
-      final Expression expression) {
+  public Where(final Expression sql, final Token tokenWhere, final Token aliasToken, final Token colonToken, final Expression expression) {
     super(sql);
     this.tokenWhere = tokenWhere;
     this.expression = expression;
@@ -79,8 +74,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     closureTyTypes = new TreeMap<>();
   }
 
-  public static Expression findIndex(
-      final Expression root, final String aliasName, final String indexName) {
+  public static Expression findIndex(final Expression root, final String aliasName, final String indexName) {
     if (root instanceof Parentheses) {
       return findIndex(((Parentheses) root).expression, aliasName, indexName);
     }
@@ -96,8 +90,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       if (((BinaryExpression) root).op == BinaryOp.Equal) {
         if (isExpressionIndexedVariable(((BinaryExpression) root).left, aliasName, indexName)) {
           return ((BinaryExpression) root).right;
-        } else if (isExpressionIndexedVariable(
-            ((BinaryExpression) root).right, aliasName, indexName)) {
+        } else if (isExpressionIndexedVariable(((BinaryExpression) root).right, aliasName, indexName)) {
           return ((BinaryExpression) root).left;
         }
       }
@@ -105,8 +98,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     return null;
   }
 
-  public static boolean isExpressionIndexedVariable(
-      final Expression root, final String aliasName, final String variableCheck) {
+  public static boolean isExpressionIndexedVariable(final Expression root, final String aliasName, final String variableCheck) {
     if (root instanceof Parentheses) {
       return isExpressionIndexedVariable(((Parentheses) root).expression, aliasName, variableCheck);
     }
@@ -130,11 +122,8 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
         continue;
       }
       final var fieldType = environment.rules.Resolve(entry.getValue().type, false);
-      if (fieldType instanceof TyReactiveInteger
-          || fieldType instanceof TyReactiveEnum
-          || fieldType instanceof TyReactiveClient) {
-        final var indexValue =
-            findIndex(expression, aliasToken != null ? aliasToken.text : null, entry.getKey());
+      if (fieldType instanceof TyReactiveInteger || fieldType instanceof TyReactiveEnum || fieldType instanceof TyReactiveClient) {
+        final var indexValue = findIndex(expression, aliasToken != null ? aliasToken.text : null, entry.getKey());
         if (indexValue != null) {
           var indexValueString = compileIndexExpr(indexValue, environment);
           if (indexValueString != null) {
@@ -164,13 +153,9 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
 
   private String compileIndexExpr(final Expression indexValue, final Environment prior) {
     try {
-      final var nope =
-          prior
-              .watch(
-                  x -> {
-                    throw new RuntimeException();
-                  })
-              .scopeWithComputeContext(ComputeContext.Computation);
+      final var nope = prior.watch(x -> {
+        throw new RuntimeException();
+      }).scopeWithComputeContext(ComputeContext.Computation);
       for (final Map.Entry<String, TyType> whatIs : closureTyTypes.entrySet()) {
         nope.define(whatIs.getKey(), whatIs.getValue(), true, whatIs.getValue());
       }
@@ -203,54 +188,44 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
     if (typeFrom != null && environment.rules.IsNativeListOfStructure(typeFrom, false)) {
       final var storageType = (IsStructure) ((TyNativeList) typeFrom).elementType;
       structureStorage = storageType.storage();
-      final var watch =
-          environment.watch(
-              name -> {
-                if (!closureTypes.containsKey(name)) {
-                  final var ty = environment.lookup(name, true, this, false);
-                  if (ty != null) {
-                    closureTyTypes.put(name, ty);
-                    closureTypes.put(name, ty.getJavaConcreteType(environment));
-                  }
-                }
-              });
+      final var watch = environment.watch(name -> {
+        if (!closureTypes.containsKey(name)) {
+          final var ty = environment.lookup(name, true, this, false);
+          if (ty != null) {
+            closureTyTypes.put(name, ty);
+            closureTypes.put(name, ty.getJavaConcreteType(environment));
+          }
+        }
+      });
       final var next = watch.scopeWithComputeContext(ComputeContext.Computation);
       iterType = "RTx" + storageType.name();
       var toUse = next;
       if (aliasToken != null) {
-        next.define(
-            aliasToken.text, (TyType) storageType, true, new DocumentPosition().ingest(aliasToken));
+        next.define(aliasToken.text, (TyType) storageType, true, new DocumentPosition().ingest(aliasToken));
       } else {
-        toUse =
-            next.trap(
-                name -> {
-                  final var result = next.lookupDirect(name);
-                  if (result != null) {
-                    return result;
-                  }
-                  final var fieldDef = structureStorage.fields.get(name);
-                  TyType resolvedType = null;
-                  if (fieldDef != null) {
-                    resolvedType = RuleSetCommon.Resolve(environment, fieldDef.type, false);
-                    var addGet = false;
-                    if (resolvedType instanceof DetailComputeRequiresGet) {
-                      addGet = true;
-                      resolvedType =
-                          RuleSetCommon.Resolve(
-                              environment,
-                              ((DetailComputeRequiresGet) resolvedType).typeAfterGet(environment),
-                              false);
-                    }
-                    if (resolvedType != null) {
-                      final var nativeType = resolvedType.getJavaConcreteType(environment);
-                      final var trapToAdd =
-                          nativeType + " " + name + " = __obj." + name + (addGet ? ".get();" : ";");
-                      trapBuilder.add(trapToAdd);
-                      next.define(name, resolvedType, true, resolvedType);
-                    }
-                  }
-                  return resolvedType;
-                });
+        toUse = next.trap(name -> {
+          final var result = next.lookupDirect(name);
+          if (result != null) {
+            return result;
+          }
+          final var fieldDef = structureStorage.fields.get(name);
+          TyType resolvedType = null;
+          if (fieldDef != null) {
+            resolvedType = RuleSetCommon.Resolve(environment, fieldDef.type, false);
+            var addGet = false;
+            if (resolvedType instanceof DetailComputeRequiresGet) {
+              addGet = true;
+              resolvedType = RuleSetCommon.Resolve(environment, ((DetailComputeRequiresGet) resolvedType).typeAfterGet(environment), false);
+            }
+            if (resolvedType != null) {
+              final var nativeType = resolvedType.getJavaConcreteType(environment);
+              final var trapToAdd = nativeType + " " + name + " = __obj." + name + (addGet ? ".get();" : ";");
+              trapBuilder.add(trapToAdd);
+              next.define(name, resolvedType, true, resolvedType);
+            }
+          }
+          return resolvedType;
+        });
       }
       final var expressionType = expression.typing(toUse, null);
       environment.rules.IsBoolean(expressionType, false);
@@ -263,9 +238,7 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
   public void writeJava(final StringBuilder sb, final Environment environment) {
     if (passedTypeChecking() && structureStorage != null) {
       sql.writeJava(sb, environment);
-      sb.append(".where(")
-          .append(intermediateExpression ? "false, " : "true, ")
-          .append("new __CLOSURE_WhereClause" + generatedClassId + "(");
+      sb.append(".where(").append(intermediateExpression ? "false, " : "true, ").append("new __CLOSURE_WhereClause" + generatedClassId + "(");
       var notfirst = false;
       for (final Map.Entry<String, String> entry : closureTypes.entrySet()) {
         if (notfirst) {
@@ -276,13 +249,10 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
       }
       // list the variables
       sb.append("))");
-      expression.writeJava(
-          exprCode, environment.scopeWithComputeContext(ComputeContext.Computation));
-      final var primaryKey =
-          findIndex(expression, aliasToken != null ? aliasToken.text : null, "id");
+      expression.writeJava(exprCode, environment.scopeWithComputeContext(ComputeContext.Computation));
+      final var primaryKey = findIndex(expression, aliasToken != null ? aliasToken.text : null, "id");
       if (primaryKey != null) {
-        primaryKey.writeJava(
-            primaryKeyExpr, environment.scopeWithComputeContext(ComputeContext.Computation));
+        primaryKey.writeJava(primaryKeyExpr, environment.scopeWithComputeContext(ComputeContext.Computation));
       } else {
         primaryKeyExpr.append("null");
       }
@@ -292,21 +262,9 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
 
   @Override
   public void writeLatentJava(final StringBuilderWithTabs sb) {
-    sb.append(
-            "private class __CLOSURE_WhereClause"
-                + generatedClassId
-                + " implements WhereClause<"
-                + iterType
-                + "> {")
-        .tabUp()
-        .writeNewline();
+    sb.append("private class __CLOSURE_WhereClause" + generatedClassId + " implements WhereClause<" + iterType + "> {").tabUp().writeNewline();
     for (final Map.Entry<String, String> entry : closureTypes.entrySet()) {
-      sb.append("private ")
-          .append(entry.getValue())
-          .append(" ")
-          .append(entry.getKey())
-          .append(";")
-          .writeNewline();
+      sb.append("private ").append(entry.getValue()).append(" ").append(entry.getKey()).append(";").writeNewline();
     }
     sb.append("@Override").writeNewline();
     sb.append("public int[] getIndices() {").tabUp().writeNewline();

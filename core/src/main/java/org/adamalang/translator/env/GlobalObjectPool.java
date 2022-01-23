@@ -36,101 +36,23 @@ public class GlobalObjectPool {
   public static GlobalObjectPool createPoolWithStdLib() {
     final var pool = new GlobalObjectPool();
     pool.add(GlobalFactory.makeGlobal("String", LibString.class, pool.extensions));
-    final var mathlib =
-        GlobalFactory.makeGlobalExplicit(
-            "Math",
-            Math.class,
-            pool.extensions,
-            true,
-            "min",
-            "max",
-            "ceil",
-            "floor",
-            "sin",
-            "cos",
-            "tan",
-            "abs",
-            "asin",
-            "acos",
-            "atan",
-            "toRadians",
-            "toDegrees",
-            "sinh",
-            "cosh",
-            "tanh",
-            "atan2",
-            "hypot",
-            "exp",
-            "log",
-            "log10",
-            "pow",
-            "cbrt",
-            "floorDiv",
-            "floorMod",
-            "IEEEremainder",
-            "expm1",
-            "log1p",
-            "signum",
-            "ulp",
-            "fma",
-            "copySign",
-            "getExponent",
-            "powerOfTwo",
-            "E",
-            "PI");
-    GlobalFactory.mergeInto(
-        mathlib,
-        LibMath.class,
-        pool.extensions,
-        true,
-        "near",
-        "sqrt",
-        "SQRT2",
-        "round",
-        "roundTo",
-        "conj",
-        "len");
+    final var mathlib = GlobalFactory.makeGlobalExplicit("Math", Math.class, pool.extensions, true, "min", "max", "ceil", "floor", "sin", "cos", "tan", "abs", "asin", "acos", "atan", "toRadians", "toDegrees", "sinh", "cosh", "tanh", "atan2", "hypot", "exp", "log", "log10", "pow", "cbrt", "floorDiv", "floorMod", "IEEEremainder", "expm1", "log1p", "signum", "ulp", "fma", "copySign", "getExponent", "powerOfTwo", "E", "PI");
+    GlobalFactory.mergeInto(mathlib, LibMath.class, pool.extensions, true, "near", "sqrt", "SQRT2", "round", "roundTo", "conj", "len");
     pool.add(mathlib);
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);
-    document.functions.put(
-        "destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));
-    document.functions.put(
-        "rewind",
-        generateInternalDocumentFunction(
-            "__rewindDocument",
-            new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null),
-            new TyNativeVoid()));
+    document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));
+    document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeVoid()));
     pool.add(document);
     final var random = new TyNativeGlobalObject("Random", null, false);
-    random.functions.put(
-        "genBoundInt",
-        generateInternalDocumentFunction(
-            "__randomBoundInt",
-            new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null),
-            new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    random.functions.put(
-        "genInt",
-        generateInternalDocumentFunction(
-            "__randomInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    random.functions.put(
-        "genDouble",
-        generateInternalDocumentFunction(
-            "__randomDouble", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    random.functions.put(
-        "getDoubleGaussian",
-        generateInternalDocumentFunction(
-            "__randomGaussian", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
-    random.functions.put(
-        "genLong",
-        generateInternalDocumentFunction(
-            "__randomLong", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("genBoundInt", generateInternalDocumentFunction("__randomBoundInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("genInt", generateInternalDocumentFunction("__randomInt", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("genDouble", generateInternalDocumentFunction("__randomDouble", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("getDoubleGaussian", generateInternalDocumentFunction("__randomGaussian", new TyNativeDouble(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    random.functions.put("genLong", generateInternalDocumentFunction("__randomLong", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
     pool.add(random);
     final var time = new TyNativeGlobalObject("Time", null, false);
-    time.functions.put(
-        "now",
-        generateInternalDocumentFunction(
-            "__timeNow", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
+    time.functions.put("now", generateInternalDocumentFunction("__timeNow", new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null)));
     pool.add(time);
     return pool;
   }
@@ -139,16 +61,14 @@ public class GlobalObjectPool {
     globalObjects.put(globalObject.globalName, globalObject);
   }
 
-  private static TyNativeFunctional generateInternalDocumentFunction(
-      final String name, final TyType returnType) {
+  private static TyNativeFunctional generateInternalDocumentFunction(final String name, final TyType returnType) {
     final var overloads = new ArrayList<FunctionOverloadInstance>();
     final var args = new ArrayList<TyType>();
     overloads.add(new FunctionOverloadInstance(name, returnType, args, true));
     return new TyNativeFunctional(name, overloads, FunctionStyleJava.InjectNameThenArgs);
   }
 
-  private static TyNativeFunctional generateInternalDocumentFunction(
-      final String name, final TyType arg, final TyType returnType) {
+  private static TyNativeFunctional generateInternalDocumentFunction(final String name, final TyType arg, final TyType returnType) {
     final var overloads = new ArrayList<FunctionOverloadInstance>();
     final var args = new ArrayList<TyType>();
     args.add(arg);

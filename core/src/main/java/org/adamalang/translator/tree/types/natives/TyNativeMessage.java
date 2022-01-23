@@ -35,24 +35,19 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class TyNativeMessage extends TyType
-    implements IsStructure, //
-        DetailTypeProducesRootLevelCode, //
-        DetailHasDeltaType, //
-        DetailInventDefaultValueExpression, //
-        CanBeNativeArray, //
-        DetailNativeDeclarationIsNotStandard, //
-        AssignmentViaNativeOnlyForSet {
+public class TyNativeMessage extends TyType implements IsStructure, //
+    DetailTypeProducesRootLevelCode, //
+    DetailHasDeltaType, //
+    DetailInventDefaultValueExpression, //
+    CanBeNativeArray, //
+    DetailNativeDeclarationIsNotStandard, //
+    AssignmentViaNativeOnlyForSet {
   public Token messageToken;
   public String name;
   public Token nameToken;
   public StructureStorage storage;
 
-  public TyNativeMessage(
-      final TypeBehavior behavior,
-      final Token messageToken,
-      final Token nameToken,
-      final StructureStorage storage) {
+  public TyNativeMessage(final TypeBehavior behavior, final Token messageToken, final Token nameToken, final StructureStorage storage) {
     super(behavior);
     this.messageToken = messageToken;
     this.nameToken = nameToken;
@@ -69,33 +64,23 @@ public class TyNativeMessage extends TyType
     for (final Map.Entry<String, FieldDefinition> e : storage.fields.entrySet()) {
       fields.add(e.getValue());
     }
-    sb.append("private static class RTx" + name + " implements NtMessageBase {")
-        .tabUp()
-        .writeNewline();
+    sb.append("private static class RTx" + name + " implements NtMessageBase {").tabUp().writeNewline();
     for (final FieldDefinition fd : fields) {
-      sb.append("private ")
-          .append(fd.type.getJavaConcreteType(environment))
-          .append(" ")
-          .append(fd.name);
+      sb.append("private ").append(fd.type.getJavaConcreteType(environment)).append(" ").append(fd.name);
       final var fieldType = environment.rules.Resolve(fd.type, false);
       if (fieldType instanceof DetailNativeDeclarationIsNotStandard) {
-        sb.append(" = ")
-            .append(
-                ((DetailNativeDeclarationIsNotStandard) fieldType)
-                    .getStringWhenValueNotProvided(environment));
+        sb.append(" = ").append(((DetailNativeDeclarationIsNotStandard) fieldType).getStringWhenValueNotProvided(environment));
       } else {
         Expression defaultValueToUse = null;
         if (fieldType instanceof DetailInventDefaultValueExpression) {
-          defaultValueToUse =
-              ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(this);
+          defaultValueToUse = ((DetailInventDefaultValueExpression) fieldType).inventDefaultValueExpression(this);
         }
         if (fd.defaultValueOverride != null) {
           defaultValueToUse = fd.defaultValueOverride;
         }
         if (defaultValueToUse != null) {
           sb.append(" = ");
-          defaultValueToUse.writeJava(
-              sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+          defaultValueToUse.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         }
       }
       sb.append(";").writeNewline();
@@ -114,9 +99,7 @@ public class TyNativeMessage extends TyType
             sb.append(", ");
           }
           firstArg = false;
-          sb.append(e.getValue().type.getJavaConcreteType(environment))
-              .append(" ")
-              .append(e.getKey());
+          sb.append(e.getValue().type.getJavaConcreteType(environment)).append(" ").append(e.getKey());
         }
         sb.append(") {").tabUp().writeNewline();
         var countDownUntilTab = storage.fields.size();
@@ -157,10 +140,8 @@ public class TyNativeMessage extends TyType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeMessage(newBehavior, messageToken, nameToken, storage)
-        .withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeMessage(newBehavior, messageToken, nameToken, storage).withPosition(position);
   }
 
   @Override
@@ -208,9 +189,7 @@ public class TyNativeMessage extends TyType
   }
 
   public TyNativeMessage makeAnonymousCopy() {
-    return (TyNativeMessage)
-        (new TyNativeMessage(behavior, messageToken, nameToken, storage.makeAnonymousCopy())
-            .withPosition(this));
+    return (TyNativeMessage) (new TyNativeMessage(behavior, messageToken, nameToken, storage.makeAnonymousCopy()).withPosition(this));
   }
 
   @Override

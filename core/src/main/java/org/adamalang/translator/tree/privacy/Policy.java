@@ -25,8 +25,7 @@ public abstract class Policy extends DocumentPosition {
 
   public abstract void typing(Environment environment, StructureStorage owningStructureStorage);
 
-  public abstract boolean writePrivacyCheckGuard(
-      StringBuilderWithTabs sb, FieldDefinition field, Environment environment);
+  public abstract boolean writePrivacyCheckGuard(StringBuilderWithTabs sb, FieldDefinition field, Environment environment);
 
   public abstract void writeTypeReflectionJson(JsonStreamWriter writer);
 }

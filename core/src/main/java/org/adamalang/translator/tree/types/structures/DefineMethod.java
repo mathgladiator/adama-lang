@@ -42,16 +42,7 @@ public class DefineMethod extends StructureComponent {
   private int functionId;
 
   /** construct the function of a type with a name */
-  public DefineMethod(
-      final Token methodToken,
-      final Token nameToken,
-      final Token openParen,
-      final ArrayList<FunctionArg> args,
-      final Token closeParen,
-      final Token introduceReturnToken,
-      final TyType returnType,
-      final Token tokenReadonly,
-      final Block code) {
+  public DefineMethod(final Token methodToken, final Token nameToken, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introduceReturnToken, final TyType returnType, final Token tokenReadonly, final Block code) {
     this.methodToken = methodToken;
     this.nameToken = nameToken;
     name = nameToken.text;
@@ -104,14 +95,9 @@ public class DefineMethod extends StructureComponent {
       }
       final var flow = code.typing(prepareEnvironment(environment));
       if (returnType != null && flow == ControlFlow.Open) {
-        environment.document.createError(
-            this,
-            String.format("Function '%s' does not return in all cases", nameToken.text),
-            "MethodDefine");
+        environment.document.createError(this, String.format("Function '%s' does not return in all cases", nameToken.text), "MethodDefine");
       }
-      cachedInstance =
-          new FunctionOverloadInstance(
-              "__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null);
+      cachedInstance = new FunctionOverloadInstance("__METH_" + functionId + "_" + name, returnType, argTypes, tokenReadonly != null);
       cachedInstance.ingest(this);
     }
     return cachedInstance;

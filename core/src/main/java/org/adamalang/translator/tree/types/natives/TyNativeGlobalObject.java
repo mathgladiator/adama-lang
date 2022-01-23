@@ -26,8 +26,7 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
   public final String importPackage;
   public final boolean availableForStatic;
 
-  public TyNativeGlobalObject(
-      final String globalName, final String importPackage, boolean availableForStatic) {
+  public TyNativeGlobalObject(final String globalName, final String importPackage, boolean availableForStatic) {
     super(TypeBehavior.ReadOnlyNativeValue);
     this.globalName = globalName;
     this.importPackage = importPackage;
@@ -56,13 +55,13 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeGlobalObject(globalName, null, availableForStatic).withPosition(position);
   }
 
   @Override
-  public void typing(final Environment environment) {}
+  public void typing(final Environment environment) {
+  }
 
   @Override
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
@@ -78,9 +77,6 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
       return null;
     }
     final var found = functions.get(name);
-    if (found != null) {
-      return found;
-    }
-    return null;
+    return found;
   }
 }

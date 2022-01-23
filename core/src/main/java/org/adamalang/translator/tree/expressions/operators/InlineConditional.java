@@ -30,19 +30,13 @@ public class InlineConditional extends Expression implements SupportsTwoPhaseTyp
 
   /**
    * ternary operator (https://en.wikipedia.org/wiki/%3F:)
-   *
    * @param condition the condition to check
    * @param questionToken the token for the ?
    * @param trueValue value when condition is true
    * @param colonToken the token for the :
    * @param falseValue value when condition is false
    */
-  public InlineConditional(
-      final Expression condition,
-      final Token questionToken,
-      final Expression trueValue,
-      final Token colonToken,
-      final Expression falseValue) {
+  public InlineConditional(final Expression condition, final Token questionToken, final Expression trueValue, final Token colonToken, final Expression falseValue) {
     this.condition = condition;
     this.questionToken = questionToken;
     this.trueValue = trueValue;
@@ -91,10 +85,8 @@ public class InlineConditional extends Expression implements SupportsTwoPhaseTyp
     sb.append(")");
   }
 
-  protected TyType typingReal(
-      final Environment environment, final TyType suggestion, final boolean commit) {
-    final var conditionType =
-        condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+  protected TyType typingReal(final Environment environment, final TyType suggestion, final boolean commit) {
+    final var conditionType = condition.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     environment.rules.IsBoolean(conditionType, false);
     TyType trueType;
     TyType falseType;

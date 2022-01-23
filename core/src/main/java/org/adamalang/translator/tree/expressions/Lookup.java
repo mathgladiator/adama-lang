@@ -37,23 +37,16 @@ public class Lookup extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    var type =
-        environment.lookup(
-            variableToken.text, environment.state.isContextComputation(), this, false);
+    var type = environment.lookup(variableToken.text, environment.state.isContextComputation(), this, false);
     if (type == null) {
       final var globalObject = environment.state.globals.get(variableToken.text);
       if (globalObject != null) {
         hide = true;
         return globalObject;
       }
-      environment.document.createError(
-          this,
-          String.format("The variable '%s' was not defined", variableToken.text),
-          "VariableLookup");
+      environment.document.createError(this, String.format("The variable '%s' was not defined", variableToken.text), "VariableLookup");
     }
-    if (type != null
-        && environment.state.isContextComputation()
-        && type instanceof DetailComputeRequiresGet) {
+    if (type != null && environment.state.isContextComputation() && type instanceof DetailComputeRequiresGet) {
       addGet = true;
       type = ((DetailComputeRequiresGet) type).typeAfterGet(environment);
       if (type != null) {

@@ -44,8 +44,6 @@ public class Shuffle extends LinqExpression {
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
     sql.writeJava(sb, environment);
-    sb.append(".shuffle(")
-        .append(intermediateExpression ? "false, " : "true, ")
-        .append("__random)");
+    sb.append(".shuffle(").append(intermediateExpression ? "false, " : "true, ").append("__random)");
   }
 }

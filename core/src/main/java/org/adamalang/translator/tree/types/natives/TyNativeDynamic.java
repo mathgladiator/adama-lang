@@ -24,16 +24,14 @@ import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
 
-public class TyNativeDynamic extends TySimpleNative
-    implements DetailHasDeltaType, //
-        DetailEqualityTestingRequiresWrapping, //
-        AssignmentViaNative //
+public class TyNativeDynamic extends TySimpleNative implements DetailHasDeltaType, //
+    DetailEqualityTestingRequiresWrapping, //
+    AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeDynamic(
-      final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+  public TyNativeDynamic(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "NtDynamic", "NtDynamic");
     this.readonlyToken = readonlyToken;
     this.token = token;
@@ -54,8 +52,7 @@ public class TyNativeDynamic extends TySimpleNative
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeDynamic(newBehavior, readonlyToken, token).withPosition(position);
   }
 

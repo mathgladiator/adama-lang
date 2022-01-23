@@ -39,19 +39,7 @@ public class DefineDispatcher extends Definition {
   public TyType returnType;
   public int signatureId;
 
-  public DefineDispatcher(
-      final Token dispatchToken,
-      final Token enumNameToken,
-      final Token doubleColonToken,
-      final Token valueToken,
-      final Token starToken,
-      final Token functionName,
-      final Token openParen,
-      final ArrayList<FunctionArg> args,
-      final Token closeParen,
-      final Token introReturnType,
-      final TyType returnType,
-      final Block code) {
+  public DefineDispatcher(final Token dispatchToken, final Token enumNameToken, final Token doubleColonToken, final Token valueToken, final Token starToken, final Token functionName, final Token openParen, final ArrayList<FunctionArg> args, final Token closeParen, final Token introReturnType, final TyType returnType, final Block code) {
     this.dispatchToken = dispatchToken;
     this.enumNameToken = enumNameToken;
     this.doubleColonToken = doubleColonToken;
@@ -73,8 +61,7 @@ public class DefineDispatcher extends Definition {
     for (final FunctionArg arg : args) {
       types.add(arg.type);
     }
-    return new FunctionOverloadInstance(
-        " __DISPATCH_" + signatureId + "_" + functionName.text, returnType, types, false);
+    return new FunctionOverloadInstance(" __DISPATCH_" + signatureId + "_" + functionName.text, returnType, types, false);
   }
 
   @Override
@@ -114,10 +101,7 @@ public class DefineDispatcher extends Definition {
     }
     final var flow = code.typing(prepareEnvironment(environment));
     if (returnType != null && flow == ControlFlow.Open) {
-      environment.document.createError(
-          this,
-          String.format("Dispatch '%s' does not return in all cases", functionName.text),
-          "DefineDispatcher");
+      environment.document.createError(this, String.format("Dispatch '%s' does not return in all cases", functionName.text), "DefineDispatcher");
     }
   }
 

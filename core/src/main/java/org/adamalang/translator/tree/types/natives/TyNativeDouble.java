@@ -30,13 +30,12 @@ import java.util.function.Consumer;
  * represents a double precision floating point number. For instance, 3.14 is a floating point
  * number. This uses the native 'double' java type.
  */
-public class TyNativeDouble extends TySimpleNative
-    implements //
-        IsNativeValue, //
-        DetailHasDeltaType, //
-        DetailTypeHasMethods, //
-        DetailEqualityTestingRequiresWrapping, //
-        AssignmentViaNative //
+public class TyNativeDouble extends TySimpleNative implements //
+    IsNativeValue, //
+    DetailHasDeltaType, //
+    DetailTypeHasMethods, //
+    DetailEqualityTestingRequiresWrapping, //
+    AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
@@ -62,8 +61,7 @@ public class TyNativeDouble extends TySimpleNative
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeDouble(newBehavior, readonlyToken, token).withPosition(position);
   }
 

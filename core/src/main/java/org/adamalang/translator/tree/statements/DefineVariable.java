@@ -38,13 +38,7 @@ public class DefineVariable extends Statement {
   private TyType type;
   private Expression value;
 
-  public DefineVariable(
-      final Token preludeToken,
-      final Token nameToken,
-      final TyType type,
-      final Token equalToken,
-      final Expression value,
-      final Token endToken) {
+  public DefineVariable(final Token preludeToken, final Token nameToken, final TyType type, final Token equalToken, final Expression value, final Token endToken) {
     this.preludeToken = preludeToken;
     if (preludeToken != null) {
       ingest(preludeToken);
@@ -91,10 +85,7 @@ public class DefineVariable extends Statement {
     // type the value
     TyType valueType = null;
     if (value != null) {
-      valueType =
-          environment.rules.Resolve(
-              value.typing(environment.scopeWithComputeContext(ComputeContext.Computation), type),
-              false);
+      valueType = environment.rules.Resolve(value.typing(environment.scopeWithComputeContext(ComputeContext.Computation), type), false);
       // infer the value type if auto
       if (type == null) {
         type = environment.rules.Resolve(valueType, false);
@@ -103,34 +94,24 @@ public class DefineVariable extends Statement {
     // resolve it
     type = RuleSetCommon.Resolve(environment, type, false);
     // invent a value if we can
-    if (value == null
-        && type != null
-        && type instanceof DetailInventDefaultValueExpression
-        && !(type instanceof DetailNativeDeclarationIsNotStandard)) {
+    if (value == null && type != null && type instanceof DetailInventDefaultValueExpression && !(type instanceof DetailNativeDeclarationIsNotStandard)) {
       value = ((DetailInventDefaultValueExpression) type).inventDefaultValueExpression(this);
-      valueType =
-          value.typing(environment.scopeWithComputeContext(ComputeContext.Computation), type);
+      valueType = value.typing(environment.scopeWithComputeContext(ComputeContext.Computation), type);
     }
     if (type != null && type instanceof TyReactiveRecord) {
-      type =
-          new TyNativeReactiveRecordPtr(TypeBehavior.ReadWriteWithSetGet, (TyReactiveRecord) type);
+      type = new TyNativeReactiveRecordPtr(TypeBehavior.ReadWriteWithSetGet, (TyReactiveRecord) type);
       if (value == null) {
-        environment.document.createError(
-            type, String.format("Reactive pointers must be initialized"), "DefinePtr");
+        environment.document.createError(type, String.format("Reactive pointers must be initialized"), "DefinePtr");
       }
     }
     // is capable of getting an assignment
     if (type != null && valueType != null) {
       final var result = environment.rules.CanAssignWithSet(type, valueType, false);
-      final var canStore =
-          environment.rules.CanTypeAStoreTypeB(type, valueType, StorageTweak.None, false);
+      final var canStore = environment.rules.CanTypeAStoreTypeB(type, valueType, StorageTweak.None, false);
       if (!canStore || result == CanAssignResult.No) {
         type = null;
       }
-      if (type instanceof TyNativeMessage
-          && type != null
-          && valueType != null
-          && valueType.behavior == TypeBehavior.ReadOnlyNativeValue) {
+      if (type instanceof TyNativeMessage && type != null && valueType != null && valueType.behavior == TypeBehavior.ReadOnlyNativeValue) {
         type = type.makeCopyWithNewPosition(type, valueType.behavior);
       }
     }
@@ -153,21 +134,14 @@ public class DefineVariable extends Statement {
         if (type instanceof DetailNativeDeclarationIsNotStandard) {
           final var child = new StringBuilder();
           value.writeJava(child, environment.scopeWithComputeContext(ComputeContext.Computation));
-          sb.append(
-              String.format(
-                  ((DetailNativeDeclarationIsNotStandard) type)
-                      .getPatternWhenValueProvided(environment),
-                  child.toString()));
+          sb.append(String.format(((DetailNativeDeclarationIsNotStandard) type).getPatternWhenValueProvided(environment), child));
         } else {
           value.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         }
         sb.append(";");
       } else {
         if (type instanceof DetailNativeDeclarationIsNotStandard) {
-          sb.append(" = ")
-              .append(
-                  ((DetailNativeDeclarationIsNotStandard) type)
-                      .getStringWhenValueNotProvided(environment));
+          sb.append(" = ").append(((DetailNativeDeclarationIsNotStandard) type).getStringWhenValueNotProvided(environment));
         }
         sb.append(";");
       }

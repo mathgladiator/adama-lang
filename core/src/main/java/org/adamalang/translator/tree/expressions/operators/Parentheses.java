@@ -24,8 +24,7 @@ public class Parentheses extends Expression implements SupportsTwoPhaseTyping {
   public final Token rightParentheses;
 
   /** @param expression the expression to wrap */
-  public Parentheses(
-      final Token leftParentheses, final Expression expression, final Token rightParentheses) {
+  public Parentheses(final Token leftParentheses, final Expression expression, final Token rightParentheses) {
     this.leftParentheses = leftParentheses;
     this.expression = expression;
     this.rightParentheses = rightParentheses;

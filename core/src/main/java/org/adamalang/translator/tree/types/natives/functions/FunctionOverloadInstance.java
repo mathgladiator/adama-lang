@@ -27,11 +27,7 @@ public class FunctionOverloadInstance extends DocumentPosition {
   public final TyType returnType;
   public final ArrayList<TyType> types;
 
-  public FunctionOverloadInstance(
-      final String javaFunction,
-      final TyType returnType,
-      final ArrayList<TyType> types,
-      final boolean pure) {
+  public FunctionOverloadInstance(final String javaFunction, final TyType returnType, final ArrayList<TyType> types, final boolean pure) {
     this.javaFunction = javaFunction;
     this.returnType = returnType;
     this.types = types;
@@ -51,33 +47,22 @@ public class FunctionOverloadInstance extends DocumentPosition {
       score = Math.abs(args.size() - types.size()) * 2;
     }
     for (var iter = 0; iter < Math.min(args.size(), types.size()); iter++) {
-      if (!environment.rules.CanTypeAStoreTypeB(
-          types.get(iter), args.get(iter), StorageTweak.None, true)) {
+      if (!environment.rules.CanTypeAStoreTypeB(types.get(iter), args.get(iter), StorageTweak.None, true)) {
         score++;
       }
-      if (!environment.rules.CanTypeAStoreTypeB(
-          args.get(iter), types.get(iter), StorageTweak.None, true)) {
+      if (!environment.rules.CanTypeAStoreTypeB(args.get(iter), types.get(iter), StorageTweak.None, true)) {
         score++;
       }
     }
     return score;
   }
 
-  public void test(
-      final DocumentPosition position,
-      final Environment environment,
-      final ArrayList<TyType> args) {
+  public void test(final DocumentPosition position, final Environment environment, final ArrayList<TyType> args) {
     if (args.size() != types.size()) {
-      environment.document.createError(
-          position,
-          String.format(
-              "Function invoked with wrong number of arguments. Expected %d, got %d",
-              types.size(), args.size()),
-          "FunctionInvoke");
+      environment.document.createError(position, String.format("Function invoked with wrong number of arguments. Expected %d, got %d", types.size(), args.size()), "FunctionInvoke");
     }
     for (var iter = 0; iter < Math.min(args.size(), types.size()); iter++) {
-      environment.rules.CanTypeAStoreTypeB(
-          types.get(iter), args.get(iter), StorageTweak.None, false);
+      environment.rules.CanTypeAStoreTypeB(types.get(iter), args.get(iter), StorageTweak.None, false);
     }
   }
 
@@ -87,19 +72,14 @@ public class FunctionOverloadInstance extends DocumentPosition {
     }
     var sameCount = 0;
     for (var iter = 0; iter < types.size(); iter++) {
-      final var l2r =
-          environment.rules.CanTypeAStoreTypeB(
-              types.get(iter), other.types.get(iter), StorageTweak.None, true);
-      final var r2l =
-          environment.rules.CanTypeAStoreTypeB(
-              other.types.get(iter), types.get(iter), StorageTweak.None, true);
+      final var l2r = environment.rules.CanTypeAStoreTypeB(types.get(iter), other.types.get(iter), StorageTweak.None, true);
+      final var r2l = environment.rules.CanTypeAStoreTypeB(other.types.get(iter), types.get(iter), StorageTweak.None, true);
       if (l2r && r2l) {
         sameCount++;
       }
     }
     if (sameCount == types.size()) {
-      environment.document.createError(
-          this, String.format("Overloaded function has many identical calls"), "FunctionOverlap");
+      environment.document.createError(this, String.format("Overloaded function has many identical calls"), "FunctionOverlap");
     }
   }
 

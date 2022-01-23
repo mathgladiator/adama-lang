@@ -26,11 +26,7 @@ public class OrderPair extends DocumentPosition {
     this.nameToken = nameToken;
     this.ascToken = ascToken;
     name = nameToken.text;
-    if (ascToken != null && ascToken.text.equals("desc")) {
-      asc = false;
-    } else {
-      asc = true;
-    }
+    asc = ascToken == null || !ascToken.text.equals("desc");
     if (commaToken != null) {
       ingest(commaToken);
     }

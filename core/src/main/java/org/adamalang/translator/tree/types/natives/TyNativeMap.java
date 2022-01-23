@@ -27,13 +27,12 @@ import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-public class TyNativeMap extends TyType
-    implements //
-        AssignmentViaSetter, //
-        DetailHasDeltaType, //
-        DetailTypeHasMethods, //
-        DetailNativeDeclarationIsNotStandard, //
-        IsMap //
+public class TyNativeMap extends TyType implements //
+    AssignmentViaSetter, //
+    DetailHasDeltaType, //
+    DetailTypeHasMethods, //
+    DetailNativeDeclarationIsNotStandard, //
+    IsMap //
 {
   public final Token closeThing;
   public final Token commaToken;
@@ -42,14 +41,7 @@ public class TyNativeMap extends TyType
   public final Token openThing;
   public final TyType rangeType;
 
-  public TyNativeMap(
-      final TypeBehavior behavior,
-      final Token mapToken,
-      final Token openThing,
-      final TyType domainType,
-      final Token commaToken,
-      final TyType rangeType,
-      final Token closeThing) {
+  public TyNativeMap(final TypeBehavior behavior, final Token mapToken, final Token openThing, final TyType domainType, final Token commaToken, final TyType rangeType, final Token closeThing) {
     super(behavior);
     this.mapToken = mapToken;
     this.openThing = openThing;
@@ -99,11 +91,8 @@ public class TyNativeMap extends TyType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
-    return new TyNativeMap(
-            newBehavior, mapToken, openThing, domainType, commaToken, rangeType, closeThing)
-        .withPosition(position);
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+    return new TyNativeMap(newBehavior, mapToken, openThing, domainType, commaToken, rangeType, closeThing).withPosition(position);
   }
 
   @Override
@@ -112,11 +101,7 @@ public class TyNativeMap extends TyType
     rangeType.typing(environment);
     final var resolvedDomainType = environment.rules.Resolve(domainType, false);
     if (resolvedDomainType != null && !(resolvedDomainType instanceof CanBeMapDomain)) {
-      environment.document.createError(
-          this,
-          String.format(
-              "The domain type '%s' is not an appropriate.", resolvedDomainType.getAdamaType()),
-          "TyNativeMap");
+      environment.document.createError(this, String.format("The domain type '%s' is not an appropriate.", resolvedDomainType.getAdamaType()), "TyNativeMap");
     }
   }
 
@@ -134,11 +119,7 @@ public class TyNativeMap extends TyType
 
   @Override
   public String getDeltaType(final Environment environment) {
-    return "DMap<"
-        + domainType.getJavaBoxType(environment)
-        + ","
-        + ((DetailHasDeltaType) rangeType).getDeltaType(environment)
-        + ">";
+    return "DMap<" + domainType.getJavaBoxType(environment) + "," + ((DetailHasDeltaType) rangeType).getDeltaType(environment) + ">";
   }
 
   @Override
@@ -156,24 +137,11 @@ public class TyNativeMap extends TyType
     if ("insert".equals(name)) {
       final var args = new ArrayList<TyType>();
       args.add(this);
-      return new TyNativeFunctional(
-          "insert",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance("insert", this, new ArrayList<>(args), false)),
-          FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("insert", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("insert", this, new ArrayList<>(args), false)), FunctionStyleJava.ExpressionThenArgs);
     }
 
     if ("size".equals(name)) {
-      return new TyNativeFunctional(
-          "size",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance(
-                  "size",
-                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken)
-                      .withPosition(this),
-                  new ArrayList<>(),
-                  true)),
-          FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

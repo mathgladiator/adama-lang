@@ -22,12 +22,10 @@ public class DocumentError {
 
   /**
    * construct the error
-   *
    * @param position where within the file the error happened
    * @param message what is the message for the error
    */
-  public DocumentError(
-      final DocumentPosition position, final String message, final String tutorial) {
+  public DocumentError(final DocumentPosition position, final String message, final String tutorial) {
     if (position == null || message == null) {
       throw new NullPointerException();
     }

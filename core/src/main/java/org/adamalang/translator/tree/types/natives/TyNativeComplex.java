@@ -34,19 +34,17 @@ import java.util.function.Consumer;
  * represents a double precision floating point number. For instance, 3.14 is a floating point
  * number. This uses the native 'double' java type.
  */
-public class TyNativeComplex extends TySimpleNative
-    implements //
-        IsNativeValue, //
-        DetailHasDeltaType, //
-        DetailTypeHasMethods, //
-        DetailEqualityTestingRequiresWrapping, //
-        AssignmentViaNative //
+public class TyNativeComplex extends TySimpleNative implements //
+    IsNativeValue, //
+    DetailHasDeltaType, //
+    DetailTypeHasMethods, //
+    DetailEqualityTestingRequiresWrapping, //
+    AssignmentViaNative //
 {
   public final Token readonlyToken;
   public final Token token;
 
-  public TyNativeComplex(
-      final TypeBehavior behavior, final Token readonlyToken, final Token token) {
+  public TyNativeComplex(final TypeBehavior behavior, final Token readonlyToken, final Token token) {
     super(behavior, "NtComplex", "NtComplex");
     this.readonlyToken = readonlyToken;
     this.token = token;
@@ -67,8 +65,7 @@ public class TyNativeComplex extends TySimpleNative
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(
-      final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeComplex(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -100,27 +97,9 @@ public class TyNativeComplex extends TySimpleNative
   @Override
   public TyNativeFunctional lookupMethod(String name, Environment environment) {
     if ("re".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement(
-          "real",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance(
-                  "real",
-                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)
-                      .withPosition(this),
-                  new ArrayList<>(),
-                  false)),
-          FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("real", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("real", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this), new ArrayList<>(), false)), FunctionStyleJava.None);
     } else if ("im".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement(
-          "imaginary",
-          FunctionOverloadInstance.WRAP(
-              new FunctionOverloadInstance(
-                  "imaginary",
-                  new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)
-                      .withPosition(this),
-                  new ArrayList<>(),
-                  false)),
-          FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("imaginary", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("imaginary", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this), new ArrayList<>(), false)), FunctionStyleJava.None);
     }
     return environment.state.globals.findExtension(this, name);
   }

@@ -107,17 +107,7 @@ public class DefineHandler extends Definition {
       code.typing(next);
     }
     if (behavior == MessageHandlerBehavior.EnqueueItemIntoNativeChannel) {
-      final var nativeChannel =
-          new TyNativeChannel(
-                  TypeBehavior.ReadOnlyNativeValue,
-                  null,
-                  null,
-                  new TokenizedItem<>(
-                      isArray
-                          ? new TyNativeArray(
-                              TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null)
-                          : (TyType) messageType))
-              .withPosition(this);
+      final var nativeChannel = new TyNativeChannel(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(isArray ? new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, null) : (TyType) messageType)).withPosition(this);
       environment.define(channel, nativeChannel, false, nativeChannel);
     }
   }
@@ -126,37 +116,18 @@ public class DefineHandler extends Definition {
     final var next = environment.scopeAsMessageHandler();
     if (messageVar != null) {
       if (isArray) {
-        next.define(
-            messageVar,
-            new TyNativeArray(
-                TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, messageTypeArrayToken),
-            true,
-            this);
+        next.define(messageVar, new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, (TyType) messageType, messageTypeArrayToken), true, this);
       } else {
         next.define(messageVar, (TyType) messageType, true, this);
       }
     }
     if (client != null) {
-      next.define(
-          client,
-          new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientTypeToken)
-              .withPosition(this),
-          true,
-          this);
+      next.define(client, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientTypeToken).withPosition(this), true, this);
     }
     return next;
   }
 
-  public void setFullHandler(
-      final Token openParenToken,
-      final Token clientTypeToken,
-      final Token clientVarToken,
-      final Token commaToken,
-      final Token messageTypeToken,
-      final Token messageTypeArrayToken,
-      final Token messageVarToken,
-      final Token endParenToken,
-      final Block code) {
+  public void setFullHandler(final Token openParenToken, final Token clientTypeToken, final Token clientVarToken, final Token commaToken, final Token messageTypeToken, final Token messageTypeArrayToken, final Token messageVarToken, final Token endParenToken, final Block code) {
     this.openParenToken = openParenToken;
     this.clientTypeToken = clientTypeToken;
     this.clientVarToken = clientVarToken;
@@ -182,12 +153,7 @@ public class DefineHandler extends Definition {
     return this;
   }
 
-  public void setFuture(
-      final Token openType,
-      final Token messageTypeToken,
-      final Token messageTypeArrayToken,
-      final Token endType,
-      final Token semicolonToken) {
+  public void setFuture(final Token openType, final Token messageTypeToken, final Token messageTypeArrayToken, final Token endType, final Token semicolonToken) {
     this.openType = openType;
     this.messageTypeToken = messageTypeToken;
     this.messageTypeArrayToken = messageTypeArrayToken;
@@ -203,13 +169,7 @@ public class DefineHandler extends Definition {
     ingest(semicolonToken);
   }
 
-  public void setMessageOnlyHandler(
-      final Token openParenToken,
-      final Token messageTypeToken,
-      final Token messageTypeArrayToken,
-      final Token messageVarToken,
-      final Token endParenToken,
-      final Block code) {
+  public void setMessageOnlyHandler(final Token openParenToken, final Token messageTypeToken, final Token messageTypeArrayToken, final Token messageVarToken, final Token endParenToken, final Block code) {
     this.openParenToken = openParenToken;
     this.messageTypeToken = messageTypeToken;
     this.messageTypeArrayToken = messageTypeArrayToken;
