@@ -1,6 +1,6 @@
 import WebSocket from 'isomorphic-ws';
 
-export class Tree {
+export class AdamaTree {
   tree: object;
   dispatch: object;
   dispatch_count: number;
@@ -269,11 +269,7 @@ export class Tree {
   }
 }
 
-export function MakeTree(): Tree {
-  return new Tree();
-}
-
-export class Connection {
+export class AdamaConnection {
   // how long between retries
   backoff: number;
   maximum_backoff: number;
@@ -316,7 +312,6 @@ export class Connection {
   sendId : number;
 
   constructor(url: string) {
-    var self = this;
     this.backoff = 1;
     this.url = url;
     this.connected = false;
@@ -633,7 +628,7 @@ export class Connection {
 
   /** api: connect tree */
   /*
-  async connectTree(gs: string, id: string, tree: Tree, hack: (request: any) => void) {
+  async connectTree(gs: string, id: string, tree: AdamaTree, hack: (request: any) => void) {
     var keyId = this.connectId;
     this.connectId++;
     let sm = {

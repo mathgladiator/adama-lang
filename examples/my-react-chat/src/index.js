@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {Connection, Tree} from 'adama-ws-client';
+import {AdamaConnection, AdamaTree} from 'adama-ws-client';
 
-window.Adama = new Connection("ws://adama-lb-us-east-2-2073537616.us-east-2.elb.amazonaws.com/s");
+window.Adama = new AdamaConnection("ws://adama-lb-us-east-2-2073537616.us-east-2.elb.amazonaws.com/s");
 window.Adama.start();
 
 ReactDOM.render(
