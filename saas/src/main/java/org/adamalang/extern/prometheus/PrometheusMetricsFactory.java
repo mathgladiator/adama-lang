@@ -82,7 +82,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
   }
 
   // TODO: FIX TOOL THAT GENERATES NAMES
-  private static String correctName(String nameRaw) {
+  public static String correctName(String nameRaw) {
     // TODO: lex the name and remove everything bad
     return nameRaw.replaceAll(Pattern.quote("/"), "").replaceAll(Pattern.quote("-"), "").toLowerCase(Locale.ROOT);
   }
@@ -240,5 +240,13 @@ public class PrometheusMetricsFactory implements MetricsFactory {
         inflight.dec();
       }
     };
+  }
+
+  @Override
+  public void page(String name, String title) {
+  }
+
+  @Override
+  public void section(String title) {
   }
 }

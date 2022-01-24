@@ -125,4 +125,12 @@ public class NoOpMetricsFactory implements MetricsFactory {
       }
     };
   }
+
+  @Override
+  public void page(String name, String title) {
+  }
+
+  @Override
+  public void section(String title) {
+  }
 }

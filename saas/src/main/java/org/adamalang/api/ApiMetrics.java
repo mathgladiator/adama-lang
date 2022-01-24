@@ -12,7 +12,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.metrics.*;
 
-public class Metrics {
+public class ApiMetrics {
   public final StreamMonitor monitor_InitStart;
   public final RequestResponseMonitor monitor_InitRevokeAll;
   public final RequestResponseMonitor monitor_InitGenerateIdentity;
@@ -38,7 +38,7 @@ public class Metrics {
   public final RequestResponseMonitor monitor_AttachmentAppend;
   public final RequestResponseMonitor monitor_AttachmentFinish;
 
-  public Metrics(MetricsFactory factory) {
+  public ApiMetrics(MetricsFactory factory) {
     this.monitor_InitStart = factory.makeStreamMonitor("init/start");
     this.monitor_InitRevokeAll = factory.makeRequestResponseMonitor("init/revoke-all");
     this.monitor_InitGenerateIdentity = factory.makeRequestResponseMonitor("init/generate-identity");

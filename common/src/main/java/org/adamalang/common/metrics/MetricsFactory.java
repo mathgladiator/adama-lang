@@ -31,4 +31,10 @@ public interface MetricsFactory {
 
   /** produce a monitor for an item action queue */
   ItemActionMonitor makeItemActionMonitor(String name);
+
+  /** kick of a dashboard page */
+  void page(String name, String title);
+
+  /** within a page group metrics under a section */
+  void section(String title);
 }

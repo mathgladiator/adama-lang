@@ -9,12 +9,16 @@
  */
 package org.adamalang.cli.commands;
 
+import org.adamalang.api.ApiMetrics;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.extern.prometheus.PrometheusDashboard;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.gossip.Engine;
@@ -29,6 +33,7 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.overlord.Overlord;
+import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
@@ -75,6 +80,9 @@ public class Service {
       case "frontend":
         serviceFrontend(config);
         return;
+      case "dashboards":
+        dashboards();
+        return;
       case "help":
         serviceHelp(next);
         return;
@@ -95,6 +103,7 @@ public class Service {
     System.out.println("    " + Util.prefix("backend", Util.ANSI.Green) + "           Spin up a gRPC back-end node");
     System.out.println("    " + Util.prefix("frontend", Util.ANSI.Green) + "          Spin up a WebSocket front-end node");
     System.out.println("    " + Util.prefix("overlord", Util.ANSI.Green) + "          Spin up the cluster overlord");
+    System.out.println("    " + Util.prefix("dashboards", Util.ANSI.Green) + "        Produce dashboards for prometheus.");
   }
 
   public static void serviceAuto(Config config) throws Exception {
@@ -301,5 +310,22 @@ public class Service {
     System.err.println("running frontend");
     runnable.run();
     System.err.println("frontend finished");
+  }
+
+  public static void dashboards() throws Exception {
+    PrometheusDashboard metricsFactory = new PrometheusDashboard();
+    metricsFactory.page("gossip", "Gossip");
+    new GossipMetricsImpl(metricsFactory);
+    metricsFactory.page("client", "Client to Adama");
+    new ClientMetrics(metricsFactory);
+    metricsFactory.page("server", "Adama Server");
+    new ServerMetrics(metricsFactory);
+    metricsFactory.page("web", "Web Proxy");
+    new WebMetrics(metricsFactory);
+    metricsFactory.page("overlord", "The Overlord");
+    new OverlordMetrics(metricsFactory);
+    metricsFactory.page("api", "The Public API");
+    new ApiMetrics(metricsFactory);
+    metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }

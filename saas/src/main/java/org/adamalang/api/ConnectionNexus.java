@@ -15,14 +15,16 @@ import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
 
 public class ConnectionNexus {
-  public final Metrics metrics;
+  public final ApiMetrics metrics;
   public final Executor executor;
   public final UserIdResolver emailService;
   public final Authenticator identityService;
   public final SpacePolicyLocator spaceService;
 
-  public ConnectionNexus(Metrics metrics, Executor executor, UserIdResolver emailService, Authenticator identityService, SpacePolicyLocator spaceService) {
-    this.metrics = metrics;    this.executor = executor;    this.emailService = emailService;
+  public ConnectionNexus(ApiMetrics metrics, Executor executor, UserIdResolver emailService, Authenticator identityService, SpacePolicyLocator spaceService) {
+    this.metrics = metrics;
+    this.executor = executor;
+    this.emailService = emailService;
     this.identityService = identityService;
     this.spaceService = spaceService;
   }
