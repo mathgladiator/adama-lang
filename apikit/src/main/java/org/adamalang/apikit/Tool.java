@@ -71,7 +71,7 @@ public class Tool {
     HashMap<String, String> apiOutput = new HashMap<>();
     apiOutput.put("ConnectionNexus.java", nexus);
     apiOutput.put("ConnectionRouter.java", router);
-    apiOutput.put("Metrics.java", metrics);
+    apiOutput.put("ApiMetrics.java", metrics);
 
     apiOutput.putAll(requestsFiles);
     apiOutput.putAll(responderFiles);
@@ -89,5 +89,9 @@ public class Tool {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     DocumentBuilder builder = factory.newDocumentBuilder();
     return builder.parse(input);
+  }
+
+  public static void main(String[] args) throws Exception {
+    build();
   }
 }

@@ -18,7 +18,7 @@ public class AssembleMetrics {
     metrics.append("\n");
     metrics.append("import org.adamalang.common.metrics.*;\n");
     metrics.append("\n");
-    metrics.append("public class Metrics {\n");
+    metrics.append("public class ApiMetrics {\n");
     for (Method method : methods) {
       if (method.create != null) {
         metrics.append("  public final StreamMonitor monitor_");
@@ -28,7 +28,7 @@ public class AssembleMetrics {
       metrics.append(method.camelName).append(";\n");
     }
     metrics.append("\n");
-    metrics.append("  public Metrics(MetricsFactory factory) {\n");
+    metrics.append("  public ApiMetrics(MetricsFactory factory) {\n");
     for (Method method : methods) {
       metrics.append("    this.monitor_").append(method.camelName);
       if (method.create != null) {
