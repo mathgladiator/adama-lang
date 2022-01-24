@@ -129,7 +129,7 @@ public class FrontendManagementInstaller {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`grants`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`authorities`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`billing_batches`;").toString());
-      DataBase.execute(connection, new StringBuilder("DROP DATABASE `").append(dataBase.databaseName).append("`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
       connection.close();
     }

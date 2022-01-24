@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /** the front-door to talking to the gRPC client. */
@@ -64,6 +66,30 @@ public class Client {
         stream.accept(target);
       }
     }, 3));
+  }
+
+  public void waitForCapacity(String space, int timeout, Consumer<Boolean> done) {
+    AtomicInteger time = new AtomicInteger(0);
+    NamedRunnable task = new NamedRunnable("wait-for-capacity") {
+      @Override
+      public void execute() throws Exception {
+        NamedRunnable self = this;
+        engine.list(space, (targets) -> {
+          if (targets.size() == 0) {
+            if (time.get() < timeout) {
+              int step = (int) (125 + Math.random() * 125);
+              time.set(time.get() + step);
+              executors[rng.nextInt(executors.length)].schedule(self, step);
+            } else {
+              done.accept(false);
+            }
+          } else {
+            done.accept(true);
+          }
+        });
+      }
+    };
+    executors[rng.nextInt(executors.length)].execute(task);
   }
 
   public void notifyDeployment(String target, String space) {

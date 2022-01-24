@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class ClientTests {
@@ -52,22 +53,18 @@ public class ClientTests {
         Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
         client.notifyDeployment("127.0.0.1:12500", "space");
         CountDownLatch latchRandomBillingExchangeFinishes = new CountDownLatch(1);
+
         CountDownLatch latchFound = new CountDownLatch(1);
-        for (int k = 0; k < 10; k++) {
-          client.routing().get(
-              "space",
-              "key",
-              new Consumer<String>() {
-                @Override
-                public void accept(String s) {
-                  if (s != null) {
-                    latchFound.countDown();
-                  }
-                }
-              });
-          latchFound.await(500, TimeUnit.MILLISECONDS);
-        }
-        Assert.assertTrue(latchFound.await(500, TimeUnit.MILLISECONDS));
+        AtomicReference<Boolean> got = new AtomicReference<>(null);
+        client.waitForCapacity("space", 5000, new Consumer<Boolean>() {
+          @Override
+          public void accept(Boolean b) {
+            got.set(b);
+            latchFound.countDown();
+          }
+        });
+        Assert.assertTrue(latchFound.await(7500, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(got.get());
         client.randomBillingExchange(new BillingStream() {
           @Override
           public void handle(String target, String batch, Runnable after) {
@@ -207,9 +204,20 @@ public class ClientTests {
             latch3Failed.countDown();
           }
         });
+        CountDownLatch latch4 = new CountDownLatch(1);
+        AtomicReference<Boolean> got = new AtomicReference<>(null);
+        client.waitForCapacity("xyz", 500, new Consumer<Boolean>() {
+          @Override
+          public void accept(Boolean b) {
+            got.set(b);
+            latch4.countDown();
+          }
+        });
         Assert.assertTrue(latch1Failed.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertTrue(latch2Failed.await(5000, TimeUnit.MILLISECONDS));
         Assert.assertTrue(latch3Failed.await(5000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(latch4.await(5000, TimeUnit.MILLISECONDS));
+        Assert.assertFalse(got.get());
       } finally{
         client.shutdown();
       }

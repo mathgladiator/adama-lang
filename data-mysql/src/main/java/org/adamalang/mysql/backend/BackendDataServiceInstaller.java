@@ -86,7 +86,7 @@ public class BackendDataServiceInstaller {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`deployed`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`deltas`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`index`;").toString());
-      DataBase.execute(connection, new StringBuilder("DROP DATABASE `").append(dataBase.databaseName).append("`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
       connection.close();
     }

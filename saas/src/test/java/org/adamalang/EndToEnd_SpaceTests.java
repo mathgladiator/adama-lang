@@ -11,6 +11,7 @@ package org.adamalang;
 
 import io.jsonwebtoken.Jwts;
 import org.adamalang.common.Json;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.transforms.results.Keystore;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,6 +21,20 @@ import java.util.Iterator;
 import java.util.regex.Pattern;
 
 public class EndToEnd_SpaceTests {
+  public static String planFor(String code) {
+    JsonStreamWriter planWriter = new JsonStreamWriter();
+    planWriter.beginObject();
+    planWriter.writeObjectFieldIntro("versions");
+    planWriter.beginObject();
+    planWriter.writeObjectFieldIntro("x");
+    planWriter.writeString(code);
+    planWriter.endObject();
+    planWriter.writeObjectFieldIntro("default");
+    planWriter.writeString("x");
+    planWriter.endObject();
+    return planWriter.toString();
+  }
+
   @Test
   public void flow() throws Exception {
     try (TestFrontEnd fe = new TestFrontEnd()) {
@@ -86,9 +101,15 @@ public class EndToEnd_SpaceTests {
       Iterator<String> c14  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/get\",\"space\":\"myspace\"}");
       Assert.assertEquals("FINISH:{\"plan\":{}}", c14.next());
-
-      // TODO: set, need a real plan
-      // tODO: get the set plan back
+      Iterator<String> c15  =
+          fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/set\",\"space\":\"myspace\",\"plan\":"+planFor("@static { create(who) { return true; } } ")+ "}");
+      Assert.assertEquals("FINISH:{}", c15.next());
+      Iterator<String> c16  =
+          fe.execute("{\"id\":7,\"identity\":\"" + userIdentity + "\",\"method\":\"space/set\",\"space\":\"myspace\",\"plan\":"+planFor("@static { create(who) { return true; } } ")+ "}");
+      Assert.assertEquals("ERROR:901127", c16.next());
+      Iterator<String> c17  =
+          fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/get\",\"space\":\"myspace\"}");
+      Assert.assertEquals("FINISH:{\"plan\":{\"versions\":{\"x\":\"@static { create(who) { return true; } } \"},\"default\":\"x\"}}", c17.next());
     }
   }
 }

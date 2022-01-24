@@ -278,8 +278,6 @@ public class RootHandlerImpl implements RootHandler {
         MessageDigest digest = Hashing.md5();
         digest.digest(planJson.getBytes(StandardCharsets.UTF_8));
         String hash = Hashing.finishAndEncode(digest);
-        // validate the plan
-
         // Change the master plan
         Spaces.setPlan(nexus.dataBaseManagement, request.policy.id, planJson, hash);
         // iterate the targets with this space loaded
@@ -288,15 +286,20 @@ public class RootHandlerImpl implements RootHandler {
             (target) -> {
               try {
                 // persist the deployment binding
-                Deployments.deploy(
-                    nexus.dataBaseDeployments, request.space, target, hash, planJson);
+                Deployments.deploy(nexus.dataBaseDeployments, request.space, target, hash, planJson);
                 // notify the client of an update
                 nexus.client.notifyDeployment(target, request.space);
               } catch (Exception ex) {
                 ex.printStackTrace();
               }
             });
-        responder.complete();
+        nexus.client.waitForCapacity(request.space, 5000, (found) -> {
+          if (found) {
+            responder.complete();
+          } else {
+            responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_DEPLOYMENT_FAILED_FINDING_CAPACITY));
+          }
+        });
       } else {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
       }
@@ -504,6 +507,7 @@ public class RootHandlerImpl implements RootHandler {
       @Override
       public void handle(ConnectionEndRequest request, SimpleResponder responder) {
         connection.close();
+        responder.complete();
       }
 
       @Override

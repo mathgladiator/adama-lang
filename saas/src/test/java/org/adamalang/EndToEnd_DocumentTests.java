@@ -32,14 +32,31 @@ public class EndToEnd_DocumentTests {
                   + fe.codesSentToEmail.get("x@x.com")
                   + "\"}");
       String result1 = c2.next();
+      Assert.assertEquals("FINISH:{}", c1.next());
       Assert.assertTrue(result1.length() > 0);
       Assert.assertEquals("FINISH:{\"identity\":", result1.substring(0, 19));
-      String identity1 = Json.parseJsonObject(result1.substring(7)).get("identity").textValue();
-      // TODO: CREATE SPACE
-      // TODO: DEPLOY SPACE
-      // TODO: CREATE DOCUMENT
-      // TODO: CONNECT TO DOCUMENT
-      // TODO: SEND TO DOCUMENT
+      String devIdentity = Json.parseJsonObject(result1.substring(7)).get("identity").textValue();
+      Iterator<String> c3  = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/create\",\"space\":\"newspace\"}");
+      Assert.assertEquals("FINISH:{}", c3.next());
+      Iterator<String> c4  =
+          fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+EndToEnd_SpaceTests.planFor(
+              "@static { create(who) { return true; } }" +
+                  "@connected(who) { return true; }" +
+                  "public int x = 1;" +
+                  "message M { int z; }" +
+                  "channel foo(M m) { x += m.z; }"
+          ) + "}");
+      Assert.assertEquals("FINISH:{}", c4.next());
+      Iterator<String> c5 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"newspace\",\"key\":\"a\",\"arg\":{}}");
+      Assert.assertEquals("FINISH:{}", c5.next());
+      Iterator<String> c6 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"newspace\",\"key\":\"a\"}");
+      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1},\"seq\":4}}", c6.next());
+      Iterator<String> c7 = fe.execute("{\"id\":8,\"method\":\"connection/send\",\"connection\":100,\"channel\":\"foo\",\"message\":{\"z\":2}}");
+      Assert.assertEquals("FINISH:{\"seq\":6}", c7.next());
+      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":3},\"seq\":6}}", c6.next());
+      Iterator<String> c8 = fe.execute("{\"id\":8,\"method\":\"connection/end\",\"connection\":100}");
+      Assert.assertEquals("FINISH:{}", c8.next());
+      Assert.assertEquals("FINISH:{}", c6.next());
     }
   }
 }
