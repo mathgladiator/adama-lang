@@ -399,7 +399,7 @@ export class AdamaConnection {
         self.socket.send(JSON.stringify(result));
         return;
       }
-      if ('signal' in result) {
+      if ('status' in result) {
         // hey, are we connected?
         if (result.status != 'connected') {
           // nope, OK, let's make this a dead socket
@@ -454,8 +454,9 @@ export class AdamaConnection {
   }
 
   /** private: send a raw message */
-  _send(request: { [k: string]: any }, callback: (result: object) => void) {
+  _write(request: { [k: string]: any }, callback: (result: object) => void) {
     if (!this.connected) {
+      // TODO: queue here, and start a timer for timeouts
       callback({ failure: 600, reason: 9999 });
       return;
     }
@@ -644,21 +645,21 @@ export class AdamaConnection {
     this.onreconnect.set(keyId, sm);
     return this._execute(sm);
   }
-
   */
-
 
   _reconnect() {
     var self = this;
     this.onreconnect.forEach(function (sm: object, id: number) {
+      sm.first = true;
       self._execute(sm);
     });
   }
 
   async _execute(sm: any) {
     var self = this;
+    sm.first = true;
     return new Promise(function (good, bad) {
-      self._send(sm.request, function (response: { [k: string]: any }) {
+      self._write(sm.request, function (response: { [k: string]: any }) {
         if (sm.first) {
           sm.first = false;
           if ('failure' in response) {
@@ -666,6 +667,9 @@ export class AdamaConnection {
           } else {
             sm.handler(response);
             good(true);
+          }
+          if (sm.remove) {
+            self.onreconnect.delete(sm.key);
           }
         } else {
           sm.handler(response);
