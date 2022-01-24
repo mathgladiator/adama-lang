@@ -83,6 +83,7 @@ public class Tool {
     }
     // TODO: move to Schema
     Files.writeString(new File("apikit/docs/src/reference.md").toPath(), AssembleAPIDocs.docify(methods));
+    Files.writeString(new File("client/src/api.ts").toPath(), AssembleClient.make(methods));
   }
 
   private static Document load(InputStream input) throws Exception {

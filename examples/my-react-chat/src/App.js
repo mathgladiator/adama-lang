@@ -1,14 +1,18 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        This is the beginning...
-      </header>
-    </div>
-  );
-}
+export default class App extends React.Component {
+    state = {
+        name: "UserName"
+    };
 
-export default App;
+    render() {
+        return (
+            <div className="App">
+                <header className="App-header">
+                    This is the beginning... {this.state.name}
+                </header>
+            </div>
+        );
+    }
+}
