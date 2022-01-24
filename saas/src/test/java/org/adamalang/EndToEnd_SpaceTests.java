@@ -110,6 +110,12 @@ public class EndToEnd_SpaceTests {
       Iterator<String> c17  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/get\",\"space\":\"myspace\"}");
       Assert.assertEquals("FINISH:{\"plan\":{\"versions\":{\"x\":\"@static { create(who) { return true; } } \"},\"default\":\"x\"}}", c17.next());
+      Iterator<String> c18  =
+          fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/reflect\",\"space\":\"myspace\",\"key\":\"k\"}");
+      Assert.assertEquals("FINISH:{\"reflection\":{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}}", c18.next());
+      Iterator<String> c19  =
+          fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/reflect\",\"space\":\"nope\",\"key\":\"k\"}");
+      Assert.assertEquals("ERROR:625678", c19.next());
     }
   }
 }

@@ -361,12 +361,7 @@ public class RootHandlerImpl implements RootHandler {
           new Callback<String>() {
             @Override
             public void success(String value) {
-              try {
                 responder.complete(Json.parseJsonObject(value));
-              } catch (RuntimeException failedToParse) {
-                responder.error(
-                    new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_INTERNAL_ERROR_JSON));
-              }
             }
 
             @Override
@@ -436,7 +431,7 @@ public class RootHandlerImpl implements RootHandler {
       if (request.policy.canUserSeeKeyListing(request.who)) {
         for (BackendOperations.DocumentIndex item :
             BackendOperations.list(
-                nexus.dataBaseBackend, request.space, request.marker, request.limit)) {
+                nexus.dataBaseBackend, request.space, request.marker, request.limit != null ? request.limit : 100)) {
           responder.next(item.key, item.created, item.updated, item.seq);
         }
         responder.finish();
@@ -444,6 +439,7 @@ public class RootHandlerImpl implements RootHandler {
         responder.error(new ErrorCodeException(ErrorCodes.API_LIST_DOCUMENTS_NO_PERMISSION));
       }
     } catch (Exception ex) {
+      ex.printStackTrace();
       responder.error(
           ErrorCodeException.detectOrWrap(
               ErrorCodes.API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION, ex, LOGGER));
