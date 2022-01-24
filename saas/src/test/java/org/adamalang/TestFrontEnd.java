@@ -43,6 +43,7 @@ import org.junit.Assert;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -126,10 +127,17 @@ public class TestFrontEnd implements AutoCloseable, Email {
     emailLatch = new ConcurrentHashMap<>();
   }
 
+  public void kill(String table) throws Exception {
+    try (Connection connection = nexus.dataBaseManagement.pool.getConnection()) {
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(nexus.dataBaseManagement.databaseName).append("`.`").append(table).append("`;").toString());
+    }
+  }
+
   @Override
   public void close() throws Exception {
     installerFront.uninstall();
     installerBack.uninstall();
+    installDeploy.uninstall();
     nexus.close();
     clientExecutor.shutdown();
     server.close();

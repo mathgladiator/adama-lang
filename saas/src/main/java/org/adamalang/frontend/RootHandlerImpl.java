@@ -30,6 +30,8 @@ import org.adamalang.mysql.frontend.Users;
 import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.transforms.results.AuthenticatedUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,6 +44,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RootHandlerImpl implements RootHandler {
+  private static final Logger LOG = LoggerFactory.getLogger(RootHandlerImpl.class);
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(RootHandlerImpl.class);
   private final ExternNexus nexus;
   private final Random rng;
@@ -290,10 +293,10 @@ public class RootHandlerImpl implements RootHandler {
                 // notify the client of an update
                 nexus.client.notifyDeployment(target, request.space);
               } catch (Exception ex) {
-                ex.printStackTrace();
+                LOG.error("failed-deployment-write", ex);
               }
             });
-        nexus.client.waitForCapacity(request.space, 5000, (found) -> {
+        nexus.client.waitForCapacity(request.space, 7500, (found) -> {
           if (found) {
             responder.complete();
           } else {
@@ -439,7 +442,6 @@ public class RootHandlerImpl implements RootHandler {
         responder.error(new ErrorCodeException(ErrorCodes.API_LIST_DOCUMENTS_NO_PERMISSION));
       }
     } catch (Exception ex) {
-      ex.printStackTrace();
       responder.error(
           ErrorCodeException.detectOrWrap(
               ErrorCodes.API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION, ex, LOGGER));
