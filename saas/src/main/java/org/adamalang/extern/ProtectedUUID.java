@@ -17,7 +17,7 @@ import java.util.UUID;
 public class ProtectedUUID {
   private static char[] UUID_CODEC_BASE =  new char[] {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','Y','Z'};
 
-  private static String encode(UUID id) {
+  public static String encode(UUID id) {
     try {
       StringBuilder sb = new StringBuilder();
       long v = id.getLeastSignificantBits();

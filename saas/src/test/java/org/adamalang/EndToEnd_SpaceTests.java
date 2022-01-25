@@ -116,6 +116,9 @@ public class EndToEnd_SpaceTests {
       Iterator<String> c19  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/reflect\",\"space\":\"nope\",\"key\":\"k\"}");
       Assert.assertEquals("ERROR:625678", c19.next());
+      Iterator<String> c20  =
+          fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/delete\",\"space\":\"myspace\"}");
+      Assert.assertEquals("FINISH:{}", c20.next());
     }
   }
 }

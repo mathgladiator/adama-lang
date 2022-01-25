@@ -103,7 +103,7 @@ public class Keystore {
     }
   }
 
-  private static PublicKey parsePublicKey(ObjectNode node) throws ErrorCodeException {
+  public static PublicKey parsePublicKey(ObjectNode node) throws ErrorCodeException {
     JsonNode alogNode = node.get("algo");
     JsonNode bytes64node = node.get("bytes64");
     if (alogNode == null || alogNode.isNull() || !alogNode.isTextual()) {
@@ -143,7 +143,6 @@ public class Keystore {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.API_KEYSTORE_NOT_JSON, ex, LOGGER);
     }
   }
-
 
   public NtClient validate(String authority, String identity) throws ErrorCodeException {
     for (PublicKey publicKey : keys) {

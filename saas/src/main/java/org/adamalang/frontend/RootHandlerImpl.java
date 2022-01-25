@@ -321,13 +321,11 @@ public class RootHandlerImpl implements RootHandler {
           responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
           return;
         }
-        // change the owner to 0 to block creation
-        // TODO: a periodic clean up job will need to happen to delete spaces with owner 0
-        //       we do this now for privacy reasons such that a data race doesn't leak information
         Spaces.changePrimaryOwner(
             nexus.dataBaseBackend, request.policy.id, request.policy.owner, 0);
         // remove all machines handling this
         Deployments.undeployAll(nexus.dataBaseDeployments, request.space);
+        responder.complete();
       } else {
         responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NO_PERMISSION));
       }
