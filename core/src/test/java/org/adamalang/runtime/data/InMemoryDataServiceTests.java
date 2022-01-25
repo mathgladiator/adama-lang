@@ -108,25 +108,9 @@ public class InMemoryDataServiceTests {
             Assert.assertEquals(120944, ex.code);
           }
         });
-    ds.compute(
-        key,
-        DataService.ComputeMethod.Unsend,
-        1,
-        new Callback<DataService.LocalDocumentChange>() {
-          @Override
-          public void success(DataService.LocalDocumentChange value) {
-            success.getAndIncrement();
-            Assert.assertEquals("{\"y\":0}", value.patch);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            Assert.fail();
-          }
-        });
     ds.patch(key, new DataService.RemoteDocumentUpdate[] { updateActive(4, "{\"x\":4}", "{\"x\":3}", 42) }, bumpSuccess(success));
     ds.delete(key, bumpSuccess(success));
-    Assert.assertEquals(10, success.get());
+    Assert.assertEquals(9, success.get());
   }
 
   public DataService.RemoteDocumentUpdate update(int seq, String redo, String undo) {
@@ -216,12 +200,7 @@ public class InMemoryDataServiceTests {
         DataService.ComputeMethod.Rewind,
         100,
         bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
-    ds.compute(
-        key,
-        DataService.ComputeMethod.Unsend,
-        100,
-        bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_UNSEND_FAILED_TO_FIND));
     Assert.assertEquals(3, success.get());
-    Assert.assertEquals(4, failure.get());
+    Assert.assertEquals(3, failure.get());
   }
 }

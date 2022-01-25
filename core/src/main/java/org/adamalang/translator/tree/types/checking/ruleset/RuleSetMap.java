@@ -16,29 +16,17 @@ import org.adamalang.translator.tree.types.reactive.TyReactiveMap;
 
 public class RuleSetMap {
   public static boolean IsMap(final Environment environment, final TyType tyTypeOriginal) {
-    var tyType = tyTypeOriginal;
-    if (tyType != null) {
-      tyType = RuleSetCommon.Resolve(environment, tyType, true);
-      return tyType != null && (tyType instanceof TyNativeMap || tyType instanceof TyReactiveMap);
-    }
-    return false;
+    var tyType =  RuleSetCommon.Resolve(environment, tyTypeOriginal, true);
+    return tyType != null && (tyType instanceof TyNativeMap || tyType instanceof TyReactiveMap);
   }
 
   public static boolean IsNativeMap(final Environment environment, final TyType tyTypeOriginal) {
-    var tyType = tyTypeOriginal;
-    if (tyType != null) {
-      tyType = RuleSetCommon.Resolve(environment, tyType, true);
-      return tyType != null && (tyType instanceof TyNativeMap);
-    }
-    return false;
+    var tyType =  RuleSetCommon.Resolve(environment, tyTypeOriginal, true);
+    return tyType instanceof TyNativeMap;
   }
 
   public static boolean IsReactiveMap(final Environment environment, final TyType tyTypeOriginal) {
-    var tyType = tyTypeOriginal;
-    if (tyType != null) {
-      tyType = RuleSetCommon.Resolve(environment, tyType, true);
-      return tyType != null && (tyType instanceof TyReactiveMap);
-    }
-    return false;
+    var tyType =  RuleSetCommon.Resolve(environment, tyTypeOriginal, true);
+    return tyType instanceof TyReactiveMap;
   }
 }

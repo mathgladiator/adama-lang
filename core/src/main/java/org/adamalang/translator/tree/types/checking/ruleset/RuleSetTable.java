@@ -16,12 +16,8 @@ import org.adamalang.translator.tree.types.reactive.TyReactiveTable;
 
 public class RuleSetTable {
   static boolean IsNativeTable(final Environment environment, final TyType tyTypeOriginal) {
-    var tyType = tyTypeOriginal;
-    if (tyType != null) {
-      tyType = RuleSetCommon.Resolve(environment, tyType, true);
-      return tyType != null && tyType instanceof TyNativeTable;
-    }
-    return false;
+    var tyType =  RuleSetCommon.Resolve(environment, tyTypeOriginal, true);
+    return tyType instanceof TyNativeTable;
   }
 
   public static boolean IsTable(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {

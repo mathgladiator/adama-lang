@@ -58,11 +58,6 @@ public class DumbDataServiceTests {
             Assert.fail();
           }
         });
-    try {
-      dds.compute(key, DataService.ComputeMethod.Unsend, 1, null);
-      Assert.fail();
-    } catch (UnsupportedOperationException uoe) {
-    }
   }
 
   @Test

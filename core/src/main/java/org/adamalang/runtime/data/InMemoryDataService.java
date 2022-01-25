@@ -43,6 +43,7 @@ public class InMemoryDataService implements DataService {
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     executor.execute(() -> {
       InMemoryDocument document = datum.get(key);
+      int reads = 0;
       if (document == null) {
         callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_GET_CANT_FIND_DOCUMENT));
         return;
@@ -50,8 +51,9 @@ public class InMemoryDataService implements DataService {
       AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
       for (RemoteDocumentUpdate update : document.updates) {
         merge.next(update.redo);
+        reads++;
       }
-      callback.success(new LocalDocumentChange(merge.finish()));
+      callback.success(new LocalDocumentChange(merge.finish(), reads));
     });
   }
 
@@ -107,25 +109,29 @@ public class InMemoryDataService implements DataService {
       }
       if (method == ComputeMethod.HeadPatch) {
         AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
+        int reads = 0;
         // get items in order
         for (RemoteDocumentUpdate update : document.updates) {
           if (update.seq > seq) {
             redo.next(update.redo);
+            reads++;
           }
         }
         if (redo.empty()) {
           callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_PATCH_NOTHING_TODO));
           return;
         }
-        callback.success(new LocalDocumentChange(redo.finish()));
+        callback.success(new LocalDocumentChange(redo.finish(), reads));
         return;
       }
       if (method == ComputeMethod.Rewind) {
         Stack<RemoteDocumentUpdate> toUndo = new Stack<>();
+        int reads = 0;
         // get items in order
         for (RemoteDocumentUpdate update : document.updates) {
           if (update.seq >= seq) {
             toUndo.push(update);
+            reads++;
           }
         }
         // walk them backwards to build appropriate undo
@@ -137,31 +143,7 @@ public class InMemoryDataService implements DataService {
           callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
           return;
         }
-        callback.success(new LocalDocumentChange(undo.finish()));
-        return;
-      }
-      if (method == ComputeMethod.Unsend) {
-        RemoteDocumentUpdate start = null;
-        ArrayList<RemoteDocumentUpdate> redos = new ArrayList<>();
-        // get items in order
-        for (RemoteDocumentUpdate update : document.updates) {
-          if (update.seq == seq) {
-            start = update;
-          } else if (update.seq > seq) {
-            redos.add(update);
-          }
-        }
-
-        if (start == null) {
-          callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_UNSEND_FAILED_TO_FIND));
-          return;
-        }
-
-        AutoMorphicAccumulator<String> unsend = JsonAlgebra.rollUndoForwardAccumulator(start.undo);
-        for (RemoteDocumentUpdate redo : redos) {
-          unsend.next(redo.redo);
-        }
-        callback.success(new LocalDocumentChange(unsend.finish()));
+        callback.success(new LocalDocumentChange(undo.finish(), reads));
         return;
       }
 

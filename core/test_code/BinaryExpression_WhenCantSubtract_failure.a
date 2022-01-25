@@ -7,3 +7,7 @@
   let b5 = true - @no_one;
   let b6 = @no_one - {};
 }
+
+#silly {
+  (true + 1) -= ("" / 2);
+}

@@ -258,13 +258,7 @@ public class StructureStorage extends DocumentPosition {
 
   /** is the other record type the same as this type. Must be exact. */
   public boolean match(final StructureStorage other, final Environment environment) {
-    if (specialization != other.specialization) {
-      return false;
-    }
-    if (fields.size() != other.fields.size()) {
-      return false;
-    }
-    if (fieldsWithDefaults.size() > 0 || other.fieldsWithDefaults.size() > 0) {
+    if (specialization != other.specialization || fields.size() != other.fields.size() || fieldsWithDefaults.size() > 0 || other.fieldsWithDefaults.size() > 0) {
       return false;
     }
     final var thisIt = fields.values().iterator();

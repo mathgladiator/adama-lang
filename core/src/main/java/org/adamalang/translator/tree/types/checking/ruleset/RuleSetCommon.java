@@ -371,9 +371,6 @@ public class RuleSetCommon {
   }
 
   static boolean TestReactive(final TyType tyType) {
-    if (tyType != null) {
-      return tyType instanceof IsReactiveValue || tyType instanceof TyReactiveRecord || tyType instanceof TyReactiveTable || tyType instanceof TyReactiveMaybe || tyType instanceof TyReactiveLazy;
-    }
-    return false;
+    return tyType instanceof IsReactiveValue || tyType instanceof TyReactiveRecord || tyType instanceof TyReactiveTable || tyType instanceof TyReactiveMaybe || tyType instanceof TyReactiveLazy;
   }
 }

@@ -98,15 +98,6 @@ public class BlockingDataServiceTests {
         service.compute(KEY_1, DataService.ComputeMethod.Rewind, 20, cb8);
         cb8.assertFailure(694287);
 
-        SimpleDataCallback cb9 = new SimpleDataCallback();
-        service.compute(KEY_1, DataService.ComputeMethod.Unsend, 20, cb9);
-        cb9.assertFailure(650252);
-
-        SimpleDataCallback cb10 = new SimpleDataCallback();
-        service.compute(KEY_1, DataService.ComputeMethod.Unsend, 1, cb10);
-        cb10.assertSuccess();
-        Assert.assertEquals("{\"y\":0}", cb10.value);
-
         SimpleDataCallback cb11 = new SimpleDataCallback();
         service.compute(KEY_1, DataService.ComputeMethod.HeadPatch, 1, cb11);
         cb11.assertSuccess();

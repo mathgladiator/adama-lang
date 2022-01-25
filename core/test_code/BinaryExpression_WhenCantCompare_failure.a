@@ -21,3 +21,7 @@ enum T { B }
   let b6 = @no_one != {};
   let z = X::A != T::B;
 }
+
+#silly {
+  bool z = (true + 1) == ("" / 2);
+}

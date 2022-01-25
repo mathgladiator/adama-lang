@@ -21,6 +21,7 @@ import org.adamalang.runtime.json.JsonAlgebra;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 /** Implements the DataService while blocking the caller's thread */
@@ -40,10 +41,12 @@ public class BlockingDataService implements DataService {
       LookupResult lookup = lookup(connection, key);
       String walkRedoSQL = new StringBuilder("SELECT `redo` FROM `").append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id).append(" ORDER BY `seq_begin`").toString();
       AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
+      AtomicInteger reads = new AtomicInteger(0);
       DataBase.walk(connection, (rs) -> {
+        reads.incrementAndGet();
         merge.next(rs.getString(1));
       }, walkRedoSQL);
-      return new LocalDocumentChange(merge.finish());
+      return new LocalDocumentChange(merge.finish(), reads.get());
     }, callback, ErrorCodes.GET_FAILURE);
   }
 
@@ -170,13 +173,15 @@ public class BlockingDataService implements DataService {
                                                                        .append(" AND `seq_begin` > ").append(seq) //
                                                                        .append(" ORDER BY `seq_begin` DESC").toString();
         AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
+        AtomicInteger reads = new AtomicInteger(0);
         DataBase.walk(connection, (rs) -> {
+          reads.incrementAndGet();
           redo.next(rs.getString(1));
         }, walkUndoSQL);
         if (redo.empty()) {
           throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_PATCH);
         }
-        return new LocalDocumentChange(redo.finish());
+        return new LocalDocumentChange(redo.finish(), reads.get());
       }
 
       if (method == ComputeMethod.Rewind) {
@@ -185,37 +190,17 @@ public class BlockingDataService implements DataService {
                                                                        .append(" AND `seq_begin` >= ").append(seq) //
                                                                        .append(" ORDER BY `seq_begin` DESC").toString();
         AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
+        AtomicInteger reads = new AtomicInteger(0);
         DataBase.walk(connection, (rs) -> {
+          reads.incrementAndGet();
           undo.next(rs.getString(1));
         }, walkUndoSQL);
         if (undo.empty()) {
           throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_REWIND);
         }
-        return new LocalDocumentChange(undo.finish());
+        return new LocalDocumentChange(undo.finish(), reads.get());
       }
 
-      if (method == ComputeMethod.Unsend) {
-        String getUndoSQL = new StringBuilder("SELECT `undo` FROM `") //
-                                                                      .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
-                                                                      .append(" AND `seq_begin` = ").append(seq) //
-                                                                      .append(" AND `seq_end` = ").append(seq).toString();
-
-        String walkRedoSQL = new StringBuilder("SELECT `redo` FROM `") //
-                                                                       .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
-                                                                       .append(" AND `seq_begin` > ").append(seq) //
-                                                                       .append(" ORDER BY `seq_begin` ASC").toString();
-        AtomicReference<AutoMorphicAccumulator<String>> unsend = new AtomicReference<>();
-        int count = DataBase.walk(connection, (rs1) -> {
-          unsend.set(JsonAlgebra.rollUndoForwardAccumulator(rs1.getString(1)));
-          DataBase.walk(connection, (rs2) -> {
-            unsend.get().next(rs2.getString(1));
-          }, walkRedoSQL);
-        }, getUndoSQL);
-        if (count == 0) {
-          throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_UNSEND);
-        }
-        return new LocalDocumentChange(unsend.get().finish());
-      }
       throw new ErrorCodeException(ErrorCodes.COMPUTE_UNKNOWN_METHOD);
     }, callback, ErrorCodes.COMPUTE_FAILURE);
   }

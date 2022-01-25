@@ -67,4 +67,7 @@ test Equals {
   assert s == "";
   assert "" == s;
   assert s == s;
+  int x = 123;
+  long y = 123;
+  assert x == y;
 }

@@ -25,19 +25,4 @@ public class JsonAlgebra_AutoMorphics {
     accum.next("{\"x\":4}");
     Assert.assertEquals("{\"x\":4}", accum.finish());
   }
-
-  @Test
-  public void roll_forward_1() {
-    AutoMorphicAccumulator<String> accum = JsonAlgebra.rollUndoForwardAccumulator("{\"x\":1}");
-    accum.next("{\"x\":3}");
-    Assert.assertEquals("{}", accum.finish());
-  }
-
-  @Test
-  public void roll_forward_2() {
-    AutoMorphicAccumulator<String> accum = JsonAlgebra.rollUndoForwardAccumulator("{\"x\":1}");
-    Assert.assertFalse(accum.empty());
-    accum.next("{\"y\":3}");
-    Assert.assertEquals("{\"x\":1}", accum.finish());
-  }
 }

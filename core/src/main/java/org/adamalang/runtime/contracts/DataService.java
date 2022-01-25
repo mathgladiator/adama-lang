@@ -42,9 +42,11 @@ public interface DataService {
   /** the local copy of the document should be changed by incorporating the given patch */
   class LocalDocumentChange {
     public final String patch;
+    public final int reads;
 
-    public LocalDocumentChange(String patch) {
+    public LocalDocumentChange(String patch, int reads) {
       this.patch = patch;
+      this.reads = reads;
     }
   }
 

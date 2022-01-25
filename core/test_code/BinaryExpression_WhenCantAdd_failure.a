@@ -18,3 +18,7 @@ table<X> zzz;
   let two = 2L + true;
   let wtf = (iterate zzz).z + true;
 }
+
+#silly {
+  (true + 1) += ("" / 2);
+}
