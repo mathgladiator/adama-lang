@@ -15,6 +15,7 @@ import io.jsonwebtoken.security.Keys;
 import org.adamalang.ErrorCodes;
 import org.adamalang.api.*;
 import org.adamalang.common.*;
+import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.extern.ProtectedUUID;
 import org.adamalang.grpc.client.contracts.CreateCallback;
@@ -55,8 +56,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public WaitingForEmailHandler handle(
-      InitStartRequest startRequest, SimpleResponder startResponder) {
+  public WaitingForEmailHandler handle(Session session, InitStartRequest startRequest, SimpleResponder startResponder) {
     String generatedCode = generateCode();
     return new WaitingForEmailHandler() {
 
@@ -142,12 +142,12 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(ProbeRequest request, SimpleResponder responder) {
+  public void handle(Session session, ProbeRequest request, SimpleResponder responder) {
     responder.complete();
   }
 
   @Override
-  public void handle(AuthorityCreateRequest request, ClaimResultResponder responder) {
+  public void handle(Session session, AuthorityCreateRequest request, ClaimResultResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         String authority = ProtectedUUID.generate();
@@ -165,7 +165,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(AuthoritySetRequest request, SimpleResponder responder) {
+  public void handle(Session session, AuthoritySetRequest request, SimpleResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: setKeystore validates ownership
@@ -187,7 +187,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(AuthorityGetRequest request, KeystoreResponder responder) {
+  public void handle(Session session, AuthorityGetRequest request, KeystoreResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: getKeystorePublic validates ownership
@@ -207,7 +207,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(AuthorityListRequest request, AuthorityListingResponder responder) {
+  public void handle(Session session, AuthorityListRequest request, AuthorityListingResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         for (String authority : Authorities.list(nexus.dataBaseManagement, request.who.id)) {
@@ -226,7 +226,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(AuthorityDestroyRequest request, SimpleResponder responder) {
+  public void handle(Session session, AuthorityDestroyRequest request, SimpleResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: deleteAuthority validates ownership
@@ -244,7 +244,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(SpaceCreateRequest request, SimpleResponder responder) {
+  public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder) {
     try {
       Spaces.createSpace(nexus.dataBaseManagement, request.who.id, request.space);
       responder.complete();
@@ -256,7 +256,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(SpaceGetRequest request, PlanResponder responder) {
+  public void handle(Session session, SpaceGetRequest request, PlanResponder responder) {
     try {
       if (request.policy.canUserGetPlan(request.who)) {
         responder.complete(
@@ -273,7 +273,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(SpaceSetRequest request, SimpleResponder responder) {
+  public void handle(Session session, SpaceSetRequest request, SimpleResponder responder) {
     try {
       if (request.policy.canUserSetPlan(request.who)) {
         String planJson = request.plan.toString();
@@ -314,7 +314,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(SpaceDeleteRequest request, SimpleResponder responder) {
+  public void handle(Session session, SpaceDeleteRequest request, SimpleResponder responder) {
     try {
       if (request.policy.canUserDeleteSpace(request.who)) {
         if (BackendOperations.list(nexus.dataBaseBackend, request.space, null, 1).size() > 0) {
@@ -337,7 +337,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(SpaceSetRoleRequest request, SimpleResponder responder) {
+  public void handle(Session session, SpaceSetRoleRequest request, SimpleResponder responder) {
     try {
       Role role = Role.from(request.role);
       if (request.policy.canUserSetRole(request.who)) {
@@ -354,7 +354,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(SpaceReflectRequest request, ReflectionResponder responder) {
+  public void handle(Session session, SpaceReflectRequest request, ReflectionResponder responder) {
     if (request.policy.canUserSeeReflection(request.who)) {
       nexus.client.reflect(
           request.space,
@@ -377,7 +377,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(SpaceListRequest request, SpaceListingResponder responder) {
+  public void handle(Session session, SpaceListRequest request, SpaceListingResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         for (Spaces.Item item :
@@ -399,7 +399,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(DocumentCreateRequest request, SimpleResponder responder) {
+  public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
     try {
       nexus.client.create(
           request.who.who.agent,
@@ -427,7 +427,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void handle(DocumentListRequest request, KeyListingResponder responder) {
+  public void handle(Session session, DocumentListRequest request, KeyListingResponder responder) {
     try {
       if (request.policy.canUserSeeKeyListing(request.who)) {
         for (BackendOperations.DocumentIndex item :
@@ -447,7 +447,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public DocumentStreamHandler handle(ConnectionCreateRequest request, DataResponder responder) {
+  public DocumentStreamHandler handle(Session session, ConnectionCreateRequest request, DataResponder responder) {
     return new DocumentStreamHandler() {
       private Connection connection;
 
@@ -514,7 +514,7 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public AttachmentUploadHandler handle(AttachmentStartRequest request, SimpleResponder responder) {
+  public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, SimpleResponder responder) {
     return new AttachmentUploadHandler() {
       String id;
       FileOutputStream output;

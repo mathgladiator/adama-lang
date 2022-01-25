@@ -13,8 +13,8 @@ import org.adamalang.common.Callback;
 
 /** An AsyncTransform transforms an input into an output over time */
 @FunctionalInterface
-public interface AsyncTransform<In, Out> {
+public interface AsyncTransform<S, In, Out> {
 
   /** go forth and execute the transformation */
-  void execute(In parameter, Callback<Out> callback);
+  void execute(S session, In parameter, Callback<Out> callback);
 }

@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateKey;
@@ -50,8 +51,8 @@ public class AttachmentStartRequest {
       final String filename = request.getString("filename", true, 470028);
       final String contentType = request.getString("content-type", true, 455691);
       _latch.with(() -> new AttachmentStartRequest(identity, who.get(), space, policy.get(), key, filename, contentType));
-      nexus.identityService.execute(identity, who);
-      nexus.spaceService.execute(space, policy);
+      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.spaceService.execute(nexus.session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

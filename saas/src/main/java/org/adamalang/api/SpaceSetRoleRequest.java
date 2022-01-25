@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateSpace;
@@ -48,9 +49,9 @@ public class SpaceSetRoleRequest {
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
       final String role = request.getString("role", true, 456716);
       _latch.with(() -> new SpaceSetRoleRequest(identity, who.get(), space, policy.get(), email, userId.get(), role));
-      nexus.identityService.execute(identity, who);
-      nexus.spaceService.execute(space, policy);
-      nexus.emailService.execute(email, userId);
+      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.spaceService.execute(nexus.session, space, policy);
+      nexus.emailService.execute(nexus.session, email, userId);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

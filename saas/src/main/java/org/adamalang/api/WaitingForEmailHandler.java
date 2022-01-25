@@ -9,6 +9,7 @@
  */
 package org.adamalang.api;
 
+import org.adamalang.connection.Session;
 
 public interface WaitingForEmailHandler {
   public void bind();

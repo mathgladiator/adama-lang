@@ -12,6 +12,7 @@ package org.adamalang.api;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.validators.ValidateKeystore;
 import org.adamalang.web.io.*;
@@ -39,7 +40,7 @@ public class AuthoritySetRequest {
       final ObjectNode keyStore = request.getObject("key-store", true, 457743);
       ValidateKeystore.validate(keyStore);
       _latch.with(() -> new AuthoritySetRequest(identity, who.get(), authority, keyStore));
-      nexus.identityService.execute(identity, who);
+      nexus.identityService.execute(nexus.session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

@@ -30,6 +30,7 @@ public class AssembleNexus {
       imps.add(service.service);
     }
     imps.add("java.util.concurrent.Executor");
+    imps.add("org.adamalang.connection.Session");
 
     StringBuilder nexus = new StringBuilder();
     nexus.append("package ").append(packageName).append(";\n\n");
@@ -40,17 +41,19 @@ public class AssembleNexus {
     nexus.append("public class ConnectionNexus {\n");
     nexus.append("  public final ApiMetrics metrics;\n");
     nexus.append("  public final Executor executor;\n");
+    nexus.append("  public final Session session;\n");
     for (Transform service : services.values()) {
       nexus.append("  public final ").append(service.shortServiceName).append(" ").append(service.fieldInputName).append(";\n");
     }
     nexus.append("\n");
-    nexus.append("  public ConnectionNexus(ApiMetrics metrics, Executor executor");
+    nexus.append("  public ConnectionNexus(Session session, ApiMetrics metrics, Executor executor");
     for (Transform service : services.values()) {
       nexus.append(", ").append(service.shortServiceName).append(" ").append(service.fieldInputName);
     }
     nexus.append(") {\n");
     nexus.append("    this.metrics = metrics;\n");
     nexus.append("    this.executor = executor;\n");
+    nexus.append("    this.session = session;\n");
     for (Transform service : services.values()) {
       nexus.append("    this.").append(service.fieldInputName).append(" = ").append(service.fieldInputName).append(";\n");
     }

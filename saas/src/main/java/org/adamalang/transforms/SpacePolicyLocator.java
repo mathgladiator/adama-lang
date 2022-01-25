@@ -11,6 +11,7 @@ package org.adamalang.transforms;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Spaces;
@@ -19,7 +20,7 @@ import org.adamalang.web.io.AsyncTransform;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
+public class SpacePolicyLocator implements AsyncTransform<Session, String, SpacePolicy> {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(SpacePolicyLocator.class);
   public final SimpleExecutor executor;
   public final DataBase dataBase;
@@ -32,7 +33,7 @@ public class SpacePolicyLocator implements AsyncTransform<String, SpacePolicy> {
   }
 
   @Override
-  public void execute(String spaceName, Callback<SpacePolicy> callback) {
+  public void execute(Session session, String spaceName, Callback<SpacePolicy> callback) {
     if (!Validators.simple(spaceName, 127)) {
       callback.failure(new ErrorCodeException(ErrorCodes.API_SPACE_INVALID_NAME_FOR_LOOKUP));
       return;

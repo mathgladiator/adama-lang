@@ -25,6 +25,7 @@ public class AssembleHandlers {
       String root = entry.getKey();
       StringBuilder java = new StringBuilder();
       java.append("package ").append(packageName).append(";\n\n");
+      java.append("import org.adamalang.connection.Session;\n");
       java.append("\n");
       java.append("public interface ").append(root).append("Handler {\n");
       if (!root.equals("Root")) {
@@ -37,7 +38,11 @@ public class AssembleHandlers {
         } else {
           java.append("void");
         }
-        java.append(" handle(").append(method.camelName).append("Request request, ").append(method.responder.camelName).append("Responder responder);\n\n");
+        if (!root.equals("Root")) {
+          java.append(" handle(").append(method.camelName).append("Request request, ").append(method.responder.camelName).append("Responder responder);\n\n");
+        } else {
+          java.append(" handle(Session session, ").append(method.camelName).append("Request request, ").append(method.responder.camelName).append("Responder responder);\n\n");
+        }
       }
       if (root.equals("Root")) {
         java.append("  public void disconnect();\n\n");

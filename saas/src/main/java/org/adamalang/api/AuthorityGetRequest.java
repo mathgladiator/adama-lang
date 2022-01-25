@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
@@ -33,7 +34,7 @@ public class AuthorityGetRequest {
       final LatchRefCallback<AuthenticatedUser> who = new LatchRefCallback<>(_latch);
       final String authority = request.getString("authority", true, 430095);
       _latch.with(() -> new AuthorityGetRequest(identity, who.get(), authority));
-      nexus.identityService.execute(identity, who);
+      nexus.identityService.execute(nexus.session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

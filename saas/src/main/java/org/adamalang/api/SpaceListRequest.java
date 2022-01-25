@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
 
@@ -36,7 +37,7 @@ public class SpaceListRequest {
       final String marker = request.getString("marker", false, 0);
       final Integer limit = request.getInteger("limit", false, 0);
       _latch.with(() -> new SpaceListRequest(identity, who.get(), marker, limit));
-      nexus.identityService.execute(identity, who);
+      nexus.identityService.execute(nexus.session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

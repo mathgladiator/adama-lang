@@ -13,6 +13,7 @@ import org.adamalang.api.ConnectionNexus;
 import org.adamalang.api.ConnectionRouter;
 import org.adamalang.api.ApiMetrics;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.transforms.Authenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
@@ -44,7 +45,8 @@ public class BootstrapFrontend {
         return new ServiceConnection() {
           // TODO: pick an executor (randomly? pick two and do the faster of the two?)
           final ConnectionNexus nexus =
-              new ConnectionNexus(extern.metrics, //
+              new ConnectionNexus(new Session(),
+                  extern.metrics, //
                   executor, //
                   userIdResolver, //
                   new Authenticator(extern), //

@@ -12,6 +12,7 @@ package org.adamalang.api;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateKey;
@@ -51,8 +52,8 @@ public class DocumentCreateRequest {
       final String entropy = request.getString("entropy", false, 0);
       final ObjectNode arg = request.getObject("arg", true, 461826);
       _latch.with(() -> new DocumentCreateRequest(identity, who.get(), space, policy.get(), key, entropy, arg));
-      nexus.identityService.execute(identity, who);
-      nexus.spaceService.execute(space, policy);
+      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.spaceService.execute(nexus.session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

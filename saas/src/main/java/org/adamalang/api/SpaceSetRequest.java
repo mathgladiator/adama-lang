@@ -12,6 +12,7 @@ package org.adamalang.api;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateSpace;
@@ -43,8 +44,8 @@ public class SpaceSetRequest {
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final ObjectNode plan = request.getObject("plan", true, 425999);
       _latch.with(() -> new SpaceSetRequest(identity, who.get(), space, policy.get(), plan));
-      nexus.identityService.execute(identity, who);
-      nexus.spaceService.execute(space, policy);
+      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.spaceService.execute(nexus.session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

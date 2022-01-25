@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
@@ -35,7 +36,7 @@ public class SpaceCreateRequest {
       final String space = request.getString("space", true, 461828);
       ValidateSpace.validate(space);
       _latch.with(() -> new SpaceCreateRequest(identity, who.get(), space));
-      nexus.identityService.execute(identity, who);
+      nexus.identityService.execute(nexus.session, identity, who);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

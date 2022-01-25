@@ -11,13 +11,14 @@ package org.adamalang.transforms;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
+import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.web.io.AsyncTransform;
 import org.apache.commons.validator.routines.EmailValidator;
 
-public class UserIdResolver implements AsyncTransform<String, Integer> {
+public class UserIdResolver implements AsyncTransform<Session, String, Integer> {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(UserIdResolver.class);
   private final SimpleExecutor executor;
   private final DataBase dataBase;
@@ -28,7 +29,7 @@ public class UserIdResolver implements AsyncTransform<String, Integer> {
   }
 
   @Override
-  public void execute(String email, Callback<Integer> callback) {
+  public void execute(Session session, String email, Callback<Integer> callback) {
     executor.execute(new NamedRunnable("resolving-user-id") {
       @Override
       public void execute() throws Exception {

@@ -10,6 +10,7 @@
 package org.adamalang.api;
 
 import java.util.concurrent.Executor;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.Authenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
@@ -17,13 +18,15 @@ import org.adamalang.transforms.UserIdResolver;
 public class ConnectionNexus {
   public final ApiMetrics metrics;
   public final Executor executor;
+  public final Session session;
   public final UserIdResolver emailService;
   public final Authenticator identityService;
   public final SpacePolicyLocator spaceService;
 
-  public ConnectionNexus(ApiMetrics metrics, Executor executor, UserIdResolver emailService, Authenticator identityService, SpacePolicyLocator spaceService) {
+  public ConnectionNexus(Session session, ApiMetrics metrics, Executor executor, UserIdResolver emailService, Authenticator identityService, SpacePolicyLocator spaceService) {
     this.metrics = metrics;
     this.executor = executor;
+    this.session = session;
     this.emailService = emailService;
     this.identityService = identityService;
     this.spaceService = spaceService;

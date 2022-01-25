@@ -118,6 +118,8 @@ public class Method {
     set.add("org.adamalang.common.ErrorCodeException");
     set.add("org.adamalang.web.io.*");
     set.add("org.adamalang.common.Callback");
+    set.add("org.adamalang.connection.Session");
+
     for (ParameterDefinition parameter : parameters) {
       Transform transform = parameter.getTransform(this.name);
       if (transform != null) {

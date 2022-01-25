@@ -27,6 +27,7 @@ public class AssembleRequestTypes {
       for (String imp : method.imports()) {
         java.append("import ").append(imp).append(";\n");
       }
+
       java.append("\n");
       java.append("/** ").append(fixDocumentation(method.documentation.trim())).append(" */\n");
       java.append("public class ").append(method.camelName).append("Request {\n");
@@ -131,7 +132,7 @@ public class AssembleRequestTypes {
       for (ParameterDefinition parameter : method.parameters) {
         Transform transform = parameter.getTransform(method.name);
         if (transform != null) {
-          java.append("      nexus.").append(transform.fieldInputName).append(".execute(").append(parameter.camelName).append(", ").append(transform.outputName).append(");\n");
+          java.append("      nexus.").append(transform.fieldInputName).append(".execute(nexus.session, ").append(parameter.camelName).append(", ").append(transform.outputName).append(");\n");
         }
       }
       java.append("    } catch (ErrorCodeException ece) {\n");

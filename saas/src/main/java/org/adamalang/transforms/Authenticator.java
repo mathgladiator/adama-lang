@@ -16,6 +16,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Users;
@@ -29,7 +30,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
-public class Authenticator implements AsyncTransform<String, AuthenticatedUser> {
+public class Authenticator implements AsyncTransform<Session, String, AuthenticatedUser> {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Authenticator.class);
   public final ExternNexus nexus;
 
@@ -38,7 +39,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
   }
 
   @Override
-  public void execute(String identity, Callback<AuthenticatedUser> callback) {
+  public void execute(Session session, String identity, Callback<AuthenticatedUser> callback) {
     // TODO: think about caching and an implicit "@" for use the most recently authenticate key
     try {
       // TODO: check for Facebook Prefix
@@ -72,8 +73,7 @@ public class Authenticator implements AsyncTransform<String, AuthenticatedUser> 
         callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who));
       }
     } catch (Exception ex) {
-      callback.failure(
-          ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, LOGGER));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 

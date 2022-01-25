@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.validators.ValidateKey;
@@ -44,8 +45,8 @@ public class ConnectionCreateRequest {
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
       _latch.with(() -> new ConnectionCreateRequest(identity, who.get(), space, policy.get(), key));
-      nexus.identityService.execute(identity, who);
-      nexus.spaceService.execute(space, policy);
+      nexus.identityService.execute(nexus.session, identity, who);
+      nexus.spaceService.execute(nexus.session, space, policy);
     } catch (ErrorCodeException ece) {
       nexus.executor.execute(() -> {
         callback.failure(ece);

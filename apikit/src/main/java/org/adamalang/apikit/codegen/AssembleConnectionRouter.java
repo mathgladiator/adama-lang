@@ -26,6 +26,7 @@ public class AssembleConnectionRouter {
     router.append("\n");
     router.append("import org.adamalang.common.*;\n");
     router.append("import org.adamalang.common.metrics.*;\n");
+    router.append("import org.adamalang.connection.Session;\n");
     router.append("import org.adamalang.web.io.*;\n");
     router.append("import org.adamalang.ErrorCodes;\n");
     router.append("\n");
@@ -82,18 +83,18 @@ public class AssembleConnectionRouter {
       if (method.findBy != null) {
         router.append("                ").append(method.handler).append("Handler handlerToUse = inflight").append(method.handler).append(method.destroy ? ".remove" : ".get").append("(resolved.").append(method.findBy).append(");\n");
         router.append("                if (handlerToUse != null) {\n");
-        router.append("                  handlerToUse.handle(resolved,new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
+        router.append("                  handlerToUse.handle(resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
         router.append("                } else {\n");
         router.append("                  mInstance.failure(").append(method.errorCantFindBy).append(");\n");
         router.append("                  responder.error(new ErrorCodeException(").append(method.errorCantFindBy).append("));\n");
         router.append("                }\n");
       } else {
         if (method.create != null) {
-          router.append("                ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder)));\n");
+          router.append("                ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder)));\n");
           router.append("                ").append("inflight").append(Common.camelize(method.create)).append(".put(requestId, handlerMade);\n");
           router.append("                ").append("handlerMade.bind();\n");
         } else {
-          router.append("                handler.handle(resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
+          router.append("                handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
         }
       }
       router.append("              }\n");
