@@ -14,8 +14,6 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
-import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.extern.prometheus.PrometheusDashboard;
@@ -30,6 +28,7 @@ import org.adamalang.grpc.server.ServerMetrics;
 import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
+import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.overlord.Overlord;
@@ -42,7 +41,7 @@ import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
-import org.adamalang.runtime.threads.ThreadedDataService;
+import org.adamalang.runtime.data.ThreadedDataService;
 import org.adamalang.web.contracts.HtmlHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.service.ServiceRunnable;
@@ -139,7 +138,8 @@ public class Service {
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
     DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"));
-    ThreadedDataService dataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(dataBaseBackend));
+    BackendMetrics backendMetrics = new BackendMetrics(prometheusMetricsFactory);
+    ThreadedDataService dataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(backendMetrics, dataBaseBackend));
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), dataService, TimeSource.REAL_TIME, coreThreads);
@@ -326,6 +326,8 @@ public class Service {
     new OverlordMetrics(metricsFactory);
     metricsFactory.page("api", "The Public API");
     new ApiMetrics(metricsFactory);
+    metricsFactory.page("backend", "The Data Service");
+    new BackendMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }

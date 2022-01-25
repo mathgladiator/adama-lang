@@ -7,12 +7,13 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.threads;
+package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.ThreadedDataService;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
@@ -90,7 +91,20 @@ public class ThreadedDataServiceTest {
           @Override
           public void failure(ErrorCodeException ex) {}
         });
+    CountDownLatch latchCompacted = new CountDownLatch(1);
+    ds.compact(key, 100, new Callback<Integer>() {
+      @Override
+      public void success(Integer value) {
+        latchCompacted.countDown();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
     Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+    Assert.assertTrue(latchCompacted.await(1000, TimeUnit.MILLISECONDS));
     Assert.assertTrue(ds.shutdown().await(1000, TimeUnit.MILLISECONDS));
   }
 }

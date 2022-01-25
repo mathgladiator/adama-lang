@@ -11,41 +11,38 @@ package org.adamalang.mysql.mocks;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.DataService;
 import org.junit.Assert;
 
-public class SimpleDataCallback implements Callback<DataService.LocalDocumentChange> {
-  public String value;
+public class SimpleIntCallback implements Callback<Integer> {
+  public Integer value;
   private boolean success;
   private int count;
   private int reason;
-  public int reads;
 
-  public SimpleDataCallback() {
+  public SimpleIntCallback() {
+    this.value = null;
     this.success = false;
     this.count = 0;
-    this.reason = 0;
-    this.reads = 0;
+    this.reason = -1;
   }
-
   @Override
-  public void success(DataService.LocalDocumentChange value) {
-    this.value = value.patch;
-    count++;
-    success = true;
-    this.reads = value.reads;
+  public void success(Integer value) {
+    this.value = value;
+    this.success = true;
+    this.count++;
   }
 
   @Override
   public void failure(ErrorCodeException ex) {
-    count++;
-    success = false;
-    reason = ex.code;
+    this.reason = ex.code;
+    this.success = false;
+    this.count++;
   }
 
-  public void assertSuccess() {
+  public void assertSuccess(int value) {
     Assert.assertEquals(1, count);
     Assert.assertTrue(success);
+    Assert.assertEquals(value, (int) this.value);
   }
 
   public void assertFailure(int code) {

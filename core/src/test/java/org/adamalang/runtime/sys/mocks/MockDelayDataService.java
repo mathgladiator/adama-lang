@@ -10,6 +10,7 @@
 package org.adamalang.runtime.sys.mocks;
 
 import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.junit.Assert;
@@ -109,6 +110,11 @@ public class MockDelayDataService implements DataService {
   @Override
   public void delete(Key key, Callback<Void> callback) {
     enqueue(() -> parent.delete(key, callback));
+  }
+
+  @Override
+  public void compact(Key key, int history, Callback<Integer> callback) {
+    enqueue(() -> parent.compact(key, history, callback));
   }
 
   public synchronized Runnable latchAt(int count) {

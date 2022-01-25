@@ -12,11 +12,13 @@ package org.adamalang.runtime.data;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.common.TimeSource;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.json.JsonAlgebra;
+import org.adamalang.runtime.natives.NtClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,6 +166,18 @@ public class InMemoryDataService implements DataService {
     });
   }
 
+  @Override
+  public void compact(Key key, int history, Callback<Integer> callback) {
+    executor.execute(() -> {
+      InMemoryDocument document = datum.get(key);
+      if (document != null) {
+        callback.success(document.compact(history));
+      } else {
+        callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPACT_CANT_FIND_DOCUMENT));
+      }
+    });
+  }
+
   private static class InMemoryDocument {
     private final ArrayList<RemoteDocumentUpdate> updates;
     private boolean active;
@@ -175,6 +189,27 @@ public class InMemoryDataService implements DataService {
       this.active = false;
       this.timeToWake = 0;
       this.seq = 0;
+    }
+
+    public int compact(int history) {
+      int toCompact = updates.size() - history;
+      if (toCompact > 1) {
+        AutoMorphicAccumulator<String> mergeRedo = JsonAlgebra.mergeAccumulator();
+        AutoMorphicAccumulator<String> mergeUndo = JsonAlgebra.mergeAccumulator();
+        Stack<String> undo = new Stack<>();
+        for (int k = 0; k < toCompact; k++) {
+          RemoteDocumentUpdate update = updates.remove(0);
+          mergeRedo.next(update.redo);
+          undo.push(update.undo);
+        }
+        while (!undo.empty()) {
+          mergeUndo.next(undo.pop());
+        }
+        RemoteDocumentUpdate newHead = new RemoteDocumentUpdate(0, NtClient.NO_ONE, "{}",  mergeRedo.finish(), mergeUndo.finish(), false, 0);
+        updates.add(0, newHead);
+        return toCompact;
+      }
+      return 0;
     }
   }
 }

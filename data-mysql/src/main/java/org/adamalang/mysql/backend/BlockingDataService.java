@@ -20,16 +20,19 @@ import org.adamalang.runtime.json.JsonAlgebra;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 /** Implements the DataService while blocking the caller's thread */
 public class BlockingDataService implements DataService {
+  private final BackendMetrics metrics;
   private final DataBase dataBase;
   private final SimpleDateFormat dateFormat;
 
-  public BlockingDataService(final DataBase dataBase) {
+  public BlockingDataService(final BackendMetrics metrics, final DataBase dataBase) {
+    this.metrics = metrics;
     this.dataBase = dataBase;
     dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   }
@@ -43,6 +46,7 @@ public class BlockingDataService implements DataService {
       AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
       AtomicInteger reads = new AtomicInteger(0);
       DataBase.walk(connection, (rs) -> {
+        metrics.read_get.run();
         reads.incrementAndGet();
         merge.next(rs.getString(1));
       }, walkRedoSQL);
@@ -51,6 +55,7 @@ public class BlockingDataService implements DataService {
   }
 
   public LookupResult lookup(Connection connection, Key key) throws SQLException, ErrorCodeException {
+    metrics.lookup.run();
     PreparedStatement statement = connection.prepareStatement(new StringBuilder("SELECT `id`, `head_seq` FROM `").append(dataBase.databaseName).append("`.`index` WHERE `space`=? AND `key`=? LIMIT 1").toString());
     try {
       statement.setString(1, key.space);
@@ -77,12 +82,12 @@ public class BlockingDataService implements DataService {
     dataBase.transact((connection) -> {
       // build the sql into insert
       String insertIndexSQL = new StringBuilder() //
-                                                  .append("INSERT INTO `").append(dataBase.databaseName).append("`.`index` (") //
-                                                  .append("`space`, `key`, `head_seq`, `invalidate`, `when`) VALUES (?, ?, ") //
-                                                  .append("'").append(patch.seq).append("', ") //
-                                                  .append("'").append(patch.requiresFutureInvalidation ? "1" : "0").append("', ") //
-                                                  .append("'").append(whenOf(patch)).append("')") //
-                                                  .toString();
+          .append("INSERT INTO `").append(dataBase.databaseName).append("`.`index` (") //
+          .append("`space`, `key`, `head_seq`, `invalidate`, `when`) VALUES (?, ?, ") //
+          .append("'").append(patch.seq).append("', ") //
+          .append("'").append(patch.requiresFutureInvalidation ? "1" : "0").append("', ") //
+          .append("'").append(whenOf(patch)).append("')") //
+          .toString();
 
       // execute the insert
       PreparedStatement statementInsertIndex = connection.prepareStatement(insertIndexSQL, Statement.RETURN_GENERATED_KEYS);
@@ -93,7 +98,7 @@ public class BlockingDataService implements DataService {
 
         // insert the delta
         int parent = DataBase.getInsertId(statementInsertIndex);
-        insertDelta(connection, parent, patch);
+        insertDelta(connection, parent, patch, metrics.write_init);
       } finally {
         statementInsertIndex.close();
       }
@@ -107,14 +112,15 @@ public class BlockingDataService implements DataService {
   }
 
   /** internal: insert a delta */
-  private void insertDelta(Connection connection, int parent, RemoteDocumentUpdate patch) throws SQLException {
+  private void insertDelta(Connection connection, int parent, RemoteDocumentUpdate patch, Runnable counter) throws SQLException {
     String insertDeltaSQL = new StringBuilder() //
-                                                .append("INSERT INTO `").append(dataBase.databaseName).append("`.`deltas` (") //
-                                                .append("`parent`, `seq_begin`, `seq_end`, `who_agent`, `who_authority`, `request`, `redo`, `undo`, `history_ptr`) VALUES (") //
-                                                .append(parent).append(", '").append(patch.seq).append("', '").append(patch.seq).append("', ") //
-                                                .append("?, ?, ?, ?, ?, '')") //
-                                                .toString();
+        .append("INSERT INTO `").append(dataBase.databaseName).append("`.`deltas` (") //
+        .append("`parent`, `seq_begin`, `seq_end`, `who_agent`, `who_authority`, `request`, `redo`, `undo`, `history_ptr`) VALUES (") //
+        .append(parent).append(", '").append(patch.seq).append("', '").append(patch.seq).append("', ") //
+        .append("?, ?, ?, ?, ?, '')") //
+        .toString();
     PreparedStatement statement = connection.prepareStatement(insertDeltaSQL);
+    counter.run();
     try {
       if (patch.who != null) {
         statement.setString(1, patch.who.agent);
@@ -146,16 +152,16 @@ public class BlockingDataService implements DataService {
 
       // update the index
       String updateIndexSQL = new StringBuilder() //
-                                                  .append("UPDATE `").append(dataBase.databaseName).append("`.`index` ") //
-                                                  .append("SET `head_seq`=").append(last.seq) //
-                                                  .append(", `invalidate`=").append(last.requiresFutureInvalidation ? 1 : 0) //
-                                                  .append(", `when`='").append(whenOf(last)) //
-                                                  .append("' WHERE `id`=").append(lookup.id).toString();
+          .append("UPDATE `").append(dataBase.databaseName).append("`.`index` ") //
+          .append("SET `head_seq`=").append(last.seq) //
+          .append(", `invalidate`=").append(last.requiresFutureInvalidation ? 1 : 0) //
+          .append(", `when`='").append(whenOf(last)) //
+          .append("' WHERE `id`=").append(lookup.id).toString();
       DataBase.execute(connection, updateIndexSQL);
 
       // insert delta
       for (RemoteDocumentUpdate patch : patches) {
-        insertDelta(connection, lookup.id, patch);
+        insertDelta(connection, lookup.id, patch, metrics.write_patch);
       }
       return null;
     }, callback, ErrorCodes.PATCH_FAILURE);
@@ -169,13 +175,14 @@ public class BlockingDataService implements DataService {
 
       if (method == ComputeMethod.HeadPatch) {
         String walkUndoSQL = new StringBuilder("SELECT `redo` FROM `") //
-                                                                       .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
-                                                                       .append(" AND `seq_begin` > ").append(seq) //
-                                                                       .append(" ORDER BY `seq_begin` DESC").toString();
+            .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+            .append(" AND `seq_begin` > ").append(seq) //
+            .append(" ORDER BY `seq_begin` DESC").toString();
         AutoMorphicAccumulator<String> redo = JsonAlgebra.mergeAccumulator();
         AtomicInteger reads = new AtomicInteger(0);
         DataBase.walk(connection, (rs) -> {
           reads.incrementAndGet();
+          metrics.read_head_patch.run();
           redo.next(rs.getString(1));
         }, walkUndoSQL);
         if (redo.empty()) {
@@ -186,13 +193,14 @@ public class BlockingDataService implements DataService {
 
       if (method == ComputeMethod.Rewind) {
         String walkUndoSQL = new StringBuilder("SELECT `undo` FROM `") //
-                                                                       .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
-                                                                       .append(" AND `seq_begin` >= ").append(seq) //
-                                                                       .append(" ORDER BY `seq_begin` DESC").toString();
+            .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+            .append(" AND `seq_begin` >= ").append(seq) //
+            .append(" ORDER BY `seq_begin` DESC").toString();
         AutoMorphicAccumulator<String> undo = JsonAlgebra.mergeAccumulator();
         AtomicInteger reads = new AtomicInteger(0);
         DataBase.walk(connection, (rs) -> {
           reads.incrementAndGet();
+          metrics.read_rewind.run();
           undo.next(rs.getString(1));
         }, walkUndoSQL);
         if (undo.empty()) {
@@ -209,19 +217,73 @@ public class BlockingDataService implements DataService {
   public void delete(Key key, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       // read the index
+      metrics.delete.run();
       LookupResult lookup = lookup(connection, key);
       // update the index
       String deleteIndexSQL = new StringBuilder() //
-                                                  .append("DELETE FROM `").append(dataBase.databaseName).append("`.`index` ") //
-                                                  .append("WHERE `id`=").append(lookup.id).toString();
+          .append("DELETE FROM `").append(dataBase.databaseName).append("`.`index` ") //
+          .append("WHERE `id`=").append(lookup.id).toString();
       DataBase.execute(connection, deleteIndexSQL);
       // build a list of all the history pointers and put them into a garbage collection queue
       String deleteDeltasSQL = new StringBuilder() //
-                                                   .append("DELETE FROM `").append(dataBase.databaseName).append("`.`deltas` ") //
-                                                   .append("WHERE `parent`=").append(lookup.id).toString();
+          .append("DELETE FROM `").append(dataBase.databaseName).append("`.`deltas` ") //
+          .append("WHERE `parent`=").append(lookup.id).toString();
       DataBase.execute(connection, deleteDeltasSQL);
       return null;
     }, callback, ErrorCodes.DELETE_FAILURE);
+  }
+
+  @Override
+  public void compact(Key key, int history, Callback<Integer> callback) {
+    dataBase.transact((connection) -> {
+      // look up the index to get the id
+      LookupResult lookup = lookup(connection, key);
+
+      String walkSql = new StringBuilder("SELECT `id`, `redo`, `undo`, `seq_end`, `seq_begin` FROM `") //
+          .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
+          .append(" ORDER BY `seq_end` DESC LIMIT 500000 OFFSET ").append(history).toString();
+
+      AutoMorphicAccumulator<String> redoMorph = JsonAlgebra.mergeAccumulator();
+      AutoMorphicAccumulator<String> undoMorph = JsonAlgebra.mergeAccumulator();
+      Stack<String> redoStack = new Stack<>();
+      AtomicInteger count = new AtomicInteger(0);
+      AtomicInteger end = new AtomicInteger(0);
+      AtomicInteger begin = new AtomicInteger(Integer.MAX_VALUE);
+      ArrayList<Integer> ids = new ArrayList<>();
+      DataBase.walk(connection, (rs) -> {
+        ids.add(rs.getInt(1));
+        redoStack.push(rs.getString(2));
+        undoMorph.next(rs.getString(3));
+        end.set(Math.max(end.get(), rs.getInt(4)));
+        begin.set(Math.min(begin.get(), rs.getInt(5)));
+        count.incrementAndGet();
+        metrics.read_compact.run();
+      }, walkSql);
+      while (!redoStack.empty()) {
+        redoMorph.next(redoStack.pop());
+      }
+      for (Integer id : ids) {
+        String deleteDeltaById = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`deltas` ").append("WHERE `id`=").append(id).toString();
+        DataBase.execute(connection, deleteDeltaById);
+      }
+      if (count.get() > 0) {
+        metrics.write_compact.run();
+        String insertCompactDeltaSQL = new StringBuilder() //
+            .append("INSERT INTO `").append(dataBase.databaseName).append("`.`deltas` (") //
+            .append("`parent`, `seq_begin`, `seq_end`, `who_agent`, `who_authority`, `request`, `redo`, `undo`, `history_ptr`) VALUES (") //
+            .append(lookup.id).append(", ").append(begin.get()).append(", ").append(end.get()).append(", '?', 'adama', '{\"method\":\"compact\"}', ?, ?, '')") //
+            .toString();
+        PreparedStatement statement = connection.prepareStatement(insertCompactDeltaSQL);
+        try {
+          statement.setString(1, redoMorph.finish());
+          statement.setString(2, undoMorph.finish());
+          statement.execute();
+        } finally {
+          statement.close();
+        }
+      }
+      return count.get();
+    }, callback, ErrorCodes.COMPUTE_FAILURE);
   }
 
   public static class LookupResult {

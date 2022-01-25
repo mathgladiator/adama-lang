@@ -131,6 +131,20 @@ public class InMemoryDataServiceTests {
     };
   }
 
+  private static Callback<Integer> bumpSuccessInt(AtomicInteger success) {
+    return new Callback<Integer>() {
+      @Override
+      public void success(Integer value) {
+        success.getAndIncrement();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        Assert.fail();
+      }
+    };
+  }
+
   public DataService.RemoteDocumentUpdate updateActive(
       int seq, String redo, String undo, int time) {
     return new DataService.RemoteDocumentUpdate(seq, NtClient.NO_ONE, null, redo, undo, true, time);
@@ -202,5 +216,110 @@ public class InMemoryDataServiceTests {
         bumpFailureDoc(failure, ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
     Assert.assertEquals(3, success.get());
     Assert.assertEquals(3, failure.get());
+  }
+
+  @Test
+  public void compaction() {
+    MockTime time = new MockTime();
+    InMemoryDataService ds = new InMemoryDataService((t) -> t.run(), time);
+    AtomicInteger success = new AtomicInteger(0);
+    Key key = new Key("space", "key");
+    ds.initialize(key, update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"), bumpSuccess(success));
+    for (int k = 0; k < 1000; k++) {
+      if (k == 250) {
+        ds.patch(key, new DataService.RemoteDocumentUpdate[] { update(2 + k, "{\"z\":"+(2 + k)+"}", "{\"z\":0}") }, bumpSuccess(success));
+      } else {
+        ds.patch(key, new DataService.RemoteDocumentUpdate[]{update(2 + k, "{\"x\":" + (2 + k) + "}", "{\"x\":" + (1 + k) + "}")}, bumpSuccess(success));
+      }
+    }
+    ds.get(key, new Callback<DataService.LocalDocumentChange>() {
+      @Override
+      public void success(DataService.LocalDocumentChange value) {
+        Assert.assertEquals("{\"x\":1001,\"z\":252}", value.patch);
+        Assert.assertEquals(1001, value.reads);
+        success.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    ds.compute(key, DataService.ComputeMethod.Rewind, 100, new Callback<DataService.LocalDocumentChange>() {
+      @Override
+      public void success(DataService.LocalDocumentChange value) {
+        Assert.assertEquals("{\"x\":99,\"z\":0}", value.patch);
+        Assert.assertEquals(902, value.reads);
+        success.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    ds.compact(key, 100, new Callback<Integer>() {
+      @Override
+      public void success(Integer value) {
+        Assert.assertEquals(901, (int) value);
+        success.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    ds.get(key, new Callback<DataService.LocalDocumentChange>() {
+      @Override
+      public void success(DataService.LocalDocumentChange value) {
+        Assert.assertEquals("{\"x\":1001,\"z\":252}", value.patch);
+        Assert.assertEquals(101, value.reads);
+        success.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    ds.compute(key, DataService.ComputeMethod.Rewind, 100, new Callback<DataService.LocalDocumentChange>() {
+      @Override
+      public void success(DataService.LocalDocumentChange value) {
+        Assert.assertEquals("{\"x\":901}", value.patch);
+        Assert.assertEquals(100, value.reads);
+        success.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    ds.compact(key, 1000, new Callback<Integer>() {
+      @Override
+      public void success(Integer value) {
+        Assert.assertEquals(0, (int) value);
+        success.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+
+    ds.compact(new Key("spaaaaaace", "keeeey"), 1000, new Callback<Integer>() {
+      @Override
+      public void success(Integer value) {
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        Assert.assertEquals(103060, ex.code);
+        success.incrementAndGet();
+      }
+    });
+    Assert.assertEquals(1008, success.get());
   }
 }

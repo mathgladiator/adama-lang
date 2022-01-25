@@ -22,6 +22,7 @@ import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.backend.BackendDataServiceInstaller;
+import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.DeployedInstaller;
 import org.adamalang.mysql.deployments.Deployments;
@@ -77,7 +78,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.installerBack = new BackendDataServiceInstaller(dataBase);
     installerBack.install();
     this.installDeploy = new DeployedInstaller(dataBase);
-    BlockingDataService ds = new BlockingDataService(dataBase);
+    BlockingDataService ds = new BlockingDataService(new BackendMetrics(new NoOpMetricsFactory()), dataBase);
     deploymentFactoryBase = new DeploymentFactoryBase();
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     coreService =

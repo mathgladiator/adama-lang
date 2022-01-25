@@ -112,6 +112,11 @@ public class DumbDataService implements DataService {
     }
   }
 
+  @Override
+  public void compact(Key key, int history, Callback<Integer> callback) {
+    throw new UnsupportedOperationException();
+  }
+
   public static class DumbDurableLivingDocumentAcquire implements Callback<DurableLivingDocument> {
     private DurableLivingDocument value;
 

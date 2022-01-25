@@ -42,4 +42,9 @@ public class MockFailureDataService implements DataService {
   public void delete(Key key, Callback<Void> callback) {
     callback.failure(new ErrorCodeException(999));
   }
+
+  @Override
+  public void compact(Key key, int history, Callback<Integer> callback) {
+    callback.failure(new ErrorCodeException(912));
+  }
 }

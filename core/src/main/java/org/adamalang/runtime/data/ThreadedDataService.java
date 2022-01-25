@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.threads;
+package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.NamedThreadFactory;
@@ -78,5 +78,10 @@ public class ThreadedDataService implements DataService {
   @Override
   public void delete(Key key, Callback<Void> callback) {
     at(key, (service) -> service.delete(key, callback));
+  }
+
+  @Override
+  public void compact(Key key, int history, Callback<Integer> callback) {
+    at(key, (service) -> service.compact(key, history, callback));
   }
 }

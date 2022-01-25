@@ -9,10 +9,12 @@
  */
 package org.adamalang.mysql.backend;
 
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
 import org.adamalang.mysql.mocks.SimpleDataCallback;
+import org.adamalang.mysql.mocks.SimpleIntCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.Key;
@@ -43,7 +45,7 @@ public class BlockingDataServiceTests {
       try {
         // make sure the database and tables are all proper and set
         installer.install();
-        BlockingDataService service = new BlockingDataService(dataBase);
+        BlockingDataService service = new BlockingDataService(new BackendMetrics(new NoOpMetricsFactory()), dataBase);
 
         // create the key the first time, should work
         SimpleMockCallback cb1 = new SimpleMockCallback();
@@ -118,6 +120,105 @@ public class BlockingDataServiceTests {
         SimpleMockCallback cb15 = new SimpleMockCallback();
         service.delete(KEY_1, cb15);
         cb15.assertFailure(625676);
+      } finally {
+        installer.uninstall();
+      }
+    }
+  }
+
+  @Test
+  public void compact() throws Exception {
+    DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+      BackendDataServiceInstaller installer = new BackendDataServiceInstaller(dataBase);
+      try {
+        // make sure the database and tables are all proper and set
+        installer.install();
+        BlockingDataService service = new BlockingDataService(new BackendMetrics(new NoOpMetricsFactory()), dataBase);
+
+        // create the key the first time, should work
+        SimpleMockCallback cb1 = new SimpleMockCallback();
+        service.initialize(KEY_1, UPDATE_1, cb1);
+        cb1.assertSuccess();
+
+        SimpleMockCallback cb2 = new SimpleMockCallback();
+        service.patch(KEY_1, new DataService.RemoteDocumentUpdate[] { UPDATE_2 }, cb2);
+        cb2.assertSuccess();
+
+        // getting the data should return a composite
+        SimpleDataCallback cb3 = new SimpleDataCallback();
+        service.get(KEY_1, cb3);
+        cb3.assertSuccess();
+        Assert.assertEquals("{\"x\":2,\"y\":4}", cb3.value);
+        Assert.assertEquals(2, cb3.reads);
+
+        SimpleMockCallback cb4 = new SimpleMockCallback();
+        service.patch(KEY_1, new DataService.RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb4);
+        cb4.assertSuccess();
+
+        {
+          SimpleDataCallback s_cb1 = new SimpleDataCallback();
+          service.get(KEY_1, s_cb1);
+          s_cb1.assertSuccess();
+          Assert.assertEquals("{\"x\":4,\"y\":4}", s_cb1.value);
+          Assert.assertEquals(4, s_cb1.reads);
+
+          SimpleDataCallback s_cb2 = new SimpleDataCallback();
+          service.compute(KEY_1, DataService.ComputeMethod.Rewind, 0, s_cb2);
+          Assert.assertEquals("{\"x\":0,\"z\":42,\"y\":0}", s_cb2.value);
+          Assert.assertEquals(4, s_cb2.reads);
+        }
+
+        SimpleIntCallback cb5 = new SimpleIntCallback();
+        service.compact(KEY_1, 10000, cb5);
+        cb5.assertSuccess(0);
+
+        {
+          SimpleDataCallback s_cb1 = new SimpleDataCallback();
+          service.get(KEY_1, s_cb1);
+          s_cb1.assertSuccess();
+          Assert.assertEquals("{\"x\":4,\"y\":4}", s_cb1.value);
+          Assert.assertEquals(4, s_cb1.reads);
+
+          SimpleDataCallback s_cb2 = new SimpleDataCallback();
+          service.compute(KEY_1, DataService.ComputeMethod.Rewind, 0, s_cb2);
+          Assert.assertEquals("{\"x\":0,\"z\":42,\"y\":0}", s_cb2.value);
+          Assert.assertEquals(4, s_cb2.reads);
+        }
+
+        SimpleIntCallback cb6 = new SimpleIntCallback();
+        service.compact(KEY_1, 2, cb6);
+        cb6.assertSuccess(2);
+
+        {
+          SimpleDataCallback s_cb1 = new SimpleDataCallback();
+          service.get(KEY_1, s_cb1);
+          s_cb1.assertSuccess();
+          Assert.assertEquals("{\"x\":4,\"y\":4}", s_cb1.value);
+          Assert.assertEquals(3, s_cb1.reads);
+
+          SimpleDataCallback s_cb2 = new SimpleDataCallback();
+          service.compute(KEY_1, DataService.ComputeMethod.Rewind, 0, s_cb2);
+          Assert.assertEquals("{\"x\":0,\"z\":42,\"y\":0}", s_cb2.value);
+          Assert.assertEquals(3, s_cb2.reads);
+        }
+
+        SimpleIntCallback cb7 = new SimpleIntCallback();
+        service.compact(KEY_1, 0, cb7);
+        cb7.assertSuccess(3);
+
+        {
+          SimpleDataCallback s_cb1 = new SimpleDataCallback();
+          service.get(KEY_1, s_cb1);
+          s_cb1.assertSuccess();
+          Assert.assertEquals("{\"x\":4,\"y\":4}", s_cb1.value);
+          Assert.assertEquals(1, s_cb1.reads);
+
+          SimpleDataCallback s_cb2 = new SimpleDataCallback();
+          service.compute(KEY_1, DataService.ComputeMethod.Rewind, 0, s_cb2);
+          Assert.assertEquals("{\"x\":0,\"z\":42,\"y\":0}", s_cb2.value);
+          Assert.assertEquals(1, s_cb2.reads);
+        }
       } finally {
         installer.uninstall();
       }

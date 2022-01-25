@@ -30,13 +30,14 @@ public interface DataService {
   /** Delete the document given by the ID */
   void delete(Key key, Callback<Void> callback);
 
+  /** Compact the storage backing a key such that the given value is shown as the history */
+  void compact(Key key, int history, Callback<Integer> callback);
+
   enum ComputeMethod {
     /** patch the local document to be up to date after the given sequencer */
     HeadPatch,
     /** rewind the document to the given sequencer */
-    Rewind,
-    /** unsend the message sent on the given sequencer */
-    Unsend
+    Rewind
   }
 
   /** the local copy of the document should be changed by incorporating the given patch */
