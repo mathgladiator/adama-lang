@@ -2,6 +2,7 @@
   create(who) {
     return true;
   }
+  maximum_history = 250;
 }
 
 @connected(who) {
