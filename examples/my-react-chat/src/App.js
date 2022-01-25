@@ -3,8 +3,15 @@ import './App.css';
 
 export default class App extends React.Component {
     state = {
-        name: "UserName"
+        name: "Connecting..."
     };
+
+    componentDidMount() {
+        var self = this;
+        window.Adama.wait_connected().then(function() {
+            self.setState({name:"Connected"});
+        });
+    }
 
     render() {
         return (

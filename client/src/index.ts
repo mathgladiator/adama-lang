@@ -202,19 +202,22 @@ export class AdamaConnection {
   /** api: wait for a connection */
   async wait_connected() {
     if (this.connected) {
-      return;
+      return new Promise(function (good) {
+        good(true);
+      });
+    } else {
+      var self = this;
+      var prior = this.onstatuschange;
+      return new Promise(function (good) {
+        self.onstatuschange = function (status) {
+          prior(status);
+          if (status) {
+            good(true);
+            self.onstatuschange = prior;
+          }
+        };
+      });
     }
-    var self = this;
-    var prior = this.onstatuschange;
-    return new Promise(function (good) {
-      self.onstatuschange = function (status) {
-        prior(status);
-        if (status) {
-          good(true);
-          self.onstatuschange = prior;
-        }
-      };
-    });
   }
 
   /** api: generate a new game */
