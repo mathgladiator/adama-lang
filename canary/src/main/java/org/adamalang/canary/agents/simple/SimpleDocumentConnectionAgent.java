@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.canary.agents;
+package org.adamalang.canary.agents.simple;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.canary.CanaryConfig;
@@ -75,7 +75,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
     ObjectNode request = Json.newJsonObject();
     request.put("method", "connection/create");
     request.put("space", "demo1");
-    request.put("key", "slow2");
+    request.put("key", "slow3");
     request.put("identity", config.identities[(int) (config.identities.length * Math.random())]);
     kickoffStarted = System.currentTimeMillis();
     waitingForFirstData = true;

@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.canary.agents;
+package org.adamalang.canary.agents.simple;
 
 import org.adamalang.canary.CanaryConfig;
 import org.adamalang.common.NamedRunnable;

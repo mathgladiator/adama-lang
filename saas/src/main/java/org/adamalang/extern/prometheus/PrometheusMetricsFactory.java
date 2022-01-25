@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 public class PrometheusMetricsFactory implements MetricsFactory {
   private final HTTPServer server;
+  private static final double[] LATENCY_BUCKETS = new double[]{0.001D, 0.005D, 0.01D, 0.02D, 0.03D, 0.04D, 0.05D, 0.075D, 0.1D, 0.2D, 0.3D, 0.4D, 0.5D, 1.0D, 2.0D, 5.0D, 10.0D};
 
   public PrometheusMetricsFactory(int metricsHttpPort) throws Exception {
     server = new HTTPServer.Builder()
@@ -45,7 +46,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter success = Counter.build().name("rr_" + name + "_success").help("Request success for " + name).register();
     Counter failure = Counter.build().name("rr_" + name + "_failure").help("Request failure for " + name).register();
     Gauge inflight = Gauge.build().name("rr_" + name + "_inflight").help("Inprogress streams for " + name).register();
-    Histogram firstLatency = Histogram.build().name("rr_" + name + "_latency").help("Latency for the first bit of progress for " + name).register();
+    Histogram firstLatency = Histogram.build().name("rr_" + name + "_latency").buckets(LATENCY_BUCKETS).help("Latency for the first bit of progress for " + name).register();
     return () -> {
       Histogram.Timer timer = firstLatency.startTimer();
       start.inc();
@@ -95,7 +96,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter finish = Counter.build().name("stream_" + name + "_finish").help("Stream finished for " + name).register();
     Counter failure = Counter.build().name("stream_" + name + "_failure").help("Stream filure for " + name).register();
     Gauge inflight = Gauge.build().name("stream_" + name + "_inflight").help("Inprogress streams for " + name).register();
-    Histogram firstLatency = Histogram.build().name("stream_" + name + "_first_latency").help("Latency for the first bit of progress for " + name).register();
+    Histogram firstLatency = Histogram.build().name("stream_" + name + "_first_latency").buckets(LATENCY_BUCKETS).help("Latency for the first bit of progress for " + name).register();
     return () -> {
       Histogram.Timer timer = firstLatency.startTimer();
       start.inc();
@@ -148,7 +149,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     Counter rejected = Counter.build().name("im_" + name + "_rejected").help("Item Monitor rejected for " + name).register();
     Counter timeout = Counter.build().name("im_" + name + "_timeout").help("Item Monitor timeout for " + name).register();
     Gauge inflight = Gauge.build().name("im_" + name + "_inflight").help("Inprogress Item Monitors for " + name).register();
-    Histogram latency = Histogram.build().name("im_" + name + "_latency").help("Latency Item Monitor to succeed " + name).register();
+    Histogram latency = Histogram.build().name("im_" + name + "_latency").buckets(LATENCY_BUCKETS).help("Latency Item Monitor to succeed " + name).register();
     return () -> {
       start.inc();
       inflight.inc();
@@ -178,13 +179,14 @@ public class PrometheusMetricsFactory implements MetricsFactory {
       };
     };
   }
+
   @Override
   public CallbackMonitor makeCallbackMonitor(String name) {
     Counter start = Counter.build().name("cb_" + name + "_start").help("Callback started for " + name).register();
     Counter success = Counter.build().name("cb_" + name + "_success").help("Callback success for " + name).register();
     Counter failure = Counter.build().name("cb_" + name + "_failure").help("Callback failure for " + name).register();
     Gauge inflight = Gauge.build().name("cb_" + name + "_inflight").help("Inprogress callbacks for " + name).register();
-    Histogram latency = Histogram.build().name("cb_" + name + "_latency").help("Latency callback to succeed " + name).register();
+    Histogram latency = Histogram.build().name("cb_" + name + "_latency").buckets(LATENCY_BUCKETS).help("Latency callback to complete " + name).register();
     return new CallbackMonitor() {
       @Override
       public CallbackMonitor.CallbackMonitorInstance start() {

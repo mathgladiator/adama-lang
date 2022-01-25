@@ -96,6 +96,20 @@ public class PrometheusDashboard implements MetricsFactory {
     }
     {
       String graphId = makeId();
+      current.append("<b> Latency p95:").append(name).append("</b>\n");
+      current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+      current.append("new PromConsole.Graph({\n");
+      current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+      current.append("  expr: \"histogram_quantile(0.95, rate(rr_").append(name).append("_latency_bucket[1m])) * 1000\",\n");
+      current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+      current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+      current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+      current.append("  yTitle: '").append(name).append("'\n");
+      current.append("});\n");
+      current.append("</script>");
+    }
+    {
+      String graphId = makeId();
       current.append("<b> Successes:").append(name).append("</b>\n");
       current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
       current.append("new PromConsole.Graph({\n");
@@ -184,6 +198,20 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    {
+      String graphId = makeId();
+      current.append("<b> Latency p95:").append(name).append("</b>\n");
+      current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+      current.append("new PromConsole.Graph({\n");
+      current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+      current.append("  expr: \"histogram_quantile(0.95, rate(stream_").append(name).append("_first_latency_bucket[1m])) * 1000\",\n");
+      current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+      current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+      current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+      current.append("  yTitle: '").append(name).append("'\n");
+      current.append("});\n");
+      current.append("</script>");
+    }
     return null;
   }
 
@@ -196,6 +224,20 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("new PromConsole.Graph({\n");
       current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
       current.append("  expr: \"rate(cb_").append(name).append("_failure_total[1m])/rate(cb_").append(name).append("_start_total[1m])\",\n");
+      current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+      current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+      current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+      current.append("  yTitle: '").append(name).append("'\n");
+      current.append("});\n");
+      current.append("</script>");
+    }
+    {
+      String graphId = makeId();
+      current.append("<b> Latency p95:").append(name).append("</b>\n");
+      current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+      current.append("new PromConsole.Graph({\n");
+      current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+      current.append("  expr: \"histogram_quantile(0.95, rate(cb_").append(name).append("_latency_bucket[1m])) * 1000\",\n");
       current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
@@ -277,6 +319,20 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("new PromConsole.Graph({\n");
       current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
       current.append("  expr: \"rate(im_").append(name).append("_executed_total[1m])/rate(im_").append(name).append("_start_total[1m])\",\n");
+      current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+      current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
+      current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");
+      current.append("  yTitle: '").append(name).append("'\n");
+      current.append("});\n");
+      current.append("</script>");
+    }
+    {
+      String graphId = makeId();
+      current.append("<b> Latency p95:").append(name).append("</b>\n");
+      current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
+      current.append("new PromConsole.Graph({\n");
+      current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
+      current.append("  expr: \"histogram_quantile(0.95, rate(im_").append(name).append("_latency_bucket[1m])) * 1000\",\n");
       current.append("  yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,\n");
       current.append("  name: function(v) { return v.instance + \"(\" + v.service + \")\";  },\n");

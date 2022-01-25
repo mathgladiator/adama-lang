@@ -9,7 +9,7 @@
  */
 package org.adamalang.canary;
 
-import org.adamalang.canary.agents.SimpleWebSocketConnectionAgent;
+import org.adamalang.canary.agents.simple.SimpleWebSocketConnectionAgent;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.Json;
 import org.adamalang.common.SimpleExecutor;
