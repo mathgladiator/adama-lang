@@ -207,7 +207,7 @@ public class InMemoryDataService implements DataService {
         }
         RemoteDocumentUpdate newHead = new RemoteDocumentUpdate(0, NtClient.NO_ONE, "{}",  mergeRedo.finish(), mergeUndo.finish(), false, 0);
         updates.add(0, newHead);
-        return toCompact;
+        return toCompact - 1;
       }
       return 0;
     }

@@ -42,6 +42,7 @@ public class CoreMetrics {
   public final Runnable document_queue_full;
   public final Runnable document_queue_running_behind;
   public final Runnable document_catastrophic_failure;
+  public final Runnable document_compacting;
 
   public CoreMetrics(MetricsFactory metricsFactory) {
     serviceCreate = metricsFactory.makeCallbackMonitor("core_service_create");
@@ -71,5 +72,6 @@ public class CoreMetrics {
     document_queue_full = metricsFactory.counter("core_document_full");
     document_queue_running_behind = metricsFactory.counter("core_document_queue_running_behind");
     document_catastrophic_failure = metricsFactory.counter("core_document_catastrophic_failure");
+    document_compacting = metricsFactory.counter("core_document_compacting");
   }
 }

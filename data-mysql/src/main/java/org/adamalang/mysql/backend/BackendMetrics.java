@@ -15,6 +15,7 @@ public class BackendMetrics {
   private final Runnable read;
   private final Runnable write;
   public final Runnable lookup;
+  public final Runnable lookup_change;
   public final Runnable delete;
 
   public final Runnable read_get;
@@ -31,6 +32,7 @@ public class BackendMetrics {
     write = factory.counter("mysql_write");
     lookup = factory.counter("mysql_lookup");
     delete = factory.counter("mysql_delete");
+    lookup_change = factory.counter("mysql_lookup_change");
 
     Runnable _read_get = factory.counter("mysql_read_get");
     this.read_get = () -> {

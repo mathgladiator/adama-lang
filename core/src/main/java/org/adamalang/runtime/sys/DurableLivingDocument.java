@@ -29,6 +29,7 @@ import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /** A LivingDocument tied to a document id and DataService */
@@ -44,6 +45,8 @@ public class DurableLivingDocument {
   private boolean catastrophicFailureOccurred;
   private long lastExpire;
   private int outstandingExecutionsWhichRequireDrain;
+  private boolean inflightCompact;
+  private AtomicInteger size;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
@@ -56,6 +59,7 @@ public class DurableLivingDocument {
     this.catastrophicFailureOccurred = false;
     this.lastExpire = 0;
     this.outstandingExecutionsWhichRequireDrain = 0;
+    this.size = new AtomicInteger(0);
   }
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final NtClient who, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -67,6 +71,44 @@ public class DurableLivingDocument {
     }
   }
 
+  private void queueCompact() {
+    base.executor.execute(new NamedRunnable("document-compacting") {
+      @Override
+      public void execute() throws Exception {
+        if (inflightCompact) {
+          return;
+        }
+        inflightCompact = true;
+        base.metrics.document_compacting.run();
+        base.service.compact(key, currentFactory.maximum_history, new Callback<>() {
+          @Override
+          public void success(Integer value) {
+            base.executor.execute(new NamedRunnable("compact-complete") {
+              @Override
+              public void execute() throws Exception {
+                inflightCompact = false;
+                size.getAndAdd(-value);
+                if (size.get() > currentFactory.maximum_history && value > currentFactory.maximum_history / 2) {
+                  queueCompact();
+                }
+              }
+            });
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            base.executor.execute(new NamedRunnable("compact-failed") {
+              @Override
+              public void execute() throws Exception {
+                inflightCompact = false;
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
   public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
     try {
       LivingDocument doc = factory.create(monitor);
@@ -76,7 +118,12 @@ public class DurableLivingDocument {
         doc.__insert(reader);
         JsonStreamWriter writer = new JsonStreamWriter();
         doc.__dump(writer);
-        return new DurableLivingDocument(key, doc, factory, base);
+        DurableLivingDocument document = new DurableLivingDocument(key, doc, factory, base);
+        document.size.set(data.reads);
+        if (data.reads > factory.maximum_history) {
+          document.queueCompact();
+        }
+        return document;
       }));
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, LOGGER));
@@ -232,7 +279,7 @@ public class DurableLivingDocument {
         at++;
       }
       int seqToUse = last.update.seq;
-
+      size.addAndGet(patches.length);
       base.service.patch(key, patches, base.metrics.document_execute_patch.wrap(new Callback<>() {
         @Override
         public void success(Void value) {
@@ -248,6 +295,9 @@ public class DurableLivingDocument {
               }
               if (shouldCleanUp && document.__canRemoveFromMemory()) {
                 scheduleCleanup();
+              }
+              if (size.get() > currentFactory.maximum_history * 1.5) {
+                queueCompact();
               }
             }
           });
@@ -392,6 +442,7 @@ public class DurableLivingDocument {
       }
       writer.endObject();
       final var change = document.__transact(writer.toString(), currentFactory);
+      size.set(1);
       base.service.initialize(key, change.update, Callback.handoff(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_PERSIST, () -> {
         change.complete();
         invalidate(callback);

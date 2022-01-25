@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /** Implements the DataService while blocking the caller's thread */
@@ -88,6 +89,7 @@ public class BlockingDataService implements DataService {
           .append("'").append(patch.requiresFutureInvalidation ? "1" : "0").append("', ") //
           .append("'").append(whenOf(patch)).append("')") //
           .toString();
+      metrics.lookup_change.run();
 
       // execute the insert
       PreparedStatement statementInsertIndex = connection.prepareStatement(insertIndexSQL, Statement.RETURN_GENERATED_KEYS);
@@ -158,6 +160,7 @@ public class BlockingDataService implements DataService {
           .append(", `when`='").append(whenOf(last)) //
           .append("' WHERE `id`=").append(lookup.id).toString();
       DataBase.execute(connection, updateIndexSQL);
+      metrics.lookup_change.run();
 
       // insert delta
       for (RemoteDocumentUpdate patch : patches) {
@@ -241,7 +244,7 @@ public class BlockingDataService implements DataService {
 
       String walkSql = new StringBuilder("SELECT `id`, `redo`, `undo`, `seq_end`, `seq_begin` FROM `") //
           .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
-          .append(" ORDER BY `seq_end` DESC LIMIT 500000 OFFSET ").append(history).toString();
+          .append(" ORDER BY `seq_end` DESC LIMIT ").append(history * 3).append(" OFFSET ").append(history).toString();
 
       AutoMorphicAccumulator<String> redoMorph = JsonAlgebra.mergeAccumulator();
       AutoMorphicAccumulator<String> undoMorph = JsonAlgebra.mergeAccumulator();
@@ -281,6 +284,8 @@ public class BlockingDataService implements DataService {
         } finally {
           statement.close();
         }
+        // account for the one we insert
+        count.decrementAndGet();
       }
       return count.get();
     }, callback, ErrorCodes.COMPUTE_FAILURE);

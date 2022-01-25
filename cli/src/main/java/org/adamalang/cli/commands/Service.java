@@ -320,6 +320,8 @@ public class Service {
     new ClientMetrics(metricsFactory);
     metricsFactory.page("server", "Adama Server");
     new ServerMetrics(metricsFactory);
+    metricsFactory.page("adama", "Core Service");
+    new CoreMetrics(metricsFactory);
     metricsFactory.page("web", "Web Proxy");
     new WebMetrics(metricsFactory);
     metricsFactory.page("overlord", "The Overlord");

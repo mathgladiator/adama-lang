@@ -35,6 +35,7 @@ public class LivingDocumentFactory {
   private final Method creationPolicyMethod;
   private final Method inventionPolicyMethod;
   private final Method canSendWhileDisconnectPolicyMethod;
+  public final int maximum_history;
 
   public LivingDocumentFactory(final String className, final String javaSource, String reflection) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
@@ -56,6 +57,8 @@ public class LivingDocumentFactory {
       creationPolicyMethod = clazz.getMethod("__onCanCreate", NtClient.class);
       inventionPolicyMethod = clazz.getMethod("__onCanInvent", NtClient.class);
       canSendWhileDisconnectPolicyMethod = clazz.getMethod("__onCanSendWhileDisconnected", NtClient.class);
+      HashMap<String, Object> config = (HashMap<String, Object>) (clazz.getMethod("__config").invoke(null));
+      maximum_history = extractMaximumHistory(config);
       this.reflection = reflection;
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
@@ -83,6 +86,15 @@ public class LivingDocumentFactory {
       return (Boolean) canSendWhileDisconnectPolicyMethod.invoke(null, who);
     } catch (Exception ex) {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_SEND_WHILE_DISCONNECTED, ex, LOGGER);
+    }
+  }
+
+  private static int extractMaximumHistory(HashMap<String, Object> config) {
+    Object value = config.get("maximum_history");
+    if (value != null && value instanceof Integer) {
+      return ((Integer) value).intValue();
+    } else {
+      return 10000;
     }
   }
 

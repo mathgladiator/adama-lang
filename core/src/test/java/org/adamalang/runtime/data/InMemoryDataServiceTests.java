@@ -261,7 +261,7 @@ public class InMemoryDataServiceTests {
     ds.compact(key, 100, new Callback<Integer>() {
       @Override
       public void success(Integer value) {
-        Assert.assertEquals(901, (int) value);
+        Assert.assertEquals(900, (int) value);
         success.incrementAndGet();
       }
 

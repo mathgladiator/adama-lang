@@ -195,6 +195,11 @@ public class HandlerTests {
             }
 
             @Override
+            public void compact(Key key, int history, Callback<Integer> callback) {
+              real.compact(key, history, callback);
+            }
+
+            @Override
             public void delete(Key key, Callback<Void> callback) {
               real.delete(key, callback);
             }

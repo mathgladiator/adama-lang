@@ -20,7 +20,7 @@ public class LivingDocumentFactoryTests {
     final var compiler =
         new LivingDocumentFactory(
             "Foo",
-            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; } public static boolean __onCanInvent(NtClient who) { return false; } public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; } }",
+            "import java.util.HashMap; \nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n public class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; } public static boolean __onCanInvent(NtClient who) { return false; } public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; } public static HashMap<String, Object> __config() { return new HashMap<>(); } } ",
             "{}");
     var success = false;
     try {
@@ -52,7 +52,7 @@ public class LivingDocumentFactoryTests {
     final var compiler =
         new LivingDocumentFactory(
             "Foo",
-            "\nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; }  public static boolean __onCanInvent(NtClient who) { return false; } public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; }}",
+            "import java.util.HashMap; \nimport org.adamalang.runtime.contracts.DocumentMonitor;import org.adamalang.runtime.natives.*;\n public class Foo { public Foo(DocumentMonitor dm) {} public static boolean __onCanCreate(NtClient who) { return false; }  public static boolean __onCanInvent(NtClient who) { return false; } public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; } public static HashMap<String, Object> __config() { return new HashMap<>(); } }",
             "{}");
     var success = false;
     try {
@@ -82,14 +82,16 @@ public class LivingDocumentFactoryTests {
     LivingDocumentFactory factory = new LivingDocumentFactory(
         "Foo",
         "import org.adamalang.runtime.contracts.DocumentMonitor;" +
-            "import org.adamalang.runtime.natives.*; class Foo {" +
+            "import java.util.HashMap; import org.adamalang.runtime.natives.*; public class Foo {" +
             "public Foo(final DocumentMonitor __monitor) { }" +
             "public static boolean __onCanCreate(NtClient who) { throw new NullPointerException(); }" +
             "public static boolean __onCanInvent(NtClient who) { throw new NullPointerException(); }" +
             "public static boolean __onCanSendWhileDisconnected(NtClient who) { throw new NullPointerException(); }" +
+            "public static HashMap<String, Object> __config() { return new HashMap<>(); }" +
             "}",
         "{}");
 
+    Assert.assertEquals(10000, factory.maximum_history);
     try {
       factory.canCreate(NtClient.NO_ONE);
       Assert.fail();
@@ -108,6 +110,23 @@ public class LivingDocumentFactoryTests {
     } catch (ErrorCodeException ex) {
       Assert.assertEquals(148095, ex.code);
     }
+  }
+
+
+  @Test
+  public void configWorks() throws Exception {
+    LivingDocumentFactory factory = new LivingDocumentFactory(
+        "Foo",
+        "import org.adamalang.runtime.contracts.DocumentMonitor;" +
+            "import java.util.HashMap; import org.adamalang.runtime.natives.*; public class Foo {" +
+            "public Foo(final DocumentMonitor __monitor) { }" +
+            "public static boolean __onCanCreate(NtClient who) { throw new NullPointerException(); }" +
+            "public static boolean __onCanInvent(NtClient who) { throw new NullPointerException(); }" +
+            "public static boolean __onCanSendWhileDisconnected(NtClient who) { throw new NullPointerException(); }" +
+            "public static HashMap<String, Object> __config() { HashMap<String, Object> map = new HashMap<>(); map.put(\"maximum_history\", 150); return map; }" +
+            "}",
+        "{}");
+    Assert.assertEquals(150, factory.maximum_history);
   }
 
   @Test
