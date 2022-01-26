@@ -14,6 +14,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
+import org.adamalang.validators.ValidateEmail;
 import org.adamalang.validators.ValidateSpace;
 import org.adamalang.web.io.*;
 
@@ -46,6 +47,7 @@ public class SpaceSetRoleRequest {
       ValidateSpace.validate(space);
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String email = request.getString("email", true, 473103);
+      ValidateEmail.validate(email);
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
       final String role = request.getString("role", true, 456716);
       _latch.with(() -> new SpaceSetRoleRequest(identity, who.get(), space, policy.get(), email, userId.get(), role));

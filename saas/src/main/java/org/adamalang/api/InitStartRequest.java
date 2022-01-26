@@ -12,6 +12,7 @@ package org.adamalang.api;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.connection.Session;
+import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.io.*;
 
 /** This establishes a developer machine via email verification. The expectation is that while the email is
@@ -35,6 +36,7 @@ public class InitStartRequest {
     try {
       final BulkLatch<InitStartRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String email = request.getString("email", true, 473103);
+      ValidateEmail.validate(email);
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
       _latch.with(() -> new InitStartRequest(email, userId.get()));
       nexus.emailService.execute(nexus.session, email, userId);

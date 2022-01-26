@@ -97,6 +97,7 @@
                    output-name="userId"
                    output-java-type="Integer"
                    error-code="460815"/>
+        <validate service="org.adamalang.validators.ValidateEmail"/>
     </parameter-definition>
 
     <parameter-definition name="plan" type="json-object" missing-error="425999">

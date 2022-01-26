@@ -16,7 +16,6 @@ import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.web.io.AsyncTransform;
-import org.apache.commons.validator.routines.EmailValidator;
 
 public class UserIdResolver implements AsyncTransform<Session, String, Integer> {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(UserIdResolver.class);
@@ -34,11 +33,7 @@ public class UserIdResolver implements AsyncTransform<Session, String, Integer> 
       @Override
       public void execute() throws Exception {
         try {
-          if (EmailValidator.getInstance().isValid(email)) {
-            callback.success(Users.getOrCreateUserId(dataBase, email));
-          } else {
-            callback.failure(new ErrorCodeException(ErrorCodes.USERID_RESOLVE_INVALID_EMAIL));
-          }
+          callback.success(Users.getOrCreateUserId(dataBase, email));
         } catch (Exception ex) {
           callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.USERID_RESOLVE_UNKNOWN_EXCEPTION, ex, LOGGER));
         }

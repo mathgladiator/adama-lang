@@ -179,7 +179,7 @@ public class ErrorCodes {
   public static final int AUTH_INVALID_TOKEN_JSON = 908303;
   public static final int AUTH_INVALID_TOKEN_JSON_COMPLETE = 959500;
   public static final int USERID_RESOLVE_UNKNOWN_EXCEPTION = 979980;
-  public static final int USERID_RESOLVE_INVALID_EMAIL = 905293;
+  public static final int API_INVALID_EMAIL = 905293;
   public static final int SPACE_POLICY_LOCATOR_UNKNOWN_EXCEPTION = 969741;
 
   public static final int API_SPACE_INVALID_NAME_FOR_LOOKUP = 928828;
