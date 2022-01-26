@@ -145,12 +145,13 @@ public class TestFrontEnd implements AutoCloseable, Email {
   }
 
   @Override
-  public void sendCode(String email, String code) {
+  public boolean sendCode(String email, String code) {
     codesSentToEmail.put(email, code);
     CountDownLatch latch = emailLatch.remove(email);
     if (latch != null) {
       latch.countDown();
     }
+    return true;
   }
 
   public String generateIdentity(String email) {

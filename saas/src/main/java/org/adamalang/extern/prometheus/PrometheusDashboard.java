@@ -23,6 +23,7 @@ public class PrometheusDashboard implements MetricsFactory {
   private StringBuilder current;
   private HashMap<String, String> files;
   private StringBuilder nav;
+  private StringBuilder alerts;
   private int id;
 
   public PrometheusDashboard() {
@@ -31,18 +32,21 @@ public class PrometheusDashboard implements MetricsFactory {
     this.files = new HashMap<>();
     this.nav = new StringBuilder();
     this.id = 0;
+    this.alerts = new StringBuilder();
+    alerts.append("groups:\n");
   }
 
   String makeId() {
     return "ID" + (id++);
   }
 
-
   @Override
   public void page(String name, String title) {
     if (filename != null) {
       cut();
     }
+    alerts.append("- name: ").append(name).append("\n");
+    alerts.append("  rules:\n");
     nav.append(" [<a href=\"adama-").append(name).append(".html").append("\">").append(title).append("</a>] ");
     this.filename = "adama-" + name + ".html";
     this.current = new StringBuilder();
@@ -64,6 +68,7 @@ public class PrometheusDashboard implements MetricsFactory {
       data = data.replaceAll(Pattern.quote("##NAV##"), nav.toString());
       Files.writeString(toWrite.toPath(), data);
     }
+    Files.writeString(new File(consolesDirectory.getParentFile(), "adama_rules.yml").toPath(), alerts.toString());
   }
 
   @Override
@@ -94,6 +99,13 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    alerts.append("  - alert: FailureRate").append(name).append("\n");
+    alerts.append("    expr: rate(rr_").append(name).append("_failure_total[2m])/rate(rr_").append(name).append("_start_total[2m]) > 0.05\n");
+    alerts.append("    for: 5m\n");
+    alerts.append("    labels:\n");
+    alerts.append("      severity: page\n");
+    alerts.append("    annotations:\n");
+    alerts.append("      summary: High Failure Rate for ").append(name).append("\n");
     {
       String graphId = makeId();
       current.append("<b> Latency p95:").append(name).append("</b>\n");
@@ -156,6 +168,13 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    alerts.append("  - alert: FailureRate").append(name).append("\n");
+    alerts.append("    expr: rate(stream_").append(name).append("_failure_total[2m])/rate(stream_").append(name).append("_start_total[2m]) > 0.05\n");
+    alerts.append("    for: 5m\n");
+    alerts.append("    labels:\n");
+    alerts.append("      severity: page\n");
+    alerts.append("    annotations:\n");
+    alerts.append("      summary: High Failure Rate for ").append(name).append("\n");
     {
       String graphId = makeId();
       current.append("<b> Progress:").append(name).append("</b>\n");
@@ -231,6 +250,13 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    alerts.append("  - alert: FailureRate").append(name).append("\n");
+    alerts.append("    expr: rate(cb_").append(name).append("_failure_total[2m])/rate(cb_").append(name).append("_start_total[2m]) > 0.05\n");
+    alerts.append("    for: 5m\n");
+    alerts.append("    labels:\n");
+    alerts.append("      severity: page\n");
+    alerts.append("    annotations:\n");
+    alerts.append("      summary: High Failure Rate for ").append(name).append("\n");
     {
       String graphId = makeId();
       current.append("<b> Latency p95:").append(name).append("</b>\n");
@@ -326,6 +352,13 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+    alerts.append("  - alert: SuccessDrop").append(name).append("\n");
+    alerts.append("    expr: rate(im_").append(name).append("_executed_total[2m])/rate(im_").append(name).append("_start_total[2m]) < 0.95\n");
+    alerts.append("    for: 5m\n");
+    alerts.append("    labels:\n");
+    alerts.append("      severity: page\n");
+    alerts.append("    annotations:\n");
+    alerts.append("      summary: Success Drop for ").append(name).append("\n");
     {
       String graphId = makeId();
       current.append("<b> Latency p95:").append(name).append("</b>\n");
@@ -354,9 +387,10 @@ public class PrometheusDashboard implements MetricsFactory {
       current.append("});\n");
       current.append("</script>");
     }
+
     {
       String graphId = makeId();
-      current.append("<b> Rejected:").append(name).append("</b>\n");
+      current.append("<b> Timeout:").append(name).append("</b>\n");
       current.append("<div id=\"").append(graphId).append("\"></div><script>\n");
       current.append("new PromConsole.Graph({\n");
       current.append("  node: document.querySelector(\"#").append(graphId).append("\"),\n");
@@ -384,5 +418,4 @@ public class PrometheusDashboard implements MetricsFactory {
     }
     return null;
   }
-
 }

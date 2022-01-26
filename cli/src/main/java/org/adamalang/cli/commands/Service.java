@@ -16,6 +16,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.extern.aws.AWSMetrics;
 import org.adamalang.extern.prometheus.PrometheusDashboard;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
@@ -285,8 +286,9 @@ public class Service {
     // TODO: use real-email SES thingy
     ExternNexus nexus = new ExternNexus(new Email() {
       @Override
-      public void sendCode(String email, String code) {
+      public boolean sendCode(String email, String code) {
         System.err.println("Email:" + email + " --> " + code);
+        return true;
       }
     }, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory);
     System.err.println("nexus constructed");
@@ -314,6 +316,8 @@ public class Service {
 
   public static void dashboards() throws Exception {
     PrometheusDashboard metricsFactory = new PrometheusDashboard();
+    metricsFactory.page("aws", "AWS");
+    new AWSMetrics(metricsFactory);
     metricsFactory.page("gossip", "Gossip");
     new GossipMetricsImpl(metricsFactory);
     metricsFactory.page("client", "Client to Adama");

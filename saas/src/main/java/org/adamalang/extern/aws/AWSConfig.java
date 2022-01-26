@@ -9,8 +9,7 @@
  */
 package org.adamalang.extern.aws;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.ConfigObject;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 
@@ -22,21 +21,13 @@ public class AWSConfig implements AwsCredentialsProvider, AwsCredentials {
   public final String region;
   public final String bucketForAssets;
 
-  private String extractStr(ObjectNode root, String field, String message) throws Exception {
-    JsonNode node = root.get(field);
-    if (node == null || node.isNull() || !node.isTextual()) {
-      throw new Exception(message);
-    }
-    return node.textValue();
-  }
-
-  public AWSConfig(ObjectNode node) throws Exception {
-    this.accessKeyId = extractStr(node, "access_key", "AWS Access Key not found");
-    this.secretKey = extractStr(node, "secret_key", "AWS Secret Key not found");
-    this.region = extractStr(node, "region", "AWS Region");
-    this.fromEmailAddressForInit = extractStr(node, "init_from_email", "No sender email address set");
-    this.replyToEmailAddressForInit = extractStr(node, "init_replay_email", "No reply email address set");
-    this.bucketForAssets = extractStr(node, "bucket", "No bucket for assets");
+  public AWSConfig(ConfigObject config) throws Exception {
+    this.accessKeyId = config.strOfButCrash("access_key", "AWS Access Key not found");
+    this.secretKey = config.strOfButCrash("secret_key", "AWS Secret Key not found");
+    this.region = config.strOfButCrash("region", "AWS Region");
+    this.fromEmailAddressForInit = config.strOfButCrash("init_from_email", "No sender email address set for init");
+    this.replyToEmailAddressForInit = config.strOfButCrash("init_reply_email", "No reply email address set for init");
+    this.bucketForAssets = config.strOfButCrash("bucket", "No bucket for assets");
   }
 
   @Override

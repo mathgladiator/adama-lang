@@ -26,6 +26,16 @@ public class PrometheusDashboardTests {
     pd.page("y", "Y");
     pd.makeRequestResponseMonitor("rrm");
     pd.makeStreamMonitor("sm");
-    pd.finish(File.createTempFile("Tempy", "tampy").getParentFile());
+    File parentTemp = File.createTempFile("Tempy", "tampy").getParentFile();
+    File prometh = new File(parentTemp, "promethesus-" + System.currentTimeMillis());
+    try {
+      prometh.mkdir();
+      pd.finish(prometh);
+    } finally {
+      for (File file : prometh.listFiles()) {
+        file.delete();
+      }
+      prometh.delete();
+    }
   }
 }
