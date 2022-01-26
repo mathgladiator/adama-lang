@@ -108,6 +108,7 @@
             Note: this method will validate that the scripts are valid, compile, and will not have any major regressions
             during role out.
         </documentation>
+        <validate service="org.adamalang.validators.ValidatePlan"/>
     </parameter-definition>
 
     <parameter-definition name="limit" type="int" optional="true">

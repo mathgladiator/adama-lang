@@ -21,7 +21,6 @@ public class ValidatePlan {
 
   public static void validate(ObjectNode node) throws ErrorCodeException {
     DeploymentPlan localPlan = new DeploymentPlan(node.toString(), (t, c) -> t.printStackTrace());
-    new DeploymentFactory(
-        "name", "prefix", validationClassId, null, localPlan);
+    new DeploymentFactory("name", "prefix", validationClassId, null, localPlan);
   }
 }
