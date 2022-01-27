@@ -14,6 +14,7 @@ import org.adamalang.apikit.model.ParameterDefinition;
 import org.adamalang.apikit.model.Responder;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class AssembleClient {
 
@@ -32,11 +33,20 @@ public class AssembleClient {
     return "";
   }
 
+  private static String removeCommonFromChild(String base, String child) {
+    for (int k = 0; k < Math.min(base.length(), child.length()); k++) {
+      if (base.charAt(k) != child.charAt(k)) {
+        return child.substring(k).toLowerCase(Locale.ROOT);
+      }
+    }
+    return child;
+  }
+
   private static String makeInvoke(Method[] methods) throws Exception {
     StringBuilder ts = new StringBuilder();
     for (Method method : methods) {
       if (method.handler.equals("Root")) {
-        ts.append("  async ").append(method.camelName2).append("(");
+        ts.append("  async ").append(method.camelName).append("(");
         boolean append1 = false;
         for (ParameterDefinition parameter : method.parameters) {
           if (append1) {
@@ -47,18 +57,14 @@ public class AssembleClient {
         }
         ts.append(") {\n");
         ts.append("    var self = this;\n");
-        ts.append("    // var id = self.nextId;\n");
-        ts.append("    self.nextId++;\n");
-        ts.append("    // var request = {\"method\":\"").append(method.name).append("\", \"id\":id");
+        ts.append("    var id = self.nextId++;\n");
+        ts.append("    return {\n");
+        ts.append("      id: id,\n");
+        ts.append("      request:  {\"method\":\"").append(method.name).append("\", \"id\":id");
         for (ParameterDefinition parameter : method.parameters) {
           ts.append(", ").append("\"").append(parameter.name).append("\":").append(parameter.camelName);
         }
-        ts.append("};\n");
-        if (method.responder.stream) {
-
-        } else {
-
-        }
+        ts.append("}");
         ArrayList<Method> submethods = new ArrayList<>();
         for (Method submethod : methods) {
           if (method.createCamel.equals(submethod.handler)) {
@@ -66,14 +72,8 @@ public class AssembleClient {
           }
         }
         if (submethods.size() > 0) {
-          ts.append("    return {\n");
-          boolean wrote = false;
           for (Method submethod : submethods) {
-            if (wrote) {
-              ts.append(",\n");
-            }
-            wrote = true;
-            ts.append("      ").append(submethod.camelName).append(": function(");
+            ts.append(",\n      ").append(removeCommonFromChild(method.camelName, submethod.camelName)).append(": async function(");
             boolean append2 = false;
 
             for (ParameterDefinition parameter : submethod.parameters) {
@@ -87,10 +87,9 @@ public class AssembleClient {
               ts.append(parameter.camelName).append(": ").append(parameter.type.typescriptType());
             }
 
-            ts.append("){\n");
-            ts.append("        // var subId = self.nextId;\n");
-            ts.append("        self.nextId++;\n");
-            ts.append("        // var request = {\"method\":\"").append(submethod.name).append("\", \"id\":subId, \"").append(submethod.findBy).append("\":id");
+            ts.append(") {\n");
+            ts.append("        var subId = self.nextId++;\n");
+            ts.append("        return {\"method\":\"").append(submethod.name).append("\", \"id\":subId, \"").append(submethod.findBy).append("\":id");
             for (ParameterDefinition parameter : submethod.parameters) {
               if (parameter.name.equals(submethod.findBy)) {
                 continue;
@@ -98,18 +97,11 @@ public class AssembleClient {
               ts.append(", ").append("\"").append(parameter.name).append("\":").append(parameter.camelName);
             }
             ts.append("};\n");
-
-
             ts.append("      }");
           }
-          if (wrote) {
-            ts.append("\n");
-          }
-          ts.append("    };\n");
         }
+        ts.append("\n    };\n");
         ts.append("  }\n");
-      } else {
-
       }
     }
     return ts.toString();
