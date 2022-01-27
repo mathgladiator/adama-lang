@@ -18,6 +18,9 @@ public class Common {
   }
 
   public static String camelize(String name, boolean lowerFirst) {
+    if (name == null || name.length() == 0) {
+      return name;
+    }
     String[] parts = name.replaceAll(Pattern.quote("/"), "-").split(Pattern.quote("-"));
     StringBuilder result = new StringBuilder();
     boolean lower = lowerFirst;

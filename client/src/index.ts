@@ -1,5 +1,7 @@
 import WebSocket from 'isomorphic-ws';
-// import {AdamaAPI} from "./api";
+
+/**[BEGIN-CODEGEN-EXPORTS]**/
+/**[END-CODEGEN-EXPORTS]**/
 
 export class AdamaConnection {
   // how long between retries
@@ -36,7 +38,7 @@ export class AdamaConnection {
   // event: we can connect, but we need auth credentials to make progress
   onauthneeded: (tryagain: () => void) => void;
 
-  connectId: number;
+  nextId: number;
 
   onreconnect: Map<number, object>;
 
@@ -58,7 +60,7 @@ export class AdamaConnection {
     };
     this.scheduled = false;
     this.callbacks = new Map<number, (result: object) => void>();
-    this.connectId = 1;
+    this.nextId = 1;
     this.onreconnect = new Map<number, object>();
     this.rpcid = 1;
     this.sessionId = "";
@@ -365,8 +367,8 @@ export class AdamaConnection {
   /** api: connect tree */
   /*
   async connectTree(gs: string, id: string, tree: AdamaTree, hack: (request: any) => void) {
-    var keyId = this.connectId;
-    this.connectId++;
+    var keyId = this.nextId;
+    this.nextId++;
     let sm = {
       request: {method: "connect", space: gs, key: id},
       first: true,
@@ -412,4 +414,152 @@ export class AdamaConnection {
       });
     });
   }
+
+  /**[BEGIN-INVOKE]**/
+  async initStart(email: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"init/start", "id":id, "email":email};
+    return {
+      InitRevokeAll: function(code: string){
+        // var subId = self.nextId;
+        self.nextId++;
+        // var request = {"method":"init/revoke-all", "id":subId, "connection":id, "code":code};
+      },
+      InitGenerateIdentity: function(revoke: boolean, code: string){
+        // var subId = self.nextId;
+        self.nextId++;
+        // var request = {"method":"init/generate-identity", "id":subId, "connection":id, "revoke":revoke, "code":code};
+      }
+    };
+  }
+  async probe(identity: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"probe", "id":id, "identity":identity};
+  }
+  async authorityCreate(identity: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"authority/create", "id":id, "identity":identity};
+  }
+  async authoritySet(identity: string, authority: string, keyStore: any) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"authority/set", "id":id, "identity":identity, "authority":authority, "key-store":keyStore};
+  }
+  async authorityGet(identity: string, authority: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"authority/get", "id":id, "identity":identity, "authority":authority};
+  }
+  async authorityList(identity: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"authority/list", "id":id, "identity":identity};
+  }
+  async authorityDestroy(identity: string, authority: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"authority/destroy", "id":id, "identity":identity, "authority":authority};
+  }
+  async spaceCreate(identity: string, space: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"space/create", "id":id, "identity":identity, "space":space};
+  }
+  async spaceGet(identity: string, space: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"space/get", "id":id, "identity":identity, "space":space};
+  }
+  async spaceSet(identity: string, space: string, plan: any) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"space/set", "id":id, "identity":identity, "space":space, "plan":plan};
+  }
+  async spaceDelete(identity: string, space: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"space/delete", "id":id, "identity":identity, "space":space};
+  }
+  async spaceSetRole(identity: string, space: string, email: string, role: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"space/set-role", "id":id, "identity":identity, "space":space, "email":email, "role":role};
+  }
+  async spaceReflect(identity: string, space: string, key: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"space/reflect", "id":id, "identity":identity, "space":space, "key":key};
+  }
+  async spaceList(identity: string, marker: string, limit: number) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"space/list", "id":id, "identity":identity, "marker":marker, "limit":limit};
+  }
+  async documentCreate(identity: string, space: string, key: string, entropy: string, arg: any) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"document/create", "id":id, "identity":identity, "space":space, "key":key, "entropy":entropy, "arg":arg};
+  }
+  async documentList(identity: string, space: string, marker: string, limit: number) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"document/list", "id":id, "identity":identity, "space":space, "marker":marker, "limit":limit};
+  }
+  async connectionCreate(identity: string, space: string, key: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"connection/create", "id":id, "identity":identity, "space":space, "key":key};
+    return {
+      ConnectionSend: function(channel: string, message: any){
+        // var subId = self.nextId;
+        self.nextId++;
+        // var request = {"method":"connection/send", "id":subId, "connection":id, "channel":channel, "message":message};
+      },
+      ConnectionEnd: function(){
+        // var subId = self.nextId;
+        self.nextId++;
+        // var request = {"method":"connection/end", "id":subId, "connection":id};
+      }
+    };
+  }
+  async attachmentStart(identity: string, space: string, key: string, filename: string, contentType: string) {
+    var self = this;
+    // var id = self.nextId;
+    self.nextId++;
+    // var request = {"method":"attachment/start", "id":id, "identity":identity, "space":space, "key":key, "filename":filename, "content-type":contentType};
+    return {
+      AttachmentAppend: function(chunkMd5: string, base64Bytes: string){
+        // var subId = self.nextId;
+        self.nextId++;
+        // var request = {"method":"attachment/append", "id":subId, "upload":id, "chunk-md5":chunkMd5, "base64-bytes":base64Bytes};
+      },
+      AttachmentFinish: function(md5: string){
+        // var subId = self.nextId;
+        self.nextId++;
+        // var request = {"method":"attachment/finish", "id":subId, "upload":id, "md5":md5};
+      }
+    };
+  }
+
+  /**[END-INVOKE]**/
 }

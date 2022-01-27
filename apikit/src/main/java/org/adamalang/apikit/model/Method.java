@@ -21,11 +21,13 @@ import java.util.TreeSet;
 public class Method {
   public final String name;
   public final String camelName;
+  public final String camelName2;
   public final ParameterDefinition[] parameters;
   public final String documentation;
   public final Responder responder;
   public final String handler;
   public final String create;
+  public final String createCamel;
   public final String findBy;
   public final int errorCantFindBy;
   public final boolean destroy;
@@ -34,12 +36,14 @@ public class Method {
   public Method(String name, ParameterDefinition[] parameters, String documentation, Responder responder, String handler, String create, String findBy, int errorCantFindBy, boolean destroy, boolean callOnDisconnect) {
     this.name = name;
     this.camelName = Common.camelize(name);
+    this.camelName2 = Common.camelize(name, true);
     this.parameters = parameters;
     this.documentation = documentation;
     this.responder = responder;
     this.handler = handler != null && handler.length() == 0 ? null : handler;
     this.create = create != null && create.length() == 0 ? null : create;
     this.findBy = findBy != null && findBy.length() == 0 ? null : findBy;
+    this.createCamel = Common.camelize(create);
     this.errorCantFindBy = errorCantFindBy;
     this.destroy = destroy;
     this.callOnDisconnect = callOnDisconnect;

@@ -81,9 +81,12 @@ public class Tool {
     for (Map.Entry<String, String> request : apiOutput.entrySet()) {
       Files.writeString(new File(outputPath, request.getKey()).toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
     }
-    // TODO: move to Schema
+    // TODO: move output files to Schema
     Files.writeString(new File("apikit/docs/src/reference.md").toPath(), AssembleAPIDocs.docify(methods));
-    Files.writeString(new File("client/src/api.ts").toPath(), AssembleClient.make(methods));
+
+    String client = Files.readString(new File("client/src/index.ts").toPath());
+    client = AssembleClient.injectInvoke(client, methods);
+    Files.writeString(new File("client/src/index.ts").toPath(), client);
   }
 
   private static Document load(InputStream input) throws Exception {

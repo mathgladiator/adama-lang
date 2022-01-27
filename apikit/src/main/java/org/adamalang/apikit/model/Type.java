@@ -47,4 +47,19 @@ public enum Type {
     }
     throw new RuntimeException();
   }
+
+  public String typescriptType() {
+    switch (this) {
+      case Boolean:
+        return "boolean";
+      case String:
+      case Long:
+        return "string";
+      case Integer:
+        return "number";
+      case JsonObject:
+        return "any";
+    }
+    throw new RuntimeException();
+  }
 }
