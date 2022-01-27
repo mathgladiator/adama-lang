@@ -86,6 +86,7 @@ public class Tool {
 
     String client = Files.readString(new File("client/src/index.ts").toPath());
     client = AssembleClient.injectInvoke(client, methods);
+    client = AssembleClient.injectResponders(client, responders);
     Files.writeString(new File("client/src/index.ts").toPath(), client);
   }
 

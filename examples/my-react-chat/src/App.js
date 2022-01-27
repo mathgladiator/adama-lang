@@ -10,7 +10,23 @@ export default class App extends React.Component {
         var self = this;
         window.Adama.wait_connected().then(function() {
             self.setState({name:"Connected"});
-        });
+            window.Adama.ConnectionCreate(
+                "eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiIxIiwiaXNzIjoiYWRhbWEifQ.eqo02oPRxALrmHUKRaUNHZWyr2cPLkP470gzuE1EjYEn1-VZDlYlh5cz-osZbdBSxuwC2nBKA7-_399kfCO-2A",
+                "demo1",
+                "test1",
+                {
+                    next: function(payload) {
+
+                    },
+                    finish: function() {
+
+                    },
+                    failure: function(code) {
+
+                    }
+                });
+            }
+        );
     }
 
     render() {

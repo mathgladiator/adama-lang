@@ -9,12 +9,11 @@
  */
 package org.adamalang.apikit.codegen;
 
-import org.adamalang.apikit.model.Method;
-import org.adamalang.apikit.model.ParameterDefinition;
-import org.adamalang.apikit.model.Responder;
+import org.adamalang.apikit.model.*;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 
 public class AssembleClient {
 
@@ -29,8 +28,17 @@ public class AssembleClient {
     }
   }
 
-  private static String makeStreamStateMachines(Responder[] responders) {
-    return "";
+  public static String injectResponders(String client, Map<String, Responder> responders) throws Exception{
+    String beginString = "/**[BEGIN-EXPORTS]**/";
+    int start = client.indexOf(beginString);
+    int end = client.indexOf("/**[END-EXPORTS]**/");
+    if (start > 0 && end > 0) {
+      StringBuilder exports = new StringBuilder();
+      exports.append(makeResponders(responders));
+      return client.substring(0, start + beginString.length()) + "\n" + exports + "\n  " + client.substring(end);
+    } else {
+      throw new Exception("Failed to find insertion points within the client");
+    }
   }
 
   private static String removeCommonFromChild(String base, String child) {
@@ -40,6 +48,30 @@ public class AssembleClient {
       }
     }
     return child;
+  }
+
+  private static String makeResponders(Map<String, Responder> responders) {
+    StringBuilder sb = new StringBuilder();
+    for (Map.Entry<String, Responder> entry : responders.entrySet()) {
+      String name = Common.camelize(entry.getKey());
+      Responder responder = entry.getValue();
+      sb.append("export interface ").append(name).append("Payload {\n");
+      for (FieldDefinition fd : responder.fields) {
+        sb.append("  ").append(fd.camelName).append(": ").append(fd.type.typescriptType()).append(";\n");
+      }
+      sb.append("}\n\n");
+      sb.append("export interface ").append(name).append("Responder {\n");
+      if (responder.stream) {
+        sb.append("  next(data: ").append(name).append("Payload): void;\n");
+        sb.append("  complete():  void;\n");
+        sb.append("  failure(reason: number): void;\n");
+      } else {
+        sb.append("  success(data: ").append(name).append("Payload): void;\n");
+        sb.append("  failure(reason: number): void;\n");
+      }
+      sb.append("}\n\n");
+    }
+    return sb.toString();
   }
 
   private static String makeInvoke(Method[] methods) throws Exception {
@@ -55,11 +87,19 @@ public class AssembleClient {
           append1 = true;
           ts.append(parameter.camelName).append(": ").append(parameter.type.typescriptType());
         }
-        ts.append(") {\n");
+        if (append1) {
+          ts.append(", ");
+        }
+        ts.append("responder: ").append(method.responder.camelName).append("Responder) {\n");
         ts.append("    var self = this;\n");
         ts.append("    var id = self.nextId++;\n");
-        ts.append("    return {\n");
+        if (method.responder.stream) {
+          ts.append("    return self.__execute_stream({\n");
+        } else {
+          ts.append("    return self.__execute_rr({\n");
+        }
         ts.append("      id: id,\n");
+        ts.append("      responder: responder,\n");
         ts.append("      request:  {\"method\":\"").append(method.name).append("\", \"id\":id");
         for (ParameterDefinition parameter : method.parameters) {
           ts.append(", ").append("\"").append(parameter.name).append("\":").append(parameter.camelName);
@@ -100,7 +140,7 @@ public class AssembleClient {
             ts.append("      }");
           }
         }
-        ts.append("\n    };\n");
+        ts.append("\n    });\n");
         ts.append("  }\n");
       }
     }

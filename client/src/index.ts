@@ -1,7 +1,116 @@
 import WebSocket from 'isomorphic-ws';
 
-/**[BEGIN-CODEGEN-EXPORTS]**/
-/**[END-CODEGEN-EXPORTS]**/
+/**[BEGIN-EXPORTS]**/
+export interface AuthorityListingPayload {
+  authority: string;
+}
+
+export interface AuthorityListingResponder {
+  next(data: AuthorityListingPayload): void;
+  complete():  void;
+  failure(reason: number): void;
+}
+
+export interface ClaimResultPayload {
+  authority: string;
+}
+
+export interface ClaimResultResponder {
+  success(data: ClaimResultPayload): void;
+  failure(reason: number): void;
+}
+
+export interface DataPayload {
+  delta: any;
+}
+
+export interface DataResponder {
+  next(data: DataPayload): void;
+  complete():  void;
+  failure(reason: number): void;
+}
+
+export interface InitiationPayload {
+  identity: string;
+}
+
+export interface InitiationResponder {
+  success(data: InitiationPayload): void;
+  failure(reason: number): void;
+}
+
+export interface KeyListingPayload {
+  key: string;
+  created: string;
+  updated: string;
+  seq: number;
+}
+
+export interface KeyListingResponder {
+  next(data: KeyListingPayload): void;
+  complete():  void;
+  failure(reason: number): void;
+}
+
+export interface KeystorePayload {
+  keystore: any;
+}
+
+export interface KeystoreResponder {
+  success(data: KeystorePayload): void;
+  failure(reason: number): void;
+}
+
+export interface PlanPayload {
+  plan: any;
+}
+
+export interface PlanResponder {
+  success(data: PlanPayload): void;
+  failure(reason: number): void;
+}
+
+export interface ReflectionPayload {
+  reflection: any;
+}
+
+export interface ReflectionResponder {
+  success(data: ReflectionPayload): void;
+  failure(reason: number): void;
+}
+
+export interface SeqPayload {
+  seq: number;
+}
+
+export interface SeqResponder {
+  success(data: SeqPayload): void;
+  failure(reason: number): void;
+}
+
+export interface SimplePayload {
+}
+
+export interface SimpleResponder {
+  success(data: SimplePayload): void;
+  failure(reason: number): void;
+}
+
+export interface SpaceListingPayload {
+  space: string;
+  role: string;
+  billing: string;
+  created: string;
+}
+
+export interface SpaceListingResponder {
+  next(data: SpaceListingPayload): void;
+  complete():  void;
+  failure(reason: number): void;
+}
+
+
+  /**[END-EXPORTS]**/
 
 export class AdamaConnection {
   // how long between retries
@@ -415,12 +524,29 @@ export class AdamaConnection {
     });
   }
 
+  __execute_rr(sm: any) {
+    var self = this;
+    self._write(sm.request, function (response: { [k: string]: any }) {
+      console.log(response);
+    });
+    return sm;
+  }
+
+  __execute_stream(sm: any) {
+    var self = this;
+    self._write(sm.request, function (response: { [k: string]: any }) {
+      console.log(response);
+    });
+    return sm;
+  }
+
   /**[BEGIN-INVOKE]**/
-  async InitStart(email: string) {
+  async InitStart(email: string, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"init/start", "id":id, "email":email},
       revokeall: async function(code: string) {
         var subId = self.nextId++;
@@ -430,133 +556,149 @@ export class AdamaConnection {
         var subId = self.nextId++;
         return {"method":"init/generate-identity", "id":subId, "connection":id, "revoke":revoke, "code":code};
       }
-    };
+    });
   }
-  async Probe(identity: string) {
+  async Probe(identity: string, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"probe", "id":id, "identity":identity}
-    };
+    });
   }
-  async AuthorityCreate(identity: string) {
+  async AuthorityCreate(identity: string, responder: ClaimResultResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"authority/create", "id":id, "identity":identity}
-    };
+    });
   }
-  async AuthoritySet(identity: string, authority: string, keyStore: any) {
+  async AuthoritySet(identity: string, authority: string, keyStore: any, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"authority/set", "id":id, "identity":identity, "authority":authority, "key-store":keyStore}
-    };
+    });
   }
-  async AuthorityGet(identity: string, authority: string) {
+  async AuthorityGet(identity: string, authority: string, responder: KeystoreResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"authority/get", "id":id, "identity":identity, "authority":authority}
-    };
+    });
   }
-  async AuthorityList(identity: string) {
+  async AuthorityList(identity: string, responder: AuthorityListingResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_stream({
       id: id,
+      responder: responder,
       request:  {"method":"authority/list", "id":id, "identity":identity}
-    };
+    });
   }
-  async AuthorityDestroy(identity: string, authority: string) {
+  async AuthorityDestroy(identity: string, authority: string, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"authority/destroy", "id":id, "identity":identity, "authority":authority}
-    };
+    });
   }
-  async SpaceCreate(identity: string, space: string) {
+  async SpaceCreate(identity: string, space: string, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"space/create", "id":id, "identity":identity, "space":space}
-    };
+    });
   }
-  async SpaceGet(identity: string, space: string) {
+  async SpaceGet(identity: string, space: string, responder: PlanResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"space/get", "id":id, "identity":identity, "space":space}
-    };
+    });
   }
-  async SpaceSet(identity: string, space: string, plan: any) {
+  async SpaceSet(identity: string, space: string, plan: any, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"space/set", "id":id, "identity":identity, "space":space, "plan":plan}
-    };
+    });
   }
-  async SpaceDelete(identity: string, space: string) {
+  async SpaceDelete(identity: string, space: string, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"space/delete", "id":id, "identity":identity, "space":space}
-    };
+    });
   }
-  async SpaceSetRole(identity: string, space: string, email: string, role: string) {
+  async SpaceSetRole(identity: string, space: string, email: string, role: string, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"space/set-role", "id":id, "identity":identity, "space":space, "email":email, "role":role}
-    };
+    });
   }
-  async SpaceReflect(identity: string, space: string, key: string) {
+  async SpaceReflect(identity: string, space: string, key: string, responder: ReflectionResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"space/reflect", "id":id, "identity":identity, "space":space, "key":key}
-    };
+    });
   }
-  async SpaceList(identity: string, marker: string, limit: number) {
+  async SpaceList(identity: string, marker: string, limit: number, responder: SpaceListingResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_stream({
       id: id,
+      responder: responder,
       request:  {"method":"space/list", "id":id, "identity":identity, "marker":marker, "limit":limit}
-    };
+    });
   }
-  async DocumentCreate(identity: string, space: string, key: string, entropy: string, arg: any) {
+  async DocumentCreate(identity: string, space: string, key: string, entropy: string, arg: any, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"document/create", "id":id, "identity":identity, "space":space, "key":key, "entropy":entropy, "arg":arg}
-    };
+    });
   }
-  async DocumentList(identity: string, space: string, marker: string, limit: number) {
+  async DocumentList(identity: string, space: string, marker: string, limit: number, responder: KeyListingResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_stream({
       id: id,
+      responder: responder,
       request:  {"method":"document/list", "id":id, "identity":identity, "space":space, "marker":marker, "limit":limit}
-    };
+    });
   }
-  async ConnectionCreate(identity: string, space: string, key: string) {
+  async ConnectionCreate(identity: string, space: string, key: string, responder: DataResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_stream({
       id: id,
+      responder: responder,
       request:  {"method":"connection/create", "id":id, "identity":identity, "space":space, "key":key},
       send: async function(channel: string, message: any) {
         var subId = self.nextId++;
@@ -566,13 +708,14 @@ export class AdamaConnection {
         var subId = self.nextId++;
         return {"method":"connection/end", "id":subId, "connection":id};
       }
-    };
+    });
   }
-  async AttachmentStart(identity: string, space: string, key: string, filename: string, contentType: string) {
+  async AttachmentStart(identity: string, space: string, key: string, filename: string, contentType: string, responder: SimpleResponder) {
     var self = this;
     var id = self.nextId++;
-    return {
+    return self.__execute_rr({
       id: id,
+      responder: responder,
       request:  {"method":"attachment/start", "id":id, "identity":identity, "space":space, "key":key, "filename":filename, "content-type":contentType},
       append: async function(chunkMd5: string, base64Bytes: string) {
         var subId = self.nextId++;
@@ -582,7 +725,7 @@ export class AdamaConnection {
         var subId = self.nextId++;
         return {"method":"attachment/finish", "id":subId, "upload":id, "md5":md5};
       }
-    };
+    });
   }
 
   /**[END-INVOKE]**/
