@@ -1,5 +1,9 @@
 import React from 'react';
 import './App.css';
+import {
+    fileOpen,
+    supported,
+} from 'browser-fs-access';
 
 export default class App extends React.Component {
     state = {
@@ -36,12 +40,22 @@ export default class App extends React.Component {
         );
     }
 
+    async onclick() {
+        var fileHandle = await fileOpen();
+        console.log(fileHandle);
+
+        // TODO: for each chunk, compute md5, send to adama, then complete
+        console.log(await fileHandle.slice(0, 65536).arrayBuffer());
+
+    }
+
     render() {
         return (
             <div className="App">
                 <header className="App-header">
                     This is the beginning... {this.state.name}
                 </header>
+                <button onClick={this.onclick}>Show Me</button>
             </div>
         );
     }
