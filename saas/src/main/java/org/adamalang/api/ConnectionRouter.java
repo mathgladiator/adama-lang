@@ -382,7 +382,7 @@ public class ConnectionRouter {
             AttachmentStartRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(AttachmentStartRequest resolved) {
-                AttachmentUploadHandler handlerMade = handler.handle(nexus.session, resolved, new SimpleResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightAttachmentUpload, requestId, responder)));
+                AttachmentUploadHandler handlerMade = handler.handle(nexus.session, resolved, new ProgressResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightAttachmentUpload, requestId, responder)));
                 inflightAttachmentUpload.put(requestId, handlerMade);
                 handlerMade.bind();
               }
@@ -418,7 +418,7 @@ public class ConnectionRouter {
             AttachmentFinishRequest.resolve(nexus, request, new Callback<>() {
               @Override
               public void success(AttachmentFinishRequest resolved) {
-                AttachmentUploadHandler handlerToUse = inflightAttachmentUpload.get(resolved.upload);
+                AttachmentUploadHandler handlerToUse = inflightAttachmentUpload.remove(resolved.upload);
                 if (handlerToUse != null) {
                   handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
                 } else {

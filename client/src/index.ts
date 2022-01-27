@@ -70,6 +70,16 @@ export interface PlanResponder {
   failure(reason: number): void;
 }
 
+export interface ProgressPayload {
+  chunk_request_size: number;
+}
+
+export interface ProgressResponder {
+  next(data: ProgressPayload): void;
+  complete():  void;
+  failure(reason: number): void;
+}
+
 export interface ReflectionPayload {
   reflection: any;
 }
@@ -588,11 +598,11 @@ export class AdamaConnection {
       }
     });
   }
-  AttachmentStart(identity: string, space: string, key: string, filename: string, contentType: string, responder: SimpleResponder) {
+  AttachmentStart(identity: string, space: string, key: string, filename: string, contentType: string, responder: ProgressResponder) {
     var self = this;
     self.nextId++;
     var id = self.nextId;
-    return self.__execute_rr({
+    return self.__execute_stream({
       id: id,
       responder: responder,
       request: {"method":"attachment/start", "id":id, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType},
@@ -606,14 +616,14 @@ export class AdamaConnection {
           request: { method: "attachment/append", id: subId, "upload":parId, "chunk-md5": chunkMd5, "base64-bytes": base64Bytes}
         });
       },
-      finish: function(md5: string, subResponder: SimpleResponder) {
+      finish: function(subResponder: SimpleResponder) {
         self.nextId++;
         var subId = self.nextId;
         var parId = id;
         self.__execute_rr({
           id: subId,
           responder: subResponder,
-          request: { method: "attachment/finish", id: subId, "upload":parId, "md5": md5}
+          request: { method: "attachment/finish", id: subId, "upload":parId}
         });
       }
     });

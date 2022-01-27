@@ -18,6 +18,7 @@ import org.adamalang.common.*;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.extern.ProtectedUUID;
+import org.adamalang.grpc.client.contracts.AskAttachmentCallback;
 import org.adamalang.grpc.client.contracts.CreateCallback;
 import org.adamalang.grpc.client.contracts.SeqCallback;
 import org.adamalang.grpc.client.contracts.SimpleEvents;
@@ -43,6 +44,7 @@ import java.util.Base64;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class RootHandlerImpl implements RootHandler {
   private static final Logger LOG = LoggerFactory.getLogger(RootHandlerImpl.class);
@@ -514,13 +516,53 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, SimpleResponder responder) {
+  public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder responder) {
+    AtomicReference<Connection> connection = new AtomicReference<>(null);
+    connection.set(nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, new SimpleEvents() {
+      @Override
+      public void connected() {
+        connection.get().canAttach(new AskAttachmentCallback() {
+          @Override
+          public void allow() {
+            responder.next(65536);
+          }
+
+          @Override
+          public void reject() {
+            responder.error(new ErrorCodeException(-1)); // TODO: ERROR CODE REJECTION
+          }
+
+          @Override
+          public void error(int code) {
+            responder.error(new ErrorCodeException(code));
+          }
+        });
+      }
+
+      @Override
+      public void delta(String data) {
+        // don't care for right now
+      }
+
+      @Override
+      public void error(int code) {
+        responder.error(new ErrorCodeException(code));
+      }
+
+      @Override
+      public void disconnected() {
+        responder.error(new ErrorCodeException(-1)); // TODO: create code for premature disconnect
+        // responder.error(new ErrorCodeException(code));
+      }
+    }));
+
     return new AttachmentUploadHandler() {
       String id;
       FileOutputStream output;
       File file;
       MessageDigest digestMD5;
       MessageDigest digestSHA384;
+      int size;
 
       @Override
       public void bind() {
@@ -532,6 +574,7 @@ public class RootHandlerImpl implements RootHandler {
           digestMD5 = MessageDigest.getInstance("MD5");
           digestSHA384 = MessageDigest.getInstance("SHA-384");
           output = new FileOutputStream(file);
+          size = 0;
         } catch (Exception ex) {
           responder.error(
               ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_FAILED_BIND, ex, LOGGER));
@@ -539,18 +582,22 @@ public class RootHandlerImpl implements RootHandler {
       }
 
       @Override
-      public void handle(AttachmentAppendRequest request, SimpleResponder chunkResponder) {
+      public void handle(AttachmentAppendRequest attachChunk, SimpleResponder chunkResponder) {
         try {
-          byte[] chunk = Base64.getDecoder().decode(request.base64Bytes);
+          byte[] chunk = Base64.getDecoder().decode(attachChunk.base64Bytes);
+          size += chunk.length;
           output.write(chunk);
           digestMD5.update(chunk);
           digestSHA384.update(chunk);
           MessageDigest chunkDigest = Hashing.md5();
           chunkDigest.update(chunk);
-          if (!Hashing.finishAndEncode(chunkDigest).equals(request.chunkMd5)) {
+          if (!Hashing.finishAndEncode(chunkDigest).equals(attachChunk.chunkMd5)) {
             chunkResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_CHUNK_BAD_DIGEST));
+            output.close();
+            file.delete();
           } else {
             chunkResponder.complete();
+            responder.next(65536);
           }
         } catch (Exception ex) {
           chunkResponder.error(
@@ -560,26 +607,37 @@ public class RootHandlerImpl implements RootHandler {
       }
 
       @Override
-      public void handle(AttachmentFinishRequest request, SimpleResponder responder) {
+      public void handle(AttachmentFinishRequest attachFinish, SimpleResponder finishResponder) {
         try {
           output.flush();
           output.close();
           String md5_64 = Hashing.finishAndEncode(digestMD5);
           // TODO: convert this digest to an S3 compatible
           String sha384_64 = Hashing.finishAndEncode(digestSHA384);
-          // TODO: UPLOAD TO S3
-          // TODO: find _right_ adama host
-          // TODO: attach to Adama
-          file.delete();
-        } catch (Exception ex) {
+          // TODO: upload to S3
+          connection.get().attach(id, request.filename, request.contentType, this.size, md5_64, sha384_64, new SeqCallback() {
+            @Override
+            public void success(int seq) {
+              disconnect(0L);
+              finishResponder.complete();
+            }
 
+            @Override
+            public void error(int code) {
+              disconnect(0L);
+              finishResponder.error(new ErrorCodeException(code));
+            }
+          });
+        } catch (Exception ex) {
+          finishResponder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
+          disconnect(0);
         }
       }
 
       @Override
       public void disconnect(long id) {
-        // TODO: if finished, then nothing
-        // TODO: otherwise, delete file
+        file.delete();
+        connection.get().close();
       }
     };
   }

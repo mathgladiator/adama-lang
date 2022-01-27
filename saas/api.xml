@@ -181,12 +181,6 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="md5" type="string" missing-error="443401">
-        <documentation>
-            The md5 of the entire file being uploaded
-        </documentation>
-    </parameter-definition>
-
     <parameter-definition name="upload" type="long" missing-error="409609">
         <documentation>
             The id of the upload in progress
@@ -279,6 +273,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="chunk_request_size" type="int">
+        <documentation>
+            The attachment uploader is asking for a chunk size.
+        </documentation>
+    </field-definition>
+
     <responder name="key-listing" stream="true">
         <field name="key"/>
         <field name="created"/>
@@ -336,6 +336,9 @@
         <field name="identity"/>
     </responder>
 
+    <responder name="progress" stream="true">
+        <field name="chunk_request_size"/>
+    </responder>
 
     <method name="init/start" responder="simple" create="waiting-for-email">
         <parameter name="email"/>
@@ -517,7 +520,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/start" responder="simple" create="attachment-upload">
+    <method name="attachment/start" responder="progress" create="attachment-upload">
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
@@ -527,8 +530,7 @@
         </documentation>
     </method>
 
-    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload"
-            error-find-by="477201">
+    <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201">
         <parameter name="upload"/>
         <parameter name="chunk-md5"/>
         <parameter name="base64-bytes"/>
@@ -536,10 +538,8 @@
         </documentation>
     </method>
 
-    <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload"
-            error-find-by="478227">
+    <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true">
         <parameter name="upload"/>
-        <parameter name="md5"/>
         <documentation>
         </documentation>
     </method>
