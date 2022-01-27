@@ -193,10 +193,6 @@ export class AdamaConnection {
       this.connected = false;
       this.onstatuschange(false);
     }
-    // fail all outstanding operations
-    this.callbacks.forEach(function (callback: (result: object) => void, id: number) {
-      callback({ failure: id, reason: 77 });
-    });
     this.callbacks.clear();
     // if we are dead, then don't actually retry
     if (this.dead) {
@@ -281,7 +277,7 @@ export class AdamaConnection {
             if (result.done) {
               self.callbacks.delete(result.deliver);
             }
-            cb(result.response);
+            cb(result);
           }
         }
       }
@@ -331,399 +327,294 @@ export class AdamaConnection {
     }
   }
 
-  /** api: generate a new game */
-  /*
-  async generate(gs: string) {
-    var request = { method: "reserve", space: gs };
-    var self = this;
-    return new Promise(function (good, bad) {
-      self._send(request, function (response: { [k: string]: any }) {
-        if ('failure' in response) {
-          bad(response.reason)
-        } else {
-          good(response.key);
-        }
-      });
-    });
-  }
-  */
-
-  /** api: get the schema for the gamepsace */
-  /*
-  async reflect(gs: string) {
-    var request = { method: "reflect", space: gs, key:'0' };
-    var self = this;
-    return new Promise(function (good, bad) {
-      self._send(request, function (response: { [k: string]: any }) {
-        if ('failure' in response) {
-          bad(response.reason)
-        } else {
-          good(response);
-        }
-      });
-    });
-  }
-
-  async load_code(gs: string) {
-    var request = { method: "load_code", space: gs };
-    var self = this;
-    return new Promise(function (good, bad) {
-      self._send(request, function (response: { [k: string]: any }) {
-        if ('failure' in response) {
-          bad(response.reason)
-        } else {
-          good(response);
-        }
-      });
-    });
-  }
-
-  async save_code(gs: string, code: string) {
-    var request = { method: "save_code", space: gs, code: code};
-    var self = this;
-    return new Promise(function (good, bad) {
-      self._send(request, function (response: { [k: string]: any }) {
-        if ('failure' in response) {
-          bad(response.reason)
-        } else {
-          good(response);
-        }
-      });
-    });
-  }
-
-  async deploy(gs: string) {
-    var request = { method: "deploy", space: gs};
-    var self = this;
-    return new Promise(function (good, bad) {
-      self._send(request, function (response: { [k: string]: any }) {
-        if ('failure' in response) {
-          bad(response.reason)
-        } else {
-          good(response);
-        }
-      });
-    });
-  }
-  */
-
-
-  /** api: generate a new game */
-  /*
-  async create(gs: string, id: string, arg: object) {
-    var request = { method: "create", space: gs, key: id, arg: arg };
-    var self = this;
-    return new Promise(function (good, bad) {
-      self._send(request, function (response: { [k: string]: any }) {
-        if ('failure' in response) {
-          bad(response.reason)
-        } else {
-          good(response);
-        }
-      });
-    });
-  }
-  */
-
-  /** api: connect to a game */
-  /*
-  async connect(gs: string, id: string, handler: (data: object) => void) {
-    var request = { method: "connect", space: gs, key: id };
-    var self = this;
-    var first = true;
-    return new Promise(function (good, bad) {
-      self._send(request, function (response: { [k: string]: any }) {
-        if (first) {
-          first = false;
-          if ('failure' in response) {
-            bad(response.reason)
-          } else {
-            handler(response);
-            good(true);
-          }
-        } else {
-          handler(response);
-        }
-      });
-    });
-  }
-  */
-
-  /** api: send a message */
-  /*
-  async send(gs: string, id: string, channel: string, msg: any, hack: (request: any) => void) {
-    var self = this;
-    var request = {method: "send", marker: self.sessionId = "/" + self.sendId, space: gs, key: id, channel: channel, message: msg};
-    self.sendId ++;
-
-    if (hack) {
-      hack(request);
-    }
-
-    // TODO: queue this up? with retry?
-    return new Promise(function (good, bad) {
-      self._send(request, function (response: { [k: string]: any }) {
-        if ('failure' in response) {
-          bad(response.reason)
-        } else {
-          good(response);
-        }
-      });
-    });
-  }
-  */
-
-  /** api: connect tree */
-  /*
-  async connectTree(gs: string, id: string, tree: AdamaTree, hack: (request: any) => void) {
-    var keyId = this.nextId;
-    this.nextId++;
-    let sm = {
-      request: {method: "connect", space: gs, key: id},
-      first: true,
-      handler: function (r: any) {
-        tree.mergeUpdate(r);
-      }
-    };
-    if (hack) {
-      hack(sm.request);
-    }
-    this.onreconnect.set(keyId, sm);
-    return this._execute(sm);
-  }
-  */
-
   _reconnect() {
-    var self = this;
     this.onreconnect.forEach(function (sm: any, id: number) {
-      sm.first = true;
-      self._execute(sm);
-    });
-  }
-
-  async _execute(sm: any) {
-    var self = this;
-    sm.first = true;
-    return new Promise(function (good, bad) {
-      self._write(sm.request, function (response: { [k: string]: any }) {
-        if (sm.first) {
-          sm.first = false;
-          if ('failure' in response) {
-            bad(response.reason)
-          } else {
-            sm.handler(response);
-            good(true);
-          }
-          if (sm.remove) {
-            self.onreconnect.delete(sm.key);
-          }
-        } else {
-          sm.handler(response);
-        }
-      });
+      sm.__retry();
     });
   }
 
   __execute_rr(sm: any) {
     var self = this;
+    sm.first = true;
     self._write(sm.request, function (response: { [k: string]: any }) {
-      console.log(response);
+      if (sm.first) {
+        sm.first = false;
+        if ('failure' in response) {
+          sm.responder.failure(response.reason);
+        } else {
+          sm.responder.success(response.response);
+        }
+      }
+      self.onreconnect.delete(sm.id);
     });
+    self.onreconnect.set(sm.id, sm);
+    sm.__retry = function() {
+      self.__execute_rr(sm);
+    };
     return sm;
   }
 
   __execute_stream(sm: any) {
     var self = this;
     self._write(sm.request, function (response: { [k: string]: any }) {
-      console.log(response);
+      if ('failure' in response) {
+        sm.responder.failure(response.reason);
+        self.onreconnect.delete(sm.id);
+        return;
+      }
+      if (response.response) {
+        sm.responder.next(response.response);
+      }
+      if (response.done) {
+        sm.responder.complete();
+        self.onreconnect.delete(sm.id);
+      }
     });
+    self.onreconnect.set(sm.id, sm);
+    sm.__retry = function() {
+      self.__execute_stream(sm);
+    };
     return sm;
   }
 
   /**[BEGIN-INVOKE]**/
-  async InitStart(email: string, responder: SimpleResponder) {
+  InitStart(email: string, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"init/start", "id":id, "email":email},
-      revokeall: async function(code: string) {
-        var subId = self.nextId++;
-        return {"method":"init/revoke-all", "id":subId, "connection":id, "code":code};
+      request: {"method":"init/start", "id":id, "email": email},
+      revokeall: function(code: string, subResponder: SimpleResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        var parId = id;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "init/revoke-all", id: subId, "connection":parId, "code": code}
+        });
       },
-      generateidentity: async function(revoke: boolean, code: string) {
-        var subId = self.nextId++;
-        return {"method":"init/generate-identity", "id":subId, "connection":id, "revoke":revoke, "code":code};
+      generateidentity: function(revoke: boolean, code: string, subResponder: InitiationResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        var parId = id;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "init/generate-identity", id: subId, "connection":parId, "revoke": revoke, "code": code}
+        });
       }
     });
   }
-  async Probe(identity: string, responder: SimpleResponder) {
+  Probe(identity: string, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"probe", "id":id, "identity":identity}
+      request: {"method":"probe", "id":id, "identity": identity}
     });
   }
-  async AuthorityCreate(identity: string, responder: ClaimResultResponder) {
+  AuthorityCreate(identity: string, responder: ClaimResultResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"authority/create", "id":id, "identity":identity}
+      request: {"method":"authority/create", "id":id, "identity": identity}
     });
   }
-  async AuthoritySet(identity: string, authority: string, keyStore: any, responder: SimpleResponder) {
+  AuthoritySet(identity: string, authority: string, keyStore: any, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"authority/set", "id":id, "identity":identity, "authority":authority, "key-store":keyStore}
+      request: {"method":"authority/set", "id":id, "identity": identity, "authority": authority, "key-store": keyStore}
     });
   }
-  async AuthorityGet(identity: string, authority: string, responder: KeystoreResponder) {
+  AuthorityGet(identity: string, authority: string, responder: KeystoreResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"authority/get", "id":id, "identity":identity, "authority":authority}
+      request: {"method":"authority/get", "id":id, "identity": identity, "authority": authority}
     });
   }
-  async AuthorityList(identity: string, responder: AuthorityListingResponder) {
+  AuthorityList(identity: string, responder: AuthorityListingResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_stream({
       id: id,
       responder: responder,
-      request:  {"method":"authority/list", "id":id, "identity":identity}
+      request: {"method":"authority/list", "id":id, "identity": identity}
     });
   }
-  async AuthorityDestroy(identity: string, authority: string, responder: SimpleResponder) {
+  AuthorityDestroy(identity: string, authority: string, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"authority/destroy", "id":id, "identity":identity, "authority":authority}
+      request: {"method":"authority/destroy", "id":id, "identity": identity, "authority": authority}
     });
   }
-  async SpaceCreate(identity: string, space: string, responder: SimpleResponder) {
+  SpaceCreate(identity: string, space: string, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"space/create", "id":id, "identity":identity, "space":space}
+      request: {"method":"space/create", "id":id, "identity": identity, "space": space}
     });
   }
-  async SpaceGet(identity: string, space: string, responder: PlanResponder) {
+  SpaceGet(identity: string, space: string, responder: PlanResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"space/get", "id":id, "identity":identity, "space":space}
+      request: {"method":"space/get", "id":id, "identity": identity, "space": space}
     });
   }
-  async SpaceSet(identity: string, space: string, plan: any, responder: SimpleResponder) {
+  SpaceSet(identity: string, space: string, plan: any, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"space/set", "id":id, "identity":identity, "space":space, "plan":plan}
+      request: {"method":"space/set", "id":id, "identity": identity, "space": space, "plan": plan}
     });
   }
-  async SpaceDelete(identity: string, space: string, responder: SimpleResponder) {
+  SpaceDelete(identity: string, space: string, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"space/delete", "id":id, "identity":identity, "space":space}
+      request: {"method":"space/delete", "id":id, "identity": identity, "space": space}
     });
   }
-  async SpaceSetRole(identity: string, space: string, email: string, role: string, responder: SimpleResponder) {
+  SpaceSetRole(identity: string, space: string, email: string, role: string, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"space/set-role", "id":id, "identity":identity, "space":space, "email":email, "role":role}
+      request: {"method":"space/set-role", "id":id, "identity": identity, "space": space, "email": email, "role": role}
     });
   }
-  async SpaceReflect(identity: string, space: string, key: string, responder: ReflectionResponder) {
+  SpaceReflect(identity: string, space: string, key: string, responder: ReflectionResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"space/reflect", "id":id, "identity":identity, "space":space, "key":key}
+      request: {"method":"space/reflect", "id":id, "identity": identity, "space": space, "key": key}
     });
   }
-  async SpaceList(identity: string, marker: string, limit: number, responder: SpaceListingResponder) {
+  SpaceList(identity: string, marker: string, limit: number, responder: SpaceListingResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_stream({
       id: id,
       responder: responder,
-      request:  {"method":"space/list", "id":id, "identity":identity, "marker":marker, "limit":limit}
+      request: {"method":"space/list", "id":id, "identity": identity, "marker": marker, "limit": limit}
     });
   }
-  async DocumentCreate(identity: string, space: string, key: string, entropy: string, arg: any, responder: SimpleResponder) {
+  DocumentCreate(identity: string, space: string, key: string, entropy: string, arg: any, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"document/create", "id":id, "identity":identity, "space":space, "key":key, "entropy":entropy, "arg":arg}
+      request: {"method":"document/create", "id":id, "identity": identity, "space": space, "key": key, "entropy": entropy, "arg": arg}
     });
   }
-  async DocumentList(identity: string, space: string, marker: string, limit: number, responder: KeyListingResponder) {
+  DocumentList(identity: string, space: string, marker: string, limit: number, responder: KeyListingResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_stream({
       id: id,
       responder: responder,
-      request:  {"method":"document/list", "id":id, "identity":identity, "space":space, "marker":marker, "limit":limit}
+      request: {"method":"document/list", "id":id, "identity": identity, "space": space, "marker": marker, "limit": limit}
     });
   }
-  async ConnectionCreate(identity: string, space: string, key: string, responder: DataResponder) {
+  ConnectionCreate(identity: string, space: string, key: string, responder: DataResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_stream({
       id: id,
       responder: responder,
-      request:  {"method":"connection/create", "id":id, "identity":identity, "space":space, "key":key},
-      send: async function(channel: string, message: any) {
-        var subId = self.nextId++;
-        return {"method":"connection/send", "id":subId, "connection":id, "channel":channel, "message":message};
+      request: {"method":"connection/create", "id":id, "identity": identity, "space": space, "key": key},
+      send: function(channel: string, message: any, subResponder: SeqResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        var parId = id;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/send", id: subId, "connection":parId, "channel": channel, "message": message}
+        });
       },
-      end: async function() {
-        var subId = self.nextId++;
-        return {"method":"connection/end", "id":subId, "connection":id};
+      end: function(subResponder: SimpleResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        var parId = id;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/end", id: subId, "connection":parId}
+        });
       }
     });
   }
-  async AttachmentStart(identity: string, space: string, key: string, filename: string, contentType: string, responder: SimpleResponder) {
+  AttachmentStart(identity: string, space: string, key: string, filename: string, contentType: string, responder: SimpleResponder) {
     var self = this;
-    var id = self.nextId++;
+    self.nextId++;
+    var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request:  {"method":"attachment/start", "id":id, "identity":identity, "space":space, "key":key, "filename":filename, "content-type":contentType},
-      append: async function(chunkMd5: string, base64Bytes: string) {
-        var subId = self.nextId++;
-        return {"method":"attachment/append", "id":subId, "upload":id, "chunk-md5":chunkMd5, "base64-bytes":base64Bytes};
+      request: {"method":"attachment/start", "id":id, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType},
+      append: function(chunkMd5: string, base64Bytes: string, subResponder: SimpleResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        var parId = id;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "attachment/append", id: subId, "upload":parId, "chunk-md5": chunkMd5, "base64-bytes": base64Bytes}
+        });
       },
-      finish: async function(md5: string) {
-        var subId = self.nextId++;
-        return {"method":"attachment/finish", "id":subId, "upload":id, "md5":md5};
+      finish: function(md5: string, subResponder: SimpleResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        var parId = id;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "attachment/finish", id: subId, "upload":parId, "md5": md5}
+        });
       }
     });
   }

@@ -78,7 +78,7 @@ public class AssembleClient {
     StringBuilder ts = new StringBuilder();
     for (Method method : methods) {
       if (method.handler.equals("Root")) {
-        ts.append("  async ").append(method.camelName).append("(");
+        ts.append("  ").append(method.camelName).append("(");
         boolean append1 = false;
         for (ParameterDefinition parameter : method.parameters) {
           if (append1) {
@@ -92,7 +92,8 @@ public class AssembleClient {
         }
         ts.append("responder: ").append(method.responder.camelName).append("Responder) {\n");
         ts.append("    var self = this;\n");
-        ts.append("    var id = self.nextId++;\n");
+        ts.append("    self.nextId++;\n");
+        ts.append("    var id = self.nextId;\n");
         if (method.responder.stream) {
           ts.append("    return self.__execute_stream({\n");
         } else {
@@ -100,9 +101,9 @@ public class AssembleClient {
         }
         ts.append("      id: id,\n");
         ts.append("      responder: responder,\n");
-        ts.append("      request:  {\"method\":\"").append(method.name).append("\", \"id\":id");
+        ts.append("      request: {\"method\":\"").append(method.name).append("\", \"id\":id");
         for (ParameterDefinition parameter : method.parameters) {
-          ts.append(", ").append("\"").append(parameter.name).append("\":").append(parameter.camelName);
+          ts.append(", ").append("\"").append(parameter.name).append("\": ").append(parameter.camelName);
         }
         ts.append("}");
         ArrayList<Method> submethods = new ArrayList<>();
@@ -113,9 +114,8 @@ public class AssembleClient {
         }
         if (submethods.size() > 0) {
           for (Method submethod : submethods) {
-            ts.append(",\n      ").append(removeCommonFromChild(method.camelName, submethod.camelName)).append(": async function(");
+            ts.append(",\n      ").append(removeCommonFromChild(method.camelName, submethod.camelName)).append(": function(");
             boolean append2 = false;
-
             for (ParameterDefinition parameter : submethod.parameters) {
               if (submethod.findBy.equals(parameter.name)) {
                 continue;
@@ -126,17 +126,25 @@ public class AssembleClient {
               append2 = true;
               ts.append(parameter.camelName).append(": ").append(parameter.type.typescriptType());
             }
-
-            ts.append(") {\n");
-            ts.append("        var subId = self.nextId++;\n");
-            ts.append("        return {\"method\":\"").append(submethod.name).append("\", \"id\":subId, \"").append(submethod.findBy).append("\":id");
+            if (append2) {
+              ts.append(", ");
+            }
+            ts.append("subResponder: ").append(submethod.responder.camelName).append("Responder) {\n");
+            ts.append("        self.nextId++;\n");
+            ts.append("        var subId = self.nextId;\n");
+            ts.append("        var parId = id;\n");
+            ts.append("        self.__execute_rr({\n");
+            ts.append("          id: subId,\n");
+            ts.append("          responder: subResponder,\n");
+            ts.append("          request: { method: \"").append(submethod.name).append("\", id: subId, \"").append(submethod.findBy).append("\":parId");
             for (ParameterDefinition parameter : submethod.parameters) {
               if (parameter.name.equals(submethod.findBy)) {
                 continue;
               }
-              ts.append(", ").append("\"").append(parameter.name).append("\":").append(parameter.camelName);
+              ts.append(", ").append("\"").append(parameter.name).append("\": ").append(parameter.camelName);
             }
-            ts.append("};\n");
+            ts.append("}\n");
+            ts.append("        });\n");
             ts.append("      }");
           }
         }
