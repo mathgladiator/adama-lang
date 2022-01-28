@@ -74,10 +74,11 @@ public class TestFrontEnd implements AutoCloseable, Email {
     String config = Files.readString(new File("./test.mysql.json").toPath());
     DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config)), "any"));
     this.installerFront = new FrontendManagementInstaller(dataBase);
-    installerFront.install();
+    this.installerFront.install();
     this.installerBack = new BackendDataServiceInstaller(dataBase);
-    installerBack.install();
+    this.installerBack.install();
     this.installDeploy = new DeployedInstaller(dataBase);
+    this.installDeploy.install();
     BlockingDataService ds = new BlockingDataService(new BackendMetrics(new NoOpMetricsFactory()), dataBase);
     deploymentFactoryBase = new DeploymentFactoryBase();
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
