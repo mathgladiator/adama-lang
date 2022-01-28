@@ -17,7 +17,7 @@ import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.extern.ProtectedUUID;
+import org.adamalang.common.ProtectedUUID;
 import org.adamalang.grpc.client.contracts.AskAttachmentCallback;
 import org.adamalang.grpc.client.contracts.CreateCallback;
 import org.adamalang.grpc.client.contracts.SeqCallback;
@@ -29,8 +29,6 @@ import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
-import org.adamalang.runtime.deploy.DeploymentFactory;
-import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +41,6 @@ import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RootHandlerImpl implements RootHandler {

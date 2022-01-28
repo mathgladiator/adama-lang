@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.extern;
+package org.adamalang.common;
 
 import org.junit.Assert;
 import org.junit.Test;

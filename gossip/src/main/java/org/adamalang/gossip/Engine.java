@@ -52,11 +52,11 @@ public class Engine implements AutoCloseable {
 
   public Engine(MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, int monitoringPort, GossipMetrics metrics) throws Exception {
     this.credentials = TlsChannelCredentials.newBuilder() //
-                                            .keyManager(identity.getCert(), identity.getKey()) //
-                                            .trustManager(identity.getTrust()).build(); //
+        .keyManager(identity.getCert(), identity.getKey()) //
+        .trustManager(identity.getTrust()).build(); //
     this.chain = new InstanceSetChain(time);
-    String id = UUID.randomUUID().toString();
-    chain.ingest(Collections.singleton(Endpoint.newBuilder().setIp(identity.ip).setId(id).setPort(port).setMonitoringPort(monitoringPort).setCounter(0).setRole("gossip").build()), Collections.emptySet());
+    String id = ProtectedUUID.generate();
+    chain.ingest(Collections.singleton(Endpoint.newBuilder().setIp(identity.ip).setId(id).setPort(port).setMonitoringPort(monitoringPort).setCreated(System.currentTimeMillis()).setCounter(0).setRole("gossip").build()), Collections.emptySet());
     me = chain.pick(id);
     this.jitter = new Random();
     this.picker = new GossipPartnerPicker(identity.ip + ":" + port, chain, initial, jitter);
@@ -70,10 +70,10 @@ public class Engine implements AutoCloseable {
     this.server = null;
     this.watcher = null;
     serverSupplier = ExceptionSupplier.TO_RUNTIME(() -> NettyServerBuilder.forPort(port).addService(new ServerHandler(executor, chain, alive, metrics)).sslContext(GrpcSslContexts //
-                                                                                                                                                                                   .forServer(identity.getCert(), identity.getKey()) //
-                                                                                                                                                                                   .trustManager(identity.getTrust()) //
-                                                                                                                                                                                   .clientAuth(ClientAuth.REQUIRE) //
-                                                                                                                                                                                   .build()).keepAliveTimeout(2500, TimeUnit.MILLISECONDS).build());
+        .forServer(identity.getCert(), identity.getKey()) //
+        .trustManager(identity.getTrust()) //
+        .clientAuth(ClientAuth.REQUIRE) //
+        .build()).keepAliveTimeout(2500, TimeUnit.MILLISECONDS).build());
   }
 
   public void summarizeHtml(Consumer<String> html) {
@@ -82,7 +82,7 @@ public class Engine implements AutoCloseable {
       public void execute() throws Exception {
         StringBuilder sbHtml = new StringBuilder();
         sbHtml.append("<html><head><title>Gossip Summary</title></head><body><table>");
-        sbHtml.append("<tr><th>ID</th><th>Witness (ms ago)</th><th>IP</th><th>Port</th><th>Role</th><th>Counter</th></tr>");
+        sbHtml.append("<tr><th>ID</th><th>Witness (ms ago)</th><th>IP</th><th>Port</th><th>Role</th><th>Counter</th><th>Age (ms)</th></tr>");
         for (Instance instance : chain.current().instances) {
           sbHtml.append("<tr><td>").append(instance.id).append("</td>");
           sbHtml.append("<td>").append(System.currentTimeMillis() - instance.witnessed()).append(" ms</td>");
@@ -90,6 +90,7 @@ public class Engine implements AutoCloseable {
           sbHtml.append("<td>").append(instance.port).append("</td>");
           sbHtml.append("<td>").append(instance.role).append("</td>");
           sbHtml.append("<td>").append(instance.counter()).append("</td></tr>");
+          sbHtml.append("<td>").append(System.currentTimeMillis() - instance.created).append("</td></tr>");
         }
         sbHtml.append("</table></body></html>");
         html.accept(sbHtml.toString());
@@ -101,8 +102,8 @@ public class Engine implements AutoCloseable {
     executor.execute(new NamedRunnable("engine-new-app") {
       @Override
       public void execute() throws Exception {
-        String id = UUID.randomUUID().toString();
-        chain.ingest(Collections.singleton(Endpoint.newBuilder().setIp(ip).setId(id).setPort(port).setMonitoringPort(-1).setCounter(0).setRole(role).build()), Collections.emptySet());
+        String id = ProtectedUUID.generate();
+        chain.ingest(Collections.singleton(Endpoint.newBuilder().setIp(ip).setId(id).setPort(port).setMonitoringPort(-1).setCounter(0).setCreated(System.currentTimeMillis()).setRole(role).build()), Collections.emptySet());
         if (watcher != null) {
           watcher.accept(chain.current().toEndpoints());
         }

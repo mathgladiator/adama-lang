@@ -7,15 +7,18 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.extern;
+package org.adamalang.common;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class ProtectedUUID {
-  private static char[] UUID_CODEC_BASE =  new char[] {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','Y','Z'};
+  private static final char[] UUID_CODEC_BASE = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z'};
+
+  public static String generate() {
+    return encode(UUID.randomUUID());
+  }
 
   public static String encode(UUID id) {
     try {
@@ -58,9 +61,5 @@ public class ProtectedUUID {
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
-  }
-
-  public static String generate() {
-    return encode(UUID.randomUUID());
   }
 }

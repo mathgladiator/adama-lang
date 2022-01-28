@@ -20,6 +20,7 @@ public class Instance implements Comparable<Instance> {
   public final String ip;
   public final int port;
   public final String role;
+  public final long created;
   private int counter;
   private long witness;
 
@@ -31,6 +32,7 @@ public class Instance implements Comparable<Instance> {
     this.role = endpoint.getRole();
     this.counter = endpoint.getCounter();
     this.witness = now;
+    this.created = endpoint.getCreated();
   }
 
   public String role() {
@@ -50,7 +52,7 @@ public class Instance implements Comparable<Instance> {
   }
 
   public Endpoint toEndpoint() {
-    return Endpoint.newBuilder().setId(id).setIp(ip).setPort(port).setMonitoringPort(monitoringPort).setRole(role).setCounter(counter).build();
+    return Endpoint.newBuilder().setId(id).setIp(ip).setPort(port).setMonitoringPort(monitoringPort).setRole(role).setCreated(created).setCounter(counter).build();
   }
 
   /**
