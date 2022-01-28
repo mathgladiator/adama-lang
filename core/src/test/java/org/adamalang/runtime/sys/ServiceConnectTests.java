@@ -86,7 +86,7 @@ public class ServiceConnectTests {
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       service.connect(NtClient.NO_ONE, KEY, streamback);
-      streamback.await_failure(904318);
+      streamback.await_failure(950384);
     } finally {
       service.shutdown();
     }
@@ -106,7 +106,7 @@ public class ServiceConnectTests {
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       service.connect(NtClient.NO_ONE, KEY, streamback);
-      streamback.await_failure(904318);
+      streamback.await_failure(950384);
     } finally {
       service.shutdown();
     }

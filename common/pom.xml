@@ -45,6 +45,11 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <properties>
+        <jdk.version>11</jdk.version>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+    </properties>
     <build>
         <plugins>
             <plugin>
@@ -57,9 +62,4 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <jdk.version>11</jdk.version>
-        <maven.compiler.target>11</maven.compiler.target>
-        <maven.compiler.source>11</maven.compiler.source>
-    </properties>
 </project>

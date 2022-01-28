@@ -1151,7 +1151,7 @@ public class LivingDocumentTests {
   @Test
   public void crash_infinite_transition() throws Exception {
       final var setup = new RealDocumentSetup("@construct { } #next { while(true) {} } @connected(who) { transition #next; return true; }");
-      setup.document.connect(A, new RealDocumentSetup.AssertFailure(904318));
+      setup.document.connect(A, new RealDocumentSetup.AssertFailure(950384));
   }
 
   @Test

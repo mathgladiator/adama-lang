@@ -244,7 +244,7 @@ public class BlockingDataService implements DataService {
 
       String walkSql = new StringBuilder("SELECT `id`, `redo`, `undo`, `seq_end`, `seq_begin` FROM `") //
           .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
-          .append(" ORDER BY `seq_end` DESC LIMIT ").append(history * 3).append(" OFFSET ").append(history).toString();
+          .append(" ORDER BY `seq_end` DESC LIMIT ").append((history + 1) * 3 + 1000).append(" OFFSET ").append(history).toString();
 
       AutoMorphicAccumulator<String> redoMorph = JsonAlgebra.mergeAccumulator();
       AutoMorphicAccumulator<String> undoMorph = JsonAlgebra.mergeAccumulator();

@@ -382,7 +382,7 @@ public class HandlerTests {
       long id = bed.connect();
       bed.assert_pull_status_connected();
       bed.attach(id);
-      bed.assert_pull_error(904318);
+      bed.assert_pull_error(950384);
     }
   }
 
@@ -395,7 +395,7 @@ public class HandlerTests {
       long id = bed.connect();
       bed.assert_pull_status_connected();
       bed.send(id);
-      bed.assert_pull_error(904318);
+      bed.assert_pull_error(950384);
     }
   }
 

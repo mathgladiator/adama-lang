@@ -70,7 +70,7 @@ public class ServiceBadCodeTests {
 
         @Override
         public void failure(ErrorCodeException ex) {
-          Assert.assertEquals(904318, ex.code);
+          Assert.assertEquals(950384, ex.code);
           latch.countDown();
         }
       });
@@ -81,7 +81,7 @@ public class ServiceBadCodeTests {
 
         @Override
         public void failure(ErrorCodeException ex) {
-          Assert.assertEquals(904318, ex.code);
+          Assert.assertEquals(950384, ex.code);
           latch.countDown();
         }
       });

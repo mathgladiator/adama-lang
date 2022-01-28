@@ -24,6 +24,7 @@ import org.junit.Test;
 
 public class BlockingDataServiceTests {
   private static final Key KEY_1 = new Key("space", "key1");
+  private static final Key KEY_2 = new Key("space", "key2");
   private static final DataService.RemoteDocumentUpdate UPDATE_1 =
       new DataService.RemoteDocumentUpdate(
           1, NtClient.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0);
@@ -137,85 +138,87 @@ public class BlockingDataServiceTests {
         BlockingDataService service = new BlockingDataService(new BackendMetrics(new NoOpMetricsFactory()), dataBase);
 
         // create the key the first time, should work
-        SimpleMockCallback cb1 = new SimpleMockCallback();
-        service.initialize(KEY_1, UPDATE_1, cb1);
-        cb1.assertSuccess();
+        {
+          SimpleMockCallback cb1 = new SimpleMockCallback();
+          service.initialize(KEY_2, UPDATE_1, cb1);
+          cb1.assertSuccess();
 
-        SimpleMockCallback cb2 = new SimpleMockCallback();
-        service.patch(KEY_1, new DataService.RemoteDocumentUpdate[] { UPDATE_2 }, cb2);
-        cb2.assertSuccess();
+          SimpleMockCallback cb2 = new SimpleMockCallback();
+          service.patch(KEY_2, new DataService.RemoteDocumentUpdate[]{UPDATE_2}, cb2);
+          cb2.assertSuccess();
 
-        // getting the data should return a composite
-        SimpleDataCallback cb3 = new SimpleDataCallback();
-        service.get(KEY_1, cb3);
-        cb3.assertSuccess();
-        Assert.assertEquals("{\"x\":2,\"y\":4}", cb3.value);
-        Assert.assertEquals(2, cb3.reads);
+          // getting the data should return a composite
+          SimpleDataCallback cb3 = new SimpleDataCallback();
+          service.get(KEY_2, cb3);
+          cb3.assertSuccess();
+          Assert.assertEquals("{\"x\":2,\"y\":4}", cb3.value);
+          Assert.assertEquals(2, cb3.reads);
 
-        SimpleMockCallback cb4 = new SimpleMockCallback();
-        service.patch(KEY_1, new DataService.RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb4);
-        cb4.assertSuccess();
+          SimpleMockCallback cb4 = new SimpleMockCallback();
+          service.patch(KEY_2, new DataService.RemoteDocumentUpdate[]{UPDATE_3, UPDATE_4}, cb4);
+          cb4.assertSuccess();
+        }
 
         {
           SimpleDataCallback s_cb1 = new SimpleDataCallback();
-          service.get(KEY_1, s_cb1);
+          service.get(KEY_2, s_cb1);
           s_cb1.assertSuccess();
           Assert.assertEquals("{\"x\":4,\"y\":4}", s_cb1.value);
           Assert.assertEquals(4, s_cb1.reads);
 
           SimpleDataCallback s_cb2 = new SimpleDataCallback();
-          service.compute(KEY_1, DataService.ComputeMethod.Rewind, 0, s_cb2);
+          service.compute(KEY_2, DataService.ComputeMethod.Rewind, 0, s_cb2);
           Assert.assertEquals("{\"x\":0,\"z\":42,\"y\":0}", s_cb2.value);
           Assert.assertEquals(4, s_cb2.reads);
         }
 
         SimpleIntCallback cb5 = new SimpleIntCallback();
-        service.compact(KEY_1, 10000, cb5);
+        service.compact(KEY_2, 10000, cb5);
         cb5.assertSuccess(0);
 
         {
           SimpleDataCallback s_cb1 = new SimpleDataCallback();
-          service.get(KEY_1, s_cb1);
+          service.get(KEY_2, s_cb1);
           s_cb1.assertSuccess();
           Assert.assertEquals("{\"x\":4,\"y\":4}", s_cb1.value);
           Assert.assertEquals(4, s_cb1.reads);
 
           SimpleDataCallback s_cb2 = new SimpleDataCallback();
-          service.compute(KEY_1, DataService.ComputeMethod.Rewind, 0, s_cb2);
+          service.compute(KEY_2, DataService.ComputeMethod.Rewind, 0, s_cb2);
           Assert.assertEquals("{\"x\":0,\"z\":42,\"y\":0}", s_cb2.value);
           Assert.assertEquals(4, s_cb2.reads);
         }
 
         SimpleIntCallback cb6 = new SimpleIntCallback();
-        service.compact(KEY_1, 2, cb6);
-        cb6.assertSuccess(2);
+        service.compact(KEY_2, 2, cb6);
+        cb6.assertSuccess(1);
 
         {
           SimpleDataCallback s_cb1 = new SimpleDataCallback();
-          service.get(KEY_1, s_cb1);
+          service.get(KEY_2, s_cb1);
           s_cb1.assertSuccess();
           Assert.assertEquals("{\"x\":4,\"y\":4}", s_cb1.value);
           Assert.assertEquals(3, s_cb1.reads);
 
           SimpleDataCallback s_cb2 = new SimpleDataCallback();
-          service.compute(KEY_1, DataService.ComputeMethod.Rewind, 0, s_cb2);
+          service.compute(KEY_2, DataService.ComputeMethod.Rewind, 0, s_cb2);
           Assert.assertEquals("{\"x\":0,\"z\":42,\"y\":0}", s_cb2.value);
           Assert.assertEquals(3, s_cb2.reads);
         }
 
         SimpleIntCallback cb7 = new SimpleIntCallback();
-        service.compact(KEY_1, 0, cb7);
-        cb7.assertSuccess(3);
+        service.compact(KEY_2, 0, cb7);
+        cb7.assertSuccess(2);
 
         {
           SimpleDataCallback s_cb1 = new SimpleDataCallback();
-          service.get(KEY_1, s_cb1);
+          service.get(KEY_2, s_cb1);
           s_cb1.assertSuccess();
           Assert.assertEquals("{\"x\":4,\"y\":4}", s_cb1.value);
           Assert.assertEquals(1, s_cb1.reads);
 
           SimpleDataCallback s_cb2 = new SimpleDataCallback();
-          service.compute(KEY_1, DataService.ComputeMethod.Rewind, 0, s_cb2);
+          service.compute(KEY_2, DataService.ComputeMethod.Rewind, 0, s_cb2);
           Assert.assertEquals("{\"x\":0,\"z\":42,\"y\":0}", s_cb2.value);
           Assert.assertEquals(1, s_cb2.reads);
         }
