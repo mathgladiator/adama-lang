@@ -13,6 +13,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
+import org.adamalang.mysql.deployments.data.Deployment;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ public class DeploymentsTests {
       DeployedInstaller installer = new DeployedInstaller(dataBase);
       try {
         installer.install();
-        ArrayList<Deployments.Deployment> listing = Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:230");
+        ArrayList<Deployment> listing = Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:230");
         Assert.assertEquals(0, listing.size());
         Deployments.deploy(dataBase, "space1", "127.0.0.1:230", "hash1", "plan1");
         listing = Deployments.listSpacesOnTarget(dataBase, "127.0.0.1:230");
@@ -77,7 +78,7 @@ public class DeploymentsTests {
         Deployments.deploy(dataBase, "space3", "127.0.0.1:232", "hash1x", "plan1x");
 
 
-        ArrayList<Deployments.Deployment> deploymentsOnSpace = Deployments.listTargetsOnSpace(dataBase,"space2");
+        ArrayList<Deployment> deploymentsOnSpace = Deployments.listTargetsOnSpace(dataBase,"space2");
         Assert.assertEquals(2, deploymentsOnSpace.size());
         Assert.assertEquals("127.0.0.1:230", deploymentsOnSpace.get(0).target);
         Assert.assertEquals("127.0.0.1:231", deploymentsOnSpace.get(1).target);

@@ -55,7 +55,8 @@ public class FrontendManagementInstaller {
         .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
         .append("  `name` VARCHAR(128) NOT NULL,") //
         .append("  `billing` VARCHAR(16) NOT NULL,") //
-        .append("  `balance` INT(4) UNSIGNED DEFAULT 0,") //
+        .append("  `balance` INT(4) DEFAULT 0,") //
+        .append("  `latest_billing_hour` INT(4) UNSIGNED DEFAULT 0,") //
         .append("  `plan` TEXT NOT NULL,") //
         .append("  `hash` VARCHAR(256) NOT NULL,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
@@ -112,11 +113,7 @@ public class FrontendManagementInstaller {
         .append("  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,") //
         .append("  `space` INT(4) UNSIGNED NOT NULL,") // (i.e. who is going to pay)
         .append("  `hour` INT(8) UNSIGNED NOT NULL,") // the UTC hour for the resource consumption
-        .append("  `resource_cpu` INT(8) UNSIGNED NOT NULL,")
-        .append("  `resource_memory` INT(8) UNSIGNED NOT NULL,")
-        .append("  `resource_connections` INT(4) UNSIGNED NOT NULL,")
-        .append("  `resource_documents` INT(4) UNSIGNED NOT NULL,")
-        .append("  `resource_messages` INT(4) UNSIGNED NOT NULL,")
+        .append("  `summary` LONGTEXT NOT NULL,")
         .append("  `pennies` INT(4) UNSIGNED NOT NULL,")
         .append("  PRIMARY KEY (`id`),") //
         .append("  INDEX `s` (`space`),") //

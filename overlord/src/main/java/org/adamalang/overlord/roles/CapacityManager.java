@@ -14,7 +14,9 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.deployments.Deployments;
+import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.mysql.frontend.Spaces;
+import org.adamalang.mysql.frontend.data.InternalDeploymentPlan;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
@@ -71,9 +73,9 @@ public class CapacityManager {
         StringBuilder sb = new StringBuilder();
         int targets = 0;
         boolean append = false;
-        ArrayList<Deployments.Deployment> deployments = Deployments.listTargetsOnSpace(deploymentsDatabase, space);
-        Spaces.InternalDeploymentPlan plan = Spaces.getPlanByNameForInternalDeployment(frontendDatabase, space);
-        for (Deployments.Deployment deployment : deployments) {
+        ArrayList<Deployment> deployments = Deployments.listTargetsOnSpace(deploymentsDatabase, space);
+        InternalDeploymentPlan plan = Spaces.getPlanByNameForInternalDeployment(frontendDatabase, space);
+        for (Deployment deployment : deployments) {
           if (append) {
             sb.append(", ");
           }

@@ -24,11 +24,13 @@ import org.adamalang.grpc.client.contracts.SeqCallback;
 import org.adamalang.grpc.client.contracts.SimpleEvents;
 import org.adamalang.grpc.client.sm.Connection;
 import org.adamalang.mysql.backend.BackendOperations;
+import org.adamalang.mysql.backend.data.DocumentIndex;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.frontend.Authorities;
-import org.adamalang.mysql.frontend.Role;
+import org.adamalang.mysql.frontend.data.Role;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
+import org.adamalang.mysql.frontend.data.SpaceListingItem;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.results.AuthenticatedUser;
@@ -382,13 +384,13 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SpaceListRequest request, SpaceListingResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
-        for (Spaces.Item item :
+        for (SpaceListingItem spaceListingItem :
             Spaces.list(
                 nexus.dataBaseManagement,
                 request.who.id,
                 request.marker,
                 request.limit == null ? 100 : request.limit)) {
-          responder.next(item.name, item.callerRole, item.billing, item.created);
+          responder.next(spaceListingItem.name, spaceListingItem.callerRole, spaceListingItem.billing, spaceListingItem.created);
         }
         responder.finish();
       } else {
@@ -432,7 +434,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder) {
     try {
       if (request.policy.canUserSeeKeyListing(request.who)) {
-        for (BackendOperations.DocumentIndex item :
+        for (DocumentIndex item :
             BackendOperations.list(
                 nexus.dataBaseBackend, request.space, request.marker, request.limit != null ? request.limit : 100)) {
           responder.next(item.key, item.created, item.updated, item.seq);

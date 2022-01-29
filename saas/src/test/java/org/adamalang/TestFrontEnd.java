@@ -27,6 +27,7 @@ import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.DeployedInstaller;
 import org.adamalang.mysql.deployments.Deployments;
+import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
@@ -101,7 +102,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     ServerNexus backendNexus = new ServerNexus(identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, (space) -> {
       try {
         if (!"*".equals(space)) {
-          Deployments.Deployment deployment = Deployments.get(dataBase, identity.ip + ":" + port, space);
+          Deployment deployment = Deployments.get(dataBase, identity.ip + ":" + port, space);
           deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
           }));
           coreService.deploy(new DeploymentMonitor() {

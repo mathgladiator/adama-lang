@@ -12,6 +12,10 @@ package org.adamalang.mysql.frontend;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.frontend.data.InternalDeploymentPlan;
+import org.adamalang.mysql.frontend.data.Role;
+import org.adamalang.mysql.frontend.data.SpaceInfo;
+import org.adamalang.mysql.frontend.data.SpaceListingItem;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -44,9 +48,9 @@ public class Spaces {
     }
   }
 
-  public static Space getSpaceId(DataBase dataBase, String space) throws Exception {
+  public static SpaceInfo getSpaceId(DataBase dataBase, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `id`,`owner`,`billing` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
+      String sql = new StringBuilder("SELECT `id`,`owner`,`billing`,`balance` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         try (ResultSet rs = statement.executeQuery()) {
@@ -62,7 +66,7 @@ public class Spaces {
                   break;
               }
             }, sqlGrants);
-            return new Space(rs.getInt(1), owner, rs.getString(3), developers);
+            return new SpaceInfo(rs.getInt(1), owner, rs.getString(3), developers, rs.getInt(4));
           }
           throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_DOESNT_EXIST);
         }
@@ -76,6 +80,16 @@ public class Spaces {
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, plan);
         statement.setString(2, hash);
+        statement.execute();
+      }
+    }
+  }
+
+  public static void creditBalance(DataBase dataBase, int spaceId, int balance) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `balance`=`balance`+? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
+      try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        statement.setInt(1, balance);
         statement.execute();
       }
     }
@@ -120,18 +134,19 @@ public class Spaces {
     }
   }
 
-  public static List<Item> list(DataBase dataBase, int userId, String marker, int limit) throws Exception {
+  public static List<SpaceListingItem> list(DataBase dataBase, int userId, String marker, int limit) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       // select * from a LEFT OUTER JOIN b on a.a = b.b;
-      String sql = new StringBuilder("SELECT `s`.`name`,`s`.`owner`,`s`.`billing`,`s`.`created` FROM `").append(dataBase.databaseName) //
+      String sql = new StringBuilder("SELECT `s`.`name`,`s`.`owner`,`s`.`billing`,`s`.`created`,`s`.`balance` FROM `").append(dataBase.databaseName) //
           .append("`.`spaces` as `s` LEFT OUTER JOIN `").append(dataBase.databaseName).append("`.`grants` as `g` ON `s`.`id` = `g`.`space`") //
           .append(" WHERE (`s`.owner=").append(userId).append(" OR `g`.`user`=").append(userId).append(") AND `s`.`name`>? ORDER BY `s`.`name` ASC LIMIT ").append(limit).toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, marker == null ? "" : marker);
         try (ResultSet rs = statement.executeQuery()) {
-          ArrayList<Item> names = new ArrayList<>();
+          ArrayList<SpaceListingItem> names = new ArrayList<>();
           while (rs.next()) {
-            names.add(new Item(rs.getString(1), rs.getInt(2) == userId ? "owner" : "developer", rs.getString(3), rs.getDate(4).toString()));
+            boolean isOwner = rs.getInt(2) == userId;
+            names.add(new SpaceListingItem(rs.getString(1), isOwner ? "owner" : "developer", rs.getString(3), rs.getDate(4).toString(), rs.getInt(5)));
           }
           return names;
         }
@@ -176,41 +191,4 @@ public class Spaces {
     }
   }
 
-  public static class InternalDeploymentPlan {
-    public final String plan;
-    public final String hash;
-
-    public InternalDeploymentPlan(String plan, String hash) {
-      this.plan = plan;
-      this.hash = hash;
-    }
-  }
-
-  public static class Space {
-    public final int id;
-    public final int owner;
-    public final String billing;
-    public final Set<Integer> developers;
-
-    public Space(int id, int owner, String billing, Set<Integer> developers) {
-      this.id = id;
-      this.owner = owner;
-      this.billing = billing;
-      this.developers = developers;
-    }
-  }
-
-  public static class Item {
-    public final String name;
-    public final String callerRole;
-    public final String billing;
-    public final String created;
-
-    public Item(String name, String callerRole, String billing, String created) {
-      this.name = name;
-      this.callerRole = callerRole;
-      this.billing = billing;
-      this.created = created;
-    }
-  }
 }

@@ -10,6 +10,7 @@
 package org.adamalang.mysql.frontend;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.mysql.frontend.data.Role;
 import org.junit.Assert;
 import org.junit.Test;
 

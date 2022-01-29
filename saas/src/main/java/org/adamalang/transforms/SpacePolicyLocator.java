@@ -15,6 +15,7 @@ import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Spaces;
+import org.adamalang.mysql.frontend.data.SpaceInfo;
 import org.adamalang.transforms.results.SpacePolicy;
 import org.adamalang.web.io.AsyncTransform;
 
@@ -47,7 +48,7 @@ public class SpacePolicyLocator implements AsyncTransform<Session, String, Space
       @Override
       public void execute() throws Exception {
         try {
-          Spaces.Space space = Spaces.getSpaceId(dataBase, spaceName);
+          SpaceInfo space = Spaces.getSpaceId(dataBase, spaceName);
           policies.putIfAbsent(spaceName, new SpacePolicy(space));
           callback.success(policies.get(spaceName));
         } catch (Exception ex) {

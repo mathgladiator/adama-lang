@@ -9,7 +9,7 @@
  */
 package org.adamalang.transforms.results;
 
-import org.adamalang.mysql.frontend.Spaces;
+import org.adamalang.mysql.frontend.data.SpaceInfo;
 
 import java.util.Set;
 
@@ -18,7 +18,7 @@ public class SpacePolicy {
   public final int owner;
   private final Set<Integer> developers;
 
-  public SpacePolicy(Spaces.Space space) {
+  public SpacePolicy(SpaceInfo space) {
     this.id = space.id;
     this.owner = space.owner;
     this.developers = space.developers;

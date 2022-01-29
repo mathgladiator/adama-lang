@@ -9,7 +9,6 @@
  */
 package org.adamalang;
 
-import com.google.gson.stream.JsonWriter;
 import org.adamalang.common.Hashing;
 import org.adamalang.common.Json;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -42,7 +41,7 @@ public class EndToEnd_AttachTests {
       Iterator<String> c3 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/create\",\"space\":\"newspace\"}");
       Assert.assertEquals("FINISH:{}", c3.next());
       Iterator<String> c4  =
-          fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+EndToEnd_SpaceTests.planFor(
+          fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+ EndToEnd_SpaceInfoTests.planFor(
               "@static { create(who) { return true; } }" +
                   "@connected(who) { return true; }" +
                   "public int x = 1;" +
@@ -80,7 +79,7 @@ public class EndToEnd_AttachTests {
       Iterator<String> c3 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/create\",\"space\":\"newspace\"}");
       Assert.assertEquals("FINISH:{}", c3.next());
       Iterator<String> c4  =
-          fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+EndToEnd_SpaceTests.planFor(
+          fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+ EndToEnd_SpaceInfoTests.planFor(
               "@static { create(who) { return true; } }" +
                   "@connected(who) { return true; }" +
                   "@can_attach(who) { return true; }" +
@@ -135,7 +134,7 @@ public class EndToEnd_AttachTests {
       Iterator<String> c3 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/create\",\"space\":\"newspace\"}");
       Assert.assertEquals("FINISH:{}", c3.next());
       Iterator<String> c4  =
-          fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+EndToEnd_SpaceTests.planFor(
+          fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+ EndToEnd_SpaceInfoTests.planFor(
               "@static { create(who) { return true; } }" +
                   "@connected(who) { return true; }" +
                   "@can_attach(who) { return true; }" +

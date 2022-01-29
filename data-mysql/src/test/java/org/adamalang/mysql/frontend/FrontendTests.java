@@ -13,11 +13,14 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
+import org.adamalang.mysql.frontend.data.InternalDeploymentPlan;
+import org.adamalang.mysql.frontend.data.Role;
+import org.adamalang.mysql.frontend.data.SpaceInfo;
+import org.adamalang.mysql.frontend.data.SpaceListingItem;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class FrontendTests {
@@ -175,7 +178,7 @@ public class FrontendTests {
         Spaces.setPlan(dataBase, 1, "{\"x\":1}", "h1");
         Spaces.setPlan(dataBase, 2, "{\"x\":2}", "h2");
 
-        Spaces.InternalDeploymentPlan iPlan = Spaces.getPlanByNameForInternalDeployment(dataBase, "space2");
+        InternalDeploymentPlan iPlan = Spaces.getPlanByNameForInternalDeployment(dataBase, "space2");
         Assert.assertEquals("h2", iPlan.hash);
         Assert.assertEquals("{\"x\":2}", iPlan.plan);
 
@@ -184,8 +187,8 @@ public class FrontendTests {
         Assert.assertEquals("{\"x\":1}", Spaces.getPlan(dataBase, 1));
         Assert.assertEquals("{\"x\":2}", Spaces.getPlan(dataBase, 2));
         {
-          List<Spaces.Item> ls1 = Spaces.list(dataBase, alice, null, 5);
-          List<Spaces.Item> ls2 = Spaces.list(dataBase, bob, null, 5);
+          List<SpaceListingItem> ls1 = Spaces.list(dataBase, alice, null, 5);
+          List<SpaceListingItem> ls2 = Spaces.list(dataBase, bob, null, 5);
           Assert.assertEquals(1, ls1.size());
           Assert.assertEquals(1, ls2.size());
           Assert.assertEquals("space1", ls1.get(0).name);
@@ -197,13 +200,13 @@ public class FrontendTests {
         }
         Spaces.setRole(dataBase, 2, alice, Role.Developer);
         {
-          Spaces.Space space1 = Spaces.getSpaceId(dataBase, "space1");
-          Spaces.Space space2 = Spaces.getSpaceId(dataBase, "space2");
-          Assert.assertTrue(space1.developers.contains(1));
-          Assert.assertTrue(space2.developers.contains(1));
-          Assert.assertTrue(space2.developers.contains(2));
-          List<Spaces.Item> ls1 = Spaces.list(dataBase, alice, null, 5);
-          List<Spaces.Item> ls2 = Spaces.list(dataBase, bob, null, 5);
+          SpaceInfo spaceInfo1 = Spaces.getSpaceId(dataBase, "space1");
+          SpaceInfo spaceInfo2 = Spaces.getSpaceId(dataBase, "space2");
+          Assert.assertTrue(spaceInfo1.developers.contains(1));
+          Assert.assertTrue(spaceInfo2.developers.contains(1));
+          Assert.assertTrue(spaceInfo2.developers.contains(2));
+          List<SpaceListingItem> ls1 = Spaces.list(dataBase, alice, null, 5);
+          List<SpaceListingItem> ls2 = Spaces.list(dataBase, bob, null, 5);
           Assert.assertEquals(2, ls1.size());
           Assert.assertEquals(1, ls2.size());
           Assert.assertEquals("space1", ls1.get(0).name);
@@ -215,8 +218,8 @@ public class FrontendTests {
         }
         Spaces.changePrimaryOwner(dataBase, 1, alice, bob);
         {
-          List<Spaces.Item> ls1 = Spaces.list(dataBase, alice, null, 5);
-          List<Spaces.Item> ls2 = Spaces.list(dataBase, bob, null, 5);
+          List<SpaceListingItem> ls1 = Spaces.list(dataBase, alice, null, 5);
+          List<SpaceListingItem> ls2 = Spaces.list(dataBase, bob, null, 5);
           Assert.assertEquals(1, ls1.size());
           Assert.assertEquals(2, ls2.size());
           Assert.assertEquals("space2", ls1.get(0).name);
@@ -228,8 +231,8 @@ public class FrontendTests {
         }
         Spaces.setRole(dataBase, 2, alice, Role.None);
         {
-          List<Spaces.Item> ls1 = Spaces.list(dataBase, alice, null, 5);
-          List<Spaces.Item> ls2 = Spaces.list(dataBase, bob, null, 5);
+          List<SpaceListingItem> ls1 = Spaces.list(dataBase, alice, null, 5);
+          List<SpaceListingItem> ls2 = Spaces.list(dataBase, bob, null, 5);
           Assert.assertEquals(0, ls1.size());
           Assert.assertEquals(2, ls2.size());
           Assert.assertEquals("space1", ls2.get(0).name);

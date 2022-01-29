@@ -10,6 +10,7 @@
 package org.adamalang.mysql.backend;
 
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.backend.data.DocumentIndex;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,19 +39,4 @@ public class BackendOperations {
     }
   }
 
-  public static class DocumentIndex {
-    public final String key;
-    public final String created;
-    public final String updated;
-    public final int seq;
-    public final boolean active;
-
-    public DocumentIndex(String key, String created, String updated, int seq, boolean active) {
-      this.key = key;
-      this.created = created;
-      this.updated = updated;
-      this.seq = seq;
-      this.active = active;
-    }
-  }
 }

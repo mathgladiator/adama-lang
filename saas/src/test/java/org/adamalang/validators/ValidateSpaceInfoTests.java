@@ -13,7 +13,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ValidateSpaceTests {
+public class ValidateSpaceInfoTests {
   @Test
   public void tooLong() throws Exception {
     StringBuilder sb = new StringBuilder();

@@ -12,6 +12,7 @@ package org.adamalang.mysql.deployments;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.deployments.data.Deployment;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -144,17 +145,4 @@ public class Deployments {
     }
   }
 
-  public static class Deployment {
-    public final String space;
-    public final String hash;
-    public final String plan;
-    public final String target;
-
-    public Deployment(String space, String hash, String plan, String target) {
-      this.space = space;
-      this.hash = hash;
-      this.plan = plan;
-      this.target = target;
-    }
-  }
 }

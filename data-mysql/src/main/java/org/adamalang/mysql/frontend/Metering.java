@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.mysql.frontend.data.MeteringSpaceSummary;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,11 +39,11 @@ public class Metering {
     }
   }
 
-  public static HashMap<String, SpaceSummary> summarizeWindow(DataBase dataBase, long fromTime, long toTime) throws Exception {
+  public static HashMap<String, MeteringSpaceSummary> summarizeWindow(DataBase dataBase, long fromTime, long toTime) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
         String sql = new StringBuilder().append("SELECT `target`, `batch` FROM `").append(dataBase.databaseName).append("`.`metering` WHERE ? <= `created` AND `created` < ?").toString();
-        HashMap<String, SpaceSummary> summary = new HashMap<>();
+        HashMap<String, MeteringSpaceSummary> summary = new HashMap<>();
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, DataBase.dateTimeOf(fromTime));
           statement.setString(2, DataBase.dateTimeOf(toTime));
@@ -62,9 +62,9 @@ public class Metering {
               Iterator<Map.Entry<String, JsonNode>> it = spaces.fields();
               while (it.hasNext()) {
                 Map.Entry<String, JsonNode> sampleSpace = it.next();
-                SpaceSummary spaceSum = summary.get(sampleSpace.getKey());
+                MeteringSpaceSummary spaceSum = summary.get(sampleSpace.getKey());
                 if (spaceSum == null) {
-                  spaceSum = new SpaceSummary();
+                  spaceSum = new MeteringSpaceSummary();
                   summary.put(sampleSpace.getKey(), spaceSum);
                 }
                 spaceSum.include(target, sampleSpace.getValue());
@@ -77,61 +77,4 @@ public class Metering {
     }
   }
 
-  public static class SpaceSummary {
-    private final HashMap<String, PerTarget> targets;
-    private long cpuTicks;
-    private long messages;
-
-    private SpaceSummary() {
-      this.targets = new HashMap<>();
-      this.cpuTicks = 0;
-    }
-
-    private void include(String target, JsonNode node) {
-      PerTarget byTarget = targets.get(target);
-      if (byTarget == null) {
-        byTarget = new PerTarget();
-        targets.put(target, byTarget);
-      }
-      cpuTicks += node.get("cpu").asLong();
-      messages += node.get("messages").asLong();
-      byTarget.include(node.get("count_p95").asLong(), node.get("memory_p95").asLong());
-    }
-
-    public String summarize() {
-      JsonStreamWriter writer = new JsonStreamWriter();
-      writer.beginObject();
-      writer.writeObjectFieldIntro("cpu");
-      writer.writeLong(cpuTicks);
-      writer.writeObjectFieldIntro("messages");
-      writer.writeLong(messages);
-      long count = 0;
-      long memory = 0;
-      for (PerTarget target : targets.values()) {
-        count += target.count;
-        memory += target.memory;
-      }
-      writer.writeObjectFieldIntro("count");
-      writer.writeLong(count);
-      writer.writeObjectFieldIntro("memory");
-      writer.writeLong(memory);
-      writer.endObject();
-      return writer.toString();
-    }
-
-    private class PerTarget {
-      private long count;
-      private long memory;
-
-      public PerTarget() {
-        this.count = 0;
-        this.memory = 0;
-      }
-
-      public void include(long count, long memory) {
-        this.count = Math.max(this.count, count);
-        this.memory = Math.max(this.memory, memory);
-      }
-    }
-  }
 }

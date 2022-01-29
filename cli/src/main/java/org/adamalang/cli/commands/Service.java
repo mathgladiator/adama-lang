@@ -35,6 +35,7 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
+import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
@@ -171,8 +172,8 @@ public class Service {
     Consumer<String> scanForDeployments = (space) -> {
       try {
         if ("*".equals(space)) {
-          ArrayList<Deployments.Deployment> deployments = Deployments.listSpacesOnTarget(dataBaseDeployments, identity.ip + ":" + port);
-          for (Deployments.Deployment deployment : deployments) {
+          ArrayList<Deployment> deployments = Deployments.listSpacesOnTarget(dataBaseDeployments, identity.ip + ":" + port);
+          for (Deployment deployment : deployments) {
             try {
               deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
               }));
@@ -182,7 +183,7 @@ public class Service {
             }
           }
         } else {
-          Deployments.Deployment deployment = Deployments.get(dataBaseDeployments, identity.ip + ":" + port, space);
+          Deployment deployment = Deployments.get(dataBaseDeployments, identity.ip + ":" + port, space);
           deploymentFactoryBase.deploy(deployment.space, new DeploymentPlan(deployment.plan, (x, y) -> {
           }));
           service.deploy(deploymentMonitor);

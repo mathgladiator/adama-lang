@@ -9,7 +9,7 @@
  */
 package org.adamalang.validators;
 
-import org.adamalang.EndToEnd_SpaceTests;
+import org.adamalang.EndToEnd_SpaceInfoTests;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.junit.Assert;
@@ -24,6 +24,6 @@ public class ValidatePlanTests {
     } catch (ErrorCodeException ece) {
       Assert.assertEquals(115788, ece.code);
     }
-    ValidatePlan.validate(Json.parseJsonObject(EndToEnd_SpaceTests.planFor("@static {}")));
+    ValidatePlan.validate(Json.parseJsonObject(EndToEnd_SpaceInfoTests.planFor("@static {}")));
   }
 }

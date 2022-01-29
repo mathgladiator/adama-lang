@@ -14,7 +14,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Iterator;
-import java.util.regex.Pattern;
 
 public class EndToEnd_DocumentTests {
   @Test
@@ -39,7 +38,7 @@ public class EndToEnd_DocumentTests {
       Iterator<String> c3  = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/create\",\"space\":\"newspace\"}");
       Assert.assertEquals("FINISH:{}", c3.next());
       Iterator<String> c4  =
-          fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+EndToEnd_SpaceTests.planFor(
+          fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+ EndToEnd_SpaceInfoTests.planFor(
               "@static { create(who) { return true; } }" +
                   "@connected(who) { return true; }" +
                   "public int x = 1;" +

@@ -20,7 +20,7 @@ import java.security.PrivateKey;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
-public class EndToEnd_SpaceTests {
+public class EndToEnd_SpaceInfoTests {
   public static String planFor(String code) {
     JsonStreamWriter planWriter = new JsonStreamWriter();
     planWriter.beginObject();
