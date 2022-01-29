@@ -13,7 +13,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 
 import java.util.Collection;
 import java.util.TreeSet;

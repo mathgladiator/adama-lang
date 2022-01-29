@@ -17,7 +17,7 @@ import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.client.InstanceClient;
 import org.adamalang.grpc.client.contracts.*;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 
 /**
  * a single connection for a document; given the number of outstanding events that can influence the

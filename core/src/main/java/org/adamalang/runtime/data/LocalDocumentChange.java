@@ -7,14 +7,15 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.extern;
+package org.adamalang.runtime.data;
 
-import org.adamalang.common.Callback;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtAsset;
+/** the local copy of the document should be changed by incorporating the given patch */
+public class LocalDocumentChange {
+  public final String patch;
+  public final int reads;
 
-import java.io.File;
-
-public interface AssetUploader {
-  void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback);
+  public LocalDocumentChange(String patch, int reads) {
+    this.patch = patch;
+    this.reads = reads;
+  }
 }

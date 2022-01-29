@@ -11,8 +11,9 @@ package org.adamalang.support.testgen;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.ComputeMethod;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.LocalDocumentChange;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,9 +23,9 @@ public class DumbDataServiceTests {
     DumbDataService dds = new DumbDataService((t) -> {});
     dds.get(
         new Key("0", "0"),
-        new Callback<DataService.LocalDocumentChange>() {
+        new Callback<LocalDocumentChange>() {
           @Override
-          public void success(DataService.LocalDocumentChange value) {
+          public void success(LocalDocumentChange value) {
             Assert.fail();
           }
 
@@ -45,11 +46,11 @@ public class DumbDataServiceTests {
         });
     dds.compute(
         key,
-        DataService.ComputeMethod.Rewind,
+        ComputeMethod.Rewind,
         1,
-        new Callback<DataService.LocalDocumentChange>() {
+        new Callback<LocalDocumentChange>() {
           @Override
-          public void success(DataService.LocalDocumentChange value) {
+          public void success(LocalDocumentChange value) {
             Assert.assertEquals("{\"x\":1000}", value.patch);
           }
 

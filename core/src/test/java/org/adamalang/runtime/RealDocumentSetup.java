@@ -13,7 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.contracts.DocumentMonitor;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.json.JsonStreamReader;

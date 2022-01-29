@@ -11,8 +11,6 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.NamedThreadFactory;
-import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.Key;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;

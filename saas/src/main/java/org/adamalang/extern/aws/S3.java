@@ -14,7 +14,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.extern.AssetUploader;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

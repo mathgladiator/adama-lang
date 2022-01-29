@@ -9,7 +9,7 @@
  */
 package org.adamalang.runtime.sys;
 
-import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.json.PrivateView;
 
 import java.util.List;
@@ -22,12 +22,12 @@ import java.util.List;
 public class LivingDocumentChange {
 
   /** the data change */
-  public final DataService.RemoteDocumentUpdate update;
+  public final RemoteDocumentUpdate update;
 
   private final List<Broadcast> broadcasts;
 
   /** wrap both the update and broadcasts into a nice package */
-  public LivingDocumentChange(DataService.RemoteDocumentUpdate update, List<Broadcast> broadcasts) {
+  public LivingDocumentChange(RemoteDocumentUpdate update, List<Broadcast> broadcasts) {
     this.update = update;
     this.broadcasts = broadcasts;
   }

@@ -12,7 +12,7 @@ package org.adamalang.runtime.sys.metering;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.natives.NtClient;

@@ -10,6 +10,7 @@
 package org.adamalang.runtime.contracts;
 
 import org.adamalang.common.Callback;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;

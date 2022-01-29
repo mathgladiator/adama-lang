@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.contracts;
+package org.adamalang.runtime.data;
 
 import java.util.Objects;
 

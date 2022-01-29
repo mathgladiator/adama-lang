@@ -16,7 +16,7 @@ import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.proto.*;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;

@@ -11,6 +11,7 @@ package org.adamalang;
 
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.extern.AssetUploader;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.frontend.BootstrapFrontend;
@@ -28,9 +29,10 @@ import org.adamalang.mysql.deployments.DeployedInstaller;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
-import org.adamalang.runtime.data.InMemoryDataService;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
@@ -63,6 +65,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public final FrontendManagementInstaller installerFront;
   public final BackendDataServiceInstaller installerBack;
   public final DeployedInstaller installDeploy;
+  public final File attachmentRoot;
   public final SimpleExecutor clientExecutor;
   public final DeploymentFactoryBase deploymentFactoryBase;
   public final CoreService coreService;
@@ -122,7 +125,19 @@ public class TestFrontEnd implements AutoCloseable, Email {
     server.start();
     Client client = new Client(identity, new ClientMetrics(new NoOpMetricsFactory()), null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
-    this.nexus = new ExternNexus(this, dataBase, dataBase, dataBase, client, new NoOpMetricsFactory());
+    this.attachmentRoot = new File(File.createTempFile("x23", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
+    AssetUploader uploader = new AssetUploader() {
+      @Override
+      public void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback) {
+        try {
+          Files.copy(localFile.toPath(), new File(localFile.getParent(), localFile.getName() + ".done").toPath());
+          callback.success(null);
+        } catch (Exception ex) {
+          callback.failure(new ErrorCodeException(-1, ex));
+        }
+      }
+    };
+    this.nexus = new ExternNexus(this, uploader, dataBase, dataBase, dataBase, client, new NoOpMetricsFactory(), attachmentRoot);
     this.frontend = BootstrapFrontend.make(nexus);
     this.context = new ConnectionContext("home", "ip", "agent");
     connection = this.frontend.establish(context);

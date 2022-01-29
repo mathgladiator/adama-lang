@@ -13,8 +13,8 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
-import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtAsset;
@@ -149,11 +149,11 @@ public class ServiceConnectTests {
     }
   }
 
-  public static DataService.RemoteDocumentUpdate[] wrap(String json) {
+  public static RemoteDocumentUpdate[] wrap(String json) {
     JsonStreamReader reader = new JsonStreamReader(json);
     Object obj = reader.readJavaTree();
     Integer seq = (Integer) (((HashMap<String, Object>) obj).get("__seq"));
-    return new DataService.RemoteDocumentUpdate[] { new DataService.RemoteDocumentUpdate(
+    return new RemoteDocumentUpdate[] { new RemoteDocumentUpdate(
         seq == null ? 0 : seq, NtClient.NO_ONE, "setup", json, "{}", false, 0) };
   }
 

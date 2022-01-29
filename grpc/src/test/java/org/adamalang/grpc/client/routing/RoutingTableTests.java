@@ -9,7 +9,7 @@
  */
 package org.adamalang.grpc.client.routing;
 
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;
 

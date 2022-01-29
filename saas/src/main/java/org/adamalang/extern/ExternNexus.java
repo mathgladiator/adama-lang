@@ -14,22 +14,29 @@ import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
 
+import java.io.File;
+
 public class ExternNexus {
 
   public final Email email;
+  public final AssetUploader uploader;
   public final DataBase dataBaseManagement;
   public final DataBase dataBaseDeployments;
   public final DataBase dataBaseBackend;
   public final Client client;
   public final ApiMetrics metrics;
+  public final File attachmentRoot;
 
-  public ExternNexus(Email email, DataBase dataBaseManagement, DataBase dataBaseDeployments,  DataBase dataBaseBackend, Client client, MetricsFactory metricsFactory) {
+  public ExternNexus(Email email, AssetUploader uploader, DataBase dataBaseManagement, DataBase dataBaseDeployments,  DataBase dataBaseBackend, Client client, MetricsFactory metricsFactory, File attachmentRoot) {
     this.email = email;
+    this.uploader = uploader;
     this.dataBaseManagement = dataBaseManagement;
     this.dataBaseDeployments = dataBaseDeployments;
     this.dataBaseBackend = dataBaseBackend;
     this.client = client;
     this.metrics = new ApiMetrics(metricsFactory);
+    this.attachmentRoot = attachmentRoot;
+    attachmentRoot.mkdir();
   }
 
   public void close() throws Exception {

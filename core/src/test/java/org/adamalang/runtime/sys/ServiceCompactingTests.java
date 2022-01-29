@@ -14,9 +14,9 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
-import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.InMemoryDataService;
+import org.adamalang.runtime.data.LocalDocumentChange;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.mocks.*;
@@ -63,9 +63,9 @@ public class ServiceCompactingTests {
       while (reads.get() > 1 && attempts > 0) {
         attempts--;
         CountDownLatch latch = new CountDownLatch(1);
-        dataService.get(KEY, new Callback<DataService.LocalDocumentChange>() {
+        dataService.get(KEY, new Callback<LocalDocumentChange>() {
           @Override
-          public void success(DataService.LocalDocumentChange value) {
+          public void success(LocalDocumentChange value) {
             reads.set(value.reads);
             executor.execute(() -> {
               latch.countDown();
@@ -112,9 +112,9 @@ public class ServiceCompactingTests {
       while (reads.get() > 20 && attempts > 0) {
         attempts--;
         CountDownLatch latch = new CountDownLatch(1);
-        dataService.get(KEY, new Callback<DataService.LocalDocumentChange>() {
+        dataService.get(KEY, new Callback<LocalDocumentChange>() {
           @Override
-          public void success(DataService.LocalDocumentChange value) {
+          public void success(LocalDocumentChange value) {
             System.err.println("READS:" + value.reads);
             reads.set(value.reads);
             executor.execute(() -> {
@@ -169,9 +169,9 @@ public class ServiceCompactingTests {
         cb1.await_success(6 + 2 * k);
       }
       CountDownLatch nothingHappened = new CountDownLatch(1);
-      dataService.get(KEY, new Callback<DataService.LocalDocumentChange>() {
+      dataService.get(KEY, new Callback<LocalDocumentChange>() {
         @Override
-        public void success(DataService.LocalDocumentChange value) {
+        public void success(LocalDocumentChange value) {
           Assert.assertEquals(205, value.reads);
           executor.execute(() -> {
             nothingHappened.countDown();
@@ -195,9 +195,9 @@ public class ServiceCompactingTests {
       while (reads.get() > 20 && attempts > 0) {
         attempts--;
         CountDownLatch latch = new CountDownLatch(1);
-        dataService.get(KEY, new Callback<DataService.LocalDocumentChange>() {
+        dataService.get(KEY, new Callback<LocalDocumentChange>() {
           @Override
-          public void success(DataService.LocalDocumentChange value) {
+          public void success(LocalDocumentChange value) {
             System.err.println("READS:" + value.reads);
             reads.set(value.reads);
             executor.execute(() -> {

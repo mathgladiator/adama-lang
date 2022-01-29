@@ -11,8 +11,7 @@ package org.adamalang.runtime.sys.mocks;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.*;
 
 public class MockFailureDataService implements DataService {
   public boolean crashScan = false;

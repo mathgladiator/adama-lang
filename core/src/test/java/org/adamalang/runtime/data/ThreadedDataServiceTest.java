@@ -11,9 +11,6 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.Key;
-import org.adamalang.runtime.data.ThreadedDataService;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.mocks.MockInstantDataService;
 import org.junit.Assert;
@@ -29,14 +26,14 @@ public class ThreadedDataServiceTest {
     MockInstantDataService dataService = new MockInstantDataService();
     ThreadedDataService ds = new ThreadedDataService(1, () -> dataService);
     Key key = new Key("space", "key");
-    DataService.RemoteDocumentUpdate update =
-        new DataService.RemoteDocumentUpdate(1, NtClient.NO_ONE, "", "", "", false, 1);
+    RemoteDocumentUpdate update =
+        new RemoteDocumentUpdate(1, NtClient.NO_ONE, "", "", "", false, 1);
     CountDownLatch latch = new CountDownLatch(5);
     ds.get(
         key,
-        new Callback<DataService.LocalDocumentChange>() {
+        new Callback<LocalDocumentChange>() {
           @Override
-          public void success(DataService.LocalDocumentChange value) {}
+          public void success(LocalDocumentChange value) {}
 
           @Override
           public void failure(ErrorCodeException ex) {
@@ -57,7 +54,7 @@ public class ThreadedDataServiceTest {
         });
     ds.patch(
         key,
-        new DataService.RemoteDocumentUpdate[] { update },
+        new RemoteDocumentUpdate[] { update },
         new Callback<Void>() {
           @Override
           public void success(Void value) {
@@ -69,11 +66,11 @@ public class ThreadedDataServiceTest {
         });
     ds.compute(
         key,
-        DataService.ComputeMethod.Rewind,
+        ComputeMethod.Rewind,
         1,
-        new Callback<DataService.LocalDocumentChange>() {
+        new Callback<LocalDocumentChange>() {
           @Override
-          public void success(DataService.LocalDocumentChange value) {
+          public void success(LocalDocumentChange value) {
             latch.countDown();
           }
 

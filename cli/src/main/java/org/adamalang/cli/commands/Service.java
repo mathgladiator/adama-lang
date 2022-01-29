@@ -14,6 +14,7 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.extern.AssetUploader;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.extern.aws.AWSConfig;
@@ -37,8 +38,10 @@ import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
@@ -286,7 +289,15 @@ public class Service {
       targetPublisher.accept(targets);
     });
     AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-    ExternNexus nexus = new ExternNexus(new SES(awsConfig, new AWSMetrics(prometheusMetricsFactory)), dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory);
+    // TODO: use S3 and update document core to account for attachment size for billing purposes
+    AssetUploader uploader = new AssetUploader() {
+      @Override
+      public void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback) {
+        callback.failure(new ErrorCodeException(-1));
+      }
+    };
+    Email email = new SES(awsConfig, new AWSMetrics(prometheusMetricsFactory));
+    ExternNexus nexus = new ExternNexus(email, uploader, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"));
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus);
 

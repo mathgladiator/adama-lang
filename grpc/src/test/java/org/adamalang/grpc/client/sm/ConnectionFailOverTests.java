@@ -22,7 +22,7 @@ import org.adamalang.grpc.client.routing.RoutingEngine;
 import org.adamalang.grpc.mocks.LatchedSeqCallback;
 import org.adamalang.grpc.mocks.MockSimpleEvents;
 import org.adamalang.grpc.mocks.SlowSingleThreadedExecutorFactory;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;

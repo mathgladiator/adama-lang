@@ -10,7 +10,7 @@
 package org.adamalang.runtime;
 
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -20,7 +20,6 @@ import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.StdOutDocumentMonitor;
 import org.adamalang.runtime.ops.TestReportBuilder;
-import org.adamalang.runtime.sys.DurableLivingDocument;
 import org.adamalang.support.testgen.DumbDataService;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;

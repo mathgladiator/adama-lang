@@ -10,7 +10,7 @@
 package org.adamalang.grpc.client.routing;
 
 import org.adamalang.grpc.client.contracts.SpaceTrackingEvents;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.Key;
 
 import java.util.*;
 import java.util.function.Consumer;

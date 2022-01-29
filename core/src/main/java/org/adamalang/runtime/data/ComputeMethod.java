@@ -7,14 +7,12 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.extern;
+package org.adamalang.runtime.data;
 
-import org.adamalang.common.Callback;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtAsset;
-
-import java.io.File;
-
-public interface AssetUploader {
-  void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback);
+/** the backend data service provides a variety of algorithms to execute on the log */
+public enum ComputeMethod {
+  /** patch the local document to be up to date after the given sequencer */
+  HeadPatch,
+  /** rewind the document to the given sequencer */
+  Rewind
 }

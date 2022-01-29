@@ -13,10 +13,10 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
-import org.adamalang.runtime.contracts.DataService;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.RxParent;
+import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.exceptions.*;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -127,7 +127,7 @@ public abstract class LivingDocument implements RxParent {
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    DataService.RemoteDocumentUpdate update = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()));
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()));
     return new LivingDocumentChange(update, broadcasts);
   }
 
@@ -774,7 +774,7 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
 
-      final var update = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+      final var update = new RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
       exception = false;
       return new LivingDocumentChange(update, null);
     } finally {
@@ -822,7 +822,7 @@ public abstract class LivingDocument implements RxParent {
         reverse.writeNull();
         reverse.endObject();
         reverse.endObject();
-        final var result = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+        final var result = new RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
         exception = false;
         return new LivingDocumentChange(result, null);
       } else {
@@ -858,7 +858,7 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+      final var result = new RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -902,7 +902,7 @@ public abstract class LivingDocument implements RxParent {
       reverse.writeNtClient(who);
       reverse.endObject();
       reverse.endObject();
-      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+      final var result = new RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -967,7 +967,7 @@ public abstract class LivingDocument implements RxParent {
         __commit(null, forward, reverse);
         forward.endObject();
         reverse.endObject();
-        return new LivingDocumentChange(new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), false, 0), broadcasts);
+        return new LivingDocumentChange(new RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), false, 0), broadcasts);
       }
     } catch (final RetryProgressException rpe) {
       __futures.restore();
@@ -991,7 +991,7 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      return new LivingDocumentChange(new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0), null);
+      return new LivingDocumentChange(new RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0), null);
     }
   }
 
@@ -1055,7 +1055,7 @@ public abstract class LivingDocument implements RxParent {
       forward.endObject();
       reverse.endObject();
 
-      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), NtClient.NO_ONE, request, forward.toString(), reverse.toString(), true, 0);
+      final var result = new RemoteDocumentUpdate(__seq.get(), NtClient.NO_ONE, request, forward.toString(), reverse.toString(), true, 0);
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {
@@ -1125,7 +1125,7 @@ public abstract class LivingDocument implements RxParent {
       __commit(null, forward, reverse);
       forward.endObject();
       reverse.endObject();
-      final var result = new DataService.RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
+      final var result = new RemoteDocumentUpdate(__seq.get(), who, request, forward.toString(), reverse.toString(), true, 0);
       exception = false;
       return new LivingDocumentChange(result, null);
     } finally {

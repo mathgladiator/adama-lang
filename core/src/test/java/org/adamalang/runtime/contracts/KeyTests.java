@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.contracts;
 
+import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;
 

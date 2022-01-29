@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.reactives;
 
+import org.adamalang.common.Json;
 import org.adamalang.runtime.contracts.RxChild;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.contracts.WhereClause;
@@ -80,8 +81,8 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
             row.__dump(forwardDelta);
             reverseDelta.writeObjectFieldIntro(key);
             reverseDelta.writeNull();
-            // lower the change flag; TODO: make this an explicit thing to save heap churn?
-            row.__commit(key + "", new JsonStreamWriter(), new JsonStreamWriter());
+            JsonStreamWriter redundantWrite = new JsonStreamWriter();
+            row.__commit(key + "", redundantWrite, redundantWrite);
           } else {
             row.__commit(key + "", forwardDelta, reverseDelta);
           }

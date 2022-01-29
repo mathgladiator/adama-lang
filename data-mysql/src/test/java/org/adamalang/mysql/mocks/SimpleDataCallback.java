@@ -11,10 +11,10 @@ package org.adamalang.mysql.mocks;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.data.LocalDocumentChange;
 import org.junit.Assert;
 
-public class SimpleDataCallback implements Callback<DataService.LocalDocumentChange> {
+public class SimpleDataCallback implements Callback<LocalDocumentChange> {
   public String value;
   private boolean success;
   private int count;
@@ -29,7 +29,7 @@ public class SimpleDataCallback implements Callback<DataService.LocalDocumentCha
   }
 
   @Override
-  public void success(DataService.LocalDocumentChange value) {
+  public void success(LocalDocumentChange value) {
     this.value = value.patch;
     count++;
     success = true;

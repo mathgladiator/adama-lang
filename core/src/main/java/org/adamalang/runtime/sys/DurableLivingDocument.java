@@ -14,9 +14,8 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.runtime.contracts.DataService;
+import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.contracts.DocumentMonitor;
-import org.adamalang.runtime.contracts.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.PerformDocumentDeleteException;
 import org.adamalang.runtime.exceptions.PerformDocumentRewindException;
@@ -272,7 +271,7 @@ public class DurableLivingDocument {
       requiresInvalidateMilliseconds = last.update.requiresFutureInvalidation ? last.update.whenToInvalidateMilliseconds : null;
 
       inflightPatch = true;
-      DataService.RemoteDocumentUpdate[] patches = new DataService.RemoteDocumentUpdate[changes.size()];
+      RemoteDocumentUpdate[] patches = new RemoteDocumentUpdate[changes.size()];
       int at = 0;
       for (LivingDocumentChange change : changes) {
         patches[at] = change.update;
@@ -316,9 +315,9 @@ public class DurableLivingDocument {
                   }
                 }
                 revert.run();
-                base.service.compute(key, DataService.ComputeMethod.HeadPatch, document.__seq.get(), base.metrics.catch_up_patch.wrap(new Callback<>() {
+                base.service.compute(key, ComputeMethod.HeadPatch, document.__seq.get(), base.metrics.catch_up_patch.wrap(new Callback<>() {
                   @Override
-                  public void success(DataService.LocalDocumentChange value) {
+                  public void success(LocalDocumentChange value) {
                     base.executor.execute(new NamedRunnable("catch-up-computed") {
                       @Override
                       public void execute() throws Exception {
@@ -347,9 +346,9 @@ public class DurableLivingDocument {
       }));
     } catch (PerformDocumentRewindException rewind) {
       IngestRequest requestToActOn = isolate(lastRequest, requests);
-      base.service.compute(key, DataService.ComputeMethod.Rewind, rewind.seq, new Callback<DataService.LocalDocumentChange>() {
+      base.service.compute(key, ComputeMethod.Rewind, rewind.seq, new Callback<LocalDocumentChange>() {
         @Override
-        public void success(DataService.LocalDocumentChange value) {
+        public void success(LocalDocumentChange value) {
           base.executor.execute(new NamedRunnable("document-rewind-success") {
             @Override
             public void execute() throws Exception {

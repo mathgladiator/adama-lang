@@ -29,6 +29,8 @@ import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Role;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,7 @@ import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RootHandlerImpl implements RootHandler {
@@ -513,25 +516,26 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder responder) {
+  public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder startResponder) {
     AtomicReference<Connection> connection = new AtomicReference<>(null);
+    AtomicBoolean clean = new AtomicBoolean(false);
     connection.set(nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, new SimpleEvents() {
       @Override
       public void connected() {
         connection.get().canAttach(new AskAttachmentCallback() {
           @Override
           public void allow() {
-            responder.next(65536);
+            startResponder.next(65536);
           }
 
           @Override
           public void reject() {
-            responder.error(new ErrorCodeException(-1)); // TODO: ERROR CODE REJECTION
+            startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_NOT_ALLOWED));
           }
 
           @Override
           public void error(int code) {
-            responder.error(new ErrorCodeException(code));
+            startResponder.error(new ErrorCodeException(code));
           }
         });
       }
@@ -543,13 +547,16 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void error(int code) {
-        responder.error(new ErrorCodeException(code));
+        startResponder.error(new ErrorCodeException(code));
       }
 
       @Override
       public void disconnected() {
-        responder.error(new ErrorCodeException(-1)); // TODO: create code for premature disconnect
-        // responder.error(new ErrorCodeException(code));
+        if (!clean.get()) {
+          startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_LOST_CONNECTION));
+        } else {
+          startResponder.finish();
+        }
       }
     }));
 
@@ -565,16 +572,14 @@ public class RootHandlerImpl implements RootHandler {
       public void bind() {
         try {
           id = UUID.randomUUID().toString();
-          File root = new File("inflight");
-          file = new File(root, id + ".upload");
+          file = new File(nexus.attachmentRoot, id + ".upload");
           file.deleteOnExit();
           digestMD5 = MessageDigest.getInstance("MD5");
           digestSHA384 = MessageDigest.getInstance("SHA-384");
           output = new FileOutputStream(file);
           size = 0;
         } catch (Exception ex) {
-          responder.error(
-              ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_FAILED_BIND, ex, LOGGER));
+          startResponder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_FAILED_BIND, ex, LOGGER));
         }
       }
 
@@ -591,15 +596,16 @@ public class RootHandlerImpl implements RootHandler {
           if (!Hashing.finishAndEncode(chunkDigest).equals(attachChunk.chunkMd5)) {
             chunkResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_CHUNK_BAD_DIGEST));
             output.close();
-            file.delete();
+            disconnect(0);
           } else {
             chunkResponder.complete();
-            responder.next(65536);
+            startResponder.next(65536);
           }
         } catch (Exception ex) {
           chunkResponder.error(
               ErrorCodeException.detectOrWrap(
                   ErrorCodes.API_ASSET_CHUNK_UNKNOWN_EXCEPTION, ex, LOGGER));
+          disconnect(0);
         }
       }
 
@@ -609,22 +615,33 @@ public class RootHandlerImpl implements RootHandler {
           output.flush();
           output.close();
           String md5_64 = Hashing.finishAndEncode(digestMD5);
-          // TODO: convert this digest to an S3 compatible
           String sha384_64 = Hashing.finishAndEncode(digestSHA384);
-          // TODO: upload to S3
-          connection.get().attach(id, request.filename, request.contentType, this.size, md5_64, sha384_64, new SeqCallback() {
-            @Override
-            public void success(int seq) {
-              disconnect(0L);
-              finishResponder.complete();
-            }
+          NtAsset asset = new NtAsset(id, request.filename, request.contentType, this.size, md5_64, sha384_64);
+          nexus.uploader.upload(new Key(request.space, request.key), asset, file, new Callback<Void>() {
+              @Override
+              public void success(Void value) {
+                connection.get().attach(id, asset.name, asset.contentType, asset.size, asset.md5, asset.sha384, new SeqCallback() {
+                  @Override
+                  public void success(int seq) {
+                    clean.set(true);
+                    disconnect(0L);
+                    finishResponder.complete();
+                  }
 
-            @Override
-            public void error(int code) {
-              disconnect(0L);
-              finishResponder.error(new ErrorCodeException(code));
-            }
-          });
+                  @Override
+                  public void error(int code) {
+                    disconnect(0L);
+                    finishResponder.error(new ErrorCodeException(code));
+                  }
+                });
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                disconnect(0L);
+                finishResponder.error(ex);
+              }
+            });
         } catch (Exception ex) {
           finishResponder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
           disconnect(0);

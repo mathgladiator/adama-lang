@@ -13,8 +13,8 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
-import org.adamalang.runtime.contracts.DataService;
-import org.adamalang.runtime.contracts.Key;
+import org.adamalang.runtime.data.DataService;
+import org.adamalang.runtime.data.Key;
 
 import java.util.*;
 import java.util.function.Consumer;
