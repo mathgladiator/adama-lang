@@ -27,7 +27,7 @@ public class ThreadedDataServiceTest {
     ThreadedDataService ds = new ThreadedDataService(1, () -> dataService);
     Key key = new Key("space", "key");
     RemoteDocumentUpdate update =
-        new RemoteDocumentUpdate(1, NtClient.NO_ONE, "", "", "", false, 1);
+        new RemoteDocumentUpdate(1, 1, NtClient.NO_ONE, "", "", "", false, 1, 123, UpdateType.AddUserData);
     CountDownLatch latch = new CountDownLatch(5);
     ds.get(
         key,

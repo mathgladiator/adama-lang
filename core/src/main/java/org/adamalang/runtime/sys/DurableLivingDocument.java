@@ -277,7 +277,7 @@ public class DurableLivingDocument {
         patches[at] = change.update;
         at++;
       }
-      int seqToUse = last.update.seq;
+      int seqToUse = last.update.seqEnd;
       size.addAndGet(patches.length);
       base.service.patch(key, patches, base.metrics.document_execute_patch.wrap(new Callback<>() {
         @Override

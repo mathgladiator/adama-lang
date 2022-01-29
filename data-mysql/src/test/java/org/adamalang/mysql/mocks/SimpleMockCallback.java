@@ -32,6 +32,7 @@ public class SimpleMockCallback implements Callback<Void> {
 
   @Override
   public void failure(ErrorCodeException ex) {
+    ex.printStackTrace();
     count++;
     success = false;
     reason = ex.code;

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /** Implements the DataService while blocking the caller's thread */
 public class BlockingDataService implements DataService {
@@ -82,10 +83,10 @@ public class BlockingDataService implements DataService {
       // build the sql into insert
       String insertIndexSQL = new StringBuilder() //
           .append("INSERT INTO `").append(dataBase.databaseName).append("`.`index` (") //
-          .append("`space`, `key`, `head_seq`, `invalidate`, `when`) VALUES (?, ?, ") //
-          .append("'").append(patch.seq).append("', ") //
+          .append("`space`, `key`, `head_seq`, `invalidate`, `when`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ") //
+          .append("'").append(patch.seqEnd).append("', ") //
           .append("'").append(patch.requiresFutureInvalidation ? "1" : "0").append("', ") //
-          .append("'").append(whenOf(patch)).append("')") //
+          .append("'").append(whenOf(patch)).append("', 0, 0)") //
           .toString();
       metrics.lookup_change.run();
 
@@ -116,7 +117,7 @@ public class BlockingDataService implements DataService {
     String insertDeltaSQL = new StringBuilder() //
         .append("INSERT INTO `").append(dataBase.databaseName).append("`.`deltas` (") //
         .append("`parent`, `seq_begin`, `seq_end`, `who_agent`, `who_authority`, `request`, `redo`, `undo`, `history_ptr`) VALUES (") //
-        .append(parent).append(", '").append(patch.seq).append("', '").append(patch.seq).append("', ") //
+        .append(parent).append(", '").append(patch.seqBegin).append("', '").append(patch.seqEnd).append("', ") //
         .append("?, ?, ?, ?, ?, '')") //
         .toString();
     PreparedStatement statement = connection.prepareStatement(insertDeltaSQL);
@@ -146,17 +147,26 @@ public class BlockingDataService implements DataService {
 
       // read the index
       LookupResult lookup = lookup(connection, key);
-      if (lookup.head_seq + 1 != first.seq) {
+      if (lookup.head_seq + 1 != first.seqBegin) {
         throw new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF);
+      }
+
+      long deltaBytesGain = 0;
+      long assetBytesGain = 0;
+      for (RemoteDocumentUpdate patch : patches) {
+        deltaBytesGain += patch.redo.length() + patch.undo.length() + patch.request.length();
+        assetBytesGain += patch.assetBytes;
       }
 
       // update the index
       String updateIndexSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`index` ") //
-          .append("SET `head_seq`=").append(last.seq) //
+          .append("SET `head_seq`=").append(last.seqEnd) //
           .append(", `invalidate`=").append(last.requiresFutureInvalidation ? 1 : 0) //
           .append(", `when`='").append(whenOf(last)) //
-          .append("' WHERE `id`=").append(lookup.id).toString();
+          .append("', `delta_bytes`=`delta_bytes`+").append(deltaBytesGain) //
+          .append(", `asset_bytes`=`asset_bytes`+").append(assetBytesGain) //
+          .append(" WHERE `id`=").append(lookup.id).toString();
       DataBase.execute(connection, updateIndexSQL);
       metrics.lookup_change.run();
 
@@ -240,7 +250,7 @@ public class BlockingDataService implements DataService {
       // look up the index to get the id
       LookupResult lookup = lookup(connection, key);
 
-      String walkSql = new StringBuilder("SELECT `id`, `redo`, `undo`, `seq_end`, `seq_begin` FROM `") //
+      String walkSql = new StringBuilder("SELECT `id`, `redo`, `undo`, `seq_end`, `seq_begin`, `request` FROM `") //
           .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
           .append(" ORDER BY `seq_end` DESC LIMIT ").append((history + 1) * 3 + 1000).append(" OFFSET ").append(history).toString();
 
@@ -251,7 +261,9 @@ public class BlockingDataService implements DataService {
       AtomicInteger end = new AtomicInteger(0);
       AtomicInteger begin = new AtomicInteger(Integer.MAX_VALUE);
       ArrayList<Integer> ids = new ArrayList<>();
+      AtomicLong changeDeltaBytes = new AtomicLong(0);
       DataBase.walk(connection, (rs) -> {
+        changeDeltaBytes.addAndGet(-(rs.getString(2).length() + rs.getString(3).length() + rs.getString(6).length()));
         ids.add(rs.getInt(1));
         redoStack.push(rs.getString(2));
         undoMorph.next(rs.getString(3));
@@ -268,6 +280,9 @@ public class BlockingDataService implements DataService {
         DataBase.execute(connection, deleteDeltaById);
       }
       if (count.get() > 0) {
+        String redoToUse = redoMorph.finish();
+        String undoToUse = undoMorph.finish();
+        changeDeltaBytes.addAndGet("{\"method\":\"compact\"}".length() + redoToUse.length() + undoToUse.length());
         metrics.write_compact.run();
         String insertCompactDeltaSQL = new StringBuilder() //
             .append("INSERT INTO `").append(dataBase.databaseName).append("`.`deltas` (") //
@@ -276,12 +291,19 @@ public class BlockingDataService implements DataService {
             .toString();
         PreparedStatement statement = connection.prepareStatement(insertCompactDeltaSQL);
         try {
-          statement.setString(1, redoMorph.finish());
-          statement.setString(2, undoMorph.finish());
+          statement.setString(1, redoToUse);
+          statement.setString(2, undoToUse);
           statement.execute();
         } finally {
           statement.close();
         }
+        String updateIndexSQL = new StringBuilder() //
+            .append("UPDATE `").append(dataBase.databaseName).append("`.`index` ") //
+            .append("SET `delta_bytes`=`delta_bytes`+").append(changeDeltaBytes.get()) //
+            .append(" WHERE `id`=").append(lookup.id).toString();
+        DataBase.execute(connection, updateIndexSQL);
+        metrics.lookup_change.run();
+
         // account for the one we insert
         count.decrementAndGet();
       }

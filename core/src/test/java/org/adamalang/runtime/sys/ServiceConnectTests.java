@@ -15,6 +15,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.mocks.MockTime;
 import org.adamalang.runtime.natives.NtAsset;
@@ -154,7 +155,7 @@ public class ServiceConnectTests {
     Object obj = reader.readJavaTree();
     Integer seq = (Integer) (((HashMap<String, Object>) obj).get("__seq"));
     return new RemoteDocumentUpdate[] { new RemoteDocumentUpdate(
-        seq == null ? 0 : seq, NtClient.NO_ONE, "setup", json, "{}", false, 0) };
+        seq == null ? 0 : seq, seq == null ? 0 : seq, NtClient.NO_ONE, "setup", json, "{}", false, 0, 0L, UpdateType.AddUserData) };
   }
 
   @Test

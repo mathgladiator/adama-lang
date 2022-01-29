@@ -19,6 +19,7 @@ import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.runtime.data.ComputeMethod;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,16 +29,16 @@ public class BlockingDataServiceTests {
   private static final Key KEY_2 = new Key("space", "key2");
   private static final RemoteDocumentUpdate UPDATE_1 =
       new RemoteDocumentUpdate(
-          1, NtClient.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0);
+          1, 1, NtClient.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
   private static final RemoteDocumentUpdate UPDATE_2 =
       new RemoteDocumentUpdate(
-          2, null, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0);
+          2, 2, null, "REQUEST", "{\"x\":2}", "{\"x\":1,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
   private static final RemoteDocumentUpdate UPDATE_3 =
       new RemoteDocumentUpdate(
-          3, null, "REQUEST", "{\"x\":3}", "{\"x\":2,\"z\":42}", true, 0);
+          3, 3, null, "REQUEST", "{\"x\":3}", "{\"x\":2,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
   private static final RemoteDocumentUpdate UPDATE_4 =
       new RemoteDocumentUpdate(
-          4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0);
+          4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
 
   @Test
   public void flow_1() throws Exception {

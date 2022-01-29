@@ -112,7 +112,7 @@ public class InMemoryDataServiceTests {
   }
 
   public RemoteDocumentUpdate update(int seq, String redo, String undo) {
-    return new RemoteDocumentUpdate(seq, NtClient.NO_ONE, null, redo, undo, false, 0);
+    return new RemoteDocumentUpdate(seq, seq, NtClient.NO_ONE, null, redo, undo, false, 0, 0, UpdateType.AddUserData);
   }
 
   private static Callback<Void> bumpSuccess(AtomicInteger success) {
@@ -145,7 +145,7 @@ public class InMemoryDataServiceTests {
 
   public RemoteDocumentUpdate updateActive(
       int seq, String redo, String undo, int time) {
-    return new RemoteDocumentUpdate(seq, NtClient.NO_ONE, null, redo, undo, true, time);
+    return new RemoteDocumentUpdate(seq, seq, NtClient.NO_ONE, null, redo, undo, true, time, 0, UpdateType.AddUserData);
   }
 
   @Test

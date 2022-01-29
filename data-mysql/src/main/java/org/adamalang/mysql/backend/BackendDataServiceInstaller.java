@@ -34,7 +34,8 @@ public class BackendDataServiceInstaller {
         .append("  `head_seq` INT(4) UNSIGNED NOT NULL,") //
         .append("  `invalidate` BOOLEAN NOT NULL,") //
         .append("  `when` DATETIME NOT NULL,") //
-//        .append("  `size_bytes` INT(8) UNSIGNED NOT NULL,") //
+        .append("  `delta_bytes` INT(8) UNSIGNED NOT NULL,") //
+        .append("  `asset_bytes` INT(8) UNSIGNED NOT NULL,") //
         .append("  PRIMARY KEY (`id`),") //
         .append("  UNIQUE  `u` (`space`, `key`))") //
         .append(" ENGINE = InnoDB") //

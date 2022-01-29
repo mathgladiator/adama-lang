@@ -22,8 +22,12 @@ public class RemoteDocumentUpdate {
   /** the undo patch to revert this change */
   public final String undo;
 
-  /** the sequencer of this change */
-  public final int seq;
+  /** the beginning sequencer of this change */
+  public final int seqBegin;
+
+  /** the end sequencer of this change */
+  public final int seqEnd;
+
 
   /** who was responsible for the update */
   public final NtClient who;
@@ -40,13 +44,24 @@ public class RemoteDocumentUpdate {
    */
   public final int whenToInvalidateMilliseconds;
 
-  public RemoteDocumentUpdate(final int seq, NtClient who, final String request, final String redo, final String undo, final boolean requiresFutureInvalidation, int whenToInvalidateMilliseconds) {
-    this.seq = seq;
+  /**
+   * how many bytes were written with this update
+   */
+  public final long assetBytes;
+
+  /** what is the type of the update */
+  public final UpdateType updateType;
+
+  public RemoteDocumentUpdate(final int seqBegin, final int seqEnd, NtClient who, final String request, final String redo, final String undo, final boolean requiresFutureInvalidation, int whenToInvalidateMilliseconds, long assetBytes, UpdateType updateType) {
+    this.seqBegin = seqBegin;
+    this.seqEnd = seqEnd;
     this.who = who;
     this.request = request;
     this.redo = redo;
     this.undo = undo;
     this.requiresFutureInvalidation = requiresFutureInvalidation;
     this.whenToInvalidateMilliseconds = whenToInvalidateMilliseconds;
+    this.assetBytes = assetBytes;
+    this.updateType = updateType;
   }
 }

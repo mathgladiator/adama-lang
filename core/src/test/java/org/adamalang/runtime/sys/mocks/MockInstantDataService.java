@@ -60,10 +60,8 @@ public class MockInstantDataService implements DataService {
       return;
     }
     println("LOAD:" + key.space + "/" + key.key);
-    int seq = 0;
     Object obj = null;
     for (RemoteDocumentUpdate update : log) {
-      seq = update.seq;
       if (obj == null) {
         obj = new JsonStreamReader(update.redo).readJavaTree();
       } else {
@@ -89,7 +87,7 @@ public class MockInstantDataService implements DataService {
         callback.failure(new ErrorCodeException(1));
       }
     } else {
-      println("INIT:" + key.space + "/" + key.key + ":" + patch.seq + "->" + patch.redo);
+      println("INIT:" + key.space + "/" + key.key + ":" + patch.seqEnd + "->" + patch.redo);
       ArrayList<RemoteDocumentUpdate> log = new ArrayList<>();
       log.add(patch);
       logByKey.put(key, log);
@@ -106,14 +104,14 @@ public class MockInstantDataService implements DataService {
     }
     ArrayList<RemoteDocumentUpdate> log = logByKey.get(key);
     for (RemoteDocumentUpdate patch : patches) {
-      println("PATCH:" + key.space + "/" + key.key + ":" + patch.seq + "->" + patch.redo);
+      println("PATCH:" + key.space + "/" + key.key + ":" + patch.seqBegin + "-" + patch.seqEnd + "->" + patch.redo);
       if (infiniteSkip) {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
         println("SKIP++");
         return;
       }
       if (enableSeqSkip) {
-        if (patch.seq == seqToSkip) {
+        if (patch.seqBegin <= seqToSkip && seqToSkip <= patch.seqEnd) {
           callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
           println("SKIP");
           return;

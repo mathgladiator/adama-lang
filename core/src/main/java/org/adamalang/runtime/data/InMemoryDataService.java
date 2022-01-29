@@ -64,7 +64,7 @@ public class InMemoryDataService implements DataService {
         return;
       }
       InMemoryDocument document = new InMemoryDocument();
-      document.seq = patch.seq;
+      document.seq = patch.seqEnd;
       document.updates.add(patch);
       datum.put(key, document);
       callback.success(null);
@@ -79,11 +79,11 @@ public class InMemoryDataService implements DataService {
         callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT));
         return;
       }
-      if (patches[0].seq != document.seq + 1) {
+      if (patches[0].seqBegin != document.seq + 1) {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
         return;
       }
-      document.seq = patches[patches.length - 1].seq;
+      document.seq = patches[patches.length - 1].seqEnd;
       for (RemoteDocumentUpdate patch : patches) {
         document.updates.add(patch);
       }
@@ -111,7 +111,7 @@ public class InMemoryDataService implements DataService {
         int reads = 0;
         // get items in order
         for (RemoteDocumentUpdate update : document.updates) {
-          if (update.seq > seq) {
+          if (update.seqBegin > seq) {
             redo.next(update.redo);
             reads++;
           }
@@ -128,7 +128,7 @@ public class InMemoryDataService implements DataService {
         int reads = 0;
         // get items in order
         for (RemoteDocumentUpdate update : document.updates) {
-          if (update.seq >= seq) {
+          if (update.seqBegin >= seq) {
             toUndo.push(update);
             reads++;
           }
@@ -194,15 +194,17 @@ public class InMemoryDataService implements DataService {
         AutoMorphicAccumulator<String> mergeRedo = JsonAlgebra.mergeAccumulator();
         AutoMorphicAccumulator<String> mergeUndo = JsonAlgebra.mergeAccumulator();
         Stack<String> undo = new Stack<>();
+        long assetBytes = 0;
         for (int k = 0; k < toCompact; k++) {
           RemoteDocumentUpdate update = updates.remove(0);
+          assetBytes += update.assetBytes;
           mergeRedo.next(update.redo);
           undo.push(update.undo);
         }
         while (!undo.empty()) {
           mergeUndo.next(undo.pop());
         }
-        RemoteDocumentUpdate newHead = new RemoteDocumentUpdate(0, NtClient.NO_ONE, "{}",  mergeRedo.finish(), mergeUndo.finish(), false, 0);
+        RemoteDocumentUpdate newHead = new RemoteDocumentUpdate(0, 0, NtClient.NO_ONE, "{}",  mergeRedo.finish(), mergeUndo.finish(), false, 0, assetBytes, UpdateType.CompactedResult);
         updates.add(0, newHead);
         return toCompact - 1;
       }
