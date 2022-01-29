@@ -16,8 +16,8 @@ import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.proto.*;
-import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Streamback;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.CoreStream;
@@ -371,31 +371,31 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
   }
 
   @Override
-  public StreamObserver<BillingForward> billingExchange(StreamObserver<BillingReverse> responseObserver) {
+  public StreamObserver<MeteringForward> meteringExchange(StreamObserver<MeteringReverse> responseObserver) {
     SimpleExecutor executor = executors[rng.nextInt(executors.length)];
-    return new StreamObserver<BillingForward>() {
+    return new StreamObserver<>() {
       private boolean sentComplete = false;
 
       @Override
-      public void onNext(BillingForward billingForward) {
-        executor.execute(new NamedRunnable("processing-billing-next") {
+      public void onNext(MeteringForward forward) {
+        executor.execute(new NamedRunnable("processing-metering-next") {
           @Override
           public void execute() throws Exception {
-            switch (billingForward.getOperationCase()) {
+            switch (forward.getOperationCase()) {
               case BEGIN: {
-                String id = nexus.billingBatchMaker.getNextAvailableBatchId();
+                String id = nexus.meteringBatchMaker.getNextAvailableBatchId();
                 if (id != null) {
-                  String batch = nexus.billingBatchMaker.getBatch(id);
-                  responseObserver.onNext(BillingReverse.newBuilder().setFound(BillingBatchFound.newBuilder().setId(id).setBatch(batch).build()).build());
+                  String batch = nexus.meteringBatchMaker.getBatch(id);
+                  responseObserver.onNext(MeteringReverse.newBuilder().setFound(MeteringBatchFound.newBuilder().setId(id).setBatch(batch).build()).build());
                 } else {
                   sendCompleteWhileInExecutor();
                 }
                 return;
               }
               case REMOVE: {
-                BillingDeleteBill deleteBill = billingForward.getRemove();
-                nexus.billingBatchMaker.deleteBatch(deleteBill.getId());
-                responseObserver.onNext(BillingReverse.newBuilder().setRemoved(BillingBatchRemoved.newBuilder().build()).build());
+                MeteringDeleteBatch deleteBill = forward.getRemove();
+                nexus.meteringBatchMaker.deleteBatch(deleteBill.getId());
+                responseObserver.onNext(MeteringReverse.newBuilder().setRemoved(MeteringBatchRemoved.newBuilder().build()).build());
                 return;
               }
             }
@@ -412,7 +412,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
 
       @Override
       public void onError(Throwable throwable) {
-        LOGGER.convertedToErrorCode(throwable, ErrorCodes.GRPC_BILLING_UNEXPECTED_ERROR);
+        LOGGER.convertedToErrorCode(throwable, ErrorCodes.GRPC_METERING_UNEXPECTED_ERROR);
         onCompleted();
       }
 

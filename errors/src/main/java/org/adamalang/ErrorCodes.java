@@ -277,9 +277,9 @@ public class ErrorCodes {
   public static final int API_SPACE_DELETE_NO_PERMISSION = 904285;
   public static final int API_SPACE_DELETE_NOT_EMPTY = 998495;
 
-  public static final int API_BILLING_FAILED_FINDING_RANDOM_HOST = 909436;
-  public static final int API_BILLING_TIMEOUT = 998480;
-  public static final int API_BILLING_REJECTED = 998499;
+  public static final int API_METERING_FAILED_FINDING_RANDOM_HOST = 909436;
+  public static final int API_METERING_TIMEOUT = 998480;
+  public static final int API_METERING_REJECTED = 998499;
 
   public static final int API_CHANNEL_VALIDATION_FAILED_EMPTY = 950399;
   public static final int API_CHANNEL_VALIDATION_BAD_START_CHARACTER = 908415;
@@ -332,8 +332,8 @@ public class ErrorCodes {
   public static final int GRPC_DISCONNECT = 786441;
   public static final int GRPC_FAILURE = 716812;
   public static final int GRPC_REFLECT_UNKNOWN_EXCEPTION = 791567;
-  public static final int GRPC_BILLING_UNKNOWN_EXCEPTION = 782348;
-  public static final int GRPC_BILLING_UNEXPECTED_ERROR = 786436;
+  public static final int GRPC_METERING_UNKNOWN_EXCEPTION = 782348;
+  public static final int GRPC_METERING_UNEXPECTED_ERROR = 786436;
   public static final int GRPC_HANDLER_EXCEPTION = 734211;
   public static final int GRPC_HANDLER_SCAN_EXCEPTION = 716806;
 

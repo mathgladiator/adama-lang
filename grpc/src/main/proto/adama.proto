@@ -23,36 +23,36 @@ service Adama {
   rpc ScanDeployments(ScanDeploymentsRequest) returns (ScanDeploymentsResponse) {}
 
   /** tear billing */
-  rpc BillingExchange(stream BillingForward) returns (stream BillingReverse) {}
+  rpc MeteringExchange(stream MeteringForward) returns (stream MeteringReverse) {}
 
 }
 
-message BillingBegin {
+message MeteringBegin {
 }
 
-message BillingDeleteBill {
+message MeteringDeleteBatch {
   string id = 1;
 }
 
-message BillingForward  {
+message MeteringForward  {
   oneof Operation {
-    BillingBegin begin = 1;
-    BillingDeleteBill remove = 2;
+    MeteringBegin begin = 1;
+    MeteringDeleteBatch remove = 2;
   }
 }
 
-message BillingBatchFound {
+message MeteringBatchFound {
   string id = 1;
   string batch = 2;
 }
 
-message BillingBatchRemoved {
+message MeteringBatchRemoved {
 }
 
-message BillingReverse {
+message MeteringReverse {
   oneof Operation {
-    BillingBatchFound found = 1;
-    BillingBatchRemoved removed = 2;
+    MeteringBatchFound found = 1;
+    MeteringBatchRemoved removed = 2;
   }
 }
 

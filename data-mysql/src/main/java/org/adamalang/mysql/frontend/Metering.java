@@ -15,16 +15,19 @@ import org.adamalang.common.Json;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.runtime.json.JsonStreamWriter;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Billing {
+public class Metering {
   public static void recordBatch(DataBase dataBase, String target, String batch, long time) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`billing_batches` (`target`, `batch`, `created`) VALUES (?,?,?)").toString();
+        String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`metering` (`target`, `batch`, `created`) VALUES (?,?,?)").toString();
 
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, target);
@@ -39,13 +42,7 @@ public class Billing {
   public static HashMap<String, SpaceSummary> summarizeWindow(DataBase dataBase, long fromTime, long toTime) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
-        {
-          DataBase.walk(connection, (rs) -> {
-            System.err.println(rs.getString(2));
-            System.err.println(rs.getString(1) + "/" + (new Date(fromTime)) + "/" + (new Date(toTime)));
-          }, "SELECT `created`,`target` FROM `" + dataBase.databaseName + "`.`billing_batches`");
-        }
-        String sql = new StringBuilder().append("SELECT `target`, `batch` FROM `").append(dataBase.databaseName).append("`.`billing_batches` WHERE ? <= `created` AND `created` < ?").toString();
+        String sql = new StringBuilder().append("SELECT `target`, `batch` FROM `").append(dataBase.databaseName).append("`.`metering` WHERE ? <= `created` AND `created` < ?").toString();
         HashMap<String, SpaceSummary> summary = new HashMap<>();
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, DataBase.dateTimeOf(fromTime));
@@ -81,9 +78,9 @@ public class Billing {
   }
 
   public static class SpaceSummary {
+    private final HashMap<String, PerTarget> targets;
     private long cpuTicks;
     private long messages;
-    private final HashMap<String, PerTarget> targets;
 
     private SpaceSummary() {
       this.targets = new HashMap<>();

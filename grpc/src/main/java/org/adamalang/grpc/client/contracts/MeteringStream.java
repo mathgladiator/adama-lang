@@ -9,7 +9,7 @@
  */
 package org.adamalang.grpc.client.contracts;
 
-public interface BillingStream {
+public interface MeteringStream {
   void handle(String target, String batch, Runnable after);
 
   void failure(int code);

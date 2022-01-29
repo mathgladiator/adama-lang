@@ -13,16 +13,14 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.grpc.TestBed;
-import org.adamalang.grpc.client.contracts.BillingStream;
+import org.adamalang.grpc.client.contracts.MeteringStream;
 import org.adamalang.grpc.client.contracts.CreateCallback;
-import org.adamalang.grpc.client.contracts.Lifecycle;
 import org.adamalang.grpc.client.contracts.SimpleEvents;
 import org.adamalang.grpc.client.sm.Connection;
 import org.adamalang.grpc.mocks.NaughtyServer;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -65,7 +63,7 @@ public class ClientTests {
         });
         Assert.assertTrue(latchFound.await(7500, TimeUnit.MILLISECONDS));
         Assert.assertTrue(got.get());
-        client.randomBillingExchange(new BillingStream() {
+        client.randomMeteringExchange(new MeteringStream() {
           @Override
           public void handle(String target, String batch, Runnable after) {
 
@@ -176,7 +174,7 @@ public class ClientTests {
           }
         });
         CountDownLatch latch2Failed = new CountDownLatch(1);
-        client.randomBillingExchange(new BillingStream() {
+        client.randomMeteringExchange(new MeteringStream() {
           @Override
           public void handle(String target, String batch, Runnable after) {
           }
@@ -293,8 +291,8 @@ public class ClientTests {
       CountDownLatch failure1 = new CountDownLatch(1);
       CountDownLatch failure2 = new CountDownLatch(1);
       client.notifyDeployment("127.0.0.1:12505", "*");
-      client.randomBillingExchange(
-          new BillingStream() {
+      client.randomMeteringExchange(
+          new MeteringStream() {
             @Override
             public void handle(String target, String batch, Runnable after) {
               after.run();
@@ -364,8 +362,8 @@ public class ClientTests {
       for (int k = 0; k < 512; k++) {
         client.notifyDeployment("127.0.0.1:12505", "*");
       }
-      client.randomBillingExchange(
-          new BillingStream() {
+      client.randomMeteringExchange(
+          new MeteringStream() {
             @Override
             public void handle(String target, String batch, Runnable after) {
               after.run();

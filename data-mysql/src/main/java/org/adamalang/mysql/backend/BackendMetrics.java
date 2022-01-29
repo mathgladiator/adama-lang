@@ -12,20 +12,18 @@ package org.adamalang.mysql.backend;
 import org.adamalang.common.metrics.MetricsFactory;
 
 public class BackendMetrics {
-  private final Runnable read;
-  private final Runnable write;
   public final Runnable lookup;
   public final Runnable lookup_change;
   public final Runnable delete;
-
   public final Runnable read_get;
   public final Runnable read_head_patch;
   public final Runnable read_rewind;
   public final Runnable read_compact;
-
   public final Runnable write_init;
   public final Runnable write_patch;
   public final Runnable write_compact;
+  private final Runnable read;
+  private final Runnable write;
 
   public BackendMetrics(MetricsFactory factory) {
     read = factory.counter("mysql_read");

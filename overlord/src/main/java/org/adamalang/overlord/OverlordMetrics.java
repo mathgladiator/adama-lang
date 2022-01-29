@@ -40,11 +40,11 @@ public class OverlordMetrics {
   public final Runnable capacity_monitor_fixed_inconsistent_deployment;
   public final Runnable capacity_monitor_found_weak_space;
 
-  public final Runnable billing_fetch_found;
-  public final Runnable billing_fetch_saved;
-  public final Runnable billing_fetch_empty;
-  public final Runnable billing_fetch_failed;
-  public final Runnable billing_fetch_finished;
+  public final Runnable metering_fetch_found;
+  public final Runnable metering_fetch_saved;
+  public final Runnable metering_fetch_empty;
+  public final Runnable metering_fetch_failed;
+  public final Runnable metering_fetch_finished;
 
   public final Runnable gossip_dump;
 
@@ -76,11 +76,11 @@ public class OverlordMetrics {
     capacity_monitor_fixed_inconsistent_deployment = factory.counter("capacity_monitor_fixed_inconsistent_deployment");
     capacity_monitor_found_weak_space = factory.counter("capacity_monitor_found_weak_space");
 
-    billing_fetch_found = factory.counter("billing_fetch_found");
-    billing_fetch_saved = factory.counter("billing_fetch_saved");
-    billing_fetch_empty = factory.counter("billing_fetch_empty");
-    billing_fetch_failed = factory.counter("billing_fetch_failed");
-    billing_fetch_finished = factory.counter("billing_fetch_finished");
+    metering_fetch_found = factory.counter("metering_fetch_found");
+    metering_fetch_saved = factory.counter("metering_fetch_saved");
+    metering_fetch_empty = factory.counter("metering_fetch_empty");
+    metering_fetch_failed = factory.counter("metering_fetch_failed");
+    metering_fetch_finished = factory.counter("metering_fetch_finished");
 
     gossip_dump = factory.counter("gossip_dump");
   }

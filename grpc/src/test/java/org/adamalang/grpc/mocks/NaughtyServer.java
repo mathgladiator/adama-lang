@@ -148,22 +148,22 @@ public class NaughtyServer extends AdamaGrpc.AdamaImplBase implements AutoClosea
   }
 
   @Override
-  public StreamObserver<BillingForward> billingExchange(StreamObserver<BillingReverse> responseObserver) {
+  public StreamObserver<MeteringForward> meteringExchange(StreamObserver<MeteringReverse> responseObserver) {
     if (bits.happyBillingDemo) {
       AtomicInteger counts = new AtomicInteger(5);
-      return new StreamObserver<BillingForward>() {
+      return new StreamObserver<MeteringForward>() {
         @Override
-        public void onNext(BillingForward billingForward) {
+        public void onNext(MeteringForward billingForward) {
           switch (billingForward.getOperationCase()) {
             case BEGIN:
               if (counts.getAndDecrement() > 0) {
-                responseObserver.onNext(BillingReverse.newBuilder().setFound(BillingBatchFound.newBuilder().setId("id").setBatch("batch:" + counts.get()).build()).build());
+                responseObserver.onNext(MeteringReverse.newBuilder().setFound(MeteringBatchFound.newBuilder().setId("id").setBatch("batch:" + counts.get()).build()).build());
               } else {
                 responseObserver.onCompleted();
               }
               return;
             case REMOVE:
-              responseObserver.onNext(BillingReverse.newBuilder().setRemoved(BillingBatchRemoved.newBuilder().build()).build());
+              responseObserver.onNext(MeteringReverse.newBuilder().setRemoved(MeteringBatchRemoved.newBuilder().build()).build());
               return;
           }
         }
@@ -176,9 +176,9 @@ public class NaughtyServer extends AdamaGrpc.AdamaImplBase implements AutoClosea
       };
     } else {
       responseObserver.onError(new NullPointerException());
-      return new StreamObserver<BillingForward>() {
+      return new StreamObserver<MeteringForward>() {
         @Override
-        public void onNext(BillingForward billingForward) {
+        public void onNext(MeteringForward billingForward) {
 
         }
 

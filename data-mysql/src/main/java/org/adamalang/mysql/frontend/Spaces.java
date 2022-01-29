@@ -124,8 +124,8 @@ public class Spaces {
     try (Connection connection = dataBase.pool.getConnection()) {
       // select * from a LEFT OUTER JOIN b on a.a = b.b;
       String sql = new StringBuilder("SELECT `s`.`name`,`s`.`owner`,`s`.`billing`,`s`.`created` FROM `").append(dataBase.databaseName) //
-                                                                                                        .append("`.`spaces` as `s` LEFT OUTER JOIN `").append(dataBase.databaseName).append("`.`grants` as `g` ON `s`.`id` = `g`.`space`") //
-                                                                                                        .append(" WHERE (`s`.owner=").append(userId).append(" OR `g`.`user`=").append(userId).append(") AND `s`.`name`>? ORDER BY `s`.`name` ASC LIMIT ").append(limit).toString();
+          .append("`.`spaces` as `s` LEFT OUTER JOIN `").append(dataBase.databaseName).append("`.`grants` as `g` ON `s`.`id` = `g`.`space`") //
+          .append(" WHERE (`s`.owner=").append(userId).append(" OR `g`.`user`=").append(userId).append(") AND `s`.`name`>? ORDER BY `s`.`name` ASC LIMIT ").append(limit).toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, marker == null ? "" : marker);
         try (ResultSet rs = statement.executeQuery()) {
@@ -142,7 +142,7 @@ public class Spaces {
   public static ArrayList<String> listAllSpaceNames(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = new StringBuilder("SELECT `name` FROM `").append(dataBase.databaseName) //
-                                                            .append("`.`spaces` ORDER BY `id` ASC").toString();
+          .append("`.`spaces` ORDER BY `id` ASC").toString();
       ArrayList<String> results = new ArrayList<>();
       DataBase.walk(connection, (rs) -> {
         results.add(rs.getString(1));

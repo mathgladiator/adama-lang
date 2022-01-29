@@ -1105,8 +1105,8 @@ public class InstanceClientTests {
         Assert.assertTrue(avail.await(2000, TimeUnit.MILLISECONDS));
         CountDownLatch finished = new CountDownLatch(1);
         ArrayList<String> handled = new ArrayList<>();
-        client.startBillingExchange(
-            new BillingStream() {
+        client.startMeteringExchange(
+            new MeteringStream() {
               @Override
               public void handle(String target, String batch, Runnable after) {
                 handled.add(target + ":" + batch);
@@ -1163,8 +1163,8 @@ public class InstanceClientTests {
               })) {
         Assert.assertTrue(avail.await(2000, TimeUnit.MILLISECONDS));
         CountDownLatch finished = new CountDownLatch(1);
-        client.startBillingExchange(
-            new BillingStream() {
+        client.startMeteringExchange(
+            new MeteringStream() {
               @Override
               public void handle(String target, String batch, Runnable after) {
                 after.run();

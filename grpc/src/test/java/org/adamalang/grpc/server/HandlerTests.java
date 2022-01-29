@@ -400,7 +400,7 @@ public class HandlerTests {
   @Test
   public void handler_billing_exchange() throws Exception {
     try (HandlerBed bed = new HandlerBed(OK_CODE)) {
-      AtomicReference<StreamObserver<BillingForward>> ref = new AtomicReference<>();
+      AtomicReference<StreamObserver<MeteringForward>> ref = new AtomicReference<>();
       CountDownLatch complete = new CountDownLatch(1);
       CountDownLatch didSomething = new CountDownLatch(1);
       do {
@@ -419,16 +419,16 @@ public class HandlerTests {
           }
         });
         Assert.assertTrue(drain.await(5000, TimeUnit.MILLISECONDS));
-        ref.set(bed.handler.billingExchange(new StreamObserver<BillingReverse>() {
+        ref.set(bed.handler.meteringExchange(new StreamObserver<>() {
           @Override
-          public void onNext(BillingReverse billingReverse) {
+          public void onNext(MeteringReverse billingReverse) {
             switch (billingReverse.getOperationCase()) {
               case FOUND:
                 didSomething.countDown();
-                ref.get().onNext(BillingForward.newBuilder().setRemove(BillingDeleteBill.newBuilder().setId(billingReverse.getFound().getId()).build()).build());
+                ref.get().onNext(MeteringForward.newBuilder().setRemove(MeteringDeleteBatch.newBuilder().setId(billingReverse.getFound().getId()).build()).build());
                 return;
               case REMOVED:
-                ref.get().onNext(BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
+                ref.get().onNext(MeteringForward.newBuilder().setBegin(MeteringBegin.newBuilder().build()).build());
                 return;
             }
           }
@@ -443,7 +443,7 @@ public class HandlerTests {
             complete.countDown();
           }
         }));
-        ref.get().onNext(BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
+        ref.get().onNext(MeteringForward.newBuilder().setBegin(MeteringBegin.newBuilder().build()).build());
         Assert.assertTrue(complete.await(5000, TimeUnit.MILLISECONDS));
       } while (!didSomething.await(100, TimeUnit.MILLISECONDS));
     }
@@ -452,17 +452,17 @@ public class HandlerTests {
   @Test
   public void handler_billing_error() throws Exception {
     try (HandlerBed bed = new HandlerBed(OK_CODE)) {
-      AtomicReference<StreamObserver<BillingForward>> ref = new AtomicReference<>();
+      AtomicReference<StreamObserver<MeteringForward>> ref = new AtomicReference<>();
       CountDownLatch complete = new CountDownLatch(1);
-      ref.set(bed.handler.billingExchange(new StreamObserver<BillingReverse>() {
+      ref.set(bed.handler.meteringExchange(new StreamObserver<>() {
         @Override
-        public void onNext(BillingReverse billingReverse) {
+        public void onNext(MeteringReverse billingReverse) {
           switch (billingReverse.getOperationCase()) {
             case FOUND:
-              ref.get().onNext(BillingForward.newBuilder().setRemove(BillingDeleteBill.newBuilder().setId(billingReverse.getFound().getId()).build()).build());
+              ref.get().onNext(MeteringForward.newBuilder().setRemove(MeteringDeleteBatch.newBuilder().setId(billingReverse.getFound().getId()).build()).build());
               return;
             case REMOVED:
-              ref.get().onNext(BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
+              ref.get().onNext(MeteringForward.newBuilder().setBegin(MeteringBegin.newBuilder().build()).build());
               return;
           }
         }

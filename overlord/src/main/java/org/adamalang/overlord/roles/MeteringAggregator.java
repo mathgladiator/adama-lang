@@ -12,38 +12,38 @@ package org.adamalang.overlord.roles;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.Client;
-import org.adamalang.grpc.client.contracts.BillingStream;
+import org.adamalang.grpc.client.contracts.MeteringStream;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.frontend.Billing;
+import org.adamalang.mysql.frontend.Metering;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 
-public class BillingAggregator {
+public class MeteringAggregator {
   public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBaseFront, ConcurrentCachedHtmlHandler handler) {
-    SimpleExecutor executor = SimpleExecutor.create("billing-aggregator");
+    SimpleExecutor executor = SimpleExecutor.create("metering-aggregator");
     FixedHtmlStringLoggerTable table = new FixedHtmlStringLoggerTable(32, "target", "batch", "time");
-    executor.schedule(new NamedRunnable("billing-fetch") {
+    executor.schedule(new NamedRunnable("metering-fetch") {
       @Override
       public void execute() throws Exception {
         NamedRunnable self = this;
-        client.randomBillingExchange(new BillingStream() {
+        client.randomMeteringExchange(new MeteringStream() {
           private boolean gotFinished = false;
 
           @Override
           public void handle(String target, String batch, Runnable after) {
-            metrics.billing_fetch_found.run();
-            executor.execute(new NamedRunnable("handle-batch") {
+            metrics.metering_fetch_found.run();
+            executor.execute(new NamedRunnable("handle-metering-batch") {
               @Override
               public void execute() throws Exception {
                 long now = System.currentTimeMillis();
                 if (!batch.contains("\"spaces\":{}")) {
-                  Billing.recordBatch(dataBaseFront, target, batch, now);
+                  Metering.recordBatch(dataBaseFront, target, batch, now);
                   table.row(target, batch, Long.toString(now));
-                  metrics.billing_fetch_saved.run();
+                  metrics.metering_fetch_saved.run();
                 } else {
                   // don't bother saving an empty batch
-                  metrics.billing_fetch_empty.run();
+                  metrics.metering_fetch_empty.run();
                 }
                 after.run();
               }
@@ -52,7 +52,7 @@ public class BillingAggregator {
 
           @Override
           public void failure(int code) {
-            metrics.billing_fetch_failed.run();
+            metrics.metering_fetch_failed.run();
             finished();
           }
 
@@ -63,8 +63,8 @@ public class BillingAggregator {
               public void execute() throws Exception {
                 if (!gotFinished) {
                   gotFinished = true;
-                  metrics.billing_fetch_finished.run();
-                  handler.put("/billing", table.toHtml("Recent Billing Data"));
+                  metrics.metering_fetch_finished.run();
+                  handler.put("/metering", table.toHtml("Recent Metering Data"));
                   executor.schedule(self, 10000);
                 }
               }

@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -117,23 +116,23 @@ public class Client {
     });
   }
 
-  public void randomBillingExchange(BillingStream billing) {
-    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_billing_exchange.start();
+  public void randomMeteringExchange(MeteringStream metering) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_metering_exchange.start();
     engine.random(target -> {
       if (target != null) {
-        finder.find(target, new ItemAction<InstanceClient>(ErrorCodes.API_BILLING_TIMEOUT, ErrorCodes.API_BILLING_REJECTED, mInstance) {
+        finder.find(target, new ItemAction<InstanceClient>(ErrorCodes.API_METERING_TIMEOUT, ErrorCodes.API_METERING_REJECTED, mInstance) {
           @Override
           protected void executeNow(InstanceClient item) {
-            item.startBillingExchange(billing);
+            item.startMeteringExchange(metering);
           }
 
           @Override
           protected void failure(int code) {
-            billing.failure(code);
+            metering.failure(code);
           }
         });
       } else {
-        billing.failure(ErrorCodes.API_BILLING_FAILED_FINDING_RANDOM_HOST);
+        metering.failure(ErrorCodes.API_METERING_FAILED_FINDING_RANDOM_HOST);
       }
     });
   }

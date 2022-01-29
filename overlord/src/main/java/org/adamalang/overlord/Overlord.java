@@ -47,7 +47,7 @@ public class Overlord {
     CapacityManager.kickOffReturnHotTargetEvent(metrics, client, deploymentsDatabase, dataBaseFront, handler, heatTable);
 
     // start aggregating bills from hosts and write them to database
-    BillingAggregator.kickOff(metrics, client, dataBaseFront, handler);
+    MeteringAggregator.kickOff(metrics, client, dataBaseFront, handler);
 
     // make a table of a dump of all gossip
     GossipDumper.kickOff(metrics, engine, handler);
@@ -59,7 +59,7 @@ public class Overlord {
     indexHtmlBuilder.append("<a href=\"/heat\">Heat Table</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/reconcile\">Deployment Reconciliation</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/targets\">Targets</a><br />\n");
-    indexHtmlBuilder.append("<a href=\"/billing\">Recent Billing Data</a><br />\n");
+    indexHtmlBuilder.append("<a href=\"/metering\">Recent Metering Data</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/gossip\">Gossip Dump</a><br />\n");
     indexHtmlBuilder.append("</body></html>");
     String indexHtml = indexHtmlBuilder.toString();

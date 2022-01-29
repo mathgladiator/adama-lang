@@ -23,7 +23,7 @@ public class BackendOperations {
     try (Connection connection = dataBase.pool.getConnection()) {
       // select * from a LEFT OUTER JOIN b on a.a = b.b;
       String sql = new StringBuilder("SELECT `key`, `created`, `updated`, `head_seq`, `invalidate` FROM `").append(dataBase.databaseName) //
-                                                                                                           .append("`.`index` WHERE `space`=? AND `key`>? LIMIT ").append(Math.max(Math.min(limit, 1000), 1)).toString();
+          .append("`.`index` WHERE `space`=? AND `key`>? LIMIT ").append(Math.max(Math.min(limit, 1000), 1)).toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         statement.setString(2, marker == null ? "" : marker);

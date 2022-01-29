@@ -134,12 +134,12 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
-  public void startBillingExchange(BillingStream billingStream) {
-    executor.execute(new NamedRunnable("billing-exchange") {
+  public void startMeteringExchange(MeteringStream meteringStream) {
+    executor.execute(new NamedRunnable("metering-exchange") {
       @Override
       public void execute() throws Exception {
-        BillingObserver observer = new BillingObserver(billingStream);
-        observer.start(stub.billingExchange(observer));
+        MeteringObserver observer = new MeteringObserver(meteringStream);
+        observer.start(stub.meteringExchange(observer));
       }
     });
   }
@@ -181,33 +181,33 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
-  private class BillingObserver implements StreamObserver<BillingReverse> {
-    private final BillingStream billingStream;
+  private class MeteringObserver implements StreamObserver<MeteringReverse> {
+    private final MeteringStream meteringStream;
     boolean completedThisSide = false;
-    private StreamObserver<BillingForward> upstream;
+    private StreamObserver<MeteringForward> upstream;
     private String batchRemoved;
 
-    public BillingObserver(BillingStream billingStream) {
-      this.billingStream = billingStream;
+    public MeteringObserver(MeteringStream meteringStream) {
+      this.meteringStream = meteringStream;
       this.batchRemoved = null;
     }
 
-    public void start(StreamObserver<BillingForward> upstream) {
+    public void start(StreamObserver<MeteringForward> upstream) {
       this.upstream = upstream;
       // start the conversation
-      upstream.onNext(BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
+      upstream.onNext(MeteringForward.newBuilder().setBegin(MeteringBegin.newBuilder().build()).build());
     }
 
     @Override
-    public void onNext(BillingReverse billingReverse) {
-      switch (billingReverse.getOperationCase()) {
+    public void onNext(MeteringReverse reverse) {
+      switch (reverse.getOperationCase()) {
         case FOUND: {
           executor.execute(new NamedRunnable("asking-to-remove") {
             @Override
             public void execute() throws Exception {
-              BillingBatchFound found = billingReverse.getFound();
-              BillingObserver.this.batchRemoved = found.getBatch();
-              upstream.onNext(BillingForward.newBuilder().setRemove(BillingDeleteBill.newBuilder().setId(found.getId()).build()).build());
+              MeteringBatchFound found = reverse.getFound();
+              MeteringObserver.this.batchRemoved = found.getBatch();
+              upstream.onNext(MeteringForward.newBuilder().setRemove(MeteringDeleteBatch.newBuilder().setId(found.getId()).build()).build());
             }
           });
           return;
@@ -216,11 +216,11 @@ public class InstanceClient implements AutoCloseable {
           executor.execute(new NamedRunnable("removing-batch") {
             @Override
             public void execute() throws Exception {
-              billingStream.handle(target, batchRemoved, () -> {
+              meteringStream.handle(target, batchRemoved, () -> {
                 executor.execute(new NamedRunnable("batch-processed") {
                   @Override
                   public void execute() throws Exception {
-                    upstream.onNext(BillingForward.newBuilder().setBegin(BillingBegin.newBuilder().build()).build());
+                    upstream.onNext(MeteringForward.newBuilder().setBegin(MeteringBegin.newBuilder().build()).build());
                   }
                 });
               });
@@ -233,12 +233,12 @@ public class InstanceClient implements AutoCloseable {
 
     @Override
     public void onError(Throwable throwable) {
-      billingStream.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_BILLING_UNKNOWN_EXCEPTION, throwable, logger).code);
+      meteringStream.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_METERING_UNKNOWN_EXCEPTION, throwable, logger).code);
     }
 
     @Override
     public void onCompleted() {
-      billingStream.finished();
+      meteringStream.finished();
       if (!completedThisSide) {
         upstream.onCompleted();
         completedThisSide = true;
