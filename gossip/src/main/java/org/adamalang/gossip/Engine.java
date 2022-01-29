@@ -89,7 +89,7 @@ public class Engine implements AutoCloseable {
           sbHtml.append("<td>").append(instance.ip).append("</td>");
           sbHtml.append("<td>").append(instance.port).append("</td>");
           sbHtml.append("<td>").append(instance.role).append("</td>");
-          sbHtml.append("<td>").append(instance.counter()).append("</td></tr>");
+          sbHtml.append("<td>").append(instance.counter()).append("</td>");
           sbHtml.append("<td>").append(System.currentTimeMillis() - instance.created).append("</td></tr>");
         }
         sbHtml.append("</table></body></html>");
