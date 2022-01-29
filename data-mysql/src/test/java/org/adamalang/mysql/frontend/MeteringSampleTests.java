@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class MeteringSampleTests {
 
   @Test
-  public void billingbatches() throws Exception {
+  public void batches() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
     try (DataBase dataBase = new DataBase(dataBaseConfig)) {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);

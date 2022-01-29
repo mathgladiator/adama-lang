@@ -55,6 +55,7 @@ public class FrontendManagementInstaller {
         .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
         .append("  `name` VARCHAR(128) NOT NULL,") //
         .append("  `billing` VARCHAR(16) NOT NULL,") //
+        .append("  `balance` INT(4) UNSIGNED DEFAULT 0,") //
         .append("  `plan` TEXT NOT NULL,") //
         .append("  `hash` VARCHAR(256) NOT NULL,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
@@ -106,6 +107,24 @@ public class FrontendManagementInstaller {
         .append(" DEFAULT CHARACTER SET = utf8mb4;") //
         .toString();
 
+    String createBillingTableSQL = new StringBuilder() //
+        .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`bills` (") //
+        .append("  `id` INT(6) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+        .append("  `space` INT(4) UNSIGNED NOT NULL,") // (i.e. who is going to pay)
+        .append("  `hour` INT(8) UNSIGNED NOT NULL,") // the UTC hour for the resource consumption
+        .append("  `resource_cpu` INT(8) UNSIGNED NOT NULL,")
+        .append("  `resource_memory` INT(8) UNSIGNED NOT NULL,")
+        .append("  `resource_connections` INT(4) UNSIGNED NOT NULL,")
+        .append("  `resource_documents` INT(4) UNSIGNED NOT NULL,")
+        .append("  `resource_messages` INT(4) UNSIGNED NOT NULL,")
+        .append("  `pennies` INT(4) UNSIGNED NOT NULL,")
+        .append("  PRIMARY KEY (`id`),") //
+        .append("  INDEX `s` (`space`),") //
+        .append("  INDEX `h` (`hour`))") //
+        .append(" ENGINE = InnoDB") //
+        .append(" DEFAULT CHARACTER SET = utf8mb4;") //
+        .toString();
+
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, createDatabaseSQL);
@@ -115,6 +134,7 @@ public class FrontendManagementInstaller {
       DataBase.execute(connection, createGrantTableSQL);
       DataBase.execute(connection, createAuthoritiesTableSQL);
       DataBase.execute(connection, createMeteringTableSQL);
+      DataBase.execute(connection, createBillingTableSQL);
     } finally {
       connection.close();
     }
@@ -129,6 +149,7 @@ public class FrontendManagementInstaller {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`grants`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`authorities`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`metering`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`bills`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
       connection.close();
