@@ -16,7 +16,9 @@ import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
+import org.adamalang.extern.aws.AWSConfig;
 import org.adamalang.extern.aws.AWSMetrics;
+import org.adamalang.extern.aws.SES;
 import org.adamalang.extern.prometheus.PrometheusDashboard;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
@@ -283,18 +285,13 @@ public class Service {
       System.err.println("adama targets:" + notice);
       targetPublisher.accept(targets);
     });
-    // TODO: use real-email SES thingy
-    ExternNexus nexus = new ExternNexus(new Email() {
-      @Override
-      public boolean sendCode(String email, String code) {
-        System.err.println("Email:" + email + " --> " + code);
-        return true;
-      }
-    }, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory);
+    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+    ExternNexus nexus = new ExternNexus(new SES(awsConfig, new AWSMetrics(prometheusMetricsFactory)), dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory);
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus);
 
     // TODO: have some sense of health checking in the web package
+    // TODO: should also have web heat flow to overlord
     /*
     engine.newApp("web", webConfig.port, (hb) -> {
 
