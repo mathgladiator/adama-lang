@@ -24,34 +24,28 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Tool {
+  public static void build(String inputXmlFile, File root) throws Exception {
+    HashMap<File, String> files = buildInMemoryFileSystem(inputXmlFile, root);
+    for (Map.Entry<File, String> entry : files.entrySet()) {
+      Files.writeString(entry.getKey().toPath(), entry.getValue());
+    }
+  }
 
-  public static void build() throws Exception {
-    // TODO: move into args
-    FileInputStream input = new FileInputStream("saas/api.xml");
-    Document doc = load(input);
-    NodeList apiList = doc.getElementsByTagName("api");
-    if (apiList == null || apiList.getLength() == 0) {
-      throw new Exception("no root api node");
-    }
-    Element api = (Element) apiList.item(0);
-    if (api == null) {
-      throw new Exception("no root api node");
-    }
-    String outputPathStr = api.getAttribute("output-path");
-    String packageName = api.getAttribute("package");
-    if (outputPathStr == null || "".equals(outputPathStr)) {
-      throw new Exception("no output path");
-    }
-
-    if (packageName == null || "".equals(packageName)) {
-      throw new Exception("no package name");
-    }
+  public static HashMap<File, String> buildInMemoryFileSystem(String inputXmlFile, File root) throws Exception {
+    FileInputStream input = new FileInputStream(new File(root, inputXmlFile));
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    Document doc = builder.parse(input);
+    Element api = DocumentHelper.first(doc.getElementsByTagName("api"), "root api node");
+    String outputPathStr = DocumentHelper.attribute(api, "output-path");
+    String packageName = DocumentHelper.attribute(api, "package");
+    String docsFile = DocumentHelper.attribute(api, "docs");
+    String clientFile = DocumentHelper.attribute(api, "client");
     Map<String, ParameterDefinition> parameters = ParameterDefinition.buildMap(doc);
     Map<String, FieldDefinition> fields = FieldDefinition.buildMap(doc);
     Map<String, Responder> responders = Responder.respondersOf(doc, fields);
@@ -62,8 +56,7 @@ public class Tool {
     Map<String, String> handlerFiles = AssembleHandlers.make(packageName, methods);
     String router = AssembleConnectionRouter.make(packageName, methods);
     String metrics = AssembleMetrics.make(packageName, methods);
-
-    File outputPath = new File(outputPathStr);
+    File outputPath = new File(root, outputPathStr);
     outputPath.mkdirs();
     if (!(outputPath.exists() && outputPath.isDirectory())) {
       throw new Exception("output path failed to be created");
@@ -72,31 +65,21 @@ public class Tool {
     apiOutput.put("ConnectionNexus.java", nexus);
     apiOutput.put("ConnectionRouter.java", router);
     apiOutput.put("ApiMetrics.java", metrics);
-
     apiOutput.putAll(requestsFiles);
     apiOutput.putAll(responderFiles);
     apiOutput.putAll(handlerFiles);
     // write out the nexus
+    HashMap<File, String> diskWrites = new HashMap<>();
 
     for (Map.Entry<String, String> request : apiOutput.entrySet()) {
-      Files.writeString(new File(outputPath, request.getKey()).toPath(), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
+      diskWrites.put(new File(outputPath, request.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
     }
-    // TODO: move output files to Schema
-    Files.writeString(new File("apikit/docs/src/reference.md").toPath(), AssembleAPIDocs.docify(methods));
-
-    String client = Files.readString(new File("client/src/index.ts").toPath());
+    diskWrites.put(new File(root, docsFile), AssembleAPIDocs.docify(methods));
+    String client = Files.readString(new File(root, clientFile).toPath());
     client = AssembleClient.injectInvoke(client, methods);
     client = AssembleClient.injectResponders(client, responders);
-    Files.writeString(new File("client/src/index.ts").toPath(), client);
+    diskWrites.put(new File(root, clientFile), client);
+    return diskWrites;
   }
 
-  private static Document load(InputStream input) throws Exception {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    return builder.parse(input);
-  }
-
-  public static void main(String[] args) throws Exception {
-    build();
-  }
 }

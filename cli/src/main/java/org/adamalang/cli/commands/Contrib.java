@@ -31,7 +31,7 @@ public class Contrib {
         GenerateLanguageTests.generate(0, next);
         return;
       case "make-api":
-        Tool.build();
+        Tool.build("saas/api.xml", new File("."));
         return;
       case "copyright":
         copyright();

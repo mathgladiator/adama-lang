@@ -17,12 +17,12 @@
     <dependencies>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>common</artifactId>
             <version>0.2</version>
         </dependency>
         <dependency>
             <groupId>org.adamalang</groupId>
-            <artifactId>web</artifactId>
+            <artifactId>errors</artifactId>
             <version>0.2</version>
         </dependency>
         <dependency>

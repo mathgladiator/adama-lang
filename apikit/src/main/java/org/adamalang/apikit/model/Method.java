@@ -9,6 +9,7 @@
  */
 package org.adamalang.apikit.model;
 
+import org.adamalang.apikit.DocumentHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,20 +56,12 @@ public class Method {
     for (int k = 0; k < list.getLength(); k++) {
       Node node = list.item(k);
       Element element = (Element) node;
-      String name = element.getAttribute("name");
-      if (name == null || "".equals(name)) {
-        throw new Exception("missing name value: " + node);
-      }
-
-      String responderValue = element.getAttribute("responder");
-      if (responderValue == null || "".equals(responderValue)) {
-        throw new Exception("missing responder value: " + node + "/" + name);
-      }
+      String name = DocumentHelper.attribute(element, "name");
+      String responderValue = DocumentHelper.attribute(element, "responder");
       Responder responder = responders.get(responderValue);
       if (responder == null) {
         throw new Exception("responder not found:" + responderValue);
       }
-
       String createValue = element.getAttribute("create");
       String findByValue = element.getAttribute("find-by");
       String errorCantFindByText = element.getAttribute("error-find-by");
@@ -93,10 +86,7 @@ public class Method {
         if (childItem.getNodeType() == Node.ELEMENT_NODE) {
           Element childElement = (Element) childItem;
           if ("parameter".equals(childElement.getTagName())) {
-            String parameterName = childElement.getAttribute("name");
-            if (parameterName == null) {
-              throw new Exception("parameters must have name");
-            }
+            String parameterName = DocumentHelper.attribute(childElement, "name");
             ParameterDefinition parameter = parameters.get(parameterName);
             if (parameter == null) {
               throw new Exception("unable to find parameter: " + parameterName);

@@ -7,6 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.web.api;
+package org.adamalang.apikit;
 
-public class CoverageTests {}
+public class DocumentHelperTests {
+}

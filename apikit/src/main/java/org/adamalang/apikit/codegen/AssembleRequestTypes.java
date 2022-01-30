@@ -88,8 +88,6 @@ public class AssembleRequestTypes {
           case Boolean:
             java.append("request.getBoolean(\"");
             break;
-          default:
-            throw new RuntimeException();
         }
         java.append(parameter.name).append("\", ").append(parameter.optional ? "false" : "true").append(", ").append(parameter.errorCodeIfMissing).append(");\n");
         if (parameter.validator != null) {
@@ -143,9 +141,6 @@ public class AssembleRequestTypes {
       java.append("  }\n");
       java.append("}\n");
       String filename = method.camelName + "Request.java";
-      if (files.containsKey(filename)) {
-        throw new Exception("method already defined");
-      }
       files.put(filename, java.toString());
     }
     return files;

@@ -9,6 +9,7 @@
  */
 package org.adamalang.apikit.model;
 
+import org.adamalang.apikit.DocumentHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -21,14 +22,12 @@ public class FieldDefinition {
   public final String name;
   public final String camelName;
   public final Type type;
-  public final boolean optional;
   public final String documentation;
 
-  public FieldDefinition(final String name, Type type, boolean optional, String documentation) {
+  public FieldDefinition(final String name, Type type, String documentation) {
     this.name = name;
     this.camelName = Common.camelize(name, true);
     this.type = type;
-    this.optional = optional;
     this.documentation = documentation;
   }
 
@@ -39,21 +38,10 @@ public class FieldDefinition {
       Node node = list.item(k);
       if (node.getNodeType() != Node.ELEMENT_NODE) continue;
       Element element = (Element) node;
-      String name = element.getAttribute("name");
-      if (name == null) {
-        throw new Exception("field-definition needs a name");
-      }
-      String rawType = element.getAttribute("type");
-      if (rawType == null) {
-        throw new Exception("field-definition needs a type");
-      }
+      String name = DocumentHelper.attribute(element, "name");
+      String rawType = DocumentHelper.attribute(element, "type");
       Type type = Type.of(rawType);
-      if (type == null) {
-        throw new Exception("field-definition's type must be valid");
-      }
-      boolean optional = "true".equals(element.getAttribute("optional"));
       String documentation = null;
-
       NodeList children = node.getChildNodes();
       for (int j = 0; j < children.getLength(); j++) {
         Node childNode = children.item(j);
@@ -71,7 +59,7 @@ public class FieldDefinition {
       if (documentation == null) {
         throw new Exception("field has no documentation");
       }
-      FieldDefinition definition = new FieldDefinition(name, type, optional, documentation);
+      FieldDefinition definition = new FieldDefinition(name, type, documentation);
       if (fields.containsKey(name)) {
         throw new Exception("field already defined: " + name);
       }

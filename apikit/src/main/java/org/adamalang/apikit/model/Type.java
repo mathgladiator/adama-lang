@@ -45,7 +45,7 @@ public enum Type {
       case JsonObject:
         return "ObjectNode";
     }
-    throw new RuntimeException();
+    throw new RuntimeException("bug");
   }
 
   public String typescriptType() {
@@ -60,6 +60,6 @@ public enum Type {
       case JsonObject:
         return "any";
     }
-    throw new RuntimeException();
+    throw new RuntimeException("bug");
   }
 }
