@@ -390,7 +390,7 @@ public class RootHandlerImpl implements RootHandler {
                 request.who.id,
                 request.marker,
                 request.limit == null ? 100 : request.limit)) {
-          responder.next(spaceListingItem.name, spaceListingItem.callerRole, spaceListingItem.billing, spaceListingItem.created);
+          responder.next(spaceListingItem.name, spaceListingItem.callerRole, spaceListingItem.billing, spaceListingItem.created, spaceListingItem.balance);
         }
         responder.finish();
       } else {

@@ -237,6 +237,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="balance" type="integer">
+        <documentation>
+            The balance of a space (in pennies)
+        </documentation>
+    </field-definition>
+
     <field-definition name="role" type="string">
         <documentation>
             Each developer has a role to a document
@@ -298,6 +304,7 @@
         <field name="role"/>
         <field name="billing"/>
         <field name="created"/>
+        <field name="balance"/>
     </responder>
 
     <responder name="authority-listing" stream="true">
@@ -318,7 +325,6 @@
     <responder name="keystore">
         <field name="keystore"/>
     </responder>
-
 
     <responder name="reflection">
         <field name="reflection"/>

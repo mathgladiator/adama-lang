@@ -22,21 +22,23 @@ public class SpaceListingResponder {
     this.responder = responder;
   }
 
-  public void next(String space, String role, String billing, String created) {
+  public void next(String space, String role, String billing, String created, Integer balance) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
     _obj.put("space", space);
     _obj.put("role", role);
     _obj.put("billing", billing);
     _obj.put("created", created);
+    _obj.put("balance", balance);
     responder.stream(_obj.toString());
   }
 
-  public void finish(String space, String role, String billing, String created) {
+  public void finish(String space, String role, String billing, String created, Integer balance) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
     _obj.put("space", space);
     _obj.put("role", role);
     _obj.put("billing", billing);
     _obj.put("created", created);
+    _obj.put("balance", balance);
     responder.finish(_obj.toString());
   }
 

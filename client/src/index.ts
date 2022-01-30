@@ -111,6 +111,7 @@ export interface SpaceListingPayload {
   role: string;
   billing: string;
   created: string;
+  balance: number;
 }
 
 export interface SpaceListingResponder {
