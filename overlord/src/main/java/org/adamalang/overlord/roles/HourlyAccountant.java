@@ -81,7 +81,7 @@ public class HourlyAccountant {
     public void execute() throws Exception {
       try {
         handler.put("/accountant", accountantTable.toHtml("Accountant Work"));
-        int current = toHourCode(LocalDateTime.now().minusHours(3));
+        int current = toHourCode(LocalDateTime.now().minusHours(2));
         while (this.billingHourAt < current) {
           int hourToRun = nextHour(billingHourAt);
           runBilling(hourToRun);
