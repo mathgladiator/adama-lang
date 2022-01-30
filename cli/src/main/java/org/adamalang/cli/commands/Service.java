@@ -194,9 +194,7 @@ public class Service {
     };
     File billingRoot = new File(billingRootPath);
     billingRoot.mkdir();
-    // TODO: change to 10 minutes, maybe? using a much shorter cut-off period as it is helping test production issues;
-    //  600000L
-    DiskMeteringBatchMaker billingBatchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 60000L);
+    DiskMeteringBatchMaker billingBatchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, SimpleExecutor.create("billing-batch-maker"), billingRoot, 10 * 60000L);
     meteringPubSub.subscribe((bills) -> {
       for (MeterReading meterReading : bills) {
         billingBatchMaker.write(meterReading);
