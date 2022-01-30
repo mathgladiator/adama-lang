@@ -24,10 +24,25 @@ import java.util.List;
 import java.util.Set;
 
 public class Spaces {
+
+  public static Integer getLatestBillingHourCode(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sqlTestWater = new StringBuilder().append("SELECT `latest_billing_hour` FROM `").append(dataBase.databaseName).append("`.`spaces` ORDER BY `latest_billing_hour` DESC LIMIT 1").toString();
+      try (PreparedStatement statement = connection.prepareStatement(sqlTestWater)) {
+        ResultSet rs = statement.executeQuery();
+        if (rs.next()) {
+          return rs.getInt(1);
+        } else {
+          return null;
+        }
+      }
+    }
+  }
+
   public static int createSpace(DataBase dataBase, int userId, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sqlTestWater = new StringBuilder().append("SELECT `owner`, `id` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE `name`=?").toString();
-      try (PreparedStatement statement = connection.prepareStatement(sqlTestWater, Statement.RETURN_GENERATED_KEYS)) {
+      try (PreparedStatement statement = connection.prepareStatement(sqlTestWater)) {
         statement.setString(1, space);
         ResultSet rs = statement.executeQuery();
         if (rs.next()) {

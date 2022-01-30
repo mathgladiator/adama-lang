@@ -9,16 +9,16 @@
  */
 package org.adamalang.apikit;
 
-import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 
 public class GenErrors {
 
-  public final SecureRandom rng;
+  public final Random rng;
 
   public GenErrors() throws Exception {
-    rng = SecureRandom.getInstanceStrong();
+    rng = new Random();
   }
 
   public static void main(String[] args) throws Exception {

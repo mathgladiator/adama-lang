@@ -30,8 +30,10 @@ public class MeteringSampleTests {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
         installer.install();
+        Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));
+        Assert.assertNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
         int spaceId = Spaces.createSpace(dataBase, 42, "space");
-
+        Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
         long now = System.currentTimeMillis();
         Metering.recordBatch(
             dataBase,
@@ -42,7 +44,7 @@ public class MeteringSampleTests {
             dataBase,
             "target2",
             "{\"time\":\""+(now + 10000)+"\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":19}}}", now);
-
+        Assert.assertNotNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
         HashMap<String, MeteringSpaceSummary> summary1 = Metering.summarizeWindow(dataBase, now - 100000, now + 100000);
         Assert.assertEquals(1, summary1.size());
 
@@ -60,6 +62,7 @@ public class MeteringSampleTests {
         Spaces.creditBalance(dataBase, spaceId, 30000);
         SpaceInfo spaceInfoAfter2 = Spaces.getSpaceId(dataBase, "space");
         Assert.assertEquals(374, spaceInfoAfter2.balance);
+        Assert.assertEquals(52, (int) Spaces.getLatestBillingHourCode(dataBase));
       } finally {
         installer.uninstall();
       }

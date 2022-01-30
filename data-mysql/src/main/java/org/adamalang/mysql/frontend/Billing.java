@@ -22,7 +22,8 @@ import java.util.Map;
 
 public class Billing {
 
-  public static void transcribeSummariesAndUpdateBalances(DataBase dataBase, int hour, HashMap<String, MeteringSpaceSummary> summaries, ResourcesPerPenny rates) throws Exception {
+  public static long transcribeSummariesAndUpdateBalances(DataBase dataBase, int hour, HashMap<String, MeteringSpaceSummary> summaries, ResourcesPerPenny rates) throws Exception {
+    long pennies_billed = 0;
     try (Connection connection = dataBase.pool.getConnection()) {
       for (Map.Entry<String, MeteringSpaceSummary> entry : summaries.entrySet()) {
         String sql = new StringBuilder("SELECT `id`,`latest_billing_hour` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
@@ -42,6 +43,7 @@ public class Billing {
                   statementInsertLog.setString(3, summary.resources);
                   statementInsertLog.setInt(4, summary.pennies);
                   statementInsertLog.execute();
+                  pennies_billed += summary.pennies;
                 }
 
                 String sqlUpdateSpace = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `balance`=`balance`-?, `latest_billing_hour`=? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
@@ -56,5 +58,6 @@ public class Billing {
         }
       }
     }
+    return pennies_billed;
   }
 }

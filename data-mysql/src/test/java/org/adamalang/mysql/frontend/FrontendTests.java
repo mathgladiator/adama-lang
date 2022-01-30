@@ -68,7 +68,6 @@ public class FrontendTests {
           Assert.assertEquals(1, listing.size());
           Assert.assertEquals("auth_space_1", listing.get(0));
         }
-
         Authorities.setKeystore(dataBase, 1, "auth_space_1", "{\"x\":1}");
         Assert.assertEquals("{\"x\":1}", Authorities.getKeystoreInternal(dataBase, "auth_space_1"));
         Assert.assertEquals("{\"x\":1}", Authorities.getKeystorePublic(dataBase, 1, "auth_space_1"));
@@ -148,6 +147,7 @@ public class FrontendTests {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
         installer.install();
+        Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));
         int alice = Users.getOrCreateUserId(dataBase, "alice@x.com");
         int bob = Users.getOrCreateUserId(dataBase, "bob@x.com");
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
@@ -155,7 +155,7 @@ public class FrontendTests {
         Assert.assertEquals(1, Spaces.getSpaceId(dataBase, "space1").id);
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
-
+        Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
         ArrayList<String> names = Spaces.listAllSpaceNames(dataBase);
         Assert.assertEquals(2, names.size());
         Assert.assertEquals("space1", names.get(0));

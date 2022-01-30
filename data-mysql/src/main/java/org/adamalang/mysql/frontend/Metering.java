@@ -24,6 +24,23 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class Metering {
+
+  public static Long getEarliestRecordTimeOfCreation(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      {
+        String sql = new StringBuilder().append("SELECT `created` FROM `").append(dataBase.databaseName).append("`.`metering` ORDER BY `created` ASC LIMIT 1").toString();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+          ResultSet rs = statement.executeQuery();
+          if (rs.next()) {
+            return rs.getDate(1).getTime();
+          } else {
+            return null;
+          }
+        }
+      }
+    }
+  }
+
   public static void recordBatch(DataBase dataBase, String target, String batch, long time) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
@@ -44,7 +61,7 @@ public class Metering {
       {
         String sql = new StringBuilder().append("SELECT `target`, `batch` FROM `").append(dataBase.databaseName).append("`.`metering` WHERE ? <= `created` AND `created` < ?").toString();
         HashMap<String, MeteringSpaceSummary> summary = new HashMap<>();
-        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, DataBase.dateTimeOf(fromTime));
           statement.setString(2, DataBase.dateTimeOf(toTime));
           try (ResultSet rs = statement.executeQuery()) {

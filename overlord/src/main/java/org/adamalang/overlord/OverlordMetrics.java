@@ -48,6 +48,7 @@ public class OverlordMetrics {
 
   public final Runnable gossip_dump;
 
+  public final Runnable accountant_task;
 
   public OverlordMetrics(MetricsFactory factory) {
     targets_watcher_fired = factory.counter("overlord_targets_watcher_fired");
@@ -83,5 +84,8 @@ public class OverlordMetrics {
     metering_fetch_finished = factory.counter("metering_fetch_finished");
 
     gossip_dump = factory.counter("gossip_dump");
+
+    accountant_task = factory.counter("accountant_task");
+
   }
 }

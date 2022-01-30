@@ -23,7 +23,7 @@ import org.adamalang.web.contracts.HtmlHandler;
 import java.io.File;
 
 public class Overlord {
-  public static HtmlHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront) {
+  public static HtmlHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront) throws Exception {
     // the HTTP web server will render data that has been put/cached in this handler
     ConcurrentCachedHtmlHandler handler = new ConcurrentCachedHtmlHandler();
 
@@ -52,6 +52,9 @@ public class Overlord {
     // make a table of a dump of all gossip
     GossipDumper.kickOff(metrics, engine, handler);
 
+    // start doing the accounting work
+    HourlyAccountant.kickOff(metrics, dataBaseFront, handler);
+
     // build the index
     StringBuilder indexHtmlBuilder = new StringBuilder();
     indexHtmlBuilder.append("<html><head><title>OVERLORD</title></head><body>\n");
@@ -61,6 +64,7 @@ public class Overlord {
     indexHtmlBuilder.append("<a href=\"/targets\">Targets</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/metering\">Recent Metering Data</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/gossip\">Gossip Dump</a><br />\n");
+    indexHtmlBuilder.append("<a href=\"/accountant\">Accountant Log</a><br />\n");
     indexHtmlBuilder.append("</body></html>");
     String indexHtml = indexHtmlBuilder.toString();
     handler.put("/", indexHtml);
