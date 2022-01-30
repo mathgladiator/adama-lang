@@ -16,13 +16,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /** operations on data */
 public class BackendOperations {
 
+  public static HashMap<String, Long> inventoryStorage(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      HashMap<String, Long> bytes = new HashMap<>();
+      String sql = new StringBuilder("SELECT `space`, SUM(delta_bytes), SUM(asset_bytes) FROM `").append(dataBase.databaseName) //
+          .append("`.`index` GROUP BY `space`").toString();
+      DataBase.walk(connection, (rs) -> {
+        bytes.put(rs.getString(1), rs.getLong(2) + rs.getLong(3));
+      }, sql);
+      return bytes;
+    }
+  }
+
   public static ArrayList<DocumentIndex> list(DataBase dataBase, String space, String marker, int limit) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      // select * from a LEFT OUTER JOIN b on a.a = b.b;
       String sql = new StringBuilder("SELECT `key`, `created`, `updated`, `head_seq`, `invalidate` FROM `").append(dataBase.databaseName) //
           .append("`.`index` WHERE `space`=? AND `key`>? LIMIT ").append(Math.max(Math.min(limit, 1000), 1)).toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {

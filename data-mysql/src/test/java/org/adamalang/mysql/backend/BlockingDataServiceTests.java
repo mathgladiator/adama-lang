@@ -24,6 +24,8 @@ import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 public class BlockingDataServiceTests {
   private static final Key KEY_1 = new Key("space", "key1");
   private static final Key KEY_2 = new Key("space", "key2");
@@ -83,6 +85,9 @@ public class BlockingDataServiceTests {
         SimpleMockCallback cb5_X = new SimpleMockCallback();
         service.patch(KEY_1, new RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb5_X);
         cb5_X.assertSuccess();
+
+        HashMap<String, Long> inventory = BackendOperations.inventoryStorage(dataBase);
+        Assert.assertEquals(384L, (long) inventory.get("space"));
 
         SimpleDataCallback cb5_X2 = new SimpleDataCallback();
         service.get(KEY_1, cb5_X2);
