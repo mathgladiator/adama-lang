@@ -24,6 +24,7 @@ import org.adamalang.extern.prometheus.PrometheusDashboard;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.gossip.Engine;
+import org.adamalang.gossip.EngineRole;
 import org.adamalang.gossip.GossipMetricsImpl;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.grpc.client.ClientMetrics;
@@ -140,7 +141,7 @@ public class Service {
     String identityFileName = config.get_string("identity_filename", "me.identity");
     String billingRootPath = config.get_string("billing_path", "billing");
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
-    Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory));
+    Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
     engine.start();
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
@@ -232,7 +233,7 @@ public class Service {
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
 
-    Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory));
+    Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.SuperNode);
     engine.start();
 
     HtmlHandler handler = Overlord.execute(identity, engine, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront, dataBaseBackend);
@@ -267,7 +268,7 @@ public class Service {
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
     System.err.println("identity: " + identity.ip);
     PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
-    Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory));
+    Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
     engine.start();
     System.err.println("gossiping on:" + gossipPort);
     WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));

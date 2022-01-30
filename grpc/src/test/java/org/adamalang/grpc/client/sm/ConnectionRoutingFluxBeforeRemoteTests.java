@@ -103,15 +103,12 @@ public class ConnectionRoutingFluxBeforeRemoteTests {
         Runnable newGetsEstablished = finderExecutor.latchAtAndDrain(12, 1);
         Runnable reportFound = finderExecutor.latchAtAndDrain(13, 1);
         Runnable registerFound = connectionExecutor.latchAtAndDrain(10, 1);
-        Runnable addConnection = finderExecutor.latchAtAndDrain(13, 1);
+        Runnable addConnection = finderExecutor.latchAtAndDrain(14, 1);
         Runnable removeTarget = directExector.latchAtAndDrain(7, 1);
         Runnable broadcastRemoval = directExector.latchAtAndDrain(8, 1);
         Runnable understandRemovalForConnection = connectionExecutor.latchAtAndDrain(11, 1);
-        Runnable secondStatus = finderExecutor.latchAtAndDrain(15, 1);
-        Runnable secondData = finderExecutor.latchAtAndDrain(16, 1);
+        Runnable secondStatusCutOver = finderExecutor.latchAtAndDrain(15, -1);
         Runnable connectionOver = connectionExecutor.latchAtAndDrain(12, 1);
-        Runnable disconnectGoodOne = finderExecutor.latchAtAndDrain(17, 1);
-        Runnable finalStatus = finderExecutor.latchAtAndDrain(18, 1);
         Runnable connectionGetsDisconnect = connectionExecutor.latchAtAndDrain(13, 1);
 
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
@@ -156,11 +153,9 @@ public class ConnectionRoutingFluxBeforeRemoteTests {
         broadcastRemoval.run();
         understandRemovalForConnection.run();
         Assert.assertEquals("state=FoundClientConnectingStop", connection.toString());
-        secondStatus.run();
-        secondData.run();
+        secondStatusCutOver.run();
+        finderExecutor.goFast();
         connectionOver.run();
-        disconnectGoodOne.run();
-        finalStatus.run();
         connectionGetsDisconnect.run();
         Assert.assertEquals("state=NotConnected", connection.toString());
         directExector.survey();

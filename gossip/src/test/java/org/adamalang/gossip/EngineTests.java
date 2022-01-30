@@ -35,7 +35,7 @@ public class EngineTests {
     initial.add("127.0.0.1:20005");
     MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
 
-    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockGossipMetrics("app"));
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockGossipMetrics("app"), EngineRole.Node);
     engines.add(app);
     app.start();
 
@@ -63,7 +63,7 @@ public class EngineTests {
     Engine lateEngine = null;
     for (int k = 0; k < 10; k++) {
       Engine engine =
-          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, -1, new MockGossipMetrics("k:" + k));
+          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, -1, new MockGossipMetrics("k:" + k), EngineRole.Node);
       engines.add(engine);
       if (k == 5) {
         lateEngine = engine;
@@ -122,7 +122,7 @@ public class EngineTests {
     initial.add("127.0.0.1:20000");
     initial.add("127.0.0.1:20005");
     MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
-    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockGossipMetrics("app"));
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockGossipMetrics("app"), EngineRole.Node);
     app.start();
     CountDownLatch latch = new CountDownLatch(1);
     app.summarizeHtml(new Consumer<String>() {
@@ -157,7 +157,7 @@ public class EngineTests {
         super.wake();
       }
     };
-    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, metrics);
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, metrics, EngineRole.Node);
     app.start();
     Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
     app.close();
@@ -172,7 +172,7 @@ public class EngineTests {
     initial.add("127.0.0.1:20009");
     MachineIdentity identity = MachineIdentity.fromFile(prefixForLocalhost());
 
-    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockGossipMetrics("app"));
+    Engine app = new Engine(identity, TimeSource.REAL_TIME, initial, 19999, -1, new MockGossipMetrics("app"), EngineRole.SuperNode);
     engines.add(app);
     CountDownLatch latchForWatchingUpdate = new CountDownLatch(1);
     app.setWatcher(new Consumer<Collection<Endpoint>>() {
@@ -209,7 +209,7 @@ public class EngineTests {
     latchForSet.await(1000, TimeUnit.MILLISECONDS);
     for (int k = 0; k < 10; k++) {
       Engine engine =
-          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, -1, new MockGossipMetrics("k:" + k));
+          new Engine(identity, TimeSource.REAL_TIME, initial, 20000 + k, -1, new MockGossipMetrics("k:" + k), EngineRole.Node);
       engines.add(engine);
       engine.start();
     }

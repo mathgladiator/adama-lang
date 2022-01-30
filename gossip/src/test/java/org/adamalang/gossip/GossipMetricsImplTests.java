@@ -27,5 +27,7 @@ public class GossipMetricsImplTests {
     impl.bump_sad_return();
     impl.bump_optimistic_return();
     impl.log_error(new NullPointerException());
+    impl.gossips_inflight().up();
+    impl.gossips_inflight().down();
   }
 }

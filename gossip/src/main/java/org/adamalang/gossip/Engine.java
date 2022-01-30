@@ -49,8 +49,9 @@ public class Engine implements AutoCloseable {
   private String broadcastHash;
   private io.grpc.Server server;
   private Consumer<Collection<Endpoint>> watcher;
+  private final EngineRole engineRole;
 
-  public Engine(MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, int monitoringPort, GossipMetrics metrics) throws Exception {
+  public Engine(MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, int monitoringPort, GossipMetrics metrics, EngineRole engineRole) throws Exception {
     this.credentials = TlsChannelCredentials.newBuilder() //
         .keyManager(identity.getCert(), identity.getKey()) //
         .trustManager(identity.getTrust()).build(); //
@@ -63,6 +64,7 @@ public class Engine implements AutoCloseable {
     this.executor = SimpleExecutor.create("gossip-engine");
     this.ip = identity.ip;
     this.metrics = metrics;
+    this.engineRole = engineRole;
     this.alive = new AtomicBoolean(false);
     this.links = new HashMap<>();
     this.subscribersByApp = new HashMap<>();
@@ -163,16 +165,12 @@ public class Engine implements AutoCloseable {
     executor.execute(new NamedRunnable("schedule-gossip") {
       @Override
       public void execute() throws Exception {
-        int wait = 50;
-        for (int k = 0; k < 4; k++) {
-          wait += jitter.nextInt(50);
-        }
         executor.schedule(new NamedRunnable("gossip-round") {
           @Override
           public void execute() throws Exception {
             gossipInExecutor();
           }
-        }, wait);
+        }, EngineRole.computeWait(jitter, engineRole));
       }
     });
   }
