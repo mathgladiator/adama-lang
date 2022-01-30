@@ -18,12 +18,19 @@ import org.adamalang.mysql.frontend.data.SpaceInfo;
 import org.adamalang.mysql.frontend.data.SpaceListingItem;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Spaces {
+  public static HashMap<String, Long> collectUnbilledStorage(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      HashMap<String, Long> byteHours = new HashMap<>();
+      String sql = new StringBuilder("SELECT `name`, `unbilled_storage_bytes_hours`  FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE `unbilled_storage_bytes_hours` > 0").toString();
+      DataBase.walk(connection, (rs) -> {
+        byteHours.put(rs.getString(1), rs.getLong(2));
+      }, sql);
+      return byteHours;
+    }
+  }
 
   public static Integer getLatestBillingHourCode(DataBase dataBase) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
@@ -65,7 +72,7 @@ public class Spaces {
 
   public static SpaceInfo getSpaceId(DataBase dataBase, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `id`,`owner`,`billing`,`balance` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
+      String sql = new StringBuilder("SELECT `id`,`owner`,`billing`,`balance`,`storage_bytes` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         try (ResultSet rs = statement.executeQuery()) {
@@ -81,7 +88,7 @@ public class Spaces {
                   break;
               }
             }, sqlGrants);
-            return new SpaceInfo(rs.getInt(1), owner, rs.getString(3), developers, rs.getInt(4));
+            return new SpaceInfo(rs.getInt(1), owner, rs.getString(3), developers, rs.getInt(4), rs.getLong(5));
           }
           throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_DOESNT_EXIST);
         }
@@ -152,7 +159,7 @@ public class Spaces {
   public static List<SpaceListingItem> list(DataBase dataBase, int userId, String marker, int limit) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       // select * from a LEFT OUTER JOIN b on a.a = b.b;
-      String sql = new StringBuilder("SELECT `s`.`name`,`s`.`owner`,`s`.`billing`,`s`.`created`,`s`.`balance` FROM `").append(dataBase.databaseName) //
+      String sql = new StringBuilder("SELECT `s`.`name`,`s`.`owner`,`s`.`billing`,`s`.`created`,`s`.`balance`,`s`.`storage_bytes` FROM `").append(dataBase.databaseName) //
           .append("`.`spaces` as `s` LEFT OUTER JOIN `").append(dataBase.databaseName).append("`.`grants` as `g` ON `s`.`id` = `g`.`space`") //
           .append(" WHERE (`s`.owner=").append(userId).append(" OR `g`.`user`=").append(userId).append(") AND `s`.`name`>? ORDER BY `s`.`name` ASC LIMIT ").append(limit).toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -161,7 +168,7 @@ public class Spaces {
           ArrayList<SpaceListingItem> names = new ArrayList<>();
           while (rs.next()) {
             boolean isOwner = rs.getInt(2) == userId;
-            names.add(new SpaceListingItem(rs.getString(1), isOwner ? "owner" : "developer", rs.getString(3), rs.getDate(4).toString(), rs.getInt(5)));
+            names.add(new SpaceListingItem(rs.getString(1), isOwner ? "owner" : "developer", rs.getString(3), rs.getDate(4).toString(), rs.getInt(5), rs.getLong(6)));
           }
           return names;
         }

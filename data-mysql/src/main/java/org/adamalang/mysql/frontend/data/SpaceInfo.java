@@ -17,12 +17,14 @@ public class SpaceInfo {
   public final String billing;
   public final Set<Integer> developers;
   public final int balance;
+  public final long storageBytes;
 
-  public SpaceInfo(int id, int owner, String billing, Set<Integer> developers, int balance) {
+  public SpaceInfo(int id, int owner, String billing, Set<Integer> developers, int balance, long storageBytes) {
     this.id = id;
     this.owner = owner;
     this.billing = billing;
     this.developers = developers;
     this.balance = balance;
+    this.storageBytes = storageBytes;
   }
 }

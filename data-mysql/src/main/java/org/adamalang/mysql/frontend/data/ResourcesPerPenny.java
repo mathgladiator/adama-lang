@@ -15,12 +15,14 @@ public class ResourcesPerPenny {
   public double count;
   public double memory;
   public double connections;
+  public long storage;
 
-  public ResourcesPerPenny(double cpu, double messages, double count, double memory, double connections) {
+  public ResourcesPerPenny(double cpu, double messages, double count, double memory, double connections, long storage) {
     this.cpu = cpu;
     this.messages = messages;
     this.count = count;
     this.memory = memory;
     this.connections = connections;
+    this.storage = storage;
   }
 }

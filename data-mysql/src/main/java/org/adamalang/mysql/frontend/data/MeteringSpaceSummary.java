@@ -19,10 +19,22 @@ public class MeteringSpaceSummary {
   private final HashMap<String, MeteringSummaryPartialPerTarget> targets;
   private long cpuTicks;
   private long messages;
+  private long storageBytes;
+  private long unbilledStorageByteHours;
 
   public MeteringSpaceSummary() {
     this.targets = new HashMap<>();
     this.cpuTicks = 0;
+    this.storageBytes = 0;
+    this.unbilledStorageByteHours = 0;
+  }
+
+  public void setStorageBytes(long storageBytes) {
+    this.storageBytes = storageBytes;
+  }
+
+  public void setUnbilledStorageByteHours(long unbilledStorageByteHours) {
+    this.unbilledStorageByteHours = unbilledStorageByteHours;
   }
 
   public void include(String target, JsonNode node) {
@@ -57,9 +69,12 @@ public class MeteringSpaceSummary {
     writer.writeLong(memory);
     writer.writeObjectFieldIntro("connections");
     writer.writeLong(connections);
+    writer.writeObjectFieldIntro("storageBytes");
+    writer.writeLong(storageBytes);
     writer.endObject();
-    int pennies = (int) Math.ceil(max(messages / rates.messages, count / rates.count, memory / rates.memory, connections / rates.connections, cpuTicks / rates.cpu));
-    return new MeteredWindowSummary(writer.toString(), pennies);
+    long totalStorageByteHours = storageBytes + unbilledStorageByteHours;
+    int pennies = (int) Math.ceil(max(messages / rates.messages, count / rates.count, memory / rates.memory, connections / rates.connections, cpuTicks / rates.cpu)) + (int) (totalStorageByteHours / rates.storage);
+    return new MeteredWindowSummary(writer.toString(), pennies, storageBytes, (totalStorageByteHours % rates.storage) - unbilledStorageByteHours);
   }
 
   private static double max(double... values) {

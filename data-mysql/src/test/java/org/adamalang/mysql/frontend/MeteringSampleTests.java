@@ -12,6 +12,7 @@ package org.adamalang.mysql.frontend;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
+import org.adamalang.mysql.backend.BackendOperations;
 import org.adamalang.mysql.frontend.data.MeteredWindowSummary;
 import org.adamalang.mysql.frontend.data.MeteringSpaceSummary;
 import org.adamalang.mysql.frontend.data.ResourcesPerPenny;
@@ -35,25 +36,33 @@ public class MeteringSampleTests {
         int spaceId = Spaces.createSpace(dataBase, 42, "space");
         Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
         long now = System.currentTimeMillis();
-        Metering.recordBatch(
-            dataBase,
-            "target1",
-            "{\"time\":\""+ (now - 10000 )+"\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":29}}}", now);
+        Metering.recordBatch(dataBase, "target1", "{\"time\":\"" + (now - 10000) + "\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":29}}}", now);
 
-        Metering.recordBatch(
-            dataBase,
-            "target2",
-            "{\"time\":\""+(now + 10000)+"\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":19}}}", now);
+        Metering.recordBatch(dataBase, "target2", "{\"time\":\"" + (now + 10000) + "\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":19}}}", now);
         Assert.assertNotNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
         HashMap<String, MeteringSpaceSummary> summary1 = Metering.summarizeWindow(dataBase, now - 100000, now + 100000);
         Assert.assertEquals(1, summary1.size());
-
-        ResourcesPerPenny rates = new ResourcesPerPenny(1000000, 2000, 50, 1024, 500);
-        MeteredWindowSummary summary = summary1.get("space").summarize(rates);
-        Assert.assertEquals(
-            "{\"cpu\":\"29625809720\",\"messages\":\"5660000\",\"count\":\"8\",\"memory\":\"2000\",\"connections\":\"48\"}",
-            summary.resources);
-        Assert.assertEquals(29626, summary.pennies);
+        HashMap<String, Long> inventory = new HashMap<>();
+        inventory.put("space", 1024L);
+        inventory.put("space2", 2048L);
+        HashMap<String, Long> unbilled = Spaces.collectUnbilledStorage(dataBase);
+        unbilled.put("space2", 1000000000L - 2000);
+        Billing.mergeStorageIntoSummaries(summary1, inventory, unbilled);
+        ResourcesPerPenny rates = new ResourcesPerPenny(1000000, 2000, 50, 1024, 500, 1000000000);
+        {
+          MeteredWindowSummary summarySpace = summary1.get("space").summarize(rates);
+          Assert.assertEquals("{\"cpu\":\"29625809720\",\"messages\":\"5660000\",\"count\":\"8\",\"memory\":\"2000\",\"connections\":\"48\",\"storageBytes\":\"1024\"}", summarySpace.resources);
+          Assert.assertEquals(1024, summarySpace.storageBytes);
+          Assert.assertEquals(1024, summarySpace.changeUnbilledStorageByteHours);
+          Assert.assertEquals(29626, summarySpace.pennies);
+        }
+        {
+          MeteredWindowSummary summarySpace2 = summary1.get("space2").summarize(rates);
+          Assert.assertEquals("{\"cpu\":\"0\",\"messages\":\"0\",\"count\":\"0\",\"memory\":\"0\",\"connections\":\"0\",\"storageBytes\":\"2048\"}", summarySpace2.resources);
+          Assert.assertEquals(2048, summarySpace2.storageBytes);
+          Assert.assertEquals(-999997952, summarySpace2.changeUnbilledStorageByteHours);
+          Assert.assertEquals(1, summarySpace2.pennies);
+        }
         SpaceInfo spaceInfoBefore = Spaces.getSpaceId(dataBase, "space");
         Billing.transcribeSummariesAndUpdateBalances(dataBase, 52, summary1, rates);
         SpaceInfo spaceInfoAfter = Spaces.getSpaceId(dataBase, "space");
@@ -63,6 +72,11 @@ public class MeteringSampleTests {
         SpaceInfo spaceInfoAfter2 = Spaces.getSpaceId(dataBase, "space");
         Assert.assertEquals(374, spaceInfoAfter2.balance);
         Assert.assertEquals(52, (int) Spaces.getLatestBillingHourCode(dataBase));
+        HashMap<String, Long> unbilledAfter = Spaces.collectUnbilledStorage(dataBase);
+        Assert.assertEquals(1024, (long) unbilledAfter.get("space"));
+        Billing.mergeStorageIntoSummaries(summary1, inventory, unbilled);
+
+
       } finally {
         installer.uninstall();
       }

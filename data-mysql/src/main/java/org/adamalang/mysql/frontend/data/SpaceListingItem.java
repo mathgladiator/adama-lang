@@ -15,12 +15,14 @@ public class SpaceListingItem {
   public final String billing;
   public final String created;
   public final int balance;
+  public final long storageBytes;
 
-  public SpaceListingItem(String name, String callerRole, String billing, String created, int balance) {
+  public SpaceListingItem(String name, String callerRole, String billing, String created, int balance, long storageBytes) {
     this.name = name;
     this.callerRole = callerRole;
     this.billing = billing;
     this.created = created;
     this.balance = balance;
+    this.storageBytes = storageBytes;
   }
 }

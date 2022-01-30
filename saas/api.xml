@@ -243,6 +243,12 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="storage-bytes" type="long">
+        <documentation>
+            The storage used.
+        </documentation>
+    </field-definition>
+
     <field-definition name="role" type="string">
         <documentation>
             Each developer has a role to a document
@@ -297,14 +303,8 @@
         <field name="role"/>
         <field name="billing"/>
         <field name="created"/>
-    </responder>
-
-    <responder name="space-listing" stream="true">
-        <field name="space"/>
-        <field name="role"/>
-        <field name="billing"/>
-        <field name="created"/>
         <field name="balance"/>
+        <field name="storage-bytes"/>
     </responder>
 
     <responder name="authority-listing" stream="true">

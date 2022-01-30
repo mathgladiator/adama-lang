@@ -10,6 +10,7 @@
 package org.adamalang.mysql.frontend;
 
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.backend.BackendOperations;
 import org.adamalang.mysql.frontend.data.MeteredWindowSummary;
 import org.adamalang.mysql.frontend.data.MeteringSpaceSummary;
 import org.adamalang.mysql.frontend.data.ResourcesPerPenny;
@@ -21,6 +22,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Billing {
+
+  public static void mergeStorageIntoSummaries(HashMap<String, MeteringSpaceSummary> summaries, HashMap<String, Long> inventory, HashMap<String, Long> unbilled) {
+    for (Map.Entry<String, Long> entry : inventory.entrySet()) {
+      if (entry.getValue() > 0) {
+        MeteringSpaceSummary summary = summaries.get(entry.getKey());
+        if (summary == null) {
+          summary = new MeteringSpaceSummary();
+          summaries.put(entry.getKey(), summary);
+        }
+        summary.setStorageBytes(entry.getValue());
+      }
+    }
+    for (Map.Entry<String, Long> entry : unbilled.entrySet()) {
+      MeteringSpaceSummary summary = summaries.get(entry.getKey());
+      if (summary != null) {
+        summary.setUnbilledStorageByteHours(entry.getValue());
+      }
+    }
+  }
 
   public static long transcribeSummariesAndUpdateBalances(DataBase dataBase, int hour, HashMap<String, MeteringSpaceSummary> summaries, ResourcesPerPenny rates) throws Exception {
     long pennies_billed = 0;
@@ -45,11 +65,12 @@ public class Billing {
                   statementInsertLog.execute();
                   pennies_billed += summary.pennies;
                 }
-
-                String sqlUpdateSpace = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `balance`=`balance`-?, `latest_billing_hour`=? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
+                String sqlUpdateSpace = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `balance`=`balance`-?, `latest_billing_hour`=?, `storage_bytes`=?, `unbilled_storage_bytes_hours`=`unbilled_storage_bytes_hours`+? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
                 try (PreparedStatement statementUpdateSpace = connection.prepareStatement(sqlUpdateSpace)) {
                   statementUpdateSpace.setInt(1, summary.pennies);
                   statementUpdateSpace.setInt(2, hour);
+                  statementUpdateSpace.setLong(3, summary.storageBytes);
+                  statementUpdateSpace.setLong(4, summary.changeUnbilledStorageByteHours);
                   statementUpdateSpace.execute();
                 }
               }

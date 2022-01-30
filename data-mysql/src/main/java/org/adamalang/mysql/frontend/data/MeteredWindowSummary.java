@@ -13,9 +13,13 @@ package org.adamalang.mysql.frontend.data;
 public class MeteredWindowSummary {
   public String resources;
   public int pennies;
+  public long storageBytes;
+  public long changeUnbilledStorageByteHours;
 
-  public MeteredWindowSummary(String resources, int pennies) {
+  public MeteredWindowSummary(String resources, int pennies, long storageBytes, long changeUnbilledStorageByteHours) {
     this.resources = resources;
     this.pennies = pennies;
+    this.storageBytes = storageBytes;
+    this.changeUnbilledStorageByteHours = changeUnbilledStorageByteHours;
   }
 }

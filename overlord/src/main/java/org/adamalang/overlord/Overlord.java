@@ -23,7 +23,7 @@ import org.adamalang.web.contracts.HtmlHandler;
 import java.io.File;
 
 public class Overlord {
-  public static HtmlHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront) throws Exception {
+  public static HtmlHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront, DataBase dataBaseBackend) throws Exception {
     // the HTTP web server will render data that has been put/cached in this handler
     ConcurrentCachedHtmlHandler handler = new ConcurrentCachedHtmlHandler();
 
@@ -53,7 +53,7 @@ public class Overlord {
     GossipDumper.kickOff(metrics, engine, handler);
 
     // start doing the accounting work
-    HourlyAccountant.kickOff(metrics, dataBaseFront, handler);
+    HourlyAccountant.kickOff(metrics, dataBaseFront, dataBaseBackend, handler);
 
     // build the index
     StringBuilder indexHtmlBuilder = new StringBuilder();

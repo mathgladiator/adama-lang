@@ -112,6 +112,7 @@ export interface SpaceListingPayload {
   billing: string;
   created: string;
   balance: number;
+  storageBytes: string;
 }
 
 export interface SpaceListingResponder {

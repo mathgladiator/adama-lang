@@ -13,6 +13,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.backend.BackendOperations;
 import org.adamalang.mysql.frontend.Billing;
 import org.adamalang.mysql.frontend.Metering;
 import org.adamalang.mysql.frontend.Spaces;
@@ -29,29 +30,32 @@ import java.time.ZoneOffset;
 import java.time.temporal.TemporalField;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class HourlyAccountant {
 
   public static class HourlyAccountantTask extends NamedRunnable {
     private final OverlordMetrics metrics;
     private final SimpleExecutor executor;
-    private final DataBase dataBase;
+    private final DataBase dataBaseFront;
+    private final DataBase dataBaseBackend;
     private int billingHourAt;
     private final FixedHtmlStringLoggerTable accountantTable;
     private final ConcurrentCachedHtmlHandler handler;
 
-    public HourlyAccountantTask(OverlordMetrics metrics, DataBase dataBase, ConcurrentCachedHtmlHandler handler) throws Exception {
+    public HourlyAccountantTask(OverlordMetrics metrics, DataBase dataBaseFront, DataBase dataBaseBackend, ConcurrentCachedHtmlHandler handler) throws Exception {
       super("hourly-accountant");
       this.metrics = metrics;
       this.executor = SimpleExecutor.create("hourly-accountant-executor");
-      this.dataBase = dataBase;
+      this.dataBaseFront = dataBaseFront;
+      this.dataBaseBackend = dataBaseBackend;
       this.accountantTable = new FixedHtmlStringLoggerTable(128, "action", "notes", "value");
-      Integer pickUp = Spaces.getLatestBillingHourCode(dataBase);
+      Integer pickUp = Spaces.getLatestBillingHourCode(dataBaseFront);
       if (pickUp != null && pickUp > 0) {
         this.billingHourAt = pickUp;
         accountantTable.row("found-latest-billing-code", "first try", "" + this.billingHourAt);
       } else {
-        Long firstRecordAt = Metering.getEarliestRecordTimeOfCreation(dataBase);
+        Long firstRecordAt = Metering.getEarliestRecordTimeOfCreation(dataBaseFront);
         if (firstRecordAt != null) {
           this.billingHourAt = toHourCode(LocalDateTime.ofInstant(Instant.ofEpochMilli(firstRecordAt), ZoneId.systemDefault()).minusHours(6));
           accountantTable.row("found-latest-billing-code", "from metering", "" + this.billingHourAt);
@@ -70,10 +74,15 @@ public class HourlyAccountant {
       LocalDateTime to = from.plusHours(1);
       long fromMs = from.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
       long toMs = to.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-      HashMap<String, MeteringSpaceSummary> summaries = Metering.summarizeWindow(dataBase, fromMs, toMs);
+      HashMap<String, MeteringSpaceSummary> summaries = Metering.summarizeWindow(dataBaseFront, fromMs, toMs);
       // TODO: need a more formal rate structure as this is B.S.
-      ResourcesPerPenny rates = new ResourcesPerPenny(1000 * 1000, 1000, 50, 1000 * 1000, 200);
-      long pennies = Billing.transcribeSummariesAndUpdateBalances(dataBase, forHour, summaries, rates);
+      // 2 penny per GB/mo is
+      ResourcesPerPenny rates = new ResourcesPerPenny(1000 * 1000, 1000, 50, 1000 * 1000, 200, 386547056640L);
+      // add storage to the summary
+      HashMap<String, Long> inventory = BackendOperations.inventoryStorage(dataBaseBackend);
+      HashMap<String, Long> unbilled = Spaces.collectUnbilledStorage(dataBaseFront);
+      Billing.mergeStorageIntoSummaries(summaries, inventory, unbilled);
+      long pennies = Billing.transcribeSummariesAndUpdateBalances(dataBaseFront, forHour, summaries, rates);
       accountantTable.row("transcribe-summary", "pennies:" + pennies, "at:" + forHour);
     }
 
@@ -115,7 +124,7 @@ public class HourlyAccountant {
     return toHourCode(fromHourCode(hour).plusHours(1));
   }
 
-  public static void kickOff(OverlordMetrics metrics, DataBase dataBaseFront, ConcurrentCachedHtmlHandler handler) throws Exception {
-    new HourlyAccountantTask(metrics, dataBaseFront, handler);
+  public static void kickOff(OverlordMetrics metrics, DataBase dataBaseFront, DataBase dataBaseBackend, ConcurrentCachedHtmlHandler handler) throws Exception {
+    new HourlyAccountantTask(metrics, dataBaseFront, dataBaseBackend, handler);
   }
 }

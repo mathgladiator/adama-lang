@@ -56,6 +56,8 @@ public class FrontendManagementInstaller {
         .append("  `name` VARCHAR(128) NOT NULL,") //
         .append("  `billing` VARCHAR(16) NOT NULL,") //
         .append("  `balance` INT(4) DEFAULT 0,") //
+        .append("  `storage_bytes` INT(8) DEFAULT 0,") //
+        .append("  `unbilled_storage_bytes_hours` INT(8) DEFAULT 0,") //
         .append("  `latest_billing_hour` INT(4) UNSIGNED DEFAULT 0,") //
         .append("  `plan` TEXT NOT NULL,") //
         .append("  `hash` VARCHAR(256) NOT NULL,") //
