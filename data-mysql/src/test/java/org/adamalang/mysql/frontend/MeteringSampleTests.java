@@ -13,13 +13,11 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
 import org.adamalang.mysql.backend.BackendOperations;
-import org.adamalang.mysql.frontend.data.MeteredWindowSummary;
-import org.adamalang.mysql.frontend.data.MeteringSpaceSummary;
-import org.adamalang.mysql.frontend.data.ResourcesPerPenny;
-import org.adamalang.mysql.frontend.data.SpaceInfo;
+import org.adamalang.mysql.frontend.data.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MeteringSampleTests {
@@ -58,7 +56,7 @@ public class MeteringSampleTests {
         }
         {
           MeteredWindowSummary summarySpace2 = summary1.get("space2").summarize(rates);
-          Assert.assertEquals("{\"cpu\":\"0\",\"messages\":\"0\",\"count\":\"0\",\"memory\":\"0\",\"connections\":\"0\",\"storageBytes\":\"2048\"}", summarySpace2.resources);
+          Assert.assertEquals("{\"storageBytes\":\"2048\"}", summarySpace2.resources);
           Assert.assertEquals(2048, summarySpace2.storageBytes);
           Assert.assertEquals(-999997952, summarySpace2.changeUnbilledStorageByteHours);
           Assert.assertEquals(1, summarySpace2.pennies);
@@ -76,6 +74,14 @@ public class MeteringSampleTests {
         Assert.assertEquals(1024, (long) unbilledAfter.get("space"));
         Billing.mergeStorageIntoSummaries(summary1, inventory, unbilled);
 
+        ArrayList<BillingUsage> usages = Billing.usageReport(dataBase, spaceId, 2);
+        Assert.assertEquals(1, usages.size());
+        Assert.assertEquals(29625809720L, usages.get(0).cpu);
+        Assert.assertEquals(2000, usages.get(0).memory);
+        Assert.assertEquals(1024, usages.get(0).storageBytes);
+        Assert.assertEquals(5660000, usages.get(0).messages);
+        Assert.assertEquals(8, usages.get(0).documents);
+        Assert.assertEquals(48, usages.get(0).connections);
 
       } finally {
         installer.uninstall();

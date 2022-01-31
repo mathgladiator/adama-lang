@@ -9,8 +9,11 @@
  */
 package org.adamalang.mysql.frontend;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.Json;
 import org.adamalang.mysql.DataBase;
-import org.adamalang.mysql.backend.BackendOperations;
+import org.adamalang.mysql.frontend.data.BillingUsage;
 import org.adamalang.mysql.frontend.data.MeteredWindowSummary;
 import org.adamalang.mysql.frontend.data.MeteringSpaceSummary;
 import org.adamalang.mysql.frontend.data.ResourcesPerPenny;
@@ -18,6 +21,7 @@ import org.adamalang.mysql.frontend.data.ResourcesPerPenny;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +43,33 @@ public class Billing {
       if (summary != null) {
         summary.setUnbilledStorageByteHours(entry.getValue());
       }
+    }
+  }
+
+  private static long usageValueOfZeroIfNotPresentOrNull(ObjectNode node, String field) {
+    JsonNode child = node.get(field);
+    if (child == null || child.isNull()) {
+      return 0;
+    }
+    return child.asLong();
+  }
+
+  public static ArrayList<BillingUsage> usageReport(DataBase dataBase, int spaceId, int limit) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = new StringBuilder("SELECT `hour`,`summary` FROM `").append(dataBase.databaseName).append("`.`bills` WHERE `space`=").append(spaceId).append(" ORDER BY `hour` DESC LIMIT ").append(limit).toString();
+      ArrayList<BillingUsage> usage = new ArrayList<>();
+      DataBase.walk(connection, (rs) -> {
+        int hour = rs.getInt(1);
+        ObjectNode resources = Json.parseJsonObject(rs.getString(2));
+        long cpu = usageValueOfZeroIfNotPresentOrNull(resources, "cpu");
+        long memory = usageValueOfZeroIfNotPresentOrNull(resources, "memory");
+        int connections = (int) usageValueOfZeroIfNotPresentOrNull(resources, "connections");
+        int documents = (int) usageValueOfZeroIfNotPresentOrNull(resources, "count");
+        int messages = (int) usageValueOfZeroIfNotPresentOrNull(resources, "messages");
+        long storageBytes = usageValueOfZeroIfNotPresentOrNull(resources, "storageBytes");
+        usage.add(new BillingUsage(hour, cpu, memory, connections, documents, messages, storageBytes));
+      }, sql);
+      return usage;
     }
   }
 

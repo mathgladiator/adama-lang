@@ -33,17 +33,6 @@ public class SpaceListingResponder {
     responder.stream(_obj.toString());
   }
 
-  public void finish(String space, String role, String billing, String created, Integer balance, Long storageBytes) {
-    ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.put("space", space);
-    _obj.put("role", role);
-    _obj.put("billing", billing);
-    _obj.put("created", created);
-    _obj.put("balance", balance);
-    _obj.put("storage-bytes", storageBytes);
-    responder.finish(_obj.toString());
-  }
-
   public void finish() {
     responder.finish("{}");
   }

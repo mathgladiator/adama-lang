@@ -28,12 +28,6 @@ public class DataResponder {
     responder.stream(_obj.toString());
   }
 
-  public void finish(ObjectNode delta) {
-    ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.set("delta", delta);
-    responder.finish(_obj.toString());
-  }
-
   public void finish() {
     responder.finish("{}");
   }

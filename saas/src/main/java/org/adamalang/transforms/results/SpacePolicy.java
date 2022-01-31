@@ -77,4 +77,11 @@ public class SpacePolicy {
     }
     return false;
   }
+
+  public boolean canUserGetBillingUsage(AuthenticatedUser user) {
+    if (user.source == AuthenticatedUser.Source.Adama) {
+      return user.id == owner;
+    }
+    return false;
+  }
 }

@@ -32,7 +32,7 @@ public class AssembleResponders {
       java.append("  public ").append(responder.camelName).append("Responder(JsonResponder responder) {\n");
       java.append("    this.responder = responder;\n");
       java.append("  }\n\n");
-      String[] names = responder.stream ? new String[]{"next", "finish"} : new String[]{"complete"};
+      String[] names = responder.stream ? new String[]{"next"} : new String[]{"complete"};
       for (String mName : names) {
         boolean terminal = !mName.equals("next");
 

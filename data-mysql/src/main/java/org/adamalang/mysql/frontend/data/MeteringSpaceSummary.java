@@ -51,10 +51,14 @@ public class MeteringSpaceSummary {
   public MeteredWindowSummary summarize(ResourcesPerPenny rates) {
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.beginObject();
-    writer.writeObjectFieldIntro("cpu");
-    writer.writeLong(cpuTicks);
-    writer.writeObjectFieldIntro("messages");
-    writer.writeLong(messages);
+    if (cpuTicks > 0) {
+      writer.writeObjectFieldIntro("cpu");
+      writer.writeLong(cpuTicks);
+    }
+    if (messages > 0) {
+      writer.writeObjectFieldIntro("messages");
+      writer.writeLong(messages);
+    }
     long count = 0;
     long memory = 0;
     long connections = 0;
@@ -63,14 +67,22 @@ public class MeteringSpaceSummary {
       memory += target.memory;
       connections += target.connections;
     }
-    writer.writeObjectFieldIntro("count");
-    writer.writeLong(count);
-    writer.writeObjectFieldIntro("memory");
-    writer.writeLong(memory);
-    writer.writeObjectFieldIntro("connections");
-    writer.writeLong(connections);
-    writer.writeObjectFieldIntro("storageBytes");
-    writer.writeLong(storageBytes);
+    if (count > 0) {
+      writer.writeObjectFieldIntro("count");
+      writer.writeLong(count);
+    }
+    if (memory > 0) {
+      writer.writeObjectFieldIntro("memory");
+      writer.writeLong(memory);
+    }
+    if (connections > 0) {
+      writer.writeObjectFieldIntro("connections");
+      writer.writeLong(connections);
+    }
+    if (storageBytes > 0) {
+      writer.writeObjectFieldIntro("storageBytes");
+      writer.writeLong(storageBytes);
+    }
     writer.endObject();
     long totalStorageByteHours = storageBytes + unbilledStorageByteHours;
     int pennies = (int) Math.ceil(max(messages / rates.messages, count / rates.count, memory / rates.memory, connections / rates.connections, cpuTicks / rates.cpu)) + (int) (totalStorageByteHours / rates.storage);

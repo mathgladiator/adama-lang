@@ -53,6 +53,9 @@ public class Space {
       case "set-role":
         spaceSetRole(config, next);
         return;
+      case "usage":
+        spaceUsage(config, next);
+        return;
       case "help":
         spaceHelp(next);
         return;
@@ -72,6 +75,7 @@ public class Space {
     System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("usage", Util.ANSI.Green) + "             Iterate the billed usage");
     System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Create a new space");
     System.out.println("    " + Util.prefix("delete", Util.ANSI.Green) + "            Deletes an empty space");
     System.out.println("    " + Util.prefix("deploy", Util.ANSI.Green) + "            Deploy a plan to a space");
@@ -179,6 +183,25 @@ public class Space {
         if (!"".equals(marker)) {
           request.put("marker", marker);
         }
+        request.put("limit", limit);
+        connection.stream(request, (response) -> {
+          System.err.println(response.toPrettyString());
+        });
+      }
+    }
+  }
+
+  private static void spaceUsage(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    int limit = Integer.parseInt(Util.extractWithDefault("--limit", "-l", "336", args));
+
+    try (WebSocketClient client = new WebSocketClient(config)) {
+      try (Connection connection = client.open()) {
+        ObjectNode request = Json.newJsonObject();
+        request.put("method", "space/usage");
+        request.put("identity", identity);
+        request.put("space", space);
         request.put("limit", limit);
         connection.stream(request, (response) -> {
           System.err.println(response.toPrettyString());

@@ -11,6 +11,22 @@ export interface AuthorityListingResponder {
   failure(reason: number): void;
 }
 
+export interface BillingUsagePayload {
+  hour: number;
+  cpu: string;
+  memory: string;
+  connections: number;
+  documents: number;
+  messages: number;
+  storageBytes: string;
+}
+
+export interface BillingUsageResponder {
+  next(data: BillingUsagePayload): void;
+  complete():  void;
+  failure(reason: number): void;
+}
+
 export interface ClaimResultPayload {
   authority: string;
 }
@@ -488,6 +504,16 @@ export class AdamaConnection {
       id: id,
       responder: responder,
       request: {"method":"space/create", "id":id, "identity": identity, "space": space}
+    });
+  }
+  SpaceUsage(identity: string, space: string, limit: number, responder: BillingUsageResponder) {
+    var self = this;
+    self.nextId++;
+    var id = self.nextId;
+    return self.__execute_stream({
+      id: id,
+      responder: responder,
+      request: {"method":"space/usage", "id":id, "identity": identity, "space": space, "limit": limit}
     });
   }
   SpaceGet(identity: string, space: string, responder: PlanResponder) {

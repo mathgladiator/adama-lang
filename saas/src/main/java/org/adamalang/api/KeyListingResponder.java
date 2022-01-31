@@ -31,15 +31,6 @@ public class KeyListingResponder {
     responder.stream(_obj.toString());
   }
 
-  public void finish(String key, String created, String updated, Integer seq) {
-    ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.put("key", key);
-    _obj.put("created", created);
-    _obj.put("updated", updated);
-    _obj.put("seq", seq);
-    responder.finish(_obj.toString());
-  }
-
   public void finish() {
     responder.finish("{}");
   }

@@ -17,7 +17,6 @@ import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.common.ProtectedUUID;
 import org.adamalang.grpc.client.contracts.AskAttachmentCallback;
 import org.adamalang.grpc.client.contracts.CreateCallback;
 import org.adamalang.grpc.client.contracts.SeqCallback;
@@ -27,9 +26,11 @@ import org.adamalang.mysql.backend.BackendOperations;
 import org.adamalang.mysql.backend.data.DocumentIndex;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.frontend.Authorities;
-import org.adamalang.mysql.frontend.data.Role;
+import org.adamalang.mysql.frontend.Billing;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
+import org.adamalang.mysql.frontend.data.BillingUsage;
+import org.adamalang.mysql.frontend.data.Role;
 import org.adamalang.mysql.frontend.data.SpaceListingItem;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
@@ -78,9 +79,7 @@ public class RootHandlerImpl implements RootHandler {
               Users.validateUser(nexus.dataBaseManagement, startRequest.userId);
               responder.complete();
             } catch (Exception ex) {
-              responder.error(
-                  ErrorCodeException.detectOrWrap(
-                      ErrorCodes.API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION, ex, LOGGER));
+              responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION, ex, LOGGER));
               return;
             }
           } else {
@@ -96,30 +95,18 @@ public class RootHandlerImpl implements RootHandler {
         try {
           if (generatedCode.equals(request.code)) {
             KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
-            String publicKey =
-                new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+            String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
             try {
               if (request.revoke != null && request.revoke) {
                 Users.removeAllKeys(nexus.dataBaseManagement, startRequest.userId);
               }
-              Users.addKey(
-                  nexus.dataBaseManagement,
-                  startRequest.userId,
-                  publicKey,
-                  System.currentTimeMillis() + 30 * 24 * 60 * 60);
+              Users.addKey(nexus.dataBaseManagement, startRequest.userId, publicKey, System.currentTimeMillis() + 30 * 24 * 60 * 60);
               Users.validateUser(nexus.dataBaseManagement, startRequest.userId);
             } catch (Exception ex) {
-              responder.error(
-                  ErrorCodeException.detectOrWrap(
-                      ErrorCodes.API_INIT_GENERATE_UNKNOWN_EXCEPTION, ex, LOGGER));
+              responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_GENERATE_UNKNOWN_EXCEPTION, ex, LOGGER));
               return;
             }
-            responder.complete(
-                Jwts.builder()
-                    .setSubject("" + startRequest.userId)
-                    .setIssuer("adama")
-                    .signWith(pair.getPrivate())
-                    .compact());
+            responder.complete(Jwts.builder().setSubject("" + startRequest.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
           } else {
             responder.error(new ErrorCodeException(ErrorCodes.API_INIT_GENERATE_CODE_MISMATCH));
           }
@@ -129,7 +116,8 @@ public class RootHandlerImpl implements RootHandler {
       }
 
       @Override
-      public void disconnect(long id) {}
+      public void disconnect(long id) {
+      }
     };
   }
 
@@ -158,13 +146,10 @@ public class RootHandlerImpl implements RootHandler {
         Authorities.createAuthority(nexus.dataBaseManagement, request.who.id, authority);
         responder.complete(authority);
       } else {
-        responder.error(
-            new ErrorCodeException(ErrorCodes.API_CREATE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+        responder.error(new ErrorCodeException(ErrorCodes.API_CREATE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_CREATE_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -173,20 +158,13 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: setKeystore validates ownership
-        Authorities.setKeystore(
-            nexus.dataBaseManagement,
-            request.who.id,
-            request.authority,
-            request.keyStore.toString());
+        Authorities.setKeystore(nexus.dataBaseManagement, request.who.id, request.authority, request.keyStore.toString());
         responder.complete();
       } else {
-        responder.error(
-            new ErrorCodeException(ErrorCodes.API_SET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+        responder.error(new ErrorCodeException(ErrorCodes.API_SET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SET_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SET_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -195,18 +173,12 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         // NOTE: getKeystorePublic validates ownership
-        responder.complete(
-            Json.parseJsonObject(
-                Authorities.getKeystorePublic(
-                    nexus.dataBaseManagement, request.who.id, request.authority)));
+        responder.complete(Json.parseJsonObject(Authorities.getKeystorePublic(nexus.dataBaseManagement, request.who.id, request.authority)));
       } else {
-        responder.error(
-            new ErrorCodeException(ErrorCodes.API_GET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+        responder.error(new ErrorCodeException(ErrorCodes.API_GET_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_GET_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_GET_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -219,13 +191,10 @@ public class RootHandlerImpl implements RootHandler {
         }
         responder.finish();
       } else {
-        responder.error(
-            new ErrorCodeException(ErrorCodes.API_LIST_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+        responder.error(new ErrorCodeException(ErrorCodes.API_LIST_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_LIST_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_LIST_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -237,13 +206,10 @@ public class RootHandlerImpl implements RootHandler {
         Authorities.deleteAuthority(nexus.dataBaseManagement, request.who.id, request.authority);
         responder.complete();
       } else {
-        responder.error(
-            new ErrorCodeException(ErrorCodes.API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
+        responder.error(new ErrorCodeException(ErrorCodes.API_DELETE_AUTHORITY_NO_PERMISSION_TO_EXECUTE));
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_DELETE_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_DELETE_AUTHORITY_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -253,9 +219,23 @@ public class RootHandlerImpl implements RootHandler {
       Spaces.createSpace(nexus.dataBaseManagement, request.who.id, request.space);
       responder.complete();
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_CREATE_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
+  public void handle(Session session, SpaceUsageRequest request, BillingUsageResponder responder) {
+    try {
+      if (request.policy.canUserGetBillingUsage(request.who)) {
+        for (BillingUsage usage : Billing.usageReport(nexus.dataBaseManagement, request.policy.id, request.limit != null ? request.limit.intValue() : 336)) {
+          responder.next(usage.hour, usage.cpu, usage.memory, usage.connections, usage.documents, usage.messages, usage.storageBytes);
+        }
+        responder.finish();
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_BILLING_USAGE_NO_PERMISSION_TO_EXECUTE));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_GET_BILLING_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -263,16 +243,12 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SpaceGetRequest request, PlanResponder responder) {
     try {
       if (request.policy.canUserGetPlan(request.who)) {
-        responder.complete(
-            Json.parseJsonObject(Spaces.getPlan(nexus.dataBaseManagement, request.policy.id)));
+        responder.complete(Json.parseJsonObject(Spaces.getPlan(nexus.dataBaseManagement, request.policy.id)));
       } else {
-        responder.error(
-            new ErrorCodeException(ErrorCodes.API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE));
+        responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_GET_PLAN_NO_PERMISSION_TO_EXECUTE));
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_GET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_GET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -288,18 +264,16 @@ public class RootHandlerImpl implements RootHandler {
         // Change the master plan
         Spaces.setPlan(nexus.dataBaseManagement, request.policy.id, planJson, hash);
         // iterate the targets with this space loaded
-        nexus.client.getDeploymentTargets(
-            request.space,
-            (target) -> {
-              try {
-                // persist the deployment binding
-                Deployments.deploy(nexus.dataBaseDeployments, request.space, target, hash, planJson);
-                // notify the client of an update
-                nexus.client.notifyDeployment(target, request.space);
-              } catch (Exception ex) {
-                LOG.error("failed-deployment-write", ex);
-              }
-            });
+        nexus.client.getDeploymentTargets(request.space, (target) -> {
+          try {
+            // persist the deployment binding
+            Deployments.deploy(nexus.dataBaseDeployments, request.space, target, hash, planJson);
+            // notify the client of an update
+            nexus.client.notifyDeployment(target, request.space);
+          } catch (Exception ex) {
+            LOG.error("failed-deployment-write", ex);
+          }
+        });
         nexus.client.waitForCapacity(request.space, 7500, (found) -> {
           if (found) {
             responder.complete();
@@ -311,9 +285,7 @@ public class RootHandlerImpl implements RootHandler {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE);
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -325,8 +297,7 @@ public class RootHandlerImpl implements RootHandler {
           responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
           return;
         }
-        Spaces.changePrimaryOwner(
-            nexus.dataBaseBackend, request.policy.id, request.policy.owner, 0);
+        Spaces.changePrimaryOwner(nexus.dataBaseBackend, request.policy.id, request.policy.owner, 0);
         // remove all machines handling this
         Deployments.undeployAll(nexus.dataBaseDeployments, request.space);
         responder.complete();
@@ -334,9 +305,7 @@ public class RootHandlerImpl implements RootHandler {
         responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NO_PERMISSION));
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_DELETE_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -351,32 +320,26 @@ public class RootHandlerImpl implements RootHandler {
         throw new ErrorCodeException(ErrorCodes.API_SPACE_SET_ROLE_NO_PERMISSION_TO_EXECUTE);
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_SET_ROLE_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
   @Override
   public void handle(Session session, SpaceReflectRequest request, ReflectionResponder responder) {
     if (request.policy.canUserSeeReflection(request.who)) {
-      nexus.client.reflect(
-          request.space,
-          request.key,
-          new Callback<String>() {
-            @Override
-            public void success(String value) {
-                responder.complete(Json.parseJsonObject(value));
-            }
+      nexus.client.reflect(request.space, request.key, new Callback<String>() {
+        @Override
+        public void success(String value) {
+          responder.complete(Json.parseJsonObject(value));
+        }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-              responder.error(ex);
-            }
-          });
+        @Override
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
+        }
+      });
     } else {
-      responder.error(
-          new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_NO_PERMISSION_TO_EXECUTE));
+      responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_REFLECT_NO_PERMISSION_TO_EXECUTE));
     }
   }
 
@@ -384,12 +347,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, SpaceListRequest request, SpaceListingResponder responder) {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
-        for (SpaceListingItem spaceListingItem :
-            Spaces.list(
-                nexus.dataBaseManagement,
-                request.who.id,
-                request.marker,
-                request.limit == null ? 100 : request.limit)) {
+        for (SpaceListingItem spaceListingItem : Spaces.list(nexus.dataBaseManagement, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
           responder.next(spaceListingItem.name, spaceListingItem.callerRole, spaceListingItem.billing, spaceListingItem.created, spaceListingItem.balance, spaceListingItem.storageBytes);
         }
         responder.finish();
@@ -397,36 +355,26 @@ public class RootHandlerImpl implements RootHandler {
         responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_LIST_NO_PERMISSION_TO_EXECUTE));
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SPACE_LIST_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
   @Override
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
     try {
-      nexus.client.create(
-          request.who.who.agent,
-          request.who.who.authority,
-          request.space,
-          request.key,
-          request.entropy,
-          request.arg.toString(),
-          new CreateCallback() {
-            @Override
-            public void created() {
-              responder.complete();
-            }
+      nexus.client.create(request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new CreateCallback() {
+        @Override
+        public void created() {
+          responder.complete();
+        }
 
-            @Override
-            public void error(int code) {
-              responder.error(new ErrorCodeException(code));
-            }
-          });
+        @Override
+        public void error(int code) {
+          responder.error(new ErrorCodeException(code));
+        }
+      });
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_CREATE_DOCUMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -434,9 +382,7 @@ public class RootHandlerImpl implements RootHandler {
   public void handle(Session session, DocumentListRequest request, KeyListingResponder responder) {
     try {
       if (request.policy.canUserSeeKeyListing(request.who)) {
-        for (DocumentIndex item :
-            BackendOperations.list(
-                nexus.dataBaseBackend, request.space, request.marker, request.limit != null ? request.limit : 100)) {
+        for (DocumentIndex item : BackendOperations.list(nexus.dataBaseBackend, request.space, request.marker, request.limit != null ? request.limit : 100)) {
           responder.next(item.key, item.created, item.updated, item.seq);
         }
         responder.finish();
@@ -444,9 +390,7 @@ public class RootHandlerImpl implements RootHandler {
         responder.error(new ErrorCodeException(ErrorCodes.API_LIST_DOCUMENTS_NO_PERMISSION));
       }
     } catch (Exception ex) {
-      responder.error(
-          ErrorCodeException.detectOrWrap(
-              ErrorCodes.API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION, ex, LOGGER));
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION, ex, LOGGER));
     }
   }
 
@@ -457,50 +401,41 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void bind() {
-        connection =
-            nexus.client.connect(
-                request.who.who.agent,
-                request.who.who.authority,
-                request.space,
-                request.key,
-                new SimpleEvents() {
-                  @Override
-                  public void connected() {}
+        connection = nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, new SimpleEvents() {
+          @Override
+          public void connected() {
+          }
 
-                  @Override
-                  public void delta(String data) {
-                    responder.next(Json.parseJsonObject(data));
-                  }
+          @Override
+          public void delta(String data) {
+            responder.next(Json.parseJsonObject(data));
+          }
 
-                  @Override
-                  public void error(int code) {
-                    responder.error(new ErrorCodeException(code));
-                  }
+          @Override
+          public void error(int code) {
+            responder.error(new ErrorCodeException(code));
+          }
 
-                  @Override
-                  public void disconnected() {
-                    responder.finish();
-                  }
-                });
+          @Override
+          public void disconnected() {
+            responder.finish();
+          }
+        });
       }
 
       @Override
       public void handle(ConnectionSendRequest request, SeqResponder responder) {
-        connection.send(
-            request.channel,
-            null,
-            request.message.toString(),
-            new SeqCallback() {
-              @Override
-              public void success(int seq) {
-                responder.complete(seq);
-              }
+        connection.send(request.channel, null, request.message.toString(), new SeqCallback() {
+          @Override
+          public void success(int seq) {
+            responder.complete(seq);
+          }
 
-              @Override
-              public void error(int code) {
-                responder.error(new ErrorCodeException(code));
-              }
-            });
+          @Override
+          public void error(int code) {
+            responder.error(new ErrorCodeException(code));
+          }
+        });
       }
 
       // TODO: attach, canAttach
@@ -604,9 +539,7 @@ public class RootHandlerImpl implements RootHandler {
             startResponder.next(65536);
           }
         } catch (Exception ex) {
-          chunkResponder.error(
-              ErrorCodeException.detectOrWrap(
-                  ErrorCodes.API_ASSET_CHUNK_UNKNOWN_EXCEPTION, ex, LOGGER));
+          chunkResponder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_CHUNK_UNKNOWN_EXCEPTION, ex, LOGGER));
           disconnect(0);
         }
       }
@@ -620,30 +553,30 @@ public class RootHandlerImpl implements RootHandler {
           String sha384_64 = Hashing.finishAndEncode(digestSHA384);
           NtAsset asset = new NtAsset(id, request.filename, request.contentType, this.size, md5_64, sha384_64);
           nexus.uploader.upload(new Key(request.space, request.key), asset, file, new Callback<Void>() {
-              @Override
-              public void success(Void value) {
-                connection.get().attach(id, asset.name, asset.contentType, asset.size, asset.md5, asset.sha384, new SeqCallback() {
-                  @Override
-                  public void success(int seq) {
-                    clean.set(true);
-                    disconnect(0L);
-                    finishResponder.complete();
-                  }
+            @Override
+            public void success(Void value) {
+              connection.get().attach(id, asset.name, asset.contentType, asset.size, asset.md5, asset.sha384, new SeqCallback() {
+                @Override
+                public void success(int seq) {
+                  clean.set(true);
+                  disconnect(0L);
+                  finishResponder.complete();
+                }
 
-                  @Override
-                  public void error(int code) {
-                    disconnect(0L);
-                    finishResponder.error(new ErrorCodeException(code));
-                  }
-                });
-              }
+                @Override
+                public void error(int code) {
+                  disconnect(0L);
+                  finishResponder.error(new ErrorCodeException(code));
+                }
+              });
+            }
 
-              @Override
-              public void failure(ErrorCodeException ex) {
-                disconnect(0L);
-                finishResponder.error(ex);
-              }
-            });
+            @Override
+            public void failure(ErrorCodeException ex) {
+              disconnect(0L);
+              finishResponder.error(ex);
+            }
+          });
         } catch (Exception ex) {
           finishResponder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
           disconnect(0);
@@ -659,5 +592,6 @@ public class RootHandlerImpl implements RootHandler {
   }
 
   @Override
-  public void disconnect() {}
+  public void disconnect() {
+  }
 }

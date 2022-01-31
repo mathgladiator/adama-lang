@@ -28,12 +28,6 @@ public class ProgressResponder {
     responder.stream(_obj.toString());
   }
 
-  public void finish(Integer chunk_request_size) {
-    ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.put("chunk_request_size", chunk_request_size);
-    responder.finish(_obj.toString());
-  }
-
   public void finish() {
     responder.finish("{}");
   }

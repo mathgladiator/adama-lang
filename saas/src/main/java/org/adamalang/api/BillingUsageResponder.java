@@ -15,16 +15,22 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.web.io.*;
 
-public class AuthorityListingResponder {
+public class BillingUsageResponder {
   public final JsonResponder responder;
 
-  public AuthorityListingResponder(JsonResponder responder) {
+  public BillingUsageResponder(JsonResponder responder) {
     this.responder = responder;
   }
 
-  public void next(String authority) {
+  public void next(Integer hour, Long cpu, Long memory, Integer connections, Integer documents, Integer messages, Long storageBytes) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.put("authority", authority);
+    _obj.put("hour", hour);
+    _obj.put("cpu", cpu);
+    _obj.put("memory", memory);
+    _obj.put("connections", connections);
+    _obj.put("documents", documents);
+    _obj.put("messages", messages);
+    _obj.put("storage-bytes", storageBytes);
     responder.stream(_obj.toString());
   }
 

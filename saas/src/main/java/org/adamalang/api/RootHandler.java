@@ -28,6 +28,8 @@ public interface RootHandler {
 
   public void handle(Session session, SpaceCreateRequest request, SimpleResponder responder);
 
+  public void handle(Session session, SpaceUsageRequest request, BillingUsageResponder responder);
+
   public void handle(Session session, SpaceGetRequest request, PlanResponder responder);
 
   public void handle(Session session, SpaceSetRequest request, SimpleResponder responder);

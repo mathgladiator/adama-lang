@@ -209,6 +209,20 @@ public class ConnectionRouter {
               }
             });
           } return;
+          case "space/usage": {
+            RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceUsage.start();
+            SpaceUsageRequest.resolve(nexus, request, new Callback<>() {
+              @Override
+              public void success(SpaceUsageRequest resolved) {
+                handler.handle(nexus.session, resolved, new BillingUsageResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+              }
+              @Override
+              public void failure(ErrorCodeException ex) {
+                mInstance.failure(ex.code);
+                responder.error(ex);
+              }
+            });
+          } return;
           case "space/get": {
             RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_SpaceGet.start();
             SpaceGetRequest.resolve(nexus, request, new Callback<>() {

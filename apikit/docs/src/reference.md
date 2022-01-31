@@ -44,6 +44,9 @@ This is useful to validate an identity without executing anything
 ## Method: space/create
 
 
+## Method: space/usage
+
+
 ## Method: space/get
 
 

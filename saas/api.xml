@@ -291,6 +291,42 @@
         </documentation>
     </field-definition>
 
+    <field-definition name="cpu" type="long">
+        <documentation>
+            Cpu (in Adama ticks) used within the hour
+        </documentation>
+    </field-definition>
+
+    <field-definition name="memory" type="long">
+        <documentation>
+            Memory (in bytes) used within the hour
+        </documentation>
+    </field-definition>
+
+    <field-definition name="connections" type="int">
+        <documentation>
+            p95 connections for the hour
+        </documentation>
+    </field-definition>
+
+    <field-definition name="documents" type="int">
+        <documentation>
+            p95 documents for the hour
+        </documentation>
+    </field-definition>
+
+    <field-definition name="messages" type="int">
+        <documentation>
+            Messages sent within the hour
+        </documentation>
+    </field-definition>
+
+    <field-definition name="hour" type="int">
+        <documentation>
+            The hour of billing
+        </documentation>
+    </field-definition>
+
     <responder name="key-listing" stream="true">
         <field name="key"/>
         <field name="created"/>
@@ -309,6 +345,16 @@
 
     <responder name="authority-listing" stream="true">
         <field name="authority"/>
+    </responder>
+
+    <responder name="billing-usage" stream="true">
+        <field name="hour"/>
+        <field name="cpu"/>
+        <field name="memory"/>
+        <field name="connections"/>
+        <field name="documents"/>
+        <field name="messages"/>
+        <field name="storage-bytes"/>
     </responder>
 
     <responder name="simple">
@@ -432,6 +478,14 @@
     <method name="space/create" responder="simple">
         <parameter name="identity"/>
         <parameter name="space"/>
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="space/usage" responder="billing-usage">
+        <parameter name="identity"/>
+        <parameter name="space"/>
+        <parameter name="limit"/>
         <documentation>
         </documentation>
     </method>
