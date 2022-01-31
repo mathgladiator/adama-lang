@@ -278,8 +278,7 @@ public class DurableLivingDocument {
       }
       int seqToUse = last.update.seqEnd;
       size.addAndGet(patches.length);
-      // TODO: compress patches down
-      base.service.patch(key, patches, base.metrics.document_execute_patch.wrap(new Callback<>() {
+      base.service.patch(key, RemoteDocumentUpdate.compact(patches), base.metrics.document_execute_patch.wrap(new Callback<>() {
         @Override
         public void success(Void value) {
           base.executor.execute(new NamedRunnable("execute-now-patch-callback") {

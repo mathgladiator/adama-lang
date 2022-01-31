@@ -95,7 +95,9 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
       waitingForFirstData = false;
       agent.schedule(SimpleDocumentConnectionAgent.this, (int) (5000 + 5000 * Math.random()));
     }
-    System.err.println("Data:" + node.toString());
+    if (Math.random() < 0.05) {
+      System.err.println("Data:" + node.toString());
+    }
   }
 
   @Override

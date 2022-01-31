@@ -99,7 +99,7 @@ public class BlockingDataService implements DataService {
 
         // insert the delta
         int parent = DataBase.getInsertId(statementInsertIndex);
-        insertDelta(connection, parent, patch, metrics.write_init);
+        insertDeltaBatch(connection, parent, new RemoteDocumentUpdate[] { patch }, metrics.write_init);
       } finally {
         statementInsertIndex.close();
       }
@@ -110,12 +110,6 @@ public class BlockingDataService implements DataService {
 
   private String whenOf(RemoteDocumentUpdate patch) {
     return dateFormat.format(new Date(System.currentTimeMillis() + (patch.requiresFutureInvalidation ? patch.whenToInvalidateMilliseconds : 0)));
-  }
-
-  /** internal: insert a delta */
-  @Deprecated
-  private void insertDelta(Connection connection, int parent, RemoteDocumentUpdate patch, Runnable counter) throws SQLException {
-    insertDeltaBatch(connection, parent, new RemoteDocumentUpdate[] { patch }, counter);
   }
 
   /** internal: insert a batch of deltas */
@@ -189,9 +183,7 @@ public class BlockingDataService implements DataService {
       metrics.lookup_change.run();
 
       // insert delta
-      for (RemoteDocumentUpdate patch : patches) {
-        insertDelta(connection, lookup.id, patch, metrics.write_patch);
-      }
+      insertDeltaBatch(connection, lookup.id, patches, metrics.write_patch);
       return null;
     }, callback, ErrorCodes.PATCH_FAILURE);
   }
