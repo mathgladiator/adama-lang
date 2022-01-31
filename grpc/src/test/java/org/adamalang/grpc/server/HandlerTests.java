@@ -236,7 +236,7 @@ public class HandlerTests {
     private long id = 0;
     public long connect() {
       long _id = id++;
-      upstream.onNext(StreamMessageClient.newBuilder().setId(_id).setConnect(StreamConnect.newBuilder().setSpace("space").setKey("key").setAuthority("dev").setAgent("agent").build()).build());
+      upstream.onNext(StreamMessageClient.newBuilder().setId(_id).setConnect(StreamConnect.newBuilder().setSpace("space").setKey("key").setAuthority("dev").setAgent("agent").setState("{}").build()).build());
       return _id;
     }
 
@@ -252,7 +252,12 @@ public class HandlerTests {
 
     public void send(long connection) {
       long _id = id++;
-      upstream.onNext(StreamMessageClient.newBuilder().setId(_id).setAct(connection).setSend(StreamSend.newBuilder().setChannel("foo").setMessage("{}").build()).build());
+      upstream.onNext(StreamMessageClient.newBuilder().setId(_id).setAct(connection).setSend(StreamSend.newBuilder().setChannel("foo").setMessage("{}").setMarker("marker" + _id).build()).build());
+    }
+
+    public void update(long connection) {
+      long _id = id++;
+      upstream.onNext(StreamMessageClient.newBuilder().setId(_id).setAct(connection).setUpdate(StreamUpdate.newBuilder().setState("{}").build()).build());
     }
 
     @Override
@@ -302,7 +307,7 @@ public class HandlerTests {
       bed.release().run(); // patch connect
       bed.connect();
       bed.upstream.onCompleted();
-      Assert.assertTrue(bed.multiplexCompleted.await(5000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(bed.multiplexCompleted.await(15000, TimeUnit.MILLISECONDS));
       bed.release().run(); // get
       bed.release().run(); // patch connect
       bed.release().run(); // patch disconnect
@@ -351,6 +356,7 @@ public class HandlerTests {
         bed.send(id);
         bed.can_attach(id);
         bed.attach(id);
+        bed.update(id);
       }
       HashSet<Integer> codesSeen = new HashSet<>();
       while (codesSeen.size() < 3) {

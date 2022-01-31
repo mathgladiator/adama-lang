@@ -88,7 +88,7 @@ public class ConnectionActionQueueTests {
 
         Runnable integrate = directExector.latchAtAndDrain(1, 1);
         Runnable integrateBroadcast = directExector.latchAtAndDrain(2, 1);
-        Runnable ranStart = connectionExecutor.latchAtAndDrain(1, 20);
+        Runnable ranStart = connectionExecutor.latchAtAndDrain(1, 25);
         Runnable subscribed = directExector.latchAtAndDrain(1, 1);
         Runnable gotTargetAndCancel = connectionExecutor.latchAtAndDrain(3, 2);
         Runnable gotFindRequest = finderExecutor.latchAtAndDrain(1, 1);
@@ -104,7 +104,7 @@ public class ConnectionActionQueueTests {
         engineDirect.integrate("127.0.0.1:21005", Collections.singleton("space"));
         integrate.run();
         integrateBroadcast.run();
-        Connection connection = new Connection(base, "who", "dev", "space", "key", events);
+        Connection connection = new Connection(base, "who", "dev", "space", "key", "{}", events);
         ArrayList<LatchedSeqCallback> successes = new ArrayList<>();
         for (int k = 0; k < 4; k++) {
           LatchedSeqCallback cb1 = new LatchedSeqCallback();
@@ -131,6 +131,7 @@ public class ConnectionActionQueueTests {
               });
           connection.attach("id", "name", "type", 12, "md5", "sha", cb3);
           connection.send("foo", null, "{\"z\":100}", cb4);
+          connection.update("{}");
           successes.add(cb1);
           successes.add(cb2);
           successes.add(cb3);
@@ -158,7 +159,7 @@ public class ConnectionActionQueueTests {
             });
         LatchedSeqCallback cbFailure3 = new LatchedSeqCallback();
         connection.attach("id", "name", "type", 12, "md5", "sha", cbFailure3);
-
+        connection.update("{}");
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
         ranStart.run();

@@ -149,14 +149,14 @@ public class InstanceClient implements AutoCloseable {
   }
 
   /** connect to a document */
-  public long connect(String agent, String authority, String space, String key, Events events) {
+  public long connect(String agent, String authority, String space, String key, String viewerState, Events events) {
     long docId = table.id();
     executor.execute(new NamedRunnable("client-connect", target, space, key) {
       @Override
       public void execute() throws Exception {
         if (InstanceClient.this.upstream != null) {
           table.associate(docId, events);
-          upstream.onNext(StreamMessageClient.newBuilder().setId(docId).setConnect(StreamConnect.newBuilder().setAgent(agent).setAuthority(authority).setSpace(space).setKey(key).build()).build());
+          upstream.onNext(StreamMessageClient.newBuilder().setId(docId).setConnect(StreamConnect.newBuilder().setAgent(agent).setAuthority(authority).setSpace(space).setKey(key).setState(viewerState).build()).build());
         } else {
           events.disconnected();
         }
@@ -280,6 +280,19 @@ public class InstanceClient implements AutoCloseable {
             upstream.onNext(StreamMessageClient.newBuilder().setId(attachId).setAct(docId).setAttach(StreamAttach.newBuilder().setId(id).setFilename(name).setContentType(contentType).setSize(size).setMd5(md5).setSha384(sha384).build()).build());
           } else {
             callback.error(ErrorCodes.GRPC_ATTACHED_FAILED_NOT_CONNECTED);
+          }
+        }
+      });
+    }
+
+    @Override
+    public void update(String viewerState) {
+      long updateId = table.id();
+      executor.execute(new NamedRunnable("client-update", target) {
+        @Override
+        public void execute() throws Exception {
+          if (upstream != null) {
+            upstream.onNext(StreamMessageClient.newBuilder().setId(updateId).setAct(docId).setUpdate(StreamUpdate.newBuilder().setState(viewerState).build()).build());
           }
         }
       });

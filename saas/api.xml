@@ -40,6 +40,11 @@
         <validate service="org.adamalang.validators.ValidateKey"/>
     </parameter-definition>
 
+    <parameter-definition name="viewer-state" type="json-object" optional="true">
+        <documentation>
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="entropy" type="string" optional="true">
         <documentation>
             Each document has a random number generator. When 'entropy' is present, it will seed the random number
@@ -560,15 +565,22 @@
         <parameter name="identity"/>
         <parameter name="space"/>
         <parameter name="key"/>
+        <parameter name="viewer-state"/>
         <documentation>
         </documentation>
     </method>
 
-    <method name="connection/send" responder="seq" handler="document-stream" find-by="connection"
-            error-find-by="457745">
+    <method name="connection/send" responder="seq" handler="document-stream" find-by="connection" error-find-by="457745">
         <parameter name="connection"/>
         <parameter name="channel"/>
         <parameter name="message"/>
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="connection/update" responder="simple" handler="document-stream" find-by="connection" error-find-by="438302">
+        <parameter name="connection"/>
+        <parameter name="viewer-state"/>
         <documentation>
         </documentation>
     </method>
@@ -605,7 +617,7 @@
     </method>
 
     <!--
-438302
+
 405532
 447516
 444445

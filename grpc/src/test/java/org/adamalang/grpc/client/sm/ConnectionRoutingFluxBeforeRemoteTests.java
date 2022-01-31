@@ -112,7 +112,7 @@ public class ConnectionRoutingFluxBeforeRemoteTests {
         Runnable connectionGetsDisconnect = connectionExecutor.latchAtAndDrain(13, 1);
 
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
-        Connection connection = new Connection(base, "who", "dev", "space", "key", events);
+        Connection connection = new Connection(base, "who", "dev", "space", "key", "{}", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
         ranStart.run();

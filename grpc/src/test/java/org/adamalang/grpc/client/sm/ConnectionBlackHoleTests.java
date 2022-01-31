@@ -103,7 +103,7 @@ public class ConnectionBlackHoleTests {
         Runnable connectionFoundNull = connectionExecutor.latchAtAndDrain(8, 1);
         Runnable connectionGotDisconnect = connectionExecutor.latchAtAndDrain(9, 1);
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
-        Connection connection = new Connection(base, "who", "dev", "space", "key", events);
+        Connection connection = new Connection(base, "who", "dev", "space", "key", "{}", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
         ranStart.run();
@@ -235,7 +235,7 @@ public class ConnectionBlackHoleTests {
         Runnable connectionGotRealTarget = connectionExecutor.latchAtAndDrain(9, 1);
         Runnable connectionGotDisconnect = connectionExecutor.latchAtAndDrain(10, 1);
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
-        Connection connection = new Connection(base, "who", "dev", "space", "key", events);
+        Connection connection = new Connection(base, "who", "dev", "space", "key", "{}", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
         ranStart.run();
@@ -379,7 +379,7 @@ public class ConnectionBlackHoleTests {
         Runnable connectionGotBroadcast = connectionExecutor.latchAtAndDrain(10, 1);
         Runnable connectionGotDisconnect = connectionExecutor.latchAtAndDrain(11, 1);
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
-        Connection connection = new Connection(base, "who", "dev", "space", "key", events);
+        Connection connection = new Connection(base, "who", "dev", "space", "key", "{}", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
         ranStart.run();

@@ -100,10 +100,10 @@ public class InstanceClientTests {
                     AssertCreateSuccess success = new AssertCreateSuccess();
                     client.create("nope", "nope", "space", "1", "123", "{}", success);
                     success.await();
-                    client.connect("nope", "test", "space", "1", events);
+                    client.connect("nope", "test", "space", "1", "{}", events);
                   } else if (createdAgain.compareAndExchange(false, true) == false) {
                     System.err.println("Connecting again");
-                    client.connect("nope", "test", "space", "1", events);
+                    client.connect("nope", "test", "space", "1", "{}", events);
                   }
                   lifecycle.connected(client);
                 }
@@ -145,13 +145,14 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10003,
-            "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble<who, viewer> zpx = viewer.z + x;")) {
       bed.startServer();
       MockClentLifecycle lifecycle = new MockClentLifecycle();
       MockEvents events =
           new MockEvents() {
             @Override
             public void connected(Remote remote) {
+              remote.update("{\"z\":100}");
               remote.send(
                   "foo",
                   "marker",
@@ -170,7 +171,7 @@ public class InstanceClientTests {
               super.connected(remote);
             }
           };
-      Runnable happy = events.latchAt(4);
+      Runnable happy = events.latchAt(5);
       try (InstanceClient client =
           new InstanceClient(
               bed.identity,
@@ -184,7 +185,7 @@ public class InstanceClientTests {
                   AssertCreateSuccess success = new AssertCreateSuccess();
                   client.create("nope", "nope", "space", "1", "123", "{}", success);
                   success.await();
-                  client.connect("nope", "test", "space", "1", events);
+                  client.connect("nope", "test", "space", "1", "{}", events);
                   lifecycle.connected(client);
                 }
 
@@ -202,9 +203,10 @@ public class InstanceClientTests {
         bed.startServer();
         happy.run();
         events.assertWrite(0, "CONNECTED");
-        events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
-        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
-        events.assertWrite(3, "DISCONNECTED");
+        events.assertWrite(1, "DELTA:{\"data\":{\"x\":123,\"zpx\":123},\"seq\":4}");
+        events.assertWrite(2, "DELTA:{\"data\":{\"zpx\":223},\"seq\":5}");
+        events.assertWrite(3, "DELTA:{\"data\":{\"x\":223,\"zpx\":323},\"seq\":7}");
+        events.assertWrite(4, "DISCONNECTED");
       }
     }
   }
@@ -269,7 +271,7 @@ public class InstanceClientTests {
                   AssertCreateSuccess success = new AssertCreateSuccess();
                   client.create("nope", "nope", "space", "1", "123", "{}", success);
                   success.await();
-                  client.connect("nope", "test", "space", "1", events);
+                  client.connect("nope", "test", "space", "1", "{}", events);
                   lifecycle.connected(client);
                 }
 
@@ -340,7 +342,7 @@ public class InstanceClientTests {
                   AssertCreateSuccess success = new AssertCreateSuccess();
                   client.create("nope", "nope", "space", "1", "123", "{}", success);
                   success.await();
-                  client.connect("nope", "test", "space", "1", events);
+                  client.connect("nope", "test", "space", "1", "{}", events);
                   lifecycle.connected(client);
                 }
 
@@ -425,7 +427,7 @@ public class InstanceClientTests {
                   AssertCreateSuccess success = new AssertCreateSuccess();
                   client.create("nope", "nope", "space", "1", "123", "{}", success);
                   success.await();
-                  client.connect("nope", "test", "space", "1", events);
+                  client.connect("nope", "test", "space", "1", "{}", events);
                   lifecycle.connected(client);
                 }
 
@@ -511,7 +513,7 @@ public class InstanceClientTests {
                   AssertCreateSuccess success = new AssertCreateSuccess();
                   client.create("nope", "nope", "space", "1", "123", "{}", success);
                   success.await();
-                  client.connect("nope", "test", "space", "1", events);
+                  client.connect("nope", "test", "space", "1", "{}", events);
                   lifecycle.connected(client);
                 }
 
@@ -601,7 +603,7 @@ public class InstanceClientTests {
                   AssertCreateSuccess success = new AssertCreateSuccess();
                   client.create("nope", "nope", "space", "1", "123", "{}", success);
                   success.await();
-                  client.connect("nope", "test", "space", "1", events);
+                  client.connect("nope", "test", "space", "1", "{}", events);
                   lifecycle.connected(client);
                 }
 
@@ -694,7 +696,7 @@ public class InstanceClientTests {
                   AssertCreateSuccess success = new AssertCreateSuccess();
                   client.create("nope", "nope", "space", "1", "123", "{}", success);
                   success.await();
-                  client.connect("nope", "test", "space", "1", events);
+                  client.connect("nope", "test", "space", "1", "{}", events);
                   lifecycle.connected(client);
                 }
 
@@ -784,7 +786,7 @@ public class InstanceClientTests {
                   AssertCreateSuccess success = new AssertCreateSuccess();
                   client.create("nope", "nope", "space", "1", "123", "{}", success);
                   success.await();
-                  client.connect("nope", "test", "space", "1", events);
+                  client.connect("nope", "test", "space", "1", "{}", events);
                   lifecycle.connected(client);
                 }
 
@@ -841,7 +843,7 @@ public class InstanceClientTests {
                 @Override
                 public void connected(InstanceClient client) {
                   client.close();
-                  client.connect("nope", "test", "space", "1", events);
+                  client.connect("nope", "test", "space", "1", "{}", events);
                 }
 
                 @Override
@@ -1053,7 +1055,7 @@ public class InstanceClientTests {
             "a",
             "a",
             "space",
-            "key",
+            "key", "{}",
             new Events() {
               @Override
               public void connected(Remote remote) {}

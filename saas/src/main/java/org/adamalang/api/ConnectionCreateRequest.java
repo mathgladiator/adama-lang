@@ -9,6 +9,7 @@
  */
 package org.adamalang.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.connection.Session;
@@ -25,13 +26,15 @@ public class ConnectionCreateRequest {
   public final String space;
   public final SpacePolicy policy;
   public final String key;
+  public final ObjectNode viewerState;
 
-  public ConnectionCreateRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key) {
+  public ConnectionCreateRequest(final String identity, final AuthenticatedUser who, final String space, final SpacePolicy policy, final String key, final ObjectNode viewerState) {
     this.identity = identity;
     this.who = who;
     this.space = space;
     this.policy = policy;
     this.key = key;
+    this.viewerState = viewerState;
   }
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<ConnectionCreateRequest> callback) {
@@ -44,7 +47,8 @@ public class ConnectionCreateRequest {
       final LatchRefCallback<SpacePolicy> policy = new LatchRefCallback<>(_latch);
       final String key = request.getString("key", true, 466947);
       ValidateKey.validate(key);
-      _latch.with(() -> new ConnectionCreateRequest(identity, who.get(), space, policy.get(), key));
+      final ObjectNode viewerState = request.getObject("viewer-state", false, 0);
+      _latch.with(() -> new ConnectionCreateRequest(identity, who.get(), space, policy.get(), key, viewerState));
       nexus.identityService.execute(nexus.session, identity, who);
       nexus.spaceService.execute(nexus.session, space, policy);
     } catch (ErrorCodeException ece) {

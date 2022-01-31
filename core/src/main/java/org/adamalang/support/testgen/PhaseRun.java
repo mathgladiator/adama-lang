@@ -16,6 +16,7 @@ import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.exceptions.GoodwillExhaustedException;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.DocumentThreadBase;
@@ -45,7 +46,7 @@ public class PhaseRun {
       outputFile.append("MEMORY:").append(doc.getMemoryBytes()).append("\n");
       doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
         outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
-      }), DumbDataService.NOOPPrivateView);
+      }), new JsonStreamReader("{}"), DumbDataService.NOOPPrivateView);
       try {
         doc.connect(NtClient.NO_ONE, DumbDataService.NOOPINT);
       } catch (final RuntimeException e) {
@@ -54,7 +55,7 @@ public class PhaseRun {
       final var rando = new NtClient("rando", "random-place");
       doc.createPrivateView(rando, wrap(str -> {
         outputFile.append("+ RANDO DELTA:").append(str).append("\n");
-      }), DumbDataService.NOOPPrivateView);
+      }), new JsonStreamReader("{}"), DumbDataService.NOOPPrivateView);
       try {
         doc.connect(rando, DumbDataService.NOOPINT);
       } catch (final RuntimeException e) {

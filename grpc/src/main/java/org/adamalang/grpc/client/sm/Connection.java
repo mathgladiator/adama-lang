@@ -30,6 +30,7 @@ public class Connection {
   private final String agent;
   private final String authority;
   private final Key key;
+  private String viewerState;
   private final SimpleEvents events;
   // the buffer of actions to execute once we have a remote
   private final ItemQueue<Remote> queue;
@@ -51,11 +52,12 @@ public class Connection {
   // how long to wait on a failure to connect to a remote peer
   private int backoffConnectPeer;
 
-  public Connection(ConnectionBase base, String agent, String authority, String space, String key, SimpleEvents events) {
+  public Connection(ConnectionBase base, String agent, String authority, String space, String key, String viewerState, SimpleEvents events) {
     this.base = base;
     this.agent = agent;
     this.authority = authority;
     this.key = new Key(space, key);
+    this.viewerState = viewerState;
     this.events = events;
     this.routingAlive = false;
     this.unsubscribeFromRouting = null;
@@ -127,6 +129,25 @@ public class Connection {
           protected void failure(int code) {
             callback.error(code);
           }
+        });
+      }
+    });
+  }
+
+  public void update(String viewerState) {
+    ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_update.start();
+    base.executor.execute(new NamedRunnable("connection-update") {
+      @Override
+      public void execute() throws Exception {
+        Connection.this.viewerState = viewerState;
+        bufferOrExecute(new ItemAction<>(ErrorCodes.API_UPDATE_TIMEOUT, ErrorCodes.API_UPDATE_REJECTED, mInstance) {
+          @Override
+          protected void executeNow(Remote remote) {
+            remote.update(viewerState);
+          }
+
+          @Override
+          protected void failure(int code) { }
         });
       }
     });
@@ -315,7 +336,7 @@ public class Connection {
 
   private void fireConnectRemote() {
     StreamMonitor.StreamMonitorInstance mInstance = base.metrics.client_open_document.start();
-    foundClient.connect(agent, authority, key.space, key.key, new Events() {
+    foundClient.connect(agent, authority, key.space, key.key, viewerState, new Events() {
       @Override
       public void connected(Remote remote) {
         mInstance.progress();

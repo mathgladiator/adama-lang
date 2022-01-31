@@ -97,6 +97,7 @@ message StreamConnect {
   string key = 2;
   string agent = 3;
   string authority = 4;
+  string state = 5;
 }
 
 enum StreamStatusCode {
@@ -112,6 +113,10 @@ message StreamSend {
   string channel = 1;
   optional string marker = 2;
   string message = 3;
+}
+
+message StreamUpdate {
+  string state = 1;
 }
 
 message StreamAskAttachmentRequest {
@@ -157,6 +162,7 @@ message StreamMessageClient {
     StreamAskAttachmentRequest ask = 6;
     StreamAttach attach = 7;
     RequestHeat monitor = 8;
+    StreamUpdate update = 9;
   }
 }
 

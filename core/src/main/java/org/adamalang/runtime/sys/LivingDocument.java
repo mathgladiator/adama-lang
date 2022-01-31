@@ -161,11 +161,42 @@ public abstract class LivingDocument implements RxParent {
   /** code generated: create a private view for the given person */
   public abstract PrivateView __createPrivateView(NtClient __who, Perspective __perspective);
 
+  /** build broadcast for a viewer */
+  public LivingDocumentChange.Broadcast __buildBroadcast(NtClient who, PrivateView pv) {
+    final var writer = new JsonStreamWriter();
+    writer.beginObject();
+    boolean wroteData = false;
+    { // write out the data if there are changes
+      JsonStreamWriter data = new JsonStreamWriter();
+      pv.update(data);
+      String dataStr = data.toString();
+      if (!"{}".equals(dataStr)) {
+        writer.writeObjectFieldIntro("data");
+        writer.inline(dataStr);
+        writer.force_comma_introduction();
+        wroteData = true;
+      }
+    }
+    { // write out the outstanding and blockers arrays if they have changed for the view
+      JsonStreamWriter futures = new JsonStreamWriter();
+      __futures.dump(futures, who);
+      String futuresStr = futures.toString();
+      if (pv.futures(futuresStr)) {
+        if (wroteData) {
+          writer.force_comma();
+        }
+        writer.inline(futuresStr);
+        writer.force_comma_introduction();
+      }
+    }
+    writer.writeObjectFieldIntro("seq");
+    writer.writeInteger(__seq.get());
+    writer.endObject();
+    return new LivingDocumentChange.Broadcast(pv, writer.toString());
+  }
+
   /** internal: we compute per client */
-  private synchronized ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastList() {
-    final var startedTime = System.nanoTime();
-    // note: this estimate is assuming that consumers are 1:1 correspondence, growth happens when
-    // that is violated
+  private ArrayList<LivingDocumentChange.Broadcast> __buildBroadcastList() {
     ArrayList<LivingDocumentChange.Broadcast> broadcasts = new ArrayList<>(__trackedViews.size());
     final var itTrackedViews = __trackedViews.entrySet().iterator();
     while (itTrackedViews.hasNext()) {
@@ -174,36 +205,7 @@ public abstract class LivingDocument implements RxParent {
       while (itView.hasNext()) {
         final var pv = itView.next();
         if (pv.isAlive()) {
-          final var writer = new JsonStreamWriter();
-          writer.beginObject();
-          boolean wroteData = false;
-          { // write out the data if there are changes
-            JsonStreamWriter data = new JsonStreamWriter();
-            pv.update(data);
-            String dataStr = data.toString();
-            if (!"{}".equals(dataStr)) {
-              writer.writeObjectFieldIntro("data");
-              writer.inline(dataStr);
-              writer.force_comma_introduction();
-              wroteData = true;
-            }
-          }
-          { // write out the outstanding and blockers arrays if they have changed for the view
-            JsonStreamWriter futures = new JsonStreamWriter();
-            __futures.dump(futures, entryTrackedView.getKey());
-            String futuresStr = futures.toString();
-            if (pv.futures(futuresStr)) {
-              if (wroteData) {
-                writer.force_comma();
-              }
-              writer.inline(futuresStr);
-              writer.force_comma_introduction();
-            }
-          }
-          writer.writeObjectFieldIntro("seq");
-          writer.writeInteger(__seq.get());
-          writer.endObject();
-          broadcasts.add(new LivingDocumentChange.Broadcast(pv, writer.toString()));
+          broadcasts.add(__buildBroadcast(entryTrackedView.getKey(), pv));
         }
       }
     }
@@ -952,7 +954,6 @@ public abstract class LivingDocument implements RxParent {
       } else {
         List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
         __revert();
-
         __futures.restore();
         __reset_future_queues();
         __blocked.set(true);

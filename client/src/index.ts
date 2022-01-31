@@ -596,14 +596,14 @@ export class AdamaConnection {
       request: {"method":"document/list", "id":id, "identity": identity, "space": space, "marker": marker, "limit": limit}
     });
   }
-  ConnectionCreate(identity: string, space: string, key: string, responder: DataResponder) {
+  ConnectionCreate(identity: string, space: string, key: string, viewerState: any, responder: DataResponder) {
     var self = this;
     self.nextId++;
     var id = self.nextId;
     return self.__execute_stream({
       id: id,
       responder: responder,
-      request: {"method":"connection/create", "id":id, "identity": identity, "space": space, "key": key},
+      request: {"method":"connection/create", "id":id, "identity": identity, "space": space, "key": key, "viewer-state": viewerState},
       send: function(channel: string, message: any, subResponder: SeqResponder) {
         self.nextId++;
         var subId = self.nextId;
@@ -612,6 +612,16 @@ export class AdamaConnection {
           id: subId,
           responder: subResponder,
           request: { method: "connection/send", id: subId, "connection":parId, "channel": channel, "message": message}
+        });
+      },
+      update: function(viewerState: any, subResponder: SimpleResponder) {
+        self.nextId++;
+        var subId = self.nextId;
+        var parId = id;
+        self.__execute_rr({
+          id: subId,
+          responder: subResponder,
+          request: { method: "connection/update", id: subId, "connection":parId, "viewer-state": viewerState}
         });
       },
       end: function(subResponder: SimpleResponder) {

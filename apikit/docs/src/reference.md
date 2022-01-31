@@ -77,6 +77,9 @@ This is useful to validate an identity without executing anything
 ## Method: connection/send
 
 
+## Method: connection/update
+
+
 ## Method: connection/end
 
 

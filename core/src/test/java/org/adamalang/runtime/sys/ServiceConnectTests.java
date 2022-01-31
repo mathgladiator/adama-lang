@@ -39,6 +39,10 @@ public class ServiceConnectTests {
   private static final String CONNECT_CRASH_2 =
       "@static { create(who) { return true; } } public int x; @connected(who) { transition #crash; return who == @no_one; } #crash { x = 1; while(x > 0) { x = 2; } } @can_attach(who) { return true; } @attached (who, a) { x++; } ";
 
+  private static final String MIRROR =
+      "@static { create(who) { return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } @can_attach(who) { return true; } @attached (who, a) { x++; } view int z; bubble<who, viewer> zpx = viewer.z + x;";
+
+
   @Test
   public void connect_super_happy_connect() throws Exception {
     LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
@@ -55,7 +59,7 @@ public class ServiceConnectTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -86,7 +90,7 @@ public class ServiceConnectTests {
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_failure(950384);
     } finally {
       service.shutdown();
@@ -106,7 +110,7 @@ public class ServiceConnectTests {
       service.create(NtClient.NO_ONE, KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_failure(950384);
     } finally {
       service.shutdown();
@@ -132,7 +136,7 @@ public class ServiceConnectTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -176,7 +180,7 @@ public class ServiceConnectTests {
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -209,7 +213,7 @@ public class ServiceConnectTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_failure(9999);
     } finally {
       service.shutdown();
@@ -235,7 +239,7 @@ public class ServiceConnectTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -251,6 +255,37 @@ public class ServiceConnectTests {
       streamback.get().disconnect();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void connect_view_update() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(MIRROR);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockInstantDataService dataService = new MockInstantDataService();
+    dataService.initialize(KEY, wrap("{\"__constructed\":true}")[0], Callback.DONT_CARE_VOID);
+    dataService.patch(
+        KEY,
+        wrap(
+            "{\"__seq\":2,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}}}"),
+        Callback.DONT_CARE_VOID);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    try {
+      MockStreamback streamback = new MockStreamback();
+      Runnable latch1 = streamback.latchAt(2);
+      Runnable latch2 = streamback.latchAt(3);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      streamback.await_began();
+      latch1.run();
+      Assert.assertEquals("STATUS:Connected", streamback.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":42,\"zpx\":42},\"seq\":3}", streamback.get(1));
+      streamback.get().updateView(new JsonStreamReader("{\"z\":100}"));
+      latch2.run();
+      Assert.assertEquals("{\"data\":{\"zpx\":142},\"seq\":4}", streamback.get(2));
     } finally {
       service.shutdown();
     }
@@ -274,9 +309,9 @@ public class ServiceConnectTests {
       Runnable latch2a = streamback2.latchAt(2);
       Runnable latch1b = streamback1.latchAt(4);
       Runnable latch2b = streamback2.latchAt(4);
-      service.connect(NtClient.NO_ONE, KEY, streamback1);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
       streamback1.await_began();
-      service.connect(NtClient.NO_ONE, KEY, streamback2);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback2);
       streamback2.await_began();
       latch1a.run();
       latch2a.run();
@@ -315,8 +350,8 @@ public class ServiceConnectTests {
       Runnable latch1 = streamback1.latchAt(2);
       Runnable latch2 = streamback2.latchAt(2);
       Runnable queuedUp = dataService.latchAt(1);
-      service.connect(NtClient.NO_ONE, KEY, streamback1);
-      service.connect(NtClient.NO_ONE, KEY, streamback2);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback2);
       queuedUp.run();
       dataService.unpause();
       streamback1.await_began();
@@ -342,7 +377,7 @@ public class ServiceConnectTests {
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latchAfter = factoryFactory.latchAt(1);
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       latchAfter.run();
       factoryFactory.satisfyNone(KEY);
       streamback.await_failure(50000);
@@ -368,7 +403,7 @@ public class ServiceConnectTests {
       dataService.set(new MockFailureDataService());
       dataService.unpause();
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_failure(999);
     } finally {
       service.shutdown();
@@ -385,7 +420,7 @@ public class ServiceConnectTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_failure(999);
     } finally {
       service.shutdown();
@@ -409,7 +444,7 @@ public class ServiceConnectTests {
       Runnable latch1 = dataService.latchAt(1);
       Runnable latch2 = dataService.latchAt(2);
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       latch1.run();
       dataService.once();
       latch2.run();

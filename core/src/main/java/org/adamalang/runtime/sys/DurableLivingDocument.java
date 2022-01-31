@@ -495,8 +495,9 @@ public class DurableLivingDocument {
     return document.__isConnected(who);
   }
 
-  public void createPrivateView(final NtClient who, final Perspective perspective, Callback<PrivateView> callback) {
+  public void createPrivateView(final NtClient who, final Perspective perspective, JsonStreamReader viewerState, Callback<PrivateView> callback) {
     PrivateView result = document.__createView(who, perspective);
+    result.ingest(viewerState);
     invalidate(Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
   }
 

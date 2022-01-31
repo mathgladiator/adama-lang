@@ -371,6 +371,26 @@ public class ConnectionRouter {
               }
             });
           } return;
+          case "connection/update": {
+            RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionUpdate.start();
+            ConnectionUpdateRequest.resolve(nexus, request, new Callback<>() {
+              @Override
+              public void success(ConnectionUpdateRequest resolved) {
+                DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
+                if (handlerToUse != null) {
+                  handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                } else {
+                  mInstance.failure(438302);
+                  responder.error(new ErrorCodeException(438302));
+                }
+              }
+              @Override
+              public void failure(ErrorCodeException ex) {
+                mInstance.failure(ex.code);
+                responder.error(ex);
+              }
+            });
+          } return;
           case "connection/end": {
             RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_ConnectionEnd.start();
             ConnectionEndRequest.resolve(nexus, request, new Callback<>() {

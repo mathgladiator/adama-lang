@@ -80,7 +80,7 @@ public class ConnectionFinderDeadTests {
         gotNewTarget.run();
         newTargetBroadcast.run();
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
-        Connection connection = new Connection(base, "who", "dev", "space", "key", events);
+        Connection connection = new Connection(base, "who", "dev", "space", "key", "{}", events);
         connection.open();
         ranStart.run();
         subscribed.run();
@@ -166,7 +166,7 @@ public class ConnectionFinderDeadTests {
         gotNewTarget.run();
         newTargetBroadcast.run();
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
-        Connection connection = new Connection(base, "who", "dev", "space", "key", events);
+        Connection connection = new Connection(base, "who", "dev", "space", "key", "{}", events);
         connection.open();
         ranStart.run();
         subscribed.run();

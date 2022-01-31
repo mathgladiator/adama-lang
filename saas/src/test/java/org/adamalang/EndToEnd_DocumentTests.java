@@ -43,16 +43,19 @@ public class EndToEnd_DocumentTests {
                   "@connected(who) { return true; }" +
                   "public int x = 1;" +
                   "message M { int z; }" +
-                  "channel foo(M m) { x += m.z; }"
+                  "channel foo(M m) { x += m.z; }" +
+                  "view int z; bubble<who, viewer> zpx = viewer.z + x;"
           ) + "}");
       Assert.assertEquals("FINISH:{}", c4.next());
       Iterator<String> c5 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"newspace\",\"key\":\"a\",\"arg\":{}}");
       Assert.assertEquals("FINISH:{}", c5.next());
       Iterator<String> c6 = fe.execute("{\"id\":100,\"identity\":\"" + devIdentity + "\",\"method\":\"connection/create\",\"space\":\"newspace\",\"key\":\"a\"}");
-      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1},\"seq\":4}}", c6.next());
+      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":1,\"zpx\":1},\"seq\":4}}", c6.next());
       Iterator<String> c7 = fe.execute("{\"id\":8,\"method\":\"connection/send\",\"connection\":100,\"channel\":\"foo\",\"message\":{\"z\":2}}");
       Assert.assertEquals("FINISH:{\"seq\":6}", c7.next());
-      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":3},\"seq\":6}}", c6.next());
+      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"x\":3,\"zpx\":3},\"seq\":6}}", c6.next());
+      fe.execute("{\"id\":8,\"method\":\"connection/update\",\"connection\":100,\"viewer-state\":{\"z\":100}}");
+      Assert.assertEquals("STREAM:{\"delta\":{\"data\":{\"zpx\":103},\"seq\":7}}", c6.next());
       Iterator<String> c8 = fe.execute("{\"id\":8,\"method\":\"connection/end\",\"connection\":100}");
       Assert.assertEquals("FINISH:{}", c8.next());
       Assert.assertEquals("FINISH:{}", c6.next());

@@ -44,7 +44,7 @@ public class ServiceImplicitCreateTests {
       MockStreamback streamback = new MockStreamback();
       Runnable latchClient = streamback.latchAt(2);
       Runnable latchData = dataService.latchLogAt(5);
-      service.connect(NtClient.NO_ONE, KEY, streamback);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_began();
       latchData.run();
       latchClient.run();
@@ -75,8 +75,8 @@ public class ServiceImplicitCreateTests {
       Runnable bothTryToCreate = dataService.latchAt(3);
       Runnable latchData = realDataService.latchLogAt(6);
       dataService.pause();
-      service.connect(NtClient.NO_ONE, KEY, streamback1);
-      service.connect(NtClient.NO_ONE, KEY, streamback2);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback2);
       onlyOneAsks.run();
       dataService.once();
       bothTryToCreate.run();
@@ -118,7 +118,7 @@ public class ServiceImplicitCreateTests {
     CoreService service = new CoreService(METRICS, proxyFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback1 = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, streamback1);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
       streamback1.await_failure(625676);
     } finally {
       service.shutdown();
@@ -142,8 +142,8 @@ public class ServiceImplicitCreateTests {
       Runnable bothCreating = dataService.latchAt(3);
       Runnable latchData = realDataService.latchLogAt(4);
       dataService.pause();
-      service.connect(NtClient.NO_ONE, KEY, streamback1);
-      service.connect(NtClient.NO_ONE, KEY, streamback2);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
+      service.connect(NtClient.NO_ONE, KEY, "{}", streamback2);
       bothAskingOnlyOne.run();
       dataService.once();
       bothCreating.run();

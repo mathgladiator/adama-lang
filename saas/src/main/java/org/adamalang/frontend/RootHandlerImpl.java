@@ -401,7 +401,7 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void bind() {
-        connection = nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, new SimpleEvents() {
+        connection = nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", new SimpleEvents() {
           @Override
           public void connected() {
           }
@@ -421,6 +421,12 @@ public class RootHandlerImpl implements RootHandler {
             responder.finish();
           }
         });
+      }
+
+      @Override
+      public void handle(ConnectionUpdateRequest request, SimpleResponder responder) {
+        connection.update(request.viewerState != null ? request.viewerState.toString() : "{}");
+        responder.complete();
       }
 
       @Override
@@ -455,7 +461,7 @@ public class RootHandlerImpl implements RootHandler {
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder startResponder) {
     AtomicReference<Connection> connection = new AtomicReference<>(null);
     AtomicBoolean clean = new AtomicBoolean(false);
-    connection.set(nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, new SimpleEvents() {
+    connection.set(nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", new SimpleEvents() {
       @Override
       public void connected() {
         connection.get().canAttach(new AskAttachmentCallback() {

@@ -83,7 +83,7 @@ public class ConnectionQuickDisconnect {
         Runnable initialized = connectionExecutor.latchAtAndDrain(3, 2);
         Runnable unsubscribe = directExector.latchAtAndDrain(2, 1);
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
-        Connection connection = new Connection(base, "who", "dev", "space", "key", events);
+        Connection connection = new Connection(base, "who", "dev", "space", "key", "{}", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
         connection.close();

@@ -18,6 +18,7 @@ import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.grpc.proto.*;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.CoreStream;
@@ -140,7 +141,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             StreamConnect connect = payload.getConnect();
             LazyCoreStream lazy = new LazyCoreStream(executor);
             streams.put(id, lazy);
-            nexus.service.connect(new NtClient(connect.getAgent(), connect.getAuthority()), new Key(connect.getSpace(), connect.getKey()), new Streamback() {
+            nexus.service.connect(new NtClient(connect.getAgent(), connect.getAuthority()), new Key(connect.getSpace(), connect.getKey()), connect.getState(), new Streamback() {
               @Override
               public void onSetupComplete(CoreStream stream) {
                 executor.execute(new NamedRunnable("connected") {
@@ -273,8 +274,22 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             });
             return;
           }
+          case UPDATE: {
+            stream.execute(new ItemAction<>(ErrorCodes.GRPC_STREAM_UPDATE_TIMEOUT, ErrorCodes.GRPC_STREAM_UPDATE_TIMEOUT, nexus.metrics.server_stream_update.start()) {
+              @Override
+              protected void executeNow(CoreStream item) {
+                item.updateView(new JsonStreamReader(payload.getUpdate().getState()));
+              }
+
+              @Override
+              protected void failure(int code) {
+                // don't care
+              }
+            });
+            return;
+          }
           case SEND: {
-            stream.execute(new ItemAction<CoreStream>(ErrorCodes.GRPC_STREAM_SEND_TIMEOUT, ErrorCodes.GRPC_STREAM_SEND_REJECTED, nexus.metrics.server_stream_send.start()) {
+            stream.execute(new ItemAction<>(ErrorCodes.GRPC_STREAM_SEND_TIMEOUT, ErrorCodes.GRPC_STREAM_SEND_REJECTED, nexus.metrics.server_stream_send.start()) {
               @Override
               protected void executeNow(CoreStream stream) {
                 StreamSend send = payload.getSend();

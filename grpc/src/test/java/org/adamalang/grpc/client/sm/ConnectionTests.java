@@ -80,7 +80,7 @@ public class ConnectionTests {
                 "me",
                 "dev",
                 "space",
-                "key1",
+                "key1", "{}",
                 new SimpleEvents() {
                   @Override
                   public void connected() {
@@ -197,7 +197,7 @@ public class ConnectionTests {
                 "me",
                 "dev",
                 "space",
-                "key1",
+                "key1", "{}",
                 new SimpleEvents() {
                   @Override
                   public void connected() {

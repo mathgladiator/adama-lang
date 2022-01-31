@@ -14,6 +14,7 @@ import org.adamalang.common.*;
 import org.adamalang.runtime.contracts.*;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
@@ -160,17 +161,17 @@ public class CoreService {
   }
 
   /** connect the given person to the document hooking up a streamback */
-  public void connect(NtClient who, Key key, Streamback stream) {
-    connect(who, key, stream, true);
+  public void connect(NtClient who, Key key, String viewerState, Streamback stream) {
+    connect(who, key, stream, viewerState, true);
   }
 
   /** internal: do the connect with retry */
-  private void connect(NtClient who, Key key, Streamback stream, boolean canRetry) {
+  private void connect(NtClient who, Key key, Streamback stream, String viewerState, boolean canRetry) {
     // TODO: instrument the stream
     load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
-        connectDirectMustBeInDocumentBase(who, document, stream);
+        connectDirectMustBeInDocumentBase(who, document, stream, new JsonStreamReader(viewerState));
       }
 
       @Override
@@ -188,13 +189,13 @@ public class CoreService {
                 create(who, key, "{}", null, metrics.implicitCreate.wrap(new Callback<Void>() {
                   @Override
                   public void success(Void value) {
-                    connect(who, key, stream, false);
+                    connect(who, key, stream, viewerState, false);
                   }
 
                   @Override
                   public void failure(ErrorCodeException ex) {
                     if (ex.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE) {
-                      connect(who, key, stream, false);
+                      connect(who, key, stream, viewerState, false);
                     } else {
                       stream.failure(exOriginal);
                     }
@@ -303,7 +304,7 @@ public class CoreService {
   }
 
   /** internal: send connection to the document if not joined, then join */
-  private void connectDirectMustBeInDocumentBase(NtClient who, DurableLivingDocument document, Streamback stream) {
+  private void connectDirectMustBeInDocumentBase(NtClient who, DurableLivingDocument document, Streamback stream, JsonStreamReader viewerState) {
     PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
     Callback<Integer> onConnected = new Callback<>() {
       @Override
@@ -313,13 +314,14 @@ public class CoreService {
           @Override
           public void data(String data) {
             stream.next(data);
+            inventory.message();
           }
 
           @Override
           public void disconnect() {
             stream.status(Streamback.StreamStatus.Disconnected);
           }
-        }, metrics.createPrivateView.wrap(new Callback<>() {
+        }, viewerState, metrics.createPrivateView.wrap(new Callback<>() {
           @Override
           public void success(PrivateView view) {
             stream.onSetupComplete(new CoreStream(metrics, who, inventory, document, view));

@@ -27,6 +27,7 @@ public class ClientMetrics {
   public final ItemActionMonitor client_reflection;
   public final ItemActionMonitor client_create;
   public final ItemActionMonitor client_connection_send;
+  public final ItemActionMonitor client_connection_update;
   public final ItemActionMonitor client_connection_attach;
   public final ItemActionMonitor client_connection_can_attach;
   public final StreamMonitor client_open_document;
@@ -44,6 +45,7 @@ public class ClientMetrics {
     client_reflection = factory.makeItemActionMonitor("client_reflection");
     client_create = factory.makeItemActionMonitor("client_create");
     client_connection_send = factory.makeItemActionMonitor("client_connection_send");
+    client_connection_update = factory.makeItemActionMonitor("client_connection_update");
     client_connection_attach = factory.makeItemActionMonitor("client_connection_attach");
     client_connection_can_attach = factory.makeItemActionMonitor("client_connection_can_attach");
     client_open_document = factory.makeStreamMonitor("client_open_document");

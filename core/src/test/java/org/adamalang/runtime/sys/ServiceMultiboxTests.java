@@ -48,7 +48,7 @@ public class ServiceMultiboxTests {
       created.await_success();
       MockStreamback streamback1 = new MockStreamback();
       Runnable latch1 = streamback1.latchAt(7);
-      service.connect(ALICE, KEY, streamback1);
+      service.connect(ALICE, KEY, "{}", streamback1);
       streamback1.await_began();
       realDataService.skipAt(5);
       LatchCallback cb1 = new LatchCallback();
@@ -96,7 +96,7 @@ public class ServiceMultiboxTests {
       created.await_success();
       MockStreamback streamback1 = new MockStreamback();
       Runnable latch1 = streamback1.latchAt(3);
-      service.connect(ALICE, KEY, streamback1);
+      service.connect(ALICE, KEY, "{}", streamback1);
       streamback1.await_began();
       realDataService.infiniteSkip();
       LatchCallback cb1 = new LatchCallback();
@@ -127,12 +127,12 @@ public class ServiceMultiboxTests {
 
       MockStreamback streamback1 = new MockStreamback();
       Runnable latch1 = streamback1.latchAt(11);
-      service1.connect(ALICE, KEY, streamback1);
+      service1.connect(ALICE, KEY, "{}", streamback1);
       streamback1.await_began();
 
       MockStreamback streamback2 = new MockStreamback();
       Runnable latch2 = streamback2.latchAt(10);
-      service2.connect(ALICE, KEY, streamback2);
+      service2.connect(ALICE, KEY, "{}", streamback2);
       streamback2.await_began();
 
       { // 2000

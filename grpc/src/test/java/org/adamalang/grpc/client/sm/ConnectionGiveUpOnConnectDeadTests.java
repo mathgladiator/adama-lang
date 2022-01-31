@@ -97,7 +97,7 @@ public class ConnectionGiveUpOnConnectDeadTests {
                         (t, c) -> {}) {
                       @Override
                       public long connect(
-                          String agent, String authority, String space, String key, Events events) {
+                          String agent, String authority, String space, String key, String viewerState, Events events) {
                         events.disconnected();
                         return 0;
                       }
@@ -124,7 +124,7 @@ public class ConnectionGiveUpOnConnectDeadTests {
         subscribed.run();
         gotNewTarget.run();
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
-        Connection connection = new Connection(base, "who", "dev", "space", "key", events);
+        Connection connection = new Connection(base, "who", "dev", "space", "key", "{}", events);
         Assert.assertEquals("state=NotConnected", connection.toString());
         connection.open();
         ranStart.run();

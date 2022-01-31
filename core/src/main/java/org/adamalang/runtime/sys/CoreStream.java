@@ -14,6 +14,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
@@ -39,6 +40,19 @@ public class CoreStream {
     inventory.message();
     inventory.connect();
     metrics.inflight_streams.up();
+  }
+
+  /** update the viewer state */
+  public void updateView(JsonStreamReader patch) {
+    document.base.executor.execute(new NamedRunnable("core-stream-send") {
+      @Override
+      public void execute() throws Exception {
+        inventory.message();
+        view.ingest(patch);
+        document.invalidate(Callback.DONT_CARE_INTEGER);
+        // TODO: for efficiency sake, we can recompute just the view. However, it does require no patch being inflight to not leak data.
+      }
+    });
   }
 
   /** send a message to the document */

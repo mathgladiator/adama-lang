@@ -16,5 +16,7 @@ public interface Remote {
 
   void send(String channel, String marker, String message, SeqCallback callback);
 
+  void update(String viewerState);
+
   void disconnect();
 }

@@ -96,7 +96,7 @@ public class ClientTests {
         CountDownLatch latchGotConnected = new CountDownLatch(1);
         CountDownLatch latchGotData = new CountDownLatch(1);
         CountDownLatch latchGotDisconnect = new CountDownLatch(1);
-        Connection connection = client.connect("me", "dev", "space", "key1", new SimpleEvents() {
+        Connection connection = client.connect("me", "dev", "space", "key1", "{}", new SimpleEvents() {
           @Override
           public void connected() {
             latchGotConnected.countDown();
