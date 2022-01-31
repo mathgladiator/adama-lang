@@ -9,7 +9,12 @@
  */
 package org.adamalang.runtime.data;
 
+import org.adamalang.runtime.json.JsonAlgebra;
+import org.adamalang.runtime.json.JsonStreamReader;
+import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
+
+import java.util.ArrayList;
 
 /** the remote copy should change */
 public class RemoteDocumentUpdate {
@@ -63,5 +68,40 @@ public class RemoteDocumentUpdate {
     this.whenToInvalidateMilliseconds = whenToInvalidateMilliseconds;
     this.assetBytes = assetBytes;
     this.updateType = updateType;
+  }
+
+  private static String mergeJson(String a, String b) {
+    JsonStreamReader readerA = new JsonStreamReader(a);
+    JsonStreamReader readerB = new JsonStreamReader(b);
+    JsonStreamWriter writer = new JsonStreamWriter();
+    writer.writeTree(JsonAlgebra.merge(readerA.readJavaTree(), readerB.readJavaTree()));
+    return writer.toString();
+  }
+
+  private static RemoteDocumentUpdate merge(RemoteDocumentUpdate a, RemoteDocumentUpdate b) {
+    return new RemoteDocumentUpdate(a.seqBegin, b.seqEnd, //
+        a.who, a.request, //
+        mergeJson(a.redo, b.redo), //
+        mergeJson(b.undo, a.undo),
+        b.requiresFutureInvalidation, b.whenToInvalidateMilliseconds, //
+        a.assetBytes + b.assetBytes, a.updateType);
+  }
+
+  public static RemoteDocumentUpdate[] compact(RemoteDocumentUpdate[] updates) {
+    if (updates.length == 1) {
+      return updates;
+    }
+    ArrayList<RemoteDocumentUpdate> newUpdates = new ArrayList<>(updates.length);
+    int k = 0;
+    while (k < updates.length) {
+      RemoteDocumentUpdate consider = updates[k];
+      while (k + 1 < updates.length && updates[k+1].updateType == UpdateType.Invalidate) {
+        consider = merge(consider, updates[k+1]);
+        k++;
+      }
+      newUpdates.add(consider);
+      k++;
+    }
+    return newUpdates.toArray(new RemoteDocumentUpdate[newUpdates.size()]);
   }
 }
