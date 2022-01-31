@@ -113,26 +113,44 @@ public class BlockingDataService implements DataService {
   }
 
   /** internal: insert a delta */
+  @Deprecated
   private void insertDelta(Connection connection, int parent, RemoteDocumentUpdate patch, Runnable counter) throws SQLException {
-    String insertDeltaSQL = new StringBuilder() //
+    insertDeltaBatch(connection, parent, new RemoteDocumentUpdate[] { patch }, counter);
+  }
+
+  /** internal: insert a batch of deltas */
+  private void insertDeltaBatch(Connection connection, int parent, RemoteDocumentUpdate[] patches, Runnable counter) throws SQLException {
+    StringBuilder insertDeltaSQLBuilder = new StringBuilder() //
         .append("INSERT INTO `").append(dataBase.databaseName).append("`.`deltas` (") //
-        .append("`parent`, `seq_begin`, `seq_end`, `who_agent`, `who_authority`, `request`, `redo`, `undo`, `history_ptr`) VALUES (") //
-        .append(parent).append(", '").append(patch.seqBegin).append("', '").append(patch.seqEnd).append("', ") //
-        .append("?, ?, ?, ?, ?, '')") //
-        .toString();
-    PreparedStatement statement = connection.prepareStatement(insertDeltaSQL);
+        .append("`parent`, `seq_begin`, `seq_end`, `who_agent`, `who_authority`, `request`, `redo`, `undo`, `history_ptr`) VALUES ");
+
+    boolean append = false;
+    for (RemoteDocumentUpdate patch : patches) {
+      if (append) {
+        insertDeltaSQLBuilder.append(",");
+      }
+      append = true;
+      insertDeltaSQLBuilder.append("(") //
+        .append(parent).append(",'").append(patch.seqBegin).append("','").append(patch.seqEnd).append("', ") //
+        .append("?, ?, ?, ?, ?, '')");
+    }
+    PreparedStatement statement = connection.prepareStatement(insertDeltaSQLBuilder.toString());
     counter.run();
     try {
-      if (patch.who != null) {
-        statement.setString(1, patch.who.agent);
-        statement.setString(2, patch.who.authority);
-      } else {
-        statement.setString(1, "?");
-        statement.setString(2, "adama");
+      int offset = 0;
+      for (RemoteDocumentUpdate patch : patches) {
+        if (patch.who != null) {
+          statement.setString(1 + offset, patch.who.agent);
+          statement.setString(2 + offset, patch.who.authority);
+        } else {
+          statement.setString(1 + offset, "?");
+          statement.setString(2 + offset, "adama");
+        }
+        statement.setString(3 + offset, patch.request);
+        statement.setString(4 + offset, patch.redo);
+        statement.setString(5 + offset, patch.undo);
+        offset += 5;
       }
-      statement.setString(3, patch.request);
-      statement.setString(4, patch.redo);
-      statement.setString(5, patch.undo);
       statement.execute();
     } finally {
       statement.close();
