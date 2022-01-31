@@ -46,10 +46,10 @@ public class Engine implements AutoCloseable {
   private final Supplier<Server> serverSupplier;
   private final HashMap<String, Link> links;
   private final HashMap<String, ArrayList<Consumer<Collection<String>>>> subscribersByApp;
+  private final EngineRole engineRole;
   private String broadcastHash;
   private io.grpc.Server server;
   private Consumer<Collection<Endpoint>> watcher;
-  private final EngineRole engineRole;
 
   public Engine(MachineIdentity identity, TimeSource time, HashSet<String> initial, int port, int monitoringPort, GossipMetrics metrics, EngineRole engineRole) throws Exception {
     this.credentials = TlsChannelCredentials.newBuilder() //

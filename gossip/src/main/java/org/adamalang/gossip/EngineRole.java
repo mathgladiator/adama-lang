@@ -12,13 +12,12 @@ package org.adamalang.gossip;
 import java.util.Random;
 
 public enum EngineRole {
-  SuperNode(5, 2),
-  Node(50, 5);
+  SuperNode(5, 2), Node(50, 5);
 
   public final int waitBasis;
   public final int waitRounds;
 
-  private EngineRole(int waitBasis, int waitRounds) {
+  EngineRole(int waitBasis, int waitRounds) {
     this.waitBasis = waitBasis;
     this.waitRounds = waitRounds;
   }
