@@ -74,7 +74,7 @@ public class RemoteDocumentUpdate {
     JsonStreamReader readerA = new JsonStreamReader(a);
     JsonStreamReader readerB = new JsonStreamReader(b);
     JsonStreamWriter writer = new JsonStreamWriter();
-    writer.writeTree(JsonAlgebra.merge(readerA.readJavaTree(), readerB.readJavaTree()));
+    writer.writeTree(JsonAlgebra.merge(readerA.readJavaTree(), readerB.readJavaTree(), true));
     return writer.toString();
   }
 

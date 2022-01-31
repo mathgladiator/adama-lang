@@ -73,7 +73,7 @@ public class ServiceImplicitCreateTests {
       Runnable latchClient2 = streamback2.latchAt(2);
       Runnable onlyOneAsks = dataService.latchAt(1);
       Runnable bothTryToCreate = dataService.latchAt(3);
-      Runnable latchData = realDataService.latchLogAt(6);
+      Runnable latchData = realDataService.latchLogAt(5);
       dataService.pause();
       service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
       service.connect(NtClient.NO_ONE, KEY, "{}", streamback2);

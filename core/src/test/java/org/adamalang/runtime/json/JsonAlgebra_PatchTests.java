@@ -17,7 +17,7 @@ public class JsonAlgebra_PatchTests {
   public void patch_empties() {
     Object target = of("{}");
     Object patch = of("{}");
-    Object result = JsonAlgebra.merge(target, patch);
+    Object result = JsonAlgebra.merge(target, patch, false);
     is("{}", result);
   }
 
@@ -35,7 +35,7 @@ public class JsonAlgebra_PatchTests {
   public void patch_unchanged() {
     Object target = of("{\"x\":123}");
     Object patch = of("{}");
-    Object result = JsonAlgebra.merge(target, patch);
+    Object result = JsonAlgebra.merge(target, patch, false);
     is("{\"x\":123}", result);
   }
 
@@ -43,7 +43,7 @@ public class JsonAlgebra_PatchTests {
   public void patch_introduce() {
     Object target = of("{}");
     Object patch = of("{\"x\":123}");
-    Object result = JsonAlgebra.merge(target, patch);
+    Object result = JsonAlgebra.merge(target, patch, false);
     is("{\"x\":123}", result);
   }
 
@@ -51,15 +51,23 @@ public class JsonAlgebra_PatchTests {
   public void patch_delete() {
     Object target = of("{\"x\":123}");
     Object patch = of("{\"x\":null}");
-    Object result = JsonAlgebra.merge(target, patch);
+    Object result = JsonAlgebra.merge(target, patch, false);
     is("{}", result);
+  }
+
+  @Test
+  public void patch_delete_keep() {
+    Object target = of("{\"x\":123}");
+    Object patch = of("{\"x\":null}");
+    Object result = JsonAlgebra.merge(target, patch, true);
+    is("{\"x\":null}", result);
   }
 
   @Test
   public void patch_obj_overwrite() {
     Object target = of("{\"x\":123}");
     Object patch = of("{\"x\":{}}");
-    Object result = JsonAlgebra.merge(target, patch);
+    Object result = JsonAlgebra.merge(target, patch, false);
     is("{\"x\":{}}", result);
   }
 }

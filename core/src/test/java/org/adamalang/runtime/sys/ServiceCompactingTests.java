@@ -172,7 +172,7 @@ public class ServiceCompactingTests {
       dataService.get(KEY, new Callback<LocalDocumentChange>() {
         @Override
         public void success(LocalDocumentChange value) {
-          Assert.assertEquals(205, value.reads);
+          Assert.assertEquals(104, value.reads);
           executor.execute(() -> {
             nothingHappened.countDown();
           });

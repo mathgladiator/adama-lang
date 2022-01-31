@@ -19,7 +19,7 @@ import java.util.Map;
 public class JsonAlgebra {
   /** RFC7396 for merging a patch into a target */
   @SuppressWarnings("unchecked")
-  public static Object merge(final Object targetObject, final Object patchObject) {
+  public static Object merge(final Object targetObject, final Object patchObject, boolean keepNulls) {
     if (patchObject instanceof HashMap) {
       HashMap<String, Object> patchMap = (HashMap<String, Object>) patchObject;
       if (targetObject instanceof HashMap) {
@@ -28,8 +28,11 @@ public class JsonAlgebra {
           String key = patchEntry.getKey();
           if (patchEntry.getValue() == null) {
             targetMap.remove(key);
+            if (keepNulls) {
+              targetMap.put(key, null);
+            }
           } else {
-            Object result = merge(targetMap.get(key), patchEntry.getValue());
+            Object result = merge(targetMap.get(key), patchEntry.getValue(), keepNulls);
             if (result != null) {
               targetMap.put(key, result);
             }
@@ -37,7 +40,7 @@ public class JsonAlgebra {
         }
         return targetMap;
       } else {
-        return merge(new HashMap<String, Object>(), patchObject);
+        return merge(new HashMap<String, Object>(), patchObject, keepNulls);
       }
     }
     return patchObject;
@@ -59,7 +62,7 @@ public class JsonAlgebra {
         if (state == null) {
           state = reader.readJavaTree();
         } else {
-          state = merge(state, reader.readJavaTree());
+          state = merge(state, reader.readJavaTree(), false);
         }
       }
 

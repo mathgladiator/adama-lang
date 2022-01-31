@@ -85,7 +85,7 @@ public class DumbDataService implements DataService {
     for (RemoteDocumentUpdate patch : patches) {
       updates.accept(patch);
       JsonStreamReader reader = new JsonStreamReader(patch.redo);
-      tree = JsonAlgebra.merge(tree, reader.readJavaTree());
+      tree = JsonAlgebra.merge(tree, reader.readJavaTree(), false);
     }
     callback.success(null);
   }

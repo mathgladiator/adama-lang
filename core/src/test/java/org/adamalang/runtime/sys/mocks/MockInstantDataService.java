@@ -65,7 +65,7 @@ public class MockInstantDataService implements DataService {
       if (obj == null) {
         obj = new JsonStreamReader(update.redo).readJavaTree();
       } else {
-        obj = JsonAlgebra.merge(obj, new JsonStreamReader(update.redo).readJavaTree());
+        obj = JsonAlgebra.merge(obj, new JsonStreamReader(update.redo).readJavaTree(), false);
       }
     }
     JsonStreamWriter writer = new JsonStreamWriter();
