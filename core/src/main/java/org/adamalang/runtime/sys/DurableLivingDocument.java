@@ -189,7 +189,6 @@ public class DurableLivingDocument {
         }, requiresInvalidateMilliseconds);
       }
     } else {
-      // TODO: do all OR consider chunking it
       IngestRequest[] remaining = new IngestRequest[pending.size()];
       for (int at = 0; at < remaining.length; at++) {
         remaining[at] = pending.removeFirst();
@@ -279,6 +278,7 @@ public class DurableLivingDocument {
       }
       int seqToUse = last.update.seqEnd;
       size.addAndGet(patches.length);
+      // TODO: compress patches down
       base.service.patch(key, patches, base.metrics.document_execute_patch.wrap(new Callback<>() {
         @Override
         public void success(Void value) {

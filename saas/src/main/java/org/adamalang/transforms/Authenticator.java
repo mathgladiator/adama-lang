@@ -42,7 +42,6 @@ public class Authenticator implements AsyncTransform<Session, String, Authentica
   public void execute(Session session, String identity, Callback<AuthenticatedUser> callback) {
     // TODO: think about caching and an implicit "@" for use the most recently authenticate key
     try {
-      // TODO: check for Facebook Prefix
       // TODO: check for Google Prefix
       ParsedToken parsedToken = new ParsedToken(identity);
       if ("adama".equals(parsedToken.iss)) {

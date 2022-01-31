@@ -82,7 +82,6 @@ public class CoreStream {
     document.base.executor.execute(new NamedRunnable("core-stream-disconnect") {
       @Override
       public void execute() throws Exception {
-        // TODO: routing changes introduce DB churn, so we should introduce a way to disconnect
         // documents that is silent
         // account for the disconnect message
         inventory.message();

@@ -40,7 +40,7 @@ public class PrometheusMetricsFactory implements MetricsFactory {
 
   @Override
   public RequestResponseMonitor makeRequestResponseMonitor(String nameRaw) {
-    String name = correctName(nameRaw);
+    String name = makeNameCompatibleWithPrometheus(nameRaw);
     Counter start = Counter.build().name("rr_" + name + "_start").help("Request started for " + name).register();
     Counter extra = Counter.build().name("rr_" + name + "_progress").help("Extra request data for " + name).register();
     Counter success = Counter.build().name("rr_" + name + "_success").help("Request success for " + name).register();
@@ -82,15 +82,16 @@ public class PrometheusMetricsFactory implements MetricsFactory {
     };
   }
 
-  // TODO: FIX TOOL THAT GENERATES NAMES
-  public static String correctName(String nameRaw) {
-    // TODO: lex the name and remove everything bad
-    return nameRaw.replaceAll(Pattern.quote("/"), "").replaceAll(Pattern.quote("-"), "").toLowerCase(Locale.ROOT);
+  public static String makeNameCompatibleWithPrometheus(String nameRaw) {
+    return nameRaw //
+        .replaceAll(Pattern.quote("/"), "") //
+        .replaceAll(Pattern.quote("-"), "") //
+        .toLowerCase(Locale.ROOT);
   }
 
   @Override
   public StreamMonitor makeStreamMonitor(String nameRaw) {
-    String name = correctName(nameRaw);
+    String name = makeNameCompatibleWithPrometheus(nameRaw);
     Counter start = Counter.build().name("stream_" + name + "_start").help("Stream requests started for " + name).register();
     Counter progress = Counter.build().name("stream_" + name + "_progress").help("Stream progress made for " + name).register();
     Counter finish = Counter.build().name("stream_" + name + "_finish").help("Stream finished for " + name).register();

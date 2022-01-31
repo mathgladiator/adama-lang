@@ -481,11 +481,8 @@ public class Parser {
   public BubbleDefinition define_bubble(final Token bubbleToken) throws AdamaLangException {
     final var openClient = consumeExpectedSymbol("<");
     final var clientVar = id();
-
     final var comma = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
-    // TODO: get viewerVariable
     final var viewerStateName = comma != null ? id() : null;
-
     final var closeClient = consumeExpectedSymbol(">");
     final var nameToken = id();
     final var equalsToken = consumeExpectedSymbol("=");

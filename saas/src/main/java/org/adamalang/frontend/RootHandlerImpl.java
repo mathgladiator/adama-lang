@@ -438,7 +438,6 @@ public class RootHandlerImpl implements RootHandler {
         });
       }
 
-      // TODO: attach, canAttach
       @Override
       public void handle(ConnectionEndRequest request, SimpleResponder responder) {
         connection.close();

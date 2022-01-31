@@ -84,7 +84,7 @@ public class PrometheusDashboard implements MetricsFactory {
 
   @Override
   public RequestResponseMonitor makeRequestResponseMonitor(String nameRaw) {
-    String name = PrometheusMetricsFactory.correctName(nameRaw);
+    String name = PrometheusMetricsFactory.makeNameCompatibleWithPrometheus(nameRaw);
     {
       String graphId = makeId();
       current.append("<b> Failure Rate:").append(name).append("</b>\n");
@@ -153,7 +153,7 @@ public class PrometheusDashboard implements MetricsFactory {
 
   @Override
   public StreamMonitor makeStreamMonitor(String nameRaw) {
-    String name = PrometheusMetricsFactory.correctName(nameRaw);
+    String name = PrometheusMetricsFactory.makeNameCompatibleWithPrometheus(nameRaw);
     {
       String graphId = makeId();
       current.append("<b> Failure Rate:").append(name).append("</b>\n");

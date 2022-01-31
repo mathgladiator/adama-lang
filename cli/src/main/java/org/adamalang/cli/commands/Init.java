@@ -115,8 +115,6 @@ public class Init {
     System.out.println();
     System.out.print(Util.prefix("   Email:", Util.ANSI.Yellow));
     String email = System.console().readLine();
-    // TODO: rough validate email
-    // TODO: if blank, then try to pull from config
     return email;
   }
 }
