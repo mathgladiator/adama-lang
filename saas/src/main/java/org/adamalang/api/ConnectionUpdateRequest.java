@@ -45,4 +45,7 @@ public class ConnectionUpdateRequest {
       });
     }
   }
+
+  public void logInto(ObjectNode _node) {
+  }
 }

@@ -51,4 +51,9 @@ public class AuthoritySetRequest {
       });
     }
   }
+
+  public void logInto(ObjectNode _node) {
+    org.adamalang.transforms.Authenticator.logInto(who, _node);
+    _node.put("authority", authority);
+  }
 }

@@ -9,6 +9,7 @@
  */
 package org.adamalang.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.connection.Session;
 
 public interface AttachmentUploadHandler {
@@ -17,6 +18,8 @@ public interface AttachmentUploadHandler {
   public void handle(AttachmentAppendRequest request, SimpleResponder responder);
 
   public void handle(AttachmentFinishRequest request, SimpleResponder responder);
+
+  public void logInto(ObjectNode node);
 
   public void disconnect(long id);
 

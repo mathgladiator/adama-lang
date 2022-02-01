@@ -9,6 +9,7 @@
  */
 package org.adamalang.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.connection.Session;
 
 public interface DocumentStreamHandler {
@@ -19,6 +20,8 @@ public interface DocumentStreamHandler {
   public void handle(ConnectionUpdateRequest request, SimpleResponder responder);
 
   public void handle(ConnectionEndRequest request, SimpleResponder responder);
+
+  public void logInto(ObjectNode node);
 
   public void disconnect(long id);
 

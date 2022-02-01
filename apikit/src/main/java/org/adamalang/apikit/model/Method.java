@@ -114,6 +114,7 @@ public class Method {
     set.add("org.adamalang.common.Callback");
     set.add("org.adamalang.connection.Session");
     set.add("org.adamalang.common.NamedRunnable");
+    set.add("com.fasterxml.jackson.databind.node.ObjectNode");
 
     for (ParameterDefinition parameter : parameters) {
       Transform transform = parameter.getTransform(this.name);

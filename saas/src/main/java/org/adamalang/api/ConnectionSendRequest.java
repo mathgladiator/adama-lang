@@ -50,4 +50,8 @@ public class ConnectionSendRequest {
       });
     }
   }
+
+  public void logInto(ObjectNode _node) {
+    _node.put("channel", channel);
+  }
 }

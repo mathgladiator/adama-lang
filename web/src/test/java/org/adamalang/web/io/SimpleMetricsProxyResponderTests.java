@@ -10,6 +10,7 @@
 package org.adamalang.web.io;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class SimpleMetricsProxyResponderTests {
   public void flow() {
     MockMetricsRR metrics = new MockMetricsRR();
     MockJsonResponder responder = new MockJsonResponder();
-    SimpleMetricsProxyResponder proxy = new SimpleMetricsProxyResponder(metrics, responder);
+    SimpleMetricsProxyResponder proxy = new SimpleMetricsProxyResponder(metrics, responder, Json.newJsonObject(), JsonLogger.NoOp);
     proxy.stream("X");
     proxy.stream("X");
     proxy.stream("X");

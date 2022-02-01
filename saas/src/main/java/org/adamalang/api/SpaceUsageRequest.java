@@ -9,6 +9,7 @@
  */
 package org.adamalang.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -54,5 +55,12 @@ public class SpaceUsageRequest {
         }
       });
     }
+  }
+
+  public void logInto(ObjectNode _node) {
+    org.adamalang.transforms.Authenticator.logInto(who, _node);
+    _node.put("space", space);
+    org.adamalang.transforms.SpacePolicyLocator.logInto(policy, _node);
+    _node.put("limit", limit);
   }
 }

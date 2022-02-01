@@ -9,12 +9,11 @@
  */
 package org.adamalang.web.io;
 
-import org.adamalang.common.Callback;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-/** An AsyncTransform transforms an input into an output over time */
 @FunctionalInterface
-public interface AsyncTransform<S, In, Out> {
+public interface JsonLogger {
+  public void log(ObjectNode item);
 
-  /** go forth and execute the transformation */
-  void execute(S session, In parameter, Callback<Out> callback);
+  public static final JsonLogger NoOp = (item) -> {};
 }

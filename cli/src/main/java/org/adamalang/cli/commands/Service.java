@@ -53,6 +53,7 @@ import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.data.ThreadedDataService;
 import org.adamalang.web.contracts.HtmlHandler;
 import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
 import org.adamalang.web.service.WebMetrics;
@@ -300,7 +301,10 @@ public class Service {
     };
     Email email = new SES(awsConfig, new AWSMetrics(prometheusMetricsFactory));
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
-    ExternNexus nexus = new ExternNexus(frontendConfig, email, uploader, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"));
+    ExternNexus nexus = new ExternNexus(frontendConfig, email, uploader, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
+      // TODO: create a real access logger
+      System.err.println(item.toString());
+    });
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus);
 

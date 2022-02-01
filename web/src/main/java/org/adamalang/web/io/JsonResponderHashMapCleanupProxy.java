@@ -9,6 +9,7 @@
  */
 package org.adamalang.web.io;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
@@ -27,13 +28,17 @@ public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
   private final HashMap<Long, T> map;
   private final long key;
   private final JsonResponder responder;
+  private final ObjectNode itemToLog;
+  private final JsonLogger logger;
 
-  public JsonResponderHashMapCleanupProxy(StreamMonitor.StreamMonitorInstance metrics, SimpleExecutor executor, HashMap<Long, T> map, long key, JsonResponder responder) {
+  public JsonResponderHashMapCleanupProxy(StreamMonitor.StreamMonitorInstance metrics, SimpleExecutor executor, HashMap<Long, T> map, long key, JsonResponder responder, ObjectNode itemToLog, JsonLogger logger) {
     this.metrics = metrics;
     this.executor = executor;
     this.map = map;
     this.key = key;
     this.responder = responder;
+    this.itemToLog = itemToLog;
+    this.logger = logger;
   }
 
   @Override
@@ -52,6 +57,8 @@ public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
       }
     });
     responder.finish(json);
+    itemToLog.put("success", true);
+    logger.log(itemToLog);
   }
 
   @Override
@@ -64,5 +71,8 @@ public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
       }
     });
     responder.error(ex);
+    itemToLog.put("success", false);
+    itemToLog.put("failure-reason", ex.code);
+    logger.log(itemToLog);
   }
 }

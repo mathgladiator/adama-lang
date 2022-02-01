@@ -28,8 +28,9 @@ public class ParameterDefinition {
   public final String documentation;
   public final int errorCodeIfMissing;
   public final HashSet<String> skipTransformOnMethods;
+  public final boolean logged;
 
-  public ParameterDefinition(final String name, Type type, boolean optional, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods) {
+  public ParameterDefinition(final String name, Type type, boolean optional, Transform transform, Validator validator, String documentation, int errorCodeIfMissing, final HashSet<String> skipTransformOnMethods, boolean logged) {
     this.name = name;
     this.camelName = Common.camelize(name, true);
     this.type = type;
@@ -39,6 +40,7 @@ public class ParameterDefinition {
     this.documentation = documentation;
     this.errorCodeIfMissing = errorCodeIfMissing;
     this.skipTransformOnMethods = skipTransformOnMethods;
+    this.logged = logged;
   }
 
   public static Map<String, ParameterDefinition> buildMap(Document document) throws Exception {
@@ -66,6 +68,7 @@ public class ParameterDefinition {
         throw new Exception("parameter-definition's type must be valid");
       }
       boolean optional = "true".equals(element.getAttribute("optional"));
+      boolean logged = "true".equals(element.getAttribute("logged"));
 
       String documentation = null;
       Transform transform = null;
@@ -130,7 +133,7 @@ public class ParameterDefinition {
       if (errorCodeIfMissing == 0 && !optional) {
         throw new Exception("non-optional parameter is missing non-zero error code:" + name);
       }
-      ParameterDefinition definition = new ParameterDefinition(name, type, optional, transform, validator, documentation, errorCodeIfMissing, skipTransforms);
+      ParameterDefinition definition = new ParameterDefinition(name, type, optional, transform, validator, documentation, errorCodeIfMissing, skipTransforms, logged);
       if (parameters.containsKey(name)) {
         throw new Exception("parameter already defined: " + name);
       }

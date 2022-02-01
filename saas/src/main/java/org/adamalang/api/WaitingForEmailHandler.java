@@ -9,6 +9,7 @@
  */
 package org.adamalang.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.connection.Session;
 
 public interface WaitingForEmailHandler {
@@ -17,6 +18,8 @@ public interface WaitingForEmailHandler {
   public void handle(InitRevokeAllRequest request, SimpleResponder responder);
 
   public void handle(InitGenerateIdentityRequest request, InitiationResponder responder);
+
+  public void logInto(ObjectNode node);
 
   public void disconnect(long id);
 

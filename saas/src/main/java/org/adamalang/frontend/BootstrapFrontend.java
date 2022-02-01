@@ -23,6 +23,7 @@ import org.adamalang.web.contracts.HtmlHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
+import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 
@@ -45,6 +46,7 @@ public class BootstrapFrontend {
         return new ServiceConnection() {
           final ConnectionNexus nexus =
               new ConnectionNexus(new Session(),
+                  extern.accessLogger, //
                   extern.metrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //
                   userIdResolver, //

@@ -14,6 +14,7 @@ import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.web.io.JsonLogger;
 
 import java.io.File;
 
@@ -27,8 +28,9 @@ public class ExternNexus {
   public final Client client;
   public final ApiMetrics metrics;
   public final File attachmentRoot;
+  public final JsonLogger accessLogger;
 
-  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, DataBase dataBaseManagement, DataBase dataBaseDeployments, DataBase dataBaseBackend, Client client, MetricsFactory metricsFactory, File attachmentRoot) {
+  public ExternNexus(FrontendConfig config, Email email, AssetUploader uploader, DataBase dataBaseManagement, DataBase dataBaseDeployments, DataBase dataBaseBackend, Client client, MetricsFactory metricsFactory, File attachmentRoot, JsonLogger accessLogger) {
     this.config = config;
     this.email = email;
     this.uploader = uploader;
@@ -38,6 +40,7 @@ public class ExternNexus {
     this.client = client;
     this.metrics = new ApiMetrics(metricsFactory);
     this.attachmentRoot = attachmentRoot;
+    this.accessLogger = accessLogger;
     attachmentRoot.mkdir();
   }
 

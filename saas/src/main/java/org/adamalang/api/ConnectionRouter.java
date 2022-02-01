@@ -10,6 +10,7 @@
 package org.adamalang.api;
 
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.*;
 import org.adamalang.connection.*;
@@ -51,8 +52,11 @@ public class ConnectionRouter {
 
   public void route(JsonRequest request, JsonResponder responder) {
     try {
+      ObjectNode _accessLogItem = Json.newJsonObject();
       long requestId = request.id();
       String method = request.method();
+      _accessLogItem.put("method", method);
+      request.dumpIntoLog(_accessLogItem);
       nexus.executor.execute(new NamedRunnable("handle", method) {
         @Override
         public void execute() throws Exception {
@@ -63,13 +67,17 @@ public class ConnectionRouter {
               InitStartRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(InitStartRequest resolved) {
-                  WaitingForEmailHandler handlerMade = handler.handle(nexus.session, resolved, new SimpleResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightWaitingForEmail, requestId, responder)));
+                  resolved.logInto(_accessLogItem);
+                  WaitingForEmailHandler handlerMade = handler.handle(nexus.session, resolved, new SimpleResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightWaitingForEmail, requestId, responder, _accessLogItem, nexus.logger)));
                   inflightWaitingForEmail.put(requestId, handlerMade);
                   handlerMade.bind();
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -79,10 +87,15 @@ public class ConnectionRouter {
               InitRevokeAllRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(InitRevokeAllRequest resolved) {
+                  resolved.logInto(_accessLogItem);
                   WaitingForEmailHandler handlerToUse = inflightWaitingForEmail.get(resolved.connection);
                   if (handlerToUse != null) {
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                   } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 441361);
+                    nexus.logger.log(_accessLogItem);
                     mInstance.failure(441361);
                     responder.error(new ErrorCodeException(441361));
                   }
@@ -90,6 +103,9 @@ public class ConnectionRouter {
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -99,10 +115,15 @@ public class ConnectionRouter {
               InitGenerateIdentityRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(InitGenerateIdentityRequest resolved) {
+                  resolved.logInto(_accessLogItem);
                   WaitingForEmailHandler handlerToUse = inflightWaitingForEmail.remove(resolved.connection);
                   if (handlerToUse != null) {
-                    handlerToUse.handle(resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                   } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 454673);
+                    nexus.logger.log(_accessLogItem);
                     mInstance.failure(454673);
                     responder.error(new ErrorCodeException(454673));
                   }
@@ -110,6 +131,9 @@ public class ConnectionRouter {
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -119,11 +143,15 @@ public class ConnectionRouter {
               ProbeRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(ProbeRequest resolved) {
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -133,11 +161,15 @@ public class ConnectionRouter {
               AuthorityCreateRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthorityCreateRequest resolved) {
-                  handler.handle(nexus.session, resolved, new ClaimResultResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new ClaimResultResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -147,11 +179,15 @@ public class ConnectionRouter {
               AuthoritySetRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthoritySetRequest resolved) {
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -161,11 +197,15 @@ public class ConnectionRouter {
               AuthorityGetRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthorityGetRequest resolved) {
-                  handler.handle(nexus.session, resolved, new KeystoreResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new KeystoreResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -175,11 +215,15 @@ public class ConnectionRouter {
               AuthorityListRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthorityListRequest resolved) {
-                  handler.handle(nexus.session, resolved, new AuthorityListingResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new AuthorityListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -189,11 +233,15 @@ public class ConnectionRouter {
               AuthorityDestroyRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(AuthorityDestroyRequest resolved) {
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -203,11 +251,15 @@ public class ConnectionRouter {
               SpaceCreateRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceCreateRequest resolved) {
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -217,11 +269,15 @@ public class ConnectionRouter {
               SpaceUsageRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceUsageRequest resolved) {
-                  handler.handle(nexus.session, resolved, new BillingUsageResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new BillingUsageResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -231,11 +287,15 @@ public class ConnectionRouter {
               SpaceGetRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceGetRequest resolved) {
-                  handler.handle(nexus.session, resolved, new PlanResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new PlanResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -245,11 +305,15 @@ public class ConnectionRouter {
               SpaceSetRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceSetRequest resolved) {
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -259,11 +323,15 @@ public class ConnectionRouter {
               SpaceDeleteRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceDeleteRequest resolved) {
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -273,11 +341,15 @@ public class ConnectionRouter {
               SpaceSetRoleRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceSetRoleRequest resolved) {
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -287,11 +359,15 @@ public class ConnectionRouter {
               SpaceReflectRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceReflectRequest resolved) {
-                  handler.handle(nexus.session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new ReflectionResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -301,11 +377,15 @@ public class ConnectionRouter {
               SpaceListRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(SpaceListRequest resolved) {
-                  handler.handle(nexus.session, resolved, new SpaceListingResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SpaceListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -315,11 +395,15 @@ public class ConnectionRouter {
               DocumentCreateRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(DocumentCreateRequest resolved) {
-                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -329,11 +413,15 @@ public class ConnectionRouter {
               DocumentListRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(DocumentListRequest resolved) {
-                  handler.handle(nexus.session, resolved, new KeyListingResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new KeyListingResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -343,13 +431,17 @@ public class ConnectionRouter {
               ConnectionCreateRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(ConnectionCreateRequest resolved) {
-                  DocumentStreamHandler handlerMade = handler.handle(nexus.session, resolved, new DataResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightDocumentStream, requestId, responder)));
+                  resolved.logInto(_accessLogItem);
+                  DocumentStreamHandler handlerMade = handler.handle(nexus.session, resolved, new DataResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightDocumentStream, requestId, responder, _accessLogItem, nexus.logger)));
                   inflightDocumentStream.put(requestId, handlerMade);
                   handlerMade.bind();
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -359,10 +451,15 @@ public class ConnectionRouter {
               ConnectionSendRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(ConnectionSendRequest resolved) {
+                  resolved.logInto(_accessLogItem);
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                   if (handlerToUse != null) {
-                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SeqResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                   } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 457745);
+                    nexus.logger.log(_accessLogItem);
                     mInstance.failure(457745);
                     responder.error(new ErrorCodeException(457745));
                   }
@@ -370,6 +467,9 @@ public class ConnectionRouter {
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -379,10 +479,15 @@ public class ConnectionRouter {
               ConnectionUpdateRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(ConnectionUpdateRequest resolved) {
+                  resolved.logInto(_accessLogItem);
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.get(resolved.connection);
                   if (handlerToUse != null) {
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                   } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 438302);
+                    nexus.logger.log(_accessLogItem);
                     mInstance.failure(438302);
                     responder.error(new ErrorCodeException(438302));
                   }
@@ -390,6 +495,9 @@ public class ConnectionRouter {
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -399,10 +507,15 @@ public class ConnectionRouter {
               ConnectionEndRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(ConnectionEndRequest resolved) {
+                  resolved.logInto(_accessLogItem);
                   DocumentStreamHandler handlerToUse = inflightDocumentStream.remove(resolved.connection);
                   if (handlerToUse != null) {
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                   } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 474128);
+                    nexus.logger.log(_accessLogItem);
                     mInstance.failure(474128);
                     responder.error(new ErrorCodeException(474128));
                   }
@@ -410,6 +523,9 @@ public class ConnectionRouter {
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -419,13 +535,17 @@ public class ConnectionRouter {
               AttachmentStartRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(AttachmentStartRequest resolved) {
-                  AttachmentUploadHandler handlerMade = handler.handle(nexus.session, resolved, new ProgressResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightAttachmentUpload, requestId, responder)));
+                  resolved.logInto(_accessLogItem);
+                  AttachmentUploadHandler handlerMade = handler.handle(nexus.session, resolved, new ProgressResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightAttachmentUpload, requestId, responder, _accessLogItem, nexus.logger)));
                   inflightAttachmentUpload.put(requestId, handlerMade);
                   handlerMade.bind();
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -435,10 +555,15 @@ public class ConnectionRouter {
               AttachmentAppendRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(AttachmentAppendRequest resolved) {
+                  resolved.logInto(_accessLogItem);
                   AttachmentUploadHandler handlerToUse = inflightAttachmentUpload.get(resolved.upload);
                   if (handlerToUse != null) {
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                   } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 477201);
+                    nexus.logger.log(_accessLogItem);
                     mInstance.failure(477201);
                     responder.error(new ErrorCodeException(477201));
                   }
@@ -446,6 +571,9 @@ public class ConnectionRouter {
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });
@@ -455,10 +583,15 @@ public class ConnectionRouter {
               AttachmentFinishRequest.resolve(nexus, request, new Callback<>() {
                 @Override
                 public void success(AttachmentFinishRequest resolved) {
+                  resolved.logInto(_accessLogItem);
                   AttachmentUploadHandler handlerToUse = inflightAttachmentUpload.remove(resolved.upload);
                   if (handlerToUse != null) {
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder)));
+                    handlerToUse.logInto(_accessLogItem);
+                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                   } else {
+                    _accessLogItem.put("success", false);
+                    _accessLogItem.put("failure-code", 478227);
+                    nexus.logger.log(_accessLogItem);
                     mInstance.failure(478227);
                     responder.error(new ErrorCodeException(478227));
                   }
@@ -466,6 +599,9 @@ public class ConnectionRouter {
                 @Override
                 public void failure(ErrorCodeException ex) {
                   mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
                   responder.error(ex);
                 }
               });

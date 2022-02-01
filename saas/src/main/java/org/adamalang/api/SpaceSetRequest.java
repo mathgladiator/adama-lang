@@ -58,4 +58,10 @@ public class SpaceSetRequest {
       });
     }
   }
+
+  public void logInto(ObjectNode _node) {
+    org.adamalang.transforms.Authenticator.logInto(who, _node);
+    _node.put("space", space);
+    org.adamalang.transforms.SpacePolicyLocator.logInto(policy, _node);
+  }
 }

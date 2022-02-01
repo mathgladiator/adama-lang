@@ -31,6 +31,7 @@ public class AssembleNexus {
     }
     imps.add("org.adamalang.connection.Session");
     imps.add("org.adamalang.common.SimpleExecutor");
+    imps.add("org.adamalang.web.io.JsonLogger;");
 
     StringBuilder nexus = new StringBuilder();
     nexus.append("package ").append(packageName).append(";\n\n");
@@ -39,6 +40,7 @@ public class AssembleNexus {
     }
     nexus.append("\n");
     nexus.append("public class ConnectionNexus {\n");
+    nexus.append("  public final JsonLogger logger;\n");
     nexus.append("  public final ApiMetrics metrics;\n");
     nexus.append("  public final SimpleExecutor executor;\n");
     nexus.append("  public final Session session;\n");
@@ -46,11 +48,12 @@ public class AssembleNexus {
       nexus.append("  public final ").append(service.shortServiceName).append(" ").append(service.fieldInputName).append(";\n");
     }
     nexus.append("\n");
-    nexus.append("  public ConnectionNexus(Session session, ApiMetrics metrics, SimpleExecutor executor");
+    nexus.append("  public ConnectionNexus(Session session, JsonLogger logger, ApiMetrics metrics, SimpleExecutor executor");
     for (Transform service : services.values()) {
       nexus.append(", ").append(service.shortServiceName).append(" ").append(service.fieldInputName);
     }
     nexus.append(") {\n");
+    nexus.append("    this.logger = logger;\n");
     nexus.append("    this.metrics = metrics;\n");
     nexus.append("    this.executor = executor;\n");
     nexus.append("    this.session = session;\n");

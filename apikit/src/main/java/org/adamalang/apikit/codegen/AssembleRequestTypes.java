@@ -145,6 +145,17 @@ public class AssembleRequestTypes {
       java.append("        }\n");
       java.append("      });\n");
       java.append("    }\n");
+      java.append("  }\n\n");
+      java.append("  public void logInto(ObjectNode _node) {\n");
+      for (ParameterDefinition parameter : method.parameters) {
+        if (parameter.logged) {
+          java.append("    _node.put(\"").append(parameter.name).append("\", ").append(parameter.camelName).append(");\n");
+        }
+        Transform transform = parameter.getTransform(method.name);
+        if (transform != null) {
+          java.append("    ").append(parameter.transform.service).append(".logInto(").append(parameter.transform.outputName).append(", _node);\n");
+        }
+      }
       java.append("  }\n");
       java.append("}\n");
       String filename = method.camelName + "Request.java";

@@ -11,6 +11,7 @@ package org.adamalang.transforms;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
@@ -23,14 +24,13 @@ import org.adamalang.mysql.frontend.Users;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.Keystore;
-import org.adamalang.web.io.AsyncTransform;
 
 import java.security.KeyFactory;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
-public class Authenticator implements AsyncTransform<Session, String, AuthenticatedUser> {
+public class Authenticator {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(Authenticator.class);
   public final ExternNexus nexus;
 
@@ -38,7 +38,19 @@ public class Authenticator implements AsyncTransform<Session, String, Authentica
     this.nexus = nexus;
   }
 
-  @Override
+  public static void logInto(AuthenticatedUser user, ObjectNode node) {
+    if (user != null) {
+      node.put("user-source", user.source.toString());
+      if (user.source == AuthenticatedUser.Source.Adama) {
+        node.put("user-id", user.id);
+      }
+      if (user.who != null) {
+        node.put("client-agent", user.who.agent);
+        node.put("client-authority", user.who.authority);
+      }
+    }
+  }
+
   public void execute(Session session, String identity, Callback<AuthenticatedUser> callback) {
     // TODO: think about caching and an implicit "@" for use the most recently authenticate key
     try {

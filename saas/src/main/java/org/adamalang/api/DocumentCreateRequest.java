@@ -64,4 +64,12 @@ public class DocumentCreateRequest {
       });
     }
   }
+
+  public void logInto(ObjectNode _node) {
+    org.adamalang.transforms.Authenticator.logInto(who, _node);
+    _node.put("space", space);
+    org.adamalang.transforms.SpacePolicyLocator.logInto(policy, _node);
+    _node.put("key", key);
+    _node.put("entropy", entropy);
+  }
 }

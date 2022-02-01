@@ -25,6 +25,7 @@ public class AssembleConnectionRouter {
     StringBuilder router = new StringBuilder();
     router.append("package ").append(packageName).append(";\n\n");
     router.append("\n");
+    router.append("import com.fasterxml.jackson.databind.node.ObjectNode;\n");
     router.append("import org.adamalang.common.*;\n");
     router.append("import org.adamalang.common.metrics.*;\n");
     router.append("import org.adamalang.connection.*;\n");
@@ -68,8 +69,11 @@ public class AssembleConnectionRouter {
 
     router.append("  public void route(JsonRequest request, JsonResponder responder) {\n");
     router.append("    try {\n");
+    router.append("      ObjectNode _accessLogItem = Json.newJsonObject();\n");
     router.append("      long requestId = request.id();\n");
     router.append("      String method = request.method();\n");
+    router.append("      _accessLogItem.put(\"method\", method);\n");
+    router.append("      request.dumpIntoLog(_accessLogItem);\n");
     router.append("      nexus.executor.execute(new NamedRunnable(\"handle\", method) {\n");
     router.append("        @Override\n");
     router.append("        public void execute() throws Exception {\n");
@@ -85,27 +89,35 @@ public class AssembleConnectionRouter {
       router.append("              ").append(method.camelName).append("Request.resolve(nexus, request, new Callback<>() {\n");
       router.append("                @Override\n");
       router.append("                public void success(").append(method.camelName).append("Request resolved) {\n");
+      router.append("                  resolved.logInto(_accessLogItem);\n");
       if (method.findBy != null) {
         router.append("                  ").append(method.handler).append("Handler handlerToUse = inflight").append(method.handler).append(method.destroy ? ".remove" : ".get").append("(resolved.").append(method.findBy).append(");\n");
         router.append("                  if (handlerToUse != null) {\n");
-        router.append("                    handlerToUse.handle(resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
+        router.append("                    handlerToUse.logInto(_accessLogItem);\n");
+        router.append("                    handlerToUse.handle(resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));\n");
         router.append("                  } else {\n");
+        router.append("                    _accessLogItem.put(\"success\", false);\n");
+        router.append("                    _accessLogItem.put(\"failure-code\", ").append(method.errorCantFindBy).append(");\n");
+        router.append("                    nexus.logger.log(_accessLogItem);\n");
         router.append("                    mInstance.failure(").append(method.errorCantFindBy).append(");\n");
         router.append("                    responder.error(new ErrorCodeException(").append(method.errorCantFindBy).append("));\n");
         router.append("                  }\n");
       } else {
         if (method.create != null) {
-          router.append("                  ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder)));\n");
+          router.append("                  ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder, _accessLogItem, nexus.logger)));\n");
           router.append("                  ").append("inflight").append(Common.camelize(method.create)).append(".put(requestId, handlerMade);\n");
           router.append("                  ").append("handlerMade.bind();\n");
         } else {
-          router.append("                  handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
+          router.append("                  handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));\n");
         }
       }
       router.append("                }\n");
       router.append("                @Override\n");
       router.append("                public void failure(ErrorCodeException ex) {\n");
       router.append("                  mInstance.failure(ex.code);\n");
+      router.append("                  _accessLogItem.put(\"success\", false);\n");
+      router.append("                  _accessLogItem.put(\"failure-code\", ex.code);\n");
+      router.append("                  nexus.logger.log(_accessLogItem);\n");
       router.append("                  responder.error(ex);\n");
       router.append("                }\n");
       router.append("              });\n");

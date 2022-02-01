@@ -15,7 +15,7 @@
                    error-code="444420"/>
     </parameter-definition>
 
-    <parameter-definition name="space" type="string" missing-error="461828">
+    <parameter-definition name="space" type="string" missing-error="461828" logged="true">
         <documentation>
             A 'space' is a collection of documents with the same schema and logic, and the 'space' parameter is used to
             denote the name of that collection.
@@ -30,7 +30,7 @@
         <validate service="org.adamalang.validators.ValidateSpace"/>
     </parameter-definition>
 
-    <parameter-definition name="key" type="string" missing-error="466947">
+    <parameter-definition name="key" type="string" missing-error="466947" logged="true">
         <documentation>
             Within a space, documents are organized within a map and the 'key' parameter will uniquely identify
             documents.
@@ -45,7 +45,7 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="entropy" type="string" optional="true">
+    <parameter-definition name="entropy" type="string" optional="true" logged="true">
         <documentation>
             Each document has a random number generator. When 'entropy' is present, it will seed the random number
             generate such that the randomness is now deterministic.
@@ -59,7 +59,7 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="channel" type="string" missing-error="454659">
+    <parameter-definition name="channel" type="string" missing-error="454659" logged="true">
         <documentation>
             'channel' is a identifier within a document used for communication
         </documentation>
@@ -87,14 +87,14 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="revoke" type="boolean" optional="true">
+    <parameter-definition name="revoke" type="boolean" optional="true" logged="true">
         <documentation>
             Should authentication on this connection wipe prior tokens
         </documentation>
     </parameter-definition>
 
 
-    <parameter-definition name="email" type="string" missing-error="473103">
+    <parameter-definition name="email" type="string" missing-error="473103" logged="true">
         <documentation>
             'email' is the email being accessed
         </documentation>
@@ -117,13 +117,13 @@
         <validate service="org.adamalang.validators.ValidatePlan"/>
     </parameter-definition>
 
-    <parameter-definition name="limit" type="int" optional="true">
+    <parameter-definition name="limit" type="int" optional="true" logged="true">
         <documentation>
             'limit' is the maximum number of items to return during a listing process
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="marker" type="string" optional="true">
+    <parameter-definition name="marker" type="string" optional="true" logged="true">
         <documentation>
             'marker' is a key to skip ahead a listing. When iterating, value will be returned that are after marker. To
             paginate an entire list, then
@@ -131,7 +131,7 @@
     </parameter-definition>
 
 
-    <parameter-definition name="name" type="string" missing-error="453647">
+    <parameter-definition name="name" type="string" missing-error="453647" logged="true">
         <documentation>
             'name' is an identifer
         </documentation>
@@ -144,25 +144,25 @@
         <validate service="org.adamalang.validators.ValidateKeystore"/>
     </parameter-definition>
 
-    <parameter-definition name="authority" type="string" missing-error="430095">
+    <parameter-definition name="authority" type="string" missing-error="430095" logged="true">
         <documentation>
             An authority is collection of users.
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="role" type="string" missing-error="456716">
+    <parameter-definition name="role" type="string" missing-error="456716" logged="true">
         <documentation>
             An role is a manner of user which has different capabilities
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="seq" type="integer" missing-error="461836">
+    <parameter-definition name="seq" type="integer" missing-error="461836" logged="true">
         <documentation>
             A 'seq' is an index in a log
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="filename" type="string" missing-error="470028">
+    <parameter-definition name="filename" type="string" missing-error="470028" logged="true">
         <documentation>
             A filename is a nice description of the file being uploaded
         </documentation>
@@ -174,7 +174,7 @@
         </documentation>
     </parameter-definition>
 
-    <parameter-definition name="content-type" type="string" missing-error="455691">
+    <parameter-definition name="content-type" type="string" missing-error="455691" logged="true">
         <documentation>
             The MIME type like text/json or video/mp4
         </documentation>
@@ -191,7 +191,6 @@
             The id of the upload in progress
         </documentation>
     </parameter-definition>
-
 
     <field-definition name="success" type="boolean">
         <documentation>

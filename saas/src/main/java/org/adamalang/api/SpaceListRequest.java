@@ -9,6 +9,7 @@
  */
 package org.adamalang.api;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -47,5 +48,11 @@ public class SpaceListRequest {
         }
       });
     }
+  }
+
+  public void logInto(ObjectNode _node) {
+    org.adamalang.transforms.Authenticator.logInto(who, _node);
+    _node.put("marker", marker);
+    _node.put("limit", limit);
   }
 }

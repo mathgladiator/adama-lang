@@ -9,15 +9,15 @@
  */
 package org.adamalang.transforms;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Users;
-import org.adamalang.web.io.AsyncTransform;
 
-public class UserIdResolver implements AsyncTransform<Session, String, Integer> {
+public class UserIdResolver {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(UserIdResolver.class);
   private final SimpleExecutor executor;
   private final DataBase dataBase;
@@ -27,7 +27,10 @@ public class UserIdResolver implements AsyncTransform<Session, String, Integer> 
     this.dataBase = nexus.dataBaseManagement;
   }
 
-  @Override
+  public static void logInto(Integer userId, ObjectNode node) {
+    node.put("user-id", userId);
+  }
+
   public void execute(Session session, String email, Callback<Integer> callback) {
     executor.execute(new NamedRunnable("resolving-user-id") {
       @Override

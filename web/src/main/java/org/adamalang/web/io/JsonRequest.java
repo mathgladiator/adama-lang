@@ -25,6 +25,10 @@ public class JsonRequest {
     return getInteger("id", true, ErrorCodes.USERLAND_REQUEST_NO_ID_PROPERTY);
   }
 
+  public void dumpIntoLog(ObjectNode logItem) {
+    // TODO: REMOTE IP, ETC..
+  }
+
   public Integer getInteger(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
     final var fieldNode = node.get(field);
     if (fieldNode == null || fieldNode.isNull() || !(fieldNode.isNumber() && fieldNode.isIntegralNumber() || fieldNode.isTextual())) {

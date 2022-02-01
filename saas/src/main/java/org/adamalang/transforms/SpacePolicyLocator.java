@@ -9,6 +9,7 @@
  */
 package org.adamalang.transforms;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.connection.Session;
@@ -17,11 +18,10 @@ import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.data.SpaceInfo;
 import org.adamalang.transforms.results.SpacePolicy;
-import org.adamalang.web.io.AsyncTransform;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SpacePolicyLocator implements AsyncTransform<Session, String, SpacePolicy> {
+public class SpacePolicyLocator {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(SpacePolicyLocator.class);
   public final SimpleExecutor executor;
   public final DataBase dataBase;
@@ -33,7 +33,10 @@ public class SpacePolicyLocator implements AsyncTransform<Session, String, Space
     this.policies = new ConcurrentHashMap<>();
   }
 
-  @Override
+  public static void logInto(SpacePolicy policy, ObjectNode node) {
+    node.put("space-id", policy.id);
+  }
+
   public void execute(Session session, String spaceName, Callback<SpacePolicy> callback) {
     if (!Validators.simple(spaceName, 127)) {
       callback.failure(new ErrorCodeException(ErrorCodes.API_SPACE_INVALID_NAME_FOR_LOOKUP));

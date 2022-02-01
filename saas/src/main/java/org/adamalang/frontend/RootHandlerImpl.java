@@ -9,6 +9,7 @@
  */
 package org.adamalang.frontend;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -117,6 +118,12 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void disconnect(long id) {
+      }
+
+
+      @Override
+      public void logInto(ObjectNode node) {
+        startRequest.logInto(node);
       }
     };
   }
@@ -454,6 +461,11 @@ public class RootHandlerImpl implements RootHandler {
       public void disconnect(long id) {
         connection.close();
       }
+
+      @Override
+      public void logInto(ObjectNode node) {
+        request.logInto(node);
+      }
     };
   }
 
@@ -592,6 +604,11 @@ public class RootHandlerImpl implements RootHandler {
       public void disconnect(long id) {
         file.delete();
         connection.get().close();
+      }
+
+      @Override
+      public void logInto(ObjectNode node) {
+        request.logInto(node);
       }
     };
   }
