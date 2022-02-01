@@ -16,10 +16,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class JsonRequestTests {
+  public static final ConnectionContext CONTEXT = new ConnectionContext( "http://blah","1.1.1.1", "agent");
 
   @Test
   public void noMethod() throws Exception {
-    JsonRequest request = new JsonRequest(of("{}"));
+    JsonRequest request = new JsonRequest(of("{}"), CONTEXT);
     try {
       request.method();
       Assert.fail();
@@ -34,7 +35,7 @@ public class JsonRequestTests {
 
   @Test
   public void noID() throws Exception {
-    JsonRequest request = new JsonRequest(of("{}"));
+    JsonRequest request = new JsonRequest(of("{}"), CONTEXT);
     try {
       request.id();
       Assert.fail();
@@ -45,14 +46,14 @@ public class JsonRequestTests {
 
   @Test
   public void bothIdAndMethod() throws Exception {
-    JsonRequest request = new JsonRequest(of("{\"id\":123,\"method\":\"m\"}"));
+    JsonRequest request = new JsonRequest(of("{\"id\":123,\"method\":\"m\"}"), CONTEXT);
     Assert.assertEquals(123, request.id());
     Assert.assertEquals("m", request.method());
   }
 
   @Test
   public void getString() throws Exception {
-    JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":\"xyz\"}"));
+    JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":\"xyz\"}"), CONTEXT);
     try {
       request.getString("x", true, 123);
     } catch (ErrorCodeException exc) {
@@ -79,7 +80,7 @@ public class JsonRequestTests {
 
   @Test
   public void getBoolean() throws Exception {
-    JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":\"xyz\"}"));
+    JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":\"xyz\"}"), CONTEXT);
     Assert.assertTrue(request.getBoolean("x", true, 123));
     Assert.assertNull(request.getBoolean("y", false, -1));
     Assert.assertNull(request.getBoolean("z", false, -1));
@@ -91,9 +92,17 @@ public class JsonRequestTests {
   }
 
   @Test
+  public void logging() throws Exception {
+    JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":4,\"w2\":\"5\",\"w3\":\"x\"}"), CONTEXT);
+    ObjectNode logItem = Json.newJsonObject();
+    request.dumpIntoLog(logItem);
+    Assert.assertEquals("{\"ip\":\"1.1.1.1\",\"origin\":\"http://blah\"}", logItem.toString());
+  }
+
+  @Test
   public void getInteger() throws Exception {
     JsonRequest request =
-        new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":4,\"w2\":\"5\",\"w3\":\"x\"}"));
+        new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":4,\"w2\":\"5\",\"w3\":\"x\"}"), CONTEXT);
     try {
       request.getInteger("x", true, 123);
     } catch (ErrorCodeException exc) {
@@ -131,7 +140,7 @@ public class JsonRequestTests {
   @Test
   public void getLong() throws Exception {
     JsonRequest request =
-        new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":4,\"w2\":\"5\",\"w3\":\"x\"}"));
+        new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":42.5,\"w\":4,\"w2\":\"5\",\"w3\":\"x\"}"), CONTEXT);
     try {
       request.getLong("x", true, 123);
     } catch (ErrorCodeException exc) {
@@ -168,7 +177,7 @@ public class JsonRequestTests {
 
   @Test
   public void getNode() throws Exception {
-    JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":{}}"));
+    JsonRequest request = new JsonRequest(of("{\"x\":true,\"y\":null,\"z\":{}}"), CONTEXT);
     try {
       request.getObject("x", true, 123);
     } catch (ErrorCodeException exc) {

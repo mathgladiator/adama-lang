@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
+  private static final ConnectionContext DEFAULT_CONTEXT = new ConnectionContext("unknown", "unknown", "unknown");
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(WebSocketHandler.class);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
@@ -40,6 +41,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   private ServiceConnection connection;
   private ScheduledFuture<?> future;
   private boolean closed;
+  private ConnectionContext context;
 
   public WebSocketHandler(final WebConfig webConfig, WebMetrics metrics, final ServiceBase base) {
     this.webConfig = webConfig;
@@ -52,6 +54,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     this.latency = new AtomicLong();
     this.closed = false;
     metrics.websockets_active.up();
+    this.context = DEFAULT_CONTEXT;
   }
 
   @Override
@@ -98,8 +101,12 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       HttpHeaders headers = ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
       String origin = headers.get("Origin");
       String ip = ctx.channel().remoteAddress().toString();
+      String xForwardedFor = headers.get("X-Forwarded-For");
+      if (xForwardedFor != null && !("".equals(xForwardedFor))) {
+        ip = xForwardedFor;
+      }
       String userAgent = headers.get("User-Agent");
-      ConnectionContext context = new ConnectionContext(origin, ip, userAgent);
+      context = new ConnectionContext(origin, ip, userAgent);
 
       // establish the service
       connection = base.establish(context);
@@ -134,7 +141,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
         latency.set(System.currentTimeMillis() - created - requestNode.get("ping").asLong());
         return;
       }
-      JsonRequest request = new JsonRequest(requestNode);
+      JsonRequest request = new JsonRequest(requestNode, context);
       final var id = request.id();
       // tie a responder to the request
       final JsonResponder responder = new JsonResponder() {

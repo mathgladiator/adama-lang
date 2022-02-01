@@ -206,7 +206,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
   public Iterator<String> execute(String requestJson) {
     System.err.println("EXECUTE:" + requestJson);
-    JsonRequest request = new JsonRequest(Json.parseJsonObject(requestJson));
+    JsonRequest request = new JsonRequest(Json.parseJsonObject(requestJson), new ConnectionContext("ip", "origin", "agent"));
     SyncIterator iterator = new SyncIterator();
     connection.execute(request, iterator);
     return iterator;

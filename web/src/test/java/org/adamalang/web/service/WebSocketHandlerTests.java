@@ -41,6 +41,7 @@ public class WebSocketHandlerTests {
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .get("/s")
+            .header("X-Forwarded-For", "4.3.2.1")
             .withWebSocket()
             .execute(callback);
         callback.awaitFirst();
