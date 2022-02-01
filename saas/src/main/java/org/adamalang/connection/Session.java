@@ -10,4 +10,27 @@
 package org.adamalang.connection;
 
 public class Session {
+  public final long created;
+  private long lastActivity;
+
+  public Session() {
+    this.created = System.currentTimeMillis();
+  }
+
+  public synchronized void activity() {
+    lastActivity = System.currentTimeMillis();
+  }
+
+  public synchronized boolean keepalive() {
+    long now = System.currentTimeMillis();
+    long timeSinceCreation = now - created;
+    if (timeSinceCreation <= 5 * 60000) {
+      return true;
+    }
+    long timeSinceLastActivity = now - lastActivity;
+    if (timeSinceLastActivity <= 2 * 60 * 60000) {
+      return true;
+    }
+    return false;
+  }
 }

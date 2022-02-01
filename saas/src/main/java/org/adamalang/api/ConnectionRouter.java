@@ -12,7 +12,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.*;
-import org.adamalang.connection.Session;
+import org.adamalang.connection.*;
 import org.adamalang.web.io.*;
 import org.adamalang.ErrorCodes;
 
@@ -56,6 +56,7 @@ public class ConnectionRouter {
       nexus.executor.execute(new NamedRunnable("handle", method) {
         @Override
         public void execute() throws Exception {
+          nexus.session.activity();
           switch (method) {
             case "init/start": {
               StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_InitStart.start();

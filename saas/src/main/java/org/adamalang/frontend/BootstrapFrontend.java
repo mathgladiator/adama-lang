@@ -59,10 +59,7 @@ public class BootstrapFrontend {
 
           @Override
           public boolean keepalive() {
-            // TODO: check with the nexus for some activity
-            // TODO: rule #1: there should be activity within the first 30 seconds of a connection
-            // TODO: rule #2: there should be activity within the last 5 minutes
-            return true;
+            return nexus.session.keepalive();
           }
 
           @Override

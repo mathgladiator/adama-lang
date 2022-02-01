@@ -27,7 +27,7 @@ public class AssembleConnectionRouter {
     router.append("\n");
     router.append("import org.adamalang.common.*;\n");
     router.append("import org.adamalang.common.metrics.*;\n");
-    router.append("import org.adamalang.connection.Session;\n");
+    router.append("import org.adamalang.connection.*;\n");
     router.append("import org.adamalang.web.io.*;\n");
     router.append("import org.adamalang.ErrorCodes;\n");
     router.append("\n");
@@ -73,6 +73,7 @@ public class AssembleConnectionRouter {
     router.append("      nexus.executor.execute(new NamedRunnable(\"handle\", method) {\n");
     router.append("        @Override\n");
     router.append("        public void execute() throws Exception {\n");
+    router.append("          nexus.session.activity();\n");
     router.append("          switch (method) {\n");
     for (Method method : methods) {
       router.append("            case \"").append(method.name).append("\": {\n");
