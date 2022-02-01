@@ -12,6 +12,7 @@ package org.adamalang.api;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
@@ -29,12 +30,18 @@ public class ConnectionUpdateRequest {
     try {
       final Long connection = request.getLong("connection", true, 405505);
       final ObjectNode viewerState = request.getObject("viewer-state", false, 0);
-      nexus.executor.execute(() -> {
-        callback.success(new ConnectionUpdateRequest(connection, viewerState));
+      nexus.executor.execute(new NamedRunnable("connectionupdate-success") {
+        @Override
+        public void execute() throws Exception {
+           callback.success(new ConnectionUpdateRequest(connection, viewerState));
+        }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(() -> {
-        callback.failure(ece);
+      nexus.executor.execute(new NamedRunnable("connectionupdate-error") {
+        @Override
+        public void execute() throws Exception {
+          callback.failure(ece);
+        }
       });
     }
   }

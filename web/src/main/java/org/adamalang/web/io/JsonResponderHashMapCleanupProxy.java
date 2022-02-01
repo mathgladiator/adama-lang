@@ -10,6 +10,8 @@
 package org.adamalang.web.io;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.StreamMonitor;
 
 import java.util.HashMap;
@@ -21,12 +23,12 @@ import java.util.concurrent.Executor;
  */
 public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
   private final StreamMonitor.StreamMonitorInstance metrics;
-  private final Executor executor;
+  private final SimpleExecutor executor;
   private final HashMap<Long, T> map;
   private final long key;
   private final JsonResponder responder;
 
-  public JsonResponderHashMapCleanupProxy(StreamMonitor.StreamMonitorInstance metrics, Executor executor, HashMap<Long, T> map, long key, JsonResponder responder) {
+  public JsonResponderHashMapCleanupProxy(StreamMonitor.StreamMonitorInstance metrics, SimpleExecutor executor, HashMap<Long, T> map, long key, JsonResponder responder) {
     this.metrics = metrics;
     this.executor = executor;
     this.map = map;
@@ -43,15 +45,23 @@ public class JsonResponderHashMapCleanupProxy<T> implements JsonResponder {
   @Override
   public void finish(String json) {
     metrics.finish();
-    executor.execute(() -> map.remove(key));
+    executor.execute(new NamedRunnable("json-hashmap-cleanup") {
+      @Override
+      public void execute() throws Exception {
+        map.remove(key);
+      }
+    });
     responder.finish(json);
   }
 
   @Override
   public void error(ErrorCodeException ex) {
     metrics.failure(ex.code);
-    executor.execute(() -> {
-      map.remove(key);
+    executor.execute(new NamedRunnable("json-hashmap-cleanup") {
+      @Override
+      public void execute() throws Exception {
+        map.remove(key);
+      }
     });
     responder.error(ex);
   }

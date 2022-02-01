@@ -10,6 +10,7 @@
 package org.adamalang.web.io;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.StreamMonitor;
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class JsonResponderHashMapCleanupProxyTests {
     map.put(42, 1);
     MockJsonResponder responder = new MockJsonResponder();
     JsonResponderHashMapCleanupProxy proxy =
-        new JsonResponderHashMapCleanupProxy(metrics, (x) -> x.run(), map, 42, responder);
+        new JsonResponderHashMapCleanupProxy(metrics, SimpleExecutor.NOW, map, 42, responder);
     Assert.assertTrue(map.containsKey(42));
     proxy.stream("X");
     Assert.assertEquals("STREAM:X", responder.events.get(0));
@@ -65,7 +66,7 @@ public class JsonResponderHashMapCleanupProxyTests {
     map.put(42L, 1);
     MockJsonResponder responder = new MockJsonResponder();
     JsonResponderHashMapCleanupProxy proxy =
-        new JsonResponderHashMapCleanupProxy(metrics, (x) -> x.run(), map, 42, responder);
+        new JsonResponderHashMapCleanupProxy(metrics, SimpleExecutor.NOW, map, 42, responder);
     Assert.assertTrue(map.containsKey(42L));
     proxy.finish("X");
     Assert.assertEquals("FINISH:X", responder.events.get(0));
@@ -83,7 +84,7 @@ public class JsonResponderHashMapCleanupProxyTests {
     map.put(42L, 1);
     MockJsonResponder responder = new MockJsonResponder();
     JsonResponderHashMapCleanupProxy proxy =
-        new JsonResponderHashMapCleanupProxy(metrics, (x) -> x.run(), map, 42, responder);
+        new JsonResponderHashMapCleanupProxy(metrics, SimpleExecutor.NOW, map, 42, responder);
     Assert.assertTrue(map.containsKey(42L));
     proxy.error(new ErrorCodeException(123));
     Assert.assertEquals("ERROR:123", responder.events.get(0));

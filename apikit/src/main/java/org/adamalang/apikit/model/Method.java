@@ -113,6 +113,7 @@ public class Method {
     set.add("org.adamalang.web.io.*");
     set.add("org.adamalang.common.Callback");
     set.add("org.adamalang.connection.Session");
+    set.add("org.adamalang.common.NamedRunnable");
 
     for (ParameterDefinition parameter : parameters) {
       Transform transform = parameter.getTransform(this.name);

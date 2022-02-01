@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.transforms.results.SpacePolicy;
@@ -55,8 +56,11 @@ public class SpaceSetRoleRequest {
       nexus.spaceService.execute(nexus.session, space, policy);
       nexus.emailService.execute(nexus.session, email, userId);
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(() -> {
-        callback.failure(ece);
+      nexus.executor.execute(new NamedRunnable("spacesetrole-error") {
+        @Override
+        public void execute() throws Exception {
+          callback.failure(ece);
+        }
       });
     }
   }

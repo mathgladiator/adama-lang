@@ -11,6 +11,8 @@ package org.adamalang.web.io;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
@@ -20,14 +22,14 @@ import java.util.function.Supplier;
  * called, and the latch fires the callback. Any failures result in a failure of the lowest code.
  */
 public class BulkLatch<T> {
-  public final Executor executor;
+  public final SimpleExecutor executor;
   public final Callback<T> callback;
 
   public Supplier<T> supply;
   public int outstanding;
   private Integer errorCode;
 
-  public BulkLatch(Executor executor, int outstanding, Callback<T> callback) {
+  public BulkLatch(SimpleExecutor executor, int outstanding, Callback<T> callback) {
     this.executor = executor;
     this.outstanding = outstanding;
     this.callback = callback;
@@ -47,26 +49,29 @@ public class BulkLatch<T> {
    * a service completed either successfully (newErrorCode == null) or not (newErrorCode != null)
    */
   public void countdown(Integer newErrorCode) {
-    executor.execute(() -> {
-      // something bad happened
-      if (newErrorCode != null) {
-        // absorb the error code
-        if (errorCode == null) {
-          errorCode = newErrorCode;
-        } else {
-          // if conflicts, pick the smallest error code
-          if (newErrorCode < errorCode) {
+    executor.execute(new NamedRunnable("bulk-latch") {
+      @Override
+      public void execute() throws Exception {
+        // something bad happened
+        if (newErrorCode != null) {
+          // absorb the error code
+          if (errorCode == null) {
             errorCode = newErrorCode;
+          } else {
+            // if conflicts, pick the smallest error code
+            if (newErrorCode < errorCode) {
+              errorCode = newErrorCode;
+            }
           }
         }
-      }
-      outstanding--;
-      if (outstanding == 0) {
-        if (errorCode == null) {
-          T value = supply.get();
-          callback.success(value);
-        } else {
-          callback.failure(new ErrorCodeException(errorCode));
+        outstanding--;
+        if (outstanding == 0) {
+          if (errorCode == null) {
+            T value = supply.get();
+            callback.success(value);
+          } else {
+            callback.failure(new ErrorCodeException(errorCode));
+          }
         }
       }
     });

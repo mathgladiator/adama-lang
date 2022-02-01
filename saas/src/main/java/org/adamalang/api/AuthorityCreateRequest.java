@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.web.io.*;
@@ -33,8 +34,11 @@ public class AuthorityCreateRequest {
       _latch.with(() -> new AuthorityCreateRequest(identity, who.get()));
       nexus.identityService.execute(nexus.session, identity, who);
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(() -> {
-        callback.failure(ece);
+      nexus.executor.execute(new NamedRunnable("authoritycreate-error") {
+        @Override
+        public void execute() throws Exception {
+          callback.failure(ece);
+        }
       });
     }
   }

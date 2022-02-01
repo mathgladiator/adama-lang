@@ -23,6 +23,7 @@ import org.adamalang.extern.aws.SES;
 import org.adamalang.extern.prometheus.PrometheusDashboard;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
 import org.adamalang.frontend.BootstrapFrontend;
+import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.EngineRole;
 import org.adamalang.gossip.GossipMetricsImpl;
@@ -298,7 +299,8 @@ public class Service {
       }
     };
     Email email = new SES(awsConfig, new AWSMetrics(prometheusMetricsFactory));
-    ExternNexus nexus = new ExternNexus(email, uploader, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"));
+    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
+    ExternNexus nexus = new ExternNexus(frontendConfig, email, uploader, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"));
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus);
 

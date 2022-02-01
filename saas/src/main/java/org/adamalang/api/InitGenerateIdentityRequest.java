@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
@@ -36,12 +37,18 @@ public class InitGenerateIdentityRequest {
       final Long connection = request.getLong("connection", true, 405505);
       final Boolean revoke = request.getBoolean("revoke", false, 0);
       final String code = request.getString("code", true, 455681);
-      nexus.executor.execute(() -> {
-        callback.success(new InitGenerateIdentityRequest(connection, revoke, code));
+      nexus.executor.execute(new NamedRunnable("initgenerateidentity-success") {
+        @Override
+        public void execute() throws Exception {
+           callback.success(new InitGenerateIdentityRequest(connection, revoke, code));
+        }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(() -> {
-        callback.failure(ece);
+      nexus.executor.execute(new NamedRunnable("initgenerateidentity-error") {
+        @Override
+        public void execute() throws Exception {
+          callback.failure(ece);
+        }
       });
     }
   }

@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.io.*;
@@ -41,8 +42,11 @@ public class InitStartRequest {
       _latch.with(() -> new InitStartRequest(email, userId.get()));
       nexus.emailService.execute(nexus.session, email, userId);
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(() -> {
-        callback.failure(ece);
+      nexus.executor.execute(new NamedRunnable("initstart-error") {
+        @Override
+        public void execute() throws Exception {
+          callback.failure(ece);
+        }
       });
     }
   }

@@ -12,6 +12,7 @@ package org.adamalang.api;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.adamalang.validators.ValidateKeystore;
@@ -42,8 +43,11 @@ public class AuthoritySetRequest {
       _latch.with(() -> new AuthoritySetRequest(identity, who.get(), authority, keyStore));
       nexus.identityService.execute(nexus.session, identity, who);
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(() -> {
-        callback.failure(ece);
+      nexus.executor.execute(new NamedRunnable("authorityset-error") {
+        @Override
+        public void execute() throws Exception {
+          callback.failure(ece);
+        }
       });
     }
   }

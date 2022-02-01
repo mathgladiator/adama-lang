@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
@@ -30,12 +31,18 @@ public class InitRevokeAllRequest {
     try {
       final Long connection = request.getLong("connection", true, 405505);
       final String code = request.getString("code", true, 455681);
-      nexus.executor.execute(() -> {
-        callback.success(new InitRevokeAllRequest(connection, code));
+      nexus.executor.execute(new NamedRunnable("initrevokeall-success") {
+        @Override
+        public void execute() throws Exception {
+           callback.success(new InitRevokeAllRequest(connection, code));
+        }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(() -> {
-        callback.failure(ece);
+      nexus.executor.execute(new NamedRunnable("initrevokeall-error") {
+        @Override
+        public void execute() throws Exception {
+          callback.failure(ece);
+        }
       });
     }
   }

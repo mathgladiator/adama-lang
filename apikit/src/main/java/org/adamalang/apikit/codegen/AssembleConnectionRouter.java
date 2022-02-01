@@ -15,6 +15,7 @@ import org.adamalang.apikit.model.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 
 public class AssembleConnectionRouter {
   public static String make(String packageName, Method[] methods) {
@@ -64,50 +65,54 @@ public class AssembleConnectionRouter {
     }
     router.append("  }\n");
     router.append("\n");
+
     router.append("  public void route(JsonRequest request, JsonResponder responder) {\n");
     router.append("    try {\n");
     router.append("      long requestId = request.id();\n");
     router.append("      String method = request.method();\n");
-    router.append("      nexus.executor.execute(() -> {\n");
-    router.append("        switch (method) {\n");
+    router.append("      nexus.executor.execute(new NamedRunnable(\"handle\", method) {\n");
+    router.append("        @Override\n");
+    router.append("        public void execute() throws Exception {\n");
+    router.append("          switch (method) {\n");
     for (Method method : methods) {
-      router.append("          case \"").append(method.name).append("\": {\n");
+      router.append("            case \"").append(method.name).append("\": {\n");
       if (method.create != null) {
-        router.append("            StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_").append(method.camelName).append(".start();\n");
+        router.append("              StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_").append(method.camelName).append(".start();\n");
       } else {
-        router.append("            RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_").append(method.camelName).append(".start();\n");
+        router.append("              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_").append(method.camelName).append(".start();\n");
       }
-      router.append("            ").append(method.camelName).append("Request.resolve(nexus, request, new Callback<>() {\n");
-      router.append("              @Override\n");
-      router.append("              public void success(").append(method.camelName).append("Request resolved) {\n");
+      router.append("              ").append(method.camelName).append("Request.resolve(nexus, request, new Callback<>() {\n");
+      router.append("                @Override\n");
+      router.append("                public void success(").append(method.camelName).append("Request resolved) {\n");
       if (method.findBy != null) {
-        router.append("                ").append(method.handler).append("Handler handlerToUse = inflight").append(method.handler).append(method.destroy ? ".remove" : ".get").append("(resolved.").append(method.findBy).append(");\n");
-        router.append("                if (handlerToUse != null) {\n");
-        router.append("                  handlerToUse.handle(resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
-        router.append("                } else {\n");
-        router.append("                  mInstance.failure(").append(method.errorCantFindBy).append(");\n");
-        router.append("                  responder.error(new ErrorCodeException(").append(method.errorCantFindBy).append("));\n");
-        router.append("                }\n");
+        router.append("                  ").append(method.handler).append("Handler handlerToUse = inflight").append(method.handler).append(method.destroy ? ".remove" : ".get").append("(resolved.").append(method.findBy).append(");\n");
+        router.append("                  if (handlerToUse != null) {\n");
+        router.append("                    handlerToUse.handle(resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
+        router.append("                  } else {\n");
+        router.append("                    mInstance.failure(").append(method.errorCantFindBy).append(");\n");
+        router.append("                    responder.error(new ErrorCodeException(").append(method.errorCantFindBy).append("));\n");
+        router.append("                  }\n");
       } else {
         if (method.create != null) {
-          router.append("                ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder)));\n");
-          router.append("                ").append("inflight").append(Common.camelize(method.create)).append(".put(requestId, handlerMade);\n");
-          router.append("                ").append("handlerMade.bind();\n");
+          router.append("                  ").append(Common.camelize(method.create)).append("Handler handlerMade = handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflight").append(Common.camelize(method.create)).append(", requestId, responder)));\n");
+          router.append("                  ").append("inflight").append(Common.camelize(method.create)).append(".put(requestId, handlerMade);\n");
+          router.append("                  ").append("handlerMade.bind();\n");
         } else {
-          router.append("                handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
+          router.append("                  handler.handle(nexus.session, resolved, new ").append(method.responder.camelName).append("Responder(new SimpleMetricsProxyResponder(mInstance, responder)));\n");
         }
       }
-      router.append("              }\n");
-      router.append("              @Override\n");
-      router.append("              public void failure(ErrorCodeException ex) {\n");
-      router.append("                mInstance.failure(ex.code);\n");
-      router.append("                responder.error(ex);\n");
-      router.append("              }\n");
-      router.append("            });\n");
-      router.append("          } return;\n");
+      router.append("                }\n");
+      router.append("                @Override\n");
+      router.append("                public void failure(ErrorCodeException ex) {\n");
+      router.append("                  mInstance.failure(ex.code);\n");
+      router.append("                  responder.error(ex);\n");
+      router.append("                }\n");
+      router.append("              });\n");
+      router.append("            } return;\n");
     }
+    router.append("          }\n");
+    router.append("          responder.error(new ErrorCodeException(ErrorCodes.API_METHOD_NOT_FOUND));\n");
     router.append("        }\n");
-    router.append("        responder.error(new ErrorCodeException(ErrorCodes.API_METHOD_NOT_FOUND));\n");
     router.append("      });\n");
     router.append("    } catch (ErrorCodeException ex) {\n");
     router.append("      responder.error(ex);\n");

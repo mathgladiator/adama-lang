@@ -10,6 +10,7 @@
 package org.adamalang.web.io;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.SimpleExecutor;
 import org.junit.Test;
 
 public class LatchTests {
@@ -17,7 +18,7 @@ public class LatchTests {
   @Test
   public void basic() {
     MockIntegerCallback callback = new MockIntegerCallback();
-    BulkLatch<Integer> bl = new BulkLatch<>((x) -> x.run(), 1, callback);
+    BulkLatch<Integer> bl = new BulkLatch<>(SimpleExecutor.NOW, 1, callback);
     bl.with(() -> 42);
     bl.countdown(null);
     callback.assertValue(42);
@@ -26,7 +27,7 @@ public class LatchTests {
   @Test
   public void withRef() {
     MockIntegerCallback callback = new MockIntegerCallback();
-    BulkLatch<Integer> bl = new BulkLatch<>((x) -> x.run(), 2, callback);
+    BulkLatch<Integer> bl = new BulkLatch<>(SimpleExecutor.NOW, 2, callback);
     LatchRefCallback<Integer> ref1 = new LatchRefCallback<>(bl);
     LatchRefCallback<Integer> ref2 = new LatchRefCallback<>(bl);
     bl.with(() -> ref1.get() + ref2.get());
@@ -38,7 +39,7 @@ public class LatchTests {
   @Test
   public void failure1() {
     MockIntegerCallback callback = new MockIntegerCallback();
-    BulkLatch<Integer> bl = new BulkLatch<>((x) -> x.run(), 2, callback);
+    BulkLatch<Integer> bl = new BulkLatch<>(SimpleExecutor.NOW, 2, callback);
     LatchRefCallback<Integer> ref1 = new LatchRefCallback<>(bl);
     LatchRefCallback<Integer> ref2 = new LatchRefCallback<>(bl);
     bl.with(() -> ref1.get() + ref2.get());
@@ -50,7 +51,7 @@ public class LatchTests {
   @Test
   public void failure2() {
     MockIntegerCallback callback = new MockIntegerCallback();
-    BulkLatch<Integer> bl = new BulkLatch<>((x) -> x.run(), 2, callback);
+    BulkLatch<Integer> bl = new BulkLatch<>(SimpleExecutor.NOW, 2, callback);
     LatchRefCallback<Integer> ref1 = new LatchRefCallback<>(bl);
     LatchRefCallback<Integer> ref2 = new LatchRefCallback<>(bl);
     bl.with(() -> ref1.get() + ref2.get());
@@ -62,7 +63,7 @@ public class LatchTests {
   @Test
   public void failureBoth1() {
     MockIntegerCallback callback = new MockIntegerCallback();
-    BulkLatch<Integer> bl = new BulkLatch<>((x) -> x.run(), 2, callback);
+    BulkLatch<Integer> bl = new BulkLatch<>(SimpleExecutor.NOW, 2, callback);
     LatchRefCallback<Integer> ref1 = new LatchRefCallback<>(bl);
     LatchRefCallback<Integer> ref2 = new LatchRefCallback<>(bl);
     bl.with(() -> ref1.get() + ref2.get());
@@ -74,7 +75,7 @@ public class LatchTests {
   @Test
   public void failureBoth2() {
     MockIntegerCallback callback = new MockIntegerCallback();
-    BulkLatch<Integer> bl = new BulkLatch<>((x) -> x.run(), 2, callback);
+    BulkLatch<Integer> bl = new BulkLatch<>(SimpleExecutor.NOW, 2, callback);
     LatchRefCallback<Integer> ref1 = new LatchRefCallback<>(bl);
     LatchRefCallback<Integer> ref2 = new LatchRefCallback<>(bl);
     bl.with(() -> ref1.get() + ref2.get());

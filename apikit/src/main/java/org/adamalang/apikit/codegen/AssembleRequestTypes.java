@@ -13,6 +13,7 @@ import org.adamalang.apikit.model.Method;
 import org.adamalang.apikit.model.ParameterDefinition;
 import org.adamalang.apikit.model.Transform;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
@@ -101,8 +102,10 @@ public class AssembleRequestTypes {
       if (outstandingCallCount > 0) {
         java.append("      _latch.with(() -> ");
       } else {
-        java.append("      nexus.executor.execute(() -> {\n");
-        java.append("        callback.success(");
+        java.append("      nexus.executor.execute(new NamedRunnable(\"").append(method.camelName.toLowerCase(Locale.ROOT) + "-success").append("\") {\n");
+        java.append("        @Override\n");
+        java.append("        public void execute() throws Exception {\n");
+        java.append("           callback.success(");
       }
 
       java.append("new ").append(method.camelName).append("Request").append("(");
@@ -124,6 +127,7 @@ public class AssembleRequestTypes {
         java.append(");\n");
       } else {
         java.append(");\n");
+        java.append("        }\n");
         java.append("      });\n");
       }
 
@@ -134,8 +138,11 @@ public class AssembleRequestTypes {
         }
       }
       java.append("    } catch (ErrorCodeException ece) {\n");
-      java.append("      nexus.executor.execute(() -> {\n");
-      java.append("        callback.failure(ece);\n");
+      java.append("      nexus.executor.execute(new NamedRunnable(\"").append(method.camelName.toLowerCase(Locale.ROOT) + "-error").append("\") {\n");
+      java.append("        @Override\n");
+      java.append("        public void execute() throws Exception {\n");
+      java.append("          callback.failure(ece);\n");
+      java.append("        }\n");
       java.append("      });\n");
       java.append("    }\n");
       java.append("  }\n");

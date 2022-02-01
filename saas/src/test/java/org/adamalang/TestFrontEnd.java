@@ -15,6 +15,7 @@ import org.adamalang.extern.AssetUploader;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.frontend.BootstrapFrontend;
+import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.grpc.server.Server;
@@ -138,7 +139,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
         }
       }
     };
-    this.nexus = new ExternNexus(this, uploader, dataBase, dataBase, dataBase, client, new NoOpMetricsFactory(), attachmentRoot);
+    FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
+    this.nexus = new ExternNexus(frontendConfig, this, uploader, dataBase, dataBase, dataBase, client, new NoOpMetricsFactory(), attachmentRoot);
     this.frontend = BootstrapFrontend.make(nexus);
     this.context = new ConnectionContext("home", "ip", "agent");
     connection = this.frontend.establish(context);

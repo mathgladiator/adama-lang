@@ -11,6 +11,7 @@ package org.adamalang.api;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.connection.Session;
 import org.adamalang.web.io.*;
 
@@ -31,12 +32,18 @@ public class AttachmentAppendRequest {
       final Long upload = request.getLong("upload", true, 409609);
       final String chunkMd5 = request.getString("chunk-md5", true, 462859);
       final String base64Bytes = request.getString("base64-bytes", true, 409608);
-      nexus.executor.execute(() -> {
-        callback.success(new AttachmentAppendRequest(upload, chunkMd5, base64Bytes));
+      nexus.executor.execute(new NamedRunnable("attachmentappend-success") {
+        @Override
+        public void execute() throws Exception {
+           callback.success(new AttachmentAppendRequest(upload, chunkMd5, base64Bytes));
+        }
       });
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(() -> {
-        callback.failure(ece);
+      nexus.executor.execute(new NamedRunnable("attachmentappend-error") {
+        @Override
+        public void execute() throws Exception {
+          callback.failure(ece);
+        }
       });
     }
   }
