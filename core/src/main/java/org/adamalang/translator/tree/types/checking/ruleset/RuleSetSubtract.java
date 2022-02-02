@@ -22,6 +22,11 @@ public class RuleSetSubtract {
       if (aInteger && bInteger) {
         return CanMathResult.YesAndResultIsInteger;
       }
+      final var aLong = RuleSetCommon.IsLong(environment, typeA, true);
+      final var bLong = RuleSetCommon.IsLong(environment, typeB, true);
+      if ((aInteger || aLong) && (bInteger || bLong)) {
+        return CanMathResult.YesAndResultIsLong;
+      }
       final var aDouble = RuleSetCommon.IsDouble(environment, typeA, true);
       final var bDouble = RuleSetCommon.IsDouble(environment, typeB, true);
       if (aDouble && bDouble || aDouble && bInteger || aInteger && bDouble) {
