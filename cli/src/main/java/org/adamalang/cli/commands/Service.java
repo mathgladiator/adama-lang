@@ -301,9 +301,9 @@ public class Service {
     };
     Email email = new SES(awsConfig, new AWSMetrics(prometheusMetricsFactory));
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
+    Logger accessLog = LoggerFactory.getLogger("access");
     ExternNexus nexus = new ExternNexus(frontendConfig, email, uploader, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
-      // TODO: create a real access logger
-      System.err.println(item.toString());
+      accessLog.debug(item.toString());
     });
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus);
