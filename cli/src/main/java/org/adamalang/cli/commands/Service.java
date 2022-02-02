@@ -64,6 +64,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class Service {
@@ -244,7 +247,7 @@ public class Service {
     co.intOf("http_port", 9089);
     WebConfig webConfig = new WebConfig(co);
     ServiceBase serviceBase = ServiceBase.JUST_HTML(handler);
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase);
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase, () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {
@@ -310,13 +313,19 @@ public class Service {
 
     // TODO: have some sense of health checking in the web package
     // TODO: should also have web heat flow to overlord
-    /*
+    AtomicReference<Runnable> heartbeat = new AtomicReference<>();
+    CountDownLatch latchForHeartbeat = new CountDownLatch(1);
     engine.newApp("web", webConfig.port, (hb) -> {
-
+      heartbeat.set(hb);
+      latchForHeartbeat.countDown();
     });
-    */
 
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase);
+    if (!latchForHeartbeat.await(10000, TimeUnit.MILLISECONDS)) {
+      System.err.println("failed to register");
+      return;
+    }
+
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase, heartbeat.get());
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override
       public void run() {

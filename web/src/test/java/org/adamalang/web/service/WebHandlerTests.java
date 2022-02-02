@@ -23,7 +23,7 @@ public class WebHandlerTests {
     EventLoopGroup group = new NioEventLoopGroup();
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.ProdScope);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base);
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {});
     final var thread = new Thread(runnable);
     thread.start();
     runnable.waitForReady(1000);

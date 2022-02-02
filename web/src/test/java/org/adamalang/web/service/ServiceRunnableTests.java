@@ -20,7 +20,7 @@ public class ServiceRunnableTests {
   public void test_interrupt() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.Mock1);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base);
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {});
     final var thread = new Thread(runnable);
     thread.start();
     Assert.assertTrue(runnable.waitForReady(2500));
@@ -34,7 +34,7 @@ public class ServiceRunnableTests {
   public void test_shutdown() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.Mock2);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base);
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {});
     final var thread = new Thread(runnable);
     thread.start();
     Assert.assertTrue(runnable.waitForReady(10000));
@@ -48,7 +48,7 @@ public class ServiceRunnableTests {
   public void test_tight_shutdown() throws Exception {
     WebConfig webConfig = WebConfigTests.mockConfig(WebConfigTests.Scenario.Mock3);
     MockServiceBase base = new MockServiceBase();
-    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base);
+    final var runnable = new ServiceRunnable(webConfig, new WebMetrics(new NoOpMetricsFactory()), base, () -> {});
     runnable.shutdown();
     final var thread = new Thread(runnable);
     thread.start();

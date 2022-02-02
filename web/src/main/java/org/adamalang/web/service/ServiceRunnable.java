@@ -31,8 +31,9 @@ public class ServiceRunnable implements Runnable {
   private final AtomicBoolean started;
   private Channel channel;
   private boolean stopped;
+  private final Runnable heartbeat;
 
-  public ServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base) {
+  public ServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base, Runnable heartbeat) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.base = base;
@@ -40,6 +41,7 @@ public class ServiceRunnable implements Runnable {
     channel = null;
     stopped = false;
     ready = new CountDownLatch(1);
+    this.heartbeat = heartbeat;
   }
 
   public synchronized boolean isAccepting() {
@@ -57,13 +59,17 @@ public class ServiceRunnable implements Runnable {
       try {
         try {
           final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-          final EventLoopGroup workerGroup = new NioEventLoopGroup();
+          final EventLoopGroup workerGroup = new NioEventLoopGroup(2);
           try {
             final var b = new ServerBootstrap();
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, metrics, base));
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             LOGGER.info("channel-registered");
+            workerGroup.schedule(() -> {
+              heartbeat.run();
+              workerGroup.schedule(this, (int) (50 + 25 * Math.random()), TimeUnit.MILLISECONDS);
+            }, 100, TimeUnit.MILLISECONDS);
             ch.closeFuture().sync();
             LOGGER.info("channel-close-futured-syncd");
           } finally {
