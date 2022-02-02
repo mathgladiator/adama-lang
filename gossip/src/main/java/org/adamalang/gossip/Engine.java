@@ -85,14 +85,24 @@ public class Engine implements AutoCloseable {
         StringBuilder sbHtml = new StringBuilder();
         sbHtml.append("<html><head><title>Gossip Summary</title></head><body><table>");
         sbHtml.append("<tr><th>ID</th><th>Witness (ms ago)</th><th>IP</th><th>Port</th><th>Role</th><th>Counter</th><th>Age (ms)</th></tr>");
-        for (Instance instance : chain.current().instances) {
-          sbHtml.append("<tr><td>").append(instance.id).append("</td>");
+        ArrayList<Instance> copySortedForHumans = new ArrayList<>(chain.current().instances);
+        copySortedForHumans.sort((x, y) -> {
+          int delta = x.ip.compareTo(y.ip);
+          if (delta == 0) {
+            return x.role.compareTo(y.role);
+          }
+          return delta;
+        });
+        for (Instance instance : copySortedForHumans) {
+          sbHtml.append("<tr>");
+          sbHtml.append("<td>").append(instance.id).append("</td>");
           sbHtml.append("<td>").append(System.currentTimeMillis() - instance.witnessed()).append(" ms</td>");
           sbHtml.append("<td>").append(instance.ip).append("</td>");
           sbHtml.append("<td>").append(instance.port).append("</td>");
           sbHtml.append("<td>").append(instance.role).append("</td>");
           sbHtml.append("<td>").append(instance.counter()).append("</td>");
-          sbHtml.append("<td>").append(System.currentTimeMillis() - instance.created).append("</td></tr>");
+          sbHtml.append("<td>").append(System.currentTimeMillis() - instance.created).append("</td>");
+          sbHtml.append("</tr>");
         }
         sbHtml.append("</table></body></html>");
         html.accept(sbHtml.toString());

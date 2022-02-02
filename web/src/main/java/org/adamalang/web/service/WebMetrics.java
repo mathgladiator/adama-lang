@@ -17,11 +17,13 @@ public class WebMetrics {
   public final Inflight websockets_active_child_connections;
   public final Runnable websockets_send_heartbeat;
   public final Runnable websockets_heartbeat_failure;
+  public final Runnable websocket_server_heartbeat;
 
   public WebMetrics(MetricsFactory factory) {
     this.websockets_active = factory.inflight("websockets_active");
     this.websockets_active_child_connections = factory.inflight("websockets_active_child_connections");
     this.websockets_send_heartbeat = factory.counter("websockets_send_heartbeat");
     this.websockets_heartbeat_failure = factory.counter("websockets_heartbeat_failure");
+    this.websocket_server_heartbeat = factory.counter("websocket_server_heartbeat");
   }
 }

@@ -91,6 +91,15 @@ public class EngineTests {
       System.err.println(versionCount);
       Thread.sleep(1000);
     }
+    CountDownLatch gotHtml = new CountDownLatch(1);
+    engines.get(0).summarizeHtml(new Consumer<String>() {
+      @Override
+      public void accept(String s) {
+        System.err.println(s);
+        gotHtml.countDown();
+      }
+    });
+    Assert.assertTrue(gotHtml.await(5000, TimeUnit.MILLISECONDS));
     Assert.assertEquals(1, versionCount);
     for (int k = 1; k < engines.size(); k++) {
       engines.get(k).close();

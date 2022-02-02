@@ -66,12 +66,14 @@ public class ServiceRunnable implements Runnable {
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             LOGGER.info("channel-registered");
-            workerGroup.schedule(() -> {
-              heartbeat.run();
-              workerGroup.schedule(this, (int) (50 + 25 * Math.random()), TimeUnit.MILLISECONDS);
-            }, 100, TimeUnit.MILLISECONDS);
+            bossGroup.scheduleAtFixedRate(() -> {
+              workerGroup.schedule(() -> {
+                metrics.websocket_server_heartbeat.run();
+                heartbeat.run();
+              },  (int) (10 + 15 * Math.random()), TimeUnit.MILLISECONDS);
+            }, 50, 50, TimeUnit.MILLISECONDS);
             ch.closeFuture().sync();
-            LOGGER.info("channel-close-futured-syncd");
+            LOGGER.info("channel-close-future-syncd");
           } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
