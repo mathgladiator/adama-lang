@@ -28,7 +28,7 @@ import org.adamalang.web.io.JsonResponder;
 import java.util.Random;
 
 public class BootstrapFrontend {
-  public static ServiceBase make(ExternNexus extern) throws Exception {
+  public static ServiceBase make(ExternNexus extern, HttpHandler httpHandler) throws Exception {
     SimpleExecutor[] executors = SimpleExecutorFactory.DEFAULT.makeMany("saas", extern.config.threads);
     RootHandlerImpl handler = new RootHandlerImpl(extern);
     SpacePolicyLocator spacePolicyLocator = new SpacePolicyLocator(SimpleExecutor.create("space-policy-locator"), extern);
@@ -68,7 +68,7 @@ public class BootstrapFrontend {
 
       @Override
       public HttpHandler http() {
-        return HttpHandler.NULL;
+        return httpHandler;
       }
     };
   }

@@ -40,6 +40,9 @@ import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
+import org.adamalang.overlord.grpc.OverlordClient;
+import org.adamalang.overlord.grpc.OverlordServer;
+import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
@@ -255,6 +258,7 @@ public class Service {
       }
     }));
 
+
     System.err.println("running overlord web");
     runnable.run();
     System.err.println("overlord finished");
@@ -301,6 +305,20 @@ public class Service {
         callback.failure(new ErrorCodeException(-1));
       }
     };
+    ConcurrentCachedHttpHandler propigatedHandler = new ConcurrentCachedHttpHandler();
+
+    OverlordClient overlordClient = new OverlordClient(identity, webConfig.port, propigatedHandler);
+    engine.subscribe("overlord", new Consumer<Collection<String>>() {
+      @Override
+      public void accept(Collection<String> targets) {
+        for (String first : targets) {
+          overlordClient.setTarget(first);
+          return;
+        }
+        overlordClient.setTarget(null);
+      }
+    });
+
     Email email = new SES(awsConfig, new AWSMetrics(prometheusMetricsFactory));
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
@@ -308,7 +326,9 @@ public class Service {
       accessLog.debug(item.toString());
     });
     System.err.println("nexus constructed");
-    ServiceBase serviceBase = BootstrapFrontend.make(nexus);
+    ServiceBase serviceBase = BootstrapFrontend.make(nexus, propigatedHandler);
+
+
 
     // TODO: have some sense of health checking in the web package
     // TODO: should also have web heat flow to overlord

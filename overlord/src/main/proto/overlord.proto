@@ -13,6 +13,7 @@ service Overlord {
 }
 
 message Register {
+  string name = 1;
 }
 
 message SignalHeat {
@@ -33,7 +34,7 @@ message Registered {
 message WebContent {
   string uri = 1;
   string content_type = 2;
-  string content = 3;
+  bytes content = 3;
 }
 
 message WebReverse {

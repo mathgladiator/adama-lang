@@ -39,6 +39,7 @@ import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
+import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
@@ -142,7 +143,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     };
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
     this.nexus = new ExternNexus(frontendConfig, this, uploader, dataBase, dataBase, dataBase, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp);
-    this.frontend = BootstrapFrontend.make(nexus);
+    this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent");
     connection = this.frontend.establish(context);
     emailLatch = new ConcurrentHashMap<>();

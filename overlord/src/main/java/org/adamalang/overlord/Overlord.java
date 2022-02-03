@@ -15,14 +15,20 @@ import org.adamalang.gossip.Engine;
 import org.adamalang.grpc.client.Client;
 import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.overlord.grpc.OverlordServer;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.roles.*;
 import org.adamalang.web.contracts.HttpHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.function.Consumer;
 
 public class Overlord {
+  private static final Logger LOGGER = LoggerFactory.getLogger(Overlord.class);
+
   public static HttpHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront, DataBase dataBaseBackend) throws Exception {
     // the HTTP web server will render data that has been put/cached in this handler
     ConcurrentCachedHttpHandler handler = new ConcurrentCachedHttpHandler();
@@ -54,6 +60,17 @@ public class Overlord {
 
     // start doing the accounting work
     HourlyAccountant.kickOff(metrics, dataBaseFront, dataBaseBackend, handler);
+
+    engine.newApp("overlord", 8015, new Consumer<Runnable>() {
+      @Override
+      public void accept(Runnable hb) {
+        try {
+          new OverlordServer(identity, 8015, heatTable, metrics, hb);
+        } catch (Exception ex) {
+          LOGGER.error("failed-to-start-overlord-server", ex);
+        }
+      }
+    });
 
     // build the index
     StringBuilder indexHtmlBuilder = new StringBuilder();

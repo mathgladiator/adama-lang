@@ -30,4 +30,8 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
   public void put(String uri, String html) {
     uris.put(uri, new HttpResult("text/html; charset=UTF-8", html.getBytes(StandardCharsets.UTF_8)));
   }
+
+  public void put(String uri, HttpResult result) {
+    uris.put(uri, result);
+  }
 }
