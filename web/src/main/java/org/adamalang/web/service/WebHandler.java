@@ -14,24 +14,24 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
-import org.adamalang.web.contracts.HtmlHandler;
+import org.adamalang.web.contracts.HttpHandler;
 
 import java.nio.charset.StandardCharsets;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebConfig webConfig;
   private final WebMetrics metrics;
-  private final HtmlHandler html;
+  private final HttpHandler httpHandler;
 
-  public WebHandler(WebConfig webConfig, WebMetrics metrics, HtmlHandler html) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler) {
     this.webConfig = webConfig;
     this.metrics = metrics;
-    this.html = html;
+    this.httpHandler = httpHandler;
   }
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
-    String htmlResult = html.handle(req.uri());
+    HttpHandler.HttpResult httpResult = httpHandler.handle(req.uri());
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
     // send the default response for bad or health checks
     final HttpResponseStatus status;
@@ -41,10 +41,10 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       status = HttpResponseStatus.OK;
       content = ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8);
       contentType = "text/text; charset=UTF-8";
-    } else if (htmlResult != null) {
+    } else if (httpResult != null) {
       status = HttpResponseStatus.OK;
-      content = htmlResult.getBytes(StandardCharsets.UTF_8);
-      contentType = "text/html; charset=UTF-8";
+      content = httpResult.body;
+      contentType = httpResult.contentType; //;
     } else {
       status = HttpResponseStatus.BAD_REQUEST;
       content = "<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>".getBytes(StandardCharsets.UTF_8);

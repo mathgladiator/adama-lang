@@ -16,11 +16,11 @@ import org.adamalang.grpc.client.contracts.MeteringStream;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Metering;
 import org.adamalang.overlord.OverlordMetrics;
-import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
+import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 
 public class MeteringAggregator {
-  public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBaseFront, ConcurrentCachedHtmlHandler handler) {
+  public static void kickOff(OverlordMetrics metrics, Client client, DataBase dataBaseFront, ConcurrentCachedHttpHandler handler) {
     SimpleExecutor executor = SimpleExecutor.create("metering-aggregator");
     FixedHtmlStringLoggerTable table = new FixedHtmlStringLoggerTable(32, "target", "batch", "time");
     executor.schedule(new NamedRunnable("metering-fetch") {

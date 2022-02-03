@@ -13,10 +13,10 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.gossip.Engine;
 import org.adamalang.overlord.OverlordMetrics;
-import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
+import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 
 public class GossipDumper {
-  public static void kickOff(OverlordMetrics metrics, Engine engine, ConcurrentCachedHtmlHandler handler) {
+  public static void kickOff(OverlordMetrics metrics, Engine engine, ConcurrentCachedHttpHandler handler) {
     SimpleExecutor executor = SimpleExecutor.create("scan-gossip");
     executor.schedule(new NamedRunnable("dump-gossip") {
       @Override

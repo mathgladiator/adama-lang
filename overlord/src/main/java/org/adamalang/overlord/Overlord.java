@@ -16,16 +16,16 @@ import org.adamalang.grpc.client.Client;
 import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.overlord.heat.HeatTable;
-import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
+import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.roles.*;
-import org.adamalang.web.contracts.HtmlHandler;
+import org.adamalang.web.contracts.HttpHandler;
 
 import java.io.File;
 
 public class Overlord {
-  public static HtmlHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront, DataBase dataBaseBackend) throws Exception {
+  public static HttpHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront, DataBase dataBaseBackend) throws Exception {
     // the HTTP web server will render data that has been put/cached in this handler
-    ConcurrentCachedHtmlHandler handler = new ConcurrentCachedHtmlHandler();
+    ConcurrentCachedHttpHandler handler = new ConcurrentCachedHttpHandler();
 
     // the overlord has metrics
     OverlordMetrics metrics = new OverlordMetrics(metricsFactory);

@@ -15,7 +15,7 @@ import org.adamalang.gossip.Engine;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.overlord.OverlordMetrics;
-import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
+import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ import java.util.TreeSet;
 public class DeploymentReconciliation {
   private static final Logger LOGGER = LoggerFactory.getLogger(DeploymentReconciliation.class);
 
-  public static void kickOff(OverlordMetrics metrics, Engine engine, DataBase deploymentsDatabase, ConcurrentCachedHtmlHandler handler) {
+  public static void kickOff(OverlordMetrics metrics, Engine engine, DataBase deploymentsDatabase, ConcurrentCachedHttpHandler handler) {
     StateMachine sm = new StateMachine(metrics, deploymentsDatabase, handler);
     engine.subscribe("adama", sm::setTargets);
     Runtime.getRuntime().addShutdownHook(new Thread(sm::stop));
@@ -41,12 +41,12 @@ public class DeploymentReconciliation {
     private final DataBase dataBase;
     private final SimpleExecutor offload;
     private final TreeSet<String> targets;
-    private final ConcurrentCachedHtmlHandler handler;
+    private final ConcurrentCachedHttpHandler handler;
     private final FixedHtmlStringLoggerTable table;
     public long lastGotTargets;
     private StateLabel label;
 
-    private StateMachine(OverlordMetrics metrics, DataBase dataBase, ConcurrentCachedHtmlHandler handler) {
+    private StateMachine(OverlordMetrics metrics, DataBase dataBase, ConcurrentCachedHttpHandler handler) {
       this.metrics = metrics;
       this.dataBase = dataBase;
       this.offload = SimpleExecutor.create("deployment-reconciliation");

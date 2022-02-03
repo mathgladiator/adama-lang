@@ -20,7 +20,7 @@ import org.adamalang.web.io.JsonResponder;
  */
 public interface ServiceBase {
 
-  static ServiceBase JUST_HTML(HtmlHandler html) {
+  static ServiceBase JUST_HTTP(HttpHandler http) {
     return new ServiceBase() {
       @Override
       public ServiceConnection establish(ConnectionContext context) {
@@ -42,8 +42,8 @@ public interface ServiceBase {
       }
 
       @Override
-      public HtmlHandler html() {
-        return html;
+      public HttpHandler http() {
+        return http;
       }
     };
   }
@@ -51,5 +51,5 @@ public interface ServiceBase {
   /** a new connection has presented itself */
   ServiceConnection establish(ConnectionContext context);
 
-  HtmlHandler html();
+  HttpHandler http();
 }

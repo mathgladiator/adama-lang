@@ -11,7 +11,6 @@ package org.adamalang.overlord.roles;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.backend.BackendOperations;
 import org.adamalang.mysql.frontend.Billing;
@@ -20,17 +19,13 @@ import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.data.MeteringSpaceSummary;
 import org.adamalang.mysql.frontend.data.ResourcesPerPenny;
 import org.adamalang.overlord.OverlordMetrics;
-import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
+import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalField;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class HourlyAccountant {
 
@@ -41,9 +36,9 @@ public class HourlyAccountant {
     private final DataBase dataBaseBackend;
     private int billingHourAt;
     private final FixedHtmlStringLoggerTable accountantTable;
-    private final ConcurrentCachedHtmlHandler handler;
+    private final ConcurrentCachedHttpHandler handler;
 
-    public HourlyAccountantTask(OverlordMetrics metrics, DataBase dataBaseFront, DataBase dataBaseBackend, ConcurrentCachedHtmlHandler handler) throws Exception {
+    public HourlyAccountantTask(OverlordMetrics metrics, DataBase dataBaseFront, DataBase dataBaseBackend, ConcurrentCachedHttpHandler handler) throws Exception {
       super("hourly-accountant");
       this.metrics = metrics;
       this.executor = SimpleExecutor.create("hourly-accountant-executor");
@@ -124,7 +119,7 @@ public class HourlyAccountant {
     return toHourCode(fromHourCode(hour).plusHours(1));
   }
 
-  public static void kickOff(OverlordMetrics metrics, DataBase dataBaseFront, DataBase dataBaseBackend, ConcurrentCachedHtmlHandler handler) throws Exception {
+  public static void kickOff(OverlordMetrics metrics, DataBase dataBaseFront, DataBase dataBaseBackend, ConcurrentCachedHttpHandler handler) throws Exception {
     new HourlyAccountantTask(metrics, dataBaseFront, dataBaseBackend, handler);
   }
 }

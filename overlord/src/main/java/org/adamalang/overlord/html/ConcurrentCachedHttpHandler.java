@@ -9,24 +9,25 @@
  */
 package org.adamalang.overlord.html;
 
-import org.adamalang.web.contracts.HtmlHandler;
+import org.adamalang.web.contracts.HttpHandler;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** a very dumb handler with no logic; just show what is in the map */
-public class ConcurrentCachedHtmlHandler implements HtmlHandler {
-  private final ConcurrentHashMap<String, String> uris;
+public class ConcurrentCachedHttpHandler implements HttpHandler {
+  private final ConcurrentHashMap<String, HttpResult> uris;
 
-  public ConcurrentCachedHtmlHandler() {
+  public ConcurrentCachedHttpHandler() {
     this.uris = new ConcurrentHashMap<>();
   }
 
   @Override
-  public String handle(String uri) {
+  public HttpResult handle(String uri) {
     return uris.get(uri);
   }
 
   public void put(String uri, String html) {
-    uris.put(uri, html);
+    uris.put(uri, new HttpResult("text/html; charset=UTF-8", html.getBytes(StandardCharsets.UTF_8)));
   }
 }

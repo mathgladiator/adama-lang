@@ -10,12 +10,14 @@
 package org.adamalang.web.service.mocks;
 
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.web.contracts.HtmlHandler;
+import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
+
+import java.nio.charset.StandardCharsets;
 
 public class MockServiceBase implements ServiceBase {
   @Override
@@ -71,10 +73,10 @@ public class MockServiceBase implements ServiceBase {
   }
 
   @Override
-  public HtmlHandler html() {
+  public HttpHandler http() {
     return uri -> {
       if ("/foo".equals(uri)){
-        return "goo";
+        return new HttpHandler.HttpResult("text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8));
       }
       return null;
     };

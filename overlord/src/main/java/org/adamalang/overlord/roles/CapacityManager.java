@@ -19,7 +19,7 @@ import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.data.InternalDeploymentPlan;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.heat.HeatTable;
-import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
+import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ import java.util.Date;
 public class CapacityManager {
   private static final Logger LOGGER = LoggerFactory.getLogger(CapacityManager.class);
 
-  public static void kickOffReturnHotTargetEvent(OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHtmlHandler handler, HeatTable heatTable) {
+  public static void kickOffReturnHotTargetEvent(OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHttpHandler handler, HeatTable heatTable) {
     SimpleExecutor executor = SimpleExecutor.create("capacity-management");
     CoreCapacityManagementTask task = new CoreCapacityManagementTask(executor, metrics, client, deploymentsDatabase, frontendDatabase, handler);
     executor.schedule(task, 1000);
@@ -50,10 +50,10 @@ public class CapacityManager {
     private final Client client;
     private final DataBase deploymentsDatabase;
     private final DataBase frontendDatabase;
-    private final ConcurrentCachedHtmlHandler handler;
+    private final ConcurrentCachedHttpHandler handler;
     private final FixedHtmlStringLoggerTable tableLogger;
 
-    public CoreCapacityManagementTask(SimpleExecutor executor, OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHtmlHandler handler) {
+    public CoreCapacityManagementTask(SimpleExecutor executor, OverlordMetrics metrics, Client client, DataBase deploymentsDatabase, DataBase frontendDatabase, ConcurrentCachedHttpHandler handler) {
       super("capacity-management");
       this.executor = executor;
       this.metrics = metrics;

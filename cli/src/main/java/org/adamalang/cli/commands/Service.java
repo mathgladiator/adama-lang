@@ -51,9 +51,8 @@ import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.data.ThreadedDataService;
-import org.adamalang.web.contracts.HtmlHandler;
+import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
-import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
 import org.adamalang.web.service.WebMetrics;
@@ -241,12 +240,12 @@ public class Service {
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.SuperNode);
     engine.start();
 
-    HtmlHandler handler = Overlord.execute(identity, engine, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront, dataBaseBackend);
+    HttpHandler handler = Overlord.execute(identity, engine, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront, dataBaseBackend);
 
     ConfigObject co = new ConfigObject(config.get_or_create_child("overlord_web"));
     co.intOf("http_port", 9089);
     WebConfig webConfig = new WebConfig(co);
-    ServiceBase serviceBase = ServiceBase.JUST_HTML(handler);
+    ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
     final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase, () -> {});
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
       @Override

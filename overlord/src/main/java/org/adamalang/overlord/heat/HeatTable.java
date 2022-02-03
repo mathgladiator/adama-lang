@@ -11,7 +11,7 @@ package org.adamalang.overlord.heat;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.overlord.html.ConcurrentCachedHtmlHandler;
+import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class HeatTable {
   private final SimpleExecutor executor;
   private final HashMap<String, HeatSample> samples;
   private Consumer<String> targetHot;
-  public HeatTable(ConcurrentCachedHtmlHandler handler) {
+  public HeatTable(ConcurrentCachedHttpHandler handler) {
     this.executor = SimpleExecutor.create("heat-table");
     this.samples = new HashMap<>();
     this.targetHot = null;

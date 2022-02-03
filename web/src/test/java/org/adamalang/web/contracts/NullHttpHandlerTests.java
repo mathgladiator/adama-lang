@@ -9,8 +9,12 @@
  */
 package org.adamalang.web.contracts;
 
-public interface HtmlHandler {
-  HtmlHandler NULL = uri -> null;
+import org.junit.Assert;
+import org.junit.Test;
 
-  String handle(String uri);
+public class NullHttpHandlerTests {
+  @Test
+  public void coverage() {
+    Assert.assertNull(HttpHandler.NULL.handle(""));
+  }
 }

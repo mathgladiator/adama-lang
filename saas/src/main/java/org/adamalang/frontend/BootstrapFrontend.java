@@ -11,7 +11,6 @@ package org.adamalang.frontend;
 
 import org.adamalang.api.ConnectionNexus;
 import org.adamalang.api.ConnectionRouter;
-import org.adamalang.api.ApiMetrics;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.SimpleExecutorFactory;
 import org.adamalang.connection.Session;
@@ -19,18 +18,14 @@ import org.adamalang.extern.ExternNexus;
 import org.adamalang.transforms.Authenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
-import org.adamalang.web.contracts.HtmlHandler;
+import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
-import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
 
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class BootstrapFrontend {
   public static ServiceBase make(ExternNexus extern) throws Exception {
@@ -72,8 +67,8 @@ public class BootstrapFrontend {
       }
 
       @Override
-      public HtmlHandler html() {
-        return HtmlHandler.NULL;
+      public HttpHandler http() {
+        return HttpHandler.NULL;
       }
     };
   }

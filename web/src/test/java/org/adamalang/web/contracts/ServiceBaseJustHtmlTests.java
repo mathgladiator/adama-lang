@@ -14,13 +14,15 @@ import org.adamalang.web.io.JsonResponder;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
+
 public class ServiceBaseJustHtmlTests {
   @Test
   public void coverage() {
-    ServiceBase base = ServiceBase.JUST_HTML(new HtmlHandler() {
+    ServiceBase base = ServiceBase.JUST_HTTP(new HttpHandler() {
       @Override
-      public String handle(String uri) {
-        return "yay";
+      public HttpResult handle(String uri) {
+        return new HttpResult("yay", "yay".getBytes(StandardCharsets.UTF_8));
       }
     });
     base.establish(null).execute(null, new JsonResponder() {
@@ -41,6 +43,6 @@ public class ServiceBaseJustHtmlTests {
     });
     base.establish(null).keepalive();
     base.establish(null).kill();
-    Assert.assertEquals("yay", base.html().handle("x"));
+    Assert.assertEquals("yay", new String(base.http().handle("x").body, StandardCharsets.UTF_8));
   }
 }
