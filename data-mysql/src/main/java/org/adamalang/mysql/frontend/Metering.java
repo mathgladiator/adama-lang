@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.Json;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.data.MeteringSpaceSummary;
+import org.adamalang.mysql.frontend.metrics.MeteringMetrics;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -56,7 +57,7 @@ public class Metering {
     }
   }
 
-  public static HashMap<String, MeteringSpaceSummary> summarizeWindow(DataBase dataBase, long fromTime, long toTime) throws Exception {
+  public static HashMap<String, MeteringSpaceSummary> summarizeWindow(DataBase dataBase, MeteringMetrics metrics, long fromTime, long toTime) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       {
         String sql = new StringBuilder().append("SELECT `target`, `batch` FROM `").append(dataBase.databaseName).append("`.`metering` WHERE ? <= `created` AND `created` < ?").toString();
@@ -69,11 +70,13 @@ public class Metering {
               String target = rs.getString(1);
               ObjectNode node = Json.parseJsonObject(rs.getString(2));
               long sampleTime = node.get("time").asLong();
+              metrics.metering_batch_found.run();
               if (sampleTime < fromTime) {
-                // TODO: WARN ON LATENESS
-              }
-              if (sampleTime > toTime) {
-                // TODO: WARN ON TOO EARLY (clock drift issue)
+                metrics.metering_batch_late.run();
+              } else if (sampleTime > toTime) {
+                metrics.metering_batch_early.run();
+              } else {
+                metrics.metering_batch_just_right.run();
               }
               ObjectNode spaces = (ObjectNode) node.get("spaces");
               Iterator<Map.Entry<String, JsonNode>> it = spaces.fields();

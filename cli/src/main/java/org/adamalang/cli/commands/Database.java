@@ -13,8 +13,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.ConfigObject;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
+import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.backend.BackendDataServiceInstaller;
 import org.adamalang.mysql.deployments.DeployedInstaller;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
@@ -33,23 +35,23 @@ public class Database {
         return;
       }
       case "install-all": {
-        new FrontendManagementInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"))).install();
-        new DeployedInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"))).install();
-        new BackendDataServiceInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"))).install();
+        new FrontendManagementInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
+        new DeployedInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
+        new BackendDataServiceInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
         return;
       }
       case "install-frontend": {
-        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
+        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
         new FrontendManagementInstaller(dataBase).install();
         return;
       }
       case "install-deployed": {
-        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"));
+        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
         new DeployedInstaller(dataBase).install();
         return;
       }
       case "install-backend": {
-        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
+        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
         new BackendDataServiceInstaller(dataBase).install();
         return;
       }

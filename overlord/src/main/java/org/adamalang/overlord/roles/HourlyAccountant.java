@@ -110,7 +110,7 @@ public class HourlyAccountant {
       LocalDateTime to = from.plusHours(1);
       long fromMs = from.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
       long toMs = to.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-      HashMap<String, MeteringSpaceSummary> summaries = Metering.summarizeWindow(dataBaseFront, fromMs, toMs);
+      HashMap<String, MeteringSpaceSummary> summaries = Metering.summarizeWindow(dataBaseFront, metrics.metering_metrics, fromMs, toMs);
       // TODO: need a more formal rate structure as this is B.S.
       // 2 penny per GB/mo is
       ResourcesPerPenny rates = new ResourcesPerPenny(1000 * 1000, 1000, 50, 1000 * 1000, 200, 386547056640L);

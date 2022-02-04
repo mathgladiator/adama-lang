@@ -10,9 +10,11 @@
 package org.adamalang.mysql.deployments;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
+import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.deployments.data.Deployment;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,7 +26,7 @@ public class DeploymentsTests {
   @Test
   public void flow() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       DeployedInstaller installer = new DeployedInstaller(dataBase);
       try {
         installer.install();

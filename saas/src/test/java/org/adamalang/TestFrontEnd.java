@@ -23,6 +23,7 @@ import org.adamalang.grpc.server.ServerMetrics;
 import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.backend.BackendDataServiceInstaller;
 import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.backend.BlockingDataService;
@@ -79,7 +80,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     int port = 10000;
     codesSentToEmail = new ConcurrentHashMap<>();
     String config = Files.readString(new File("./test.mysql.json").toPath());
-    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config)), "any"));
+    DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(Json.parseJsonObject(config)), "any"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
     this.installerFront = new FrontendManagementInstaller(dataBase);
     this.installerFront.install();
     this.installerBack = new BackendDataServiceInstaller(dataBase);

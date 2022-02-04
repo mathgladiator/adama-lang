@@ -13,6 +13,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
+import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.mocks.SimpleDataCallback;
 import org.adamalang.mysql.mocks.SimpleIntCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
@@ -45,7 +46,7 @@ public class BlockingDataServiceTests {
   @Test
   public void flow_1() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       BackendDataServiceInstaller installer = new BackendDataServiceInstaller(dataBase);
       try {
         // make sure the database and tables are all proper and set
@@ -137,7 +138,7 @@ public class BlockingDataServiceTests {
   @Test
   public void compact() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       BackendDataServiceInstaller installer = new BackendDataServiceInstaller(dataBase);
       try {
         // make sure the database and tables are all proper and set

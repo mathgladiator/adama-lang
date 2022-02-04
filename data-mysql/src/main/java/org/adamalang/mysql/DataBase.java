@@ -13,6 +13,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.mysql.contracts.SQLConsumer;
 import org.adamalang.mysql.contracts.SQLTransact;
 
@@ -24,10 +25,12 @@ public class DataBase implements AutoCloseable {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DataBase.class);
   public final ComboPooledDataSource pool;
   public final String databaseName;
+  public final DataBaseMetrics metrics;
 
-  public DataBase(DataBaseConfig config) throws Exception {
+  public DataBase(DataBaseConfig config, DataBaseMetrics metrics) throws Exception {
     this.pool = config.createComboPooledDataSource();
     this.databaseName = config.databaseName;
+    this.metrics = metrics;
   }
 
   public static String dateTimeOf(long time) {
@@ -72,6 +75,7 @@ public class DataBase implements AutoCloseable {
   }
 
   public <R> void transact(SQLTransact<R> transaction, Callback<R> callback, int failureReason) {
+    RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.transaction.start();
     try {
       Connection connection = pool.getConnection();
       boolean commit = false;
@@ -81,6 +85,7 @@ public class DataBase implements AutoCloseable {
         commit = true;
         connection.commit();
         callback.success(result);
+        instance.success();
       } finally {
         if (!commit) {
           connection.rollback();
@@ -88,7 +93,9 @@ public class DataBase implements AutoCloseable {
         connection.close();
       }
     } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(failureReason, ex, LOGGER));
+      ErrorCodeException ece = ErrorCodeException.detectOrWrap(failureReason, ex, LOGGER);
+      callback.failure(ece);
+      instance.failure(ece.code);
     }
   }
 }

@@ -9,6 +9,7 @@
  */
 package org.adamalang.mysql;
 
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class DataBaseTests {
   @Test
   public void failure_coverage() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       Connection connection = dataBase.pool.getConnection();
       try {
         DataBase.execute(connection, "INSERT");

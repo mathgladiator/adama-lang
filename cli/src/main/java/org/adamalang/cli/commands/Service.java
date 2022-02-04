@@ -14,6 +14,7 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.extern.AssetUploader;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
@@ -34,6 +35,7 @@ import org.adamalang.grpc.server.ServerMetrics;
 import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
+import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
@@ -151,8 +153,8 @@ public class Service {
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
     engine.start();
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
-    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
-    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"));
+    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
+    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(prometheusMetricsFactory, "deployed"));
     BackendMetrics backendMetrics = new BackendMetrics(prometheusMetricsFactory);
     ThreadedDataService dataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(backendMetrics, dataBaseBackend));
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
@@ -235,9 +237,9 @@ public class Service {
     int overlordPort  = config.get_int("overlord_port", 8015);
     String scanPath = config.get_string("scan_path", "web_root");
     PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
-    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"));
-    DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
-    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
+    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(prometheusMetricsFactory, "deployed"));
+    DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(prometheusMetricsFactory, "frontend"));
+    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
 
     String identityFileName = config.get_string("identity_filename", "me.identity");
     File targetsPath = new File(config.get_string("targets_filename", "targets.json"));
@@ -270,16 +272,16 @@ public class Service {
   public static void serviceFrontend(Config config) throws Exception {
     MachineHeat.install();
     System.err.println("starting frontend");
-    DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
-    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployments"));
-    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"));
-    System.err.println("using databases: " + dataBaseFront.databaseName + ", " + dataBaseDeployments.databaseName + ", and " + dataBaseBackend.databaseName);
     String identityFileName = config.get_string("identity_filename", "me.identity");
     int gossipPort = config.get_int("gossip_frontend_port", 8004);
     int monitoringPort = config.get_int("monitoring_frontend_port", 8005);
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
-    System.err.println("identity: " + identity.ip);
     PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
+    DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(prometheusMetricsFactory, "frontend"));
+    DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(prometheusMetricsFactory, "deployed"));
+    DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
+    System.err.println("using databases: " + dataBaseFront.databaseName + ", " + dataBaseDeployments.databaseName + ", and " + dataBaseBackend.databaseName);
+    System.err.println("identity: " + identity.ip);
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
     engine.start();
     System.err.println("gossiping on:" + gossipPort);
@@ -381,6 +383,10 @@ public class Service {
     new ApiMetrics(metricsFactory);
     metricsFactory.page("backend", "The Data Service");
     new BackendMetrics(metricsFactory);
+    metricsFactory.page("database", "Database");
+    new DataBaseMetrics(metricsFactory, "frontend");
+    new DataBaseMetrics(metricsFactory, "backend");
+    new DataBaseMetrics(metricsFactory, "deployed");
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }

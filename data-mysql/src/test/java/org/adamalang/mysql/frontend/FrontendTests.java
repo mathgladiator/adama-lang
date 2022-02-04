@@ -10,9 +10,11 @@
 package org.adamalang.mysql.frontend;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
+import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.frontend.data.InternalDeploymentPlan;
 import org.adamalang.mysql.frontend.data.Role;
 import org.adamalang.mysql.frontend.data.SpaceInfo;
@@ -28,7 +30,7 @@ public class FrontendTests {
   @Test
   public void users() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
         installer.install();
@@ -49,7 +51,7 @@ public class FrontendTests {
   @Test
   public void authorities() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
         installer.install();
@@ -143,7 +145,7 @@ public class FrontendTests {
   @Test
   public void spaces() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
         installer.install();

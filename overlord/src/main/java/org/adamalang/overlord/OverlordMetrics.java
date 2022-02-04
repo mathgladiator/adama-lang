@@ -10,6 +10,7 @@
 package org.adamalang.overlord;
 
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.mysql.frontend.metrics.MeteringMetrics;
 
 public class OverlordMetrics {
   public final Runnable targets_watcher_fired;
@@ -50,6 +51,8 @@ public class OverlordMetrics {
 
   public final Runnable accountant_task;
 
+  public final MeteringMetrics metering_metrics;
+
   public OverlordMetrics(MetricsFactory factory) {
     targets_watcher_fired = factory.counter("overlord_targets_watcher_fired");
     targets_made = factory.counter("overlord_targets_made");
@@ -86,6 +89,8 @@ public class OverlordMetrics {
     gossip_dump = factory.counter("gossip_dump");
 
     accountant_task = factory.counter("accountant_task");
+
+    metering_metrics = new MeteringMetrics(factory);
 
   }
 }

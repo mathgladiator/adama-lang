@@ -9,11 +9,13 @@
  */
 package org.adamalang.mysql.frontend;
 
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
-import org.adamalang.mysql.backend.BackendOperations;
+import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.frontend.data.*;
+import org.adamalang.mysql.frontend.metrics.MeteringMetrics;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -25,9 +27,10 @@ public class MeteringSampleTests {
   @Test
   public void batches() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
-    try (DataBase dataBase = new DataBase(dataBaseConfig)) {
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
+        MeteringMetrics metrics = new MeteringMetrics(new NoOpMetricsFactory());
         installer.install();
         Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));
         Assert.assertNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
@@ -38,7 +41,7 @@ public class MeteringSampleTests {
 
         Metering.recordBatch(dataBase, "target2", "{\"time\":\"" + (now + 10000) + "\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":19}}}", now);
         Assert.assertNotNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
-        HashMap<String, MeteringSpaceSummary> summary1 = Metering.summarizeWindow(dataBase, now - 100000, now + 100000);
+        HashMap<String, MeteringSpaceSummary> summary1 = Metering.summarizeWindow(dataBase, metrics, now - 100000, now + 100000);
         Assert.assertEquals(1, summary1.size());
         HashMap<String, Long> inventory = new HashMap<>();
         inventory.put("space", 1024L);
