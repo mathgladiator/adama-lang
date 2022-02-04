@@ -1,0 +1,1 @@
+# Document layout with types

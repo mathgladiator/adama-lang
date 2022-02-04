@@ -1,0 +1,1 @@
+# Local variables and assignment
