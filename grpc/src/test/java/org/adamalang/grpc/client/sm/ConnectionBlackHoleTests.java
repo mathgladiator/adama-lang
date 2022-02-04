@@ -348,7 +348,6 @@ public class ConnectionBlackHoleTests {
         Runnable eventsConnected = events.latchAt(1);
         Runnable eventsProducedData = events.latchAt(2);
         Runnable eventsGotUpdate = events.latchAt(3);
-        Runnable eventsGotRollback = events.latchAt(4);
 
         Runnable ranStart = connectionExecutor.latchAtAndDrain(1, 1);
         Runnable subscribed = directExector.latchAtAndDrain(1, 1);
@@ -362,8 +361,7 @@ public class ConnectionBlackHoleTests {
         Runnable clientConnected = finderExecutor.latchAtAndDrain(4, 1);
         Runnable clientFound = connectionExecutor.latchAtAndDrain(5, 1);
         Runnable clientReconnecting = finderExecutor.latchAtAndDrain(5, 1);
-        Runnable clientGotEstablished = finderExecutor.latchAtAndDrain(6, 1);
-        Runnable clientMade = finderExecutor.latchAtAndDrain(7, 1);
+        Runnable clientGotEstablished = finderExecutor.latchAtAndDrain(7, 2);
         Runnable connectionMade = connectionExecutor.latchAtAndDrain(6, 1);
         Runnable executeSend = connectionExecutor.latchAtAndDrain(7, 1);
         Runnable forwardSend = finderExecutor.latchAtAndDrain(8, 1);
@@ -399,7 +397,6 @@ public class ConnectionBlackHoleTests {
         clientReconnecting.run();
         Assert.assertEquals("state=FoundClientConnectingWait", connection.toString());
         clientGotEstablished.run();
-        clientMade.run();
         eventsProducedData.run();
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         Assert.assertEquals("state=FoundClientConnectingWait", connection.toString());
