@@ -16,6 +16,6 @@ import org.junit.Test;
 public class InitializerTests {
   @Test
   public void sanity() throws Exception {
-    new Initializer(WebConfigTests.mockConfig(WebConfigTests.Scenario.Dev), new WebMetrics(new NoOpMetricsFactory()), new MockServiceBase());
+    new Initializer(WebConfigTests.mockConfig(WebConfigTests.Scenario.Dev), new WebMetrics(new NoOpMetricsFactory()), new MockServiceBase(), null);
   }
 }

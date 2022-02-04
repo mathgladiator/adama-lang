@@ -15,27 +15,36 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 import org.adamalang.web.contracts.ServiceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 public class Initializer extends ChannelInitializer<SocketChannel> {
   private final Logger logger;
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final ServiceBase base;
+  private final SslContext context;
 
-  public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base) {
+  public Initializer(final WebConfig webConfig, final WebMetrics metrics, final ServiceBase base, SslContext context) {
     this.logger = LoggerFactory.getLogger("Initializer");
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.base = base;
+    this.context = context;
   }
 
   @Override
   public void initChannel(final SocketChannel ch) throws Exception {
     logger.info("initializing channel: {}", ch.remoteAddress());
     final var pipeline = ch.pipeline();
+    if (context != null) {
+      pipeline.addLast("ssl", context.newHandler(ch.alloc()));
+    }
     pipeline.addLast(new HttpServerCodec());
     pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
     pipeline.addLast(new WebSocketServerCompressionHandler());

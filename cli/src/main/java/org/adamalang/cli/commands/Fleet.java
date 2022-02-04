@@ -137,8 +137,6 @@ public class Fleet {
   private static void fleetDeploy(Config config, String[] args) throws Exception {
     Ec2Client ec2 = getEC2(config);
     String scopeToJustRole = Util.extractWithDefault("--scope", "-s", "*", args);
-
-
     DescribeInstancesResponse response = ec2.describeInstances();
     String templateFile = Util.extractOrCrash("--template", "-t", args);
     String keyName = Util.extractOrCrash("--key", "-k", args);
@@ -198,6 +196,10 @@ public class Fleet {
       commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama-new.jar\n");
       commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".sh ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama.sh\n");
       commands.append("ssh -i ").append(keyName).append(" ec2-user@" + instance.publicIpAddress() + " chmod 700 /home/ec2-user/adama.sh\n");
+      if ("frontend".equals(role)) {
+        commands.append("scp -i ").append(keyName).append(" cert.pem ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/cert.pem\n");
+        commands.append("scp -i ").append(keyName).append(" key.pem ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/key.pem\n");
+      }
       commands.append("rm staging/").append(instance.privateIpAddress()).append(".identity\n");
       commands.append("rm staging/").append(instance.privateIpAddress()).append(".json\n");
       commands.append("rm staging/").append(instance.privateIpAddress()).append(".sh\n");

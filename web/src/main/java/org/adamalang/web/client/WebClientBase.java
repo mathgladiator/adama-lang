@@ -22,6 +22,8 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientProtocolHandler;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.adamalang.common.Json;
@@ -48,15 +50,18 @@ public class WebClientBase {
   public void open(String endpoint, WebLifecycle lifecycle) {
     URI uri = URI.create(endpoint);
     String host = uri.getHost();
-    boolean secure = uri.getScheme().equals("wss");
+    boolean secure = uri.getScheme().equals("wss") || uri.getScheme().equals("https");
     int port = uri.getPort() < 0 ? (secure ? 443 : 80) : uri.getPort();
-    // TODO: figure out how to do TLS if secure
+
     final var b = new Bootstrap();
     b.group(group);
     b.channel(NioSocketChannel.class);
     b.handler(new ChannelInitializer<SocketChannel>() {
       @Override
       protected void initChannel(final SocketChannel ch) throws Exception {
+        if (port == 443) {
+          ch.pipeline().addLast(SslContextBuilder.forClient().build().newHandler(ch.alloc()));
+        }
         ch.pipeline().addLast(new HttpClientCodec());
         ch.pipeline().addLast(new HttpObjectAggregator(2424242));
         ch.pipeline().addLast(new WriteTimeoutHandler(3));
