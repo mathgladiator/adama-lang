@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {AdamaConnection, AdamaTree} from 'adama-ws-client';
 
-window.Adama = new AdamaConnection("ws://adama-lb-us-east-2-2073537616.us-east-2.elb.amazonaws.com/s");
+window.Adama = new AdamaConnection("ws://integ.adama-lang.org/s");
 window.Adama.start();
 
 ReactDOM.render(

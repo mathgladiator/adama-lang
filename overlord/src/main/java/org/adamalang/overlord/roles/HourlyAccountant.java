@@ -29,14 +29,38 @@ import java.util.HashMap;
 
 public class HourlyAccountant {
 
+  public static int nextHour(int hour) {
+    return toHourCode(fromHourCode(hour).plusHours(1));
+  }
+
+  public static int toHourCode(LocalDateTime localDateTime) {
+    return localDateTime.getYear() * 1000000 + localDateTime.getMonth().getValue() * 10000 + localDateTime.getDayOfMonth() * 100 + localDateTime.getHour();
+  }
+
+  public static LocalDateTime fromHourCode(int hourCode) {
+    int v = hourCode;
+    int hour = v % 100;
+    v /= 100;
+    int day = v % 100;
+    v /= 100;
+    int month = v % 100;
+    v /= 100;
+    int year = v;
+    return LocalDateTime.of(year, month, day, hour, 0);
+  }
+
+  public static void kickOff(OverlordMetrics metrics, DataBase dataBaseFront, DataBase dataBaseBackend, ConcurrentCachedHttpHandler handler) throws Exception {
+    new HourlyAccountantTask(metrics, dataBaseFront, dataBaseBackend, handler);
+  }
+
   public static class HourlyAccountantTask extends NamedRunnable {
     private final OverlordMetrics metrics;
     private final SimpleExecutor executor;
     private final DataBase dataBaseFront;
     private final DataBase dataBaseBackend;
-    private int billingHourAt;
     private final FixedHtmlStringLoggerTable accountantTable;
     private final ConcurrentCachedHttpHandler handler;
+    private int billingHourAt;
 
     public HourlyAccountantTask(OverlordMetrics metrics, DataBase dataBaseFront, DataBase dataBaseBackend, ConcurrentCachedHttpHandler handler) throws Exception {
       super("hourly-accountant");
@@ -63,6 +87,23 @@ public class HourlyAccountant {
       executor.execute(this);
     }
 
+    @Override
+    public void execute() throws Exception {
+      try {
+        handler.put("/accountant", accountantTable.toHtml("Accountant Work"));
+        int current = toHourCode(LocalDateTime.now().minusHours(2));
+        while (this.billingHourAt < current) {
+          int hourToRun = nextHour(billingHourAt);
+          runBilling(hourToRun);
+          billingHourAt = hourToRun;
+        }
+        accountantTable.row("accountant-ran", "hour:" + current, "scan:" + System.currentTimeMillis());
+        handler.put("/accountant", accountantTable.toHtml("Accountant Work"));
+      } finally {
+        executor.schedule(this, 1000 * 60 * 10);
+      }
+    }
+
     public void runBilling(int forHour) throws Exception {
       metrics.accountant_task.run();
       LocalDateTime from = fromHourCode(forHour);
@@ -80,46 +121,5 @@ public class HourlyAccountant {
       long pennies = Billing.transcribeSummariesAndUpdateBalances(dataBaseFront, forHour, summaries, rates);
       accountantTable.row("transcribe-summary", "pennies:" + pennies, "at:" + forHour);
     }
-
-    @Override
-    public void execute() throws Exception {
-      try {
-        handler.put("/accountant", accountantTable.toHtml("Accountant Work"));
-        int current = toHourCode(LocalDateTime.now().minusHours(2));
-        while (this.billingHourAt < current) {
-          int hourToRun = nextHour(billingHourAt);
-          runBilling(hourToRun);
-          billingHourAt = hourToRun;
-        }
-        accountantTable.row("accountant-ran", "hour:" + current, "scan:" + System.currentTimeMillis());
-        handler.put("/accountant", accountantTable.toHtml("Accountant Work"));
-      } finally {
-        executor.schedule(this, 1000 * 60 * 10);
-      }
-    }
-  }
-
-  public static int toHourCode(LocalDateTime localDateTime) {
-    return localDateTime.getYear() * 1000000 + localDateTime.getMonth().getValue() * 10000 + localDateTime.getDayOfMonth() * 100 + localDateTime.getHour();
-  }
-
-  public static LocalDateTime fromHourCode(int hourCode) {
-    int v = hourCode;
-    int hour = v % 100;
-    v /= 100;
-    int day = v % 100;
-    v /= 100;
-    int month = v % 100;
-    v /= 100;
-    int year = v;
-    return LocalDateTime.of(year, month, day, hour, 0);
-  }
-
-  public static int nextHour(int hour) {
-    return toHourCode(fromHourCode(hour).plusHours(1));
-  }
-
-  public static void kickOff(OverlordMetrics metrics, DataBase dataBaseFront, DataBase dataBaseBackend, ConcurrentCachedHttpHandler handler) throws Exception {
-    new HourlyAccountantTask(metrics, dataBaseFront, dataBaseBackend, handler);
   }
 }

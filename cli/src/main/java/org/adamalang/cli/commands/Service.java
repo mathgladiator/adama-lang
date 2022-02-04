@@ -229,8 +229,11 @@ public class Service {
   }
 
   public static void serviceOverlord(Config config) throws Exception {
+    MachineHeat.install();
     int gossipPort = config.get_int("gossip_overlord_port", 8010);
     int monitoringPort = config.get_int("monitoring_overlord_port", 8011);
+    int overlordPort  = config.get_int("overlord_port", 8015);
+    String scanPath = config.get_string("scan_path", "web_root");
     PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
     DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"));
     DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
@@ -243,7 +246,7 @@ public class Service {
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.SuperNode);
     engine.start();
 
-    HttpHandler handler = Overlord.execute(identity, engine, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront, dataBaseBackend);
+    HttpHandler handler = Overlord.execute(identity, engine, overlordPort, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront, dataBaseBackend, scanPath);
 
     ConfigObject co = new ConfigObject(config.get_or_create_child("overlord_web"));
     co.intOf("http_port", 9089);
@@ -265,6 +268,7 @@ public class Service {
   }
 
   public static void serviceFrontend(Config config) throws Exception {
+    MachineHeat.install();
     System.err.println("starting frontend");
     DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"));
     DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployments"));

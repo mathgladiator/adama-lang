@@ -32,11 +32,11 @@ public class HeatTable {
         StringBuilder html = new StringBuilder();
         html.append("<html><head><title>HEAT</title></head><body>\n");
         html.append("<h1>Heat by target</h1>");
-        html.append("<table><tr><th>Target</th><th>CPU</th><th>Memory</th><th>ms ago</th></tr>");
+        html.append("<table><tr><th>Target</th><th>Role</th><th>CPU</th><th>Memory</th><th>ms ago</th></tr>");
         long now = System.currentTimeMillis();
         for (Map.Entry<String, HeatSample> entry : samples.entrySet()) {
           long ago = now - entry.getValue().time;
-          html.append("<tr><td>").append(entry.getKey()).append("</td><td>").append(entry.getValue().cpu).append("</td><td>").append(entry.getValue().memory).append("</td><td>").append(ago).append("</td></tr>");
+          html.append("<tr><td>").append(entry.getKey()).append("</td><td>").append(entry.getValue().role).append("</td><td>").append(entry.getValue().cpu).append("</td><td>").append(entry.getValue().memory).append("</td><td>").append(ago).append("</td></tr>");
         }
         html.append("</table></body></table>");
         handler.put("/heat", html.toString());
@@ -54,7 +54,7 @@ public class HeatTable {
     });
   }
 
-  public void onSample(String target, double cpu, double memory) {
+  public void onSample(String target, String role, double cpu, double memory) {
     executor.execute(new NamedRunnable("got-heat-sample") {
       @Override
       public void execute() throws Exception {
@@ -62,18 +62,20 @@ public class HeatTable {
         if (sample != null) {
           sample.update(cpu, memory);
         } else {
-          samples.put(target, new HeatSample(cpu, memory));
+          samples.put(target, new HeatSample(role, cpu, memory));
         }
       }
     });
   }
 
   private class HeatSample {
+    String role;
     double cpu;
     double memory;
     long time;
 
-    public HeatSample(double cpu, double memory) {
+    public HeatSample(String role, double cpu, double memory) {
+      this.role = role;
       this.cpu = cpu;
       this.memory = memory;
       this.time = System.currentTimeMillis();

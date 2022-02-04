@@ -10,6 +10,8 @@
 package org.adamalang.overlord;
 
 import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.gossip.Engine;
 import org.adamalang.grpc.client.Client;
@@ -29,7 +31,7 @@ import java.util.function.Consumer;
 public class Overlord {
   private static final Logger LOGGER = LoggerFactory.getLogger(Overlord.class);
 
-  public static HttpHandler execute(MachineIdentity identity, Engine engine, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront, DataBase dataBaseBackend) throws Exception {
+  public static HttpHandler execute(MachineIdentity identity, Engine engine, int overlordPort, MetricsFactory metricsFactory, File targetsDestination, DataBase deploymentsDatabase, DataBase dataBaseFront, DataBase dataBaseBackend, String scanPath) throws Exception {
     // the HTTP web server will render data that has been put/cached in this handler
     ConcurrentCachedHttpHandler handler = new ConcurrentCachedHttpHandler();
 
@@ -46,8 +48,11 @@ public class Overlord {
     HeatTable heatTable = new HeatTable(handler);
 
     // build a full mesh from overlord to all clients
-    Client client = new Client(identity, new ClientMetrics(metricsFactory), heatTable::onSample);
-    engine.subscribe("adama", client.getTargetPublisher());
+    String adamaRole = "adama";
+    Client client = new Client(identity, new ClientMetrics(metricsFactory), (target, cpu, memory) -> {
+      heatTable.onSample(target, adamaRole, cpu, memory);
+    });
+    engine.subscribe(adamaRole, client.getTargetPublisher());
 
     // kick off capacity management will will add/remove capacity per space
     CapacityManager.kickOffReturnHotTargetEvent(metrics, client, deploymentsDatabase, dataBaseFront, handler, heatTable);
@@ -61,11 +66,15 @@ public class Overlord {
     // start doing the accounting work
     HourlyAccountant.kickOff(metrics, dataBaseFront, dataBaseBackend, handler);
 
-    engine.newApp("overlord", 8015, new Consumer<Runnable>() {
+    engine.newApp("overlord", overlordPort, new Consumer<Runnable>() {
       @Override
       public void accept(Runnable hb) {
         try {
-          new OverlordServer(identity, 8015, heatTable, metrics, hb);
+          OverlordServer server = new OverlordServer(identity, overlordPort, heatTable, metrics, () -> {
+            heatTable.onSample(identity.ip + ":" + overlordPort, "overlord", MachineHeat.cpu(), MachineHeat.memory());
+            hb.run();
+          });
+          WebRootScanner.kickOff(metrics, server, handler, scanPath);
         } catch (Exception ex) {
           LOGGER.error("failed-to-start-overlord-server", ex);
         }
@@ -82,6 +91,7 @@ public class Overlord {
     indexHtmlBuilder.append("<a href=\"/metering\">Recent Metering Data</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/gossip\">Gossip Dump</a><br />\n");
     indexHtmlBuilder.append("<a href=\"/accountant\">Accountant Log</a><br />\n");
+    indexHtmlBuilder.append("<a href=\"/webroot\">Web Root Scanner</a><br />\n");
     indexHtmlBuilder.append("</body></html>");
     String indexHtml = indexHtmlBuilder.toString();
     handler.put("/", indexHtml);

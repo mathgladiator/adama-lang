@@ -26,8 +26,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class OverlordServer extends OverlordGrpc.OverlordImplBase {
+  private static final String webRole = "web";
   private final MachineIdentity identity;
-  private final SimpleExecutor executor;
+  public final SimpleExecutor executor;
   private final int port;
   private final io.grpc.Server server;
   private final HeatTable heatTable;
@@ -98,7 +99,7 @@ public class OverlordServer extends OverlordGrpc.OverlordImplBase {
             });
             return;
           case HEAT:
-            heatTable.onSample(targetName, webForward.getHeat().getCpu(), webForward.getHeat().getMemory());
+            heatTable.onSample(targetName, webRole, webForward.getHeat().getCpu(), webForward.getHeat().getMemory());
             return;
         }
       }
