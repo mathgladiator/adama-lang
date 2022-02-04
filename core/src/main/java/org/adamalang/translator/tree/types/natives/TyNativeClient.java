@@ -21,11 +21,13 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
+import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.function.Consumer;
 
 public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType, //
     DetailEqualityTestingRequiresWrapping, //
+    DetailTypeHasMethods, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;
@@ -79,5 +81,10 @@ public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType
   @Override
   public Expression inventDefaultValueExpression(final DocumentPosition forWhatExpression) {
     return new NoOneClientConstant(Token.WRAP("@no_one")).withPosition(forWhatExpression);
+  }
+
+  @Override
+  public TyNativeFunctional lookupMethod(String name, Environment environment) {
+    return environment.state.globals.findExtension(this, name);
   }
 }

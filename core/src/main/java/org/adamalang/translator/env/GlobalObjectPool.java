@@ -9,6 +9,7 @@
  */
 package org.adamalang.translator.env;
 
+import org.adamalang.runtime.stdlib.LibClient;
 import org.adamalang.runtime.stdlib.LibMath;
 import org.adamalang.runtime.stdlib.LibStatistics;
 import org.adamalang.runtime.stdlib.LibString;
@@ -40,6 +41,7 @@ public class GlobalObjectPool {
     GlobalFactory.mergeInto(mathlib, LibMath.class, pool.extensions, true, "near", "sqrt", "SQRT2", "round", "roundTo", "conj", "len");
     pool.add(mathlib);
     pool.add(GlobalFactory.makeGlobal("Statistics", LibStatistics.class, pool.extensions));
+    pool.add(GlobalFactory.makeGlobal("Client", LibClient.class, pool.extensions));
     final var document = new TyNativeGlobalObject("Document", null, false);
     document.functions.put("destroy", generateInternalDocumentFunction("__destroyDocument", new TyNativeVoid()));
     document.functions.put("rewind", generateInternalDocumentFunction("__rewindDocument", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null), new TyNativeVoid()));

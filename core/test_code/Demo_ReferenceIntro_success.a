@@ -1,0 +1,49 @@
+// static code runs without a document
+@static {
+  // 1. a policy which is run to validate the given user can create the document
+  create(who) {
+    return who.isAdamaDeveloper();
+  }
+}
+
+// 2. the document schema has a creator and an integer named x
+public client creator;
+public int x;
+
+// 3. the constructor is a message named by the document
+message ConsXYZ {
+  int x;
+}
+
+// 4. connect the constructor message to code
+@construct (client who, ConsXYZ c) {
+  // 5. fill the document with state
+  creator = who;
+  x = c.x;
+}
+
+// 5. gate who can connect to the document
+@connected(who) {
+   return who == creator;
+}
+
+message Nothing {}
+message Param { int z; }
+
+channel square(client who, Nothing n) {
+  x = x * x;
+}
+
+channel zero(client who, Nothing n) {
+  x = 0;
+}
+
+channel add(client who, Param p) {
+  x += p.z;
+}
+
+channel kill(client who, Nothing n) {
+  if (who == creator) {
+    Document.destroy();
+  }
+}

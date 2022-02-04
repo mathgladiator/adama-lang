@@ -1,0 +1,7 @@
+[book]
+authors = ["Jeffrey M. Barber"]
+title = "Adama Platform"
+description = "The documentation for the Adama Platform"
+language = "en"
+multilingual = false
+src = "src"
