@@ -27,6 +27,7 @@
   - [Anonymous messages and arrays](./guide/anonymous.md)
   - [Maybe some data, maybe not](./guide/maybe.md)
   - [Tables and integrated query](./guide/tables-linq.md)
+  - [Maps and reduce](./guide/map-reduce.md)
   - [Standard control](./guide/control.md)
   - [Functions, procedures, and methods oh my](./guide/functions-procedures-methods-oh-my.md)
   - [Enumerations and dynamic dispatch](./guide/enumerations.md)
