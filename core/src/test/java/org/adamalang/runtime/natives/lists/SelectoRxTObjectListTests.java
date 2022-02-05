@@ -74,7 +74,7 @@ public class SelectoRxTObjectListTests {
     table.__insert(
         new JsonStreamReader("{\"4\":{\"index\":13},\"5\":{\"index\":13},\"6\":{\"index\":13}}"));
     new Random(0);
-    final var list = table.iterate(false).skipAndLimit(true, 0, 1);
+    final var list = table.iterate(false).skip(true, 0).limit(true, 1);
     Assert.assertEquals(4, list.lookup(0).get().__id());
   }
 

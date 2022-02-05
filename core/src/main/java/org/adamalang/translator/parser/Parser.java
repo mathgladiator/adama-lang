@@ -857,7 +857,7 @@ public class Parser {
       base = ternary();
     }
     Token op;
-    while ((op = tokens.popIf(t -> t.isIdentifier("where", "where_as", "order", "shuffle", "limit", "reduce"))) != null) {
+    while ((op = tokens.popIf(t -> t.isIdentifier("where", "where_as", "order", "shuffle", "reduce", "limit", "offset"))) != null) {
       base = wrap_linq(base, op);
     }
     return base;
@@ -1456,12 +1456,11 @@ public class Parser {
       default: // this is a code coverage hack
       case "limit": {
         final var eLim = ternary();
-        final var offsetToken = tokens.popIf(t -> t.isIdentifier("offset"));
-        Expression offsetExpr = null;
-        if (offsetToken != null) {
-          offsetExpr = ternary();
-        }
-        return new Limit(base, op, eLim, offsetToken, offsetExpr);
+        return new Limit(base, op, eLim);
+      }
+      case "offset": {
+        final var offsetExpr = ternary();
+        return new Offset(base, op, offsetExpr);
       }
     }
   }

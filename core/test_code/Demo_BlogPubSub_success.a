@@ -41,8 +41,5 @@ channel publish(client who, PublishMessage message) {
   // Second, we hard cap the publishes biasing younger ones
   (iterate _publishes
      order by when desc
-     limit _publishes.size() offset 100).delete();
-
-  // Hindsight: I should decouple the offset from
-  // the limit because this is currently silly (TODO)
+     offset 100).delete();
 }

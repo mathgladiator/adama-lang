@@ -64,7 +64,12 @@ public class EmptyNtList<T> implements NtList<T> {
   }
 
   @Override
-  public NtList<T> skipAndLimit(final boolean done, final int skip, final int limit) {
+  public NtList<T> skip(final boolean done, final int skip) {
+    return this;
+  }
+
+  @Override
+  public NtList<T> limit(final boolean done, final int limit) {
     return this;
   }
 

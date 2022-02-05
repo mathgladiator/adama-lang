@@ -1283,7 +1283,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    __track(1);");
     gold.append("\n    (_publishes.iterate(false).where(true, new __CLOSURE_WhereClause0())).map((__item) -> { __item.__delete(); });");
     gold.append("\n    __track(2);");
-    gold.append("\n    (_publishes.iterate(false).orderBy(false, __ORDER_Publish_when_d).skipAndLimit(true, 100, _publishes.size())).map((__item) -> { __item.__delete(); });");
+    gold.append("\n    (_publishes.iterate(false).orderBy(false, __ORDER_Publish_when_d).skip(true, 100)).map((__item) -> { __item.__delete(); });");
     gold.append("\n");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3674,7 +3674,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n          RTxPlayer player = _AutoConditionplayer_47.get();");
     gold.append("\n          __code_cost += 2;");
     gold.append("\n          __track(27);");
-    gold.append("\n          NtList<RxClient> _auto_48 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause14()).orderBy(false, __ORDER_Card_ordering_a).skipAndLimit(true, 0, 13)).transform((item) -> item.owner);");
+    gold.append("\n          NtList<RxClient> _auto_48 = (deck.iterate(false).where(false, new __CLOSURE_WhereClause14()).orderBy(false, __ORDER_Card_ordering_a).limit(true, 13)).transform((item) -> item.owner);");
     gold.append("\n          for (RxClient _auto_49 : _auto_48) {");
     gold.append("\n            _auto_49.set(player.link.get());");
     gold.append("\n          }");

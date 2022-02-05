@@ -2419,9 +2419,9 @@ public class GeneratedLinqTests extends GeneratedBase {
     gold.append("\n    tbl2.__subscribe(list_w5);");
     gold.append("\n    list_w6 = new RxLazy<NtList<RTxX>>(this, () -> (tbl2.iterate(false).orderBy(true, __ORDER_X_x_a_y_a)));");
     gold.append("\n    tbl2.__subscribe(list_w6);");
-    gold.append("\n    list_w7 = new RxLazy<NtList<RTxX>>(this, () -> (tbl2.iterate(false).orderBy(false, __ORDER_X_x_a_y_a).skipAndLimit(true, 0, 1)));");
+    gold.append("\n    list_w7 = new RxLazy<NtList<RTxX>>(this, () -> (tbl2.iterate(false).orderBy(false, __ORDER_X_x_a_y_a).limit(true, 1)));");
     gold.append("\n    tbl2.__subscribe(list_w7);");
-    gold.append("\n    list_w8 = new RxLazy<NtList<RTxX>>(this, () -> (tbl2.iterate(false).orderBy(false, __ORDER_X_x_a_y_a).skipAndLimit(true, 1, 1)));");
+    gold.append("\n    list_w8 = new RxLazy<NtList<RTxX>>(this, () -> (tbl2.iterate(false).orderBy(false, __ORDER_X_x_a_y_a).skip(false, 1).limit(true, 1)));");
     gold.append("\n    tbl2.__subscribe(list_w8);");
     gold.append("\n    count_tbl2 = new RxInt32(this, 0);");
     gold.append("\n    __goodwillBudget = 100000;");

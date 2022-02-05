@@ -157,9 +157,15 @@ public class SelectorRxObjectList<Ty extends RxRecordBase<Ty>> implements NtList
   }
 
   @Override
-  public NtList<Ty> skipAndLimit(final boolean done, final int skip, final int limit) {
+  public NtList<Ty> skip(final boolean done, final int skip) {
     ensureFinalized();
-    return new ArrayNtList<>(finalized).skipAndLimit(true, skip, limit);
+    return new ArrayNtList<>(finalized).skip(true, skip);
+  }
+
+  @Override
+  public NtList<Ty> limit(final boolean done, final int limit) {
+    ensureFinalized();
+    return new ArrayNtList<>(finalized).limit(true, limit);
   }
 
   @Override

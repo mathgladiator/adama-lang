@@ -15448,9 +15448,9 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    x.__subscribe(order5);");
     gold.append("\n    shuffle1 = new RxLazy<NtList<RTxX>>(this, () -> (x.iterate(false).shuffle(true, __random)));");
     gold.append("\n    x.__subscribe(shuffle1);");
-    gold.append("\n    limit1 = new RxLazy<NtList<RTxX>>(this, () -> (x.iterate(false).skipAndLimit(true, 0, 1)));");
+    gold.append("\n    limit1 = new RxLazy<NtList<RTxX>>(this, () -> (x.iterate(false).limit(true, 1)));");
     gold.append("\n    x.__subscribe(limit1);");
-    gold.append("\n    limit2 = new RxLazy<NtList<RTxX>>(this, () -> (x.iterate(false).skipAndLimit(true, 2, 1)));");
+    gold.append("\n    limit2 = new RxLazy<NtList<RTxX>>(this, () -> (x.iterate(false).skip(false, 2).limit(true, 1)));");
     gold.append("\n    x.__subscribe(limit2);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");

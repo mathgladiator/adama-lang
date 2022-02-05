@@ -23,7 +23,7 @@ public formula order5 = iterate x order by by asc, id desc;
 public formula shuffle1 = iterate x shuffle;
 
 public formula limit1 = iterate x limit 1;
-public formula limit2 = iterate x limit 1 offset 2;
+public formula limit2 = iterate x  offset 2 limit 1;
 
 @construct {
   x <- {name:"J"};

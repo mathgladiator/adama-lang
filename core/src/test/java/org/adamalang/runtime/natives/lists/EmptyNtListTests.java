@@ -19,7 +19,8 @@ public class EmptyNtListTests {
     list.get().get();
     Assert.assertEquals(0, list.size());
     list.orderBy(true, (x, y) -> 0);
-    list.skipAndLimit(true, 0, 100);
+    list.skip(true, 0);
+    list.limit(false, 100);
     list.where(true, null);
     list.shuffle(true, null);
     Assert.assertEquals(0, list.toArray(n -> new String[n]).length);

@@ -25,7 +25,7 @@ auto list_w4 = iterate tbl2 order by y, x asc;
 auto list_w5 = iterate tbl2 order by x desc, y desc;
 auto list_w6 = iterate tbl2 order by x, y;
 auto list_w7 = iterate tbl2 order by x, y limit 1;
-auto list_w8 = iterate tbl2 order by x, y limit 1 offset 1;
+auto list_w8 = iterate tbl2 order by x, y offset 1 limit 1;
 
 int count_tbl2;
 

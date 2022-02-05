@@ -34,7 +34,9 @@ public interface NtList<Ty> extends Iterable<Ty> {
 
   int size();
 
-  NtList<Ty> skipAndLimit(boolean done, int skip, int limit);
+  NtList<Ty> skip(boolean done, int skip);
+
+  NtList<Ty> limit(boolean done, int limit);
 
   Ty[] toArray(Function<Integer, Object> arrayMaker);
 

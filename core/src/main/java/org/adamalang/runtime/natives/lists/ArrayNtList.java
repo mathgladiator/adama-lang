@@ -102,13 +102,23 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
   }
 
   @Override
-  public NtList<Ty> skipAndLimit(final boolean done, final int skip, final int limit) {
+  public NtList<Ty> limit(final boolean done, final int limit) {
     final var next = new ArrayList<Ty>(limit);
+    final var it = iterator();
+    for (var k = 0; k < limit && it.hasNext(); k++) {
+      next.add(it.next());
+    }
+    return new ArrayNtList<>(next);
+  }
+
+  @Override
+  public NtList<Ty> skip(final boolean done, final int skip) {
+    final var next = new ArrayList<Ty>();
     final var it = iterator();
     for (var k = 0; k < skip && it.hasNext(); k++) {
       it.next();
     }
-    for (var k = 0; k < limit && it.hasNext(); k++) {
+    while (it.hasNext()) {
       next.add(it.next());
     }
     return new ArrayNtList<>(next);

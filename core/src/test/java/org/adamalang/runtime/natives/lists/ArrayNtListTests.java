@@ -25,7 +25,8 @@ public class ArrayNtListTests {
     final var list = new ArrayNtList<String>(new ArrayList<>());
     Assert.assertEquals(0, list.size());
     list.orderBy(true, (x, y) -> 0);
-    list.skipAndLimit(true, 0, 100);
+    list.skip(true, 0);
+    list.limit(false, 100);
     list.where(true, null);
     list.shuffle(true, null);
     Assert.assertEquals(0, list.toArray(n -> new String[n]).length);
@@ -71,8 +72,8 @@ public class ArrayNtListTests {
               }
             });
     Assert.assertEquals(1, filtered.size());
-    Assert.assertEquals(2, list.skipAndLimit(true, 1, 50).size());
-    Assert.assertEquals(2, list.skipAndLimit(true, 0, 2).size());
+    Assert.assertEquals(2, list.skip(true, 1).size());
+    Assert.assertEquals(2, list.limit(true, 2).size());
     Assert.assertEquals("y", list.lookup(0).get());
     Assert.assertFalse(list.lookup(40).has());
     list.orderBy(true, String::compareTo);
