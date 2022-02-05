@@ -852,7 +852,6 @@ public class Parser {
     Expression base;
     final var iterateToken = tokens.popIf(t -> t.isIdentifier("iterate"));
     if (iterateToken != null) {
-      // TODO: check for { and then introduce a View which must look a LOT like a record
       base = new Iterate(iterateToken, ternary());
     } else {
       base = ternary();
@@ -1290,8 +1289,6 @@ public class Parser {
           final var eqToken = consumeExpectedSymbol("=");
           final var value = expression();
           final var endToken = consumeExpectedSymbol(";");
-          // TODO: Consider forcing let to induce readonly? (it may be very interesting to
-          // introduce a read only cast..
           return new DefineVariable(op, varName, null, eqToken, value, endToken);
         }
         case "do":
