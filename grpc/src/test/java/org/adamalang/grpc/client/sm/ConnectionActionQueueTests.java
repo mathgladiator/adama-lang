@@ -97,7 +97,7 @@ public class ConnectionActionQueueTests {
         Runnable clientConnected = finderExecutor.latchAtAndDrain(4, 1);
         Runnable clientFound = connectionExecutor.latchAtAndDrain(5, 1);
         Runnable sendConnect = finderExecutor.latchAtAndDrain(5, 1);
-        Runnable connectEstablish = finderExecutor.latchAtAndDrain(6, 1);
+        Runnable connectEstablish = finderExecutor.latchAtAndDrain(6, -1);
         Runnable connectionComplete = connectionExecutor.latchAtAndDrain(6, 1);
 
         ConnectionBase base = new ConnectionBase(metrics, engineDirect, finder, connectionExecutor);
