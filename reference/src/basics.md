@@ -5,11 +5,11 @@ Welcome to the introduction of the Adama Platform book.
 In this chapter, we are going to explore the core idioms and language of what Adama is and how it helps you.
 
 So, what is the Adama Platform?
-Well, we could kick this off with some buzzword bingo by saying that the Adama platform is an open-source reactive server-less privacy-first document-oriented compute-centric key-value store acting like a platform as a service, but that doesn't communicate much.
+Well, we could kick this off with some buzzword bingo by saying that the Adama platform is an open-source reactive server-less privacy-first document-oriented compute-centric key-value store acting like a platform as a service, but that doesn't communicate much (or, does it?).
 However, we have to start somewhere, so let's tear down those buzzwords with more words.
 
 Let's start with [**document orientated key-value store**](https://en.wikipedia.org/wiki/Document-oriented_database).
-Documents are identified via a key (hence the **key-value**), and documents are organized by a space (which is similar to the [bucket concept used by S3](https://en.wikipedia.org/wiki/Amazon_S3) except with a more mathematical feel).
+Adama stores documents, and documents are identified via a key (hence the **key-value**). Documents are organized by a space (which is similar to the [bucket concept used by S3](https://en.wikipedia.org/wiki/Amazon_S3) except with a more mathematical feel).
 Adama has variants of the four big [CRUD operations](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete), but there are notable differences which make the Adama platform unique. Deconstructing the CRUD operations is the best way to teardown the buzzword bingo.
 
 ## Creating
@@ -23,7 +23,7 @@ This is why the name space was chosen over bucket because buckets can only have 
 For a clear example, the below code illustrates valid Adama code which we will tear down.
 
 ```adama
-// static code runs without a document
+// static code runs without a document instance
 @static {
 
   // 1. a policy which is run to validate the given user can create the document
@@ -59,9 +59,9 @@ when constructed with a message like
 {"x":23}
 ```
 
-However, this document contains (1) an access control mechanism for who can create the document, (2) a document schema with **privacy as a first class citizen**, (3) a message interface for validating input, and (4) logic to construct the state of the document.
+However, this document contains (1) an access control mechanism for who can create a document, (2) a document schema with **privacy as a first class citizen**, (3) a message interface for validating input structure, and (4) logic to construct the state of the document.
 
-As a rule, documents can only be created once and race conditions go to first creator. It's worth noting that the document's state is different from the state used to construct it which enables developers to think in their domain rather than the document's schema.
+As a rule, documents can only be created once and race conditions go to first creator. It's worth noting that the document's state is different from the state used to construct it which enables developers to think in their domain rather than the document's schema. This is very similar to [Alan Kay's original thinking around object-oriented programming](https://wiki.c2.com/?AlanKaysDefinitionOfObjectOriented) and [Carl Hewitt's actor model](https://en.wikipedia.org/wiki/Actor_model).
 
 ## Reading
 
@@ -75,11 +75,11 @@ Once a document is created, documents can be read by connecting to the document.
 ```
 
 This will allow people to connect or not.
-The reason we say *connect* instead of *read* or *get* is because we establish a long-lived stream between the client and the document which allows changes to flow from document to client with minimal cost; this explains the **reactive** buzzword.
+The reason we say *connect* instead of *read* or *get* is because we establish a long-lived stream between the client and the document which allows changes to flow from the document to all clients with minimal cost; this explains the **reactive** buzzword.
 
 ## Updating
 
-Updates to the document happen by sending messages to the document via channels; channels are basically functions exposed to clients.
+Updates to the document happen by sending messages to the document via channels; channels are basically procedures exposed to clients.
 For example, we can open a few channels to manipulate our document in various ways.
 
 ```adama
@@ -99,7 +99,7 @@ channel add(client who, Param p) {
 }
 ```
 
-Messages will hit a document exactly once, run the associated logic, change the document state, and all connected clients will **reactively** receive an updated version of the document.
+Messages will hit a document exactly once, run the associated logic, change the document state, and all connected clients will **reactively** receive a change to update their version of the document.
 Access control is possible per channel, but it is worth noting that only connected clients can send to a document (by default).
 
 ## Deleting
@@ -113,7 +113,7 @@ channel kill(client who, Nothing n) {
 }
 ```
 
-The core motivation for this is that access control for deletion requires business logic. Since Adama documents can invent messages based on time, this also enables documents to self-destruct.
+The core motivation for this is that access control for deletion requires business logic. Since Adama documents can run code [based on time passing](./guide/state-machine.md), this also enables documents to self-destruct.
 
 ## Buzzword Bingo Summary
 With the CRUD operations laid bare, we can analyze the buzzword bingo aspects in a table:
@@ -123,13 +123,15 @@ With the CRUD operations laid bare, we can analyze the buzzword bingo aspects in
 | open-source | Yes, _<u>all</u>_ the source for the platform is [hosted on Github](https://github.com/mathgladiator/adama-lang) |
 | reactive | The connection from client to server uses a stream such that updates flow to client as they happen |
 | server-less | The servers are managed by the platform, and developers only have to think about keys and documents |
-| privacy-first | The language has many privacy mechanisms that happen during document schema definition enforced during run-time |
+| privacy-first | The language has many privacy mechanisms that happen during document schema definition enforced during run-time. It's entirely possible for the document to hold state that is never readable by any human without hacking. |
 | document-oriented | Adama maps keys to values, and those values are documents |
 | key-value store | Adama use a NoSQL design mapping keys to values |
-| platform as a service | Adama provides the trinity of compute, storage, and networking which is enough to build many products |
+| platform as a service | Adama provides the trinity of compute, storage, and networking which is enough to build many products. Adama is designed to pair exceptionally well with a web browser. |
 
 ## So, how does this help? What is Adama's value proposition?
 This is the big question. At core, Adama takes the trinity of the cloud: compute, storage, and networking and bundles them into one offering. The value proposition is thusly multi-faceted depending on various markets:
 * Jamstack developers are able to hook their application up directly to the Adama platform such that privacy, security, query, and transformation are provided out of the box.
 * Game developers can leverage Adama platform to act as a serverless platform for both a game lobby and a game server (The [history of Adama](/reference/history.html) starts with board games).
 * Any website can integrate Adama as a durable and reliable real-time service for chat, presence, web-rtc signalling, and more without managing servers.
+
+Beyond making development easier, business operations is further aided by having a tunable history of changes to the document available which makes auditing changes easy as well as having a universal rewind.
