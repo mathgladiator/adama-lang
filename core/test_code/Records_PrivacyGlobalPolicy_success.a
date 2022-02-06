@@ -1,0 +1,23 @@
+@connected (who) {
+  return who == @no_one;
+}
+
+private client owner = @no_one;
+
+policy saneG(who) {
+  return who == @no_one;
+}
+
+record X {
+  use_policy<saneL> int x;
+  use_policy<saneG> int y;
+
+  policy saneL(who) {
+    return x < y;
+  }
+
+  require saneL;
+  require saneG;
+}
+
+

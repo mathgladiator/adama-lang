@@ -2907,6 +2907,10 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    public void show(RTxCard __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 3;");
+    gold.append("\n      if (!__item.__POLICY_p(__writer.who)) {");
+    gold.append("\n        hide(__writer);");
+    gold.append("\n        return;");
+    gold.append("\n      }");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __did.show(__item.id.get(), __obj.planField(\"id\"));");
     gold.append("\n      __dsuit.show(__item.suit.get(), __obj.planField(\"suit\"));");

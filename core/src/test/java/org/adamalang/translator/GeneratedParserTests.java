@@ -21751,6 +21751,10 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    public void show(RTxX __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 4;");
+    gold.append("\n      if (!__item.__POLICY_p1(__writer.who)) {");
+    gold.append("\n        hide(__writer);");
+    gold.append("\n        return;");
+    gold.append("\n      }");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __dx.show(__item.x.get(), __obj.planField(\"x\"));");
     gold.append("\n      if (__writer.who.equals(__item.who.get())) {");

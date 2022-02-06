@@ -61,7 +61,7 @@ public class UseCustomPolicy extends Policy {
         globals.add(policyToCheck);
         dcp = environment.document.root.storage.policies.get(policyToCheck);
         if (dcp == null) {
-          environment.document.createError(this, String.format("Policy '%s' was not found", policyToCheck), "CustomPolicy");
+          environment.document.createError(this, String.format("Policy '%s' was not found", policyToCheck), "UseCustomPolicy");
         }
       }
     }

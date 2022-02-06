@@ -555,7 +555,7 @@ file,start_line,start_character,end_line,end_character,message
 ./test_code/Records_IdMustBeInt_failure.a,0,0,2,1,"id must be type int (Record)"
 ./test_code/Records_InvalidFormula_failure.a,1,21,1,22,"The variable 'y' was not defined (VariableLookup)"
 ./test_code/Records_InvalidFormula_failure.a,1,2,1,27,"Variable 'x' has no backing type (EnvironmentDefine)"
-./test_code/Records_PolicyNotFound_failure.a,1,2,1,15,"Policy 'p' was not found (CustomPolicy)"
+./test_code/Records_PolicyNotFound_failure.a,1,2,1,15,"Policy 'p' was not found (UseCustomPolicy)"
 ./test_code/Return_ShouldntReturnButDoes_failure.a,1,2,1,11,"The return statement expects no expression (ReturnFlow)"
 ./test_code/Return_ShouldReturnButDoesnt_failure.a,1,2,1,9,"The return statement expected an expression of type `int` (ReturnFlow)"
 ./test_code/Testing_CantForceOutsideOfTest_failure.a,2,2,2,8,"Forcing a step designed exclusively for testing (Testing)"

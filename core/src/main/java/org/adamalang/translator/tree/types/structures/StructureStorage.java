@@ -247,7 +247,7 @@ public class StructureStorage extends DocumentPosition {
 
     policiesForVisibility.add(policyToCheck);
     typeCheckOrder.add(env -> {
-      if (!policies.containsKey(policyToCheck)) {
+      if (!policies.containsKey(policyToCheck) && !env.document.root.storage.policies.containsKey(policyToCheck)) {
         final var dp = new DocumentPosition();
         dp.ingest(requireToken);
         dp.ingest(semicolon);

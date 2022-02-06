@@ -137,10 +137,17 @@ public class CodeGenDeltaClass {
     if (cost > 0 && !environment.state.hasNoCost()) {
       sb.append("__code_cost += ").append("" + cost).append(";").writeNewline();
     }
+    for (String policy : storage.policiesForVisibility) {
+      sb.append("if (!").append(storage.policies.containsKey(policy) ? "__item." : "").append("__POLICY_").append(policy).append("(__writer.who)) {").tabUp().writeNewline();
+      sb.append("hide(__writer);").writeNewline();
+      sb.append("return;").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+    }
     sb.append("PrivateLazyDeltaWriter __obj = __writer.planObject();").writeNewline();
     if (forceManifest) {
       sb.append("__obj.manifest();").writeNewline();
     }
+
     for (final FieldDefinition fd : fds) {
       final var isLazy = fd.type instanceof TyReactiveLazy;
       var fieldType = environment.rules.Resolve(fd.type, false);
