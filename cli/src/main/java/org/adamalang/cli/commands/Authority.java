@@ -200,8 +200,8 @@ public class Authority {
     System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List authorities this developer owns");
     System.out.println("    " + Util.prefix("set", Util.ANSI.Green) + "               Set public keys to an authority");
     System.out.println("    " + Util.prefix("get", Util.ANSI.Green) + "               Get released public keys for an authority");
-    System.out.println("    " + Util.prefix("create-local", Util.ANSI.Green) + "      Make a new set of public keys" + Util.prefix("(WARNING)", Util.ANSI.Red));
-    System.out.println("    " + Util.prefix("append-local", Util.ANSI.Green) + "      Append a new public key to the public key file" + Util.prefix("(WARNING)", Util.ANSI.Red));
+    System.out.println("    " + Util.prefix("create-local", Util.ANSI.Green) + "      Make a new set of public keys " + Util.prefix("(WARNING)", Util.ANSI.Red));
+    System.out.println("    " + Util.prefix("append-local", Util.ANSI.Green) + "      Append a new public key to the public key file " + Util.prefix("(WARNING)", Util.ANSI.Red));
     System.out.println("    " + Util.prefix("sign", Util.ANSI.Green) + "              Sign an agent with a local private key");
   }
 }

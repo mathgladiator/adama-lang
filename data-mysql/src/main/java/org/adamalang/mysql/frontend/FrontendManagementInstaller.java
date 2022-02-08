@@ -36,6 +36,19 @@ public class FrontendManagementInstaller {
         .append(" DEFAULT CHARACTER SET = utf8mb4;") //
         .toString();
 
+    String createInitiationsTableSQL = new StringBuilder() //
+        .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`initiations` (") //
+        .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+        .append("  `user` INT(4) UNSIGNED NOT NULL,") //
+        .append("  `hash` TEXT NOT NULL,") //
+        .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
+        .append("  `expires` DATETIME,") //
+        .append("  PRIMARY KEY (`id`),") //
+        .append("  INDEX `u` (`user` ASC))") //
+        .append(" ENGINE = InnoDB") //
+        .append(" DEFAULT CHARACTER SET = utf8mb4;") //
+        .toString();
+
     String createAccessKeysTableSQL = new StringBuilder() //
         .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`email_keys` (") //
         .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
@@ -127,6 +140,7 @@ public class FrontendManagementInstaller {
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, createDatabaseSQL);
+      DataBase.execute(connection, createInitiationsTableSQL);
       DataBase.execute(connection, createEmailsTableSQL);
       DataBase.execute(connection, createAccessKeysTableSQL);
       DataBase.execute(connection, createSpaceTableSQL);
@@ -143,6 +157,7 @@ public class FrontendManagementInstaller {
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`emails`;").toString());
+      DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`initiations`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`email_keys`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`spaces`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`grants`;").toString());

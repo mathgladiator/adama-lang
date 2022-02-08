@@ -10,15 +10,13 @@
 package org.adamalang.mysql.frontend;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
 import org.adamalang.mysql.DataBaseMetrics;
-import org.adamalang.mysql.frontend.data.InternalDeploymentPlan;
-import org.adamalang.mysql.frontend.data.Role;
-import org.adamalang.mysql.frontend.data.SpaceInfo;
-import org.adamalang.mysql.frontend.data.SpaceListingItem;
+import org.adamalang.mysql.frontend.data.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -42,6 +40,34 @@ public class FrontendTests {
         Assert.assertEquals("key", Users.listKeys(dataBase, 1).get(0));
         Users.removeAllKeys(dataBase, 1);
         Assert.assertEquals(0, Users.listKeys(dataBase, 1).size());
+        Users.addKey(dataBase, 1, "key2", System.currentTimeMillis() + 1000 * 60);
+        Assert.assertEquals(1, Users.listKeys(dataBase, 1).size());
+        Assert.assertEquals(1, Users.expireKeys(dataBase, System.currentTimeMillis() + 10000000L));
+        Assert.assertEquals(0, Users.listKeys(dataBase, 1).size());
+      } finally {
+        installer.uninstall();
+      }
+    }
+  }
+
+  @Test
+  public void initiations() throws Exception {
+    DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
+      FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
+      try {
+        installer.install();
+        Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
+        Users.addInitiationPair(dataBase, 1, "hash", System.currentTimeMillis() - 60000);
+        Assert.assertEquals("hash", Users.listInitiationPairs(dataBase, 1).get(0).hash);
+        Assert.assertEquals(1, Users.expireKeys(dataBase, System.currentTimeMillis()));
+        Assert.assertEquals(0, Users.listInitiationPairs(dataBase, 1).size());
+        Users.addInitiationPair(dataBase, 1, "hash", System.currentTimeMillis() - 60000);
+        Assert.assertEquals(1, Users.listInitiationPairs(dataBase, 1).size());
+        for (IdHashPairing ihp : Users.listInitiationPairs(dataBase, 1)) {
+          Users.deleteInitiationPairing(dataBase, ihp.id);
+        }
+        Assert.assertEquals(0, Users.listInitiationPairs(dataBase, 1).size());
       } finally {
         installer.uninstall();
       }
@@ -278,5 +304,11 @@ public class FrontendTests {
         installer.uninstall();
       }
     }
+  }
+
+  @Test
+  public void billing() {
+    Assert.assertEquals(0, Billing.usageValueOfZeroIfNotPresentOrNull(Json.parseJsonObject("{}"), "x"));
+    Assert.assertEquals(123, Billing.usageValueOfZeroIfNotPresentOrNull(Json.parseJsonObject("{\"x\":123}"), "x"));
   }
 }

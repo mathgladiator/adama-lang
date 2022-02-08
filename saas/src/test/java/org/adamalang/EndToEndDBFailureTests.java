@@ -20,20 +20,7 @@ public class EndToEndDBFailureTests {
   @Test
   public void flow() throws Exception {
     try (TestFrontEnd fe = new TestFrontEnd()) {
-      Runnable latch1 = fe.latchOnEmail("x@x.com");
-      Iterator<String> c1 =
-          fe.execute("{\"id\":1,\"method\":\"init/start\",\"email\":\"x@x.com\"}");
-      latch1.run();
-      Iterator<String> c2 =
-          fe.execute(
-              "{\"id\":2,\"connection\":1,\"method\":\"init/generate-identity\",\"code\":\""
-                  + fe.codesSentToEmail.get("x@x.com")
-                  + "\"}");
-      String result1 = c2.next();
-      Assert.assertTrue(result1.length() > 0);
-      Assert.assertEquals("FINISH:{\"identity\":", result1.substring(0, 19));
-      String identity = Json.parseJsonObject(result1.substring(7)).get("identity").textValue();
-      Assert.assertEquals("FINISH:{}", c1.next());
+      String identity = fe.setupDevIdentity();
       fe.kill("authorities");
       fe.kill("spaces");
       Iterator<String> c3 = fe.execute("{\"id\":3,\"method\":\"authority/create\",\"identity\":\"" + identity + "\"}");

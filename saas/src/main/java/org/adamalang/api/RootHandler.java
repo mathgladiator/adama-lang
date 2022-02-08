@@ -12,7 +12,9 @@ package org.adamalang.api;
 import org.adamalang.connection.Session;
 
 public interface RootHandler {
-  public WaitingForEmailHandler handle(Session session, InitStartRequest request, SimpleResponder responder);
+  public void handle(Session session, InitSetupAccountRequest request, SimpleResponder responder);
+
+  public void handle(Session session, InitCompleteAccountRequest request, InitiationResponder responder);
 
   public void handle(Session session, ProbeRequest request, SimpleResponder responder);
 

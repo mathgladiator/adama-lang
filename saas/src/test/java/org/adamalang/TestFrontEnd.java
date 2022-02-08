@@ -176,24 +176,6 @@ public class TestFrontEnd implements AutoCloseable, Email {
     return true;
   }
 
-  public String generateIdentity(String email) {
-    Runnable latch1 = latchOnEmail(email);
-    Iterator<String> c1 =
-        execute("{\"id\":1,\"method\":\"init/start\",\"email\":\"" + email + "\"}");
-    latch1.run();
-    Iterator<String> c2 =
-        execute(
-            "{\"id\":2,\"connection\":1,\"method\":\"init/generate-identity\",\"code\":\""
-                + codesSentToEmail.remove(email)
-                + "\"}");
-    String result1 = c2.next();
-    Assert.assertTrue(result1.length() > 0);
-    Assert.assertEquals("FINISH:{\"identity\":", result1.substring(0, 19));
-    String identity1 = Json.parseJsonObject(result1.substring(7)).get("identity").textValue();
-    Assert.assertEquals("FINISH:{}", c1.next());
-    return identity1;
-  }
-
   public Runnable latchOnEmail(String email) {
     CountDownLatch latch = new CountDownLatch(1);
     emailLatch.put(email, latch);
@@ -276,5 +258,21 @@ public class TestFrontEnd implements AutoCloseable, Email {
     public void error(ErrorCodeException ex) {
       write("ERROR:" + ex.code);
     }
+  }
+
+  public String setupDevIdentity() {
+    return generateIdentity("x@x.com", false);
+  }
+
+  public String generateIdentity(String email, boolean revoke) {
+    Runnable latch1 = latchOnEmail(email);
+    Iterator<String> c1 = execute("{\"id\":1,\"method\":\"init/setup-account\",\"email\":\""+email+"\"}");
+    latch1.run();
+    Assert.assertEquals("FINISH:{}", c1.next());
+    Iterator<String> c2 = execute("{\"id\":2,\"method\":\"init/complete-account\",\"email\":\""+email+"\",\"code\":\"" + codesSentToEmail.get(email) + "\""+(revoke ? ",\"revoke\":true" : "")+"}");
+    String result1 = c2.next();
+    Assert.assertTrue(result1.length() > 0);
+    Assert.assertEquals("FINISH:{\"identity\":", result1.substring(0, 19));
+    return Json.parseJsonObject(result1.substring(7)).get("identity").textValue();
   }
 }

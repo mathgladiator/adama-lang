@@ -46,7 +46,7 @@ public class Billing {
     }
   }
 
-  private static long usageValueOfZeroIfNotPresentOrNull(ObjectNode node, String field) {
+  public static long usageValueOfZeroIfNotPresentOrNull(ObjectNode node, String field) {
     JsonNode child = node.get(field);
     if (child == null || child.isNull()) {
       return 0;

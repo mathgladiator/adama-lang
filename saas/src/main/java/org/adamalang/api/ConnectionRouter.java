@@ -24,14 +24,12 @@ public class ConnectionRouter {
   public final ConnectionNexus nexus;
   public final RootHandler handler;
   public final HashMap<Long, AttachmentUploadHandler> inflightAttachmentUpload;
-  public final HashMap<Long, WaitingForEmailHandler> inflightWaitingForEmail;
   public final HashMap<Long, DocumentStreamHandler> inflightDocumentStream;
 
   public ConnectionRouter(ConnectionNexus nexus, RootHandler handler) {
     this.nexus = nexus;
     this.handler = handler;
     this.inflightAttachmentUpload = new HashMap<>();
-    this.inflightWaitingForEmail = new HashMap<>();
     this.inflightDocumentStream = new HashMap<>();
   }
 
@@ -40,10 +38,6 @@ public class ConnectionRouter {
       entry.getValue().disconnect(entry.getKey());
     }
     inflightAttachmentUpload.clear();
-    for (Map.Entry<Long, WaitingForEmailHandler> entry : inflightWaitingForEmail.entrySet()) {
-      entry.getValue().disconnect(entry.getKey());
-    }
-    inflightWaitingForEmail.clear();
     for (Map.Entry<Long, DocumentStreamHandler> entry : inflightDocumentStream.entrySet()) {
       entry.getValue().disconnect(entry.getKey());
     }
@@ -62,15 +56,13 @@ public class ConnectionRouter {
         public void execute() throws Exception {
           nexus.session.activity();
           switch (method) {
-            case "init/start": {
-              StreamMonitor.StreamMonitorInstance mInstance = nexus.metrics.monitor_InitStart.start();
-              InitStartRequest.resolve(nexus, request, new Callback<>() {
+            case "init/setup-account": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_InitSetupAccount.start();
+              InitSetupAccountRequest.resolve(nexus, request, new Callback<>() {
                 @Override
-                public void success(InitStartRequest resolved) {
+                public void success(InitSetupAccountRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  WaitingForEmailHandler handlerMade = handler.handle(nexus.session, resolved, new SimpleResponder(new JsonResponderHashMapCleanupProxy<>(mInstance, nexus.executor, inflightWaitingForEmail, requestId, responder, _accessLogItem, nexus.logger)));
-                  inflightWaitingForEmail.put(requestId, handlerMade);
-                  handlerMade.bind();
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {
@@ -82,51 +74,13 @@ public class ConnectionRouter {
                 }
               });
             } return;
-            case "init/revoke-all": {
-              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_InitRevokeAll.start();
-              InitRevokeAllRequest.resolve(nexus, request, new Callback<>() {
+            case "init/complete-account": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_InitCompleteAccount.start();
+              InitCompleteAccountRequest.resolve(nexus, request, new Callback<>() {
                 @Override
-                public void success(InitRevokeAllRequest resolved) {
+                public void success(InitCompleteAccountRequest resolved) {
                   resolved.logInto(_accessLogItem);
-                  WaitingForEmailHandler handlerToUse = inflightWaitingForEmail.get(resolved.connection);
-                  if (handlerToUse != null) {
-                    handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
-                  } else {
-                    _accessLogItem.put("success", false);
-                    _accessLogItem.put("failure-code", 441361);
-                    nexus.logger.log(_accessLogItem);
-                    mInstance.failure(441361);
-                    responder.error(new ErrorCodeException(441361));
-                  }
-                }
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  mInstance.failure(ex.code);
-                  _accessLogItem.put("success", false);
-                  _accessLogItem.put("failure-code", ex.code);
-                  nexus.logger.log(_accessLogItem);
-                  responder.error(ex);
-                }
-              });
-            } return;
-            case "init/generate-identity": {
-              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_InitGenerateIdentity.start();
-              InitGenerateIdentityRequest.resolve(nexus, request, new Callback<>() {
-                @Override
-                public void success(InitGenerateIdentityRequest resolved) {
-                  resolved.logInto(_accessLogItem);
-                  WaitingForEmailHandler handlerToUse = inflightWaitingForEmail.remove(resolved.connection);
-                  if (handlerToUse != null) {
-                    handlerToUse.logInto(_accessLogItem);
-                    handlerToUse.handle(resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
-                  } else {
-                    _accessLogItem.put("success", false);
-                    _accessLogItem.put("failure-code", 454673);
-                    nexus.logger.log(_accessLogItem);
-                    mInstance.failure(454673);
-                    responder.error(new ErrorCodeException(454673));
-                  }
+                  handler.handle(nexus.session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
                 }
                 @Override
                 public void failure(ErrorCodeException ex) {

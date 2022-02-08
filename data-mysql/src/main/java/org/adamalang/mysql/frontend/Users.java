@@ -10,6 +10,7 @@
 package org.adamalang.mysql.frontend;
 
 import org.adamalang.mysql.DataBase;
+import org.adamalang.mysql.frontend.data.IdHashPairing;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -78,6 +79,27 @@ public class Users {
     }
   }
 
+  public static int expireKeys(DataBase dataBase, long now) throws Exception {
+    int keysDeleted = 0;
+    try (Connection connection = dataBase.pool.getConnection()) {
+      {
+        String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`email_keys` WHERE `expires` < ?").toString();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+          statement.setString(1, DataBase.dateTimeOf(now));
+          keysDeleted += statement.executeUpdate();
+        }
+      }
+      {
+        String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`initiations` WHERE `expires` < ?").toString();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+          statement.setString(1, DataBase.dateTimeOf(now));
+          keysDeleted += statement.executeUpdate();
+        }
+      }
+    }
+    return keysDeleted;
+  }
+
   public static int removeAllKeys(DataBase dataBase, int userId) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`email_keys` WHERE `user`=?").toString();
@@ -85,6 +107,37 @@ public class Users {
         statement.setInt(1, userId);
         return statement.executeUpdate();
       }
+    }
+  }
+
+  public static void addInitiationPair(DataBase dataBase, int userId, String hash, long expires) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`initiations` (`user`,`hash`,`expires`) VALUES (?,?,?)").toString();
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        statement.setInt(1, userId);
+        statement.setString(2, hash);
+        statement.setString(3, DataBase.dateTimeOf(expires));
+        statement.execute();
+        return;
+      }
+    }
+  }
+
+  public static List<IdHashPairing> listInitiationPairs(DataBase dataBase, int userId) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      ArrayList<IdHashPairing> pairs = new ArrayList<>();
+      String sql = new StringBuilder().append("SELECT `id`,`hash` FROM `").append(dataBase.databaseName).append("`.`initiations` WHERE `user`=").append(userId).toString();
+      DataBase.walk(connection, (rs) -> {
+        pairs.add(new IdHashPairing(rs.getInt(1), rs.getString(2)));
+      }, sql);
+      return pairs;
+    }
+  }
+
+  public static void deleteInitiationPairing(DataBase dataBase, int pairId) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = new StringBuilder().append("DELETE FROM `").append(dataBase.databaseName).append("`.`initiations` WHERE `id`=").append(pairId).toString();
+      DataBase.execute(connection, sql);
     }
   }
 }

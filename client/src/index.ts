@@ -406,34 +406,24 @@ export class AdamaConnection {
   }
 
   /**[BEGIN-INVOKE]**/
-  InitStart(email: string, responder: SimpleResponder) {
+  InitSetupAccount(email: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
     var id = self.nextId;
     return self.__execute_rr({
       id: id,
       responder: responder,
-      request: {"method":"init/start", "id":id, "email": email},
-      revokeall: function(code: string, subResponder: SimpleResponder) {
-        self.nextId++;
-        var subId = self.nextId;
-        var parId = id;
-        self.__execute_rr({
-          id: subId,
-          responder: subResponder,
-          request: { method: "init/revoke-all", id: subId, "connection":parId, "code": code}
-        });
-      },
-      generateidentity: function(revoke: boolean, code: string, subResponder: InitiationResponder) {
-        self.nextId++;
-        var subId = self.nextId;
-        var parId = id;
-        self.__execute_rr({
-          id: subId,
-          responder: subResponder,
-          request: { method: "init/generate-identity", id: subId, "connection":parId, "revoke": revoke, "code": code}
-        });
-      }
+      request: {"method":"init/setup-account", "id":id, "email": email}
+    });
+  }
+  InitCompleteAccount(email: string, revoke: boolean, code: string, responder: InitiationResponder) {
+    var self = this;
+    self.nextId++;
+    var id = self.nextId;
+    return self.__execute_rr({
+      id: id,
+      responder: responder,
+      request: {"method":"init/complete-account", "id":id, "email": email, "revoke": revoke, "code": code}
     });
   }
   Probe(identity: string, responder: SimpleResponder) {

@@ -9,7 +9,6 @@
  */
 package org.adamalang;
 
-import org.adamalang.common.Json;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,22 +18,7 @@ public class EndToEnd_DocumentTests {
   @Test
   public void flow() throws Exception {
     try (TestFrontEnd fe = new TestFrontEnd()) {
-      Iterator<String> c0 = fe.execute("{}");
-      Assert.assertEquals("ERROR:233120", c0.next());
-      Runnable latch1 = fe.latchOnEmail("x@x.com");
-      Iterator<String> c1 =
-          fe.execute("{\"id\":1,\"method\":\"init/start\",\"email\":\"x@x.com\"}");
-      latch1.run();
-      Iterator<String> c2 =
-          fe.execute(
-              "{\"id\":2,\"connection\":1,\"method\":\"init/generate-identity\",\"code\":\""
-                  + fe.codesSentToEmail.get("x@x.com")
-                  + "\"}");
-      String result1 = c2.next();
-      Assert.assertEquals("FINISH:{}", c1.next());
-      Assert.assertTrue(result1.length() > 0);
-      Assert.assertEquals("FINISH:{\"identity\":", result1.substring(0, 19));
-      String devIdentity = Json.parseJsonObject(result1.substring(7)).get("identity").textValue();
+      String devIdentity = fe.setupDevIdentity();
       Iterator<String> c3  = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/create\",\"space\":\"newspace\"}");
       Assert.assertEquals("FINISH:{}", c3.next());
       Iterator<String> c4  =

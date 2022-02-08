@@ -186,10 +186,9 @@ public class ErrorCodes {
 
   public static final int API_SPACE_CREATE_UNKNOWN_EXCEPTION = 900104;
 
-  public static final int API_INIT_GENERATE_UNKNOWN_EXCEPTION = 965636;
-  public static final int API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION = 946179;
-  public static final int API_INIT_GENERATE_CODE_MISMATCH = 916486;
-  public static final int API_INIT_REVOKE_ALL_CODE_MISMATCH = 974851;
+  public static final int API_INIT_SETUP_UNKNOWN_EXCEPTION = 965636;
+  public static final int API_INIT_COMPLETE_UNKNOWN_EXCEPTION = 946179;
+  public static final int API_INIT_COMPLETE_CODE_MISMATCH = 916486;
 
   public static final int API_SPACE_SET_PLAN_NO_PERMISSION_TO_EXECUTE = 901127;
   public static final int API_SPACE_SET_PLAN_UNKNOWN_EXCEPTION = 904318;

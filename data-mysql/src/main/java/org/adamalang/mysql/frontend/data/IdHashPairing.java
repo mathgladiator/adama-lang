@@ -7,20 +7,14 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.api;
+package org.adamalang.mysql.frontend.data;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.connection.Session;
+public class IdHashPairing {
+  public final int id;
+  public final String hash;
 
-public interface WaitingForEmailHandler {
-  public void bind();
-
-  public void handle(InitRevokeAllRequest request, SimpleResponder responder);
-
-  public void handle(InitGenerateIdentityRequest request, InitiationResponder responder);
-
-  public void logInto(ObjectNode node);
-
-  public void disconnect(long id);
-
+  public IdHashPairing(int id, String hash) {
+    this.id = id;
+    this.hash = hash;
+  }
 }

@@ -18,58 +18,24 @@ import org.adamalang.common.Json;
 
 public class Init {
   public static void execute(Config config, String[] args) throws Exception {
-    if (args.length == 0) {
-      initHelp();
-      return;
-    }
-    String command = Util.normalize(args[0]);
-    String[] next = Util.tail(args);
-    switch (command) {
-      case "start":
-        initStart(config);
-        return;
-      case "revoke":
-        initRevoke(config);
-        return;
-      case "help":
-        initHelp();
-        return;
-    }
-  }
-
-  public static void initHelp() {
-    System.out.println(Util.prefix("Initiate the local configuration file", Util.ANSI.Green));
-    System.out.println();
-    System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("adama code", Util.ANSI.Green) + " " + Util.prefix("[INITSUBCOMMAND]", Util.ANSI.Magenta));
-    System.out.println();
-    System.out.println(Util.prefix("FLAGS:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
-    System.out.println();
-    System.out.println(Util.prefix("INITSUBCOMMAND:", Util.ANSI.Yellow));
-    System.out.println("    " + Util.prefix("start", Util.ANSI.Green) + "             Connect this machine to the remote resource (interactive)");
-    System.out.println("    " + Util.prefix("revoke", Util.ANSI.Green) + "            Revoke all machines for your account (interactive)");
-  }
-
-  private static void initStart(Config config) throws Exception {
     String email = readEmail(config);
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
         ObjectNode requestStart = Json.newJsonObject();
-        requestStart.put("method", "init/start");
+        requestStart.put("method", "init/setup-account");
         requestStart.put("email", email);
-        long initConnectionId = connection.open(requestStart, (o) -> {
-
-        }, (ex) -> {
-        });
+        connection.execute(requestStart);
 
         System.out.println();
-        System.out.print(Util.prefix("    Code:", Util.ANSI.Yellow));
+        System.out.print(Util.prefix("Code:", Util.ANSI.Yellow));
         String code = System.console().readLine();
 
         ObjectNode requestGenerateIdentity = Json.newJsonObject();
-        requestGenerateIdentity.put("method", "init/generate-identity");
-        requestGenerateIdentity.put("connection", initConnectionId);
+        requestGenerateIdentity.put("method", "init/complete-account");
+        requestGenerateIdentity.put("email", email);
+        if (revokePrior(config)) {
+          requestGenerateIdentity.put("revoke", true);
+        }
         requestGenerateIdentity.put("code", code);
         ObjectNode responseGenerateIdentity = connection.execute(requestGenerateIdentity);
         config.manipulate((node) -> {
@@ -80,41 +46,17 @@ public class Init {
     }
   }
 
-  private static void initRevoke(Config config) throws Exception {
-    String email = readEmail(config);
-    try (WebSocketClient client = new WebSocketClient(config)) {
-      try (Connection connection = client.open()) {
-        ObjectNode requestStart = Json.newJsonObject();
-        requestStart.put("method", "init/start");
-        requestStart.put("email", email);
-        long initConnectionId = connection.open(requestStart, (o) -> {
-
-        }, (ex) -> {
-        });
-
-        System.out.println();
-        System.out.print(Util.prefix("    Code:", Util.ANSI.Yellow));
-        String code = System.console().readLine();
-
-        ObjectNode requestRevoke = Json.newJsonObject();
-        requestRevoke.put("method", "init/revoke-all");
-        requestRevoke.put("connection", initConnectionId);
-        requestRevoke.put("code", code);
-        ObjectNode responseRevoke = connection.execute(requestRevoke);
-        System.err.println(responseRevoke.toPrettyString());
-
-        config.manipulate((node) -> {
-          node.remove("email");
-          node.remove("identity");
-        });
-      }
-    }
-  }
-
   private static String readEmail(Config config) {
     System.out.println();
-    System.out.print(Util.prefix("   Email:", Util.ANSI.Yellow));
+    System.out.print(Util.prefix("Email:", Util.ANSI.Yellow));
     String email = System.console().readLine();
     return email;
+  }
+
+  private static boolean revokePrior(Config config) {
+    System.out.println();
+    System.out.print(Util.prefix("Revoke other machines[Y/n]:", Util.ANSI.Yellow));
+    String revokeYesNo = System.console().readLine();
+    return revokeYesNo.trim().equalsIgnoreCase("Y");
   }
 }

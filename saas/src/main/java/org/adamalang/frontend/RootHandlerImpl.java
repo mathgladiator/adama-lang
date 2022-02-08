@@ -10,6 +10,7 @@
 package org.adamalang.frontend;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.lambdaworks.crypto.SCryptUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -31,6 +32,7 @@ import org.adamalang.mysql.frontend.Billing;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.Users;
 import org.adamalang.mysql.frontend.data.BillingUsage;
+import org.adamalang.mysql.frontend.data.IdHashPairing;
 import org.adamalang.mysql.frontend.data.Role;
 import org.adamalang.mysql.frontend.data.SpaceListingItem;
 import org.adamalang.runtime.data.Key;
@@ -59,73 +61,44 @@ public class RootHandlerImpl implements RootHandler {
   public RootHandlerImpl(ExternNexus nexus) throws Exception {
     this.nexus = nexus;
     this.rng = new Random();
+
+  }
+
+
+  @Override
+  public void handle(Session session, InitSetupAccountRequest request, SimpleResponder responder) {
+    try {
+      String generatedCode = generateCode();
+      String hash = SCryptUtil.scrypt(generatedCode, 16384, 8, 1);
+      Users.addInitiationPair(nexus.dataBaseManagement, request.userId, hash, System.currentTimeMillis() + 15 * 60000);
+      nexus.email.sendCode(request.email, generatedCode);
+      responder.complete();
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_SETUP_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
   }
 
   @Override
-  public WaitingForEmailHandler handle(Session session, InitStartRequest startRequest, SimpleResponder startResponder) {
-    String generatedCode = generateCode();
-    return new WaitingForEmailHandler() {
-
-      @Override
-      public void bind() {
-        nexus.email.sendCode(startRequest.email, generatedCode);
-      }
-
-      @Override
-      public void handle(InitRevokeAllRequest request, SimpleResponder responder) {
-        try {
-          if (generatedCode.equals(request.code)) {
-            try {
-              Users.removeAllKeys(nexus.dataBaseManagement, startRequest.userId);
-              Users.validateUser(nexus.dataBaseManagement, startRequest.userId);
-              responder.complete();
-            } catch (Exception ex) {
-              responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_REVOKE_ALL_UNKNOWN_EXCEPTION, ex, LOGGER));
-              return;
-            }
-          } else {
-            responder.error(new ErrorCodeException(ErrorCodes.API_INIT_REVOKE_ALL_CODE_MISMATCH));
+  public void handle(Session session, InitCompleteAccountRequest request, InitiationResponder responder) {
+    try {
+      for (IdHashPairing idHash : Users.listInitiationPairs(nexus.dataBaseManagement, request.userId)) {
+        if (SCryptUtil.check(request.code, idHash.hash)) {
+          KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+          String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+          if (request.revoke != null && request.revoke) {
+            Users.removeAllKeys(nexus.dataBaseManagement, request.userId);
           }
-        } finally {
-          startResponder.complete();
+          Users.addKey(nexus.dataBaseManagement, request.userId, publicKey, System.currentTimeMillis() + 14 * 24 * 60 * 60000);
+          responder.complete(Jwts.builder().setSubject("" + request.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
+          Users.validateUser(nexus.dataBaseManagement, request.userId);
+          Users.deleteInitiationPairing(nexus.dataBaseManagement, idHash.id);
+          return;
         }
       }
-
-      @Override
-      public void handle(InitGenerateIdentityRequest request, InitiationResponder responder) {
-        try {
-          if (generatedCode.equals(request.code)) {
-            KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
-            String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
-            try {
-              if (request.revoke != null && request.revoke) {
-                Users.removeAllKeys(nexus.dataBaseManagement, startRequest.userId);
-              }
-              Users.addKey(nexus.dataBaseManagement, startRequest.userId, publicKey, System.currentTimeMillis() + 30 * 24 * 60 * 60);
-              Users.validateUser(nexus.dataBaseManagement, startRequest.userId);
-            } catch (Exception ex) {
-              responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_GENERATE_UNKNOWN_EXCEPTION, ex, LOGGER));
-              return;
-            }
-            responder.complete(Jwts.builder().setSubject("" + startRequest.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
-          } else {
-            responder.error(new ErrorCodeException(ErrorCodes.API_INIT_GENERATE_CODE_MISMATCH));
-          }
-        } finally {
-          startResponder.complete();
-        }
-      }
-
-      @Override
-      public void disconnect(long id) {
-      }
-
-
-      @Override
-      public void logInto(ObjectNode node) {
-        startRequest.logInto(node);
-      }
-    };
+      responder.error(new ErrorCodeException(ErrorCodes.API_INIT_COMPLETE_CODE_MISMATCH));
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_INIT_COMPLETE_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
   }
 
   private String generateCode() {

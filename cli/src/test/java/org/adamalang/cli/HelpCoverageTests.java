@@ -22,7 +22,6 @@ public class HelpCoverageTests {
     Main.main(new String[] {"database"});
     Main.main(new String[] {"documents"});
     Main.main(new String[] {"fleet"});
-    Main.main(new String[] {"init"});
     Main.main(new String[] {"security"});
     Main.main(new String[] {"service"});
     Main.main(new String[] {"space"});
@@ -35,7 +34,6 @@ public class HelpCoverageTests {
     Main.main(new String[] {"database", "help"});
     Main.main(new String[] {"documents", "help"});
     Main.main(new String[] {"fleet", "help"});
-    Main.main(new String[] {"init", "help"});
     Main.main(new String[] {"security", "help"});
     Main.main(new String[] {"service", "help"});
     Main.main(new String[] {"space", "help"});

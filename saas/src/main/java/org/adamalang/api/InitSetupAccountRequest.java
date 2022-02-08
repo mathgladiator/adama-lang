@@ -17,33 +17,26 @@ import org.adamalang.connection.Session;
 import org.adamalang.validators.ValidateEmail;
 import org.adamalang.web.io.*;
 
-/** This establishes a developer machine via email verification. The expectation is that while the email is
-  * being sent, the socket is held open for the developer to complete the operation by providing the generated
-  * code.
-  * 
-  * The generated code is securely randomized and tied to the socket to provide a secure way to validate the
-  * email on the other end.
-  * 
-  * Developer accounts are keyed off of email. */
-public class InitStartRequest {
+/** This initiates developer machine via email verification. */
+public class InitSetupAccountRequest {
   public final String email;
   public final Integer userId;
 
-  public InitStartRequest(final String email, final Integer userId) {
+  public InitSetupAccountRequest(final String email, final Integer userId) {
     this.email = email;
     this.userId = userId;
   }
 
-  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<InitStartRequest> callback) {
+  public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<InitSetupAccountRequest> callback) {
     try {
-      final BulkLatch<InitStartRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
+      final BulkLatch<InitSetupAccountRequest> _latch = new BulkLatch<>(nexus.executor, 1, callback);
       final String email = request.getString("email", true, 473103);
       ValidateEmail.validate(email);
       final LatchRefCallback<Integer> userId = new LatchRefCallback<>(_latch);
-      _latch.with(() -> new InitStartRequest(email, userId.get()));
+      _latch.with(() -> new InitSetupAccountRequest(email, userId.get()));
       nexus.emailService.execute(nexus.session, email, userId);
     } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("initstart-error") {
+      nexus.executor.execute(new NamedRunnable("initsetupaccount-error") {
         @Override
         public void execute() throws Exception {
           callback.failure(ece);

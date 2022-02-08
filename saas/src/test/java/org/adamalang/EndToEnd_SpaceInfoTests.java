@@ -38,8 +38,8 @@ public class EndToEnd_SpaceInfoTests {
   @Test
   public void flow() throws Exception {
     try (TestFrontEnd fe = new TestFrontEnd()) {
-      String alice = fe.generateIdentity("alice@x.com");
-      String bob = fe.generateIdentity("bob@x.com");
+      String alice = fe.generateIdentity("alice@x.com", false);
+      String bob = fe.generateIdentity("bob@x.com", true);
       Iterator<String> c1 =
           fe.execute(
               "{\"id\":1,\"identity\":\""

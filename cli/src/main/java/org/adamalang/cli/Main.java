@@ -39,6 +39,7 @@ public class Main {
         Database.execute(config, next);
         return;
       case "documents":
+      case "document":
         Documents.execute(config, next);
         return;
       case "fleet":
@@ -54,6 +55,7 @@ public class Main {
         Service.execute(config, next);
         return;
       case "space":
+      case "spaces":
         Space.execute(config, next);
         return;
       case "help":
@@ -77,7 +79,7 @@ public class Main {
     System.out.println("    " + Util.prefix("code", Util.ANSI.Green) + "              Local developer tools");
     System.out.println("    " + Util.prefix("contrib", Util.ANSI.Green) + "           Open source contributor tools");
     System.out.println("    " + Util.prefix("database", Util.ANSI.Green) + "          Prepare database for usage");
-    System.out.println("    " + Util.prefix("documents", Util.ANSI.Green) + "         Interact with documents");
+    System.out.println("    " + Util.prefix("document", Util.ANSI.Green) + "          Interact with documents");
     System.out.println("    " + Util.prefix("fleet", Util.ANSI.Green) + "             Fleet management via EC2");
     System.out.println("    " + Util.prefix("init", Util.ANSI.Green) + "              Initializes the config with a valid token");
     System.out.println("    " + Util.prefix("security", Util.ANSI.Green) + "          Security tools for production usage");
