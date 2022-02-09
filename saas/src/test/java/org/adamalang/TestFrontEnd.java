@@ -162,10 +162,10 @@ public class TestFrontEnd implements AutoCloseable, Email {
     installerFront.uninstall();
     installerBack.uninstall();
     installDeploy.uninstall();
+    connection.kill();
     nexus.close();
     clientExecutor.shutdown();
     server.close();
-    connection.kill();
     connection.keepalive();
   }
 

@@ -9,6 +9,7 @@
  */
 package org.adamalang;
 
+import org.adamalang.transforms.UserIdResolver;
 import org.adamalang.transforms.results.Keystore;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,6 +44,9 @@ public class EndToEndDB_FailureTests {
       Assert.assertEquals("ERROR:965636", c10.next());
       Iterator<String> c11 = fe.execute("{\"id\":7,\"method\":\"init/complete-account\",\"identity\":\"" + identity + "\",\"email\":\"x@x.com\",\"code\":\"42\"}");
       Assert.assertEquals("ERROR:946179", c11.next());
+      fe.kill("emails");
+      Iterator<String> c12 = fe.execute("{\"id\":7,\"method\":\"init/setup-account\",\"identity\":\"" + identity + "\",\"email\":\"x@x.com\"}");
+      Assert.assertEquals("ERROR:979980", c12.next());
     }
   }
 }

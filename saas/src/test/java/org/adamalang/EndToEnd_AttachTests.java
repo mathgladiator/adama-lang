@@ -95,6 +95,8 @@ public class EndToEnd_AttachTests {
       Assert.assertEquals("ERROR:477201", c9.next());
       Iterator<String> c10 = fe.execute("{\"id\":8,\"upload\":120,\"identity\":\"" + devIdentity + "\",\"method\":\"attachment/finish\"}");
       Assert.assertEquals("ERROR:478227", c10.next());
+      Iterator<String> c11 = fe.execute("{\"id\":125,\"identity\":\"" + devIdentity + "\",\"method\":\"attachment/start\",\"space\":\"newspace\",\"key\":\"a\",\"filename\":\"thefilename\",\"content-type\":\"text/plain\"}");
+      Assert.assertEquals("STREAM:{\"chunk_request_size\":65536}", c11.next());
     }
   }
 
