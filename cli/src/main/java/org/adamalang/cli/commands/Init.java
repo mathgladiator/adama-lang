@@ -18,6 +18,24 @@ import org.adamalang.common.Json;
 
 public class Init {
   public static void execute(Config config, String[] args) throws Exception {
+    System.out.println("Hello, and welcome to the " + Util.prefix("Adama Tool", Util.ANSI.Green) + " account on-boarding experience!");
+    System.out.println("");
+    System.out.println("Before you begin, you should read " + Util.prefix("terms & conditions", Util.ANSI.Yellow) + " on the website:");
+    System.out.println();
+    System.out.println("  TODO: URL to terms and conditions");
+    System.out.println();
+    System.out.println("Also, you should read the " + Util.prefix("privacy policy", Util.ANSI.Yellow) + " on the website as well:");
+    System.out.println();
+    System.out.println("  TODO: URL to privacy policy");
+    System.out.println();
+    System.out.println("This tool is about to ask for your email, and that is used as your developer account id." +
+        " As of 2022-02-09, the email is only used for account verification, but we reserve the " + Util.prefix("option to use for updates in the future.", Util.ANSI.Yellow) +
+        " We haven't yet written the code to dump emails into software which will handle that for us, and if we are successful enough with traction then we will not need to.");
+    System.out.println();
+    System.out.print("So, look, go tell your friends about how neat this software is and then we will be too busy with feature requests to even hire a marketing person.");
+    System.out.println();
+    System.out.println(Util.prefix("As such, providing your email constitutes a binding agreement to both the privacy policy and our terms of conditions.", Util.ANSI.Yellow));
+    System.out.println();
     String email = readEmail(config);
     try (WebSocketClient client = new WebSocketClient(config)) {
       try (Connection connection = client.open()) {
@@ -26,6 +44,8 @@ public class Init {
         requestStart.put("email", email);
         connection.execute(requestStart);
 
+        System.out.println();
+        System.out.println("At this point, an email has been sent to the address that you just provided. So, go find the email (remember to check spam) and copy and paste the code into this prompt.");
         System.out.println();
         System.out.print(Util.prefix("Code:", Util.ANSI.Yellow));
         String code = System.console().readLine();
