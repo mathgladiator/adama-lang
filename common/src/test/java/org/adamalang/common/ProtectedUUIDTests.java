@@ -20,6 +20,8 @@ public class ProtectedUUIDTests {
     } catch (RuntimeException re) {
       Assert.assertTrue(re.getCause() instanceof NullPointerException);
     }
-    ProtectedUUID.generate();
+    for (int k = 0; k < 1000; k++) {
+      ProtectedUUID.generate();
+    }
   }
 }

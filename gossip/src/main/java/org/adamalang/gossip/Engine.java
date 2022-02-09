@@ -86,13 +86,7 @@ public class Engine implements AutoCloseable {
         sbHtml.append("<html><head><title>Gossip Summary</title></head><body><table>");
         sbHtml.append("<tr><th>ID</th><th>Witness (ms ago)</th><th>IP</th><th>Port</th><th>Role</th><th>Counter</th><th>Age (ms)</th></tr>");
         ArrayList<Instance> copySortedForHumans = new ArrayList<>(chain.current().instances);
-        copySortedForHumans.sort((x, y) -> {
-          int delta = x.ip.compareTo(y.ip);
-          if (delta == 0) {
-            return x.role.compareTo(y.role);
-          }
-          return delta;
-        });
+        copySortedForHumans.sort(Instance::humanizeCompare);
         for (Instance instance : copySortedForHumans) {
           sbHtml.append("<tr>");
           sbHtml.append("<td>").append(instance.id).append("</td>");

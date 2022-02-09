@@ -46,6 +46,18 @@ public class InstanceTests {
     Assert.assertEquals("ip:4242", instance.target());
     Assert.assertEquals("proxy", instance.role());
     Assert.assertEquals(10002, instance.toEndpoint().getMonitoringPort());
+    Assert.assertEquals(0, Instance.humanizeCompare(instance, instance));
+    Instance other = new Instance(
+        Endpoint.newBuilder()
+            .setCounter(224)
+            .setId("id")
+            .setIp("ip2")
+            .setRole("proxy")
+            .setPort(4242)
+            .setMonitoringPort(10002)
+            .build(),
+        0);
+    Assert.assertEquals(-1, Instance.humanizeCompare(instance, other));
   }
 
   @Test

@@ -106,4 +106,12 @@ public class Instance implements Comparable<Instance> {
     }
     return false;
   }
+
+  public static int humanizeCompare(Instance x, Instance y) {
+    int delta = x.ip.compareTo(y.ip);
+    if (delta == 0) {
+      return x.role.compareTo(y.role);
+    }
+    return delta;
+  }
 }
