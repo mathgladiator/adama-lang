@@ -24,13 +24,7 @@ public class Session {
   public synchronized boolean keepalive() {
     long now = System.currentTimeMillis();
     long timeSinceCreation = now - created;
-    if (timeSinceCreation <= 5 * 60000) {
-      return true;
-    }
     long timeSinceLastActivity = now - lastActivity;
-    if (timeSinceLastActivity <= 2 * 60 * 60000) {
-      return true;
-    }
-    return false;
+    return (timeSinceCreation <= 5 * 60000) || (timeSinceLastActivity <= 2 * 60 * 60000);
   }
 }

@@ -9,11 +9,14 @@
  */
 package org.adamalang.connection;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class SessionTests {
   @Test
   public void coverage() {
-    new Session();
+    Session session = new Session();
+    session.activity();
+    Assert.assertTrue(session.keepalive());
   }
 }

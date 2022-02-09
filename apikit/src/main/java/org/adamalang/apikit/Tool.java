@@ -43,6 +43,7 @@ public class Tool {
     Document doc = builder.parse(input);
     Element api = DocumentHelper.first(doc.getElementsByTagName("api"), "root api node");
     String outputPathStr = DocumentHelper.attribute(api, "output-path");
+    String testOutputPathStr = DocumentHelper.attribute(api, "test-output-path");
     String packageName = DocumentHelper.attribute(api, "package");
     String docsFile = DocumentHelper.attribute(api, "docs");
     String clientFile = DocumentHelper.attribute(api, "client");
@@ -61,6 +62,12 @@ public class Tool {
     if (!(outputPath.exists() && outputPath.isDirectory())) {
       throw new Exception("output path failed to be created");
     }
+    File testOutputPath = new File(root, testOutputPathStr);
+    testOutputPath.mkdirs();
+    if (!(testOutputPath.exists() && testOutputPath.isDirectory())) {
+      throw new Exception("test output path failed to be created");
+    }
+
     HashMap<String, String> apiOutput = new HashMap<>();
     apiOutput.put("ConnectionNexus.java", nexus);
     apiOutput.put("ConnectionRouter.java", router);
@@ -70,16 +77,23 @@ public class Tool {
     apiOutput.putAll(handlerFiles);
     // write out the nexus
     HashMap<File, String> diskWrites = new HashMap<>();
-
     for (Map.Entry<String, String> request : apiOutput.entrySet()) {
       diskWrites.put(new File(outputPath, request.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
     }
+    for (Map.Entry<String, String> request : AssembleTests.make(packageName, methods).entrySet()) {
+      diskWrites.put(new File(testOutputPath, request.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
+    }
+
     diskWrites.put(new File(root, docsFile), AssembleAPIDocs.docify(methods));
     String client = Files.readString(new File(root, clientFile).toPath());
     client = AssembleClient.injectInvoke(client, methods);
     client = AssembleClient.injectResponders(client, responders);
     diskWrites.put(new File(root, clientFile), client);
     return diskWrites;
+  }
+
+  public static void main(String[] args) throws Exception {
+    build("saas/api.xml", new File("."));
   }
 
 }

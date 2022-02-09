@@ -43,6 +43,28 @@ public class ParameterDefinition {
     this.logged = logged;
   }
 
+  public String invent() {
+    if ("identity".equals(name)) {
+      return "_identity";
+    }
+    if ("email".equals(name)) {
+      return "\"x@x.com\"";
+    }
+    switch (type) {
+      case JsonObject:
+        return "Json.newJsonObject()";
+      case Boolean:
+        return "false";
+      case String:
+        return "\"x\"";
+      case Integer:
+        return "42";
+      case Long:
+        return "100L";
+    }
+    throw new NullPointerException();
+  }
+
   public static Map<String, ParameterDefinition> buildMap(Document document) throws Exception {
     TreeMap<String, ParameterDefinition> parameters = new TreeMap<>();
     NodeList list = document.getElementsByTagName("parameter-definition");
