@@ -147,6 +147,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent");
     connection = this.frontend.establish(context);
+    frontend.http();
     emailLatch = new ConcurrentHashMap<>();
   }
 
@@ -164,6 +165,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
     nexus.close();
     clientExecutor.shutdown();
     server.close();
+    connection.kill();
+    connection.keepalive();
   }
 
   @Override

@@ -50,6 +50,9 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("FINISH:{}", c10.next());
       Iterator<String> c11 = fe.execute("{\"id\":8,\"method\":\"connection/send\",\"connection\":100,\"channel\":\"foo\",\"message\":{\"z\":2}}");
       Assert.assertEquals("ERROR:457745", c11.next());
+      Assert.assertEquals("ERROR:438302", fe.execute("{\"id\":1000,\"method\":\"connection/update\",\"connection\":1000,\"viewer-state\":{\"z\":100}}").next());
+      Assert.assertEquals("ERROR:474128", fe.execute("{\"id\":1000,\"method\":\"connection/end\",\"connection\":1000}").next());
+
     }
   }
 }

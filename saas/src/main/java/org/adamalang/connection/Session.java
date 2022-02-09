@@ -9,12 +9,18 @@
  */
 package org.adamalang.connection;
 
+import org.adamalang.transforms.results.AuthenticatedUser;
+
+import java.util.HashMap;
+
 public class Session {
   public final long created;
   private long lastActivity;
+  public HashMap<String, AuthenticatedUser> identityCache;
 
   public Session() {
     this.created = System.currentTimeMillis();
+    this.identityCache = new HashMap<>();
   }
 
   public synchronized void activity() {

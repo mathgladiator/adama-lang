@@ -38,10 +38,6 @@ public class SpacePolicyLocator {
   }
 
   public void execute(Session session, String spaceName, Callback<SpacePolicy> callback) {
-    if (!Validators.simple(spaceName, 127)) {
-      callback.failure(new ErrorCodeException(ErrorCodes.API_SPACE_INVALID_NAME_FOR_LOOKUP));
-      return;
-    }
     SpacePolicy policy = policies.get(spaceName);
     if (policy != null) {
       callback.success(policy);

@@ -90,6 +90,11 @@ public class EndToEnd_AttachTests {
       Assert.assertEquals(1, fe.attachmentRoot.listFiles().length);
       File f = fe.attachmentRoot.listFiles()[0];
       Assert.assertEquals("[This is a chunk][This is a chunk][This is a chunk][This is a chunk][This is a chunk][This is a chunk][This is a chunk][This is a chunk][This is a chunk][This is a chunk]", Files.readString(f.toPath()));
+
+      Iterator<String> c9 = fe.execute("{\"id\":8,\"upload\":120,\"identity\":\"" + devIdentity + "\",\"method\":\"attachment/append\"," + partialJsonChunk(chunkToSend, false) + "}");
+      Assert.assertEquals("ERROR:477201", c9.next());
+      Iterator<String> c10 = fe.execute("{\"id\":8,\"upload\":120,\"identity\":\"" + devIdentity + "\",\"method\":\"attachment/finish\"}");
+      Assert.assertEquals("ERROR:478227", c10.next());
     }
   }
 

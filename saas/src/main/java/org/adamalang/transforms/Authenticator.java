@@ -52,7 +52,11 @@ public class Authenticator {
   }
 
   public void execute(Session session, String identity, Callback<AuthenticatedUser> callback) {
-    // TODO: think about caching and an implicit "@" for use the most recently authenticate key
+    AuthenticatedUser cacheHit = session.identityCache.get(identity);
+    if (cacheHit != null) {
+      callback.success(cacheHit);
+      return;
+    }
     try {
       // TODO: check for Google Prefix
       ParsedToken parsedToken = new ParsedToken(identity);
@@ -68,9 +72,9 @@ public class Authenticator {
                 .requireIssuer("adama")
                 .build()
                 .parseClaimsJws(identity);
-            callback.success(
-                new AuthenticatedUser(
-                    AuthenticatedUser.Source.Adama, userId, new NtClient("" + userId, "adama")));
+            AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Adama, userId, new NtClient("" + userId, "adama"));
+            session.identityCache.put(identity, user);
+            callback.success(user);
             return;
           } catch (Exception ex) {
             // move on
@@ -81,7 +85,9 @@ public class Authenticator {
         String keystoreJson = Authorities.getKeystoreInternal(nexus.dataBaseManagement, parsedToken.iss);
         Keystore keystore = Keystore.parse(keystoreJson);
         NtClient who = keystore.validate(parsedToken.iss, identity);
-        callback.success(new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who));
+        AuthenticatedUser user = new AuthenticatedUser(AuthenticatedUser.Source.Authority, -1, who);
+        session.identityCache.put(identity, user);
+        callback.success(user);
       }
     } catch (Exception ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.AUTH_UNKNOWN_EXCEPTION, ex, LOGGER));

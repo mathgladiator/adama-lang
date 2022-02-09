@@ -80,7 +80,7 @@ public class Tool {
     for (Map.Entry<String, String> request : apiOutput.entrySet()) {
       diskWrites.put(new File(outputPath, request.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
     }
-    for (Map.Entry<String, String> request : AssembleTests.make(packageName, methods).entrySet()) {
+    for (Map.Entry<String, String> request : AssembleTests.make(packageName, methods, responders).entrySet()) {
       diskWrites.put(new File(testOutputPath, request.getKey()), DefaultCopyright.COPYRIGHT_FILE_PREFIX + request.getValue());
     }
 
