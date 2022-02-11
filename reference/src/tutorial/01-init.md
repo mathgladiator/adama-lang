@@ -1,7 +1,7 @@
 # Initializing your developer account
 
 ```shell
-adama init
+java -jar adama.jar init
 ```
 
 This will then prompt you with a blurb of text that outlines that providing your email will be implicit acceptance to Adama's terms, conditions, and privacy policy. You should read them!

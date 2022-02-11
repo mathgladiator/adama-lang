@@ -5,7 +5,7 @@ This is the rough spot of the tutorial since I can't tell you exactly what to ty
 However, I can provide an example of creating a space.
 
 ```shell
-adama space create --space chat001
+java -jar adama.jar space create --space chat001
 ```
 
 And, if you don't see a bloody mess of an error message, then your space is created! Huzzah!
@@ -13,13 +13,13 @@ And, if you don't see a bloody mess of an error message, then your space is crea
 You can poke around the space sub command as well. For instance, you can investigate your options by invoking the help on the space sub command via
 
 ```shell
-adama space help
+java -jar adama.jar space help
 ```
 
 And one option available to you is to list all your spaces via
 
 ```shell
-adama space list
+java -jar adama.jar space list
 ```
 
 For me, using my freshly made account to test this tooling and your experience, produced a list of JSON object containing
