@@ -80,6 +80,15 @@ public formula people_by_age = iterate _records order by age asc;
 public formula youngest_person = iterate _records order by age asc limit 1;
 ```
 
+### offset
+
+With offset, you can skip the first entries with a query.
+
+```adama
+public formula next_youngest_person = iterate _records order by age asc offset 1 limit 1;
+```
+
+
 ### Bulk Assignments
 
 A novel aspect of a reactive list is bulk field assignment, and this allows us to do some nice things. Take the following definition of a Card table representing a deck of cards:
