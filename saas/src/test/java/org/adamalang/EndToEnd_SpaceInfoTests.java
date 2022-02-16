@@ -49,8 +49,8 @@ public class EndToEnd_SpaceInfoTests {
       Iterator<String> c2 =
           fe.execute("{\"id\":2,\"identity\":\"" + alice + "\",\"method\":\"space/list\"}");
       Assert.assertEquals(
-          "STREAM:{\"space\":\"spacename\",\"role\":\"owner\",\"billing\":\"free\",\"created\":",
-          c2.next().substring(0, 70));
+          "STREAM:{\"space\":\"spacename\",\"role\":\"owner\",\"created\":\"",
+          c2.next().substring(0, 54));
       Assert.assertEquals("FINISH:{}", c2.next());
       Iterator<String> c3 =
           fe.execute("{\"id\":3,\"identity\":\"" + bob + "\",\"method\":\"space/list\"}");
@@ -64,8 +64,8 @@ public class EndToEnd_SpaceInfoTests {
       Iterator<String> c5 =
           fe.execute("{\"id\":5,\"identity\":\"" + bob + "\",\"method\":\"space/list\"}");
       Assert.assertEquals(
-          "STREAM:{\"space\":\"spacename\",\"role\":\"developer\",\"billing\":\"free\",\"created\":",
-          c5.next().substring(0, 74));
+          "STREAM:{\"space\":\"spacename\",\"role\":\"developer\",\"created\":\"",
+          c5.next().substring(0, 58));
       Assert.assertEquals("FINISH:{}", c5.next());
       Iterator<String> c6 =
           fe.execute(
