@@ -79,7 +79,9 @@ public int x;
 }
 ```
 
-The ```@construct``` event will fire exactly once when the document is constructed. Constructors can also accept a ```client``` and message argument. For instance, the following is a more representative constructor.
+The ```@construct``` event will fire exactly once when the document is constructed.
+Constructors can also accept a ```client``` and a single message argument.
+For instance, the following is a more representative constructor.
 
 ```adama
 message Arg {
