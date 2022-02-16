@@ -14,17 +14,15 @@ import java.util.Set;
 public class SpaceInfo {
   public final int id;
   public final int owner;
-  public final String billing;
   public final Set<Integer> developers;
-  public final int balance;
+  public final boolean enabled;
   public final long storageBytes;
 
-  public SpaceInfo(int id, int owner, String billing, Set<Integer> developers, int balance, long storageBytes) {
+  public SpaceInfo(int id, int owner, Set<Integer> developers, boolean enabled, long storageBytes) {
     this.id = id;
     this.owner = owner;
-    this.billing = billing;
     this.developers = developers;
-    this.balance = balance;
+    this.enabled = enabled;
     this.storageBytes = storageBytes;
   }
 }

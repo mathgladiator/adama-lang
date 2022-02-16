@@ -27,6 +27,9 @@ public class FrontendManagementInstaller {
         .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`emails` (") //
         .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
         .append("  `email` VARCHAR(128) NOT NULL,") //
+        .append("  `password` TEXT NOT NULL,") //
+        .append("  `balance` INT(4) DEFAULT 0,") //
+        .append("  `credit_carry_limit` INT(4) DEFAULT -500,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
         .append("  `validations` INT(4) UNSIGNED NOT NULL,") //
         .append("  `last_validated` DATETIME NULL,") //
@@ -67,8 +70,7 @@ public class FrontendManagementInstaller {
         .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
         .append("  `owner` INT(4) UNSIGNED NOT NULL,") //
         .append("  `name` VARCHAR(128) NOT NULL,") //
-        .append("  `billing` VARCHAR(16) NOT NULL,") //
-        .append("  `balance` INT(4) DEFAULT 0,") //
+        .append("  `enabled` BOOLEAN DEFAULT TRUE,") //
         .append("  `storage_bytes` INT(8) DEFAULT 0,") //
         .append("  `unbilled_storage_bytes_hours` INT(8) DEFAULT 0,") //
         .append("  `latest_billing_hour` INT(4) UNSIGNED DEFAULT 0,") //

@@ -44,6 +44,23 @@ public class FrontendTests {
         Assert.assertEquals(1, Users.listKeys(dataBase, 1).size());
         Assert.assertEquals(1, Users.expireKeys(dataBase, System.currentTimeMillis() + 10000000L));
         Assert.assertEquals(0, Users.listKeys(dataBase, 1).size());
+        Users.setPasswordHash(dataBase, 1, "hash");
+        Assert.assertEquals("hash", Users.getPasswordHash(dataBase, 1));
+        Assert.assertEquals(500, Users.getBalance(dataBase, 1));
+        Users.addToBalance(dataBase, 1, 250);
+        Assert.assertEquals(750, Users.getBalance(dataBase, 1));
+        try {
+          Users.getPasswordHash(dataBase, 55000);
+          Assert.fail();
+        } catch (ErrorCodeException ece) {
+          Assert.assertEquals(684039, ece.code);
+        }
+        try {
+          Users.getBalance(dataBase, 55000);
+          Assert.fail();
+        } catch (ErrorCodeException ece) {
+          Assert.assertEquals(605208, ece.code);
+        }
       } finally {
         installer.uninstall();
       }
@@ -180,7 +197,7 @@ public class FrontendTests {
         int bob = Users.getOrCreateUserId(dataBase, "bob@x.com");
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
         Assert.assertEquals(1, Spaces.createSpace(dataBase, alice, "space1"));
-        Assert.assertEquals(1, Spaces.getSpaceId(dataBase, "space1").id);
+        Assert.assertEquals(1, Spaces.getSpaceInfo(dataBase, "space1").id);
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
         Assert.assertEquals(2, Spaces.createSpace(dataBase, bob, "space2"));
         Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
@@ -200,7 +217,7 @@ public class FrontendTests {
         } catch (ErrorCodeException ex) {
           Assert.assertEquals(679948, ex.code);
         }
-        Assert.assertEquals(2, Spaces.getSpaceId(dataBase, "space2").id);
+        Assert.assertEquals(2, Spaces.getSpaceInfo(dataBase, "space2").id);
         Assert.assertEquals("{}", Spaces.getPlan(dataBase, 1));
         Assert.assertEquals("{}", Spaces.getPlan(dataBase, 2));
         Spaces.setPlan(dataBase, 1, "{\"x\":1}", "h1");
@@ -210,8 +227,6 @@ public class FrontendTests {
         Assert.assertEquals("h2", iPlan.hash);
         Assert.assertEquals("{\"x\":2}", iPlan.plan);
 
-        Spaces.setBilling(dataBase, 1, "fixed50");
-        Spaces.setBilling(dataBase, 2, "open");
         Assert.assertEquals("{\"x\":1}", Spaces.getPlan(dataBase, 1));
         Assert.assertEquals("{\"x\":2}", Spaces.getPlan(dataBase, 2));
         {
@@ -223,13 +238,11 @@ public class FrontendTests {
           Assert.assertEquals("space2", ls2.get(0).name);
           Assert.assertEquals("owner", ls1.get(0).callerRole);
           Assert.assertEquals("owner", ls2.get(0).callerRole);
-          Assert.assertEquals("fixed50", ls1.get(0).billing);
-          Assert.assertEquals("open", ls2.get(0).billing);
         }
         Spaces.setRole(dataBase, 2, alice, Role.Developer);
         {
-          SpaceInfo spaceInfo1 = Spaces.getSpaceId(dataBase, "space1");
-          SpaceInfo spaceInfo2 = Spaces.getSpaceId(dataBase, "space2");
+          SpaceInfo spaceInfo1 = Spaces.getSpaceInfo(dataBase, "space1");
+          SpaceInfo spaceInfo2 = Spaces.getSpaceInfo(dataBase, "space2");
           Assert.assertTrue(spaceInfo1.developers.contains(1));
           Assert.assertTrue(spaceInfo2.developers.contains(1));
           Assert.assertTrue(spaceInfo2.developers.contains(2));
@@ -274,7 +287,7 @@ public class FrontendTests {
           Assert.assertEquals(679948, ex.code);
         }
         try {
-          Spaces.getSpaceId(dataBase, "space3");
+          Spaces.getSpaceInfo(dataBase, "space3");
           Assert.fail();
         } catch (ErrorCodeException ex) {
           Assert.assertEquals(625678, ex.code);
@@ -293,7 +306,7 @@ public class FrontendTests {
         }
         {
           Assert.assertEquals(2, Spaces.list(dataBase, bob, null, 5).size());
-          int space1 = Spaces.getSpaceId(dataBase,"space1").id;
+          int space1 = Spaces.getSpaceInfo(dataBase,"space1").id;
           Spaces.delete(dataBase, space1, alice);
           Assert.assertEquals(2, Spaces.list(dataBase, bob, null, 5).size());
           Spaces.delete(dataBase, space1, bob);

@@ -12,17 +12,15 @@ package org.adamalang.mysql.frontend.data;
 public class SpaceListingItem {
   public final String name;
   public final String callerRole;
-  public final String billing;
   public final String created;
-  public final int balance;
+  public final boolean enabled;
   public final long storageBytes;
 
-  public SpaceListingItem(String name, String callerRole, String billing, String created, int balance, long storageBytes) {
+  public SpaceListingItem(String name, String callerRole, String created, boolean enabled, long storageBytes) {
     this.name = name;
     this.callerRole = callerRole;
-    this.billing = billing;
     this.created = created;
-    this.balance = balance;
+    this.enabled = enabled;
     this.storageBytes = storageBytes;
   }
 }

@@ -77,7 +77,7 @@ public class Billing {
     long pennies_billed = 0;
     try (Connection connection = dataBase.pool.getConnection()) {
       for (Map.Entry<String, MeteringSpaceSummary> entry : summaries.entrySet()) {
-        String sql = new StringBuilder("SELECT `id`,`latest_billing_hour` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
+        String sql = new StringBuilder("SELECT `id`,`latest_billing_hour`,`owner` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
           statement.setString(1, entry.getKey());
           try (ResultSet rs = statement.executeQuery()) {
@@ -85,6 +85,7 @@ public class Billing {
               // we found it
               int spaceId = rs.getInt(1);
               int latestBillingHour = rs.getInt(2);
+              int ownerId = rs.getInt(3);
               if (latestBillingHour < hour) {
                 MeteredWindowSummary summary = entry.getValue().summarize(rates);
                 String sqlInsertLog = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`bills` (`space`, `hour`, `summary`, `pennies`) VALUES (?,?,?,?)").toString();
@@ -96,14 +97,15 @@ public class Billing {
                   statementInsertLog.execute();
                   pennies_billed += summary.pennies;
                 }
-                String sqlUpdateSpace = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `balance`=`balance`-?, `latest_billing_hour`=?, `storage_bytes`=?, `unbilled_storage_bytes_hours`=`unbilled_storage_bytes_hours`+? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
+                String sqlUpdateSpace = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `latest_billing_hour`=?, `storage_bytes`=?, `unbilled_storage_bytes_hours`=`unbilled_storage_bytes_hours`+? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
                 try (PreparedStatement statementUpdateSpace = connection.prepareStatement(sqlUpdateSpace)) {
-                  statementUpdateSpace.setInt(1, summary.pennies);
-                  statementUpdateSpace.setInt(2, hour);
-                  statementUpdateSpace.setLong(3, summary.storageBytes);
-                  statementUpdateSpace.setLong(4, summary.changeUnbilledStorageByteHours);
+                  statementUpdateSpace.setInt(1, hour);
+                  statementUpdateSpace.setLong(2, summary.storageBytes);
+                  statementUpdateSpace.setLong(3, summary.changeUnbilledStorageByteHours);
                   statementUpdateSpace.execute();
                 }
+                String sqlUpdateDeveloperBalance = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `balance`=`balance`-").append(summary.pennies).append(" WHERE `id`=").append(ownerId).append(" LIMIT 1").toString();
+                DataBase.execute(connection, sqlUpdateDeveloperBalance);
               }
             }
           }

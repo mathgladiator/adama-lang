@@ -9,6 +9,8 @@
  */
 package org.adamalang.mysql.frontend;
 
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.data.IdHashPairing;
 
@@ -35,13 +37,76 @@ public class Users {
       }
 
       {
-        String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`emails` (`email`, `validations`) VALUES (?, 0)").toString();
+        String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`emails` (`email`, `balance`, `password`, `validations`) VALUES (?, 500, '', 0)").toString();
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
           statement.setString(1, email);
           statement.execute();
           return DataBase.getInsertId(statement);
         }
       }
+    }
+  }
+
+  public static void setPasswordHash(DataBase dataBase, int userId, String pwHash) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `password` = ? WHERE `id`=").append(userId).toString();
+      try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        statement.setString(1, pwHash);
+        statement.execute();
+      }
+    }
+  }
+
+  public static String getPasswordHash(DataBase dataBase, int userId) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      {
+        String sql = new StringBuilder("SELECT `password` FROM `").append(dataBase.databaseName).append("`.`emails` WHERE `id`=").append(userId).toString();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+          try (ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+              return rs.getString(1);
+            } else {
+              throw new ErrorCodeException(ErrorCodes.USER_NOT_FOUND_GET_PASSWORD);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public static int getBalance(DataBase dataBase, int userId) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      {
+        String sql = new StringBuilder("SELECT `balance` FROM `").append(dataBase.databaseName).append("`.`emails` WHERE `id`=").append(userId).toString();
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+          try (ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+              return rs.getInt(1);
+            } else {
+              throw new ErrorCodeException(ErrorCodes.USER_NOT_FOUND_GET_BALANCE);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  public static void addToBalance(DataBase dataBase, int userId, int balanceToAdd) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sqlAddToBalance = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `balance` = `balance` + ").append(balanceToAdd).append(" WHERE `id`=").append(userId).toString();
+      DataBase.execute(connection, sqlAddToBalance);
+      String sqlReEnableSpaces = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `enabled`=TRUE WHERE `owner`=").append(userId).toString();
+      DataBase.execute(connection, sqlReEnableSpaces);
+    }
+  }
+
+  public static void disableSweep(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sqlFindErrantCustomers = new StringBuilder().append("SELECT `id` FROM `").append(dataBase.databaseName).append("`.`emails` WHERE `balance` < `credit_carry_limit`").toString();
+      DataBase.walk(connection, (rs) -> {
+        String sqlReEnableSpaces = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `enabled`=FALSE WHERE `owner`=").append(rs.getInt(1)).toString();
+        DataBase.execute(connection, sqlReEnableSpaces);
+      }, sqlFindErrantCustomers);
     }
   }
 

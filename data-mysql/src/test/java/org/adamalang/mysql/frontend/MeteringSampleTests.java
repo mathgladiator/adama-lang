@@ -33,7 +33,8 @@ public class MeteringSampleTests {
         installer.install();
         Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));
         Assert.assertNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
-        int spaceId = Spaces.createSpace(dataBase, 42, "space");
+        int userId = Users.getOrCreateUserId(dataBase, "user@user.com");
+        int spaceId = Spaces.createSpace(dataBase, userId, "space");
         Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
         long now = System.currentTimeMillis();
         Metering.recordBatch(dataBase, "target1", "{\"time\":\"" + (now - 100000000) + "\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":29}}}", now);
@@ -62,14 +63,9 @@ public class MeteringSampleTests {
           Assert.assertEquals(-999997952, summarySpace2.changeUnbilledStorageByteHours);
           Assert.assertEquals(1, summarySpace2.pennies);
         }
-        SpaceInfo spaceInfoBefore = Spaces.getSpaceId(dataBase, "space");
+        Assert.assertEquals(500, Users.getBalance(dataBase, userId));
         Billing.transcribeSummariesAndUpdateBalances(dataBase, 52, summary1, rates);
-        SpaceInfo spaceInfoAfter = Spaces.getSpaceId(dataBase, "space");
-        Assert.assertEquals(0, spaceInfoBefore.balance);
-        Assert.assertEquals(-29626, spaceInfoAfter.balance);
-        Spaces.creditBalance(dataBase, spaceId, 30000);
-        SpaceInfo spaceInfoAfter2 = Spaces.getSpaceId(dataBase, "space");
-        Assert.assertEquals(374, spaceInfoAfter2.balance);
+        Assert.assertEquals(-29126, Users.getBalance(dataBase, userId));
         Assert.assertEquals(52, (int) Spaces.getLatestBillingHourCode(dataBase));
         HashMap<String, Long> unbilledAfter = Spaces.collectUnbilledStorage(dataBase);
         Assert.assertEquals(1024, (long) unbilledAfter.get("space"));
@@ -99,7 +95,8 @@ public class MeteringSampleTests {
         installer.install();
         Assert.assertNull(Spaces.getLatestBillingHourCode(dataBase));
         Assert.assertNull(Metering.getEarliestRecordTimeOfCreation(dataBase));
-        int spaceId = Spaces.createSpace(dataBase, 42, "space");
+        int userId = Users.getOrCreateUserId(dataBase, "user@user.com");
+        int spaceId = Spaces.createSpace(dataBase, userId, "space");
         Assert.assertEquals(0, (int) Spaces.getLatestBillingHourCode(dataBase));
         long now = System.currentTimeMillis();
         Metering.recordBatch(dataBase, "target1", "{\"time\":\"" + (now - 10000) + "\",\"spaces\":{\"space\":{\"cpu\":\"14812904860\",\"messages\":\"2830000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":29}}}", now);
@@ -128,14 +125,9 @@ public class MeteringSampleTests {
           Assert.assertEquals(-999997952, summarySpace2.changeUnbilledStorageByteHours);
           Assert.assertEquals(1, summarySpace2.pennies);
         }
-        SpaceInfo spaceInfoBefore = Spaces.getSpaceId(dataBase, "space");
+        Assert.assertEquals(500, Users.getBalance(dataBase, userId));
         Billing.transcribeSummariesAndUpdateBalances(dataBase, 52, summary1, rates);
-        SpaceInfo spaceInfoAfter = Spaces.getSpaceId(dataBase, "space");
-        Assert.assertEquals(0, spaceInfoBefore.balance);
-        Assert.assertEquals(-29626, spaceInfoAfter.balance);
-        Spaces.creditBalance(dataBase, spaceId, 30000);
-        SpaceInfo spaceInfoAfter2 = Spaces.getSpaceId(dataBase, "space");
-        Assert.assertEquals(374, spaceInfoAfter2.balance);
+        Assert.assertEquals(-29126, Users.getBalance(dataBase, userId));
         Assert.assertEquals(52, (int) Spaces.getLatestBillingHourCode(dataBase));
         HashMap<String, Long> unbilledAfter = Spaces.collectUnbilledStorage(dataBase);
         Assert.assertEquals(1024, (long) unbilledAfter.get("space"));
@@ -150,6 +142,12 @@ public class MeteringSampleTests {
         Assert.assertEquals(8, usages.get(0).documents);
         Assert.assertEquals(48, usages.get(0).connections);
 
+        Assert.assertTrue(Spaces.getSpaceInfo(dataBase, "space").enabled);
+        Users.disableSweep(dataBase);
+        Assert.assertFalse(Spaces.getSpaceInfo(dataBase, "space").enabled);
+        Users.addToBalance(dataBase, userId, 50000);
+        Assert.assertEquals(50000-29126, Users.getBalance(dataBase, userId));
+        Assert.assertTrue(Spaces.getSpaceInfo(dataBase, "space").enabled);
       } finally {
         installer.uninstall();
       }

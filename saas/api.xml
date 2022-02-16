@@ -250,15 +250,15 @@
         </documentation>
     </field-definition>
 
-    <field-definition name="role" type="string">
+    <field-definition name="enabled" type="boolean">
         <documentation>
-            Each developer has a role to a document
+            Is the item in question enabled
         </documentation>
     </field-definition>
 
-    <field-definition name="billing" type="string">
+    <field-definition name="role" type="string">
         <documentation>
-            Where the bill is sent for this space
+            Each developer has a role to a document
         </documentation>
     </field-definition>
 
@@ -338,9 +338,8 @@
     <responder name="space-listing" stream="true">
         <field name="space"/>
         <field name="role"/>
-        <field name="billing"/>
         <field name="created"/>
-        <field name="balance"/>
+        <field name="enabled"/>
         <field name="storage-bytes"/>
     </responder>
 

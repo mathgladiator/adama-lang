@@ -58,7 +58,7 @@ public class Spaces {
           }
         }
       }
-      String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`spaces` (`owner`, `name`, `plan`, `hash`, `billing`) VALUES (?,?,'{}', '', 'free')").toString();
+      String sql = new StringBuilder().append("INSERT INTO `").append(dataBase.databaseName).append("`.`spaces` (`owner`, `name`, `plan`, `hash`) VALUES (?,?,'{}', '')").toString();
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setInt(1, userId);
         statement.setString(2, space);
@@ -70,9 +70,9 @@ public class Spaces {
     }
   }
 
-  public static SpaceInfo getSpaceId(DataBase dataBase, String space) throws Exception {
+  public static SpaceInfo getSpaceInfo(DataBase dataBase, String space) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `id`,`owner`,`billing`,`balance`,`storage_bytes` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
+      String sql = new StringBuilder("SELECT `id`,`owner`,`enabled`,`storage_bytes` FROM `").append(dataBase.databaseName).append("`.`spaces` WHERE name=?").toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
         try (ResultSet rs = statement.executeQuery()) {
@@ -88,7 +88,7 @@ public class Spaces {
                   break;
               }
             }, sqlGrants);
-            return new SpaceInfo(rs.getInt(1), owner, rs.getString(3), developers, rs.getInt(4), rs.getLong(5));
+            return new SpaceInfo(rs.getInt(1), owner, developers, rs.getBoolean(3), rs.getLong(2));
           }
           throw new ErrorCodeException(ErrorCodes.FRONTEND_SPACE_DOESNT_EXIST);
         }
@@ -102,26 +102,6 @@ public class Spaces {
       try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, plan);
         statement.setString(2, hash);
-        statement.execute();
-      }
-    }
-  }
-
-  public static void creditBalance(DataBase dataBase, int spaceId, int balance) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `balance`=`balance`+? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
-      try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-        statement.setInt(1, balance);
-        statement.execute();
-      }
-    }
-  }
-
-  public static void setBilling(DataBase dataBase, int spaceId, String billing) throws Exception {
-    try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`spaces` SET `billing`=? WHERE `id`=").append(spaceId).append(" LIMIT 1").toString();
-      try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-        statement.setString(1, billing);
         statement.execute();
       }
     }
@@ -159,7 +139,7 @@ public class Spaces {
   public static List<SpaceListingItem> list(DataBase dataBase, int userId, String marker, int limit) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       // select * from a LEFT OUTER JOIN b on a.a = b.b;
-      String sql = new StringBuilder("SELECT `s`.`name`,`s`.`owner`,`s`.`billing`,`s`.`created`,`s`.`balance`,`s`.`storage_bytes` FROM `").append(dataBase.databaseName) //
+      String sql = new StringBuilder("SELECT `s`.`name`,`s`.`owner`,`s`.`created`,`s`.`enabled`,`s`.`storage_bytes` FROM `").append(dataBase.databaseName) //
           .append("`.`spaces` as `s` LEFT OUTER JOIN `").append(dataBase.databaseName).append("`.`grants` as `g` ON `s`.`id` = `g`.`space`") //
           .append(" WHERE (`s`.owner=").append(userId).append(" OR `g`.`user`=").append(userId).append(") AND `s`.`name`>? ORDER BY `s`.`name` ASC LIMIT ").append(limit).toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -168,7 +148,7 @@ public class Spaces {
           ArrayList<SpaceListingItem> names = new ArrayList<>();
           while (rs.next()) {
             boolean isOwner = rs.getInt(2) == userId;
-            names.add(new SpaceListingItem(rs.getString(1), isOwner ? "owner" : "developer", rs.getString(3), rs.getDate(4).toString(), rs.getInt(5), rs.getLong(6)));
+            names.add(new SpaceListingItem(rs.getString(1), isOwner ? "owner" : "developer", rs.getDate(3).toString(), rs.getBoolean(4), rs.getLong(5)));
           }
           return names;
         }

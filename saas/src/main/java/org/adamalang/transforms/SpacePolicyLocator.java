@@ -47,7 +47,7 @@ public class SpacePolicyLocator {
       @Override
       public void execute() throws Exception {
         try {
-          SpaceInfo space = Spaces.getSpaceId(dataBase, spaceName);
+          SpaceInfo space = Spaces.getSpaceInfo(dataBase, spaceName);
           policies.putIfAbsent(spaceName, new SpacePolicy(space));
           callback.success(policies.get(spaceName));
         } catch (Exception ex) {

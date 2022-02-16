@@ -22,13 +22,12 @@ public class SpaceListingResponder {
     this.responder = responder;
   }
 
-  public void next(String space, String role, String billing, String created, Integer balance, Long storageBytes) {
+  public void next(String space, String role, String created, Boolean enabled, Long storageBytes) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
     _obj.put("space", space);
     _obj.put("role", role);
-    _obj.put("billing", billing);
     _obj.put("created", created);
-    _obj.put("balance", balance);
+    _obj.put("enabled", enabled);
     _obj.put("storage-bytes", storageBytes);
     responder.stream(_obj.toString());
   }

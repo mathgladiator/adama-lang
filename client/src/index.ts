@@ -125,9 +125,8 @@ export interface SimpleResponder {
 export interface SpaceListingPayload {
   space: string;
   role: string;
-  billing: string;
   created: string;
-  balance: number;
+  enabled: boolean;
   storageBytes: string;
 }
 

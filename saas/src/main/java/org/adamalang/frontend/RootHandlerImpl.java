@@ -328,7 +328,7 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.who.source == AuthenticatedUser.Source.Adama) {
         for (SpaceListingItem spaceListingItem : Spaces.list(nexus.dataBaseManagement, request.who.id, request.marker, request.limit == null ? 100 : request.limit)) {
-          responder.next(spaceListingItem.name, spaceListingItem.callerRole, spaceListingItem.billing, spaceListingItem.created, spaceListingItem.balance, spaceListingItem.storageBytes);
+          responder.next(spaceListingItem.name, spaceListingItem.callerRole, spaceListingItem.created, spaceListingItem.enabled, spaceListingItem.storageBytes);
         }
         responder.finish();
       } else {
