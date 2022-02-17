@@ -22,15 +22,16 @@ public class Init {
     System.out.println("");
     System.out.println("Before you begin, you should read " + Util.prefix("terms & conditions", Util.ANSI.Yellow) + " on the website:");
     System.out.println();
-    System.out.println("  TODO: URL to terms and conditions");
+    System.out.println("  http://www.adama-platform.com/terms-and-conditions.html");
     System.out.println();
     System.out.println("Also, you should read the " + Util.prefix("privacy policy", Util.ANSI.Yellow) + " on the website as well:");
     System.out.println();
-    System.out.println("  TODO: URL to privacy policy");
+    System.out.println("  http://www.adama-platform.com/privacy.html");
     System.out.println();
     System.out.println("This tool is about to ask for your email, and that is used as your developer account id." +
-        " As of 2022-02-09, the email is only used for account verification, but we reserve the " + Util.prefix("option to use for updates in the future.", Util.ANSI.Yellow) +
-        " We haven't yet written the code to dump emails into software which will handle that for us, and if we are successful enough with traction then we will not need to.");
+        " As of 2022-02-17, the email is only used for account verification, but we reserve the " + Util.prefix("option to use for updates in the future.", Util.ANSI.Yellow) +
+        " We will never share with third parties because tools to distribute updates." +
+        " Heck! we haven't yet written the code to dump emails into software which will handle that for us, and if we are successful enough with traction then we will not need to.");
     System.out.println();
     System.out.print("So, look, go tell your friends about how neat this software is and then we will be too busy with feature requests to even hire a marketing person.");
     System.out.println();
