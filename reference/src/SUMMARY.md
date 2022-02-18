@@ -17,6 +17,7 @@
   - [WebRTC Signalling](./examples/webrtc-signals.md)
   - [Home Inventory](./examples/home-inventory.md)
   - [Expenses](./examples/expenses.md)
+  - [A silly example to tour features](./examples/silly.md)
 - [Language Guide](./guide/start.md)
   - [Static policies and document events](./guide/static-policies-document-events.md)
   - [Document layout with types](./guide/document-layout-and-types.md)

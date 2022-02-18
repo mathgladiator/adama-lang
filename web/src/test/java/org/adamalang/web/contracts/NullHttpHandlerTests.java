@@ -15,6 +15,7 @@ import org.junit.Test;
 public class NullHttpHandlerTests {
   @Test
   public void coverage() {
-    Assert.assertNull(HttpHandler.NULL.handle(""));
+    Assert.assertNull(HttpHandler.NULL.handleGet(""));
+    Assert.assertNull(HttpHandler.NULL.handlePost("", null));
   }
 }

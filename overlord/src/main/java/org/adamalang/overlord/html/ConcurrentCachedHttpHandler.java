@@ -12,6 +12,7 @@ package org.adamalang.overlord.html;
 import org.adamalang.web.contracts.HttpHandler;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /** a very dumb handler with no logic; just show what is in the map */
@@ -23,7 +24,7 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
   }
 
   @Override
-  public HttpResult handle(String uri) {
+  public HttpResult handleGet(String uri) {
     return uris.get(uri);
   }
 
@@ -33,5 +34,10 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
 
   public void put(String uri, HttpResult result) {
     uris.put(uri, result);
+  }
+
+  @Override
+  public HttpResult handlePost(String uri, HashMap<String, String> parameters) {
+    return null;
   }
 }

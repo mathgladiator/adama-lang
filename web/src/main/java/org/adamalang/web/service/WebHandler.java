@@ -31,7 +31,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
-    HttpHandler.HttpResult httpResult = httpHandler.handle(req.uri());
+    HttpHandler.HttpResult httpResult = httpHandler.handleGet(req.uri());
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
     // send the default response for bad or health checks
     final HttpResponseStatus status;

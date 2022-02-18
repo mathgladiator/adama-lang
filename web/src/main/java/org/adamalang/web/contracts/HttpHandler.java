@@ -9,8 +9,20 @@
  */
 package org.adamalang.web.contracts;
 
+import java.util.HashMap;
+
 public interface HttpHandler {
-  HttpHandler NULL = uri -> null;
+  HttpHandler NULL = new HttpHandler() {
+    @Override
+    public HttpResult handleGet(String uri) {
+      return null;
+    }
+
+    @Override
+    public HttpResult handlePost(String uri, HashMap<String, String> parameters) {
+      return null;
+    }
+  };
 
   public static class HttpResult {
     public final String contentType;
@@ -22,5 +34,7 @@ public interface HttpHandler {
     }
   }
 
-  HttpResult handle(String uri);
+  HttpResult handleGet(String uri);
+
+  HttpResult handlePost(String uri, HashMap<String, String> parameters);
 }

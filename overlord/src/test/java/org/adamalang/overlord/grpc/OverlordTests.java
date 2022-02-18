@@ -10,15 +10,10 @@
 package org.adamalang.overlord.grpc;
 
 import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.grpc.server.Server;
-import org.adamalang.grpc.server.ServerMetrics;
-import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
-import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.web.contracts.HttpHandler;
 import org.junit.Assert;
 import org.junit.Test;
@@ -49,9 +44,9 @@ public class OverlordTests {
       server.put("/ninja", new HttpHandler.HttpResult("text/plain", "text".getBytes(StandardCharsets.UTF_8)));
       int attempts = 50;
       while (attempts-- > 0) {
-        HttpHandler.HttpResult resultOfNinja = handler.handle("/ninja");
-        HttpHandler.HttpResult resultOfNinja2 = handler.handle("/ninja2");
-        HttpHandler.HttpResult heatResult = handler.handle("/heat");
+        HttpHandler.HttpResult resultOfNinja = handler.handleGet("/ninja");
+        HttpHandler.HttpResult resultOfNinja2 = handler.handleGet("/ninja2");
+        HttpHandler.HttpResult heatResult = handler.handleGet("/heat");
         if (heatResult != null) {
           String htmlHeat = new String(heatResult.body);
           if (htmlHeat.contains("127.0.0.1:10001")) {
