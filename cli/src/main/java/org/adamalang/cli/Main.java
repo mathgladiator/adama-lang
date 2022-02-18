@@ -29,6 +29,9 @@ public class Main {
       case "aws":
         AWS.execute(config, next);
         return;
+      case "business":
+        Business.execute(config, next);
+        return;
       case "code":
         Code.execute(config, next);
         return;
@@ -76,6 +79,7 @@ public class Main {
     System.out.println(Util.prefix("SUBCOMMANDS:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("authority", Util.ANSI.Green) + "         Manage authorities");
     System.out.println("    " + Util.prefix("aws", Util.ANSI.Green) + "               Tools for working with AWS");
+    System.out.println("    " + Util.prefix("business", Util.ANSI.Green) + "          Business tools to support developers");
     System.out.println("    " + Util.prefix("code", Util.ANSI.Green) + "              Local developer tools");
     System.out.println("    " + Util.prefix("contrib", Util.ANSI.Green) + "           Open source contributor tools");
     System.out.println("    " + Util.prefix("database", Util.ANSI.Green) + "          Prepare database for usage");
