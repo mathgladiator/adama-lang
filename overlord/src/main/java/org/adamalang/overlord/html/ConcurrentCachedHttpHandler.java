@@ -37,7 +37,7 @@ public class ConcurrentCachedHttpHandler implements HttpHandler {
   }
 
   @Override
-  public HttpResult handlePost(String uri, HashMap<String, String> parameters) {
+  public HttpResult handlePost(String uri, String body) {
     return null;
   }
 }

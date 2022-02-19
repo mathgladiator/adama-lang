@@ -27,7 +27,7 @@ public class ServiceBaseJustHtmlTests {
       }
 
       @Override
-      public HttpResult handlePost(String uri, HashMap<String, String> parameters) {
+      public HttpResult handlePost(String uri, String body) {
         return new HttpResult("post", "post".getBytes(StandardCharsets.UTF_8));
       }
     });

@@ -40,21 +40,9 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     try {
       if (req.method() == HttpMethod.POST) {
         metrics.webhandler_post.run();
-        HashMap<String, String> parameters = new HashMap<>();
         byte[] memory = new byte[req.content().readableBytes()];
         req.content().readBytes(memory);
-        JsonNode node = new JsonMapper().readTree(memory);
-        if (node.isObject()) {
-          Iterator<Map.Entry<String, JsonNode>> it = node.fields();
-          while (it.hasNext()) {
-            Map.Entry<String, JsonNode> entry = it.next();
-            JsonNode value = entry.getValue();
-            if (value != null && (value.isTextual() || value.isNumber())) {
-              parameters.put(entry.getKey(), value.isTextual() ? value.textValue() : value.toString());
-            }
-          }
-        }
-        httpResult = httpHandler.handlePost(req.uri(), parameters);
+        httpResult = httpHandler.handlePost(req.uri(), new String(memory, StandardCharsets.UTF_8));
       } else {
         metrics.webhandler_get.run();
         httpResult = httpHandler.handleGet(req.uri());

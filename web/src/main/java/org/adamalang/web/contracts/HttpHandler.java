@@ -9,6 +9,9 @@
  */
 package org.adamalang.web.contracts;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import org.adamalang.common.Json;
+
 import java.util.HashMap;
 
 public interface HttpHandler {
@@ -19,7 +22,7 @@ public interface HttpHandler {
     }
 
     @Override
-    public HttpResult handlePost(String uri, HashMap<String, String> parameters) {
+    public HttpResult handlePost(String uri, String body) {
       return null;
     }
   };
@@ -36,5 +39,5 @@ public interface HttpHandler {
 
   HttpResult handleGet(String uri);
 
-  HttpResult handlePost(String uri, HashMap<String, String> parameters);
+  HttpResult handlePost(String uri, String body);
 }
