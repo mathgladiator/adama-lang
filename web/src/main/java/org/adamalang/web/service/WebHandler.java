@@ -16,10 +16,8 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
-import org.adamalang.common.Json;
 import org.adamalang.web.contracts.HttpHandler;
 
-import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,6 +39,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     HttpHandler.HttpResult httpResult = null;
     try {
       if (req.method() == HttpMethod.POST) {
+        metrics.webhandler_post.run();
         HashMap<String, String> parameters = new HashMap<>();
         byte[] memory = new byte[req.content().readableBytes()];
         req.content().readBytes(memory);
@@ -57,10 +56,15 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
         }
         httpResult = httpHandler.handlePost(req.uri(), parameters);
       } else {
+        metrics.webhandler_get.run();
         httpResult = httpHandler.handleGet(req.uri());
       }
     } catch (Exception exception) {
       httpResult = null;
+      metrics.webhandler_exception.run();
+    }
+    if (httpResult != null) {
+      metrics.webhandler_found.run();
     }
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
     // send the default response for bad or health checks
@@ -68,6 +72,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     final byte[] content;
     final String contentType;
     if (isHealthCheck) {
+      metrics.webhandler_healthcheck.run();
       status = HttpResponseStatus.OK;
       content = ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8);
       contentType = "text/text; charset=UTF-8";

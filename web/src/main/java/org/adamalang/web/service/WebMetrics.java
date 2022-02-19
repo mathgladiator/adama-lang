@@ -18,6 +18,11 @@ public class WebMetrics {
   public final Runnable websockets_send_heartbeat;
   public final Runnable websockets_heartbeat_failure;
   public final Runnable websocket_server_heartbeat;
+  public final Runnable webhandler_get;
+  public final Runnable webhandler_post;
+  public final Runnable webhandler_exception;
+  public final Runnable webhandler_found;
+  public final Runnable webhandler_healthcheck;
 
   public WebMetrics(MetricsFactory factory) {
     this.websockets_active = factory.inflight("websockets_active");
@@ -25,5 +30,11 @@ public class WebMetrics {
     this.websockets_send_heartbeat = factory.counter("websockets_send_heartbeat");
     this.websockets_heartbeat_failure = factory.counter("websockets_heartbeat_failure");
     this.websocket_server_heartbeat = factory.counter("websocket_server_heartbeat");
+
+    this.webhandler_get = factory.counter("webhandler_get");
+    this.webhandler_post = factory.counter("webhandler_post");
+    this.webhandler_exception = factory.counter("webhandler_exception");
+    this.webhandler_found = factory.counter("webhandler_found");
+    this.webhandler_healthcheck = factory.counter("webhandler_healthcheck");
   }
 }
