@@ -9,11 +9,6 @@
  */
 package org.adamalang.web.contracts;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import org.adamalang.common.Json;
-
-import java.util.HashMap;
-
 public interface HttpHandler {
   HttpHandler NULL = new HttpHandler() {
     @Override
