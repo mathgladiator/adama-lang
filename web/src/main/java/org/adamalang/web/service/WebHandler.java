@@ -9,14 +9,21 @@
  */
 package org.adamalang.web.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import org.adamalang.common.Json;
 import org.adamalang.web.contracts.HttpHandler;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebConfig webConfig;
@@ -31,7 +38,30 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
 
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final FullHttpRequest req) throws Exception {
-    HttpHandler.HttpResult httpResult = httpHandler.handleGet(req.uri());
+    HttpHandler.HttpResult httpResult = null;
+    try {
+      if (req.method() == HttpMethod.POST) {
+        HashMap<String, String> parameters = new HashMap<>();
+        byte[] memory = new byte[req.content().readableBytes()];
+        req.content().readBytes(memory);
+        JsonNode node = new JsonMapper().readTree(memory);
+        if (node.isObject()) {
+          Iterator<Map.Entry<String, JsonNode>> it = node.fields();
+          while (it.hasNext()) {
+            Map.Entry<String, JsonNode> entry = it.next();
+            JsonNode value = entry.getValue();
+            if (value != null && (value.isTextual() || value.isNumber())) {
+              parameters.put(entry.getKey(), value.isTextual() ? value.textValue() : value.toString());
+            }
+          }
+        }
+        httpResult = httpHandler.handlePost(req.uri(), parameters);
+      } else {
+        httpResult = httpHandler.handleGet(req.uri());
+      }
+    } catch (Exception exception) {
+      httpResult = null;
+    }
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
     // send the default response for bad or health checks
     final HttpResponseStatus status;

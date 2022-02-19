@@ -31,9 +31,9 @@ public class WebHandlerTests {
       {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
-            .server("localhost", 52000)
-            .get("/x")
-            .execute(callback);
+          .server("localhost", 52000)
+          .get("/x")
+          .execute(callback);
         callback.awaitFailedToConnect();
       }
 
@@ -50,9 +50,39 @@ public class WebHandlerTests {
       {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
-                                .server("localhost", webConfig.port)
-                                .get("/foo")
-                                .execute(callback);
+            .server("localhost", webConfig.port)
+            .get("/crash")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .post("/crash", "{}")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+          .server("localhost", webConfig.port)
+          .post("/p", "{\"v\":123,\"u\":\"hi\"}")
+          .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("123:hi");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+          .server("localhost", webConfig.port)
+          .get("/foo")
+          .execute(callback);
         callback.awaitFirst();
         callback.assertData("goo");
       }

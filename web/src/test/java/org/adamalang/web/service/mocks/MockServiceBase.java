@@ -81,10 +81,20 @@ public class MockServiceBase implements ServiceBase {
         if ("/foo".equals(uri)){
           return new HttpHandler.HttpResult("text/html; charset=UTF-8", "goo".getBytes(StandardCharsets.UTF_8));
         }
-        return null;      }
+        if ("/crash".equals(uri)) {
+          throw new NullPointerException();
+        }
+        return null;
+      }
 
       @Override
       public HttpResult handlePost(String uri, HashMap<String, String> parameters) {
+        if ("/p".equals(uri)){
+          return new HttpHandler.HttpResult("text/html; charset=UTF-8", (parameters.get("v") + ":" + parameters.get("u")).getBytes(StandardCharsets.UTF_8));
+        }
+        if ("/crash".equals(uri)) {
+          throw new NullPointerException();
+        }
         return null;
       }
     };
