@@ -13,15 +13,18 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.ConfigObject;
+import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.extern.aws.AWSConfig;
 import org.adamalang.extern.aws.AWSMetrics;
 import org.adamalang.extern.aws.SES;
 
+import java.util.ArrayList;
+
 public class AWS {
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
-      codeHelp();
+      awsHelp();
       return;
     }
     String command = Util.normalize(args[0]);
@@ -33,13 +36,30 @@ public class AWS {
       case "test-email":
         awsTestEmail(config);
         return;
+      case "memory-test":
+        awsMemoryTest();
+        return;
       case "help":
-        codeHelp();
+        awsHelp();
         return;
     }
   }
 
-  public static void codeHelp() {
+  public static void awsMemoryTest() throws Exception {
+    MachineHeat.install();
+    ArrayList<byte[]> chunks = new ArrayList<>();
+    int MB = 0;
+    System.out.println("memory MB, ms, %");
+    while (true) {
+      long started = System.nanoTime();
+      chunks.add(new byte[1024*1024]);
+      double taken = (System.nanoTime() - started) / 1000000.0;
+      MB ++;
+      System.out.println(MB + ", " + taken + ", " + MachineHeat.memory());
+    }
+  }
+
+  public static void awsHelp() {
     System.out.println(Util.prefix("Production AWS Support.", Util.ANSI.Green));
     System.out.println();
     System.out.println(Util.prefix("USAGE:", Util.ANSI.Yellow));
@@ -51,6 +71,7 @@ public class AWS {
     System.out.println(Util.prefix("AWSSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("setup", Util.ANSI.Green) + "             Interactive setup for the config");
     System.out.println("    " + Util.prefix("test-email", Util.ANSI.Green) + "        Test Email via AWS");
+    System.out.println("    " + Util.prefix("memory-test", Util.ANSI.Green) + "       Crash by allocating memory");
   }
 
   public static void awsTestEmail(Config config) throws Exception {
