@@ -18,14 +18,14 @@ import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
-import software.amazon.awssdk.services.ec2.model.DescribeInstancesResponse;
-import software.amazon.awssdk.services.ec2.model.Instance;
-import software.amazon.awssdk.services.ec2.model.Reservation;
+import software.amazon.awssdk.services.ec2.model.*;
 import software.amazon.awssdk.services.ec2.model.Tag;
 import software.amazon.awssdk.services.elasticloadbalancingv2.ElasticLoadBalancingV2Client;
 import software.amazon.awssdk.services.elasticloadbalancingv2.model.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,6 +49,9 @@ public class Fleet {
         return;
       case "show":
         fleetShow(config, next);
+        return;
+      case "launch":
+        fleetLaunch(config, next);
         return;
       case "deploy":
         fleetDeploy(config, next);
@@ -74,6 +77,7 @@ public class Fleet {
     System.out.println();
     System.out.println(Util.prefix("FLEETSUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("configure", Util.ANSI.Green) + "         Configure your CLI");
+    System.out.println("    " + Util.prefix("launch", Util.ANSI.Green) + "            Launch a new instance");
     System.out.println("    " + Util.prefix("deploy", Util.ANSI.Green) + "            Generate a fleet config and deploy the jar");
     System.out.println("    " + Util.prefix("show", Util.ANSI.Green) + "              Show the current capacity in the given region");
   }
@@ -134,17 +138,37 @@ public class Fleet {
     }
   }
 
+  private static void fleetLaunch(Config config, String[] args) throws Exception {
+    Ec2Client ec2 = getEC2(config);
+    String role = Util.extractOrCrash("--role", "-r", args);
+    String subnetLabel = Util.extractOrCrash("--subnet", "-s", args);
+    String subnetId = config.get_string("aws_ec2_subnet_" + subnetLabel, null);
+    String instanceType = Util.extractOrCrash("--type", "-i", args);
+    String imageId = config.get_string("aws_ec2_image_id", null);
+    String securityGroup = config.get_string("aws_ec2_security_group", null);
+    String keyName = config.get_string("aws_ec2_key_name", null);
+
+    RunInstancesRequest request = RunInstancesRequest.builder().imageId(imageId) //
+        .subnetId(subnetId) //
+        .securityGroupIds(securityGroup) //
+        .keyName(keyName) //
+        .instanceType(instanceType) //
+        .minCount(1) //
+        .maxCount(1) //
+        .tagSpecifications(TagSpecification.builder().resourceType(ResourceType.INSTANCE).tags(Tag.builder().key("role").value(role).build()).build()).build();
+    ec2.runInstances(request);
+  }
+
   private static void fleetDeploy(Config config, String[] args) throws Exception {
     Ec2Client ec2 = getEC2(config);
     String scopeToJustRole = Util.extractWithDefault("--scope", "-s", "*", args);
     DescribeInstancesResponse response = ec2.describeInstances();
     String templateFile = Util.extractOrCrash("--template", "-t", args);
-    String keyName = Util.extractOrCrash("--key", "-k", args);
     String template = Files.readString(new File(templateFile).toPath());
     ObjectNode configTemplate = Json.parseJsonObject(template);
-    StringBuilder commands = new StringBuilder().append("#!/bin/sh\n");
     ArrayList<Instance> instances = new ArrayList<>();
     ArrayList<String> gossipHosts = new ArrayList<>();
+    String bastionPublicIp = null;
     for (Reservation reservation : response.reservations()) {
       for (Instance instance : reservation.instances()) {
         String state = instance.state().nameAsString();
@@ -160,6 +184,10 @@ public class Fleet {
           } else if (role.equals("overlord")) {
             gossipHosts.add(instance.privateIpAddress() + ":8010");
             System.out.println(Util.prefix("OVERLORD AT ", Util.ANSI.Red) + instance.publicIpAddress());
+          } else if (role.equals("bastion")) {
+            System.out.println(Util.prefix("BASTION: ", Util.ANSI.Green) + instance.publicIpAddress());
+            bastionPublicIp = instance.publicIpAddress();
+            continue;
           }
           if (scopeToJustRole.equals(role) || scopeToJustRole.equals("*")) {
             instances.add(instance);
@@ -180,7 +208,20 @@ public class Fleet {
     }
 
     new File("staging").mkdir();
+    Files.copy(new File("adama.jar").toPath(), new File("staging/adama.jar").toPath());
+    File certFile = new File("cert.pem");
+    File keyFile = new File("key.pem");
+    boolean sslAvailable = false;
+    if (certFile.exists() && keyFile.exists()) {
+      Files.copy(certFile.toPath(), new File("staging/cert.pem").toPath());
+      Files.copy(keyFile.toPath(), new File("staging/key.pem").toPath());
+      sslAvailable = true;
+    }
+    // TODO: COPY SSL INFORMATION INTO staging/
+    Files.writeString(new File("staging/adama.sh").toPath(), "#!/bin/sh\nmv adama-new.jar adama.jar\njava -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/home/ec2-user/ -jar adama.jar service auto\n");
     HashSet<String> frontendInstances = new HashSet<>();
+    StringBuilder commands = new StringBuilder().append("#!/bin/sh\n");
+    commands.append("cd /home/ec2-user/staging\n");
     for (Instance instance : instances) {
       String role = roleOf(instance);
       configTemplate.put("role", role);
@@ -188,37 +229,54 @@ public class Fleet {
         frontendInstances.add(instance.instanceId());
       }
       Files.writeString(new File("staging/" + instance.privateIpAddress() + ".json").toPath(), configTemplate.toPrettyString());
-      Files.writeString(new File("staging/" + instance.privateIpAddress() + ".sh").toPath(), "#!/bin/sh\nmv adama-new.jar adama.jar\njava -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/home/ec2-user/ -jar adama.jar service auto\n");
       Security.newServer(new String[]{"--ip", instance.privateIpAddress(), "--out", "staging/" + instance.privateIpAddress() + ".identity"});
-      commands.append("echo Uploading to ").append(instance.publicIpAddress()).append("\n");
-      commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".identity ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/me.identity\n");
-      commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".json ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/.adama\n");
-      commands.append("scp -i ").append(keyName).append(" adama.jar ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama-new.jar\n");
-      commands.append("scp -i ").append(keyName).append(" staging/" + instance.privateIpAddress() + ".sh ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/adama.sh\n");
-      commands.append("ssh -i ").append(keyName).append(" ec2-user@" + instance.publicIpAddress() + " chmod 700 /home/ec2-user/adama.sh\n");
+      commands.append("scp " + instance.privateIpAddress() + ".identity ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/me.identity\n");
+      commands.append("scp " + instance.privateIpAddress() + ".json ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/.adama\n");
+      commands.append("scp adama.jar ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/adama-new.jar\n");
+      commands.append("scp adama.sh ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/adama.sh\n");
+      commands.append("ssh ec2-user@" + instance.privateIpAddress() + " chmod 700 /home/ec2-user/adama.sh\n");
+
+      if (sslAvailable && "frontend".equals(role)) {
+        commands.append("scp ").append(" adama.sh ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/adama.sh\n");
+        commands.append("scp cert.pem ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/cert.pem\n");
+        commands.append("scp key.pem ec2-user@" + instance.privateIpAddress() + ":/home/ec2-user/key.pem\n");
+      }
+
+      /*
       if ("frontend".equals(role)) {
         commands.append("scp -i ").append(keyName).append(" cert.pem ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/cert.pem\n");
         commands.append("scp -i ").append(keyName).append(" key.pem ec2-user@" + instance.publicIpAddress() + ":/home/ec2-user/key.pem\n");
       }
-      commands.append("rm staging/").append(instance.privateIpAddress()).append(".identity\n");
-      commands.append("rm staging/").append(instance.privateIpAddress()).append(".json\n");
-      commands.append("rm staging/").append(instance.privateIpAddress()).append(".sh\n");
+      */
     }
-    commands.append("rmdir staging\n");
+
     for (Instance instance : instances) {
-      commands.append("echo ").append(Util.prefix("RESTART", Util.ANSI.Red)).append(" ").append(instance.publicIpAddress()).append("\n");
-      commands.append("ssh -i ").append(keyName).append(" ec2-user@" + instance.publicIpAddress() + " sudo systemctl restart adama\n");
+      commands.append("echo ").append(Util.prefix("RESTART", Util.ANSI.Red)).append(" ").append(instance.privateIpAddress()).append("\n");
+      commands.append("ssh ec2-user@" + instance.privateIpAddress() + " sudo systemctl restart adama\n");
     }
 
     if (scopeToJustRole.equals("*")) {
       System.err.println("Updating ELB");
       fleetDeployUpdateELB(config, frontendInstances);
     }
+    Files.writeString(new File("staging/deploy.sh").toPath(), commands.toString());
 
+    // tar up the staging directory
+    Process p = Runtime.getRuntime().exec("tar -czvf staging.tar.gz staging");
+    try(BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+      String line;
+      while ((line = input.readLine()) != null) {
+        System.out.println(line);
+      }
+    }
 
-    Files.writeString(new File("execute.sh").toPath(), commands.toString());
+    for (File f : new File("staging").listFiles()) {
+      f.delete();
+    }
+    new File("staging").delete();
+
+    System.err.println("bastion:" + bastionPublicIp);
   }
-
   private static Ec2Client getEC2(Config config) {
     String accessKeyId = config.get_string("aws_ec2_access_key_id", null);
     String secretAccessKey = config.get_string("aws_ec2_secret_access_key", null);
