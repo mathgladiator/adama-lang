@@ -183,7 +183,7 @@ public class Fleet {
             gossipHosts.add(instance.privateIpAddress() + ":8002");
           } else if (role.equals("overlord")) {
             gossipHosts.add(instance.privateIpAddress() + ":8010");
-            System.out.println(Util.prefix("OVERLORD AT ", Util.ANSI.Red) + instance.publicIpAddress());
+            System.out.println(Util.prefix("OVERLORD AT ", Util.ANSI.Red) + instance.privateIpAddress());
           } else if (role.equals("bastion")) {
             System.out.println(Util.prefix("BASTION: ", Util.ANSI.Green) + instance.publicIpAddress());
             bastionPublicIp = instance.publicIpAddress();

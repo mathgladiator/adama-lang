@@ -251,7 +251,7 @@ public class Service {
     HttpHandler handler = Overlord.execute(identity, engine, overlordPort, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront, dataBaseBackend, scanPath);
 
     ConfigObject co = new ConfigObject(config.get_or_create_child("overlord_web"));
-    co.intOf("http_port", 9089);
+    co.intOf("http_port", 8081);
     WebConfig webConfig = new WebConfig(co);
     ServiceBase serviceBase = ServiceBase.JUST_HTTP(handler);
     final var runnable = new ServiceRunnable(webConfig, new WebMetrics(prometheusMetricsFactory), serviceBase, () -> {});
