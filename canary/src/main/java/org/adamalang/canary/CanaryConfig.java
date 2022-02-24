@@ -17,7 +17,7 @@ public class CanaryConfig {
   public final int documentsPerConnectionMaxmimum;
 
   public CanaryConfig() {
-    this.endpoint = "https://integ.jeffrey.io/s";
+    this.endpoint = "https://aws-us-east-2.adama-platform.com/s";
     // TODO: need to measure the heat of the web tier because I suspect there is a cost in not caching tokens
     this.identities = new String[]{"eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaXNzIjoiMzQ2RzhUOUU5RDNVMVFRWUU2RjFRSEM5SjEzWENSIn0.c8et44m8t9vrrBlXu6ySyHwrzyLkuBmfCIGVOTO3TJ25yT_6jPWRZNHjXn_yyjQ5h8_Dn8U-bB0BRqxprKYZhQ"};
     this.connections = 5;

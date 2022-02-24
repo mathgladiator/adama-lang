@@ -27,8 +27,7 @@ public class WebSocketClient implements AutoCloseable {
 
   public WebSocketClient(Config config) {
     this.base = new WebClientBase(new WebConfig(new ConfigObject(config.read())));
-    // TODO: use the production endpoint
-    this.endpoint = config.get_string("endpoint", "ws://localhost:8080/s");
+    this.endpoint = config.get_string("endpoint", "wss://aws-us-east-2.adama-platform.com/s");
   }
 
   @Override

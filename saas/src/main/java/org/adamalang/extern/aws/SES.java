@@ -38,8 +38,8 @@ public class SES implements Email {
       builder.source(config.fromEmailAddressForInit);
       builder.replyToAddresses(config.replyToEmailAddressForInit);
       builder.destination(Destination.builder().toAddresses(email).build());
-      Content subject = Content.builder().data("Your Super Secret Code for Adama Platform").charset("UTF-8").build();
-      Content text = Content.builder().data("Your code is " + code).charset("UTF-8").build();
+      Content subject = Content.builder().data("Access code for Adama Platform").charset("UTF-8").build();
+      Content text = Content.builder().data("This is your code: " + code).charset("UTF-8").build();
       Body body = Body.builder().text(text).build();
       builder.message(Message.builder().subject(subject).body(body).build());
       client.sendEmail(builder.build());
