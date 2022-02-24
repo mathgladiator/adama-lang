@@ -22,11 +22,11 @@ public class Init {
     System.out.println("");
     System.out.println("Before you begin, you should read " + Util.prefix("terms & conditions", Util.ANSI.Yellow) + " on the website:");
     System.out.println();
-    System.out.println("  http://www.adama-platform.com/terms-and-conditions.html");
+    System.out.println(Util.prefix("  https://www.adama-platform.com/terms-and-conditions.html", Util.ANSI.Green));
     System.out.println();
     System.out.println("Also, you should read the " + Util.prefix("privacy policy", Util.ANSI.Yellow) + " on the website as well:");
     System.out.println();
-    System.out.println("  http://www.adama-platform.com/privacy.html");
+    System.out.println(Util.prefix("  https://www.adama-platform.com/privacy.html", Util.ANSI.Green));
     System.out.println();
     System.out.println("This tool is about to ask for your email, and that is used as your developer account id." +
         " As of 2022-02-17, the email is only used for account verification, but we reserve the " + Util.prefix("option to use for updates in the future.", Util.ANSI.Yellow) +
@@ -76,7 +76,7 @@ public class Init {
 
   private static boolean revokePrior(Config config) {
     System.out.println();
-    System.out.print(Util.prefix("Revoke other machines[Y/n]:", Util.ANSI.Yellow));
+    System.out.print(Util.prefix("Revoke other machines[y/N]:", Util.ANSI.Yellow));
     String revokeYesNo = System.console().readLine();
     return revokeYesNo.trim().equalsIgnoreCase("Y");
   }
