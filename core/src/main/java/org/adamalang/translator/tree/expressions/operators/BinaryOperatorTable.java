@@ -31,25 +31,38 @@ public class BinaryOperatorTable {
     insert(tyInt, "/", tyInt, tyMaybeDouble, "LibArithmetic.Divide.II(%s, %s)", false);
     insert(tyInt, "/", tyLong, tyMaybeDouble, "LibArithmetic.Divide.IL(%s, %s)", false);
     insert(tyInt, "/", tyDouble, tyMaybeDouble, "LibArithmetic.Divide.ID(%s, %s)", false);
+    insert(tyInt, "/", tyMaybeDouble, tyMaybeDouble, "LibArithmetic.Divide.ImD(%s, %s)", false);
     insert(tyInt, "/", tyComplex, tyMaybeComplex, "LibArithmetic.Divide.IC(%s, %s)", false);
+    insert(tyInt, "/", tyMaybeComplex, tyMaybeComplex, "LibArithmetic.Divide.ImC(%s, %s)", false);
 
     insert(tyLong, "/", tyInt, tyMaybeDouble, "LibArithmetic.Divide.LI(%s, %s)", false);
     insert(tyLong, "/", tyLong, tyMaybeDouble, "LibArithmetic.Divide.LL(%s, %s)", false);
     insert(tyLong, "/", tyDouble, tyMaybeDouble, "LibArithmetic.Divide.LD(%s, %s)", false);
+    insert(tyLong, "/", tyMaybeDouble, tyMaybeDouble, "LibArithmetic.Divide.LmD(%s, %s)", false);
     insert(tyLong, "/", tyComplex, tyMaybeComplex, "LibArithmetic.Divide.LC(%s, %s)", false);
+    insert(tyLong, "/", tyMaybeComplex, tyMaybeComplex, "LibArithmetic.Divide.LmC(%s, %s)", false);
 
     insert(tyDouble, "/", tyInt, tyMaybeDouble, "LibArithmetic.Divide.DI(%s, %s)", false);
     insert(tyDouble, "/", tyLong, tyMaybeDouble, "LibArithmetic.Divide.DL(%s, %s)", false);
     insert(tyDouble, "/", tyDouble, tyMaybeDouble, "LibArithmetic.Divide.DD(%s, %s)", false);
+    insert(tyDouble, "/", tyMaybeDouble, tyMaybeDouble, "LibArithmetic.Divide.DmD(%s, %s)", false);
     insert(tyDouble, "/", tyComplex, tyMaybeComplex, "LibArithmetic.Divide.DC(%s, %s)", false);
+    insert(tyDouble, "/", tyMaybeComplex, tyMaybeComplex, "LibArithmetic.Divide.DmC(%s, %s)", false);
+
+    insert(tyMaybeDouble, "/", tyInt, tyMaybeDouble, "LibArithmetic.Divide.mDI(%s, %s)", false);
+    insert(tyMaybeDouble, "/", tyLong, tyMaybeDouble, "LibArithmetic.Divide.mDL(%s, %s)", false);
+    insert(tyMaybeDouble, "/", tyDouble, tyMaybeDouble, "LibArithmetic.Divide.mDD(%s, %s)", false);
+    insert(tyMaybeDouble, "/", tyMaybeDouble, tyMaybeDouble, "LibArithmetic.Divide.mDmD(%s, %s)", false);
+    insert(tyMaybeDouble, "/", tyComplex, tyMaybeComplex, "LibArithmetic.Divide.mDC(%s, %s)", false);
+    insert(tyMaybeDouble, "/", tyMaybeComplex, tyMaybeComplex, "LibArithmetic.Divide.mDmC(%s, %s)", false);
 
     insert(tyComplex, "/", tyInt, tyMaybeComplex, "LibArithmetic.Divide.CI(%s, %s)", false);
     insert(tyComplex, "/", tyLong, tyMaybeComplex, "LibArithmetic.Divide.CL(%s, %s)", false);
     insert(tyComplex, "/", tyDouble, tyMaybeComplex, "LibArithmetic.Divide.CD(%s, %s)", false);
     insert(tyComplex, "/", tyMaybeDouble, tyMaybeComplex, "LibArithmetic.Divide.CmD(%s, %s)", false);
     insert(tyComplex, "/", tyComplex, tyMaybeComplex, "LibArithmetic.Divide.CC(%s, %s)", false);
+    insert(tyComplex, "/", tyMaybeComplex, tyMaybeComplex, "LibArithmetic.Divide.CmC(%s, %s)", false);
 
-    insert(tyMaybeDouble, "/", tyComplex, tyMaybeComplex, "LibArithmetic.Divide.mDC(%s, %s)", false);
 
   }
 

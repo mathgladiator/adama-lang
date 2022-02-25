@@ -17,9 +17,7 @@ import org.adamalang.runtime.natives.NtMaybe;
  * maybe<N> where N is a numeric type of int, long, double
  */
 public class LibArithmetic {
-
   public static class Divide {
-
     // Left=Integer
     public static NtMaybe<Double> II(int x, int y) {
       double z = ((double) x) / y;
@@ -53,6 +51,20 @@ public class LibArithmetic {
       return new NtMaybe<>(new NtComplex(r.real * x, r.imaginary * x));
     }
 
+    public static NtMaybe<Double> ImD(int x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return ID(x, y.get());
+      }
+      return y;
+    }
+
+    public static NtMaybe<NtComplex> ImC(int x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return IC(x, y.get());
+      }
+      return y;
+    }
+
     // Left=Long
     public static NtMaybe<Double> LI(long x, int y) {
       double z = ((double) x) / y;
@@ -77,6 +89,12 @@ public class LibArithmetic {
       }
       return new NtMaybe<>(z);
     }
+    public static NtMaybe<Double> LmD(long x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return LD(x, y.get());
+      }
+      return y;
+    }
 
     public static NtMaybe<NtComplex> LC(long x, NtComplex y) {
       if (y.zero()) {
@@ -84,6 +102,13 @@ public class LibArithmetic {
       }
       NtComplex r = y.recip();
       return new NtMaybe<>(new NtComplex(r.real * x, r.imaginary * x));
+    }
+
+    public static NtMaybe<NtComplex> LmC(long x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return LC(x, y.get());
+      }
+      return y;
     }
 
     // left=Double
@@ -111,6 +136,13 @@ public class LibArithmetic {
       return new NtMaybe<>(z);
     }
 
+    public static NtMaybe<Double> DmD(double x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return DD(x, y.get());
+      }
+      return y;
+    }
+
     public static NtMaybe<NtComplex> DC(double x, NtComplex y) {
       if (y.zero()) {
         return new NtMaybe<>();
@@ -119,8 +151,14 @@ public class LibArithmetic {
       return new NtMaybe<>(new NtComplex(r.real * x, r.imaginary * x));
     }
 
-    // Left=Complex
+    public static NtMaybe<NtComplex> DmC(double x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return DC(x, y.get());
+      }
+      return y;
+    }
 
+    // Left=Complex
     public static NtMaybe<NtComplex> CI(NtComplex x, int y) {
       if (y == 0) {
         return new NtMaybe<>();
@@ -142,6 +180,13 @@ public class LibArithmetic {
       return new NtMaybe<>(new NtComplex(x.real / y, x.imaginary / y));
     }
 
+    public static NtMaybe<NtComplex> CmD(NtComplex x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return CD(x, y.get());
+      }
+      return new NtMaybe<>();
+    }
+
     public static NtMaybe<NtComplex> CC(NtComplex x, NtComplex y) {
       if (y.zero()) {
         return new NtMaybe<>();
@@ -150,28 +195,35 @@ public class LibArithmetic {
       return new NtMaybe<>(new NtComplex(x.real * r.real - x.imaginary * y.imaginary, x.real * y.imaginary + x.imaginary * y.real));
     }
 
+    public static NtMaybe<NtComplex> CmC(NtComplex x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return CC(x, y.get());
+      }
+      return y;
+    }
 
+    public static NtMaybe<Double> mDI(NtMaybe<Double> x, int y) {
+      if (x.has()) {
+        return DI(x.get(), y);
+      }
+      return x;
+    }
 
+    public static NtMaybe<Double> mDL(NtMaybe<Double> x, long y) {
+      if (x.has()) {
+        return DL(x.get(), y);
+      }
+      return x;
+    }
 
-
-
-
-
-    public static NtMaybe<Double> DD(NtMaybe<Double> x, double y) {
+    public static NtMaybe<Double> mDD(NtMaybe<Double> x, double y) {
       if (x.has()) {
         return DD(x.get(), y);
       }
       return x;
     }
 
-    public static NtMaybe<Double> DD(double x, NtMaybe<Double> y) {
-      if (y.has()) {
-        return DD(x, y.get());
-      }
-      return y;
-    }
-
-    public static NtMaybe<Double> DD(NtMaybe<Double> x, NtMaybe<Double> y) {
+    public static NtMaybe<Double> mDmD(NtMaybe<Double> x, NtMaybe<Double> y) {
       if (x.has()) {
         if (y.has()) {
           return DD(x.get(), y.get());
@@ -182,23 +234,19 @@ public class LibArithmetic {
       }
     }
 
-    public static NtMaybe<NtComplex> CmD(NtComplex x, NtMaybe<Double> mY) {
-      if (mY.has()) {
-        double y = mY.get();
-        if (LibMath.near(y, 0)) {
-          return new NtMaybe<>();
-        }
-        return new NtMaybe<>(new NtComplex(x.real / y, x.imaginary / y));
-      }
-      return new NtMaybe<>();
-    }
-
     public static NtMaybe<NtComplex> mDC(NtMaybe<Double> x, NtComplex y) {
       if (!x.has() || y.zero()) {
         return new NtMaybe<>();
       }
       NtComplex r = y.recip();
       return new NtMaybe<>(new NtComplex(r.real * x.get(), r.imaginary *  x.get()));
+    }
+
+    public static NtMaybe<NtComplex> mDmC(NtMaybe<Double> x, NtMaybe<NtComplex> y) {
+      if (x.has() && y.has()) {
+        return DC(x.get(), y.get());
+      }
+      return new NtMaybe<>();
     }
   }
 

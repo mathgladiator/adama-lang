@@ -17,15 +17,15 @@ public class LibArithmeticTests {
   @Test
   public void doubleDivision() {
     Assert.assertEquals(0.5, LibArithmetic.Divide.DD(1, 2.0).get(), 0.01);
-    Assert.assertEquals(0.5, LibArithmetic.Divide.DD(new NtMaybe<>(1.0), 2).get(), 0.01);
-    Assert.assertEquals(0.5, LibArithmetic.Divide.DD(1.0, new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertEquals(0.5, LibArithmetic.Divide.mDD(new NtMaybe<>(1.0), 2).get(), 0.01);
+    Assert.assertEquals(0.5, LibArithmetic.Divide.DmD(1.0, new NtMaybe<>(2.0)).get(), 0.01);
     Assert.assertEquals(
-        0.5, LibArithmetic.Divide.DD(new NtMaybe<>(1.0), new NtMaybe<>(2.0)).get(), 0.01);
-    Assert.assertFalse(LibArithmetic.Divide.DD(new NtMaybe<>(), 2).has());
-    Assert.assertFalse(LibArithmetic.Divide.DD(1.0, new NtMaybe<>()).has());
-    Assert.assertFalse(LibArithmetic.Divide.DD(new NtMaybe<>(), new NtMaybe<>()).has());
-    Assert.assertFalse(LibArithmetic.Divide.DD(new NtMaybe<>(1.0), new NtMaybe<>()).has());
-    Assert.assertFalse(LibArithmetic.Divide.DD(new NtMaybe<>(), new NtMaybe<>(1.0)).has());
+        0.5, LibArithmetic.Divide.mDmD(new NtMaybe<>(1.0), new NtMaybe<>(2.0)).get(), 0.01);
+    Assert.assertFalse(LibArithmetic.Divide.mDD(new NtMaybe<>(), 2).has());
+    Assert.assertFalse(LibArithmetic.Divide.DmD(1.0, new NtMaybe<>()).has());
+    Assert.assertFalse(LibArithmetic.Divide.mDmD(new NtMaybe<>(), new NtMaybe<>()).has());
+    Assert.assertFalse(LibArithmetic.Divide.mDmD(new NtMaybe<>(1.0), new NtMaybe<>()).has());
+    Assert.assertFalse(LibArithmetic.Divide.mDmD(new NtMaybe<>(), new NtMaybe<>(1.0)).has());
     Assert.assertFalse(LibArithmetic.Divide.DD(1, 0.0).has());
   }
 
