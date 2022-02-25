@@ -22,7 +22,6 @@ public class LocalTypeAssignmentResult {
   private final Expression expression;
   private final Expression ref;
   public CanAssignResult assignResult = CanAssignResult.No;
-  public CanMathResult canMathResult = CanMathResult.No;
   public TyType ltype = null;
   public TyType rtype = null;
 
@@ -30,14 +29,6 @@ public class LocalTypeAssignmentResult {
     this.environment = environment;
     this.ref = ref;
     this.expression = expression;
-  }
-
-  public void add() {
-    ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
-    rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
-    assignResult = environment.rules.CanAssignWithAdd(ltype, rtype, false);
-    canMathResult = environment.rules.CanAdd(environment.rules.Resolve(ltype, true), rtype, false);
-    environment.rules.CanTypeAStoreTypeB(ltype, rtype, StorageTweak.Add, false);
   }
 
   public boolean bad() {
@@ -51,26 +42,10 @@ public class LocalTypeAssignmentResult {
     assignResult = CanAssignResult.YesWithIngestionCodeGen;
   }
 
-  public void multiply() {
-    ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
-    rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
-    assignResult = environment.rules.CanAssignWithMult(ltype, rtype, false);
-    canMathResult = environment.rules.CanMultiply(environment.rules.Resolve(ltype, true), rtype, false);
-    environment.rules.CanTypeAStoreTypeB(ltype, rtype, StorageTweak.Multiply, false);
-  }
-
   public void set() {
     ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
     rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
     assignResult = environment.rules.CanAssignWithSet(ltype, rtype, false);
     environment.rules.CanTypeAStoreTypeB(ltype, rtype, StorageTweak.None, false);
-  }
-
-  public void subtract() {
-    ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
-    rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
-    assignResult = environment.rules.CanAssignWithSubtract(ltype, rtype, false);
-    canMathResult = environment.rules.CanSubstract(environment.rules.Resolve(ltype, true), rtype, false);
-    environment.rules.CanTypeAStoreTypeB(ltype, rtype, StorageTweak.Subtract, false);
   }
 }

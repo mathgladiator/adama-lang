@@ -536,7 +536,7 @@ public class GeneratedMathTests extends GeneratedBase {
     gold.append("\n    __track(7);");
     gold.append("\n    eq1.set(LibMath.near(l2, l1));");
     gold.append("\n    __track(8);");
-    gold.append("\n    final NtComplex l3 = l2;");
+    gold.append("\n    final NtComplex l3 = (l2).copy();");
     gold.append("\n    __track(9);");
     gold.append("\n    c4.set(LibMath.conj(c2.get()));");
     gold.append("\n    __track(10);");

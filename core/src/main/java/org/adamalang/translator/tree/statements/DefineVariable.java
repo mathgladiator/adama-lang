@@ -19,6 +19,7 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
+import org.adamalang.translator.tree.types.natives.TyNativeComplex;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.natives.TyNativeReactiveRecordPtr;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
@@ -131,12 +132,26 @@ public class DefineVariable extends Statement {
       sb.append(type.getJavaConcreteType(environment)).append(" " + name);
       if (value != null) {
         sb.append(" = ");
+        StringBuilder exprBuilder = new StringBuilder();
         if (type instanceof DetailNativeDeclarationIsNotStandard) {
           final var child = new StringBuilder();
           value.writeJava(child, environment.scopeWithComputeContext(ComputeContext.Computation));
-          sb.append(String.format(((DetailNativeDeclarationIsNotStandard) type).getPatternWhenValueProvided(environment), child));
+          exprBuilder.append(String.format(((DetailNativeDeclarationIsNotStandard) type).getPatternWhenValueProvided(environment), child));
         } else {
-          value.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+          value.writeJava(exprBuilder, environment.scopeWithComputeContext(ComputeContext.Computation));
+        }
+        String exprToSet = exprBuilder.toString();
+        if (type instanceof TyNativeComplex) {
+          // heuristic to know if we should copy the assignment so it is a value type rather than a reference
+          if (TyNativeComplex.avoidCopyHeuristic(exprToSet)) {
+            sb.append(exprToSet);
+          } else {
+            sb.append("(");
+            sb.append(exprToSet);
+            sb.append(").copy()");
+          }
+        } else {
+          sb.append(exprToSet);
         }
         sb.append(";");
       } else {

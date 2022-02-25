@@ -10,10 +10,5 @@
 package org.adamalang.translator.tree.types.checking.properties;
 
 public enum StorageTweak {
-  Add, //
-  Divide, //
-  Mod, //
-  Multiply, //
   None, //
-  Subtract
 }

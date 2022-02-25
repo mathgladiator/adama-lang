@@ -20,12 +20,13 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.LocalTypeAssignmentResult;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
 import org.adamalang.translator.tree.types.natives.TyNativeArray;
+import org.adamalang.translator.tree.types.natives.TyNativeComplex;
 import org.adamalang.translator.tree.types.natives.TyNativeInteger;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 
 import java.util.function.Consumer;
 
-/** left {=,+=,*=,-=,<-} right */
+/** left {=,<-} right */
 public class Assignment extends Statement {
   public final Expression expression;
   public final boolean inForLoop;
@@ -93,12 +94,6 @@ public class Assignment extends Statement {
       case Set:
         result.set();
         break;
-      case SubtractFrom:
-        result.subtract();
-        break;
-      case MultiplyBy:
-        result.multiply();
-        break;
     }
     return ControlFlow.Open;
   }
@@ -111,7 +106,21 @@ public class Assignment extends Statement {
     if (result.assignResult == CanAssignResult.YesWithNativeOp) {
       ref.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Assignment));
       sb.append(" ").append(op.js).append(" ");
-      expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+      StringBuilder valueExprStr = new StringBuilder();
+      expression.writeJava(valueExprStr, environment.scopeWithComputeContext(ComputeContext.Computation));
+      String exprToSet = valueExprStr.toString();
+      if (result.rtype instanceof TyNativeComplex) {
+        // heuristic to know if we should copy the assignment so it is a value type rather than a reference
+        if (TyNativeComplex.avoidCopyHeuristic(exprToSet)) {
+          sb.append(exprToSet);
+        } else {
+          sb.append("(");
+          sb.append(exprToSet);
+          sb.append(").copy()");
+        }
+      } else {
+        sb.append(exprToSet);
+      }
       if (!inForLoop) {
         sb.append(";");
       }

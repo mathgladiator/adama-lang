@@ -25,31 +25,14 @@ public class Rules {
     this.environment = environment;
   }
 
-  /** FROM: RuleSetAddition */
-  public CanMathResult CanAdd(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetAddition.CanAdd(environment, tyTypeA, tyTypeB, silent);
-  }
-
   /** FROM: RuleSetIngestion */
   public boolean CanAIngestB(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetIngestion.CanAIngestB(environment, tyTypeA, tyTypeB, silent);
   }
 
   /** FROM: RuleSetAssignment */
-  public CanAssignResult CanAssignWithAdd(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetAssignment.CanAssignWithAdd(environment, tyTypeA, tyTypeB, silent);
-  }
-
-  public CanAssignResult CanAssignWithMult(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetAssignment.CanAssignWithMult(environment, tyTypeA, tyTypeB, silent);
-  }
-
   public CanAssignResult CanAssignWithSet(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetAssignment.CanAssignWithSet(environment, tyTypeA, tyTypeB, silent);
-  }
-
-  public CanAssignResult CanAssignWithSubtract(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetAssignment.CanAssignWithSubtract(environment, tyTypeA, tyTypeB, silent);
   }
 
   /** FROM: RuleSetBump */
@@ -61,19 +44,9 @@ public class Rules {
     return RuleSetBump.CanBumpNumeric(environment, tyType, silent);
   }
 
-  /** FROM: RuleSetMultiply */
-  public CanMathResult CanMultiply(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetMultiply.CanMultiply(environment, tyTypeA, tyTypeB, silent);
-  }
-
   /** FROM: RuleSetStructures */
   public boolean CanStructureAProjectIntoStructureB(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetStructures.CanStructureAProjectIntoStructureB(environment, tyTypeA, tyTypeB, silent);
-  }
-
-  /** FROM: RuleSetSubtract */
-  public CanMathResult CanSubstract(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetSubtract.CanSubstract(environment, tyTypeA, tyTypeB, silent);
   }
 
   /** FROM: RuleSetEquality */
@@ -130,10 +103,6 @@ public class Rules {
   }
 
   /** FROM: RuleSetMath */
-  public TyType InventMathType(final TyType tyTypeA, final TyType tyTypeB, final CanMathResult result) {
-    return RuleSetMath.InventMathType(environment, tyTypeA, tyTypeB, result);
-  }
-
   public boolean IsBoolean(final TyType tyType, final boolean silent) {
     return RuleSetCommon.IsBoolean(environment, tyType, silent);
   }

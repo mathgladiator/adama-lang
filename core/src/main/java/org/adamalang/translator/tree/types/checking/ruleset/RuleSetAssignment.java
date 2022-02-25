@@ -39,44 +39,6 @@ public class RuleSetAssignment {
     return CanAssignResult.No;
   }
 
-  public static CanAssignResult CanAssignWithAdd(final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) {
-      return CanAssignResult.No;
-    }
-    var result = TestAssignReactively(environment, left, right);
-    if (result != CanAssignResult.No) {
-      return result;
-    }
-    if (left instanceof AssignmentViaNative) {
-      return CanAssignResult.YesWithNativeOp;
-    }
-    result = CanAssignBase(environment, left, right, silent);
-    if (result != CanAssignResult.No) {
-      return result;
-    }
-    environment.document.createError(left, String.format("The type '%s' is not applicable for add based assignment (+=)", left.getAdamaType()), "Assignment");
-    return CanAssignResult.No;
-  }
-
-  public static CanAssignResult CanAssignWithMult(final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) {
-      return CanAssignResult.No;
-    }
-    var result = TestAssignReactively(environment, left, right);
-    if (result != CanAssignResult.No) {
-      return result;
-    }
-    if (left instanceof AssignmentViaNative) {
-      return CanAssignResult.YesWithNativeOp;
-    }
-    result = CanAssignBase(environment, left, right, silent);
-    if (result != CanAssignResult.No) {
-      return result;
-    }
-    environment.document.createError(left, String.format("The type '%s' is not applicable for multiplication based assignment (*=)", left.getAdamaType()), "Assignment");
-    return CanAssignResult.No;
-  }
-
   public static CanAssignResult CanAssignWithSet(final Environment environment, final TyType left, final TyType right, final boolean silent) {
     if (left == null || right == null) {
       return CanAssignResult.No;
@@ -93,25 +55,6 @@ public class RuleSetAssignment {
       return result;
     }
     environment.document.createError(left, String.format("The type '%s' is not applicable for assignment (=)", left.getAdamaType()), "Assignment");
-    return CanAssignResult.No;
-  }
-
-  public static CanAssignResult CanAssignWithSubtract(final Environment environment, final TyType left, final TyType right, final boolean silent) {
-    if (left == null || right == null) {
-      return CanAssignResult.No;
-    }
-    var result = TestAssignReactively(environment, left, right);
-    if (result != CanAssignResult.No) {
-      return result;
-    }
-    if (left instanceof AssignmentViaNative) {
-      return CanAssignResult.YesWithNativeOp;
-    }
-    result = CanAssignBase(environment, left, right, silent);
-    if (result != CanAssignResult.No) {
-      return result;
-    }
-    environment.document.createError(left, String.format("The type '%s' is not applicable for subtract based assignment (-=)", left.getAdamaType()), "Assignment");
     return CanAssignResult.No;
   }
 
@@ -150,11 +93,6 @@ public class RuleSetAssignment {
     final var bString = RuleSetCommon.IsString(environment, typeB, true);
     if (aString && bString) {
       return true;
-    }
-    if (tweak == StorageTweak.Add) {
-      if (aString && (bInteger || bBoolean || bDouble)) {
-        return true;
-      }
     }
     final var aClient = RuleSetAsync.IsClient(environment, typeA, true);
     final var bClient = RuleSetAsync.IsClient(environment, typeB, true);

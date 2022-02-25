@@ -74,7 +74,12 @@ public class RxComplex extends RxBase implements CanGetAndSet<NtComplex> {
 
   @Override
   public void set(final NtComplex value) {
-    this.value = value;
+    this.value = value.copy();
+    __raiseDirty();
+  }
+
+  public void set(final double value) {
+    this.value = new NtComplex(value, 0.0);
     __raiseDirty();
   }
 
