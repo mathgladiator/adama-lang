@@ -7,6 +7,7 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
+import org.adamalang.translator.tree.types.reactive.*;
 
 import java.util.HashMap;
 
@@ -25,11 +26,24 @@ public class BinaryOperatorTable {
     TyType tyClient = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
     TyType tyAsset = new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
 
+    TyType tyMaybeBoolean = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyBoolean));
     TyType tyMaybeInt = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyInt));
     TyType tyMaybeLong = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyLong));
     TyType tyMaybeDouble = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyDouble));
     TyType tyMaybeComplex = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyComplex));
     TyType tyMaybeString = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyString));
+
+    TyType tyRxInteger = new TyReactiveInteger(Token.WRAP("int"));
+    TyType tyRxLong = new TyReactiveLong(Token.WRAP("long"));
+    TyType tyRxDouble = new TyReactiveDouble(Token.WRAP("double"));
+    TyType tyRxString = new TyReactiveString(Token.WRAP("string"));
+    TyType tyRxComplex = new TyReactiveComplex(Token.WRAP("complex"));
+
+    TyType tyListRxInteger = new TyNativeList(TypeBehavior.ReadWriteNative, null, null, new TokenizedItem<>(tyRxInteger));
+    TyType tyListRxLong = new TyNativeList(TypeBehavior.ReadWriteNative, null, null, new TokenizedItem<>(tyRxLong));
+    TyType tyListRxDouble = new TyNativeList(TypeBehavior.ReadWriteNative, null, null, new TokenizedItem<>(tyRxDouble));
+    TyType tyListRxString = new TyNativeList(TypeBehavior.ReadWriteNative, null, null, new TokenizedItem<>(tyRxString));
+    TyType tyListRxComplex = new TyNativeList(TypeBehavior.ReadWriteNative, null, null, new TokenizedItem<>(tyRxComplex));
 
     // DIVISION (I,L,D,mD,C,mC)x(I,L,D,mD,C,mC)
     {
@@ -323,6 +337,86 @@ public class BinaryOperatorTable {
       insert(tyLong, "%", tyInt, tyMaybeLong, "LibArithmetic.Mod.O(%s, %s)", false);
       insert(tyLong, "%", tyLong, tyMaybeLong, "LibArithmetic.Mod.O(%s, %s)", false);
     }
+    // ADDITION-ASSIGNMENT (+=)
+    {
+      insert(tyRxInteger, "+=", tyInt, tyInt,"%s.opAddTo(%s)", false);
+      insert(tyRxLong, "+=", tyInt, tyLong,"%s.opAddTo(%s)", false);
+      insert(tyRxLong, "+=", tyLong, tyLong,"%s.opAddTo(%s)", false);
+      insert(tyRxDouble, "+=", tyInt, tyDouble,"%s.opAddTo(%s)", false);
+      insert(tyRxDouble, "+=", tyLong, tyDouble,"%s.opAddTo(%s)", false);
+      insert(tyRxDouble, "+=", tyDouble, tyDouble,"%s.opAddTo(%s)", false);
+      insert(tyRxComplex, "+=", tyInt, tyComplex,"%s.opAddTo(%s)", false);
+      insert(tyRxComplex, "+=", tyLong, tyComplex,"%s.opAddTo(%s)", false);
+      insert(tyRxComplex, "+=", tyDouble, tyComplex,"%s.opAddTo(%s)", false);
+      insert(tyRxComplex, "+=", tyComplex, tyComplex,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyBoolean, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyInt, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyLong, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyDouble, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyComplex, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyString, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyMaybeBoolean, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyMaybeInt, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyMaybeLong, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyMaybeDouble, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyMaybeComplex, tyString,"%s.opAddTo(%s)", false);
+      insert(tyRxString, "+=", tyMaybeString, tyString,"%s.opAddTo(%s)", false);
+      insert(tyInt, "+=", tyInt, tyInt,"%s += %s", false);
+      insert(tyLong, "+=", tyInt, tyLong,"%s += %s", false);
+      insert(tyLong, "+=", tyLong, tyLong,"%s += %s", false);
+      insert(tyDouble, "+=", tyInt, tyDouble,"%s += %s", false);
+      insert(tyDouble, "+=", tyLong, tyDouble,"%s += %s", false);
+      insert(tyDouble, "+=", tyDouble, tyDouble,"%s += %s", false);
+      insert(tyComplex, "+=", tyInt, tyComplex,"%s.opAddTo(%s)", false);
+      insert(tyComplex, "+=", tyLong, tyComplex,"%s.opAddTo(%s)", false);
+      insert(tyComplex, "+=", tyDouble, tyComplex,"%s.opAddTo(%s)", false);
+      insert(tyComplex, "+=", tyComplex, tyComplex,"%s.opAddTo(%s)", false);
+      insert(tyString, "+=", tyBoolean, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyInt, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyLong, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyDouble, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyComplex, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyString, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyMaybeBoolean, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyMaybeInt, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyMaybeLong, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyMaybeDouble, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyMaybeComplex, tyString,"%s += %s", false);
+      insert(tyString, "+=", tyMaybeString, tyString,"%s += %s", false);
+
+      insert(tyListRxInteger, "+=", tyInt, tyInt, "LibArithmetic.ListMath.addToII(%s, %s)", false);
+      insert(tyListRxLong, "+=", tyInt, tyLong, "LibArithmetic.ListMath.addToLI(%s, %s)", false);
+      insert(tyListRxLong, "+=", tyLong, tyLong, "LibArithmetic.ListMath.addToLL(%s, %s)", false);
+      insert(tyListRxDouble, "+=", tyInt, tyDouble, "LibArithmetic.ListMath.addToDI(%s, %s)", false);
+      insert(tyListRxDouble, "+=", tyLong, tyDouble,"LibArithmetic.ListMath.addToDL(%s, %s)", false);
+      insert(tyListRxDouble, "+=", tyDouble, tyDouble, "LibArithmetic.ListMath.addToDL(%s, %s)", false);
+      insert(tyListRxComplex, "+=", tyInt, tyComplex,"LibArithmetic.ListMath.addToCI(%s, %s)", false);
+      insert(tyListRxComplex, "+=", tyLong, tyComplex, "LibArithmetic.ListMath.addToCL(%s, %s)", false);
+      insert(tyListRxComplex, "+=", tyDouble, tyComplex, "LibArithmetic.ListMath.addToCD(%s, %s)", false);
+      insert(tyListRxComplex, "+=", tyComplex, tyComplex, "LibArithmetic.ListMath.addToCC(%s, %s)", false);
+      insert(tyListRxString, "+=", tyBoolean, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyInt, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyLong, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyDouble, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyComplex, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyString, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeBoolean, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeInt, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeLong, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeDouble, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeComplex, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeString, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+    }
+    // SUBTRACTION-ASSIGNMENT (-=)
+    {
+
+    }
+    // MULTIPLICATION-ASSIGNMENT (*=) {
+    {
+
+    }
+
+
   }
 
   private void insert(TyType left, String operator, TyType right, TyType result, String java, boolean reverse) {

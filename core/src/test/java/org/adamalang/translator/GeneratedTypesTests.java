@@ -52,43 +52,83 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_BooleanBulk_2 = null;
-  private String get_BooleanBulk_2() {
-    if (cached_BooleanBulk_2 != null) {
-      return cached_BooleanBulk_2;
+  private String cached_BadMaybe_2 = null;
+  private String get_BadMaybe_2() {
+    if (cached_BadMaybe_2 != null) {
+      return cached_BadMaybe_2;
     }
-    cached_BooleanBulk_2 = generateTestOutput(true, "BooleanBulk_2", "./test_code/Types_BooleanBulk_success.a");
-    return cached_BooleanBulk_2;
+    cached_BadMaybe_2 = generateTestOutput(false, "BadMaybe_2", "./test_code/Types_BadMaybe_failure.a");
+    return cached_BadMaybe_2;
+  }
+
+  @Test
+  public void testBadMaybeFailure() {
+    assertLiveFail(get_BadMaybe_2());
+  }
+
+  @Test
+  public void testBadMaybeNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_BadMaybe_2());
+  }
+
+  @Test
+  public void testBadMaybeExceptionFree() {
+    assertExceptionFree(get_BadMaybe_2());
+  }
+
+  @Test
+  public void testBadMaybeTODOFree() {
+    assertTODOFree(get_BadMaybe_2());
+  }
+
+  @Test
+  public void stable_BadMaybe_2() {
+    String live = get_BadMaybe_2();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Types_BadMaybe_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":18},\"end\":{\"line\":1,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'int' / 'bool' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11},\"end\":{\"line\":2,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'maybe<42>' is unable to store type 'maybe<42>'. (TypeCheckReferences)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_BooleanBulk_3 = null;
+  private String get_BooleanBulk_3() {
+    if (cached_BooleanBulk_3 != null) {
+      return cached_BooleanBulk_3;
+    }
+    cached_BooleanBulk_3 = generateTestOutput(true, "BooleanBulk_3", "./test_code/Types_BooleanBulk_success.a");
+    return cached_BooleanBulk_3;
   }
 
   @Test
   public void testBooleanBulkEmission() {
-    assertEmissionGood(get_BooleanBulk_2());
+    assertEmissionGood(get_BooleanBulk_3());
   }
 
   @Test
   public void testBooleanBulkSuccess() {
-    assertLivePass(get_BooleanBulk_2());
+    assertLivePass(get_BooleanBulk_3());
   }
 
   @Test
   public void testBooleanBulkGoodWillHappy() {
-    assertGoodWillHappy(get_BooleanBulk_2());
+    assertGoodWillHappy(get_BooleanBulk_3());
   }
 
   @Test
   public void testBooleanBulkExceptionFree() {
-    assertExceptionFree(get_BooleanBulk_2());
+    assertExceptionFree(get_BooleanBulk_3());
   }
 
   @Test
   public void testBooleanBulkTODOFree() {
-    assertTODOFree(get_BooleanBulk_2());
+    assertTODOFree(get_BooleanBulk_3());
   }
 
   @Test
-  public void stable_BooleanBulk_2() {
-    String live = get_BooleanBulk_2();
+  public void stable_BooleanBulk_3() {
+    String live = get_BooleanBulk_3();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_BooleanBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -116,7 +156,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class BooleanBulk_2 extends LivingDocument {");
+    gold.append("\npublic class BooleanBulk_3 extends LivingDocument {");
     gold.append("\n  private final RxBoolean b;");
     gold.append("\n  private final RxLazy<Boolean> ib;");
     gold.append("\n  @Override");
@@ -126,7 +166,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += ib.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public BooleanBulk_2(DocumentMonitor __monitor) {");
+    gold.append("\n  public BooleanBulk_3(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    b = new RxBoolean(this, true);");
     gold.append("\n    ib = new RxLazy<Boolean>(this, () -> (!b.get()));");
@@ -322,9 +362,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    b.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaBooleanBulk_2 implements DeltaNode {");
+    gold.append("\n  private class DeltaBooleanBulk_3 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaBooleanBulk_2() {");
+    gold.append("\n    private DeltaBooleanBulk_3() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -332,7 +372,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(BooleanBulk_2 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(BooleanBulk_3 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -355,8 +395,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    BooleanBulk_2 __self = this;");
-    gold.append("\n    DeltaBooleanBulk_2 __state = new DeltaBooleanBulk_2();");
+    gold.append("\n    BooleanBulk_3 __self = this;");
+    gold.append("\n    DeltaBooleanBulk_3 __state = new DeltaBooleanBulk_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -527,43 +567,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_BooleanLegacy_3 = null;
-  private String get_BooleanLegacy_3() {
-    if (cached_BooleanLegacy_3 != null) {
-      return cached_BooleanLegacy_3;
+  private String cached_BooleanLegacy_4 = null;
+  private String get_BooleanLegacy_4() {
+    if (cached_BooleanLegacy_4 != null) {
+      return cached_BooleanLegacy_4;
     }
-    cached_BooleanLegacy_3 = generateTestOutput(true, "BooleanLegacy_3", "./test_code/Types_BooleanLegacy_success.a");
-    return cached_BooleanLegacy_3;
+    cached_BooleanLegacy_4 = generateTestOutput(true, "BooleanLegacy_4", "./test_code/Types_BooleanLegacy_success.a");
+    return cached_BooleanLegacy_4;
   }
 
   @Test
   public void testBooleanLegacyEmission() {
-    assertEmissionGood(get_BooleanLegacy_3());
+    assertEmissionGood(get_BooleanLegacy_4());
   }
 
   @Test
   public void testBooleanLegacySuccess() {
-    assertLivePass(get_BooleanLegacy_3());
+    assertLivePass(get_BooleanLegacy_4());
   }
 
   @Test
   public void testBooleanLegacyGoodWillHappy() {
-    assertGoodWillHappy(get_BooleanLegacy_3());
+    assertGoodWillHappy(get_BooleanLegacy_4());
   }
 
   @Test
   public void testBooleanLegacyExceptionFree() {
-    assertExceptionFree(get_BooleanLegacy_3());
+    assertExceptionFree(get_BooleanLegacy_4());
   }
 
   @Test
   public void testBooleanLegacyTODOFree() {
-    assertTODOFree(get_BooleanLegacy_3());
+    assertTODOFree(get_BooleanLegacy_4());
   }
 
   @Test
-  public void stable_BooleanLegacy_3() {
-    String live = get_BooleanLegacy_3();
+  public void stable_BooleanLegacy_4() {
+    String live = get_BooleanLegacy_4();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_BooleanLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -591,7 +631,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class BooleanLegacy_3 extends LivingDocument {");
+    gold.append("\npublic class BooleanLegacy_4 extends LivingDocument {");
     gold.append("\n  private final RxBoolean b1;");
     gold.append("\n  private final RxBoolean b2;");
     gold.append("\n  private final RxBoolean bAnd1;");
@@ -617,7 +657,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += bOr4.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public BooleanLegacy_3(DocumentMonitor __monitor) {");
+    gold.append("\n  public BooleanLegacy_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    b1 = new RxBoolean(this, false);");
     gold.append("\n    b2 = new RxBoolean(this, false);");
@@ -910,7 +950,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    bOr4.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaBooleanLegacy_3 implements DeltaNode {");
+    gold.append("\n  private class DeltaBooleanLegacy_4 implements DeltaNode {");
     gold.append("\n    private DBoolean __db1;");
     gold.append("\n    private DBoolean __db2;");
     gold.append("\n    private DBoolean __dbAnd1;");
@@ -922,7 +962,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    private DBoolean __dbAnd4;");
     gold.append("\n    private DBoolean __dbOr4;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaBooleanLegacy_3() {");
+    gold.append("\n    private DeltaBooleanLegacy_4() {");
     gold.append("\n      __db1 = new DBoolean();");
     gold.append("\n      __db2 = new DBoolean();");
     gold.append("\n      __dbAnd1 = new DBoolean();");
@@ -950,7 +990,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __dbOr4.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(BooleanLegacy_3 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(BooleanLegacy_4 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 10;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -984,8 +1024,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    BooleanLegacy_3 __self = this;");
-    gold.append("\n    DeltaBooleanLegacy_3 __state = new DeltaBooleanLegacy_3();");
+    gold.append("\n    BooleanLegacy_4 __self = this;");
+    gold.append("\n    DeltaBooleanLegacy_4 __state = new DeltaBooleanLegacy_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -1266,43 +1306,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ChannelFunky_4 = null;
-  private String get_ChannelFunky_4() {
-    if (cached_ChannelFunky_4 != null) {
-      return cached_ChannelFunky_4;
+  private String cached_ChannelFunky_5 = null;
+  private String get_ChannelFunky_5() {
+    if (cached_ChannelFunky_5 != null) {
+      return cached_ChannelFunky_5;
     }
-    cached_ChannelFunky_4 = generateTestOutput(true, "ChannelFunky_4", "./test_code/Types_ChannelFunky_success.a");
-    return cached_ChannelFunky_4;
+    cached_ChannelFunky_5 = generateTestOutput(true, "ChannelFunky_5", "./test_code/Types_ChannelFunky_success.a");
+    return cached_ChannelFunky_5;
   }
 
   @Test
   public void testChannelFunkyEmission() {
-    assertEmissionGood(get_ChannelFunky_4());
+    assertEmissionGood(get_ChannelFunky_5());
   }
 
   @Test
   public void testChannelFunkySuccess() {
-    assertLivePass(get_ChannelFunky_4());
+    assertLivePass(get_ChannelFunky_5());
   }
 
   @Test
   public void testChannelFunkyGoodWillHappy() {
-    assertGoodWillHappy(get_ChannelFunky_4());
+    assertGoodWillHappy(get_ChannelFunky_5());
   }
 
   @Test
   public void testChannelFunkyExceptionFree() {
-    assertExceptionFree(get_ChannelFunky_4());
+    assertExceptionFree(get_ChannelFunky_5());
   }
 
   @Test
   public void testChannelFunkyTODOFree() {
-    assertTODOFree(get_ChannelFunky_4());
+    assertTODOFree(get_ChannelFunky_5());
   }
 
   @Test
-  public void stable_ChannelFunky_4() {
-    String live = get_ChannelFunky_4();
+  public void stable_ChannelFunky_5() {
+    String live = get_ChannelFunky_5();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_ChannelFunky_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1330,13 +1370,13 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class ChannelFunky_4 extends LivingDocument {");
+    gold.append("\npublic class ChannelFunky_5 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public ChannelFunky_4(DocumentMonitor __monitor) {");
+    gold.append("\n  public ChannelFunky_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -1519,9 +1559,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaChannelFunky_4 implements DeltaNode {");
+    gold.append("\n  private class DeltaChannelFunky_5 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaChannelFunky_4() {");
+    gold.append("\n    private DeltaChannelFunky_5() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1529,7 +1569,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(ChannelFunky_4 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(ChannelFunky_5 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -1552,8 +1592,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    ChannelFunky_4 __self = this;");
-    gold.append("\n    DeltaChannelFunky_4 __state = new DeltaChannelFunky_4();");
+    gold.append("\n    ChannelFunky_5 __self = this;");
+    gold.append("\n    DeltaChannelFunky_5 __state = new DeltaChannelFunky_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -1820,43 +1860,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ConstantsLegacy_5 = null;
-  private String get_ConstantsLegacy_5() {
-    if (cached_ConstantsLegacy_5 != null) {
-      return cached_ConstantsLegacy_5;
+  private String cached_ConstantsLegacy_6 = null;
+  private String get_ConstantsLegacy_6() {
+    if (cached_ConstantsLegacy_6 != null) {
+      return cached_ConstantsLegacy_6;
     }
-    cached_ConstantsLegacy_5 = generateTestOutput(true, "ConstantsLegacy_5", "./test_code/Types_ConstantsLegacy_success.a");
-    return cached_ConstantsLegacy_5;
+    cached_ConstantsLegacy_6 = generateTestOutput(true, "ConstantsLegacy_6", "./test_code/Types_ConstantsLegacy_success.a");
+    return cached_ConstantsLegacy_6;
   }
 
   @Test
   public void testConstantsLegacyEmission() {
-    assertEmissionGood(get_ConstantsLegacy_5());
+    assertEmissionGood(get_ConstantsLegacy_6());
   }
 
   @Test
   public void testConstantsLegacySuccess() {
-    assertLivePass(get_ConstantsLegacy_5());
+    assertLivePass(get_ConstantsLegacy_6());
   }
 
   @Test
   public void testConstantsLegacyGoodWillHappy() {
-    assertGoodWillHappy(get_ConstantsLegacy_5());
+    assertGoodWillHappy(get_ConstantsLegacy_6());
   }
 
   @Test
   public void testConstantsLegacyExceptionFree() {
-    assertExceptionFree(get_ConstantsLegacy_5());
+    assertExceptionFree(get_ConstantsLegacy_6());
   }
 
   @Test
   public void testConstantsLegacyTODOFree() {
-    assertTODOFree(get_ConstantsLegacy_5());
+    assertTODOFree(get_ConstantsLegacy_6());
   }
 
   @Test
-  public void stable_ConstantsLegacy_5() {
-    String live = get_ConstantsLegacy_5();
+  public void stable_ConstantsLegacy_6() {
+    String live = get_ConstantsLegacy_6();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_ConstantsLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1884,7 +1924,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class ConstantsLegacy_5 extends LivingDocument {");
+    gold.append("\npublic class ConstantsLegacy_6 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxDouble y;");
     gold.append("\n  private final RxString z;");
@@ -1898,7 +1938,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += u.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public ConstantsLegacy_5(DocumentMonitor __monitor) {");
+    gold.append("\n  public ConstantsLegacy_6(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 0);");
     gold.append("\n    y = new RxDouble(this, 0.0);");
@@ -2125,9 +2165,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    u.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaConstantsLegacy_5 implements DeltaNode {");
+    gold.append("\n  private class DeltaConstantsLegacy_6 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaConstantsLegacy_5() {");
+    gold.append("\n    private DeltaConstantsLegacy_6() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2135,7 +2175,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(ConstantsLegacy_5 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(ConstantsLegacy_6 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -2158,8 +2198,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    ConstantsLegacy_5 __self = this;");
-    gold.append("\n    DeltaConstantsLegacy_5 __state = new DeltaConstantsLegacy_5();");
+    gold.append("\n    ConstantsLegacy_6 __self = this;");
+    gold.append("\n    DeltaConstantsLegacy_6 __state = new DeltaConstantsLegacy_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -2305,43 +2345,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_DoubleBulk_6 = null;
-  private String get_DoubleBulk_6() {
-    if (cached_DoubleBulk_6 != null) {
-      return cached_DoubleBulk_6;
+  private String cached_DoubleBulk_7 = null;
+  private String get_DoubleBulk_7() {
+    if (cached_DoubleBulk_7 != null) {
+      return cached_DoubleBulk_7;
     }
-    cached_DoubleBulk_6 = generateTestOutput(true, "DoubleBulk_6", "./test_code/Types_DoubleBulk_success.a");
-    return cached_DoubleBulk_6;
+    cached_DoubleBulk_7 = generateTestOutput(true, "DoubleBulk_7", "./test_code/Types_DoubleBulk_success.a");
+    return cached_DoubleBulk_7;
   }
 
   @Test
   public void testDoubleBulkEmission() {
-    assertEmissionGood(get_DoubleBulk_6());
+    assertEmissionGood(get_DoubleBulk_7());
   }
 
   @Test
   public void testDoubleBulkSuccess() {
-    assertLivePass(get_DoubleBulk_6());
+    assertLivePass(get_DoubleBulk_7());
   }
 
   @Test
   public void testDoubleBulkGoodWillHappy() {
-    assertGoodWillHappy(get_DoubleBulk_6());
+    assertGoodWillHappy(get_DoubleBulk_7());
   }
 
   @Test
   public void testDoubleBulkExceptionFree() {
-    assertExceptionFree(get_DoubleBulk_6());
+    assertExceptionFree(get_DoubleBulk_7());
   }
 
   @Test
   public void testDoubleBulkTODOFree() {
-    assertTODOFree(get_DoubleBulk_6());
+    assertTODOFree(get_DoubleBulk_7());
   }
 
   @Test
-  public void stable_DoubleBulk_6() {
-    String live = get_DoubleBulk_6();
+  public void stable_DoubleBulk_7() {
+    String live = get_DoubleBulk_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_DoubleBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2369,7 +2409,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class DoubleBulk_6 extends LivingDocument {");
+    gold.append("\npublic class DoubleBulk_7 extends LivingDocument {");
     gold.append("\n  private final RxDouble x;");
     gold.append("\n  private final RxDouble y;");
     gold.append("\n  private final RxDouble z;");
@@ -2383,7 +2423,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += sum.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public DoubleBulk_6(DocumentMonitor __monitor) {");
+    gold.append("\n  public DoubleBulk_7(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxDouble(this, 0.0);");
     gold.append("\n    y = new RxDouble(this, 3.14);");
@@ -2603,14 +2643,14 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaDoubleBulk_6 implements DeltaNode {");
+    gold.append("\n  private class DeltaDoubleBulk_7 implements DeltaNode {");
     gold.append("\n    private DDouble __dx;");
     gold.append("\n    private DDouble __dy;");
     gold.append("\n    private DDouble __dz;");
     gold.append("\n    private int __gsum;");
     gold.append("\n    private DDouble __dsum;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaDoubleBulk_6() {");
+    gold.append("\n    private DeltaDoubleBulk_7() {");
     gold.append("\n      __dx = new DDouble();");
     gold.append("\n      __dy = new DDouble();");
     gold.append("\n      __dz = new DDouble();");
@@ -2627,7 +2667,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __dsum.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(DoubleBulk_6 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(DoubleBulk_7 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -2658,8 +2698,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    DoubleBulk_6 __self = this;");
-    gold.append("\n    DeltaDoubleBulk_6 __state = new DeltaDoubleBulk_6();");
+    gold.append("\n    DoubleBulk_7 __self = this;");
+    gold.append("\n    DeltaDoubleBulk_7 __state = new DeltaDoubleBulk_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -2835,43 +2875,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_IntegerBulk_7 = null;
-  private String get_IntegerBulk_7() {
-    if (cached_IntegerBulk_7 != null) {
-      return cached_IntegerBulk_7;
+  private String cached_IntegerBulk_8 = null;
+  private String get_IntegerBulk_8() {
+    if (cached_IntegerBulk_8 != null) {
+      return cached_IntegerBulk_8;
     }
-    cached_IntegerBulk_7 = generateTestOutput(true, "IntegerBulk_7", "./test_code/Types_IntegerBulk_success.a");
-    return cached_IntegerBulk_7;
+    cached_IntegerBulk_8 = generateTestOutput(true, "IntegerBulk_8", "./test_code/Types_IntegerBulk_success.a");
+    return cached_IntegerBulk_8;
   }
 
   @Test
   public void testIntegerBulkEmission() {
-    assertEmissionGood(get_IntegerBulk_7());
+    assertEmissionGood(get_IntegerBulk_8());
   }
 
   @Test
   public void testIntegerBulkSuccess() {
-    assertLivePass(get_IntegerBulk_7());
+    assertLivePass(get_IntegerBulk_8());
   }
 
   @Test
   public void testIntegerBulkGoodWillHappy() {
-    assertGoodWillHappy(get_IntegerBulk_7());
+    assertGoodWillHappy(get_IntegerBulk_8());
   }
 
   @Test
   public void testIntegerBulkExceptionFree() {
-    assertExceptionFree(get_IntegerBulk_7());
+    assertExceptionFree(get_IntegerBulk_8());
   }
 
   @Test
   public void testIntegerBulkTODOFree() {
-    assertTODOFree(get_IntegerBulk_7());
+    assertTODOFree(get_IntegerBulk_8());
   }
 
   @Test
-  public void stable_IntegerBulk_7() {
-    String live = get_IntegerBulk_7();
+  public void stable_IntegerBulk_8() {
+    String live = get_IntegerBulk_8();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_IntegerBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -2899,7 +2939,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class IntegerBulk_7 extends LivingDocument {");
+    gold.append("\npublic class IntegerBulk_8 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxInt32 y;");
     gold.append("\n  private final RxInt32 z;");
@@ -2913,7 +2953,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += sum.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public IntegerBulk_7(DocumentMonitor __monitor) {");
+    gold.append("\n  public IntegerBulk_8(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    y = new RxInt32(this, 2);");
@@ -3133,9 +3173,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaIntegerBulk_7 implements DeltaNode {");
+    gold.append("\n  private class DeltaIntegerBulk_8 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaIntegerBulk_7() {");
+    gold.append("\n    private DeltaIntegerBulk_8() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -3143,7 +3183,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(IntegerBulk_7 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(IntegerBulk_8 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -3166,8 +3206,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    IntegerBulk_7 __self = this;");
-    gold.append("\n    DeltaIntegerBulk_7 __state = new DeltaIntegerBulk_7();");
+    gold.append("\n    IntegerBulk_8 __self = this;");
+    gold.append("\n    DeltaIntegerBulk_8 __state = new DeltaIntegerBulk_8();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -3341,43 +3381,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LabelLegacy_8 = null;
-  private String get_LabelLegacy_8() {
-    if (cached_LabelLegacy_8 != null) {
-      return cached_LabelLegacy_8;
+  private String cached_LabelLegacy_9 = null;
+  private String get_LabelLegacy_9() {
+    if (cached_LabelLegacy_9 != null) {
+      return cached_LabelLegacy_9;
     }
-    cached_LabelLegacy_8 = generateTestOutput(true, "LabelLegacy_8", "./test_code/Types_LabelLegacy_success.a");
-    return cached_LabelLegacy_8;
+    cached_LabelLegacy_9 = generateTestOutput(true, "LabelLegacy_9", "./test_code/Types_LabelLegacy_success.a");
+    return cached_LabelLegacy_9;
   }
 
   @Test
   public void testLabelLegacyEmission() {
-    assertEmissionGood(get_LabelLegacy_8());
+    assertEmissionGood(get_LabelLegacy_9());
   }
 
   @Test
   public void testLabelLegacySuccess() {
-    assertLivePass(get_LabelLegacy_8());
+    assertLivePass(get_LabelLegacy_9());
   }
 
   @Test
   public void testLabelLegacyGoodWillHappy() {
-    assertGoodWillHappy(get_LabelLegacy_8());
+    assertGoodWillHappy(get_LabelLegacy_9());
   }
 
   @Test
   public void testLabelLegacyExceptionFree() {
-    assertExceptionFree(get_LabelLegacy_8());
+    assertExceptionFree(get_LabelLegacy_9());
   }
 
   @Test
   public void testLabelLegacyTODOFree() {
-    assertTODOFree(get_LabelLegacy_8());
+    assertTODOFree(get_LabelLegacy_9());
   }
 
   @Test
-  public void stable_LabelLegacy_8() {
-    String live = get_LabelLegacy_8();
+  public void stable_LabelLegacy_9() {
+    String live = get_LabelLegacy_9();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LabelLegacy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -3405,7 +3445,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LabelLegacy_8 extends LivingDocument {");
+    gold.append("\npublic class LabelLegacy_9 extends LivingDocument {");
     gold.append("\n  private final RxFastString ptr;");
     gold.append("\n  private final RxString output;");
     gold.append("\n  private final RxString output2;");
@@ -3417,7 +3457,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += output2.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public LabelLegacy_8(DocumentMonitor __monitor) {");
+    gold.append("\n  public LabelLegacy_9(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    ptr = new RxFastString(this, \"\");");
     gold.append("\n    output = new RxString(this, \"\");");
@@ -3633,9 +3673,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    output2.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLabelLegacy_8 implements DeltaNode {");
+    gold.append("\n  private class DeltaLabelLegacy_9 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLabelLegacy_8() {");
+    gold.append("\n    private DeltaLabelLegacy_9() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -3643,7 +3683,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LabelLegacy_8 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LabelLegacy_9 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -3666,8 +3706,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    LabelLegacy_8 __self = this;");
-    gold.append("\n    DeltaLabelLegacy_8 __state = new DeltaLabelLegacy_8();");
+    gold.append("\n    LabelLegacy_9 __self = this;");
+    gold.append("\n    DeltaLabelLegacy_9 __state = new DeltaLabelLegacy_9();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -3854,38 +3894,38 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LabelNotFound_9 = null;
-  private String get_LabelNotFound_9() {
-    if (cached_LabelNotFound_9 != null) {
-      return cached_LabelNotFound_9;
+  private String cached_LabelNotFound_10 = null;
+  private String get_LabelNotFound_10() {
+    if (cached_LabelNotFound_10 != null) {
+      return cached_LabelNotFound_10;
     }
-    cached_LabelNotFound_9 = generateTestOutput(false, "LabelNotFound_9", "./test_code/Types_LabelNotFound_failure.a");
-    return cached_LabelNotFound_9;
+    cached_LabelNotFound_10 = generateTestOutput(false, "LabelNotFound_10", "./test_code/Types_LabelNotFound_failure.a");
+    return cached_LabelNotFound_10;
   }
 
   @Test
   public void testLabelNotFoundFailure() {
-    assertLiveFail(get_LabelNotFound_9());
+    assertLiveFail(get_LabelNotFound_10());
   }
 
   @Test
   public void testLabelNotFoundNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_LabelNotFound_9());
+    assertNotTerribleLineNumbers(get_LabelNotFound_10());
   }
 
   @Test
   public void testLabelNotFoundExceptionFree() {
-    assertExceptionFree(get_LabelNotFound_9());
+    assertExceptionFree(get_LabelNotFound_10());
   }
 
   @Test
   public void testLabelNotFoundTODOFree() {
-    assertTODOFree(get_LabelNotFound_9());
+    assertTODOFree(get_LabelNotFound_10());
   }
 
   @Test
-  public void stable_LabelNotFound_9() {
-    String live = get_LabelNotFound_9();
+  public void stable_LabelNotFound_10() {
+    String live = get_LabelNotFound_10();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LabelNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -3894,43 +3934,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_LegacyClient_10 = null;
-  private String get_LegacyClient_10() {
-    if (cached_LegacyClient_10 != null) {
-      return cached_LegacyClient_10;
+  private String cached_LegacyClient_11 = null;
+  private String get_LegacyClient_11() {
+    if (cached_LegacyClient_11 != null) {
+      return cached_LegacyClient_11;
     }
-    cached_LegacyClient_10 = generateTestOutput(true, "LegacyClient_10", "./test_code/Types_LegacyClient_success.a");
-    return cached_LegacyClient_10;
+    cached_LegacyClient_11 = generateTestOutput(true, "LegacyClient_11", "./test_code/Types_LegacyClient_success.a");
+    return cached_LegacyClient_11;
   }
 
   @Test
   public void testLegacyClientEmission() {
-    assertEmissionGood(get_LegacyClient_10());
+    assertEmissionGood(get_LegacyClient_11());
   }
 
   @Test
   public void testLegacyClientSuccess() {
-    assertLivePass(get_LegacyClient_10());
+    assertLivePass(get_LegacyClient_11());
   }
 
   @Test
   public void testLegacyClientGoodWillHappy() {
-    assertGoodWillHappy(get_LegacyClient_10());
+    assertGoodWillHappy(get_LegacyClient_11());
   }
 
   @Test
   public void testLegacyClientExceptionFree() {
-    assertExceptionFree(get_LegacyClient_10());
+    assertExceptionFree(get_LegacyClient_11());
   }
 
   @Test
   public void testLegacyClientTODOFree() {
-    assertTODOFree(get_LegacyClient_10());
+    assertTODOFree(get_LegacyClient_11());
   }
 
   @Test
-  public void stable_LegacyClient_10() {
-    String live = get_LegacyClient_10();
+  public void stable_LegacyClient_11() {
+    String live = get_LegacyClient_11();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LegacyClient_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -3958,7 +3998,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LegacyClient_10 extends LivingDocument {");
+    gold.append("\npublic class LegacyClient_11 extends LivingDocument {");
     gold.append("\n  private final RxClient x;");
     gold.append("\n  private final RxClient y;");
     gold.append("\n  @Override");
@@ -3968,7 +4008,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += y.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public LegacyClient_10(DocumentMonitor __monitor) {");
+    gold.append("\n  public LegacyClient_11(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxClient(this, NtClient.NO_ONE);");
     gold.append("\n    y = new RxClient(this, NtClient.NO_ONE);");
@@ -4173,9 +4213,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    y.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLegacyClient_10 implements DeltaNode {");
+    gold.append("\n  private class DeltaLegacyClient_11 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLegacyClient_10() {");
+    gold.append("\n    private DeltaLegacyClient_11() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -4183,7 +4223,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LegacyClient_10 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LegacyClient_11 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -4206,8 +4246,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    LegacyClient_10 __self = this;");
-    gold.append("\n    DeltaLegacyClient_10 __state = new DeltaLegacyClient_10();");
+    gold.append("\n    LegacyClient_11 __self = this;");
+    gold.append("\n    DeltaLegacyClient_11 __state = new DeltaLegacyClient_11();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -4392,43 +4432,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LegacyDouble_11 = null;
-  private String get_LegacyDouble_11() {
-    if (cached_LegacyDouble_11 != null) {
-      return cached_LegacyDouble_11;
+  private String cached_LegacyDouble_12 = null;
+  private String get_LegacyDouble_12() {
+    if (cached_LegacyDouble_12 != null) {
+      return cached_LegacyDouble_12;
     }
-    cached_LegacyDouble_11 = generateTestOutput(true, "LegacyDouble_11", "./test_code/Types_LegacyDouble_success.a");
-    return cached_LegacyDouble_11;
+    cached_LegacyDouble_12 = generateTestOutput(true, "LegacyDouble_12", "./test_code/Types_LegacyDouble_success.a");
+    return cached_LegacyDouble_12;
   }
 
   @Test
   public void testLegacyDoubleEmission() {
-    assertEmissionGood(get_LegacyDouble_11());
+    assertEmissionGood(get_LegacyDouble_12());
   }
 
   @Test
   public void testLegacyDoubleSuccess() {
-    assertLivePass(get_LegacyDouble_11());
+    assertLivePass(get_LegacyDouble_12());
   }
 
   @Test
   public void testLegacyDoubleGoodWillHappy() {
-    assertGoodWillHappy(get_LegacyDouble_11());
+    assertGoodWillHappy(get_LegacyDouble_12());
   }
 
   @Test
   public void testLegacyDoubleExceptionFree() {
-    assertExceptionFree(get_LegacyDouble_11());
+    assertExceptionFree(get_LegacyDouble_12());
   }
 
   @Test
   public void testLegacyDoubleTODOFree() {
-    assertTODOFree(get_LegacyDouble_11());
+    assertTODOFree(get_LegacyDouble_12());
   }
 
   @Test
-  public void stable_LegacyDouble_11() {
-    String live = get_LegacyDouble_11();
+  public void stable_LegacyDouble_12() {
+    String live = get_LegacyDouble_12();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LegacyDouble_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -4456,7 +4496,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LegacyDouble_11 extends LivingDocument {");
+    gold.append("\npublic class LegacyDouble_12 extends LivingDocument {");
     gold.append("\n  private final RxDouble d1;");
     gold.append("\n  private final RxDouble d3;");
     gold.append("\n  private final RxBoolean is_near;");
@@ -4474,7 +4514,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += assign.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public LegacyDouble_11(DocumentMonitor __monitor) {");
+    gold.append("\n  public LegacyDouble_12(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    d1 = new RxDouble(this, 0.0);");
     gold.append("\n    d3 = new RxDouble(this, 0.0);");
@@ -4723,14 +4763,14 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    assign.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLegacyDouble_11 implements DeltaNode {");
+    gold.append("\n  private class DeltaLegacyDouble_12 implements DeltaNode {");
     gold.append("\n    private DDouble __dd1;");
     gold.append("\n    private DDouble __dd3;");
     gold.append("\n    private DBoolean __dis_near;");
     gold.append("\n    private DDouble __ddX;");
     gold.append("\n    private DDouble __ddY;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLegacyDouble_11() {");
+    gold.append("\n    private DeltaLegacyDouble_12() {");
     gold.append("\n      __dd1 = new DDouble();");
     gold.append("\n      __dd3 = new DDouble();");
     gold.append("\n      __dis_near = new DBoolean();");
@@ -4748,7 +4788,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __ddY.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LegacyDouble_11 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LegacyDouble_12 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 5;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -4777,8 +4817,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    LegacyDouble_11 __self = this;");
-    gold.append("\n    DeltaLegacyDouble_11 __state = new DeltaLegacyDouble_11();");
+    gold.append("\n    LegacyDouble_12 __self = this;");
+    gold.append("\n    DeltaLegacyDouble_12 __state = new DeltaLegacyDouble_12();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -4977,43 +5017,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LegacyEnum_12 = null;
-  private String get_LegacyEnum_12() {
-    if (cached_LegacyEnum_12 != null) {
-      return cached_LegacyEnum_12;
+  private String cached_LegacyEnum_13 = null;
+  private String get_LegacyEnum_13() {
+    if (cached_LegacyEnum_13 != null) {
+      return cached_LegacyEnum_13;
     }
-    cached_LegacyEnum_12 = generateTestOutput(true, "LegacyEnum_12", "./test_code/Types_LegacyEnum_success.a");
-    return cached_LegacyEnum_12;
+    cached_LegacyEnum_13 = generateTestOutput(true, "LegacyEnum_13", "./test_code/Types_LegacyEnum_success.a");
+    return cached_LegacyEnum_13;
   }
 
   @Test
   public void testLegacyEnumEmission() {
-    assertEmissionGood(get_LegacyEnum_12());
+    assertEmissionGood(get_LegacyEnum_13());
   }
 
   @Test
   public void testLegacyEnumSuccess() {
-    assertLivePass(get_LegacyEnum_12());
+    assertLivePass(get_LegacyEnum_13());
   }
 
   @Test
   public void testLegacyEnumGoodWillHappy() {
-    assertGoodWillHappy(get_LegacyEnum_12());
+    assertGoodWillHappy(get_LegacyEnum_13());
   }
 
   @Test
   public void testLegacyEnumExceptionFree() {
-    assertExceptionFree(get_LegacyEnum_12());
+    assertExceptionFree(get_LegacyEnum_13());
   }
 
   @Test
   public void testLegacyEnumTODOFree() {
-    assertTODOFree(get_LegacyEnum_12());
+    assertTODOFree(get_LegacyEnum_13());
   }
 
   @Test
-  public void stable_LegacyEnum_12() {
-    String live = get_LegacyEnum_12();
+  public void stable_LegacyEnum_13() {
+    String live = get_LegacyEnum_13();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LegacyEnum_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -5041,7 +5081,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LegacyEnum_12 extends LivingDocument {");
+    gold.append("\npublic class LegacyEnum_13 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxBoolean check1;");
     gold.append("\n  private final RxBoolean check2;");
@@ -5057,7 +5097,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += ee.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public LegacyEnum_12(DocumentMonitor __monitor) {");
+    gold.append("\n  public LegacyEnum_13(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    check1 = new RxBoolean(this, false);");
@@ -5295,9 +5335,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    ee.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLegacyEnum_12 implements DeltaNode {");
+    gold.append("\n  private class DeltaLegacyEnum_13 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLegacyEnum_12() {");
+    gold.append("\n    private DeltaLegacyEnum_13() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -5305,7 +5345,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LegacyEnum_12 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LegacyEnum_13 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -5328,8 +5368,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    LegacyEnum_12 __self = this;");
-    gold.append("\n    DeltaLegacyEnum_12 __state = new DeltaLegacyEnum_12();");
+    gold.append("\n    LegacyEnum_13 __self = this;");
+    gold.append("\n    DeltaLegacyEnum_13 __state = new DeltaLegacyEnum_13();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -5508,43 +5548,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LegacyEnvironment_13 = null;
-  private String get_LegacyEnvironment_13() {
-    if (cached_LegacyEnvironment_13 != null) {
-      return cached_LegacyEnvironment_13;
+  private String cached_LegacyEnvironment_14 = null;
+  private String get_LegacyEnvironment_14() {
+    if (cached_LegacyEnvironment_14 != null) {
+      return cached_LegacyEnvironment_14;
     }
-    cached_LegacyEnvironment_13 = generateTestOutput(true, "LegacyEnvironment_13", "./test_code/Types_LegacyEnvironment_success.a");
-    return cached_LegacyEnvironment_13;
+    cached_LegacyEnvironment_14 = generateTestOutput(true, "LegacyEnvironment_14", "./test_code/Types_LegacyEnvironment_success.a");
+    return cached_LegacyEnvironment_14;
   }
 
   @Test
   public void testLegacyEnvironmentEmission() {
-    assertEmissionGood(get_LegacyEnvironment_13());
+    assertEmissionGood(get_LegacyEnvironment_14());
   }
 
   @Test
   public void testLegacyEnvironmentSuccess() {
-    assertLivePass(get_LegacyEnvironment_13());
+    assertLivePass(get_LegacyEnvironment_14());
   }
 
   @Test
   public void testLegacyEnvironmentGoodWillHappy() {
-    assertGoodWillHappy(get_LegacyEnvironment_13());
+    assertGoodWillHappy(get_LegacyEnvironment_14());
   }
 
   @Test
   public void testLegacyEnvironmentExceptionFree() {
-    assertExceptionFree(get_LegacyEnvironment_13());
+    assertExceptionFree(get_LegacyEnvironment_14());
   }
 
   @Test
   public void testLegacyEnvironmentTODOFree() {
-    assertTODOFree(get_LegacyEnvironment_13());
+    assertTODOFree(get_LegacyEnvironment_14());
   }
 
   @Test
-  public void stable_LegacyEnvironment_13() {
-    String live = get_LegacyEnvironment_13();
+  public void stable_LegacyEnvironment_14() {
+    String live = get_LegacyEnvironment_14();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LegacyEnvironment_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -5572,7 +5612,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LegacyEnvironment_13 extends LivingDocument {");
+    gold.append("\npublic class LegacyEnvironment_14 extends LivingDocument {");
     gold.append("\n  private final RxBoolean a;");
     gold.append("\n  private final RxBoolean b;");
     gold.append("\n  @Override");
@@ -5582,7 +5622,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += b.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public LegacyEnvironment_13(DocumentMonitor __monitor) {");
+    gold.append("\n  public LegacyEnvironment_14(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    a = new RxBoolean(this, false);");
     gold.append("\n    b = new RxBoolean(this, false);");
@@ -5787,9 +5827,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    b.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLegacyEnvironment_13 implements DeltaNode {");
+    gold.append("\n  private class DeltaLegacyEnvironment_14 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLegacyEnvironment_13() {");
+    gold.append("\n    private DeltaLegacyEnvironment_14() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -5797,7 +5837,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LegacyEnvironment_13 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LegacyEnvironment_14 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -5820,8 +5860,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    LegacyEnvironment_13 __self = this;");
-    gold.append("\n    DeltaLegacyEnvironment_13 __state = new DeltaLegacyEnvironment_13();");
+    gold.append("\n    LegacyEnvironment_14 __self = this;");
+    gold.append("\n    DeltaLegacyEnvironment_14 __state = new DeltaLegacyEnvironment_14();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -5976,43 +6016,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LegacyInt_14 = null;
-  private String get_LegacyInt_14() {
-    if (cached_LegacyInt_14 != null) {
-      return cached_LegacyInt_14;
+  private String cached_LegacyInt_15 = null;
+  private String get_LegacyInt_15() {
+    if (cached_LegacyInt_15 != null) {
+      return cached_LegacyInt_15;
     }
-    cached_LegacyInt_14 = generateTestOutput(true, "LegacyInt_14", "./test_code/Types_LegacyInt_success.a");
-    return cached_LegacyInt_14;
+    cached_LegacyInt_15 = generateTestOutput(true, "LegacyInt_15", "./test_code/Types_LegacyInt_success.a");
+    return cached_LegacyInt_15;
   }
 
   @Test
   public void testLegacyIntEmission() {
-    assertEmissionGood(get_LegacyInt_14());
+    assertEmissionGood(get_LegacyInt_15());
   }
 
   @Test
   public void testLegacyIntSuccess() {
-    assertLivePass(get_LegacyInt_14());
+    assertLivePass(get_LegacyInt_15());
   }
 
   @Test
   public void testLegacyIntGoodWillHappy() {
-    assertGoodWillHappy(get_LegacyInt_14());
+    assertGoodWillHappy(get_LegacyInt_15());
   }
 
   @Test
   public void testLegacyIntExceptionFree() {
-    assertExceptionFree(get_LegacyInt_14());
+    assertExceptionFree(get_LegacyInt_15());
   }
 
   @Test
   public void testLegacyIntTODOFree() {
-    assertTODOFree(get_LegacyInt_14());
+    assertTODOFree(get_LegacyInt_15());
   }
 
   @Test
-  public void stable_LegacyInt_14() {
-    String live = get_LegacyInt_14();
+  public void stable_LegacyInt_15() {
+    String live = get_LegacyInt_15();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LegacyInt_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -6040,7 +6080,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LegacyInt_14 extends LivingDocument {");
+    gold.append("\npublic class LegacyInt_15 extends LivingDocument {");
     gold.append("\n  private final RxInt32 assign;");
     gold.append("\n  private final RxInt32 hex;");
     gold.append("\n  @Override");
@@ -6050,7 +6090,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += hex.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public LegacyInt_14(DocumentMonitor __monitor) {");
+    gold.append("\n  public LegacyInt_15(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    assign = new RxInt32(this, 0);");
     gold.append("\n    hex = new RxInt32(this, 0);");
@@ -6255,9 +6295,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    hex.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLegacyInt_14 implements DeltaNode {");
+    gold.append("\n  private class DeltaLegacyInt_15 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLegacyInt_14() {");
+    gold.append("\n    private DeltaLegacyInt_15() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -6265,7 +6305,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LegacyInt_14 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LegacyInt_15 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -6288,8 +6328,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    LegacyInt_14 __self = this;");
-    gold.append("\n    DeltaLegacyInt_14 __state = new DeltaLegacyInt_14();");
+    gold.append("\n    LegacyInt_15 __self = this;");
+    gold.append("\n    DeltaLegacyInt_15 __state = new DeltaLegacyInt_15();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -6514,43 +6554,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LegacyMaybe_15 = null;
-  private String get_LegacyMaybe_15() {
-    if (cached_LegacyMaybe_15 != null) {
-      return cached_LegacyMaybe_15;
+  private String cached_LegacyMaybe_16 = null;
+  private String get_LegacyMaybe_16() {
+    if (cached_LegacyMaybe_16 != null) {
+      return cached_LegacyMaybe_16;
     }
-    cached_LegacyMaybe_15 = generateTestOutput(true, "LegacyMaybe_15", "./test_code/Types_LegacyMaybe_success.a");
-    return cached_LegacyMaybe_15;
+    cached_LegacyMaybe_16 = generateTestOutput(true, "LegacyMaybe_16", "./test_code/Types_LegacyMaybe_success.a");
+    return cached_LegacyMaybe_16;
   }
 
   @Test
   public void testLegacyMaybeEmission() {
-    assertEmissionGood(get_LegacyMaybe_15());
+    assertEmissionGood(get_LegacyMaybe_16());
   }
 
   @Test
   public void testLegacyMaybeSuccess() {
-    assertLivePass(get_LegacyMaybe_15());
+    assertLivePass(get_LegacyMaybe_16());
   }
 
   @Test
   public void testLegacyMaybeGoodWillHappy() {
-    assertGoodWillHappy(get_LegacyMaybe_15());
+    assertGoodWillHappy(get_LegacyMaybe_16());
   }
 
   @Test
   public void testLegacyMaybeExceptionFree() {
-    assertExceptionFree(get_LegacyMaybe_15());
+    assertExceptionFree(get_LegacyMaybe_16());
   }
 
   @Test
   public void testLegacyMaybeTODOFree() {
-    assertTODOFree(get_LegacyMaybe_15());
+    assertTODOFree(get_LegacyMaybe_16());
   }
 
   @Test
-  public void stable_LegacyMaybe_15() {
-    String live = get_LegacyMaybe_15();
+  public void stable_LegacyMaybe_16() {
+    String live = get_LegacyMaybe_16();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LegacyMaybe_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -6578,7 +6618,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LegacyMaybe_15 extends LivingDocument {");
+    gold.append("\npublic class LegacyMaybe_16 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RxDouble> md;");
     gold.append("\n  private final RxMaybe<RxInt32> mi;");
     gold.append("\n  private final RxMaybe<RxString> ms;");
@@ -6590,7 +6630,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += ms.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public LegacyMaybe_15(DocumentMonitor __monitor) {");
+    gold.append("\n  public LegacyMaybe_16(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    md = new RxMaybe<>(this, (RxParent __parent) -> new RxDouble(__parent, 0.0));");
     gold.append("\n    mi = new RxMaybe<>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
@@ -6806,12 +6846,12 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    ms.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLegacyMaybe_15 implements DeltaNode {");
+    gold.append("\n  private class DeltaLegacyMaybe_16 implements DeltaNode {");
     gold.append("\n    private DMaybe<DDouble> __dmd;");
     gold.append("\n    private DMaybe<DInt32> __dmi;");
     gold.append("\n    private DMaybe<DString> __dms;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLegacyMaybe_15() {");
+    gold.append("\n    private DeltaLegacyMaybe_16() {");
     gold.append("\n      __dmd = new DMaybe<DDouble>();");
     gold.append("\n      __dmi = new DMaybe<DInt32>();");
     gold.append("\n      __dms = new DMaybe<DString>();");
@@ -6825,7 +6865,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __dms.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LegacyMaybe_15 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LegacyMaybe_16 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 3;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -6870,8 +6910,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    LegacyMaybe_15 __self = this;");
-    gold.append("\n    DeltaLegacyMaybe_15 __state = new DeltaLegacyMaybe_15();");
+    gold.append("\n    LegacyMaybe_16 __self = this;");
+    gold.append("\n    DeltaLegacyMaybe_16 __state = new DeltaLegacyMaybe_16();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -7035,43 +7075,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LegacyStrings_16 = null;
-  private String get_LegacyStrings_16() {
-    if (cached_LegacyStrings_16 != null) {
-      return cached_LegacyStrings_16;
+  private String cached_LegacyStrings_17 = null;
+  private String get_LegacyStrings_17() {
+    if (cached_LegacyStrings_17 != null) {
+      return cached_LegacyStrings_17;
     }
-    cached_LegacyStrings_16 = generateTestOutput(true, "LegacyStrings_16", "./test_code/Types_LegacyStrings_success.a");
-    return cached_LegacyStrings_16;
+    cached_LegacyStrings_17 = generateTestOutput(true, "LegacyStrings_17", "./test_code/Types_LegacyStrings_success.a");
+    return cached_LegacyStrings_17;
   }
 
   @Test
   public void testLegacyStringsEmission() {
-    assertEmissionGood(get_LegacyStrings_16());
+    assertEmissionGood(get_LegacyStrings_17());
   }
 
   @Test
   public void testLegacyStringsSuccess() {
-    assertLivePass(get_LegacyStrings_16());
+    assertLivePass(get_LegacyStrings_17());
   }
 
   @Test
   public void testLegacyStringsGoodWillHappy() {
-    assertGoodWillHappy(get_LegacyStrings_16());
+    assertGoodWillHappy(get_LegacyStrings_17());
   }
 
   @Test
   public void testLegacyStringsExceptionFree() {
-    assertExceptionFree(get_LegacyStrings_16());
+    assertExceptionFree(get_LegacyStrings_17());
   }
 
   @Test
   public void testLegacyStringsTODOFree() {
-    assertTODOFree(get_LegacyStrings_16());
+    assertTODOFree(get_LegacyStrings_17());
   }
 
   @Test
-  public void stable_LegacyStrings_16() {
-    String live = get_LegacyStrings_16();
+  public void stable_LegacyStrings_17() {
+    String live = get_LegacyStrings_17();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LegacyStrings_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -7099,7 +7139,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LegacyStrings_16 extends LivingDocument {");
+    gold.append("\npublic class LegacyStrings_17 extends LivingDocument {");
     gold.append("\n  private final RxString s1;");
     gold.append("\n  private final RxString s2;");
     gold.append("\n  private final RxString s5;");
@@ -7127,7 +7167,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += mult1.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public LegacyStrings_16(DocumentMonitor __monitor) {");
+    gold.append("\n  public LegacyStrings_17(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    s1 = new RxString(this, \"\");");
     gold.append("\n    s2 = new RxString(this, \"\");");
@@ -7431,7 +7471,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    mult1.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLegacyStrings_16 implements DeltaNode {");
+    gold.append("\n  private class DeltaLegacyStrings_17 implements DeltaNode {");
     gold.append("\n    private DString __ds1;");
     gold.append("\n    private DString __ds2;");
     gold.append("\n    private DString __ds5;");
@@ -7444,7 +7484,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    private DString __dbig_finish;");
     gold.append("\n    private DString __dmult1;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLegacyStrings_16() {");
+    gold.append("\n    private DeltaLegacyStrings_17() {");
     gold.append("\n      __ds1 = new DString();");
     gold.append("\n      __ds2 = new DString();");
     gold.append("\n      __ds5 = new DString();");
@@ -7474,7 +7514,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __dmult1.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LegacyStrings_16 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LegacyStrings_17 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 11;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -7509,8 +7549,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    LegacyStrings_16 __self = this;");
-    gold.append("\n    DeltaLegacyStrings_16 __state = new DeltaLegacyStrings_16();");
+    gold.append("\n    LegacyStrings_17 __self = this;");
+    gold.append("\n    DeltaLegacyStrings_17 __state = new DeltaLegacyStrings_17();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -7708,43 +7748,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_Long64Bits_17 = null;
-  private String get_Long64Bits_17() {
-    if (cached_Long64Bits_17 != null) {
-      return cached_Long64Bits_17;
+  private String cached_Long64Bits_18 = null;
+  private String get_Long64Bits_18() {
+    if (cached_Long64Bits_18 != null) {
+      return cached_Long64Bits_18;
     }
-    cached_Long64Bits_17 = generateTestOutput(true, "Long64Bits_17", "./test_code/Types_Long64Bits_success.a");
-    return cached_Long64Bits_17;
+    cached_Long64Bits_18 = generateTestOutput(true, "Long64Bits_18", "./test_code/Types_Long64Bits_success.a");
+    return cached_Long64Bits_18;
   }
 
   @Test
   public void testLong64BitsEmission() {
-    assertEmissionGood(get_Long64Bits_17());
+    assertEmissionGood(get_Long64Bits_18());
   }
 
   @Test
   public void testLong64BitsSuccess() {
-    assertLivePass(get_Long64Bits_17());
+    assertLivePass(get_Long64Bits_18());
   }
 
   @Test
   public void testLong64BitsGoodWillHappy() {
-    assertGoodWillHappy(get_Long64Bits_17());
+    assertGoodWillHappy(get_Long64Bits_18());
   }
 
   @Test
   public void testLong64BitsExceptionFree() {
-    assertExceptionFree(get_Long64Bits_17());
+    assertExceptionFree(get_Long64Bits_18());
   }
 
   @Test
   public void testLong64BitsTODOFree() {
-    assertTODOFree(get_Long64Bits_17());
+    assertTODOFree(get_Long64Bits_18());
   }
 
   @Test
-  public void stable_Long64Bits_17() {
-    String live = get_Long64Bits_17();
+  public void stable_Long64Bits_18() {
+    String live = get_Long64Bits_18();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_Long64Bits_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -7772,7 +7812,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Long64Bits_17 extends LivingDocument {");
+    gold.append("\npublic class Long64Bits_18 extends LivingDocument {");
     gold.append("\n  private final RxInt64 x;");
     gold.append("\n  private final RxInt64 big;");
     gold.append("\n  @Override");
@@ -7782,7 +7822,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += big.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Long64Bits_17(DocumentMonitor __monitor) {");
+    gold.append("\n  public Long64Bits_18(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt64(this, 0L);");
     gold.append("\n    big = new RxInt64(this, 0L);");
@@ -7987,11 +8027,11 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    big.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLong64Bits_17 implements DeltaNode {");
+    gold.append("\n  private class DeltaLong64Bits_18 implements DeltaNode {");
     gold.append("\n    private DInt64 __dx;");
     gold.append("\n    private DInt64 __dbig;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLong64Bits_17() {");
+    gold.append("\n    private DeltaLong64Bits_18() {");
     gold.append("\n      __dx = new DInt64();");
     gold.append("\n      __dbig = new DInt64();");
     gold.append("\n      __emitted = false;");
@@ -8003,7 +8043,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __dbig.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Long64Bits_17 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Long64Bits_18 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -8029,8 +8069,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    Long64Bits_17 __self = this;");
-    gold.append("\n    DeltaLong64Bits_17 __state = new DeltaLong64Bits_17();");
+    gold.append("\n    Long64Bits_18 __self = this;");
+    gold.append("\n    DeltaLong64Bits_18 __state = new DeltaLong64Bits_18();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -8198,43 +8238,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_LongFun_18 = null;
-  private String get_LongFun_18() {
-    if (cached_LongFun_18 != null) {
-      return cached_LongFun_18;
+  private String cached_LongFun_19 = null;
+  private String get_LongFun_19() {
+    if (cached_LongFun_19 != null) {
+      return cached_LongFun_19;
     }
-    cached_LongFun_18 = generateTestOutput(true, "LongFun_18", "./test_code/Types_LongFun_success.a");
-    return cached_LongFun_18;
+    cached_LongFun_19 = generateTestOutput(true, "LongFun_19", "./test_code/Types_LongFun_success.a");
+    return cached_LongFun_19;
   }
 
   @Test
   public void testLongFunEmission() {
-    assertEmissionGood(get_LongFun_18());
+    assertEmissionGood(get_LongFun_19());
   }
 
   @Test
   public void testLongFunSuccess() {
-    assertLivePass(get_LongFun_18());
+    assertLivePass(get_LongFun_19());
   }
 
   @Test
   public void testLongFunGoodWillHappy() {
-    assertGoodWillHappy(get_LongFun_18());
+    assertGoodWillHappy(get_LongFun_19());
   }
 
   @Test
   public void testLongFunExceptionFree() {
-    assertExceptionFree(get_LongFun_18());
+    assertExceptionFree(get_LongFun_19());
   }
 
   @Test
   public void testLongFunTODOFree() {
-    assertTODOFree(get_LongFun_18());
+    assertTODOFree(get_LongFun_19());
   }
 
   @Test
-  public void stable_LongFun_18() {
-    String live = get_LongFun_18();
+  public void stable_LongFun_19() {
+    String live = get_LongFun_19();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_LongFun_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -8262,7 +8302,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class LongFun_18 extends LivingDocument {");
+    gold.append("\npublic class LongFun_19 extends LivingDocument {");
     gold.append("\n  private final RxInt64 x;");
     gold.append("\n  private final RxTable<RTxR> t;");
     gold.append("\n  @Override");
@@ -8272,7 +8312,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += t.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public LongFun_18(DocumentMonitor __monitor) {");
+    gold.append("\n  public LongFun_19(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt64(this, 0L);");
     gold.append("\n    t = new RxTable<>(__self, this, \"t\", (RxParent __parent) -> new RTxR(__parent), 0);");
@@ -8477,9 +8517,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    t.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaLongFun_18 implements DeltaNode {");
+    gold.append("\n  private class DeltaLongFun_19 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaLongFun_18() {");
+    gold.append("\n    private DeltaLongFun_19() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -8487,7 +8527,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(LongFun_18 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(LongFun_19 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -8510,8 +8550,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    LongFun_18 __self = this;");
-    gold.append("\n    DeltaLongFun_18 __state = new DeltaLongFun_18();");
+    gold.append("\n    LongFun_19 __self = this;");
+    gold.append("\n    DeltaLongFun_19 __state = new DeltaLongFun_19();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -8773,11 +8813,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __track(2);");
     gold.append("\n    (t.iterate(true)).transform((item) -> item.y).transform((item) -> item.bumpUpPost());");
     gold.append("\n    __track(3);");
-    gold.append("\n    NtList<RxInt64> _auto_2 = (t.iterate(true)).transform((item) -> item.y);");
-    gold.append("\n    for (RxInt64 _auto_3 : _auto_2) {");
-    gold.append("\n      _auto_3.opAddTo(90L);");
-    gold.append("\n    }");
-    gold.append("\n");
+    gold.append("\n    LibArithmetic.ListMath.addToLL((t.iterate(true)).transform((item) -> item.y), 90L);");
     gold.append("\n    __track(4);");
     gold.append("\n    long x = 42;");
     gold.append("\n  }");
@@ -8824,43 +8860,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_MaybeDeleteFlow_19 = null;
-  private String get_MaybeDeleteFlow_19() {
-    if (cached_MaybeDeleteFlow_19 != null) {
-      return cached_MaybeDeleteFlow_19;
+  private String cached_MaybeDeleteFlow_20 = null;
+  private String get_MaybeDeleteFlow_20() {
+    if (cached_MaybeDeleteFlow_20 != null) {
+      return cached_MaybeDeleteFlow_20;
     }
-    cached_MaybeDeleteFlow_19 = generateTestOutput(true, "MaybeDeleteFlow_19", "./test_code/Types_MaybeDeleteFlow_success.a");
-    return cached_MaybeDeleteFlow_19;
+    cached_MaybeDeleteFlow_20 = generateTestOutput(true, "MaybeDeleteFlow_20", "./test_code/Types_MaybeDeleteFlow_success.a");
+    return cached_MaybeDeleteFlow_20;
   }
 
   @Test
   public void testMaybeDeleteFlowEmission() {
-    assertEmissionGood(get_MaybeDeleteFlow_19());
+    assertEmissionGood(get_MaybeDeleteFlow_20());
   }
 
   @Test
   public void testMaybeDeleteFlowSuccess() {
-    assertLivePass(get_MaybeDeleteFlow_19());
+    assertLivePass(get_MaybeDeleteFlow_20());
   }
 
   @Test
   public void testMaybeDeleteFlowGoodWillHappy() {
-    assertGoodWillHappy(get_MaybeDeleteFlow_19());
+    assertGoodWillHappy(get_MaybeDeleteFlow_20());
   }
 
   @Test
   public void testMaybeDeleteFlowExceptionFree() {
-    assertExceptionFree(get_MaybeDeleteFlow_19());
+    assertExceptionFree(get_MaybeDeleteFlow_20());
   }
 
   @Test
   public void testMaybeDeleteFlowTODOFree() {
-    assertTODOFree(get_MaybeDeleteFlow_19());
+    assertTODOFree(get_MaybeDeleteFlow_20());
   }
 
   @Test
-  public void stable_MaybeDeleteFlow_19() {
-    String live = get_MaybeDeleteFlow_19();
+  public void stable_MaybeDeleteFlow_20() {
+    String live = get_MaybeDeleteFlow_20();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_MaybeDeleteFlow_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -8888,7 +8924,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class MaybeDeleteFlow_19 extends LivingDocument {");
+    gold.append("\npublic class MaybeDeleteFlow_20 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RxInt32> x;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -8896,7 +8932,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += x.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public MaybeDeleteFlow_19(DocumentMonitor __monitor) {");
+    gold.append("\n  public MaybeDeleteFlow_20(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxMaybe<>(this, (RxParent __parent) -> new RxInt32(__parent, 0));");
     gold.append("\n    __goodwillBudget = 100000;");
@@ -9090,9 +9126,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    x.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaMaybeDeleteFlow_19 implements DeltaNode {");
+    gold.append("\n  private class DeltaMaybeDeleteFlow_20 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaMaybeDeleteFlow_19() {");
+    gold.append("\n    private DeltaMaybeDeleteFlow_20() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -9100,7 +9136,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(MaybeDeleteFlow_19 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(MaybeDeleteFlow_20 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -9123,8 +9159,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    MaybeDeleteFlow_19 __self = this;");
-    gold.append("\n    DeltaMaybeDeleteFlow_19 __state = new DeltaMaybeDeleteFlow_19();");
+    gold.append("\n    MaybeDeleteFlow_20 __self = this;");
+    gold.append("\n    DeltaMaybeDeleteFlow_20 __state = new DeltaMaybeDeleteFlow_20();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -9279,43 +9315,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_MaybeDelete_20 = null;
-  private String get_MaybeDelete_20() {
-    if (cached_MaybeDelete_20 != null) {
-      return cached_MaybeDelete_20;
+  private String cached_MaybeDelete_21 = null;
+  private String get_MaybeDelete_21() {
+    if (cached_MaybeDelete_21 != null) {
+      return cached_MaybeDelete_21;
     }
-    cached_MaybeDelete_20 = generateTestOutput(true, "MaybeDelete_20", "./test_code/Types_MaybeDelete_success.a");
-    return cached_MaybeDelete_20;
+    cached_MaybeDelete_21 = generateTestOutput(true, "MaybeDelete_21", "./test_code/Types_MaybeDelete_success.a");
+    return cached_MaybeDelete_21;
   }
 
   @Test
   public void testMaybeDeleteEmission() {
-    assertEmissionGood(get_MaybeDelete_20());
+    assertEmissionGood(get_MaybeDelete_21());
   }
 
   @Test
   public void testMaybeDeleteSuccess() {
-    assertLivePass(get_MaybeDelete_20());
+    assertLivePass(get_MaybeDelete_21());
   }
 
   @Test
   public void testMaybeDeleteGoodWillHappy() {
-    assertGoodWillHappy(get_MaybeDelete_20());
+    assertGoodWillHappy(get_MaybeDelete_21());
   }
 
   @Test
   public void testMaybeDeleteExceptionFree() {
-    assertExceptionFree(get_MaybeDelete_20());
+    assertExceptionFree(get_MaybeDelete_21());
   }
 
   @Test
   public void testMaybeDeleteTODOFree() {
-    assertTODOFree(get_MaybeDelete_20());
+    assertTODOFree(get_MaybeDelete_21());
   }
 
   @Test
-  public void stable_MaybeDelete_20() {
-    String live = get_MaybeDelete_20();
+  public void stable_MaybeDelete_21() {
+    String live = get_MaybeDelete_21();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_MaybeDelete_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -9343,7 +9379,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class MaybeDelete_20 extends LivingDocument {");
+    gold.append("\npublic class MaybeDelete_21 extends LivingDocument {");
     gold.append("\n  private final RxMaybe<RxString> s;");
     gold.append("\n  private final RxMaybe<RxString> w00t;");
     gold.append("\n  private final RxBoolean t1;");
@@ -9359,7 +9395,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += t3.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public MaybeDelete_20(DocumentMonitor __monitor) {");
+    gold.append("\n  public MaybeDelete_21(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    s = new RxMaybe<>(this, (RxParent __parent) -> new RxString(__parent, \"\"));");
     gold.append("\n    w00t = new RxMaybe<>(this, (RxParent __parent) -> new RxString(__parent, \"\"));");
@@ -9597,12 +9633,12 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    t3.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaMaybeDelete_20 implements DeltaNode {");
+    gold.append("\n  private class DeltaMaybeDelete_21 implements DeltaNode {");
     gold.append("\n    private DBoolean __dt1;");
     gold.append("\n    private DBoolean __dt2;");
     gold.append("\n    private DBoolean __dt3;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaMaybeDelete_20() {");
+    gold.append("\n    private DeltaMaybeDelete_21() {");
     gold.append("\n      __dt1 = new DBoolean();");
     gold.append("\n      __dt2 = new DBoolean();");
     gold.append("\n      __dt3 = new DBoolean();");
@@ -9616,7 +9652,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __dt3.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(MaybeDelete_20 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(MaybeDelete_21 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 3;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -9643,8 +9679,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    MaybeDelete_20 __self = this;");
-    gold.append("\n    DeltaMaybeDelete_20 __state = new DeltaMaybeDelete_20();");
+    gold.append("\n    MaybeDelete_21 __self = this;");
+    gold.append("\n    DeltaMaybeDelete_21 __state = new DeltaMaybeDelete_21();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -9891,43 +9927,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_NumberBulk_21 = null;
-  private String get_NumberBulk_21() {
-    if (cached_NumberBulk_21 != null) {
-      return cached_NumberBulk_21;
+  private String cached_NumberBulk_22 = null;
+  private String get_NumberBulk_22() {
+    if (cached_NumberBulk_22 != null) {
+      return cached_NumberBulk_22;
     }
-    cached_NumberBulk_21 = generateTestOutput(true, "NumberBulk_21", "./test_code/Types_NumberBulk_success.a");
-    return cached_NumberBulk_21;
+    cached_NumberBulk_22 = generateTestOutput(true, "NumberBulk_22", "./test_code/Types_NumberBulk_success.a");
+    return cached_NumberBulk_22;
   }
 
   @Test
   public void testNumberBulkEmission() {
-    assertEmissionGood(get_NumberBulk_21());
+    assertEmissionGood(get_NumberBulk_22());
   }
 
   @Test
   public void testNumberBulkSuccess() {
-    assertLivePass(get_NumberBulk_21());
+    assertLivePass(get_NumberBulk_22());
   }
 
   @Test
   public void testNumberBulkGoodWillHappy() {
-    assertGoodWillHappy(get_NumberBulk_21());
+    assertGoodWillHappy(get_NumberBulk_22());
   }
 
   @Test
   public void testNumberBulkExceptionFree() {
-    assertExceptionFree(get_NumberBulk_21());
+    assertExceptionFree(get_NumberBulk_22());
   }
 
   @Test
   public void testNumberBulkTODOFree() {
-    assertTODOFree(get_NumberBulk_21());
+    assertTODOFree(get_NumberBulk_22());
   }
 
   @Test
-  public void stable_NumberBulk_21() {
-    String live = get_NumberBulk_21();
+  public void stable_NumberBulk_22() {
+    String live = get_NumberBulk_22();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_NumberBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -9955,7 +9991,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class NumberBulk_21 extends LivingDocument {");
+    gold.append("\npublic class NumberBulk_22 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxInt32 y;");
     gold.append("\n  private final RxDouble z;");
@@ -9969,7 +10005,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += sum.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public NumberBulk_21(DocumentMonitor __monitor) {");
+    gold.append("\n  public NumberBulk_22(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    y = new RxInt32(this, 2);");
@@ -10189,9 +10225,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaNumberBulk_21 implements DeltaNode {");
+    gold.append("\n  private class DeltaNumberBulk_22 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaNumberBulk_21() {");
+    gold.append("\n    private DeltaNumberBulk_22() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -10199,7 +10235,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(NumberBulk_21 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(NumberBulk_22 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -10222,8 +10258,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    NumberBulk_21 __self = this;");
-    gold.append("\n    DeltaNumberBulk_21 __state = new DeltaNumberBulk_21();");
+    gold.append("\n    NumberBulk_22 __self = this;");
+    gold.append("\n    DeltaNumberBulk_22 __state = new DeltaNumberBulk_22();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -10397,38 +10433,38 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_ReactiveAssignmentMismatches_22 = null;
-  private String get_ReactiveAssignmentMismatches_22() {
-    if (cached_ReactiveAssignmentMismatches_22 != null) {
-      return cached_ReactiveAssignmentMismatches_22;
+  private String cached_ReactiveAssignmentMismatches_23 = null;
+  private String get_ReactiveAssignmentMismatches_23() {
+    if (cached_ReactiveAssignmentMismatches_23 != null) {
+      return cached_ReactiveAssignmentMismatches_23;
     }
-    cached_ReactiveAssignmentMismatches_22 = generateTestOutput(false, "ReactiveAssignmentMismatches_22", "./test_code/Types_ReactiveAssignmentMismatches_failure.a");
-    return cached_ReactiveAssignmentMismatches_22;
+    cached_ReactiveAssignmentMismatches_23 = generateTestOutput(false, "ReactiveAssignmentMismatches_23", "./test_code/Types_ReactiveAssignmentMismatches_failure.a");
+    return cached_ReactiveAssignmentMismatches_23;
   }
 
   @Test
   public void testReactiveAssignmentMismatchesFailure() {
-    assertLiveFail(get_ReactiveAssignmentMismatches_22());
+    assertLiveFail(get_ReactiveAssignmentMismatches_23());
   }
 
   @Test
   public void testReactiveAssignmentMismatchesNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_ReactiveAssignmentMismatches_22());
+    assertNotTerribleLineNumbers(get_ReactiveAssignmentMismatches_23());
   }
 
   @Test
   public void testReactiveAssignmentMismatchesExceptionFree() {
-    assertExceptionFree(get_ReactiveAssignmentMismatches_22());
+    assertExceptionFree(get_ReactiveAssignmentMismatches_23());
   }
 
   @Test
   public void testReactiveAssignmentMismatchesTODOFree() {
-    assertTODOFree(get_ReactiveAssignmentMismatches_22());
+    assertTODOFree(get_ReactiveAssignmentMismatches_23());
   }
 
   @Test
-  public void stable_ReactiveAssignmentMismatches_22() {
-    String live = get_ReactiveAssignmentMismatches_22();
+  public void stable_ReactiveAssignmentMismatches_23() {
+    String live = get_ReactiveAssignmentMismatches_23();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_ReactiveAssignmentMismatches_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -10437,43 +10473,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_SpecialConstants_23 = null;
-  private String get_SpecialConstants_23() {
-    if (cached_SpecialConstants_23 != null) {
-      return cached_SpecialConstants_23;
+  private String cached_SpecialConstants_24 = null;
+  private String get_SpecialConstants_24() {
+    if (cached_SpecialConstants_24 != null) {
+      return cached_SpecialConstants_24;
     }
-    cached_SpecialConstants_23 = generateTestOutput(true, "SpecialConstants_23", "./test_code/Types_SpecialConstants_success.a");
-    return cached_SpecialConstants_23;
+    cached_SpecialConstants_24 = generateTestOutput(true, "SpecialConstants_24", "./test_code/Types_SpecialConstants_success.a");
+    return cached_SpecialConstants_24;
   }
 
   @Test
   public void testSpecialConstantsEmission() {
-    assertEmissionGood(get_SpecialConstants_23());
+    assertEmissionGood(get_SpecialConstants_24());
   }
 
   @Test
   public void testSpecialConstantsSuccess() {
-    assertLivePass(get_SpecialConstants_23());
+    assertLivePass(get_SpecialConstants_24());
   }
 
   @Test
   public void testSpecialConstantsGoodWillHappy() {
-    assertGoodWillHappy(get_SpecialConstants_23());
+    assertGoodWillHappy(get_SpecialConstants_24());
   }
 
   @Test
   public void testSpecialConstantsExceptionFree() {
-    assertExceptionFree(get_SpecialConstants_23());
+    assertExceptionFree(get_SpecialConstants_24());
   }
 
   @Test
   public void testSpecialConstantsTODOFree() {
-    assertTODOFree(get_SpecialConstants_23());
+    assertTODOFree(get_SpecialConstants_24());
   }
 
   @Test
-  public void stable_SpecialConstants_23() {
-    String live = get_SpecialConstants_23();
+  public void stable_SpecialConstants_24() {
+    String live = get_SpecialConstants_24();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_SpecialConstants_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -10501,13 +10537,13 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class SpecialConstants_23 extends LivingDocument {");
+    gold.append("\npublic class SpecialConstants_24 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public SpecialConstants_23(DocumentMonitor __monitor) {");
+    gold.append("\n  public SpecialConstants_24(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -10690,9 +10726,9 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaSpecialConstants_23 implements DeltaNode {");
+    gold.append("\n  private class DeltaSpecialConstants_24 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaSpecialConstants_23() {");
+    gold.append("\n    private DeltaSpecialConstants_24() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -10700,7 +10736,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(SpecialConstants_23 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(SpecialConstants_24 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -10723,8 +10759,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    SpecialConstants_23 __self = this;");
-    gold.append("\n    DeltaSpecialConstants_23 __state = new DeltaSpecialConstants_23();");
+    gold.append("\n    SpecialConstants_24 __self = this;");
+    gold.append("\n    DeltaSpecialConstants_24 __state = new DeltaSpecialConstants_24();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -10870,43 +10906,43 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_StringBulk_24 = null;
-  private String get_StringBulk_24() {
-    if (cached_StringBulk_24 != null) {
-      return cached_StringBulk_24;
+  private String cached_StringBulk_25 = null;
+  private String get_StringBulk_25() {
+    if (cached_StringBulk_25 != null) {
+      return cached_StringBulk_25;
     }
-    cached_StringBulk_24 = generateTestOutput(true, "StringBulk_24", "./test_code/Types_StringBulk_success.a");
-    return cached_StringBulk_24;
+    cached_StringBulk_25 = generateTestOutput(true, "StringBulk_25", "./test_code/Types_StringBulk_success.a");
+    return cached_StringBulk_25;
   }
 
   @Test
   public void testStringBulkEmission() {
-    assertEmissionGood(get_StringBulk_24());
+    assertEmissionGood(get_StringBulk_25());
   }
 
   @Test
   public void testStringBulkSuccess() {
-    assertLivePass(get_StringBulk_24());
+    assertLivePass(get_StringBulk_25());
   }
 
   @Test
   public void testStringBulkGoodWillHappy() {
-    assertGoodWillHappy(get_StringBulk_24());
+    assertGoodWillHappy(get_StringBulk_25());
   }
 
   @Test
   public void testStringBulkExceptionFree() {
-    assertExceptionFree(get_StringBulk_24());
+    assertExceptionFree(get_StringBulk_25());
   }
 
   @Test
   public void testStringBulkTODOFree() {
-    assertTODOFree(get_StringBulk_24());
+    assertTODOFree(get_StringBulk_25());
   }
 
   @Test
-  public void stable_StringBulk_24() {
-    String live = get_StringBulk_24();
+  public void stable_StringBulk_25() {
+    String live = get_StringBulk_25();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Types_StringBulk_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -10934,7 +10970,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class StringBulk_24 extends LivingDocument {");
+    gold.append("\npublic class StringBulk_25 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxString y;");
     gold.append("\n  private final RxDouble z;");
@@ -10948,7 +10984,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __sum += sum.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public StringBulk_24(DocumentMonitor __monitor) {");
+    gold.append("\n  public StringBulk_25(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    x = new RxInt32(this, 1);");
     gold.append("\n    y = new RxString(this, \"2\");");
@@ -11168,14 +11204,14 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    z.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaStringBulk_24 implements DeltaNode {");
+    gold.append("\n  private class DeltaStringBulk_25 implements DeltaNode {");
     gold.append("\n    private DInt32 __dx;");
     gold.append("\n    private DString __dy;");
     gold.append("\n    private DDouble __dz;");
     gold.append("\n    private int __gsum;");
     gold.append("\n    private DString __dsum;");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaStringBulk_24() {");
+    gold.append("\n    private DeltaStringBulk_25() {");
     gold.append("\n      __dx = new DInt32();");
     gold.append("\n      __dy = new DString();");
     gold.append("\n      __dz = new DDouble();");
@@ -11192,7 +11228,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __sum += __dsum.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(StringBulk_24 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(StringBulk_25 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
@@ -11223,8 +11259,8 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    StringBulk_24 __self = this;");
-    gold.append("\n    DeltaStringBulk_24 __state = new DeltaStringBulk_24();");
+    gold.append("\n    StringBulk_25 __self = this;");
+    gold.append("\n    DeltaStringBulk_25 __state = new DeltaStringBulk_25();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");

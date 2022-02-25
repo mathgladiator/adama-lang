@@ -77,4 +77,24 @@ public class RxComplex extends RxBase implements CanGetAndSet<NtComplex> {
     this.value = value;
     __raiseDirty();
   }
+
+  public void opAddTo(int x) {
+    this.value = new NtComplex(value.real + x, value.imaginary);
+    __raiseDirty();
+  }
+
+  public void opAddTo(long x) {
+    this.value = new NtComplex(value.real + x, value.imaginary);
+    __raiseDirty();
+  }
+
+  public void opAddTo(double x) {
+    this.value = new NtComplex(value.real + x, value.imaginary);
+    __raiseDirty();
+  }
+
+  public void opAddTo(NtComplex x) {
+    this.value = new NtComplex(value.real + x.real, value.imaginary + x.imaginary);
+    __raiseDirty();
+  }
 }

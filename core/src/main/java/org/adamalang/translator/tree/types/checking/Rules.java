@@ -61,16 +61,6 @@ public class Rules {
     return RuleSetBump.CanBumpNumeric(environment, tyType, silent);
   }
 
-  /** FROM: RuleSetCompare */
-  public boolean CanCompare(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetCompare.CanCompare(environment, tyTypeA, tyTypeB, silent);
-  }
-
-  /** FROM: RuleSetMod */
-  public CanMathResult CanMod(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetMod.CanMod(environment, tyTypeA, tyTypeB, silent);
-  }
-
   /** FROM: RuleSetMultiply */
   public CanMathResult CanMultiply(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetMultiply.CanMultiply(environment, tyTypeA, tyTypeB, silent);
@@ -93,11 +83,6 @@ public class Rules {
 
   public boolean CanTypeAStoreTypeB(final TyType tyTypeA, final TyType tyTypeB, final StorageTweak result, final boolean silent) {
     return RuleSetAssignment.CanTypeAStoreTypeB(environment, tyTypeA, tyTypeB, result, silent);
-  }
-
-  /** FROM: RuleSetLogic */
-  public boolean CanUseLogic(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetLogic.CanUseLogic(environment, tyTypeA, tyTypeB, silent);
   }
 
   /** FROM: RuleSetCommon */

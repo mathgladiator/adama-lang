@@ -10,7 +10,9 @@
 package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtComplex;
+import org.adamalang.runtime.natives.NtList;
 import org.adamalang.runtime.natives.NtMaybe;
+import org.adamalang.runtime.reactives.*;
 
 /**
  * Since division is complicated, we need to think about what it means to build up arithmetic using
@@ -629,18 +631,95 @@ public class LibArithmetic {
     }
   }
 
-  /*
-  public static NtComplex addCI(NtComplex x, int y) {
-    return new NtComplex(x.real + y, x.imaginary);
+  public static class ListMath {
+    public static int addToII(NtList<RxInt32> x, int y) {
+      int sum = 0;
+      for (RxInt32 item : x) {
+        sum += item.opAddTo(y);
+      }
+      return sum;
+    }
+    public static long addToLI(NtList<RxInt64> x, int y) {
+      long sum = 0;
+      for (RxInt64 item : x) {
+        sum += item.opAddTo(y);
+      }
+      return sum;
+    }
+    public static long addToLL(NtList<RxInt64> x, long y) {
+      long sum = 0;
+      for (RxInt64 item : x) {
+        sum += item.opAddTo(y);
+      }
+      return sum;
+    }
+    public static double addToDI(NtList<RxDouble> x, int y) {
+      double sum = 0;
+      for (RxDouble item : x) {
+        sum += item.opAddTo(y);
+      }
+      return sum;
+    }
+    public static double addToDL(NtList<RxDouble> x, long y) {
+      double sum = 0;
+      for (RxDouble item : x) {
+        sum += item.opAddTo(y);
+      }
+      return sum;
+    }
+    public static double addToDD(NtList<RxDouble> x, double y) {
+      double sum = 0;
+      for (RxDouble item : x) {
+        sum += item.opAddTo(y);
+      }
+      return sum;
+    }
+    public static NtComplex addToCI(NtList<RxComplex> x, int y) {
+      double real = 0;
+      double imaginary = 0;
+      for (RxComplex item : x) {
+        item.opAddTo(y);
+        real += item.get().real;
+        imaginary += item.get().imaginary;
+      }
+      return new NtComplex(real, imaginary);
+    }
+    public static NtComplex addToCL(NtList<RxComplex> x, long y) {
+      double real = 0;
+      double imaginary = 0;
+      for (RxComplex item : x) {
+        item.opAddTo(y);
+        real += item.get().real;
+        imaginary += item.get().imaginary;
+      }
+      return new NtComplex(real, imaginary);
+    }
+    public static NtComplex addToCD(NtList<RxComplex> x, double y) {
+      double real = 0;
+      double imaginary = 0;
+      for (RxComplex item : x) {
+        item.opAddTo(y);
+        real += item.get().real;
+        imaginary += item.get().imaginary;
+      }
+      return new NtComplex(real, imaginary);
+    }
+    public static NtComplex addToCD(NtList<RxComplex> x, NtComplex y) {
+      double real = 0;
+      double imaginary = 0;
+      for (RxComplex item : x) {
+        item.opAddTo(y);
+        real += item.get().real;
+        imaginary += item.get().imaginary;
+      }
+      return new NtComplex(real, imaginary);
+    }
+    public static String addToSO(NtList<RxString> x, Object y) {
+      StringBuilder sb = new StringBuilder();
+      for (RxString item : x) {
+        sb.append(item.opAddTo(y.toString()));
+      }
+      return sb.toString();
+    }
   }
-  public static NtComplex addCL(NtComplex x, long y) {
-    return new NtComplex(x.real + y, x.imaginary);
-  }
-  public static NtComplex addCD(NtComplex x, double y) {
-    return new NtComplex(x.real + y, x.imaginary);
-  }
-  public static NtComplex addCC(NtComplex x, NtComplex y) {
-    return new NtComplex(x.real + y.real, x.imaginary + y.imaginary);
-  }
-  */
 }

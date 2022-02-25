@@ -73,9 +73,62 @@ public class LibArithmeticTests {
     throw new NullPointerException();
   }
 
+  private static String aType(String ty) {
+    switch (ty) {
+      case "tyInt": return "int";
+      case "tyLong": return "long";
+      case "tyDouble": return "double";
+      case "tyMaybeDouble": return "maybe<double>";
+      case "tyComplex": return "complex";
+      case "tyMaybeComplex": return "maybe<complex>";
+      case "tyBoolean": return "bool";
+      case "tyString": return "string";
+      case "tyMaybeString": return "maybe<string>";
+    }
+    throw new NullPointerException();
+  }
+
+  private static String invent(String ty) {
+    switch (ty) {
+      case "tyInt": return "1";
+      case "tyLong": return "2L";
+      case "tyDouble": return "3.5";
+      case "tyMaybeDouble": return "@maybe(4.5)";
+      case "tyComplex": return "1 + 2 * @i";
+      case "tyMaybeComplex": return "@maybe(7 + 2 * @i)";
+      case "tyBoolean": return "true";
+      case "tyString": return "\"s\"";
+      case "tyMaybeString": return "@maybe(\"maybe?\")";
+    }
+    throw new NullPointerException();
+  }
+
   @Test
   public void generateTable() {
-    String[] x = new String[] { "tyInt", "tyLong", "tyDouble" };
+    String[] x = new String[] { "tyInt", "tyLong", "tyDouble", "tyComplex" };
+    for (int k = 0; k < x.length; k++) {
+      System.out.println("public " + aType(x[k]) + " r" + k + ";");
+    }
+    System.out.println("public string rS;");
+    System.out.println("@construct {");
+    for (int k = 0; k < x.length; k++) {
+      System.out.println("  " + aType(x[k]) + " l" + k + ";");
+      for (int j = 0; j <= k; j++) {
+        System.out.println("  r" + k + " += " + invent(x[j]) + ";");
+        System.out.println("  l" + k + " += " + invent(x[j]) + ";");
+        System.out.println("  r" + k + " += l" + k + ";");
+      }
+    }
+    System.out.println("  string lS;");
+    String[] y = new String[] { "tyInt", "tyLong", "tyDouble", "tyComplex", "tyMaybeString", "tyBoolean", "tyMaybeComplex" };
+    for (String Y : y) {
+      System.out.println("  rS += " + invent(Y) + ";");
+      System.out.println("  lS += " + invent(Y) + ";");
+    }
+    System.out.println("}");
+
+
+    /*
     String[] ops = new String[] { "<", "<=", "==", "!=",">=", ">"};
     for (String op : ops) {
       for (String a : x) {
@@ -110,6 +163,7 @@ public class LibArithmeticTests {
 
     System.out.println("insert(tyBoolean \"==\", tyBoolean, tyBoolean, \"%s == %s\", false);");
     System.out.println("insert(tyBoolean \"!=\", tyBoolean, tyBoolean, \"%s != %s\", false);");
+    */
 
     /*
     String[] x = new String[] { "tyInt", "tyLong", "tyDouble", "tyMaybeDouble", "tyComplex", "tyMaybeComplex", "tyBoolean", "tyString", "tyMaybeString"};

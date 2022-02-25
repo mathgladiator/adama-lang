@@ -13,8 +13,8 @@ import org.adamalang.runtime.stdlib.LibMath;
 
 /** a complex number */
 public class NtComplex {
-  public final double real;
-  public final double imaginary;
+  public double real;
+  public double imaginary;
 
   public NtComplex(double real, double imaginary) {
     this.real = real;
@@ -45,5 +45,26 @@ public class NtComplex {
   @Override
   public String toString() {
     return real + " " + imaginary + "i";
+  }
+
+  public NtComplex opAddTo(int x) {
+    real += x;
+    return this;
+  }
+
+  public NtComplex opAddTo(long x) {
+    real += x;
+    return this;
+  }
+
+  public NtComplex opAddTo(double x) {
+    real += x;
+    return this;
+  }
+
+  public NtComplex opAddTo(NtComplex x) {
+    real += x.real;
+    imaginary += x.imaginary;
+    return this;
   }
 }

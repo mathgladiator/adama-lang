@@ -33,7 +33,6 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
     CanBeMapDomain, //
     DetailTypeHasMethods, //
     DetailEqualityTestingRequiresWrapping, //
-    DetailComparisonTestingRequiresWrapping, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;
@@ -72,11 +71,6 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
     writer.writeObjectFieldIntro("type");
     writer.writeString("string");
     writer.endObject();
-  }
-
-  @Override
-  public String getComparisonTestingBinaryPattern() {
-    return "LibString.compare(%s, %s)";
   }
 
   @Override

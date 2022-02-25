@@ -9,6 +9,7 @@
  */
 package org.adamalang.translator.tree.expressions.operators;
 
+import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.expressions.Expression;
@@ -17,7 +18,6 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.LocalTypeAlgebraResult;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.traits.details.DetailComparisonTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
 
 import java.util.function.Consumer;
@@ -29,6 +29,7 @@ public class BinaryExpression extends Expression {
   public final Token opToken;
   public final Expression right;
   private LocalTypeAlgebraResult typingResult;
+  public BinaryOperatorResult operatorResult;
 
   public BinaryExpression(final Expression left, final Token opToken, final Expression right) {
     this.left = left;
@@ -51,28 +52,25 @@ public class BinaryExpression extends Expression {
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     environment.mustBeComputeContext(this);
     typingResult = new LocalTypeAlgebraResult(environment, left, right);
-    if (op != null) {
-      switch (op) {
-        case Mod:
-        case Add:
-        case Multiply:
-        case Divide:
-        case Subtract:
-        case LessThan:
-        case GreaterThan:
-        case GreaterThanOrEqual:
-        case LessThanOrEqual:
-        case LogicalAnd:
-        case LogicalOr:
-        case LogicalXor:
-          return typingResult.table(op.javaOp);
-        case Equal:
-        case NotEqual:
-          if (typingResult.equals()) {
-            return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this);
-          }
-          return null;
-      }
+    if (op == BinaryOp.Equal || op == BinaryOp.NotEqual) {
+      // TEST if both sides are enumerations, if so, then cool
+    }
+    switch (op) {
+      case Equal:
+      case NotEqual:
+        if (typingResult.equals()) {
+          return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this);
+        }
+        return null;
+    }
+    Environment leftEnv = op.leftAssignment ? environment.scopeWithComputeContext(ComputeContext.Assignment) : environment;
+    TyType typeLeft = left.typing(leftEnv, null);
+    typeLeft = environment.rules.Resolve(typeLeft, false);
+    TyType typeRight = right.typing(environment, null);
+    typeRight = environment.rules.Resolve(typeRight, false);
+    operatorResult = BinaryOperatorTable.INSTANCE.find(typeLeft, op.javaOp, typeRight, environment);
+    if (operatorResult != null) {
+      return operatorResult.type.makeCopyWithNewPosition(typeLeft, TypeBehavior.ReadOnlyNativeValue).withPosition(typeRight);
     }
     return null;
   }
@@ -81,13 +79,14 @@ public class BinaryExpression extends Expression {
   public void writeJava(final StringBuilder sb, final Environment environment) {
     final var leftStr = new StringBuilder();
     final var rightStr = new StringBuilder();
-    left.writeJava(leftStr, environment);
+    Environment leftEnv = op.leftAssignment ? environment.scopeWithComputeContext(ComputeContext.Assignment) : environment;
+    left.writeJava(leftStr, leftEnv);
     right.writeJava(rightStr, environment);
-    if (typingResult.operatorResult != null) {
-      if (typingResult.operatorResult.reverse) {
-        sb.append(String.format("%s", String.format(typingResult.operatorResult.javaPattern, rightStr, leftStr)));
+    if (operatorResult != null) {
+      if (operatorResult.reverse) {
+        sb.append(String.format("%s", String.format(operatorResult.javaPattern, rightStr, leftStr)));
       } else {
-        sb.append(String.format("%s", String.format(typingResult.operatorResult.javaPattern, leftStr, rightStr)));
+        sb.append(String.format("%s", String.format(operatorResult.javaPattern, leftStr, rightStr)));
       }
       return;
     }
@@ -99,22 +98,6 @@ public class BinaryExpression extends Expression {
           return;
         case NotEqual:
           sb.append(String.format("!%s", String.format(((DetailEqualityTestingRequiresWrapping) typeLeft).getEqualityTestingBinaryPattern(), leftStr, rightStr)));
-          return;
-      }
-    }
-    if (typingResult.typeLeft instanceof DetailComparisonTestingRequiresWrapping) {
-      switch (op) {
-        case LessThan:
-          sb.append(String.format("%s < 0", String.format(((DetailComparisonTestingRequiresWrapping) typeLeft).getComparisonTestingBinaryPattern(), leftStr, rightStr)));
-          return;
-        case LessThanOrEqual:
-          sb.append(String.format("%s <= 0", String.format(((DetailComparisonTestingRequiresWrapping) typeLeft).getComparisonTestingBinaryPattern(), leftStr, rightStr)));
-          return;
-        case GreaterThan:
-          sb.append(String.format("%s > 0", String.format(((DetailComparisonTestingRequiresWrapping) typeLeft).getComparisonTestingBinaryPattern(), leftStr, rightStr)));
-          return;
-        case GreaterThanOrEqual:
-          sb.append(String.format("%s >= 0", String.format(((DetailComparisonTestingRequiresWrapping) typeLeft).getComparisonTestingBinaryPattern(), leftStr, rightStr)));
           return;
       }
     }

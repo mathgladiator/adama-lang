@@ -22,30 +22,14 @@ public class LocalTypeAlgebraResult {
   private final Environment environment;
   private final Expression left;
   private final Expression right;
-  public CanMathResult mathResult = CanMathResult.No;
   public TyType typeLeft = null;
   public TyType typeRight = null;
   CanTestEqualityResult equalityResult = CanTestEqualityResult.No;
-  public BinaryOperatorResult operatorResult;
 
   public LocalTypeAlgebraResult(final Environment environment, final Expression left, final Expression right) {
     this.environment = environment;
     this.left = left;
     this.right = right;
-    this.operatorResult = null;
-  }
-
-
-  public TyType table(String operator) {
-    typeLeft = left.typing(environment, null);
-    typeLeft = environment.rules.Resolve(typeLeft, false);
-    typeRight = right.typing(environment, null);
-    typeRight = environment.rules.Resolve(typeRight, false);
-    operatorResult = BinaryOperatorTable.INSTANCE.find(typeLeft, operator, typeRight, environment);
-    if (operatorResult != null) {
-      return operatorResult.type.makeCopyWithNewPosition(typeLeft, TypeBehavior.ReadOnlyNativeValue).withPosition(typeRight);
-    }
-    return null;
   }
 
   public boolean equals() {
@@ -55,17 +39,5 @@ public class LocalTypeAlgebraResult {
     typeRight = environment.rules.Resolve(typeRight, false);
     equalityResult = environment.rules.CanTestEquality(typeLeft, typeRight, false);
     return equalityResult != CanTestEqualityResult.No;
-  }
-
-  public TyType mod() {
-    typeLeft = left.typing(environment, null);
-    typeLeft = environment.rules.Resolve(typeLeft, false);
-    typeRight = right.typing(environment, null);
-    typeRight = environment.rules.Resolve(typeRight, false);
-    mathResult = environment.rules.CanMod(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) {
-      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
-    }
-    return null;
   }
 }

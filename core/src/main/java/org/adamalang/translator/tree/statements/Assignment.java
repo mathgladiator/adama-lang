@@ -93,9 +93,6 @@ public class Assignment extends Statement {
       case Set:
         result.set();
         break;
-      case AddTo:
-        result.add();
-        break;
       case SubtractFrom:
         result.subtract();
         break;

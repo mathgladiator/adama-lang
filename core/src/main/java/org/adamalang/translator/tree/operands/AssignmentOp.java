@@ -11,10 +11,9 @@ package org.adamalang.translator.tree.operands;
 
 /** defines what is possible during assignment */
 public enum AssignmentOp {
-  AddTo("+=", ".opAddTo"), //
+  Set("=", ".set"), //
   IngestFrom("<-", "/* N/A */"), //
   MultiplyBy("*=", ".opMultBy"), //
-  Set("=", ".set"), //
   SubtractFrom("-=", ".opSubFrom") //
   ;
 

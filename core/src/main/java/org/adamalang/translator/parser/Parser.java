@@ -342,7 +342,7 @@ public class Parser {
       }
     }
     final var leftSide = expression();
-    var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("+=", "-=", "*=", "<-"));
+    var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("-=", "*=", "<-"));
     if (hasAssignment == null) {
       hasAssignment = tokens.popIf(t -> t.isSymbolWithTextEq("="));
     }
@@ -852,9 +852,9 @@ public class Parser {
     Expression base;
     final var iterateToken = tokens.popIf(t -> t.isIdentifier("iterate"));
     if (iterateToken != null) {
-      base = new Iterate(iterateToken, ternary());
+      base = new Iterate(iterateToken, assignment());
     } else {
-      base = ternary();
+      base = assignment();
     }
     Token op;
     while ((op = tokens.popIf(t -> t.isIdentifier("where", "where_as", "order", "shuffle", "reduce", "limit", "offset"))) != null) {
@@ -1370,6 +1370,16 @@ public class Parser {
     return condition;
   }
 
+  public Expression assignment() throws AdamaLangException {
+    final var left = ternary();
+    var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("+="));
+    if (hasAssignment != null) {
+      final var right = assignment();
+      return new BinaryExpression(left, hasAssignment, right);
+    }
+    return left;
+  }
+
   public boolean test_native_declare() throws AdamaLangException {
     final var token = tokens.peek();
     if (token == null) {
@@ -1437,11 +1447,11 @@ public class Parser {
   Expression wrap_linq(final Expression base, final Token op) throws AdamaLangException {
     switch (op.text) {
       case "where":
-        return new Where(base, op, null, null, ternary());
+        return new Where(base, op, null, null, assignment());
       case "where_as": {
         final var id = tokens.pop();
         final var colonAlias = consumeExpectedSymbol(":");
-        return new Where(base, op, id, colonAlias, ternary());
+        return new Where(base, op, id, colonAlias, assignment());
       }
       case "order": {
         final var byToken = tokens.popIf(t -> t.isIdentifier("by"));
@@ -1465,11 +1475,11 @@ public class Parser {
       }
       default: // this is a code coverage hack
       case "limit": {
-        final var eLim = ternary();
+        final var eLim = assignment();
         return new Limit(base, op, eLim);
       }
       case "offset": {
-        final var offsetExpr = ternary();
+        final var offsetExpr = assignment();
         return new Offset(base, op, offsetExpr);
       }
     }

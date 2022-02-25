@@ -1,0 +1,4 @@
+@construct {
+  let t1 = @maybe(3 / true);
+  let t2 = @maybe<42>;
+}

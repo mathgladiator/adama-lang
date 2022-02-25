@@ -13,6 +13,8 @@ import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtComplex;
+import org.adamalang.runtime.natives.NtMaybe;
 
 /** a reactive string */
 public class RxString extends RxBase implements Comparable<RxString>, CanGetAndSet<String> {
@@ -86,26 +88,8 @@ public class RxString extends RxBase implements Comparable<RxString>, CanGetAndS
     return !value.isEmpty();
   }
 
-  public String opAddTo(final boolean incoming) {
-    value += incoming;
-    __raiseDirty();
-    return value;
-  }
-
-  public String opAddTo(final double incoming) {
-    value += incoming;
-    __raiseDirty();
-    return value;
-  }
-
-  public String opAddTo(final int incoming) {
-    value += incoming;
-    __raiseDirty();
-    return value;
-  }
-
-  public String opAddTo(final String incoming) {
-    value += incoming;
+  public String opAddTo(final Object incoming) {
+    value += incoming.toString();
     __raiseDirty();
     return value;
   }

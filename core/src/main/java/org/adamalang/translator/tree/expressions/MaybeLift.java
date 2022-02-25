@@ -61,7 +61,10 @@ public class MaybeLift extends Expression {
       return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, maybeToken, type);
     } else {
       final var valueType = value.typing(environment, null);
-      return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, maybeToken, new TokenizedItem<>(valueType));
+      if (valueType != null) {
+        return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, maybeToken, new TokenizedItem<>(valueType));
+      }
+      return null;
     }
   }
 
