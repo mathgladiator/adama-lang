@@ -13,8 +13,6 @@ package org.adamalang.translator.tree.operands;
 public enum AssignmentOp {
   Set("=", ".set"), //
   IngestFrom("<-", "/* N/A */"), //
-  MultiplyBy("*=", ".opMultBy"), //
-  SubtractFrom("-=", ".opSubFrom") //
   ;
 
   public final String js;

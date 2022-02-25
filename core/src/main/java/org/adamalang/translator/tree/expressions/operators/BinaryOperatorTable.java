@@ -367,10 +367,6 @@ public class BinaryOperatorTable {
       insert(tyDouble, "+=", tyInt, tyDouble,"%s += %s", false);
       insert(tyDouble, "+=", tyLong, tyDouble,"%s += %s", false);
       insert(tyDouble, "+=", tyDouble, tyDouble,"%s += %s", false);
-      insert(tyComplex, "+=", tyInt, tyComplex,"%s.opAddTo(%s)", false);
-      insert(tyComplex, "+=", tyLong, tyComplex,"%s.opAddTo(%s)", false);
-      insert(tyComplex, "+=", tyDouble, tyComplex,"%s.opAddTo(%s)", false);
-      insert(tyComplex, "+=", tyComplex, tyComplex,"%s.opAddTo(%s)", false);
       insert(tyString, "+=", tyBoolean, tyString,"%s += %s", false);
       insert(tyString, "+=", tyInt, tyString,"%s += %s", false);
       insert(tyString, "+=", tyLong, tyString,"%s += %s", false);
@@ -425,10 +421,6 @@ public class BinaryOperatorTable {
       insert(tyDouble, "-=", tyInt, tyDouble,"%s -= %s", false);
       insert(tyDouble, "-=", tyLong, tyDouble,"%s -= %s", false);
       insert(tyDouble, "-=", tyDouble, tyDouble,"%s -= %s", false);
-      insert(tyComplex, "-=", tyInt, tyComplex,"%s.opAddTo(-(%s))", false);
-      insert(tyComplex, "-=", tyLong, tyComplex,"%s.opAddTo(-(%s))", false);
-      insert(tyComplex, "-=", tyDouble, tyComplex,"%s.opAddTo(-(%s))", false);
-      insert(tyComplex, "-=", tyComplex, tyComplex,"%s.opSubFrom(%s)", false);
       insert(tyListRxInteger, "-=", tyInt, tyInt, "LibArithmetic.ListMath.addToII(%s, -(%s))", false);
       insert(tyListRxLong, "-=", tyInt, tyInt, "LibArithmetic.ListMath.addToLI(%s, -(%s))", false);
       insert(tyListRxLong, "-=", tyLong, tyInt, "LibArithmetic.ListMath.addToLL(%s, -(%s))", false);
@@ -458,10 +450,6 @@ public class BinaryOperatorTable {
       insert(tyDouble, "*=", tyInt, tyDouble,"%s *= %s", false);
       insert(tyDouble, "*=", tyLong, tyDouble,"%s *= %s", false);
       insert(tyDouble, "*=", tyDouble, tyDouble,"%s *= %s", false);
-      insert(tyComplex, "*=", tyInt, tyComplex,"%s.opMultBy(%s)", false);
-      insert(tyComplex, "*=", tyLong, tyComplex,"%s.opMultBy(%s)", false);
-      insert(tyComplex, "*=", tyDouble, tyComplex,"%s.opMultBy(%s)", false);
-      insert(tyComplex, "*=", tyComplex, tyComplex,"%s.opMultBy(%s)", false);
       insert(tyListRxInteger, "*=", tyInt, tyInt, "LibArithmetic.ListMath.multByII(%s, %s)", false);
       insert(tyListRxLong, "*=", tyInt, tyInt, "LibArithmetic.ListMath.multByLI(%s, %s)", false);
       insert(tyListRxLong, "*=", tyLong, tyInt, "LibArithmetic.ListMath.multByLL(%s, %s)", false);

@@ -106,21 +106,7 @@ public class Assignment extends Statement {
     if (result.assignResult == CanAssignResult.YesWithNativeOp) {
       ref.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Assignment));
       sb.append(" ").append(op.js).append(" ");
-      StringBuilder valueExprStr = new StringBuilder();
-      expression.writeJava(valueExprStr, environment.scopeWithComputeContext(ComputeContext.Computation));
-      String exprToSet = valueExprStr.toString();
-      if (result.rtype instanceof TyNativeComplex) {
-        // heuristic to know if we should copy the assignment so it is a value type rather than a reference
-        if (TyNativeComplex.avoidCopyHeuristic(exprToSet)) {
-          sb.append(exprToSet);
-        } else {
-          sb.append("(");
-          sb.append(exprToSet);
-          sb.append(").copy()");
-        }
-      } else {
-        sb.append(exprToSet);
-      }
+      expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
       if (!inForLoop) {
         sb.append(";");
       }

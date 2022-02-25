@@ -15,7 +15,6 @@ public complex final_foo3;
   }
   complex z;
   z = foo;
-  z += foo;
   final_foo2 = z * z;
   final_foo3 = 42;
 }

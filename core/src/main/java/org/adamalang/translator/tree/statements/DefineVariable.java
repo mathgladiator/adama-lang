@@ -132,26 +132,12 @@ public class DefineVariable extends Statement {
       sb.append(type.getJavaConcreteType(environment)).append(" " + name);
       if (value != null) {
         sb.append(" = ");
-        StringBuilder exprBuilder = new StringBuilder();
         if (type instanceof DetailNativeDeclarationIsNotStandard) {
           final var child = new StringBuilder();
           value.writeJava(child, environment.scopeWithComputeContext(ComputeContext.Computation));
-          exprBuilder.append(String.format(((DetailNativeDeclarationIsNotStandard) type).getPatternWhenValueProvided(environment), child));
+          sb.append(String.format(((DetailNativeDeclarationIsNotStandard) type).getPatternWhenValueProvided(environment), child));
         } else {
-          value.writeJava(exprBuilder, environment.scopeWithComputeContext(ComputeContext.Computation));
-        }
-        String exprToSet = exprBuilder.toString();
-        if (type instanceof TyNativeComplex) {
-          // heuristic to know if we should copy the assignment so it is a value type rather than a reference
-          if (TyNativeComplex.avoidCopyHeuristic(exprToSet)) {
-            sb.append(exprToSet);
-          } else {
-            sb.append("(");
-            sb.append(exprToSet);
-            sb.append(").copy()");
-          }
-        } else {
-          sb.append(exprToSet);
+          value.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         }
         sb.append(";");
       } else {
