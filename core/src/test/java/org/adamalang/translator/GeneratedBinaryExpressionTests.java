@@ -1268,43 +1268,535 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_OperationsHappy_3 = null;
-  private String get_OperationsHappy_3() {
-    if (cached_OperationsHappy_3 != null) {
-      return cached_OperationsHappy_3;
+  private String cached_OperationsDivideCases_3 = null;
+  private String get_OperationsDivideCases_3() {
+    if (cached_OperationsDivideCases_3 != null) {
+      return cached_OperationsDivideCases_3;
     }
-    cached_OperationsHappy_3 = generateTestOutput(true, "OperationsHappy_3", "./test_code/BinaryExpression_OperationsHappy_success.a");
-    return cached_OperationsHappy_3;
+    cached_OperationsDivideCases_3 = generateTestOutput(true, "OperationsDivideCases_3", "./test_code/BinaryExpression_OperationsDivideCases_success.a");
+    return cached_OperationsDivideCases_3;
+  }
+
+  @Test
+  public void testOperationsDivideCasesEmission() {
+    assertEmissionGood(get_OperationsDivideCases_3());
+  }
+
+  @Test
+  public void testOperationsDivideCasesSuccess() {
+    assertLivePass(get_OperationsDivideCases_3());
+  }
+
+  @Test
+  public void testOperationsDivideCasesGoodWillHappy() {
+    assertGoodWillHappy(get_OperationsDivideCases_3());
+  }
+
+  @Test
+  public void testOperationsDivideCasesExceptionFree() {
+    assertExceptionFree(get_OperationsDivideCases_3());
+  }
+
+  @Test
+  public void testOperationsDivideCasesTODOFree() {
+    assertTODOFree(get_OperationsDivideCases_3());
+  }
+
+  @Test
+  public void stable_OperationsDivideCases_3() {
+    String live = get_OperationsDivideCases_3();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:BinaryExpression_OperationsDivideCases_success.a");
+    gold.append("\n--EMISSION-----------------------------------------");
+    gold.append("\nEmission Success, Yay");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[]\"--JAVA---------------------------------------------");
+    gold.append("\nimport org.adamalang.runtime.async.*;");
+    gold.append("\nimport org.adamalang.runtime.contracts.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.exceptions.*;");
+    gold.append("\nimport org.adamalang.runtime.index.*;");
+    gold.append("\nimport org.adamalang.runtime.json.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.*;");
+    gold.append("\nimport org.adamalang.runtime.natives.lists.*;");
+    gold.append("\nimport org.adamalang.runtime.ops.*;");
+    gold.append("\nimport org.adamalang.runtime.reactives.*;");
+    gold.append("\nimport org.adamalang.runtime.stdlib.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport java.util.function.Consumer;");
+    gold.append("\nimport java.util.function.Function;");
+    gold.append("\nimport java.util.ArrayList;");
+    gold.append("\nimport java.util.Comparator;");
+    gold.append("\nimport java.util.HashMap;");
+    gold.append("\nimport java.util.HashSet;");
+    gold.append("\nimport java.util.Map;");
+    gold.append("\nimport java.util.Set;");
+    gold.append("\nimport java.lang.Math;");
+    gold.append("\npublic class OperationsDivideCases_3 extends LivingDocument {");
+    gold.append("\n  @Override");
+    gold.append("\n  public long __memory() {");
+    gold.append("\n    long __sum = super.__memory();");
+    gold.append("\n    return __sum;");
+    gold.append("\n  }");
+    gold.append("\n  public OperationsDivideCases_3(DocumentMonitor __monitor) {");
+    gold.append("\n    super(__monitor);");
+    gold.append("\n    __goodwillBudget = 100000;");
+    gold.append("\n    __goodwillLimitOfBudget = 100000;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __insert(JsonStreamReader __reader) {");
+    gold.append("\n    if (__reader.startObject()) {");
+    gold.append("\n      while(__reader.notEndOfObject()) {");
+    gold.append("\n        String __fieldName = __reader.fieldName();");
+    gold.append("\n        switch (__fieldName) {");
+    gold.append("\n          case \"__state\":");
+    gold.append("\n            __state.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__constructed\":");
+    gold.append("\n            __constructed.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__next_time\":");
+    gold.append("\n            __next_time.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__last_expire_time\":");
+    gold.append("\n            __last_expire_time.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__blocked\":");
+    gold.append("\n            __blocked.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__seq\":");
+    gold.append("\n            __seq.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__entropy\":");
+    gold.append("\n            __entropy.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_future_id\":");
+    gold.append("\n            __auto_future_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__connection_id\":");
+    gold.append("\n            __connection_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__message_id\":");
+    gold.append("\n            __message_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__time\":");
+    gold.append("\n            __time.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_table_row_id\":");
+    gold.append("\n            __auto_table_row_id.__insert(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__dedupe\":");
+    gold.append("\n            __hydrateDeduper(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__clients\":");
+    gold.append("\n            __hydrateClients(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__messages\":");
+    gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          default:");
+    gold.append("\n            __reader.skipValue();");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __patch(JsonStreamReader __reader) {");
+    gold.append("\n    if (__reader.startObject()) {");
+    gold.append("\n      while(__reader.notEndOfObject()) {");
+    gold.append("\n        String __fieldName = __reader.fieldName();");
+    gold.append("\n        switch (__fieldName) {");
+    gold.append("\n          case \"__state\":");
+    gold.append("\n            __state.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__constructed\":");
+    gold.append("\n            __constructed.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__next_time\":");
+    gold.append("\n            __next_time.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__last_expire_time\":");
+    gold.append("\n            __last_expire_time.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__blocked\":");
+    gold.append("\n            __blocked.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__seq\":");
+    gold.append("\n            __seq.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__entropy\":");
+    gold.append("\n            __entropy.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_future_id\":");
+    gold.append("\n            __auto_future_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__connection_id\":");
+    gold.append("\n            __connection_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__message_id\":");
+    gold.append("\n            __message_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__time\":");
+    gold.append("\n            __time.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__auto_table_row_id\":");
+    gold.append("\n            __auto_table_row_id.__patch(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__dedupe\":");
+    gold.append("\n            __hydrateDeduper(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__clients\":");
+    gold.append("\n            __hydrateClients(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          case \"__messages\":");
+    gold.append("\n            __hydrateMessages(__reader);");
+    gold.append("\n            break;");
+    gold.append("\n          default:");
+    gold.append("\n            __reader.skipValue();");
+    gold.append("\n        }");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __dump(JsonStreamWriter __writer) {");
+    gold.append("\n    __writer.beginObject();");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__state\");");
+    gold.append("\n    __state.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__constructed\");");
+    gold.append("\n    __constructed.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__next_time\");");
+    gold.append("\n    __next_time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__last_expire_time\");");
+    gold.append("\n    __last_expire_time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__blocked\");");
+    gold.append("\n    __blocked.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__seq\");");
+    gold.append("\n    __seq.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__entropy\");");
+    gold.append("\n    __entropy.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_future_id\");");
+    gold.append("\n    __auto_future_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__connection_id\");");
+    gold.append("\n    __connection_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__message_id\");");
+    gold.append("\n    __message_id.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__time\");");
+    gold.append("\n    __time.__dump(__writer);");
+    gold.append("\n    __writer.writeObjectFieldIntro(\"__auto_table_row_id\");");
+    gold.append("\n    __auto_table_row_id.__dump(__writer);");
+    gold.append("\n    __dumpDeduper(__writer);");
+    gold.append("\n    __dumpClients(__writer);");
+    gold.append("\n    __dumpMessages(__writer);");
+    gold.append("\n    __writer.endObject();");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __commit(String __name, JsonStreamWriter __forward, JsonStreamWriter __reverse) {");
+    gold.append("\n    __state.__commit(\"__state\", __forward, __reverse);");
+    gold.append("\n    __constructed.__commit(\"__constructed\", __forward, __reverse);");
+    gold.append("\n    __next_time.__commit(\"__next_time\", __forward, __reverse);");
+    gold.append("\n    __last_expire_time.__commit(\"__last_expire_time\", __forward, __reverse);");
+    gold.append("\n    __blocked.__commit(\"__blocked\", __forward, __reverse);");
+    gold.append("\n    __seq.__commit(\"__seq\", __forward, __reverse);");
+    gold.append("\n    __entropy.__commit(\"__entropy\", __forward, __reverse);");
+    gold.append("\n    __auto_future_id.__commit(\"__auto_future_id\", __forward, __reverse);");
+    gold.append("\n    __connection_id.__commit(\"__connection_id\", __forward, __reverse);");
+    gold.append("\n    __message_id.__commit(\"__message_id\", __forward, __reverse);");
+    gold.append("\n    __time.__commit(\"__time\", __forward, __reverse);");
+    gold.append("\n    __auto_table_row_id.__commit(\"__auto_table_row_id\", __forward, __reverse);");
+    gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __revert() {");
+    gold.append("\n    __state.__revert();");
+    gold.append("\n    __constructed.__revert();");
+    gold.append("\n    __next_time.__revert();");
+    gold.append("\n    __last_expire_time.__revert();");
+    gold.append("\n    __blocked.__revert();");
+    gold.append("\n    __seq.__revert();");
+    gold.append("\n    __entropy.__revert();");
+    gold.append("\n    __auto_future_id.__revert();");
+    gold.append("\n    __connection_id.__revert();");
+    gold.append("\n    __message_id.__revert();");
+    gold.append("\n    __time.__revert();");
+    gold.append("\n    __auto_table_row_id.__revert();");
+    gold.append("\n    /* root */");
+    gold.append("\n  }");
+    gold.append("\n  private class DeltaOperationsDivideCases_3 implements DeltaNode {");
+    gold.append("\n    private boolean __emitted;");
+    gold.append("\n    private DeltaOperationsDivideCases_3() {");
+    gold.append("\n      __emitted = false;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() {");
+    gold.append("\n      long __sum = 40;");
+    gold.append("\n      return __sum;");
+    gold.append("\n    }");
+    gold.append("\n    public void show(OperationsDivideCases_3 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      __obj.manifest();");
+    gold.append("\n      if (__obj.end()) {");
+    gold.append("\n        __emitted = true;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      if (__emitted) {");
+    gold.append("\n        __emitted = false;");
+    gold.append("\n        __writer.writeNull();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public Set<String> __get_intern_strings() {");
+    gold.append("\n    HashSet<String> __interns = new HashSet<>();");
+    gold.append("\n    __interns.add(\"\");");
+    gold.append("\n    __interns.add(\"?\");");
+    gold.append("\n    return __interns;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n    OperationsDivideCases_3 __self = this;");
+    gold.append("\n    DeltaOperationsDivideCases_3 __state = new DeltaOperationsDivideCases_3();");
+    gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
+    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n      @Override");
+    gold.append("\n      public long memory() {");
+    gold.append("\n        return __state.__memory();");
+    gold.append("\n      }");
+    gold.append("\n      @Override");
+    gold.append("\n      public void dumpViewer(JsonStreamWriter __writer) {");
+    gold.append("\n        __viewerState.__writeOut(__writer);");
+    gold.append("\n      }");
+    gold.append("\n      @Override");
+    gold.append("\n      public void ingest(JsonStreamReader __reader) {");
+    gold.append("\n        __viewerState.__ingest(__reader);");
+    gold.append("\n      }");
+    gold.append("\n      @Override");
+    gold.append("\n      public void update(JsonStreamWriter __writer) {");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n      }");
+    gold.append("\n    };");
+    gold.append("\n  }");
+    gold.append("\n  private static class RTx__ViewerType implements NtMessageBase {");
+    gold.append("\n    private RTx__ViewerType(JsonStreamReader __reader) {");
+    gold.append("\n      __ingest(__reader);");
+    gold.append("\n    }");
+    gold.append("\n    public int __DATA_GENERATION = 1;");
+    gold.append("\n    private void __ingest(JsonStreamReader __reader) {");
+    gold.append("\n      __reader.skipValue();");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public void __writeOut(JsonStreamWriter __writer) {");
+    gold.append("\n      __writer.beginObject();");
+    gold.append("\n      __writer.endObject();");
+    gold.append("\n    }");
+    gold.append("\n    private RTx__ViewerType() {}");
+    gold.append("\n  }");
+    gold.append("\n  private class DeltaRTx__ViewerType implements DeltaNode {");
+    gold.append("\n    private boolean __emitted;");
+    gold.append("\n    private DeltaRTx__ViewerType() {");
+    gold.append("\n      __emitted = false;");
+    gold.append("\n    }");
+    gold.append("\n    @Override");
+    gold.append("\n    public long __memory() {");
+    gold.append("\n      long __sum = 40;");
+    gold.append("\n      return __sum;");
+    gold.append("\n    }");
+    gold.append("\n    public void show(RTx__ViewerType __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
+    gold.append("\n      if (__obj.end()) {");
+    gold.append("\n        __emitted = true;");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n    public void hide(PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n      if (__emitted) {");
+    gold.append("\n        __emitted = false;");
+    gold.append("\n        __writer.writeNull();");
+    gold.append("\n      }");
+    gold.append("\n    }");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __route(AsyncTask task) {");
+    gold.append("\n    return;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected Object __parse_message2(String channel, JsonStreamReader __reader) {");
+    gold.append("\n    __reader.skipValue();");
+    gold.append("\n    return NtMessageBase.NULL;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __reset_future_queues() {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __invoke_label(String __new_state) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
+    gold.append("\n    boolean __result = false;");
+    gold.append("\n    return __result;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onDisconnected(NtClient __cvalue) {}");
+    gold.append("\n  @Override");
+    gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanCreate(NtClient __client) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}");
+    gold.append("\n  public static HashMap<String, Object> __config() {");
+    gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
+    gold.append("\n    return __map;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public String[] __getTests() {");
+    gold.append("\n    return new String[] {};");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
+    gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
+    gold.append("\n    __code_cost += 20;");
+    gold.append("\n    __track(0);");
+    gold.append("\n    final NtMaybe<Double> d0 = new NtMaybe<Double>(LibArithmetic.Divide.II(1, 0));");
+    gold.append("\n    __track(1);");
+    gold.append("\n    final NtMaybe<Double> d1 = new NtMaybe<Double>(LibArithmetic.Divide.DI(1.0, 0));");
+    gold.append("\n    __track(2);");
+    gold.append("\n    final NtMaybe<Double> d2 = new NtMaybe<Double>(LibArithmetic.Divide.LI(1L, 0));");
+    gold.append("\n    __track(3);");
+    gold.append("\n    final NtMaybe<Double> d3 = new NtMaybe<Double>(LibArithmetic.Divide.ID(1, 0.1));");
+    gold.append("\n    __track(4);");
+    gold.append("\n    final NtMaybe<Double> d4 = new NtMaybe<Double>(LibArithmetic.Divide.DD(1.0, 0.1));");
+    gold.append("\n    __track(5);");
+    gold.append("\n    final NtMaybe<Double> d5 = new NtMaybe<Double>(LibArithmetic.Divide.LD(1L, 0.1));");
+    gold.append("\n    __track(6);");
+    gold.append("\n    final NtMaybe<Double> d6 = new NtMaybe<Double>(LibArithmetic.Divide.IL(1, 0L));");
+    gold.append("\n    __track(7);");
+    gold.append("\n    final NtMaybe<Double> d7 = new NtMaybe<Double>(LibArithmetic.Divide.DL(1.0, 0L));");
+    gold.append("\n    __track(8);");
+    gold.append("\n    final NtMaybe<Double> d8 = new NtMaybe<Double>(LibArithmetic.Divide.LL(1L, 0L));");
+    gold.append("\n    __track(9);");
+    gold.append("\n    final NtMaybe<NtComplex> c1 = new NtMaybe<NtComplex>(LibArithmetic.Divide.CI(new NtComplex(0.0, 1.0), 0));");
+    gold.append("\n    __track(10);");
+    gold.append("\n    final NtMaybe<NtComplex> c2 = new NtMaybe<NtComplex>(LibArithmetic.Divide.CL(new NtComplex(0.0, 1.0), 0L));");
+    gold.append("\n    __track(11);");
+    gold.append("\n    final NtMaybe<NtComplex> c3 = new NtMaybe<NtComplex>(LibArithmetic.Divide.CD(new NtComplex(0.0, 1.0), 0.0));");
+    gold.append("\n    __track(12);");
+    gold.append("\n    final NtMaybe<NtComplex> c4 = new NtMaybe<NtComplex>(LibArithmetic.Divide.CmD(new NtComplex(0.0, 1.0), (LibArithmetic.Divide.II(1, 2))));");
+    gold.append("\n    __track(13);");
+    gold.append("\n    final NtMaybe<NtComplex> c5 = new NtMaybe<NtComplex>(LibArithmetic.Divide.CmD(new NtComplex(0.0, 1.0), (LibArithmetic.Divide.II(1, 0))));");
+    gold.append("\n    __track(14);");
+    gold.append("\n    final NtMaybe<NtComplex> c6 = new NtMaybe<NtComplex>(LibArithmetic.Divide.IC(0, new NtComplex(0.0, 1.0)));");
+    gold.append("\n    __track(15);");
+    gold.append("\n    final NtMaybe<NtComplex> c7 = new NtMaybe<NtComplex>(LibArithmetic.Divide.LC(0L, new NtComplex(0.0, 1.0)));");
+    gold.append("\n    __track(16);");
+    gold.append("\n    final NtMaybe<NtComplex> c8 = new NtMaybe<NtComplex>(LibArithmetic.Divide.DC(0.0, new NtComplex(0.0, 1.0)));");
+    gold.append("\n    __track(17);");
+    gold.append("\n    final NtMaybe<NtComplex> c9 = new NtMaybe<NtComplex>(LibArithmetic.Divide.mDC((LibArithmetic.Divide.II(1, 2)), new NtComplex(0.0, 1.0)));");
+    gold.append("\n    __track(18);");
+    gold.append("\n    final NtMaybe<NtComplex> c10 = new NtMaybe<NtComplex>(LibArithmetic.Divide.mDC((LibArithmetic.Divide.II(1, 0)), new NtComplex(0.0, 1.0)));");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
+    gold.append("\n    __reader.skipValue();");
+    gold.append("\n    return NtMessageBase.NULL;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __construct_intern(NtClient __who, NtMessageBase __object) {");
+    gold.append("\n    __construct_0(__who, __object);");
+    gold.append("\n  }");
+    gold.append("\n  /* end of file */");
+    gold.append("\n}");
+    gold.append("\n");
+    gold.append("\n--JAVA COMPILE RESULTS-----------------------------");
+    gold.append("\nBegin");
+    gold.append("\n/OperationsDivideCases_3.java:357: error: cannot find symbol");
+    gold.append("\nfinal NtMaybe<Double> d2 = new NtMaybe<Double>(LibArithmetic.Divide.LI(1L, 0));");
+    gold.append("\n^");
+    gold.append("\nsymbol:   method LI(long,int)");
+    gold.append("\nlocation: class org.adamalang.runtime.stdlib.LibArithmetic.Divide");
+    gold.append("\n/OperationsDivideCases_3.java:363: error: cannot find symbol");
+    gold.append("\nfinal NtMaybe<Double> d5 = new NtMaybe<Double>(LibArithmetic.Divide.LD(1L, 0.1));");
+    gold.append("\n^");
+    gold.append("\nsymbol:   method LD(long,double)");
+    gold.append("\nlocation: class org.adamalang.runtime.stdlib.LibArithmetic.Divide");
+    gold.append("\n/OperationsDivideCases_3.java:369: error: cannot find symbol");
+    gold.append("\nfinal NtMaybe<Double> d8 = new NtMaybe<Double>(LibArithmetic.Divide.LL(1L, 0L));");
+    gold.append("\n^");
+    gold.append("\nsymbol:   method LL(long,long)");
+    gold.append("\nlocation: class org.adamalang.runtime.stdlib.LibArithmetic.Divide");
+    gold.append("\n/OperationsDivideCases_3.java:383: error: cannot find symbol");
+    gold.append("\nfinal NtMaybe<NtComplex> c7 = new NtMaybe<NtComplex>(LibArithmetic.Divide.LC(0L, new NtComplex(0.0, 1.0)));");
+    gold.append("\n^");
+    gold.append("\nsymbol:   method LC(long,org.adamalang.runtime.natives.NtComplex)");
+    gold.append("\nlocation: class org.adamalang.runtime.stdlib.LibArithmetic.Divide");
+    gold.append("\n/OperationsDivideCases_3.java:387: error: cannot find symbol");
+    gold.append("\nfinal NtMaybe<NtComplex> c9 = new NtMaybe<NtComplex>(LibArithmetic.Divide.mDC((LibArithmetic.Divide.II(1, 2)), new NtComplex(0.0, 1.0)));");
+    gold.append("\n^");
+    gold.append("\nsymbol:   method mDC(org.adamalang.runtime.natives.NtMaybe<java.lang.Double>,org.adamalang.runtime.natives.NtComplex)");
+    gold.append("\nlocation: class org.adamalang.runtime.stdlib.LibArithmetic.Divide");
+    gold.append("\n/OperationsDivideCases_3.java:389: error: cannot find symbol");
+    gold.append("\nfinal NtMaybe<NtComplex> c10 = new NtMaybe<NtComplex>(LibArithmetic.Divide.mDC((LibArithmetic.Divide.II(1, 0)), new NtComplex(0.0, 1.0)));");
+    gold.append("\n^");
+    gold.append("\nsymbol:   method mDC(org.adamalang.runtime.natives.NtMaybe<java.lang.Double>,org.adamalang.runtime.natives.NtComplex)");
+    gold.append("\nlocation: class org.adamalang.runtime.stdlib.LibArithmetic.Divide");
+    gold.append("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    gold.append("\n!!EXCEPTION!!!!!!!!!!!!!!!!!!");
+    gold.append("\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    gold.append("\npath: OperationsDivideCases_3 failed due to to exception");
+    gold.append("\norg.adamalang.common.ErrorCodeException: code:180258");
+    gold.append("\n	at org.adamalang.translator.jvm.LivingDocumentFactory.<init>(LivingDocumentFactory.java:49)");
+    gold.append("\n	at org.adamalang.support.testgen.PhaseCompile.go(PhaseCompile.java:28)");
+    gold.append("\n	at org.adamalang.support.testgen.TestForge.forge(TestForge.java:36)");
+    gold.append("\n	at org.adamalang.support.testgen.TestClass.addTest(TestClass.java:83)");
+    gold.append("\n	at org.adamalang.support.testgen.TestForge.scan(TestForge.java:102)");
+    gold.append("\n	at org.adamalang.support.GenerateLanguageTests.generate(GenerateLanguageTests.java:54)");
+    gold.append("\n	at org.adamalang.cli.commands.Contrib.execute(Contrib.java:31)");
+    gold.append("\n	at org.adamalang.cli.Main.main(Main.java:39)");
+    assertStable(live, gold);
+  }
+  private String cached_OperationsHappy_4 = null;
+  private String get_OperationsHappy_4() {
+    if (cached_OperationsHappy_4 != null) {
+      return cached_OperationsHappy_4;
+    }
+    cached_OperationsHappy_4 = generateTestOutput(true, "OperationsHappy_4", "./test_code/BinaryExpression_OperationsHappy_success.a");
+    return cached_OperationsHappy_4;
   }
 
   @Test
   public void testOperationsHappyEmission() {
-    assertEmissionGood(get_OperationsHappy_3());
+    assertEmissionGood(get_OperationsHappy_4());
   }
 
   @Test
   public void testOperationsHappySuccess() {
-    assertLivePass(get_OperationsHappy_3());
+    assertLivePass(get_OperationsHappy_4());
   }
 
   @Test
   public void testOperationsHappyGoodWillHappy() {
-    assertGoodWillHappy(get_OperationsHappy_3());
+    assertGoodWillHappy(get_OperationsHappy_4());
   }
 
   @Test
   public void testOperationsHappyExceptionFree() {
-    assertExceptionFree(get_OperationsHappy_3());
+    assertExceptionFree(get_OperationsHappy_4());
   }
 
   @Test
   public void testOperationsHappyTODOFree() {
-    assertTODOFree(get_OperationsHappy_3());
+    assertTODOFree(get_OperationsHappy_4());
   }
 
   @Test
-  public void stable_OperationsHappy_3() {
-    String live = get_OperationsHappy_3();
+  public void stable_OperationsHappy_4() {
+    String live = get_OperationsHappy_4();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_OperationsHappy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1332,7 +1824,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class OperationsHappy_3 extends LivingDocument {");
+    gold.append("\npublic class OperationsHappy_4 extends LivingDocument {");
     gold.append("\n  private final RxClient other;");
     gold.append("\n  private final RxString s;");
     gold.append("\n  @Override");
@@ -1342,7 +1834,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __sum += s.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public OperationsHappy_3(DocumentMonitor __monitor) {");
+    gold.append("\n  public OperationsHappy_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    other = new RxClient(this, NtClient.NO_ONE);");
     gold.append("\n    s = new RxString(this, \"\");");
@@ -1547,9 +2039,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    s.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaOperationsHappy_3 implements DeltaNode {");
+    gold.append("\n  private class DeltaOperationsHappy_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaOperationsHappy_3() {");
+    gold.append("\n    private DeltaOperationsHappy_4() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -1557,7 +2049,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(OperationsHappy_3 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(OperationsHappy_4 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -1580,8 +2072,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    OperationsHappy_3 __self = this;");
-    gold.append("\n    DeltaOperationsHappy_3 __state = new DeltaOperationsHappy_3();");
+    gold.append("\n    OperationsHappy_4 __self = this;");
+    gold.append("\n    DeltaOperationsHappy_4 __state = new DeltaOperationsHappy_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -1746,13 +2238,13 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    {");
     gold.append("\n      __code_cost += 5;");
     gold.append("\n      __track(20);");
-    gold.append("\n      __assert_truth(2 == 4 / 2, 30, 2, 30, 20);");
+    gold.append("\n      __assert_truth(2 == (LibArithmetic.Divide.II(4, 2)).getOrDefaultTo(-100.0), 30, 2, 30, 45);");
     gold.append("\n      __track(21);");
-    gold.append("\n      __assert_truth(LibMath.near(2.0, 4 / 2.0), 31, 2, 31, 24);");
+    gold.append("\n      __assert_truth(LibMath.near(2.0, (LibArithmetic.Divide.ID(4, 2.0)).getOrDefaultTo(-100.0)), 31, 2, 31, 49);");
     gold.append("\n      __track(22);");
-    gold.append("\n      __assert_truth(LibMath.near(2.0, 4.0 / 2.0), 32, 2, 32, 26);");
+    gold.append("\n      __assert_truth(LibMath.near(2.0, (LibArithmetic.Divide.DD(4.0, 2.0)).getOrDefaultTo(-100.0)), 32, 2, 32, 51);");
     gold.append("\n      __track(23);");
-    gold.append("\n      __assert_truth(LibMath.near(1.5, 3.0 / 2), 33, 2, 33, 24);");
+    gold.append("\n      __assert_truth(LibMath.near(1.5, (LibArithmetic.Divide.DI(3.0, 2)).getOrDefaultTo(-100.0)), 33, 2, 33, 49);");
     gold.append("\n    }");
     gold.append("\n    report.end(getAndResetAssertions());");
     gold.append("\n  }");
@@ -1912,43 +2404,43 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_StringCompare_4 = null;
-  private String get_StringCompare_4() {
-    if (cached_StringCompare_4 != null) {
-      return cached_StringCompare_4;
+  private String cached_StringCompare_5 = null;
+  private String get_StringCompare_5() {
+    if (cached_StringCompare_5 != null) {
+      return cached_StringCompare_5;
     }
-    cached_StringCompare_4 = generateTestOutput(true, "StringCompare_4", "./test_code/BinaryExpression_StringCompare_success.a");
-    return cached_StringCompare_4;
+    cached_StringCompare_5 = generateTestOutput(true, "StringCompare_5", "./test_code/BinaryExpression_StringCompare_success.a");
+    return cached_StringCompare_5;
   }
 
   @Test
   public void testStringCompareEmission() {
-    assertEmissionGood(get_StringCompare_4());
+    assertEmissionGood(get_StringCompare_5());
   }
 
   @Test
   public void testStringCompareSuccess() {
-    assertLivePass(get_StringCompare_4());
+    assertLivePass(get_StringCompare_5());
   }
 
   @Test
   public void testStringCompareGoodWillHappy() {
-    assertGoodWillHappy(get_StringCompare_4());
+    assertGoodWillHappy(get_StringCompare_5());
   }
 
   @Test
   public void testStringCompareExceptionFree() {
-    assertExceptionFree(get_StringCompare_4());
+    assertExceptionFree(get_StringCompare_5());
   }
 
   @Test
   public void testStringCompareTODOFree() {
-    assertTODOFree(get_StringCompare_4());
+    assertTODOFree(get_StringCompare_5());
   }
 
   @Test
-  public void stable_StringCompare_4() {
-    String live = get_StringCompare_4();
+  public void stable_StringCompare_5() {
+    String live = get_StringCompare_5();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_StringCompare_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -1976,13 +2468,13 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class StringCompare_4 extends LivingDocument {");
+    gold.append("\npublic class StringCompare_5 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public StringCompare_4(DocumentMonitor __monitor) {");
+    gold.append("\n  public StringCompare_5(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -2165,9 +2657,9 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaStringCompare_4 implements DeltaNode {");
+    gold.append("\n  private class DeltaStringCompare_5 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaStringCompare_4() {");
+    gold.append("\n    private DeltaStringCompare_5() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -2175,7 +2667,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(StringCompare_4 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(StringCompare_5 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -2198,8 +2690,8 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
-    gold.append("\n    StringCompare_4 __self = this;");
-    gold.append("\n    DeltaStringCompare_4 __state = new DeltaStringCompare_4();");
+    gold.append("\n    StringCompare_5 __self = this;");
+    gold.append("\n    DeltaStringCompare_5 __state = new DeltaStringCompare_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective) {");
     gold.append("\n      @Override");
@@ -2381,158 +2873,158 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_WhenCantAdd_5 = null;
-  private String get_WhenCantAdd_5() {
-    if (cached_WhenCantAdd_5 != null) {
-      return cached_WhenCantAdd_5;
+  private String cached_WhenCantAdd_6 = null;
+  private String get_WhenCantAdd_6() {
+    if (cached_WhenCantAdd_6 != null) {
+      return cached_WhenCantAdd_6;
     }
-    cached_WhenCantAdd_5 = generateTestOutput(false, "WhenCantAdd_5", "./test_code/BinaryExpression_WhenCantAdd_failure.a");
-    return cached_WhenCantAdd_5;
+    cached_WhenCantAdd_6 = generateTestOutput(false, "WhenCantAdd_6", "./test_code/BinaryExpression_WhenCantAdd_failure.a");
+    return cached_WhenCantAdd_6;
   }
 
   @Test
   public void testWhenCantAddFailure() {
-    assertLiveFail(get_WhenCantAdd_5());
+    assertLiveFail(get_WhenCantAdd_6());
   }
 
   @Test
   public void testWhenCantAddNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_WhenCantAdd_5());
+    assertNotTerribleLineNumbers(get_WhenCantAdd_6());
   }
 
   @Test
   public void testWhenCantAddExceptionFree() {
-    assertExceptionFree(get_WhenCantAdd_5());
+    assertExceptionFree(get_WhenCantAdd_6());
   }
 
   @Test
   public void testWhenCantAddTODOFree() {
-    assertTODOFree(get_WhenCantAdd_5());
+    assertTODOFree(get_WhenCantAdd_6());
   }
 
   @Test
-  public void stable_WhenCantAdd_5() {
-    String live = get_WhenCantAdd_5();
+  public void stable_WhenCantAdd_6() {
+    String live = get_WhenCantAdd_6();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_WhenCantAdd_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":17,\"character\":12},\"end\":{\"line\":17,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'long' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a numeric type of 'long' which can be added with types: 'int', 'long', or 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":18,\"character\":12},\"end\":{\"line\":18,\"character\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'list<int>' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a type that is unable to the added. (ADD01)\"},{\"range\":{\"start\":{\"line\":22,\"character\":3},\"end\":{\"line\":22,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":22,\"character\":3},\"end\":{\"line\":22,\"character\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":22,\"character\":10},\"end\":{\"line\":22,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":22,\"character\":3},\"end\":{\"line\":22,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":22,\"character\":17},\"end\":{\"line\":22,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'string' and 'int' are unable to be divided with the / operator. (Divide)\"},{\"range\":{\"start\":{\"line\":1,\"character\":11},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11},\"end\":{\"line\":2,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":3,\"character\":11},\"end\":{\"line\":3,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'int' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a numeric type of 'int' which can be added with types: 'int', 'double', or 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'double' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'double' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a numeric type of 'double' which can be added with types: 'int, 'double', or 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'client' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'client' and '__ViewerType' are unable to be added with the + operator.\\n\\tThe left hand side has a type that is unable to the added. (ADD01)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":17,\"character\":12},\"end\":{\"line\":17,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'long' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a numeric type of 'long' which can be added with types: 'int', 'long', or 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":18,\"character\":12},\"end\":{\"line\":18,\"character\":34}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'list<int>' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a type that is unable to the added. (ADD01)\"},{\"range\":{\"start\":{\"line\":22,\"character\":3},\"end\":{\"line\":22,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":22,\"character\":3},\"end\":{\"line\":22,\"character\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":22,\"character\":10},\"end\":{\"line\":22,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":22,\"character\":3},\"end\":{\"line\":22,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":22,\"character\":17},\"end\":{\"line\":22,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'string' / 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":1,\"character\":11},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11},\"end\":{\"line\":2,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":3,\"character\":11},\"end\":{\"line\":3,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'int' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a numeric type of 'int' which can be added with types: 'int', 'double', or 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'double' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'double' and 'bool' are unable to be added with the + operator.\\n\\tThe left hand side has a numeric type of 'double' which can be added with types: 'int, 'double', or 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'client' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'client' and '__ViewerType' are unable to be added with the + operator.\\n\\tThe left hand side has a type that is unable to the added. (ADD01)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_WhenCantCompare_6 = null;
-  private String get_WhenCantCompare_6() {
-    if (cached_WhenCantCompare_6 != null) {
-      return cached_WhenCantCompare_6;
+  private String cached_WhenCantCompare_7 = null;
+  private String get_WhenCantCompare_7() {
+    if (cached_WhenCantCompare_7 != null) {
+      return cached_WhenCantCompare_7;
     }
-    cached_WhenCantCompare_6 = generateTestOutput(false, "WhenCantCompare_6", "./test_code/BinaryExpression_WhenCantCompare_failure.a");
-    return cached_WhenCantCompare_6;
+    cached_WhenCantCompare_7 = generateTestOutput(false, "WhenCantCompare_7", "./test_code/BinaryExpression_WhenCantCompare_failure.a");
+    return cached_WhenCantCompare_7;
   }
 
   @Test
   public void testWhenCantCompareFailure() {
-    assertLiveFail(get_WhenCantCompare_6());
+    assertLiveFail(get_WhenCantCompare_7());
   }
 
   @Test
   public void testWhenCantCompareNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_WhenCantCompare_6());
+    assertNotTerribleLineNumbers(get_WhenCantCompare_7());
   }
 
   @Test
   public void testWhenCantCompareExceptionFree() {
-    assertExceptionFree(get_WhenCantCompare_6());
+    assertExceptionFree(get_WhenCantCompare_7());
   }
 
   @Test
   public void testWhenCantCompareTODOFree() {
-    assertTODOFree(get_WhenCantCompare_6());
+    assertTODOFree(get_WhenCantCompare_7());
   }
 
   @Test
-  public void stable_WhenCantCompare_6() {
-    String live = get_WhenCantCompare_6();
+  public void stable_WhenCantCompare_7() {
+    String live = get_WhenCantCompare_7();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_WhenCantCompare_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'int' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'int' and 'bool' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'double' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'double' and 'bool' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":8,\"character\":11},\"end\":{\"line\":8,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'client' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":9,\"character\":11},\"end\":{\"line\":9,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'client' and '__ViewerType' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":10,\"character\":10},\"end\":{\"line\":10,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: enum types are incompatible 'X' vs 'T'. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":15,\"character\":11},\"end\":{\"line\":15,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'int' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":16,\"character\":11},\"end\":{\"line\":16,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'int' and 'bool' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":17,\"character\":11},\"end\":{\"line\":17,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'double' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":18,\"character\":11},\"end\":{\"line\":18,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'double' and 'bool' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":19,\"character\":11},\"end\":{\"line\":19,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'client' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":20,\"character\":11},\"end\":{\"line\":20,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'client' and '__ViewerType' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":21,\"character\":10},\"end\":{\"line\":21,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: enum types are incompatible 'X' vs 'T'. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":25,\"character\":12},\"end\":{\"line\":25,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":25,\"character\":26},\"end\":{\"line\":25,\"character\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'string' and 'int' are unable to be divided with the / operator. (Divide)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'int' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'int' and 'bool' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'double' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'double' and 'bool' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":8,\"character\":11},\"end\":{\"line\":8,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'client' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":9,\"character\":11},\"end\":{\"line\":9,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'client' and '__ViewerType' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":10,\"character\":10},\"end\":{\"line\":10,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: enum types are incompatible 'X' vs 'T'. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":15,\"character\":11},\"end\":{\"line\":15,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'int' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":16,\"character\":11},\"end\":{\"line\":16,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'int' and 'bool' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":17,\"character\":11},\"end\":{\"line\":17,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'double' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":18,\"character\":11},\"end\":{\"line\":18,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'double' and 'bool' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":19,\"character\":11},\"end\":{\"line\":19,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'bool' and 'client' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":20,\"character\":11},\"end\":{\"line\":20,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: unable to compare types 'client' and '__ViewerType' for equality. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":21,\"character\":10},\"end\":{\"line\":21,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: enum types are incompatible 'X' vs 'T'. (RuleSetEquality)\"},{\"range\":{\"start\":{\"line\":25,\"character\":12},\"end\":{\"line\":25,\"character\":20}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":25,\"character\":26},\"end\":{\"line\":25,\"character\":32}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'string' / 'int' (OperatorTable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_WhenCantDivide_7 = null;
-  private String get_WhenCantDivide_7() {
-    if (cached_WhenCantDivide_7 != null) {
-      return cached_WhenCantDivide_7;
+  private String cached_WhenCantDivide_8 = null;
+  private String get_WhenCantDivide_8() {
+    if (cached_WhenCantDivide_8 != null) {
+      return cached_WhenCantDivide_8;
     }
-    cached_WhenCantDivide_7 = generateTestOutput(false, "WhenCantDivide_7", "./test_code/BinaryExpression_WhenCantDivide_failure.a");
-    return cached_WhenCantDivide_7;
+    cached_WhenCantDivide_8 = generateTestOutput(false, "WhenCantDivide_8", "./test_code/BinaryExpression_WhenCantDivide_failure.a");
+    return cached_WhenCantDivide_8;
   }
 
   @Test
   public void testWhenCantDivideFailure() {
-    assertLiveFail(get_WhenCantDivide_7());
+    assertLiveFail(get_WhenCantDivide_8());
   }
 
   @Test
   public void testWhenCantDivideNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_WhenCantDivide_7());
+    assertNotTerribleLineNumbers(get_WhenCantDivide_8());
   }
 
   @Test
   public void testWhenCantDivideExceptionFree() {
-    assertExceptionFree(get_WhenCantDivide_7());
+    assertExceptionFree(get_WhenCantDivide_8());
   }
 
   @Test
   public void testWhenCantDivideTODOFree() {
-    assertTODOFree(get_WhenCantDivide_7());
+    assertTODOFree(get_WhenCantDivide_8());
   }
 
   @Test
-  public void stable_WhenCantDivide_7() {
-    String live = get_WhenCantDivide_7();
+  public void stable_WhenCantDivide_8() {
+    String live = get_WhenCantDivide_8();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_WhenCantDivide_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'bool' are unable to be divided with the / operator. (Divide)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11},\"end\":{\"line\":2,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'int' are unable to be divided with the / operator. (Divide)\"},{\"range\":{\"start\":{\"line\":3,\"character\":11},\"end\":{\"line\":3,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'int' and 'bool' are unable to be divided with the / operator. (Divide)\"},{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'double' are unable to be divided with the / operator. (Divide)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'double' and 'bool' are unable to be divided with the / operator. (Divide)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'client' are unable to be divided with the / operator. (Divide)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'client' and '__ViewerType' are unable to be divided with the / operator. (Divide)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":11},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'bool' / 'bool' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11},\"end\":{\"line\":2,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'bool' / 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":3,\"character\":11},\"end\":{\"line\":3,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'int' / 'bool' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'bool' / 'double' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'double' / 'bool' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'bool' / 'client' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'client' / '__ViewerType' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":8,\"character\":12},\"end\":{\"line\":8,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'client' / '__ViewerType' (OperatorTable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_WhenCantLogic_8 = null;
-  private String get_WhenCantLogic_8() {
-    if (cached_WhenCantLogic_8 != null) {
-      return cached_WhenCantLogic_8;
+  private String cached_WhenCantLogic_9 = null;
+  private String get_WhenCantLogic_9() {
+    if (cached_WhenCantLogic_9 != null) {
+      return cached_WhenCantLogic_9;
     }
-    cached_WhenCantLogic_8 = generateTestOutput(false, "WhenCantLogic_8", "./test_code/BinaryExpression_WhenCantLogic_failure.a");
-    return cached_WhenCantLogic_8;
+    cached_WhenCantLogic_9 = generateTestOutput(false, "WhenCantLogic_9", "./test_code/BinaryExpression_WhenCantLogic_failure.a");
+    return cached_WhenCantLogic_9;
   }
 
   @Test
   public void testWhenCantLogicFailure() {
-    assertLiveFail(get_WhenCantLogic_8());
+    assertLiveFail(get_WhenCantLogic_9());
   }
 
   @Test
   public void testWhenCantLogicNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_WhenCantLogic_8());
+    assertNotTerribleLineNumbers(get_WhenCantLogic_9());
   }
 
   @Test
   public void testWhenCantLogicExceptionFree() {
-    assertExceptionFree(get_WhenCantLogic_8());
+    assertExceptionFree(get_WhenCantLogic_9());
   }
 
   @Test
   public void testWhenCantLogicTODOFree() {
-    assertTODOFree(get_WhenCantLogic_8());
+    assertTODOFree(get_WhenCantLogic_9());
   }
 
   @Test
-  public void stable_WhenCantLogic_8() {
-    String live = get_WhenCantLogic_8();
+  public void stable_WhenCantLogic_9() {
+    String live = get_WhenCantLogic_9();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_WhenCantLogic_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2541,38 +3033,38 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_WhenCantMod_9 = null;
-  private String get_WhenCantMod_9() {
-    if (cached_WhenCantMod_9 != null) {
-      return cached_WhenCantMod_9;
+  private String cached_WhenCantMod_10 = null;
+  private String get_WhenCantMod_10() {
+    if (cached_WhenCantMod_10 != null) {
+      return cached_WhenCantMod_10;
     }
-    cached_WhenCantMod_9 = generateTestOutput(false, "WhenCantMod_9", "./test_code/BinaryExpression_WhenCantMod_failure.a");
-    return cached_WhenCantMod_9;
+    cached_WhenCantMod_10 = generateTestOutput(false, "WhenCantMod_10", "./test_code/BinaryExpression_WhenCantMod_failure.a");
+    return cached_WhenCantMod_10;
   }
 
   @Test
   public void testWhenCantModFailure() {
-    assertLiveFail(get_WhenCantMod_9());
+    assertLiveFail(get_WhenCantMod_10());
   }
 
   @Test
   public void testWhenCantModNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_WhenCantMod_9());
+    assertNotTerribleLineNumbers(get_WhenCantMod_10());
   }
 
   @Test
   public void testWhenCantModExceptionFree() {
-    assertExceptionFree(get_WhenCantMod_9());
+    assertExceptionFree(get_WhenCantMod_10());
   }
 
   @Test
   public void testWhenCantModTODOFree() {
-    assertTODOFree(get_WhenCantMod_9());
+    assertTODOFree(get_WhenCantMod_10());
   }
 
   @Test
-  public void stable_WhenCantMod_9() {
-    String live = get_WhenCantMod_9();
+  public void stable_WhenCantMod_10() {
+    String live = get_WhenCantMod_10();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_WhenCantMod_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2581,78 +3073,78 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_WhenCantMultiply_10 = null;
-  private String get_WhenCantMultiply_10() {
-    if (cached_WhenCantMultiply_10 != null) {
-      return cached_WhenCantMultiply_10;
+  private String cached_WhenCantMultiply_11 = null;
+  private String get_WhenCantMultiply_11() {
+    if (cached_WhenCantMultiply_11 != null) {
+      return cached_WhenCantMultiply_11;
     }
-    cached_WhenCantMultiply_10 = generateTestOutput(false, "WhenCantMultiply_10", "./test_code/BinaryExpression_WhenCantMultiply_failure.a");
-    return cached_WhenCantMultiply_10;
+    cached_WhenCantMultiply_11 = generateTestOutput(false, "WhenCantMultiply_11", "./test_code/BinaryExpression_WhenCantMultiply_failure.a");
+    return cached_WhenCantMultiply_11;
   }
 
   @Test
   public void testWhenCantMultiplyFailure() {
-    assertLiveFail(get_WhenCantMultiply_10());
+    assertLiveFail(get_WhenCantMultiply_11());
   }
 
   @Test
   public void testWhenCantMultiplyNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_WhenCantMultiply_10());
+    assertNotTerribleLineNumbers(get_WhenCantMultiply_11());
   }
 
   @Test
   public void testWhenCantMultiplyExceptionFree() {
-    assertExceptionFree(get_WhenCantMultiply_10());
+    assertExceptionFree(get_WhenCantMultiply_11());
   }
 
   @Test
   public void testWhenCantMultiplyTODOFree() {
-    assertTODOFree(get_WhenCantMultiply_10());
+    assertTODOFree(get_WhenCantMultiply_11());
   }
 
   @Test
-  public void stable_WhenCantMultiply_10() {
-    String live = get_WhenCantMultiply_10();
+  public void stable_WhenCantMultiply_11() {
+    String live = get_WhenCantMultiply_11();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_WhenCantMultiply_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":10},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":11,\"character\":17},\"end\":{\"line\":11,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'string' and 'int' are unable to be divided with the / operator. (Divide)\"},{\"range\":{\"start\":{\"line\":1,\"character\":11},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'bool' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11},\"end\":{\"line\":2,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'int' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":3,\"character\":11},\"end\":{\"line\":3,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'int' and 'bool' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'double' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'double' and 'bool' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'client' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'client' and '__ViewerType' are unable to be multiplied with the * operator. (Multiply)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":10},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":11,\"character\":17},\"end\":{\"line\":11,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'string' / 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":1,\"character\":11},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'bool' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11},\"end\":{\"line\":2,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'int' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":3,\"character\":11},\"end\":{\"line\":3,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'int' and 'bool' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'double' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'double' and 'bool' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'bool' and 'client' are unable to be multiplied with the * operator. (Multiply)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'client' and '__ViewerType' are unable to be multiplied with the * operator. (Multiply)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_WhenCantRelate_11 = null;
-  private String get_WhenCantRelate_11() {
-    if (cached_WhenCantRelate_11 != null) {
-      return cached_WhenCantRelate_11;
+  private String cached_WhenCantRelate_12 = null;
+  private String get_WhenCantRelate_12() {
+    if (cached_WhenCantRelate_12 != null) {
+      return cached_WhenCantRelate_12;
     }
-    cached_WhenCantRelate_11 = generateTestOutput(false, "WhenCantRelate_11", "./test_code/BinaryExpression_WhenCantRelate_failure.a");
-    return cached_WhenCantRelate_11;
+    cached_WhenCantRelate_12 = generateTestOutput(false, "WhenCantRelate_12", "./test_code/BinaryExpression_WhenCantRelate_failure.a");
+    return cached_WhenCantRelate_12;
   }
 
   @Test
   public void testWhenCantRelateFailure() {
-    assertLiveFail(get_WhenCantRelate_11());
+    assertLiveFail(get_WhenCantRelate_12());
   }
 
   @Test
   public void testWhenCantRelateNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_WhenCantRelate_11());
+    assertNotTerribleLineNumbers(get_WhenCantRelate_12());
   }
 
   @Test
   public void testWhenCantRelateExceptionFree() {
-    assertExceptionFree(get_WhenCantRelate_11());
+    assertExceptionFree(get_WhenCantRelate_12());
   }
 
   @Test
   public void testWhenCantRelateTODOFree() {
-    assertTODOFree(get_WhenCantRelate_11());
+    assertTODOFree(get_WhenCantRelate_12());
   }
 
   @Test
-  public void stable_WhenCantRelate_11() {
-    String live = get_WhenCantRelate_11();
+  public void stable_WhenCantRelate_12() {
+    String live = get_WhenCantRelate_12();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_WhenCantRelate_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -2661,42 +3153,42 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_WhenCantSubtract_12 = null;
-  private String get_WhenCantSubtract_12() {
-    if (cached_WhenCantSubtract_12 != null) {
-      return cached_WhenCantSubtract_12;
+  private String cached_WhenCantSubtract_13 = null;
+  private String get_WhenCantSubtract_13() {
+    if (cached_WhenCantSubtract_13 != null) {
+      return cached_WhenCantSubtract_13;
     }
-    cached_WhenCantSubtract_12 = generateTestOutput(false, "WhenCantSubtract_12", "./test_code/BinaryExpression_WhenCantSubtract_failure.a");
-    return cached_WhenCantSubtract_12;
+    cached_WhenCantSubtract_13 = generateTestOutput(false, "WhenCantSubtract_13", "./test_code/BinaryExpression_WhenCantSubtract_failure.a");
+    return cached_WhenCantSubtract_13;
   }
 
   @Test
   public void testWhenCantSubtractFailure() {
-    assertLiveFail(get_WhenCantSubtract_12());
+    assertLiveFail(get_WhenCantSubtract_13());
   }
 
   @Test
   public void testWhenCantSubtractNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_WhenCantSubtract_12());
+    assertNotTerribleLineNumbers(get_WhenCantSubtract_13());
   }
 
   @Test
   public void testWhenCantSubtractExceptionFree() {
-    assertExceptionFree(get_WhenCantSubtract_12());
+    assertExceptionFree(get_WhenCantSubtract_13());
   }
 
   @Test
   public void testWhenCantSubtractTODOFree() {
-    assertTODOFree(get_WhenCantSubtract_12());
+    assertTODOFree(get_WhenCantSubtract_13());
   }
 
   @Test
-  public void stable_WhenCantSubtract_12() {
-    String live = get_WhenCantSubtract_12();
+  public void stable_WhenCantSubtract_13() {
+    String live = get_WhenCantSubtract_13();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:BinaryExpression_WhenCantSubtract_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":10},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":11,\"character\":17},\"end\":{\"line\":11,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the types 'string' and 'int' are unable to be divided with the / operator. (Divide)\"},{\"range\":{\"start\":{\"line\":1,\"character\":11},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'bool' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11},\"end\":{\"line\":2,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":3,\"character\":11},\"end\":{\"line\":3,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'int' and 'bool' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'double' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'double' and 'bool' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'client' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'client' and '__ViewerType' are unable to be subtracted with the - operator. (Subtracted)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":10},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression expected to be computed, rather than assigned to (Environment)\"},{\"range\":{\"start\":{\"line\":11,\"character\":3},\"end\":{\"line\":11,\"character\":11}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be added with the + operator.\\n\\tThe left hand side has a type of 'bool' which may only be added with a right hand type of 'string'. (ADD01)\"},{\"range\":{\"start\":{\"line\":11,\"character\":17},\"end\":{\"line\":11,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'string' / 'int' (OperatorTable)\"},{\"range\":{\"start\":{\"line\":1,\"character\":11},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'bool' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":2,\"character\":11},\"end\":{\"line\":2,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'int' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":3,\"character\":11},\"end\":{\"line\":3,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'int' and 'bool' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":4,\"character\":11},\"end\":{\"line\":4,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'double' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":5,\"character\":11},\"end\":{\"line\":5,\"character\":21}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'double' and 'bool' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":6,\"character\":11},\"end\":{\"line\":6,\"character\":25}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'bool' and 'client' are unable to be subtracted with the - operator. (Subtracted)\"},{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'client' and '__ViewerType' are unable to be subtracted with the - operator. (Subtracted)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

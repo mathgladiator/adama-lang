@@ -6,4 +6,5 @@
   let b4 = 1.0 / true;
   let b5 = true / @no_one;
   let b6 = @no_one / {};
+  let b6 = (@no_one / {}) / false;
 }

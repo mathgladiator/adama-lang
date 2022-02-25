@@ -66,11 +66,6 @@ public class Rules {
     return RuleSetCompare.CanCompare(environment, tyTypeA, tyTypeB, silent);
   }
 
-  /** FROM: RuleSetDivide */
-  public CanMathResult CanDivide(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetDivide.CanDivide(environment, tyTypeA, tyTypeB, silent);
-  }
-
   /** FROM: RuleSetMod */
   public CanMathResult CanMod(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
     return RuleSetMod.CanMod(environment, tyTypeA, tyTypeB, silent);

@@ -1,0 +1,29 @@
+// TODO: investigate if this is worth sorting out
+// public maybe<double> x1 = 1 / 0;
+// https://github.com/mathgladiator/adama-lang/issues/100
+
+@construct {
+  let d0 = 1 / 0;
+  let d1 = 1.0 / 0;
+  let d2 = 1L / 0;
+
+  let d3 = 1 / 0.1;
+  let d4 = 1.0 / 0.1;
+  let d5 = 1L / 0.1;
+
+  let d6 = 1 / 0L;
+  let d7 = 1.0 / 0L;
+  let d8 = 1L / 0L;
+
+  let c1 = @i / 0;
+  let c2 = @i / 0L;
+  let c3 = @i / 0.0;
+  let c4 = @i / (1 / 2);
+  let c5 = @i / (1 / 0);
+
+  let c6 = 0 / @i;
+  let c7 = 0L / @i;
+  let c8 = 0.0 / @i;
+  let c9 = (1 / 2) / @i;
+  let c10 = (1 / 0) / @i;
+}

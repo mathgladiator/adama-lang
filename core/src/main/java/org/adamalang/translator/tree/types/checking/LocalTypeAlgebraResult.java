@@ -11,25 +11,28 @@ package org.adamalang.translator.tree.types.checking;
 
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.tree.expressions.Expression;
+import org.adamalang.translator.tree.expressions.operators.BinaryOperatorResult;
+import org.adamalang.translator.tree.expressions.operators.BinaryOperatorTable;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.properties.CanMathResult;
 import org.adamalang.translator.tree.types.checking.properties.CanTestEqualityResult;
 
 public class LocalTypeAlgebraResult {
   private final Environment environment;
   private final Expression left;
-  private final Expression operation;
   private final Expression right;
   public CanMathResult mathResult = CanMathResult.No;
   public TyType typeLeft = null;
   public TyType typeRight = null;
   CanTestEqualityResult equalityResult = CanTestEqualityResult.No;
+  public BinaryOperatorResult operatorResult;
 
-  public LocalTypeAlgebraResult(final Environment environment, final Expression operation, final Expression left, final Expression right) {
+  public LocalTypeAlgebraResult(final Environment environment, final Expression left, final Expression right) {
     this.environment = environment;
-    this.operation = operation;
     this.left = left;
     this.right = right;
+    this.operatorResult = null;
   }
 
   public TyType add() {
@@ -52,14 +55,14 @@ public class LocalTypeAlgebraResult {
     return environment.rules.CanCompare(typeLeft, typeRight, false);
   }
 
-  public TyType divide() {
+  public TyType table(String operator) {
     typeLeft = left.typing(environment, null);
     typeLeft = environment.rules.Resolve(typeLeft, false);
     typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
-    mathResult = environment.rules.CanDivide(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) {
-      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
+    operatorResult = BinaryOperatorTable.INSTANCE.find(typeLeft, operator, typeRight, environment);
+    if (operatorResult != null) {
+      return operatorResult.type.makeCopyWithNewPosition(typeLeft, TypeBehavior.ReadOnlyNativeValue).withPosition(typeRight);
     }
     return null;
   }

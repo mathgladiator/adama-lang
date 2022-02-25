@@ -28,13 +28,12 @@ For me, using my freshly made account to test this tooling and your experience, 
 {
   "space" : "chat001",
   "role" : "owner",
-  "billing" : "free",
   "created" : "2022-02-09",
-  "balance" : 0,
+  "enabled" : true,
   "storage-bytes" : 0
 }
 ```
 
-This object reveals the name of the space, role of the person doing the listing, billing plan associated with the space, date when the space was created, current balance available to the space, and finally the total storage used by the space.
+This object reveals the name of the space, role of the person doing the listing, date when the space was created, whether or not the space is currently enabled, and finally the total storage used by the space.
 
 The space is now created in an empty state, so [we can move on and make the space useful.](03-space.md) 

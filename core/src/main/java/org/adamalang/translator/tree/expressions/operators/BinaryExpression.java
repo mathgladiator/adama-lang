@@ -52,7 +52,7 @@ public class BinaryExpression extends Expression {
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     environment.mustBeComputeContext(this);
-    typingResult = new LocalTypeAlgebraResult(environment, this, left, right);
+    typingResult = new LocalTypeAlgebraResult(environment, left, right);
     if (op != null) {
       switch (op) {
         case Add:
@@ -60,7 +60,7 @@ public class BinaryExpression extends Expression {
         case Multiply:
           return typingResult.multiply();
         case Divide:
-          return typingResult.divide();
+          return typingResult.table("/");
         case Mod:
           return typingResult.mod();
         case Subtract:
@@ -91,11 +91,19 @@ public class BinaryExpression extends Expression {
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    final var typeLeft = typingResult.typeLeft;
     final var leftStr = new StringBuilder();
     final var rightStr = new StringBuilder();
     left.writeJava(leftStr, environment);
     right.writeJava(rightStr, environment);
+    if (typingResult.operatorResult != null) {
+      if (typingResult.operatorResult.reverse) {
+        sb.append(String.format("%s", String.format(typingResult.operatorResult.javaPattern, rightStr, leftStr)));
+      } else {
+        sb.append(String.format("%s", String.format(typingResult.operatorResult.javaPattern, leftStr, rightStr)));
+      }
+      return;
+    }
+    final var typeLeft = typingResult.typeLeft;
     if (typingResult.typeLeft instanceof DetailEqualityTestingRequiresWrapping) {
       switch (op) {
         case Equal:

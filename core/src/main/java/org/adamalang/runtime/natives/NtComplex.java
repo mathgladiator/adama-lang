@@ -9,6 +9,8 @@
  */
 package org.adamalang.runtime.natives;
 
+import org.adamalang.runtime.stdlib.LibMath;
+
 /** a complex number */
 public class NtComplex {
   public final double real;
@@ -25,6 +27,15 @@ public class NtComplex {
     if (o == null || getClass() != o.getClass()) return false;
     NtComplex ntComplex = (NtComplex) o;
     return Double.compare(ntComplex.real, real) == 0 && Double.compare(ntComplex.imaginary, imaginary) == 0;
+  }
+
+  public boolean zero() {
+    return LibMath.near(real, 0) && LibMath.near(imaginary, 0);
+  }
+
+  public NtComplex recip() {
+    double len2 = real * real + imaginary * imaginary;
+    return new NtComplex(real / len2, -imaginary / len2);
   }
 
   public long memory() {
