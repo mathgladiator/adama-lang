@@ -16,6 +16,9 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.checking.properties.CanAssignResult;
 import org.adamalang.translator.tree.types.checking.properties.CanMathResult;
 import org.adamalang.translator.tree.types.checking.properties.StorageTweak;
+import org.adamalang.translator.tree.types.natives.TyNativeComplex;
+import org.adamalang.translator.tree.types.natives.TyNativeLong;
+import org.adamalang.translator.tree.types.reactive.TyReactiveComplex;
 
 public class LocalTypeAssignmentResult {
   private final Environment environment;
@@ -43,8 +46,14 @@ public class LocalTypeAssignmentResult {
   }
 
   public void set() {
-    ltype = ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null);
-    rtype = expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null);
+    ltype = environment.rules.Resolve(ref.typing(environment.scopeWithComputeContext(ComputeContext.Assignment), null), false);
+    rtype = environment.rules.Resolve(expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null), false);
+    if (ltype instanceof TyReactiveComplex) {
+      if (environment.rules.IsNumeric(rtype, true) || rtype instanceof TyNativeLong) {
+        assignResult = CanAssignResult.YesWithSetter;
+        return;
+      }
+    }
     assignResult = environment.rules.CanAssignWithSet(ltype, rtype, false);
     environment.rules.CanTypeAStoreTypeB(ltype, rtype, StorageTweak.None, false);
   }

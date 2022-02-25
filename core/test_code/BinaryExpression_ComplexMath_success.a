@@ -3,6 +3,7 @@ public formula forty_five = 0.707 + 0.707 * @i;
 public formula recip = 1.0 / forty_five;
 public complex final_foo;
 public complex final_foo2;
+public complex final_foo3;
 
 @construct {
   complex foo = 1 + 1 * @i;
@@ -16,4 +17,5 @@ public complex final_foo2;
   z = foo;
   z += foo;
   final_foo2 = z * z;
+  final_foo3 = 42;
 }
