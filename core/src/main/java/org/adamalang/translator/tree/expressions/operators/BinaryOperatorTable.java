@@ -385,35 +385,93 @@ public class BinaryOperatorTable {
       insert(tyString, "+=", tyMaybeString, tyString,"%s += %s", false);
 
       insert(tyListRxInteger, "+=", tyInt, tyInt, "LibArithmetic.ListMath.addToII(%s, %s)", false);
-      insert(tyListRxLong, "+=", tyInt, tyLong, "LibArithmetic.ListMath.addToLI(%s, %s)", false);
-      insert(tyListRxLong, "+=", tyLong, tyLong, "LibArithmetic.ListMath.addToLL(%s, %s)", false);
-      insert(tyListRxDouble, "+=", tyInt, tyDouble, "LibArithmetic.ListMath.addToDI(%s, %s)", false);
-      insert(tyListRxDouble, "+=", tyLong, tyDouble,"LibArithmetic.ListMath.addToDL(%s, %s)", false);
-      insert(tyListRxDouble, "+=", tyDouble, tyDouble, "LibArithmetic.ListMath.addToDL(%s, %s)", false);
-      insert(tyListRxComplex, "+=", tyInt, tyComplex,"LibArithmetic.ListMath.addToCI(%s, %s)", false);
-      insert(tyListRxComplex, "+=", tyLong, tyComplex, "LibArithmetic.ListMath.addToCL(%s, %s)", false);
-      insert(tyListRxComplex, "+=", tyDouble, tyComplex, "LibArithmetic.ListMath.addToCD(%s, %s)", false);
-      insert(tyListRxComplex, "+=", tyComplex, tyComplex, "LibArithmetic.ListMath.addToCC(%s, %s)", false);
-      insert(tyListRxString, "+=", tyBoolean, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyInt, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyLong, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyDouble, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyComplex, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyString, tyString, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyMaybeBoolean, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyMaybeInt, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyMaybeLong, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyMaybeDouble, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyMaybeComplex, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
-      insert(tyListRxString, "+=", tyMaybeString, tyString,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxLong, "+=", tyInt, tyInt, "LibArithmetic.ListMath.addToLI(%s, %s)", false);
+      insert(tyListRxLong, "+=", tyLong, tyInt, "LibArithmetic.ListMath.addToLL(%s, %s)", false);
+      insert(tyListRxDouble, "+=", tyInt, tyInt, "LibArithmetic.ListMath.addToDI(%s, %s)", false);
+      insert(tyListRxDouble, "+=", tyLong, tyInt,"LibArithmetic.ListMath.addToDL(%s, %s)", false);
+      insert(tyListRxDouble, "+=", tyDouble, tyInt, "LibArithmetic.ListMath.addToDL(%s, %s)", false);
+      insert(tyListRxComplex, "+=", tyInt, tyInt,"LibArithmetic.ListMath.addToCI(%s, %s)", false);
+      insert(tyListRxComplex, "+=", tyLong, tyInt, "LibArithmetic.ListMath.addToCL(%s, %s)", false);
+      insert(tyListRxComplex, "+=", tyDouble, tyInt, "LibArithmetic.ListMath.addToCD(%s, %s)", false);
+      insert(tyListRxComplex, "+=", tyComplex, tyInt, "LibArithmetic.ListMath.addToCC(%s, %s)", false);
+      insert(tyListRxString, "+=", tyBoolean, tyInt, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyInt, tyInt, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyLong, tyInt, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyDouble, tyInt, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyComplex, tyInt, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyString, tyInt, "LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeBoolean, tyInt,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeInt, tyInt,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeLong, tyInt,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeDouble, tyInt,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeComplex, tyInt,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
+      insert(tyListRxString, "+=", tyMaybeString, tyInt,"LibArithmetic.ListMath.addToSO(%s, %s)", false);
     }
     // SUBTRACTION-ASSIGNMENT (-=)
     {
-
+      insert(tyRxInteger, "-=", tyInt, tyInt,"%s.opAddTo(-(%s))", false);
+      insert(tyRxLong, "-=", tyInt, tyLong,"%s.opAddTo(-(%s))", false);
+      insert(tyRxLong, "-=", tyLong, tyLong,"%s.opAddTo(-(%s))", false);
+      insert(tyRxDouble, "-=", tyInt, tyDouble,"%s.opAddTo(-(%s))", false);
+      insert(tyRxDouble, "-=", tyLong, tyDouble,"%s.opAddTo(-(%s))", false);
+      insert(tyRxDouble, "-=", tyDouble, tyDouble,"%s.opAddTo(-(%s))", false);
+      insert(tyRxComplex, "-=", tyInt, tyComplex,"%s.opAddTo(-(%s))", false);
+      insert(tyRxComplex, "-=", tyLong, tyComplex,"%s.opAddTo(-(%s))", false);
+      insert(tyRxComplex, "-=", tyDouble, tyComplex,"%s.opAddTo(-(%s))", false);
+      insert(tyRxComplex, "-=", tyComplex, tyComplex,"%s.opSubFrom(%s)", false);
+      insert(tyInt, "-=", tyInt, tyInt,"%s -= %s", false);
+      insert(tyLong, "-=", tyInt, tyLong,"%s -= %s", false);
+      insert(tyLong, "-=", tyLong, tyLong,"%s -= %s", false);
+      insert(tyDouble, "-=", tyInt, tyDouble,"%s -= %s", false);
+      insert(tyDouble, "-=", tyLong, tyDouble,"%s -= %s", false);
+      insert(tyDouble, "-=", tyDouble, tyDouble,"%s -= %s", false);
+      insert(tyComplex, "-=", tyInt, tyComplex,"%s.opAddTo(-(%s))", false);
+      insert(tyComplex, "-=", tyLong, tyComplex,"%s.opAddTo(-(%s))", false);
+      insert(tyComplex, "-=", tyDouble, tyComplex,"%s.opAddTo(-(%s))", false);
+      insert(tyComplex, "-=", tyComplex, tyComplex,"%s.opSubFrom(%s)", false);
+      insert(tyListRxInteger, "-=", tyInt, tyInt, "LibArithmetic.ListMath.addToII(%s, -(%s))", false);
+      insert(tyListRxLong, "-=", tyInt, tyInt, "LibArithmetic.ListMath.addToLI(%s, -(%s))", false);
+      insert(tyListRxLong, "-=", tyLong, tyInt, "LibArithmetic.ListMath.addToLL(%s, -(%s))", false);
+      insert(tyListRxDouble, "-=", tyInt, tyInt, "LibArithmetic.ListMath.addToDI(%s, -(%s))", false);
+      insert(tyListRxDouble, "-=", tyLong, tyInt,"LibArithmetic.ListMath.addToDL(%s, -(%s))", false);
+      insert(tyListRxDouble, "-=", tyDouble, tyInt, "LibArithmetic.ListMath.addToDL(%s, -(%s))", false);
+      insert(tyListRxComplex, "-=", tyInt, tyInt,"LibArithmetic.ListMath.addToCI(%s, -(%s))", false);
+      insert(tyListRxComplex, "-=", tyLong, tyInt, "LibArithmetic.ListMath.addToCL(%s, -(%s))", false);
+      insert(tyListRxComplex, "-=", tyDouble, tyInt, "LibArithmetic.ListMath.addToCD(%s, -(%s))", false);
+      insert(tyListRxComplex, "-=", tyComplex, tyInt, "LibArithmetic.ListMath.subFromCC(%s, %s)", false);
     }
     // MULTIPLICATION-ASSIGNMENT (*=) {
     {
-
+      insert(tyRxInteger, "*=", tyInt, tyInt,"%s.opMultBy(%s)", false);
+      insert(tyRxLong, "*=", tyInt, tyLong,"%s.opMultBy(%s)", false);
+      insert(tyRxLong, "*=", tyLong, tyLong,"%s.opMultBy(%s)", false);
+      insert(tyRxDouble, "*=", tyInt, tyDouble,"%s.opMultBy(%s)", false);
+      insert(tyRxDouble, "*=", tyLong, tyDouble,"%s.opMultBy(%s)", false);
+      insert(tyRxDouble, "*=", tyDouble, tyDouble,"%s.opMultBy(%s)", false);
+      insert(tyRxComplex, "*=", tyInt, tyComplex,"%s.opMultBy(%s)", false);
+      insert(tyRxComplex, "*=", tyLong, tyComplex,"%s.opMultBy(%s)", false);
+      insert(tyRxComplex, "*=", tyDouble, tyComplex,"%s.opMultBy(%s)", false);
+      insert(tyRxComplex, "*=", tyComplex, tyComplex,"%s.opMultBy(%s)", false);
+      insert(tyInt, "*=", tyInt, tyInt,"%s *= %s", false);
+      insert(tyLong, "*=", tyInt, tyLong,"%s *= %s", false);
+      insert(tyLong, "*=", tyLong, tyLong,"%s *= %s", false);
+      insert(tyDouble, "*=", tyInt, tyDouble,"%s *= %s", false);
+      insert(tyDouble, "*=", tyLong, tyDouble,"%s *= %s", false);
+      insert(tyDouble, "*=", tyDouble, tyDouble,"%s *= %s", false);
+      insert(tyComplex, "*=", tyInt, tyComplex,"%s.opMultBy(%s)", false);
+      insert(tyComplex, "*=", tyLong, tyComplex,"%s.opMultBy(%s)", false);
+      insert(tyComplex, "*=", tyDouble, tyComplex,"%s.opMultBy(%s)", false);
+      insert(tyComplex, "*=", tyComplex, tyComplex,"%s.opMultBy(%s)", false);
+      insert(tyListRxInteger, "*=", tyInt, tyInt, "LibArithmetic.ListMath.multByII(%s, %s)", false);
+      insert(tyListRxLong, "*=", tyInt, tyInt, "LibArithmetic.ListMath.multByLI(%s, %s)", false);
+      insert(tyListRxLong, "*=", tyLong, tyInt, "LibArithmetic.ListMath.multByLL(%s, %s)", false);
+      insert(tyListRxDouble, "*=", tyInt, tyInt, "LibArithmetic.ListMath.multByDI(%s, %s)", false);
+      insert(tyListRxDouble, "*=", tyLong, tyInt,"LibArithmetic.ListMath.multByDL(%s, %s)", false);
+      insert(tyListRxDouble, "*=", tyDouble, tyInt, "LibArithmetic.ListMath.multByDL(%s, %s)", false);
+      insert(tyListRxComplex, "*=", tyInt, tyInt,"LibArithmetic.ListMath.multByCI(%s, %s)", false);
+      insert(tyListRxComplex, "*=", tyLong, tyInt, "LibArithmetic.ListMath.multByCL(%s, %s)", false);
+      insert(tyListRxComplex, "*=", tyDouble, tyInt, "LibArithmetic.ListMath.multByCD(%s, %s)", false);
+      insert(tyListRxComplex, "*=", tyComplex, tyInt, "LibArithmetic.ListMath.multByCC(%s, %s)", false);
     }
 
 

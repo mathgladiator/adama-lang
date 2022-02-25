@@ -109,21 +109,14 @@ public class LibArithmeticTests {
     for (int k = 0; k < x.length; k++) {
       System.out.println("public " + aType(x[k]) + " r" + k + ";");
     }
-    System.out.println("public string rS;");
     System.out.println("@construct {");
     for (int k = 0; k < x.length; k++) {
       System.out.println("  " + aType(x[k]) + " l" + k + ";");
       for (int j = 0; j <= k; j++) {
-        System.out.println("  r" + k + " += " + invent(x[j]) + ";");
-        System.out.println("  l" + k + " += " + invent(x[j]) + ";");
-        System.out.println("  r" + k + " += l" + k + ";");
+        System.out.println("  r" + k + " -= " + invent(x[j]) + ";");
+        System.out.println("  l" + k + " -= " + invent(x[j]) + ";");
+        System.out.println("  r" + k + " -= l" + k + ";");
       }
-    }
-    System.out.println("  string lS;");
-    String[] y = new String[] { "tyInt", "tyLong", "tyDouble", "tyComplex", "tyMaybeString", "tyBoolean", "tyMaybeComplex" };
-    for (String Y : y) {
-      System.out.println("  rS += " + invent(Y) + ";");
-      System.out.println("  lS += " + invent(Y) + ";");
     }
     System.out.println("}");
 

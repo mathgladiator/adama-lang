@@ -131,10 +131,4 @@ public class RxInt32 extends RxBase implements Comparable<RxInt32>, CanGetAndSet
     __raiseDirty();
     return value;
   }
-
-  public int opSubFrom(final int x) {
-    value -= x;
-    __raiseDirty();
-    return value;
-  }
 }

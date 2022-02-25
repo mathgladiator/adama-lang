@@ -790,11 +790,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n    __track(10);");
     gold.append("\n    LibArithmetic.ListMath.addToII((zzz.iterate(true)).transform((item) -> item.z), 100);");
     gold.append("\n    __track(11);");
-    gold.append("\n    NtList<RxInt32> _auto_4 = (zzz.iterate(true)).transform((item) -> item.z);");
-    gold.append("\n    for (RxInt32 _auto_5 : _auto_4) {");
-    gold.append("\n      _auto_5.opMultBy(3);");
-    gold.append("\n    }");
-    gold.append("\n");
+    gold.append("\n    LibArithmetic.ListMath.multByII((zzz.iterate(true)).transform((item) -> item.z), 3);");
     gold.append("\n    __track(12);");
     gold.append("\n    __transitionStateMachine(\"next\", 0);");
     gold.append("\n  }");

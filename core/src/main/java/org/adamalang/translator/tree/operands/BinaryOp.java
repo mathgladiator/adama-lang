@@ -26,6 +26,8 @@ public enum BinaryOp {
   NotEqual("!=", false), //
   Subtract("-", false), //
   AssignmentAdd("+=", true), //
+  AssignmentSubtract("-=", true), //
+  AssignmentMultiply("*=", true), //
   ; //
 
   public final String javaOp;

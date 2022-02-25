@@ -4920,7 +4920,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __track(13);");
     gold.append("\n    assign.opMultBy(3);");
     gold.append("\n    __track(14);");
-    gold.append("\n    assign.opSubFrom(17);");
+    gold.append("\n    assign.opAddTo(-(17));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {");
@@ -6507,7 +6507,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __track(28);");
     gold.append("\n    assign.opMultBy(3);");
     gold.append("\n    __track(29);");
-    gold.append("\n    assign.opSubFrom(17);");
+    gold.append("\n    assign.opAddTo(-(17));");
     gold.append("\n    __track(30);");
     gold.append("\n    hex.set(74747);");
     gold.append("\n  }");

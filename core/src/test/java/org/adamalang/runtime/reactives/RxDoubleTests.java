@@ -111,7 +111,7 @@ public class RxDoubleTests {
     Assert.assertEquals(11, d.get(), 0.1);
     d.opMultBy(2);
     Assert.assertEquals(22, d.get(), 0.1);
-    d.opSubFrom(7);
+    d.opAddTo(-(7));
     Assert.assertEquals(15, d.get(), 0.1);
   }
 }

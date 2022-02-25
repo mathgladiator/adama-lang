@@ -120,7 +120,7 @@ public class RxInt32Tests {
     Assert.assertEquals(11, (int) i.get());
     i.opMultBy(2);
     Assert.assertEquals(22, (int) i.get());
-    i.opSubFrom(7);
+    i.opAddTo(-7);
     Assert.assertEquals(15, (int) i.get());
   }
 }

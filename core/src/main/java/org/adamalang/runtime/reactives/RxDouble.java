@@ -122,12 +122,6 @@ public class RxDouble extends RxBase implements Comparable<RxDouble>, CanGetAndS
     return value;
   }
 
-  public double opSubFrom(final double x) {
-    value -= x;
-    __raiseDirty();
-    return value;
-  }
-
   public void set(final int value) {
     this.value = value;
     __raiseDirty();

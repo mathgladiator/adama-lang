@@ -67,4 +67,27 @@ public class NtComplex {
     imaginary += x.imaginary;
     return this;
   }
+
+  public NtComplex opSubFrom(NtComplex x) {
+    real -= x.real;
+    imaginary -= x.imaginary;
+    return this;
+  }
+
+  public NtComplex opMultBy(double x) {
+    real *= x;
+    imaginary *= x;
+    return this;
+  }
+
+  public NtComplex opMultBy(NtComplex x) {
+    double nReal = real * x.real - imaginary * x.imaginary;
+    imaginary = real * x.imaginary + imaginary * x.real;
+    real = nReal;
+    return this;
+  }
+
+  public NtComplex copy() {
+    return new NtComplex(real, imaginary);
+  }
 }

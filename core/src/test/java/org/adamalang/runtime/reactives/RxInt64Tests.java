@@ -133,7 +133,7 @@ public class RxInt64Tests {
     Assert.assertEquals(11, (long) l.get());
     l.opMultBy(2);
     Assert.assertEquals(22, (long) l.get());
-    l.opSubFrom(7);
+    l.opAddTo(-(7));
     Assert.assertEquals(15, (long) l.get());
   }
 }

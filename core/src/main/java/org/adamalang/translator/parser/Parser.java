@@ -342,7 +342,7 @@ public class Parser {
       }
     }
     final var leftSide = expression();
-    var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("-=", "*=", "<-"));
+    var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("<-"));
     if (hasAssignment == null) {
       hasAssignment = tokens.popIf(t -> t.isSymbolWithTextEq("="));
     }
@@ -1372,7 +1372,7 @@ public class Parser {
 
   public Expression assignment() throws AdamaLangException {
     final var left = ternary();
-    var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("+="));
+    var hasAssignment = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("+=", "-=", "*="));
     if (hasAssignment != null) {
       final var right = assignment();
       return new BinaryExpression(left, hasAssignment, right);

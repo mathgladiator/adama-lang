@@ -633,82 +633,70 @@ public class LibArithmetic {
 
   public static class ListMath {
     public static int addToII(NtList<RxInt32> x, int y) {
-      int sum = 0;
       for (RxInt32 item : x) {
-        sum += item.opAddTo(y);
+        item.opAddTo(y);
       }
-      return sum;
+      return x.size();
     }
-    public static long addToLI(NtList<RxInt64> x, int y) {
-      long sum = 0;
+    public static int addToLI(NtList<RxInt64> x, int y) {
       for (RxInt64 item : x) {
-        sum += item.opAddTo(y);
+        item.opAddTo(y);
       }
-      return sum;
+      return x.size();
     }
-    public static long addToLL(NtList<RxInt64> x, long y) {
-      long sum = 0;
+    public static int addToLL(NtList<RxInt64> x, long y) {
       for (RxInt64 item : x) {
-        sum += item.opAddTo(y);
+        item.opAddTo(y);
       }
-      return sum;
+      return x.size();
     }
-    public static double addToDI(NtList<RxDouble> x, int y) {
-      double sum = 0;
+    public static int addToDI(NtList<RxDouble> x, int y) {
       for (RxDouble item : x) {
-        sum += item.opAddTo(y);
+        item.opAddTo(y);
       }
-      return sum;
+      return x.size();
     }
-    public static double addToDL(NtList<RxDouble> x, long y) {
-      double sum = 0;
+    public static int addToDL(NtList<RxDouble> x, long y) {
       for (RxDouble item : x) {
-        sum += item.opAddTo(y);
+        item.opAddTo(y);
       }
-      return sum;
+      return x.size();
     }
-    public static double addToDD(NtList<RxDouble> x, double y) {
-      double sum = 0;
+    public static int addToDD(NtList<RxDouble> x, double y) {
       for (RxDouble item : x) {
-        sum += item.opAddTo(y);
+        item.opAddTo(y);
       }
-      return sum;
+      return x.size();
     }
-    public static NtComplex addToCI(NtList<RxComplex> x, int y) {
+    public static int addToCI(NtList<RxComplex> x, int y) {
+      for (RxComplex item : x) {
+        item.opAddTo(y);
+      }
+      return x.size();
+    }
+    public static int addToCL(NtList<RxComplex> x, long y) {
+      for (RxComplex item : x) {
+        item.opAddTo(y);
+      }
+      return x.size();
+    }
+    public static int addToCD(NtList<RxComplex> x, double y) {
+      for (RxComplex item : x) {
+        item.opAddTo(y);
+      }
+      return x.size();
+    }
+    public static int addToCC(NtList<RxComplex> x, NtComplex y) {
+      for (RxComplex item : x) {
+        item.opAddTo(y);
+      }
+      return x.size();
+    }
+    public static NtComplex subFromCC(NtList<RxComplex> x, NtComplex y) {
       double real = 0;
       double imaginary = 0;
       for (RxComplex item : x) {
-        item.opAddTo(y);
-        real += item.get().real;
-        imaginary += item.get().imaginary;
-      }
-      return new NtComplex(real, imaginary);
-    }
-    public static NtComplex addToCL(NtList<RxComplex> x, long y) {
-      double real = 0;
-      double imaginary = 0;
-      for (RxComplex item : x) {
-        item.opAddTo(y);
-        real += item.get().real;
-        imaginary += item.get().imaginary;
-      }
-      return new NtComplex(real, imaginary);
-    }
-    public static NtComplex addToCD(NtList<RxComplex> x, double y) {
-      double real = 0;
-      double imaginary = 0;
-      for (RxComplex item : x) {
-        item.opAddTo(y);
-        real += item.get().real;
-        imaginary += item.get().imaginary;
-      }
-      return new NtComplex(real, imaginary);
-    }
-    public static NtComplex addToCD(NtList<RxComplex> x, NtComplex y) {
-      double real = 0;
-      double imaginary = 0;
-      for (RxComplex item : x) {
-        item.opAddTo(y);
+        item.opSubFrom(y);
         real += item.get().real;
         imaginary += item.get().imaginary;
       }
@@ -720,6 +708,66 @@ public class LibArithmetic {
         sb.append(item.opAddTo(y.toString()));
       }
       return sb.toString();
+    }
+    public static int multByII(NtList<RxInt32> x, int y) {
+      for (RxInt32 item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
+    }
+    public static int multByLI(NtList<RxInt64> x, int y) {
+      for (RxInt64 item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
+    }
+    public static int multByLL(NtList<RxInt64> x, long y) {
+      for (RxInt64 item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
+    }
+    public static int multByDI(NtList<RxDouble> x, int y) {
+      for (RxDouble item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
+    }
+    public static int multByDL(NtList<RxDouble> x, long y) {
+      for (RxDouble item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
+    }
+    public static int multByDD(NtList<RxDouble> x, double y) {
+      for (RxDouble item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
+    }
+    public static int multByCI(NtList<RxComplex> x, int y) {
+      for (RxComplex item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
+    }
+    public static int multByCL(NtList<RxComplex> x, long y) {
+      for (RxComplex item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
+    }
+    public static int multByCD(NtList<RxComplex> x, double y) {
+      for (RxComplex item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
+    }
+    public static int multByCC(NtList<RxComplex> x, NtComplex y) {
+      for (RxComplex item : x) {
+        item.opMultBy(y);
+      }
+      return x.size();
     }
   }
 }

@@ -127,12 +127,6 @@ public class RxInt64 extends RxBase implements Comparable<RxInt64>, CanGetAndSet
     return value;
   }
 
-  public long opSubFrom(final long x) {
-    value -= x;
-    __raiseDirty();
-    return value;
-  }
-
   public void set(final int value) {
     if (this.value != value) {
       this.value = value;
