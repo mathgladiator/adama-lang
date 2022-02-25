@@ -6453,7 +6453,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n      __assert_truth(false, 28, 4, 28, 17);");
     gold.append("\n    }");
     gold.append("\n    __track(22);");
-    gold.append("\n    __assert_truth(10 % 3 > 0, 30, 2, 30, 20);");
+    gold.append("\n    __assert_truth((LibArithmetic.Mod.O(10, 3)).getOrDefaultTo(-100) > 0, 30, 2, 30, 43);");
     gold.append("\n    __track(23);");
     gold.append("\n    __assert_truth(2 * 3 > 5, 31, 2, 31, 19);");
     gold.append("\n    __track(24);");
@@ -7640,11 +7640,11 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __track(8);");
     gold.append("\n    s7.set(LibString.reverse(s6.get()));");
     gold.append("\n    __track(9);");
-    gold.append("\n    re1.set((LibString.compare(\"x\", \"y\") < 0) + \";\" + (LibString.compare(\"x\", \"y\") <= 0) + \";\" + (LibString.compare(\"x\", \"y\") > 0) + \";\" + (LibString.compare(\"x\", \"y\") >= 0) + \";\" + (LibString.equality(\"x\", \"y\")) + \";\" + (!LibString.equality(\"x\", \"y\")) + \";\");");
+    gold.append("\n    re1.set(((\"x\").compareTo(\"y\") < 0) + \";\" + ((\"x\").compareTo(\"y\") <= 0) + \";\" + ((\"x\").compareTo(\"y\") > 0) + \";\" + ((\"x\").compareTo(\"y\") >= 0) + \";\" + (LibString.equality(\"x\", \"y\")) + \";\" + (!LibString.equality(\"x\", \"y\")) + \";\");");
     gold.append("\n    __track(10);");
-    gold.append("\n    re2.set((LibString.compare(\"y\", \"x\") < 0) + \";\" + (LibString.compare(\"y\", \"x\") <= 0) + \";\" + (LibString.compare(\"y\", \"x\") > 0) + \";\" + (LibString.compare(\"y\", \"x\") >= 0) + \";\" + (LibString.equality(\"y\", \"x\")) + \";\" + (!LibString.equality(\"y\", \"x\")) + \";\");");
+    gold.append("\n    re2.set(((\"y\").compareTo(\"x\") < 0) + \";\" + ((\"y\").compareTo(\"x\") <= 0) + \";\" + ((\"y\").compareTo(\"x\") > 0) + \";\" + ((\"y\").compareTo(\"x\") >= 0) + \";\" + (LibString.equality(\"y\", \"x\")) + \";\" + (!LibString.equality(\"y\", \"x\")) + \";\");");
     gold.append("\n    __track(11);");
-    gold.append("\n    re3.set((LibString.compare(\"x\", \"x\") < 0) + \";\" + (LibString.compare(\"x\", \"x\") <= 0) + \";\" + (LibString.compare(\"x\", \"x\") > 0) + \";\" + (LibString.compare(\"x\", \"x\") >= 0) + \";\" + (LibString.equality(\"x\", \"x\")) + \";\" + (!LibString.equality(\"x\", \"x\")) + \";\");");
+    gold.append("\n    re3.set(((\"x\").compareTo(\"x\") < 0) + \";\" + ((\"x\").compareTo(\"x\") <= 0) + \";\" + ((\"x\").compareTo(\"x\") > 0) + \";\" + ((\"x\").compareTo(\"x\") >= 0) + \";\" + (LibString.equality(\"x\", \"x\")) + \";\" + (!LibString.equality(\"x\", \"x\")) + \";\");");
     gold.append("\n    __track(12);");
     gold.append("\n    big_finish.set(\"X:\");");
     gold.append("\n    __track(13);");

@@ -1015,6 +1015,16 @@ public class Parser {
     return result;
   }
 
+  public Expression logic_xor() throws AdamaLangException {
+    var result = logic_or();
+    var op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("^^"));
+    while (op != null) {
+      result = new BinaryExpression(result, op, logic_or());
+      op = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("^^"));
+    }
+    return result;
+  }
+
   public Expression multiplicative() throws AdamaLangException {
     var result = prefix();
     var op = forwardScanMathOp("*", "/", "%");
@@ -1350,12 +1360,12 @@ public class Parser {
   }
 
   public Expression ternary() throws AdamaLangException {
-    final var condition = logic_or();
+    final var condition = logic_xor();
     final var questionToken = tokens.popIf(t -> t.isSymbolWithTextEq("?"));
     if (questionToken != null) {
-      final var trueValue = logic_or();
+      final var trueValue = logic_xor();
       final var colonToken = consumeExpectedSymbol(":");
-      return new InlineConditional(condition, questionToken, trueValue, colonToken, logic_or());
+      return new InlineConditional(condition, questionToken, trueValue, colonToken, logic_xor());
     }
     return condition;
   }

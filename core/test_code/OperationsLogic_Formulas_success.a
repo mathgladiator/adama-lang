@@ -1,0 +1,12 @@
+public formula f0 = true || true;
+public formula f1 = true && true;
+public formula f2 = true ^^ true;
+public formula f3 = true || false;
+public formula f4 = true && false;
+public formula f5 = true ^^ false;
+public formula f6 = false || true;
+public formula f7 = false && true;
+public formula f8 = false ^^ true;
+public formula f9 = false || false;
+public formula f10 = false && false;
+public formula f11 = false ^^ false;

@@ -28,7 +28,7 @@ int hex;
   } else {
     assert false;
   }
-  assert 10 % 3 > 0;
+  assert (10 % 3).getOrDefaultTo(-100) > 0;
   assert 2 * 3 > 5;
   assert 2 * 3.0 > 5;
   assert 2.0 * 3 > 5.9;

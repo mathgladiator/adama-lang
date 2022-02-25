@@ -21,6 +21,9 @@ public class BinaryOperatorTable {
     TyType tyBoolean = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("boolean"));
     TyType tyString = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
     TyType tyComplex = new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("complex"));
+    TyType tyLabel = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
+    TyType tyClient = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
+    TyType tyAsset = new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
 
     TyType tyMaybeInt = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyInt));
     TyType tyMaybeLong = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyLong));
@@ -232,6 +235,93 @@ public class BinaryOperatorTable {
       insert(tyMaybeComplex, "-", tyMaybeDouble, tyMaybeComplex, "LibArithmetic.Subtract.mCmD(%s, %s)", false);
       insert(tyMaybeComplex, "-", tyComplex, tyMaybeComplex, "LibArithmetic.Subtract.mCC(%s, %s)", false);
       insert(tyMaybeComplex, "-", tyMaybeComplex, tyMaybeComplex, "LibArithmetic.Subtract.mCmC(%s, %s)", false);
+    }
+    // COMPARE and EQUALITY
+    {
+      insert(tyInt, "<", tyInt, tyBoolean, "%s < %s", false);
+      insert(tyInt, "<", tyLong, tyBoolean, "%s < %s", false);
+      insert(tyInt, "<", tyDouble, tyBoolean, "%s < %s", false);
+      insert(tyLong, "<", tyInt, tyBoolean, "%s < %s", false);
+      insert(tyLong, "<", tyLong, tyBoolean, "%s < %s", false);
+      insert(tyLong, "<", tyDouble, tyBoolean, "%s < %s", false);
+      insert(tyDouble, "<", tyInt, tyBoolean, "%s < %s", false);
+      insert(tyDouble, "<", tyLong, tyBoolean, "%s < %s", false);
+      insert(tyDouble, "<", tyDouble, tyBoolean, "%s < %s", false);
+      insert(tyInt, "<=", tyInt, tyBoolean, "%s <= %s", false);
+      insert(tyInt, "<=", tyLong, tyBoolean, "%s <= %s", false);
+      insert(tyInt, "<=", tyDouble, tyBoolean, "%s <= %s", false);
+      insert(tyLong, "<=", tyInt, tyBoolean, "%s <= %s", false);
+      insert(tyLong, "<=", tyLong, tyBoolean, "%s <= %s", false);
+      insert(tyLong, "<=", tyDouble, tyBoolean, "%s <= %s", false);
+      insert(tyDouble, "<=", tyInt, tyBoolean, "%s <= %s", false);
+      insert(tyDouble, "<=", tyLong, tyBoolean, "%s <= %s", false);
+      insert(tyDouble, "<=", tyDouble, tyBoolean, "%s <= %s", false);
+      insert(tyInt, "==", tyInt, tyBoolean, "%s == %s", false);
+      insert(tyInt, "==", tyLong, tyBoolean, "%s == %s", false);
+      insert(tyInt, "==", tyDouble, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyComplex, "==", tyInt, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyInt, "==", tyComplex, tyBoolean, "LibMath.near(%s, %s)", true);
+      insert(tyLong, "==", tyInt, tyBoolean, "%s == %s", false);
+      insert(tyLong, "==", tyLong, tyBoolean, "%s == %s", false);
+      insert(tyLong, "==", tyDouble, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyComplex, "==", tyLong, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyLong, "==", tyComplex, tyBoolean, "LibMath.near(%s, %s)", true);
+      insert(tyDouble, "==", tyInt, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyDouble, "==", tyLong, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyDouble, "==", tyDouble, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyComplex, "==", tyDouble, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyDouble, "==", tyComplex, tyBoolean, "LibMath.near(%s, %s)", true);
+      insert(tyInt, "!=", tyInt, tyBoolean, "%s != %s", false);
+      insert(tyInt, "!=", tyLong, tyBoolean, "%s != %s", false);
+      insert(tyInt, "!=", tyDouble, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyLong, "!=", tyInt, tyBoolean, "%s != %s", false);
+      insert(tyLong, "!=", tyLong, tyBoolean, "%s != %s", false);
+      insert(tyLong, "!=", tyDouble, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyDouble, "!=", tyInt, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyDouble, "!=", tyLong, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyDouble, "!=", tyDouble, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyInt, ">=", tyInt, tyBoolean, "%s >= %s", false);
+      insert(tyInt, ">=", tyLong, tyBoolean, "%s >= %s", false);
+      insert(tyInt, ">=", tyDouble, tyBoolean, "%s >= %s", false);
+      insert(tyLong, ">=", tyInt, tyBoolean, "%s >= %s", false);
+      insert(tyLong, ">=", tyLong, tyBoolean, "%s >= %s", false);
+      insert(tyLong, ">=", tyDouble, tyBoolean, "%s >= %s", false);
+      insert(tyDouble, ">=", tyInt, tyBoolean, "%s >= %s", false);
+      insert(tyDouble, ">=", tyLong, tyBoolean, "%s >= %s", false);
+      insert(tyDouble, ">=", tyDouble, tyBoolean, "%s >= %s", false);
+      insert(tyInt, ">", tyInt, tyBoolean, "%s > %s", false);
+      insert(tyInt, ">", tyLong, tyBoolean, "%s > %s", false);
+      insert(tyInt, ">", tyDouble, tyBoolean, "%s > %s", false);
+      insert(tyLong, ">", tyInt, tyBoolean, "%s > %s", false);
+      insert(tyLong, ">", tyLong, tyBoolean, "%s > %s", false);
+      insert(tyLong, ">", tyDouble, tyBoolean, "%s > %s", false);
+      insert(tyDouble, ">", tyInt, tyBoolean, "%s > %s", false);
+      insert(tyDouble, ">", tyLong, tyBoolean, "%s > %s", false);
+      insert(tyDouble, ">", tyDouble, tyBoolean, "%s > %s", false);
+      insert(tyString, "<", tyString, tyBoolean, "(%s).compareTo(%s) < 0", false);
+      insert(tyString, "<=", tyString, tyBoolean, "(%s).compareTo(%s) <= 0", false);
+      insert(tyString, "==", tyString, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyString, "!=", tyString, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyString, ">=", tyString, tyBoolean, "(%s).compareTo(%s) >= 0", false);
+      insert(tyString, ">", tyString, tyBoolean, "(%s).compareTo(%s) > 0", false);
+      insert(tyLabel, "==", tyLabel, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyLabel, "!=", tyLabel, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyAsset, "==", tyAsset, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyAsset, "!=", tyAsset, tyBoolean, "!((%s).equals(%s))", false);
+      insert(tyClient, "==", tyClient, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyClient, "!=", tyClient, tyBoolean, "!((%s).equals(%s))", false);
+    }
+    // LOGIC
+    {
+      insert(tyBoolean, "&&", tyBoolean, tyBoolean, "%s && %s", false);
+      insert(tyBoolean, "||", tyBoolean, tyBoolean, "%s || %s", false);
+      insert(tyBoolean, "^^", tyBoolean, tyBoolean, "LibMath.xor(%s, %s)", false);
+    }
+    // MOD
+    {
+      insert(tyInt, "%", tyInt, tyMaybeInt, "LibArithmetic.Mod.O(%s, %s)", false);
+      insert(tyLong, "%", tyInt, tyMaybeLong, "LibArithmetic.Mod.O(%s, %s)", false);
+      insert(tyLong, "%", tyLong, tyMaybeLong, "LibArithmetic.Mod.O(%s, %s)", false);
     }
   }
 

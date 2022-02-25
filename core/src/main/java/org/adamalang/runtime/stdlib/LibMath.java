@@ -40,6 +40,29 @@ public class LibMath {
   }
 
   @Extension
+  public static boolean near(final NtComplex a, int b) {
+    return near(a.real, b) && near(a.imaginary, b);
+  }
+
+  @Extension
+  public static boolean near(final NtComplex a, long b) {
+    return near(a.real, b) && near(a.imaginary, b);
+  }
+
+  @Extension
+  public static boolean near(final NtComplex a, double b) {
+    return near(a.real, b) && near(a.imaginary, b);
+  }
+
+  @Extension
+  public static boolean xor(final boolean a, final boolean b) {
+    if (a) {
+      return !b;
+    }
+    return b;
+  }
+
+  @Extension
   public static boolean near(final double a, final double b) {
     final var diff = Math.abs(a - b);
     return diff < 0.0000001;

@@ -1942,7 +1942,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxR __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x % 2 == 0;");
+    gold.append("\n      return (LibArithmetic.Mod.O(x, 2)).getOrDefaultTo(-100) == 0;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxR> {");
@@ -1960,7 +1960,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxR __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x % 3 == 0;");
+    gold.append("\n      return (LibArithmetic.Mod.O(x, 3)).getOrDefaultTo(-100) == 0;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxR> {");
@@ -1978,7 +1978,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxR __obj) {");
     gold.append("\n      int x = __obj.x.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return x % 8 == 0;");
+    gold.append("\n      return (LibArithmetic.Mod.O(x, 8)).getOrDefaultTo(-100) == 0;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  /* end of file */");

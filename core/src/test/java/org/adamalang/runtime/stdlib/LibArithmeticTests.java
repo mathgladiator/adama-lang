@@ -75,6 +75,43 @@ public class LibArithmeticTests {
 
   @Test
   public void generateTable() {
+    String[] x = new String[] { "tyInt", "tyLong", "tyDouble" };
+    String[] ops = new String[] { "<", "<=", "==", "!=",">=", ">"};
+    for (String op : ops) {
+      for (String a : x) {
+        for (String b : x) {
+          if (("==".equals(op) || "!=".equals(op)) && (a.contains("Double") || b.contains("Double"))) {
+            if ("==".equals(op)) {
+              System.out.println("insert(" + a + ", \"" + op + "\", " + b + ", tyBoolean, \"LibMath.near(%s, %s)\", false);");
+            } else {
+              System.out.println("insert(" + a + ", \"" + op + "\", " + b + ", tyBoolean, \"!LibMath.near(%s, %s)\", false);");
+            }
+          } else {
+            System.out.println("insert("+a+", \""+op+"\", "+b+", tyBoolean, \"%s "+op+" %s\", false);");
+          }
+        }
+        if (op.equals("==")) {
+          System.out.println("insert(tyComplex, \"==\", "+a+", tyBoolean, \"LibMath.near(%s, %s)\", false);");
+          System.out.println("insert("+a+", \"==\", tyComplex, tyBoolean, \"LibMath.near(%s, %s)\", true);");
+        }
+      }
+    }
+    System.out.println("insert(tyString, \"<\", tyString, tyBoolean, \"(%s).compareTo(%s) < 0\", false);");
+    System.out.println("insert(tyString, \"<=\", tyString, tyBoolean, \"(%s).compareTo(%s) <= 0\", false);");
+    System.out.println("insert(tyString, \"==\", tyString, tyBoolean, \"(%s).equals(%s)\", false);");
+    System.out.println("insert(tyString, \"!=\", tyString, tyBoolean, \"!((%s).equals(%s))\", false);");
+    System.out.println("insert(tyString, \">=\", tyString, tyBoolean, \"(%s).compareTo(%s) >= 0\", false);");
+    System.out.println("insert(tyString, \">\", tyString, tyBoolean, \"(%s).compareTo(%s) > 0\", false);");
+
+    for (String z : new String[] { "tyLabel", "tyAsset", "tyClient" }) {
+      System.out.println("insert("+z+", \"==\", "+z+", tyBoolean, \"(%s).equals(%s)\", false);");
+      System.out.println("insert("+z+", \"!=\", "+z+", tyBoolean, \"!((%s).equals(%s))\", false);");
+    }
+
+    System.out.println("insert(tyBoolean \"==\", tyBoolean, tyBoolean, \"%s == %s\", false);");
+    System.out.println("insert(tyBoolean \"!=\", tyBoolean, tyBoolean, \"%s != %s\", false);");
+
+    /*
     String[] x = new String[] { "tyInt", "tyLong", "tyDouble", "tyMaybeDouble", "tyComplex", "tyMaybeComplex", "tyBoolean", "tyString", "tyMaybeString"};
     for (String a : x) {
       System.out.println("// " + a);
@@ -83,6 +120,7 @@ public class LibArithmeticTests {
       System.out.println("insert(" + a + ", \"+\", tyMaybeString, tyString, \"%s + (%s).toString()\", false);");
       System.out.println("insert(tyMaybeString, \"+\", " + a + ", tyString, \"(%s).toString() + %s\", false);");
     }
+    */
 
     /*
     String[] x = new String[] { "tyInt", "tyLong", "tyDouble", "tyMaybeDouble", "tyComplex", "tyMaybeComplex"};
@@ -107,11 +145,16 @@ public class LibArithmeticTests {
 
   @Test
   public void generateTestCase() {
-    String[] x = new String[] { "1", "1L", "0.5", "(1 / 2)", "(1 / 0)", "@i", "(1 / @i)", "(@i / 0)", "0", "0L", "0.0", "(@i * 0)", "(@i / 0.0)", "\"x\"", "@maybe(\"x\")", "@maybe<string>"};
+    // String[] x = new String[] { "1", "1L", "0.5", "(1 / 2)", "(1 / 0)", "@i", "(1 / @i)", "(@i / 0)", "0", "0L", "0.0", "(@i * 0)", "(@i / 0.0)", "\"x\"", "@maybe(\"x\")", "@maybe<string>"};
+    String[] x = new String[] { "true", "false"};
     int k = 0;
     for (String a : x) {
       for (String b : x) {
-        System.out.println("public formula f" + k + " = " + a + " + " + b + ";");
+        System.out.println("public formula f" + k + " = " + a + " || " + b + ";");
+        k++;
+        System.out.println("public formula f" + k + " = " + a + " && " + b + ";");
+        k++;
+        System.out.println("public formula f" + k + " = " + a + " ^^ " + b + ";");
         k++;
       }
     }

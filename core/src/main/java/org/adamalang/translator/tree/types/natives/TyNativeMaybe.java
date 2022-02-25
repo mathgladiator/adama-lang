@@ -138,7 +138,7 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
     if ("getOrDefaultTo".equals(name)) {
       ArrayList<TyType> args = new ArrayList<>();
       args.add(tokenElementType.item);
-      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, true)), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }

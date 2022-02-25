@@ -35,7 +35,7 @@ test Divide {
 }
 
 test Mod {
-  assert 2 == 7 % 5;
+  assert 2 == (7 % 5).getOrDefaultTo(-100);
 }
 
 test Relate {

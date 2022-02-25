@@ -11,7 +11,7 @@ function arr3(int x) -> double[] {
 }
 
 function arr4(int x) -> bool[] {
-  return [x % 2 == 0, x % 2 != 0];
+  return [(x % 2).getOrDefaultTo(-100) == 0, (x % 2).getOrDefaultTo(-100) != 0];
 }
 
 function arr5(int x) -> string[] {

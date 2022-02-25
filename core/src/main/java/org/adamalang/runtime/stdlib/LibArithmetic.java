@@ -609,6 +609,24 @@ public class LibArithmetic {
   }
 
   public static class Mod {
+    public static NtMaybe<Integer> O(int x, int y) {
+      if (y == 0) {
+        return new NtMaybe<>();
+      }
+      return new NtMaybe<>(x % y);
+    }
+    public static NtMaybe<Long> O(long x, int y) {
+      if (y == 0) {
+        return new NtMaybe<>();
+      }
+      return new NtMaybe<>(x % y);
+    }
+    public static NtMaybe<Long> O(long x, long y) {
+      if (y == 0) {
+        return new NtMaybe<>();
+      }
+      return new NtMaybe<>(x % y);
+    }
   }
 
   /*

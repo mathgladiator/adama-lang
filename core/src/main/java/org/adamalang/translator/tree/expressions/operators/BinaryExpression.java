@@ -53,35 +53,25 @@ public class BinaryExpression extends Expression {
     typingResult = new LocalTypeAlgebraResult(environment, left, right);
     if (op != null) {
       switch (op) {
-        case Add:
-          return typingResult.table("+");
-        case Multiply:
-          return typingResult.table("*");
-        case Divide:
-          return typingResult.table("/");
         case Mod:
-          return typingResult.mod();
+        case Add:
+        case Multiply:
+        case Divide:
         case Subtract:
-          return typingResult.table("-");
         case LessThan:
         case GreaterThan:
         case GreaterThanOrEqual:
         case LessThanOrEqual:
-          if (typingResult.compare()) {
-            return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this);
-          }
-          return null;
+        case LogicalAnd:
+        case LogicalOr:
+        case LogicalXor:
+          return typingResult.table(op.javaOp);
         case Equal:
         case NotEqual:
           if (typingResult.equals()) {
             return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this);
           }
           return null;
-        case LogicalAnd:
-        case LogicalOr:
-          if (typingResult.logic()) {
-            return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this);
-          }
       }
     }
     return null;

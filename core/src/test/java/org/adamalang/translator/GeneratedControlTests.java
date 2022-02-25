@@ -4554,7 +4554,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    __track(2);");
-    gold.append("\n    int k = sum.get() % 7;");
+    gold.append("\n    int k = (LibArithmetic.Mod.O(sum.get(), 7)).getOrDefaultTo(-100);");
     gold.append("\n    __track(3);");
     gold.append("\n    {");
     gold.append("\n      for (;__goodwill(7, 8, 7, 15) && (k < 100);k++) {");

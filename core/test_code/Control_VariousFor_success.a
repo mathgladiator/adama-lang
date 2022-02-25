@@ -4,7 +4,7 @@ public int sum = 0;
   for (int x = 0; x < 10; x++) {
     sum += x;
   }
-  int k = sum % 7;
+  int k = (sum % 7).getOrDefaultTo(-100);
   for(; k < 100; k++) {
     sum ++;
   }

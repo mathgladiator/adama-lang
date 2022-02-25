@@ -11,19 +11,20 @@ package org.adamalang.translator.tree.operands;
 
 /** defines a binary operation (A op B) */
 public enum BinaryOp {
-  Add("+"), // *
-  Divide("/"), // /
-  Equal("=="), // ^
-  GreaterThan(">"), // +
-  GreaterThanOrEqual(">="), // -
-  LessThan("<"), // <
-  LessThanOrEqual("<="), // >
-  LogicalAnd("&&"), // <=
-  LogicalOr("||"), // >=
-  Mod("%"), // ==
-  Multiply("*"), // !=
-  NotEqual("!="), // &&
-  Subtract("-"); // ||
+  Add("+"), //
+  Divide("/"), //
+  Equal("=="), //
+  GreaterThan(">"), //
+  GreaterThanOrEqual(">="), //
+  LessThan("<"), //
+  LessThanOrEqual("<="), //
+  LogicalXor("^^"), //
+  LogicalAnd("&&"), //
+  LogicalOr("||"), //
+  Mod("%"), //
+  Multiply("*"), //
+  NotEqual("!="), //
+  Subtract("-"); //
 
   public final String javaOp;
 

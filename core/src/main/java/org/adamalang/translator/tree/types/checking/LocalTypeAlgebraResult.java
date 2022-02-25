@@ -35,13 +35,6 @@ public class LocalTypeAlgebraResult {
     this.operatorResult = null;
   }
 
-  public boolean compare() {
-    typeLeft = left.typing(environment, null);
-    typeLeft = environment.rules.Resolve(typeLeft, false);
-    typeRight = right.typing(environment, null);
-    typeRight = environment.rules.Resolve(typeRight, false);
-    return environment.rules.CanCompare(typeLeft, typeRight, false);
-  }
 
   public TyType table(String operator) {
     typeLeft = left.typing(environment, null);
@@ -62,14 +55,6 @@ public class LocalTypeAlgebraResult {
     typeRight = environment.rules.Resolve(typeRight, false);
     equalityResult = environment.rules.CanTestEquality(typeLeft, typeRight, false);
     return equalityResult != CanTestEqualityResult.No;
-  }
-
-  public boolean logic() {
-    typeLeft = left.typing(environment, null);
-    typeLeft = environment.rules.Resolve(typeLeft, false);
-    typeRight = right.typing(environment, null);
-    typeRight = environment.rules.Resolve(typeRight, false);
-    return environment.rules.CanUseLogic(typeLeft, typeRight, false);
   }
 
   public TyType mod() {
