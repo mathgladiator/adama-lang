@@ -45,7 +45,7 @@ public class JsonStreamReaderTests {
   public void complex() {
     JsonStreamReader reader = new JsonStreamReader("{\"r\":1.2,\"i\":2.4}");
     NtComplex cmp = new NtComplex(1.2, 2.4);
-    NtComplex tst = reader.readNtCompex();
+    NtComplex tst = reader.readNtComplex();
     Assert.assertEquals(cmp, tst);
   }
 

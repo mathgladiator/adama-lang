@@ -17,4 +17,8 @@ public complex final_foo3;
   z = foo;
   final_foo2 = z * z;
   final_foo3 = 42;
+  let b0 = foo == 1;
+  let b1 = foo == 2L;
+  let b2 = foo == 3.3;
+  let b3 = foo == gen;
 }

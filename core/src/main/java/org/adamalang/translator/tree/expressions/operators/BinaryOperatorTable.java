@@ -385,7 +385,7 @@ public class BinaryOperatorTable {
       insert(tyListRxLong, "+=", tyLong, tyInt, "LibArithmetic.ListMath.addToLL(%s, %s)", false);
       insert(tyListRxDouble, "+=", tyInt, tyInt, "LibArithmetic.ListMath.addToDI(%s, %s)", false);
       insert(tyListRxDouble, "+=", tyLong, tyInt,"LibArithmetic.ListMath.addToDL(%s, %s)", false);
-      insert(tyListRxDouble, "+=", tyDouble, tyInt, "LibArithmetic.ListMath.addToDL(%s, %s)", false);
+      insert(tyListRxDouble, "+=", tyDouble, tyInt, "LibArithmetic.ListMath.addToDD(%s, %s)", false);
       insert(tyListRxComplex, "+=", tyInt, tyInt,"LibArithmetic.ListMath.addToCI(%s, %s)", false);
       insert(tyListRxComplex, "+=", tyLong, tyInt, "LibArithmetic.ListMath.addToCL(%s, %s)", false);
       insert(tyListRxComplex, "+=", tyDouble, tyInt, "LibArithmetic.ListMath.addToCD(%s, %s)", false);
@@ -426,7 +426,7 @@ public class BinaryOperatorTable {
       insert(tyListRxLong, "-=", tyLong, tyInt, "LibArithmetic.ListMath.addToLL(%s, -(%s))", false);
       insert(tyListRxDouble, "-=", tyInt, tyInt, "LibArithmetic.ListMath.addToDI(%s, -(%s))", false);
       insert(tyListRxDouble, "-=", tyLong, tyInt,"LibArithmetic.ListMath.addToDL(%s, -(%s))", false);
-      insert(tyListRxDouble, "-=", tyDouble, tyInt, "LibArithmetic.ListMath.addToDL(%s, -(%s))", false);
+      insert(tyListRxDouble, "-=", tyDouble, tyInt, "LibArithmetic.ListMath.addToDD(%s, -(%s))", false);
       insert(tyListRxComplex, "-=", tyInt, tyInt,"LibArithmetic.ListMath.addToCI(%s, -(%s))", false);
       insert(tyListRxComplex, "-=", tyLong, tyInt, "LibArithmetic.ListMath.addToCL(%s, -(%s))", false);
       insert(tyListRxComplex, "-=", tyDouble, tyInt, "LibArithmetic.ListMath.addToCD(%s, -(%s))", false);
@@ -455,7 +455,7 @@ public class BinaryOperatorTable {
       insert(tyListRxLong, "*=", tyLong, tyInt, "LibArithmetic.ListMath.multByLL(%s, %s)", false);
       insert(tyListRxDouble, "*=", tyInt, tyInt, "LibArithmetic.ListMath.multByDI(%s, %s)", false);
       insert(tyListRxDouble, "*=", tyLong, tyInt,"LibArithmetic.ListMath.multByDL(%s, %s)", false);
-      insert(tyListRxDouble, "*=", tyDouble, tyInt, "LibArithmetic.ListMath.multByDL(%s, %s)", false);
+      insert(tyListRxDouble, "*=", tyDouble, tyInt, "LibArithmetic.ListMath.multByDD(%s, %s)", false);
       insert(tyListRxComplex, "*=", tyInt, tyInt,"LibArithmetic.ListMath.multByCI(%s, %s)", false);
       insert(tyListRxComplex, "*=", tyLong, tyInt, "LibArithmetic.ListMath.multByCL(%s, %s)", false);
       insert(tyListRxComplex, "*=", tyDouble, tyInt, "LibArithmetic.ListMath.multByCD(%s, %s)", false);

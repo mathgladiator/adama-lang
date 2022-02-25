@@ -103,8 +103,4 @@ public class TyNativeComplex extends TySimpleNative implements //
     }
     return environment.state.globals.findExtension(this, name);
   }
-
-  public static boolean avoidCopyHeuristic(String code) {
-    return code.startsWith("new NtComplex") || code.startsWith("LibArithmetic") || code.startsWith("LibMath");
-  }
 }

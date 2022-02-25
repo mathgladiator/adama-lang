@@ -137,7 +137,7 @@ public class JsonStreamReader {
     }
   }
 
-  public NtComplex readNtCompex() {
+  public NtComplex readNtComplex() {
     double re = 0.0;
     double im = 0.0;
     if (startObject()) {

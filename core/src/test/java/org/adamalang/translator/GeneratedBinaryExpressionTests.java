@@ -1227,7 +1227,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  public void __test(TestReportBuilder report, String testName) {}");
     gold.append("\n  private void __construct_0(NtClient __who, NtMessageBase __object) {");
-    gold.append("\n    __code_cost += 10;");
+    gold.append("\n    __code_cost += 14;");
     gold.append("\n    __track(0);");
     gold.append("\n    NtComplex foo = LibArithmetic.Add.CI(LibArithmetic.Multiply.CI(new NtComplex(0.0, 1.0), 1), 1);");
     gold.append("\n    __track(1);");
@@ -1252,6 +1252,14 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n    final_foo2.set(LibArithmetic.Multiply.CC(z, z));");
     gold.append("\n    __track(9);");
     gold.append("\n    final_foo3.set(42);");
+    gold.append("\n    __track(10);");
+    gold.append("\n    final boolean b0 = LibMath.near(foo, 1);");
+    gold.append("\n    __track(11);");
+    gold.append("\n    final boolean b1 = LibMath.near(foo, 2L);");
+    gold.append("\n    __track(12);");
+    gold.append("\n    final boolean b2 = LibMath.near(foo, 3.3);");
+    gold.append("\n    __track(13);");
+    gold.append("\n    final boolean b3 = LibMath.near(foo, gen);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
@@ -1273,7 +1281,7 @@ public class GeneratedBinaryExpressionTests extends GeneratedBase {
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\",\"final_foo\":{\"r\":-2.0,\"i\":2.0},\"final_foo2\":{\"r\":0.0,\"i\":2.0},\"final_foo3\":{\"r\":42.0,\"i\":0.0}} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
-    gold.append("\nCPU:12");
+    gold.append("\nCPU:16");
     gold.append("\nMEMORY:768");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"special_one\":{\"r\":1.0,\"i\":0.0},\"forty_five\":{\"r\":0.707,\"i\":0.707},\"recip\":{\"r\":0.7072135785007073,\"i\":-0.7072135785007073},\"final_foo\":{\"r\":-2.0,\"i\":2.0},\"final_foo2\":{\"r\":0.0,\"i\":2.0},\"final_foo3\":{\"r\":42.0,\"i\":0.0}},\"seq\":2}");

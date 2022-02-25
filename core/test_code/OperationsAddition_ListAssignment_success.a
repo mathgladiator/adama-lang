@@ -1,0 +1,35 @@
+record R {
+  public int r0;
+  public long r1;
+  public double r2;
+  public complex r3;
+  public string rS;
+}
+
+table<R> tbl;
+
+@construct {
+  tbl <- {r0:1, r1:2L, r2: 3.3,r3: @i, rS:"" };
+  tbl <- {r0:2, r1:3L, r2: 4.4,r3: 2 * @i, rS:"S" };
+
+  (iterate tbl).r0 += 1;
+
+  (iterate tbl).r1 += 1;
+  (iterate tbl).r1 += 1L;
+
+  (iterate tbl).r2 += 1;
+  (iterate tbl).r2 += 1L;
+  (iterate tbl).r2 += 1.0;
+
+  (iterate tbl).r3 += 1;
+  (iterate tbl).r3 += 1L;
+  (iterate tbl).r3 += 1.0;
+  (iterate tbl).r3 += 1.0 + 2 * @i;
+
+  (iterate tbl).rS += 1;
+  (iterate tbl).rS += 1L;
+  (iterate tbl).rS += 1.0;
+  (iterate tbl).rS += 1.0 + 2 * @i;
+  (iterate tbl).rS += true;
+  (iterate tbl).rS += "x";
+}

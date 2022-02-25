@@ -33,8 +33,8 @@ public class RuleSetEquality {
       if ((aInteger || aLong) && (bInteger || bLong)) {
         return CanTestEqualityResult.Yes;
       }
-      final var aNumber = RuleSetCommon.IsNumeric(environment, typeA, true);
-      final var bNumber = RuleSetCommon.IsNumeric(environment, typeB, true);
+      final var aNumber = RuleSetCommon.IsNumeric(environment, typeA, true) || aLong || aComplex;
+      final var bNumber = RuleSetCommon.IsNumeric(environment, typeB, true) || bLong || bComplex;
       if (aNumber && bNumber) {
         // a mix of int/double
         return CanTestEqualityResult.YesButViaNear;

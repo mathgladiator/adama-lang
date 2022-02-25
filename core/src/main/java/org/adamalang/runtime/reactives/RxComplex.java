@@ -45,13 +45,13 @@ public class RxComplex extends RxBase implements CanGetAndSet<NtComplex> {
 
   @Override
   public void __insert(final JsonStreamReader reader) {
-    backup = reader.readNtCompex();
+    backup = reader.readNtComplex();
     value = backup;
   }
 
   @Override
   public void __patch(JsonStreamReader reader) {
-    set(reader.readNtCompex());
+    set(reader.readNtComplex());
   }
 
   @Override

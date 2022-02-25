@@ -83,6 +83,7 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\n  private final RxLazy<NtMaybe<Long>> f3;");
     gold.append("\n  private final RxLazy<NtMaybe<Long>> f4;");
     gold.append("\n  private final RxLazy<NtMaybe<Long>> f5;");
+    gold.append("\n  private final RxLazy<NtMaybe<Long>> f6;");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
@@ -92,6 +93,7 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\n    __sum += f3.__memory();");
     gold.append("\n    __sum += f4.__memory();");
     gold.append("\n    __sum += f5.__memory();");
+    gold.append("\n    __sum += f6.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
     gold.append("\n  public Formulas_1(DocumentMonitor __monitor) {");
@@ -102,6 +104,7 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\n    f3 = new RxLazy<NtMaybe<Long>>(this, () -> (LibArithmetic.Mod.O(1L, 0)));");
     gold.append("\n    f4 = new RxLazy<NtMaybe<Long>>(this, () -> (LibArithmetic.Mod.O(1L, 1L)));");
     gold.append("\n    f5 = new RxLazy<NtMaybe<Long>>(this, () -> (LibArithmetic.Mod.O(1L, 1L)));");
+    gold.append("\n    f6 = new RxLazy<NtMaybe<Long>>(this, () -> (LibArithmetic.Mod.O(1L, 0L)));");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
     gold.append("\n  }");
@@ -296,6 +299,8 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\n    private DMaybe<DInt64> __df4;");
     gold.append("\n    private int __gf5;");
     gold.append("\n    private DMaybe<DInt64> __df5;");
+    gold.append("\n    private int __gf6;");
+    gold.append("\n    private DMaybe<DInt64> __df6;");
     gold.append("\n    private boolean __emitted;");
     gold.append("\n    private DeltaFormulas_1() {");
     gold.append("\n      __gf0 = -1;");
@@ -310,6 +315,8 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\n      __df4 = new DMaybe<DInt64>();");
     gold.append("\n      __gf5 = -1;");
     gold.append("\n      __df5 = new DMaybe<DInt64>();");
+    gold.append("\n      __gf6 = -1;");
+    gold.append("\n      __df6 = new DMaybe<DInt64>();");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -321,10 +328,11 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\n      __sum += __df3.__memory();");
     gold.append("\n      __sum += __df4.__memory();");
     gold.append("\n      __sum += __df5.__memory();");
+    gold.append("\n      __sum += __df6.__memory();");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
     gold.append("\n    public void show(Formulas_1 __item, PrivateLazyDeltaWriter __writer) {");
-    gold.append("\n      __code_cost += 6;");
+    gold.append("\n      __code_cost += 7;");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__gf0 != __item.f0.getGeneration()) {");
@@ -386,6 +394,16 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\n          __df5.hide(__obj.planField(\"f5\"));");
     gold.append("\n        }");
     gold.append("\n        __gf5 = __item.f5.getGeneration();");
+    gold.append("\n      }");
+    gold.append("\n      if (__gf6 != __item.f6.getGeneration()) {");
+    gold.append("\n        if (__item.f6.get().has()) {");
+    gold.append("\n          Long __maybeElement12 = (Long)(__item.f6.get().get());");
+    gold.append("\n          DInt64 __maybeDeltaElement13 = __df6.get(() -> new DInt64());");
+    gold.append("\n          __maybeDeltaElement13.show(__maybeElement12, __obj.planField(\"f6\"));");
+    gold.append("\n        } else {");
+    gold.append("\n          __df6.hide(__obj.planField(\"f6\"));");
+    gold.append("\n        }");
+    gold.append("\n        __gf6 = __item.f6.getGeneration();");
     gold.append("\n      }");
     gold.append("\n      if (__obj.end()) {");
     gold.append("\n        __emitted = true;");
@@ -527,12 +545,12 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\nBegin");
     gold.append("\nEnd");
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
-    gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"f0\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}},\"privacy\":\"public\"},\"f1\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}},\"privacy\":\"public\"},\"f2\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"long\"}},\"privacy\":\"public\"},\"f3\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"long\"}},\"privacy\":\"public\"},\"f4\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"long\"}},\"privacy\":\"public\"},\"f5\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"long\"}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
+    gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{\"f0\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}},\"privacy\":\"public\"},\"f1\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"int\"}},\"privacy\":\"public\"},\"f2\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"long\"}},\"privacy\":\"public\"},\"f3\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"long\"}},\"privacy\":\"public\"},\"f4\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"long\"}},\"privacy\":\"public\"},\"f5\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"long\"}},\"privacy\":\"public\"},\"f6\":{\"type\":{\"nature\":\"native_maybe\",\"type\":{\"nature\":\"native_value\",\"type\":\"long\"}},\"privacy\":\"public\"}}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
     gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__constructed\":true,\"__entropy\":\"0\"} need:true in:0");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"25\"}-->{\"__messages\":null,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__time\":\"25\"} need:false in:-25");
     gold.append("\nCPU:0");
-    gold.append("\nMEMORY:624");
+    gold.append("\nMEMORY:664");
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"50\"}-->{\"__messages\":null,\"__seq\":2,\"__entropy\":\"4804307197456638271\",\"__time\":\"50\"} need:false in:-50");
     gold.append("\n+ NO_ONE DELTA:{\"data\":{\"f0\":0,\"f2\":\"0\",\"f4\":\"0\",\"f5\":\"0\"},\"seq\":2}");
     gold.append("\nNO_ONE was DENIED");
@@ -543,7 +561,7 @@ public class GeneratedOperationsModTests extends GeneratedBase {
     gold.append("\n{\"command\":\"invalidate\",\"timestamp\":\"100\"}-->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__time\":\"100\"} need:false in:-100");
     gold.append("\n+ NO_ONE DELTA:{\"seq\":4}");
     gold.append("\n+ RANDO DELTA:{\"seq\":4}");
-    gold.append("\nMEMORY:1542");
+    gold.append("\nMEMORY:1662");
     gold.append("\n--JAVA RESULTS-------------------------------------");
     gold.append("\n{\"__state\":\"\",\"__constructed\":true,\"__next_time\":\"0\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":4,\"__entropy\":\"7848011421992302230\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"100\",\"__auto_table_row_id\":0}");
     gold.append("\n--DUMP RESULTS-------------------------------------");

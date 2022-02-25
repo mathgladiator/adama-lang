@@ -4,3 +4,5 @@ public formula f2 = 1L % 1;
 public formula f3 = 1L % 0;
 public formula f4 = 1L % 1L;
 public formula f5 = 1L % 1L;
+public formula f6 = 1L % 0L;
+
