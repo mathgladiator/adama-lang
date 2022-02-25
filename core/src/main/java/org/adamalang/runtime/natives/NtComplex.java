@@ -41,4 +41,9 @@ public class NtComplex {
   public long memory() {
     return 16;
   }
+
+  @Override
+  public String toString() {
+    return real + " " + imaginary + "i";
+  }
 }

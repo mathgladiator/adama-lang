@@ -35,18 +35,6 @@ public class LocalTypeAlgebraResult {
     this.operatorResult = null;
   }
 
-  public TyType add() {
-    typeLeft = left.typing(environment, null);
-    typeLeft = environment.rules.Resolve(typeLeft, false);
-    typeRight = right.typing(environment, null);
-    typeRight = environment.rules.Resolve(typeRight, false);
-    mathResult = environment.rules.CanAdd(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) {
-      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
-    }
-    return null;
-  }
-
   public boolean compare() {
     typeLeft = left.typing(environment, null);
     typeLeft = environment.rules.Resolve(typeLeft, false);
@@ -90,30 +78,6 @@ public class LocalTypeAlgebraResult {
     typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
     mathResult = environment.rules.CanMod(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) {
-      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
-    }
-    return null;
-  }
-
-  public TyType multiply() {
-    typeLeft = left.typing(environment, null);
-    typeLeft = environment.rules.Resolve(typeLeft, false);
-    typeRight = right.typing(environment, null);
-    typeRight = environment.rules.Resolve(typeRight, false);
-    mathResult = environment.rules.CanMultiply(typeLeft, typeRight, false);
-    if (mathResult != CanMathResult.No) {
-      return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
-    }
-    return null;
-  }
-
-  public TyType subtract() {
-    typeLeft = left.typing(environment, null);
-    typeLeft = environment.rules.Resolve(typeLeft, false);
-    typeRight = right.typing(environment, null);
-    typeRight = environment.rules.Resolve(typeRight, false);
-    mathResult = environment.rules.CanSubstract(typeLeft, typeRight, false);
     if (mathResult != CanMathResult.No) {
       return environment.rules.InventMathType(typeLeft, typeRight, mathResult);
     }

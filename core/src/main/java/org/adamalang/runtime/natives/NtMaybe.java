@@ -109,4 +109,13 @@ public class NtMaybe<T> {
     this.deleteChain = deleteChain;
     return this;
   }
+
+  @Override
+  public String toString() {
+    if (value != null) {
+      return value.toString();
+    } else {
+      return "";
+    }
+  }
 }

@@ -14,6 +14,16 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class LibArithmeticTests {
+
+  @Test
+  public void coverage() {
+    new LibArithmetic();
+    new LibArithmetic.Divide();
+    new LibArithmetic.Multiply();
+    new LibArithmetic.Subtract();
+    new LibArithmetic.Add();
+    new LibArithmetic.Mod();
+  }
   @Test
   public void doubleDivision() {
     Assert.assertEquals(0.5, LibArithmetic.Divide.DD(1, 2.0).get(), 0.01);
@@ -35,13 +45,73 @@ public class LibArithmeticTests {
     Assert.assertFalse(LibArithmetic.Divide.II(1, 0).has());
   }
 
+
+  private static String codeWord(String ty) {
+    switch (ty) {
+      case "tyInt": return "I";
+      case "tyLong": return "L";
+      case "tyDouble": return "D";
+      case "tyMaybeDouble": return "mD";
+      case "tyComplex": return "C";
+      case "tyMaybeComplex": return "mC";
+    }
+    throw new NullPointerException();
+  }
+
+  private static String jType(String ty) {
+    switch (ty) {
+      case "tyInt": return "int";
+      case "tyLong": return "long";
+      case "tyDouble": return "double";
+      case "tyMaybeDouble": return "NtMaybe<Double>";
+      case "tyComplex": return "NtComplex";
+      case "tyMaybeComplex": return "NtMaybe<NtComplex>";
+      case "tyBoolean": return "boolean";
+      case "tyString": return "String";
+      case "tyMaybeString": return "NtMaybe<String>";
+    }
+    throw new NullPointerException();
+  }
+
+  @Test
+  public void generateTable() {
+    String[] x = new String[] { "tyInt", "tyLong", "tyDouble", "tyMaybeDouble", "tyComplex", "tyMaybeComplex", "tyBoolean", "tyString", "tyMaybeString"};
+    for (String a : x) {
+      System.out.println("// " + a);
+      System.out.println("insert(" + a + ", \"+\", tyString, tyString, \"%s + %s\", false);");
+      System.out.println("insert(tyString, \"+\", " + a + ", tyString, \"%s + %s\", false);");
+      System.out.println("insert(" + a + ", \"+\", tyMaybeString, tyString, \"%s + (%s).toString()\", false);");
+      System.out.println("insert(tyMaybeString, \"+\", " + a + ", tyString, \"(%s).toString() + %s\", false);");
+    }
+
+    /*
+    String[] x = new String[] { "tyInt", "tyLong", "tyDouble", "tyMaybeDouble", "tyComplex", "tyMaybeComplex"};
+    for (String a : x) {
+      for (String b : x) {
+        String c = a+b;
+        if (c.contains("Maybe") || c.contains("Complex")) {
+          // System.out.println("insert(" + a + ", \"+\", " + b + ", ty, \"LibArithmetic.Add."+codeWord(a) + codeWord(b)+"(%s, %s)\", false);");
+          String result = c.contains("Complex") ? "NtComplex" : "Double";
+          if (c.contains("Maybe")) {
+            result = "NtMaybe<" + result + ">";
+          }
+          System.out.println("    public static " + result + " " + codeWord(a) + codeWord(b) + "(" + jType(a) + " x, " + jType(b) + " y) {");
+          System.out.println("    }");
+        } else {
+          // System.out.println("insert(" + a + ", \"+\", " + b + ", ty, \"%s + %s\", false);");
+        }
+      }
+    }
+    */
+  }
+
   @Test
   public void generateTestCase() {
-    String[] x = new String[] { "1", "1L", "0.5", "(1 / 2)", "(1 / 0)", "@i", "(1 / @i)", "(@i / 0)"};
+    String[] x = new String[] { "1", "1L", "0.5", "(1 / 2)", "(1 / 0)", "@i", "(1 / @i)", "(@i / 0)", "0", "0L", "0.0", "(@i * 0)", "(@i / 0.0)", "\"x\"", "@maybe(\"x\")", "@maybe<string>"};
     int k = 0;
     for (String a : x) {
       for (String b : x) {
-        System.out.println("  public formula f" + k + " = " + a + " / " + b + ";");
+        System.out.println("public formula f" + k + " = " + a + " + " + b + ";");
         k++;
       }
     }

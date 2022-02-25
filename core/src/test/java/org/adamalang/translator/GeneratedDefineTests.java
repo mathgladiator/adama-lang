@@ -4933,7 +4933,7 @@ public class GeneratedDefineTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Define_RightSideFailTyping_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"The types 'string' and '__ViewerType' are unable to be added with the + operator.\\n\\tThe left hand side is a string which may be added with types: bool, int, double  (ADD01)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":10},\"end\":{\"line\":1,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Could not find a meaning for 'string' + '__ViewerType' (OperatorTable)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

@@ -16,11 +16,9 @@ import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.LocalTypeAlgebraResult;
-import org.adamalang.translator.tree.types.checking.properties.CanMathResult;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.traits.details.DetailComparisonTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
-import org.adamalang.translator.tree.types.traits.details.DetailSpecialMultiplyOp;
 
 import java.util.function.Consumer;
 
@@ -56,15 +54,15 @@ public class BinaryExpression extends Expression {
     if (op != null) {
       switch (op) {
         case Add:
-          return typingResult.add();
+          return typingResult.table("+");
         case Multiply:
-          return typingResult.multiply();
+          return typingResult.table("*");
         case Divide:
           return typingResult.table("/");
         case Mod:
           return typingResult.mod();
         case Subtract:
-          return typingResult.subtract();
+          return typingResult.table("-");
         case LessThan:
         case GreaterThan:
         case GreaterThanOrEqual:
@@ -129,16 +127,6 @@ public class BinaryExpression extends Expression {
           sb.append(String.format("%s >= 0", String.format(((DetailComparisonTestingRequiresWrapping) typeLeft).getComparisonTestingBinaryPattern(), leftStr, rightStr)));
           return;
       }
-    }
-    switch (op) {
-      case Multiply:
-        if (typingResult.mathResult == CanMathResult.YesAndResultIsStringRepetitionUsingSpecialMultiplyOp && typeLeft instanceof DetailSpecialMultiplyOp) {
-          sb.append(String.format(((DetailSpecialMultiplyOp) typeLeft).getSpecialMultiplyOpPatternForBinary(), leftStr, rightStr));
-          return;
-        }
-        break;
-      default:
-        // generic
     }
     sb.append(leftStr).append(" ").append(op.javaOp).append(" ").append(rightStr);
   }

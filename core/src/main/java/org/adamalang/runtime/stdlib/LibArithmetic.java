@@ -294,10 +294,322 @@ public class LibArithmetic {
     }
   }
 
+  public static class Multiply {
+    // Left=maybe<complex>
+    public static NtComplex CI(NtComplex x, int y) {
+      return new NtComplex(x.real * y, x.imaginary * y);
+    }
+    public static NtComplex CL(NtComplex x, long y) {
+      return new NtComplex(x.real * y, x.imaginary * y);
+    }
+    public static NtComplex CD(NtComplex x, double y) {
+      return new NtComplex(x.real * y, x.imaginary * y);
+    }
+    public static NtMaybe<NtComplex> CmD(NtComplex x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return new NtMaybe<>(new NtComplex(x.real * y.get(), x.imaginary * y.get()));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtComplex CC(NtComplex x, NtComplex y) {
+      return new NtComplex(x.real * y.real - x.imaginary * y.imaginary, x.real * y.imaginary + y.real * x.imaginary);
+    }
+    public static NtMaybe<NtComplex> CmC(NtComplex x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return new NtMaybe<>(CC(x, y.get()));
+      }
+      return y;
+    }
+    // Left=maybe<complex>
+    public static NtMaybe<NtComplex> mCI(NtMaybe<NtComplex> x, int y) {
+      if (x.has()) {
+        return new NtMaybe<>(CI(x.get(), y));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtMaybe<NtComplex> mCL(NtMaybe<NtComplex> x, long y) {
+      if (x.has()) {
+        return new NtMaybe<>(CL(x.get(), y));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtMaybe<NtComplex> mCD(NtMaybe<NtComplex> x, double y) {
+      if (x.has()) {
+        return new NtMaybe<>(CD(x.get(), y));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtMaybe<NtComplex> mCmD(NtMaybe<NtComplex> x, NtMaybe<Double> y) {
+      if (x.has()) {
+        return new NtMaybe<>(CmD(x.get(), y));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtMaybe<NtComplex> mCC(NtMaybe<NtComplex> x, NtComplex y) {
+      if (x.has()) {
+        return new NtMaybe<>(CC(x.get(), y));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtMaybe<NtComplex> mCmC(NtMaybe<NtComplex> x, NtMaybe<NtComplex> y) {
+      if (x.has() && y.has()) {
+        return new NtMaybe<>(CC(x.get(), y.get()));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtMaybe<Double> mDI(NtMaybe<Double> x, int y) {
+      if (x.has()) {
+        return new NtMaybe<>(x.get() * y);
+      }
+      return x;
+    }
+    public static NtMaybe<Double> mDL(NtMaybe<Double> x, long y) {
+      if (x.has()) {
+        return new NtMaybe<>(x.get() * y);
+      }
+      return x;
+    }
+    public static NtMaybe<Double> mDD(NtMaybe<Double> x, double y) {
+      if (x.has()) {
+        return new NtMaybe<>(x.get() * y);
+      }
+      return x;
+    }
+    public static NtMaybe<Double> mDmD(NtMaybe<Double> x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return mDD(x, y.get());
+      }
+      return y;
+    }
+  }
 
+  public static class Subtract {
+    public static NtMaybe<Double> ImD(int x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return new NtMaybe<>(x - y.get());
+      }
+      return y;
+    }
+    public static NtComplex IC(int x, NtComplex y) {
+      return new NtComplex(x - y.real, -y.imaginary);
+    }
+    public static NtMaybe<NtComplex> ImC(int x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return new NtMaybe<>(IC(x, y.get()));
+      }
+      return y;
+    }
+    public static NtMaybe<Double> LmD(long x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return new NtMaybe<>(x - y.get());
+      }
+      return y;
+    }
+    public static NtComplex LC(long x, NtComplex y) {
+      return new NtComplex(x - y.real, - y.imaginary);
+    }
+    public static NtMaybe<NtComplex> LmC(long x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return new NtMaybe<>(LC(x, y.get()));
+      }
+      return y;
+    }
+    public static NtMaybe<Double> DmD(double x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return new NtMaybe<>(x - y.get());
+      }
+      return y;
+    }
+    public static NtComplex DC(double x, NtComplex y) {
+      return new NtComplex(x - y.real, - y.imaginary);
+    }
+    public static NtMaybe<NtComplex> DmC(double x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return new NtMaybe<>(DC(x, y.get()));
+      }
+      return y;
+    }
+    public static NtMaybe<Double> mDI(NtMaybe<Double> x, int y) {
+      if (x.has()) {
+        return new NtMaybe<>(x.get() - y);
+      }
+      return x;
+    }
+    public static NtMaybe<Double> mDL(NtMaybe<Double> x, long y) {
+      if (x.has()) {
+        return new NtMaybe<>(x.get() - y);
+      }
+      return x;
+    }
+    public static NtMaybe<Double> mDD(NtMaybe<Double> x, double y) {
+      if (x.has()) {
+        return new NtMaybe<>(x.get() - y);
+      }
+      return x;
+    }
+    public static NtMaybe<Double> mDmD(NtMaybe<Double> x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return mDD(x, y.get());
+      }
+      return y;
+    }
+    public static NtMaybe<NtComplex> mDC(NtMaybe<Double> x, NtComplex y) {
+      if (x.has()) {
+        return new NtMaybe<>(DC(x.get(), y));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtMaybe<NtComplex> mDmC(NtMaybe<Double> x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return mDC(x, y.get());
+      }
+      return y;
+    }
+    public static NtComplex CI(NtComplex x, int y) {
+      return new NtComplex(x.real - y, x.imaginary);
+    }
+    public static NtComplex CL(NtComplex x, long y) {
+      return new NtComplex(x.real - y, x.imaginary);
+    }
+    public static NtComplex CD(NtComplex x, double y) {
+      return new NtComplex(x.real - y, x.imaginary);
+    }
+    public static NtMaybe<NtComplex> CmD(NtComplex x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return new NtMaybe<>(CD(x, y.get()));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtComplex CC(NtComplex x, NtComplex y) {
+      return new NtComplex(x.real - y.real, x.imaginary - y.imaginary);
+    }
+    public static NtMaybe<NtComplex> CmC(NtComplex x, NtMaybe<NtComplex> y) {
+      if (y.has()) {
+        return new NtMaybe<>(CC(x, y.get()));
+      }
+      return y;
+    }
+    public static NtMaybe<NtComplex> mCI(NtMaybe<NtComplex> x, int y) {
+      if (x.has()) {
+        return new NtMaybe<>(CI(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCL(NtMaybe<NtComplex> x, long y) {
+      if (x.has()) {
+        return new NtMaybe<>(CL(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCD(NtMaybe<NtComplex> x, double y) {
+      if (x.has()) {
+        return new NtMaybe<>(CD(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCmD(NtMaybe<NtComplex> x, NtMaybe<Double> y) {
+      if (x.has()) {
+        return new NtMaybe<>(CmD(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCC(NtMaybe<NtComplex> x, NtComplex y) {
+      if (x.has()) {
+        return new NtMaybe<>(CC(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCmC(NtMaybe<NtComplex> x, NtMaybe<NtComplex> y) {
+      if (x.has()) {
+        return new NtMaybe<>(CmC(x.get(), y));
+      }
+      return x;
+    }
+  }
 
+  public static class Add {
+    public static NtMaybe<Double> mDI(NtMaybe<Double> x, int y) {
+      if (x.has()) {
+        return new NtMaybe<>(x.get() + y);
+      }
+      return x;
+    }
+    public static NtMaybe<Double> mDL(NtMaybe<Double> x, long y) {
+      if (x.has()) {
+        return new NtMaybe<>(x.get() + y);
+      }
+      return x;
+    }
+    public static NtMaybe<Double> mDD(NtMaybe<Double> x, double y) {
+      if (x.has()) {
+        return new NtMaybe<>(x.get() + y);
+      }
+      return x;
+    }
+    public static NtMaybe<Double> mDmD(NtMaybe<Double> x, NtMaybe<Double> y) {
+      if (x.has() && y.has()) {
+        return new NtMaybe<>(x.get() + y.get());
+      }
+      return new NtMaybe<>();
+    }
+    public static NtComplex CI(NtComplex x, int y) {
+      return new NtComplex(x.real + y, x.imaginary);
+    }
+    public static NtComplex CL(NtComplex x, long y) {
+      return new NtComplex(x.real + y, x.imaginary);
+    }
+    public static NtComplex CD(NtComplex x, double y) {
+      return new NtComplex(x.real + y, x.imaginary);
+    }
+    public static NtMaybe<NtComplex> CmD(NtComplex x, NtMaybe<Double> y) {
+      if (y.has()) {
+        return new NtMaybe<>(new NtComplex(x.real + y.get(), x.imaginary));
+      }
+      return new NtMaybe<>();
+    }
+    public static NtComplex CC(NtComplex x, NtComplex y) {
+      return new NtComplex(x.real + y.real, x.imaginary + y.imaginary);
+    }
+    public static NtMaybe<NtComplex> mCI(NtMaybe<NtComplex> x, int y) {
+      if (x.has()) {
+        return new NtMaybe<>(CI(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCL(NtMaybe<NtComplex> x, long y) {
+      if (x.has()) {
+        return new NtMaybe<>(CL(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCD(NtMaybe<NtComplex> x, double y) {
+      if (x.has()) {
+        return new NtMaybe<>(CD(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCmD(NtMaybe<NtComplex> x, NtMaybe<Double> y) {
+      if (x.has()) {
+        return new NtMaybe<>(CmD(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCC(NtMaybe<NtComplex> x, NtComplex y) {
+      if (x.has()) {
+        return new NtMaybe<>(CC(x.get(), y));
+      }
+      return x;
+    }
+    public static NtMaybe<NtComplex> mCmC(NtMaybe<NtComplex> x, NtMaybe<NtComplex> y) {
+      if (x.has()) {
+        return new NtMaybe<>(mCC(y, x.get()));
+      }
+      return x;
+    }
+  }
 
-
+  public static class Mod {
+  }
 
   /*
   public static NtComplex addCI(NtComplex x, int y) {

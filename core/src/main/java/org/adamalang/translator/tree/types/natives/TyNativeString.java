@@ -32,7 +32,6 @@ import java.util.function.Consumer;
 public class TyNativeString extends TySimpleNative implements IsNativeValue, DetailHasDeltaType, //
     CanBeMapDomain, //
     DetailTypeHasMethods, //
-    DetailSpecialMultiplyOp, //
     DetailEqualityTestingRequiresWrapping, //
     DetailComparisonTestingRequiresWrapping, //
     AssignmentViaNative //
@@ -88,11 +87,6 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
   @Override
   public String getEqualityTestingBinaryPattern() {
     return "LibString.equality(%s, %s)";
-  }
-
-  @Override
-  public String getSpecialMultiplyOpPatternForBinary() {
-    return "LibString.multiply(%s, %s)";
   }
 
   @Override
