@@ -30,7 +30,7 @@ public class TyReactiveString extends TySimpleReactive implements IsOrderable //
 
   @Override
   public String getAdamaType() {
-    return "string";
+    return "r<string>";
   }
 
   @Override

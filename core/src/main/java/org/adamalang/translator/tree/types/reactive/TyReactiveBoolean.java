@@ -33,7 +33,7 @@ public class TyReactiveBoolean extends TySimpleReactive implements IsOrderable /
 
   @Override
   public String getAdamaType() {
-    return "bool";
+    return "r<bool>";
   }
 
   @Override

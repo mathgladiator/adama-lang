@@ -37,7 +37,7 @@ public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
 
   @Override
   public String getAdamaType() {
-    return name;
+    return "r<" + name + ">";
   }
 
   @Override

@@ -63,7 +63,7 @@ public class TyReactiveMap extends TyType implements //
 
   @Override
   public String getAdamaType() {
-    return "map<" + domainType.getAdamaType() + "," + rangeType.getAdamaType() + ">";
+    return "r<map<" + domainType.getAdamaType() + "," + rangeType.getAdamaType() + ">>";
   }
 
   @Override

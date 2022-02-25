@@ -33,7 +33,7 @@ public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrd
 
   @Override
   public String getAdamaType() {
-    return "label";
+    return "r<label>";
   }
 
   @Override

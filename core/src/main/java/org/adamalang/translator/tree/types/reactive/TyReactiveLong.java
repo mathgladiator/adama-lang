@@ -30,7 +30,7 @@ public class TyReactiveLong extends TySimpleReactive implements IsOrderable //
 
   @Override
   public String getAdamaType() {
-    return "long";
+    return "r<long>";
   }
 
   @Override

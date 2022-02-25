@@ -28,7 +28,7 @@ public class TyReactiveAsset extends TySimpleReactive implements IsOrderable {
 
   @Override
   public String getAdamaType() {
-    return "asset";
+    return "r<asset>";
   }
 
   @Override

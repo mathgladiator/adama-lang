@@ -748,7 +748,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_AssignmentIssues_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0},\"end\":{\"line\":4,\"character\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'maybe<R>' is unable to store type 'R'. (TypeCheckReferencesX)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'R' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive pointers must be initialized (DefinePtr)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":0},\"end\":{\"line\":4,\"character\":7}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'r<maybe<R>>' is unable to store type 'R'. (TypeCheckReferencesX)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The type 'R' is not applicable for assignment (=) (Assignment)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive pointers must be initialized (DefinePtr)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

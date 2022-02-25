@@ -63,7 +63,12 @@ public class BinaryOperatorTable {
     insert(tyComplex, "/", tyComplex, tyMaybeComplex, "LibArithmetic.Divide.CC(%s, %s)", false);
     insert(tyComplex, "/", tyMaybeComplex, tyMaybeComplex, "LibArithmetic.Divide.CmC(%s, %s)", false);
 
-
+    insert(tyMaybeComplex, "/", tyInt, tyMaybeComplex, "LibArithmetic.Divide.mCI(%s, %s)", false);
+    insert(tyMaybeComplex, "/", tyLong, tyMaybeComplex, "LibArithmetic.Divide.mCL(%s, %s)", false);
+    insert(tyMaybeComplex, "/", tyDouble, tyMaybeComplex, "LibArithmetic.Divide.mCD(%s, %s)", false);
+    insert(tyMaybeComplex, "/", tyMaybeDouble, tyMaybeComplex, "LibArithmetic.Divide.mCmD(%s, %s)", false);
+    insert(tyMaybeComplex, "/", tyComplex, tyMaybeComplex, "LibArithmetic.Divide.mCC(%s, %s)", false);
+    insert(tyMaybeComplex, "/", tyMaybeComplex, tyMaybeComplex, "LibArithmetic.Divide.mCmC(%s, %s)", false);
   }
 
   private void insert(TyType left, String operator, TyType right, TyType result, String java, boolean reverse) {

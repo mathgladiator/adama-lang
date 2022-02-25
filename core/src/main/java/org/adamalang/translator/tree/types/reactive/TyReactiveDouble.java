@@ -33,7 +33,7 @@ public class TyReactiveDouble extends TySimpleReactive implements IsOrderable //
 
   @Override
   public String getAdamaType() {
-    return "double";
+    return "r<double>";
   }
 
   @Override

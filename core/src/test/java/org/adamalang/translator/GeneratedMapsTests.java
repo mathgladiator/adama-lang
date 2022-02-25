@@ -686,7 +686,7 @@ public class GeneratedMapsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Maps_ReactiveBad_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'client' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2},\"end\":{\"line\":5,\"character\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"Record 'map<client,int>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2},\"end\":{\"line\":5,\"character\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":7},\"end\":{\"line\":1,\"character\":23}},\"severity\":1,\"source\":\"error\",\"message\":\"The domain type 'client' is not an appropriate. (TyNativeMap)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2},\"end\":{\"line\":5,\"character\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"Record 'r<map<client,r<int>>>' lacks field 'nope' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2},\"end\":{\"line\":5,\"character\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"Expression is not a function (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

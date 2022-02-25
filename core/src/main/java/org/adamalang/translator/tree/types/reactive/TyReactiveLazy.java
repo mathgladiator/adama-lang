@@ -37,7 +37,7 @@ public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedTy
 
   @Override
   public String getAdamaType() {
-    return "auto:" + computedType.getAdamaType();
+    return "r<auto<" + computedType.getAdamaType() + ">>";
   }
 
   @Override

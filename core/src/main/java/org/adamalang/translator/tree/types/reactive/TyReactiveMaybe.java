@@ -48,7 +48,7 @@ public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedT
 
   @Override
   public String getAdamaType() {
-    return String.format("maybe<%s>", tokenizedElementType.item.getAdamaType());
+    return String.format("r<maybe<%s>>", tokenizedElementType.item.getAdamaType());
   }
 
   @Override

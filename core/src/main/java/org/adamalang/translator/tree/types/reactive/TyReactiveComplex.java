@@ -27,7 +27,7 @@ public class TyReactiveComplex extends TySimpleReactive {
 
   @Override
   public String getAdamaType() {
-    return "complex";
+    return "r<complex>";
   }
 
   @Override

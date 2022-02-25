@@ -28,7 +28,7 @@ public class TyReactiveClient extends TySimpleReactive implements IsOrderable {
 
   @Override
   public String getAdamaType() {
-    return "client";
+    return "r<client>";
   }
 
   @Override

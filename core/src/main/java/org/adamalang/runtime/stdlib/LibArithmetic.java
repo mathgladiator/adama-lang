@@ -202,6 +202,7 @@ public class LibArithmetic {
       return y;
     }
 
+    // Left=maybe<double>
     public static NtMaybe<Double> mDI(NtMaybe<Double> x, int y) {
       if (x.has()) {
         return DI(x.get(), y);
@@ -247,6 +248,49 @@ public class LibArithmetic {
         return DC(x.get(), y.get());
       }
       return new NtMaybe<>();
+    }
+
+    // left=maybe<complex>
+    public static NtMaybe<NtComplex> mCI(NtMaybe<NtComplex> x, int y) {
+      if (x.has()) {
+        return CI(x.get(), y);
+      }
+      return x;
+    }
+
+    public static NtMaybe<NtComplex> mCL(NtMaybe<NtComplex> x, long y) {
+      if (x.has()) {
+        return CL(x.get(), y);
+      }
+      return x;
+    }
+
+    public static NtMaybe<NtComplex> mCD(NtMaybe<NtComplex> x, double y) {
+      if (x.has()) {
+        return CD(x.get(), y);
+      }
+      return x;
+    }
+
+    public static NtMaybe<NtComplex> mCmD(NtMaybe<NtComplex> x, NtMaybe<Double> y) {
+      if (x.has()) {
+        return CmD(x.get(), y);
+      }
+      return x;
+    }
+
+    public static NtMaybe<NtComplex> mCC(NtMaybe<NtComplex> x, NtComplex y) {
+      if (x.has()) {
+        return CC(x.get(), y);
+      }
+      return x;
+    }
+
+    public static NtMaybe<NtComplex> mCmC(NtMaybe<NtComplex> x, NtMaybe<NtComplex> y) {
+      if (x.has()) {
+        return CmC(x.get(), y);
+      }
+      return y;
     }
   }
 

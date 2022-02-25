@@ -28,7 +28,7 @@ public class TyReactiveDynamic extends TySimpleReactive implements IsOrderable {
 
   @Override
   public String getAdamaType() {
-    return "dynamic";
+    return "r<dynamic>";
   }
 
   @Override

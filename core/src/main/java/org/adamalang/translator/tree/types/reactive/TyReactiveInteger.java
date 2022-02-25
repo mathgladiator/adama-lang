@@ -30,7 +30,7 @@ public class TyReactiveInteger extends TySimpleReactive implements IsOrderable /
 
   @Override
   public String getAdamaType() {
-    return "int";
+    return "r<int>";
   }
 
   @Override

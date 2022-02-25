@@ -120,7 +120,7 @@ public class SillyTypeIssues {
     final var nl = new TyNativeLong(TypeBehavior.ReadOnlyNativeValue, null, null);
     rl.makeCopyWithNewPosition(rl, TypeBehavior.ReadOnlyNativeValue);
     nl.makeCopyWithNewPosition(nl, TypeBehavior.ReadOnlyNativeValue);
-    Assert.assertEquals("long", rl.getAdamaType());
+    Assert.assertEquals("r<long>", rl.getAdamaType());
     Assert.assertEquals("long", nl.getAdamaType());
   }
 
@@ -259,7 +259,7 @@ public class SillyTypeIssues {
     new TyNativeComplex(null, null, null).writeTypeReflectionJson(new JsonStreamWriter());
     Assert.assertEquals("complex", new TyNativeComplex(null, null, null).getAdamaType());
     Assert.assertEquals(
-        "complex",
+        "r<complex>",
         new TyReactiveComplex(null)
             .makeCopyWithNewPosition(DocumentPosition.ZERO, TypeBehavior.ReadWriteWithSetGet)
             .getAdamaType());

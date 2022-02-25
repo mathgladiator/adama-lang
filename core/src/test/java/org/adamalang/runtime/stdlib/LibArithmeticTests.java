@@ -34,4 +34,16 @@ public class LibArithmeticTests {
     Assert.assertEquals(0.5, LibArithmetic.Divide.II(1, 2).get(), 0.01);
     Assert.assertFalse(LibArithmetic.Divide.II(1, 0).has());
   }
+
+  @Test
+  public void generateTestCase() {
+    String[] x = new String[] { "1", "1L", "0.5", "(1 / 2)", "(1 / 0)", "@i", "(1 / @i)", "(@i / 0)"};
+    int k = 0;
+    for (String a : x) {
+      for (String b : x) {
+        System.out.println("  public formula f" + k + " = " + a + " / " + b + ";");
+        k++;
+      }
+    }
+  }
 }

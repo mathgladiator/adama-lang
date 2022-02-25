@@ -202,8 +202,13 @@ public formula c = b / 10;
 {"a":20.0,"b":10.0,"c":1.0}
 ```
 
-**Typing:** TODO
+**Typing:**
 
+In Adama, division always results in a [maybe&lt;&gt;](maybe.md) due to a division by zero.
+
+| left type | right type | result type |
+| --- | --- | --- |
+| int | int | maybe<double> |
 
 ### Modulus: *expr* % *expr*
 
