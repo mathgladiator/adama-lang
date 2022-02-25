@@ -54,7 +54,7 @@ public class LibArithmetic {
     }
 
     // Left=Long
-    public static NtMaybe<Double> divLI(long x, int y) {
+    public static NtMaybe<Double> LI(long x, int y) {
       double z = ((double) x) / y;
       if (Double.isNaN(z) || Double.isInfinite(z)) {
         return new NtMaybe<>();
@@ -62,7 +62,7 @@ public class LibArithmetic {
       return new NtMaybe<>(z);
     }
 
-    public static NtMaybe<Double> divLL(long x, long y) {
+    public static NtMaybe<Double> LL(long x, long y) {
       double z = ((double) x) / y;
       if (Double.isNaN(z) || Double.isInfinite(z)) {
         return new NtMaybe<>();
@@ -70,7 +70,7 @@ public class LibArithmetic {
       return new NtMaybe<>(z);
     }
 
-    public static NtMaybe<Double> divLD(long x, double y) {
+    public static NtMaybe<Double> LD(long x, double y) {
       double z = ((double) x) / y;
       if (Double.isNaN(z) || Double.isInfinite(z)) {
         return new NtMaybe<>();
@@ -78,7 +78,7 @@ public class LibArithmetic {
       return new NtMaybe<>(z);
     }
 
-    public static NtMaybe<NtComplex> divLC(long x, NtComplex y) {
+    public static NtMaybe<NtComplex> LC(long x, NtComplex y) {
       if (y.zero()) {
         return new NtMaybe<>();
       }
@@ -193,7 +193,7 @@ public class LibArithmetic {
       return new NtMaybe<>();
     }
 
-    public static NtMaybe<NtComplex> DC(NtMaybe<Double> x, NtComplex y) {
+    public static NtMaybe<NtComplex> mDC(NtMaybe<Double> x, NtComplex y) {
       if (!x.has() || y.zero()) {
         return new NtMaybe<>();
       }
