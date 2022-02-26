@@ -18,6 +18,11 @@ public class WebConfig {
   public final int port;
   public final int timeoutWebsocketHandshake;
   public final int heartbeatTimeMilliseconds;
+  public final int readTimeoutSeconds;
+  public final int writeTimeoutSeconds;
+  public final int idleReadSeconds;
+  public final int idleWriteSeconds;
+  public final int idleAllSeconds;
 
   public WebConfig(ConfigObject config) {
     // HTTP properties
@@ -26,6 +31,11 @@ public class WebConfig {
     this.healthCheckPath = config.strOf("http_health_check_path", "/~health_check_lb");
     // WebSocket properties
     this.timeoutWebsocketHandshake = config.intOf("websocket_handshake_timeout_ms", 2500);
+    this.readTimeoutSeconds = config.intOf("websocket_read_timeout_sec", 10);
+    this.writeTimeoutSeconds = config.intOf("websocket_write_timeout_sec", 5);
+    this.idleReadSeconds = config.intOf("websocket_read_idle_sec", 0);
+    this.idleWriteSeconds = config.intOf("websocket_write_idle_sec", 0);
+    this.idleAllSeconds = config.intOf("websocket_all_idle_sec", 15);
     this.maxWebSocketFrameSize = config.intOf("websocket_max_frame_size", 1048576);
     this.heartbeatTimeMilliseconds = config.intOf("websocket_heart_beat_ms", 1000);
   }

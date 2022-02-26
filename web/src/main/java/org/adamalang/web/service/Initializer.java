@@ -16,12 +16,14 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.ssl.SslContext;
-import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 public class Initializer extends ChannelInitializer<SocketChannel> {
   private final Logger logger;
@@ -46,6 +48,9 @@ public class Initializer extends ChannelInitializer<SocketChannel> {
       pipeline.addLast("ssl", context.newHandler(ch.alloc()));
     }
     pipeline.addLast(new HttpServerCodec());
+    pipeline.addLast(new ReadTimeoutHandler(webConfig.readTimeoutSeconds));
+    pipeline.addLast(new WriteTimeoutHandler(webConfig.writeTimeoutSeconds));
+    pipeline.addLast(new IdleStateHandler(webConfig.idleReadSeconds, webConfig.idleWriteSeconds, webConfig.idleAllSeconds, TimeUnit.SECONDS));
     pipeline.addLast(new HttpObjectAggregator(webConfig.maxContentLengthSize));
     pipeline.addLast(new WebSocketServerCompressionHandler());
     pipeline.addLast(new WebSocketServerProtocolHandler("/s", null, true, webConfig.maxWebSocketFrameSize, false, true, webConfig.timeoutWebsocketHandshake));

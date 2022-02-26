@@ -29,6 +29,39 @@ public class ConfigObjectTests {
   }
 
   @Test
+  public void strings() {
+    try {
+      ConfigObject config = new ConfigObject(Json.newJsonObject());
+      config.stringsOf("x", "nope");
+      Assert.fail();
+    } catch (NullPointerException npe) {
+    }
+    try {
+      ConfigObject config = new ConfigObject(Json.parseJsonObject("{\"x\":{}}"));
+      config.stringsOf("x", "nope");
+      Assert.fail();
+    } catch (NullPointerException npe) {
+    }
+    {
+      ConfigObject config = new ConfigObject(Json.parseJsonObject("{\"x\":[]}"));
+      Assert.assertEquals(0, config.stringsOf("x", "nope").length);
+    }
+    {
+      ConfigObject config = new ConfigObject(Json.parseJsonObject("{\"x\":[\"z\"]}"));
+      String[] list = config.stringsOf("x", "nope");
+      Assert.assertEquals(1, list.length);
+      Assert.assertEquals("z", list[0]);
+    }
+    {
+      ConfigObject config = new ConfigObject(Json.parseJsonObject("{\"x\":[\"z\",\"1\"]}"));
+      String[] list = config.stringsOf("x", "nope");
+      Assert.assertEquals(2, list.length);
+      Assert.assertEquals("z", list[0]);
+      Assert.assertEquals("1", list[1]);
+    }
+  }
+
+  @Test
   public void integer() {
     ObjectNode root = Json.newJsonObject();
     ConfigObject config = new ConfigObject(root);

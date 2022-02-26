@@ -2,6 +2,12 @@
 
 ```adama
 
+@static {
+  // anyone can create
+  create(who) { return true; }
+  invent(who) { return true; }
+}
+
 // let anyone into the document
 @connected (who) {
   return true;
@@ -22,7 +28,7 @@ message Say {
 }
 
 // the "channel" which enables someone to say something
-channel speak(client who, Say what) {
+channel say(client who, Say what) {
   // ingest the line into the chat
   _chat <- {who:who, what:what.what};
 }

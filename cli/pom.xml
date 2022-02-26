@@ -52,6 +52,11 @@
             <version>0.2</version>
         </dependency>
         <dependency>
+            <groupId>org.adamalang</groupId>
+            <artifactId>canary</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>4.1.51.Final</version>

@@ -3,6 +3,11 @@
 Many of the bugs have been fixed, this is from an old version.
 ```adama
 
+@static {
+  // anyone can create
+  create(who) { return true; }
+}
+
 // we define the suit of a card
 enum Suit {
   Clubs:1,

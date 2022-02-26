@@ -9,19 +9,67 @@
  */
 package org.adamalang.canary;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.ConfigObject;
+import org.adamalang.common.Json;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 public class CanaryConfig {
   public final String endpoint;
   public final String[] identities;
+  public final String mode;
   public final int connections;
-  public final int documentsPerConnectionMinimum;
-  public final int documentsPerConnectionMaxmimum;
+  public final String space;
+  public final int documentsPerConnectionMin;
+  public final int documentsPerConnectionMax;
+  public final String keyPrefix;
+  public final int keyIdMin;
+  public final int keyIdMax;
+  public final Message[] messages;
+  public final int messagesPerConnection;
+  public final int messageDelayMs;
+  public final CountDownLatch quitter;
+  public final Metrics metrics;
 
-  public CanaryConfig() {
-    this.endpoint = "https://aws-us-east-2.adama-platform.com/s";
-    // TODO: need to measure the heat of the web tier because I suspect there is a cost in not caching tokens
-    this.identities = new String[]{"eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaXNzIjoiMzQ2RzhUOUU5RDNVMVFRWUU2RjFRSEM5SjEzWENSIn0.c8et44m8t9vrrBlXu6ySyHwrzyLkuBmfCIGVOTO3TJ25yT_6jPWRZNHjXn_yyjQ5h8_Dn8U-bB0BRqxprKYZhQ"};
-    this.connections = 5;
-    this.documentsPerConnectionMinimum = 1;
-    this.documentsPerConnectionMaxmimum = 1;
+  public CanaryConfig(ConfigObject config) {
+    this.endpoint = config.strOf("endpoint", "https://aws-us-east-2.adama-platform.com/s");
+    this.identities = config.stringsOf("identities", "identities was not an array");
+    this.mode = config.strOf("mode", "simple");
+    this.connections = Integer.parseInt(config.strOf("connections", "100"));
+    this.documentsPerConnectionMin = Integer.parseInt(config.strOf("documents_per_connection_min", "1"));
+    this.documentsPerConnectionMax = Integer.parseInt(config.strOf("documents_per_connection_max", "2"));
+    this.space = config.strOf("space", "demo");
+    this.keyPrefix = config.strOf("key_prefix", "");
+    this.keyIdMin = Integer.parseInt(config.strOf("key_id_min", "1"));
+    this.keyIdMax = Integer.parseInt(config.strOf("key_id_max", "50"));
+    String[] rawMessages = config.stringsOf("messages", "messages was not an array");
+    this.messagesPerConnection = Integer.parseInt(config.strOf("messages_per_connection", "50"));
+    this.messageDelayMs = Integer.parseInt(config.strOf("message_delay_ms", "250"));
+    this.messages = new Message[rawMessages.length];
+    for (int k = 0; k < messages.length; k++) {
+      this.messages[k] = new Message(rawMessages[k]);
+    }
+    this.quitter = new CountDownLatch(connections);
+    this.metrics = new Metrics();
+  }
+
+  public static class Message {
+    public final String channel;
+    public final ObjectNode message;
+
+    public Message(String json) {
+      ObjectNode messageRaw = Json.parseJsonObject(json);
+      channel = messageRaw.get("@channel").textValue();
+      messageRaw.remove("@channel");
+      message = messageRaw;
+    }
+  }
+
+  public void blockUntilQuit() throws Exception {
+    while (!quitter.await(1000, TimeUnit.MILLISECONDS)) {
+      metrics.snapshot();
+    }
   }
 }

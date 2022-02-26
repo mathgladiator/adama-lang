@@ -1,4 +1,4 @@
-# Privacy and bubbbles
+# Privacy and bubbles
 
 The document and records contain fields and formulas that are privacy checked before they can be viewed by users. This section outlines how data is exposed to users. At the core, each field is prefixed with a privacy modifier.
 

@@ -53,8 +53,12 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     this.created = System.currentTimeMillis();
     this.latency = new AtomicLong();
     this.closed = false;
-    metrics.websockets_active.up();
     this.context = DEFAULT_CONTEXT;
+  }
+
+  @Override
+  public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    metrics.websockets_active.up();
   }
 
   @Override

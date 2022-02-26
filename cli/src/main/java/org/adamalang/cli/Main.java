@@ -61,6 +61,9 @@ public class Main {
       case "spaces":
         Space.execute(config, next);
         return;
+      case "stress":
+        Stress.execute(config, next);
+        return;
       case "help":
         rootHelp();
         return;
@@ -89,5 +92,6 @@ public class Main {
     System.out.println("    " + Util.prefix("security", Util.ANSI.Green) + "          Security tools for production usage");
     System.out.println("    " + Util.prefix("service", Util.ANSI.Green) + "           Launch a service");
     System.out.println("    " + Util.prefix("space", Util.ANSI.Green) + "             Manages spaces");
+    System.out.println("    " + Util.prefix("stress", Util.ANSI.Green) + "            Stress test using the canary tool");
   }
 }

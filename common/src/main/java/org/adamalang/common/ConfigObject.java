@@ -10,7 +10,13 @@
 package org.adamalang.common;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 /** handy way of interacting with JSON config */
 public class ConfigObject {
@@ -66,5 +72,19 @@ public class ConfigObject {
       return new ConfigObject(node.putObject(key));
     }
     return new ConfigObject((ObjectNode) v);
+  }
+
+  public String[] stringsOf(String key, String errorMessage) {
+    JsonNode vs = node.get(key);
+    if (vs.isArray()) {
+      ArrayList<String> strings = new ArrayList<>();
+      for (int k = 0; k < vs.size(); k++) {
+        if (vs.get(k).isTextual()) {
+          strings.add(vs.get(k).textValue());
+        }
+      }
+      return strings.toArray(new String[strings.size()]);
+    }
+    throw new NullPointerException(errorMessage);
   }
 }
