@@ -46,7 +46,6 @@ public class ConfigObject {
     }
   }
 
-
   public String strOfButCrash(String key, String errorMessage) {
     JsonNode v = node.get(key);
     if (v == null || v.isNull() || !v.isTextual()) {

@@ -56,6 +56,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
         send.put("channel", msg.channel);
         send.set("message", msg.message);
         long sendStart = System.currentTimeMillis();
+        config.metrics.messages_sent.incrementAndGet();
         connection.execute(send, new WebJsonStream() {
           @Override
           public void data(ObjectNode node) {
