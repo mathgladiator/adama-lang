@@ -34,14 +34,19 @@ public class ConnectionRouter {
   }
 
   public void disconnect() {
-    for (Map.Entry<Long, AttachmentUploadHandler> entry : inflightAttachmentUpload.entrySet()) {
-      entry.getValue().disconnect(entry.getKey());
-    }
-    inflightAttachmentUpload.clear();
-    for (Map.Entry<Long, DocumentStreamHandler> entry : inflightDocumentStream.entrySet()) {
-      entry.getValue().disconnect(entry.getKey());
-    }
-    inflightDocumentStream.clear();
+    nexus.executor.execute(new NamedRunnable("disconnect") {
+      @Override
+      public void execute() throws Exception {
+        for (Map.Entry<Long, AttachmentUploadHandler> entry : inflightAttachmentUpload.entrySet()) {
+          entry.getValue().disconnect(entry.getKey());
+        }
+        inflightAttachmentUpload.clear();
+        for (Map.Entry<Long, DocumentStreamHandler> entry : inflightDocumentStream.entrySet()) {
+          entry.getValue().disconnect(entry.getKey());
+        }
+        inflightDocumentStream.clear();
+      }
+    });
   }
 
   public void route(JsonRequest request, JsonResponder responder) {

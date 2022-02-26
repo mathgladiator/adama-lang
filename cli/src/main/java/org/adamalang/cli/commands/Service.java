@@ -146,7 +146,7 @@ public class Service {
     int monitoringPort = config.get_int("monitoring_backend_port", 8003);
     PrometheusMetricsFactory prometheusMetricsFactory = new PrometheusMetricsFactory(monitoringPort);
     int dataThreads = config.get_int("data_thread_count", 32);
-    int coreThreads = config.get_int("service_thread_count", 4);
+    int coreThreads = config.get_int("service_thread_count", 8);
     String identityFileName = config.get_string("identity_filename", "me.identity");
     String billingRootPath = config.get_string("billing_path", "billing");
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);

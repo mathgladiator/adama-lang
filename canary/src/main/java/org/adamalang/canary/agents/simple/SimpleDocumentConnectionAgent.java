@@ -75,6 +75,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
 
           @Override
           public void failure(int code) {
+            config.metrics.report_failure(code);
             config.metrics.messages_failed.incrementAndGet();
             complete();
           }
@@ -121,6 +122,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
 
   @Override
   public void failure(int code) {
+    config.metrics.report_failure(code);
     kill();
   }
 }

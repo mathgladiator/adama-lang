@@ -37,7 +37,6 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   private final ServiceBase base;
   private final long created;
   private final AtomicLong latency;
-  private boolean ended;
   private ServiceConnection connection;
   private ScheduledFuture<?> future;
   private boolean closed;
@@ -48,7 +47,6 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
     this.metrics = metrics;
     this.base = base;
     this.connection = null;
-    this.ended = false;
     this.future = null;
     this.created = System.currentTimeMillis();
     this.latency = new AtomicLong();
@@ -59,46 +57,50 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   @Override
   public void channelActive(ChannelHandlerContext ctx) throws Exception {
     metrics.websockets_active.up();
+    metrics.websockets_start.run();
+    super.channelActive(ctx);
   }
 
   @Override
-  public void channelInactive(final ChannelHandlerContext ctx) {
+  public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
+    metrics.websockets_end.run();
     end(ctx);
+    super.channelInactive(ctx);
   }
 
-  private void end(ChannelHandlerContext ctx) {
-    final var connToKill = clean();
-    if (connToKill != null) {
-      metrics.websockets_active_child_connections.down();
-      connToKill.kill();
-    }
-    if (!closed) {
+  private synchronized void end(ChannelHandlerContext ctx) {
+    try {
+      if (closed) {
+        return;
+      }
       closed = true;
       metrics.websockets_active.down();
+      if (future != null) {
+        future.cancel(false);
+        future = null;
+      }
+      if (connection != null) {
+        metrics.websockets_active_child_connections.down();
+        connection.kill();
+        connection = null;
+      }
       ctx.close();
+    } catch (Exception ex) {
+      metrics.websockets_end_exception.run();
+      LOGGER.convertedToErrorCode(ex, -1);
     }
   }
 
-  private ServiceConnection clean() {
-    if (ended) {
-      return null;
-    }
-    ended = true;
-    if (future != null) {
-      future.cancel(false);
-      future = null;
-    }
-    if (connection != null) {
-      final var copy = connection;
-      connection = null;
-      return copy;
-    }
-    return null;
+  @Override
+  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    super.exceptionCaught(ctx, cause);
+    metrics.websockets_uncaught_exception.run();
+    end(ctx);
   }
 
   @Override
   public void userEventTriggered(final ChannelHandlerContext ctx, final Object evt) {
-    if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
+    if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete && !closed) {
       // tell client all is ok
       ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\"}"));
 

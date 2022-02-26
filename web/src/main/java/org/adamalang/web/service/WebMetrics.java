@@ -17,19 +17,29 @@ public class WebMetrics {
   public final Inflight websockets_active_child_connections;
   public final Runnable websockets_send_heartbeat;
   public final Runnable websockets_heartbeat_failure;
-  public final Runnable websocket_server_heartbeat;
+  public final Runnable websockets_server_heartbeat;
+  public final Runnable websockets_uncaught_exception;
+  public final Runnable websockets_end_exception;
   public final Runnable webhandler_get;
   public final Runnable webhandler_post;
   public final Runnable webhandler_exception;
   public final Runnable webhandler_found;
   public final Runnable webhandler_healthcheck;
 
+  public final Runnable websockets_start;
+  public final Runnable websockets_end;
+
+
   public WebMetrics(MetricsFactory factory) {
     this.websockets_active = factory.inflight("websockets_active");
     this.websockets_active_child_connections = factory.inflight("websockets_active_child_connections");
     this.websockets_send_heartbeat = factory.counter("websockets_send_heartbeat");
     this.websockets_heartbeat_failure = factory.counter("websockets_heartbeat_failure");
-    this.websocket_server_heartbeat = factory.counter("websocket_server_heartbeat");
+    this.websockets_server_heartbeat = factory.counter("websockets_server_heartbeat");
+    this.websockets_start = factory.counter("websockets_start");
+    this.websockets_end = factory.counter("websockets_end");
+    this.websockets_uncaught_exception = factory.counter("websockets_uncaught_exception");
+    this.websockets_end_exception = factory.counter("websockets_end_exception");
 
     this.webhandler_get = factory.counter("webhandler_get");
     this.webhandler_post = factory.counter("webhandler_post");

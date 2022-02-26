@@ -56,14 +56,19 @@ public class AssembleConnectionRouter {
     router.append("  }\n");
     router.append("\n");
     router.append("  public void disconnect() {\n");
+    router.append("    nexus.executor.execute(new NamedRunnable(\"disconnect\") {\n");
+    router.append("      @Override\n");
+    router.append("      public void execute() throws Exception {\n");
     for (String subHandler : subHandlers) {
       if (!"Root".equals(subHandler)) {
-        router.append("    for (Map.Entry<Long, ").append(subHandler).append("Handler> entry : inflight").append(subHandler).append(".entrySet()) {\n");
-        router.append("      entry.getValue().disconnect(entry.getKey());\n");
-        router.append("    }\n");
-        router.append("    inflight").append(subHandler).append(".clear();\n");
+        router.append("        for (Map.Entry<Long, ").append(subHandler).append("Handler> entry : inflight").append(subHandler).append(".entrySet()) {\n");
+        router.append("          entry.getValue().disconnect(entry.getKey());\n");
+        router.append("        }\n");
+        router.append("        inflight").append(subHandler).append(".clear();\n");
       }
     }
+    router.append("      }\n");
+    router.append("    });\n");
     router.append("  }\n");
     router.append("\n");
 

@@ -78,7 +78,7 @@ public class ServiceRunnable implements Runnable {
             LOGGER.info("channel-registered");
             bossGroup.scheduleAtFixedRate(() -> {
               workerGroup.schedule(() -> {
-                metrics.websocket_server_heartbeat.run();
+                metrics.websockets_server_heartbeat.run();
                 heartbeat.run();
               },  (int) (10 + 15 * Math.random()), TimeUnit.MILLISECONDS);
             }, 50, 50, TimeUnit.MILLISECONDS);

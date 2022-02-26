@@ -32,6 +32,7 @@ public class CanaryConfig {
   public final int messageDelayMs;
   public final CountDownLatch quitter;
   public final Metrics metrics;
+  public final int connectDelayMs;
 
   public CanaryConfig(ConfigObject config) {
     this.endpoint = config.strOf("endpoint", "https://aws-us-east-2.adama-platform.com/s");
@@ -47,6 +48,7 @@ public class CanaryConfig {
     String[] rawMessages = config.stringsOf("messages", "messages was not an array");
     this.messagesPerConnection = config.intOf("messages_per_connection", 50);
     this.messageDelayMs = config.intOf("message_delay_ms", 250);
+    this.connectDelayMs = config.intOf("connect_delay_ms", 5);
     this.messages = new Message[rawMessages.length];
     for (int k = 0; k < messages.length; k++) {
       this.messages[k] = new Message(rawMessages[k]);
