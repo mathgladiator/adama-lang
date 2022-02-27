@@ -194,7 +194,7 @@ public class CoreService {
 
                   @Override
                   public void failure(ErrorCodeException ex) {
-                    if (ex.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE) {
+                    if (ex.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE || ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED) {
                       connect(who, key, stream, viewerState, false);
                     } else {
                       stream.failure(exOriginal);
@@ -308,7 +308,7 @@ public class CoreService {
     PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
     Callback<Integer> onConnected = new Callback<>() {
       @Override
-      public void success(Integer value) {
+      public void success(Integer dontCare) {
         stream.status(Streamback.StreamStatus.Connected);
         document.createPrivateView(who, new Perspective() {
           @Override
@@ -336,7 +336,11 @@ public class CoreService {
 
       @Override
       public void failure(ErrorCodeException ex) {
-        stream.failure(ex);
+        if (ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONNECTED) {
+          success(null);
+        } else {
+          stream.failure(ex);
+        }
       }
     };
 
