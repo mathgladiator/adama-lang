@@ -30,6 +30,7 @@
         <module>common</module>
         <module>overlord</module>
         <module>canary</module>
+        <module>data-disk</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
