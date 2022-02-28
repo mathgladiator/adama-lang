@@ -9,26 +9,24 @@
  */
 package org.adamalang.canary.agents.simple;
 
-import org.adamalang.canary.CanaryConfig;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.web.client.WebClientBase;
 import org.adamalang.web.client.WebClientConnection;
 import org.adamalang.web.contracts.WebLifecycle;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SimpleWebSocketConnectionAgent implements WebLifecycle {
   private final SimpleExecutor executor;
-  private final CanaryConfig config;
+  private final SimpleCanaryConfig config;
   private final WebClientBase base;
   private SimpleDocumentConnectionAgent[] agents;
   private AtomicBoolean alive;
   private AtomicInteger connectionsLeft;
 
-  public SimpleWebSocketConnectionAgent(SimpleExecutor executor, CanaryConfig config, WebClientBase base) {
+  public SimpleWebSocketConnectionAgent(SimpleExecutor executor, SimpleCanaryConfig config, WebClientBase base) {
     this.executor = executor;
     this.config = config;
     this.base = base;

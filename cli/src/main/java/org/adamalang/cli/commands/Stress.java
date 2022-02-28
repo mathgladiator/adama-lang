@@ -1,7 +1,6 @@
 package org.adamalang.cli.commands;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.canary.CanaryConfig;
 import org.adamalang.canary.DriveTraffic;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
@@ -16,7 +15,6 @@ public class Stress {
     String scenarioJson = Files.readString(new File(scenarioFile).toPath());
     ObjectNode scenarioObject = Json.parseJsonObject(scenarioJson);
     ConfigObject scenario = new ConfigObject(scenarioObject);
-    CanaryConfig canaryConfig = new CanaryConfig(scenario);
-    DriveTraffic.execute(canaryConfig);
+    DriveTraffic.execute(scenario);
   }
 }

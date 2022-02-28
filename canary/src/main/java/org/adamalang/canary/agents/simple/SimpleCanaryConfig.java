@@ -7,19 +7,19 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.canary;
+package org.adamalang.canary.agents.simple;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.canary.Metrics;
 import org.adamalang.common.ConfigObject;
 import org.adamalang.common.Json;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class CanaryConfig {
+public class SimpleCanaryConfig {
   public final String endpoint;
   public final String[] identities;
-  public final String mode;
   public final int connections;
   public final String space;
   public final int documentsPerConnectionMin;
@@ -34,10 +34,9 @@ public class CanaryConfig {
   public final Metrics metrics;
   public final int connectDelayMs;
 
-  public CanaryConfig(ConfigObject config) {
+  public SimpleCanaryConfig(ConfigObject config) {
     this.endpoint = config.strOf("endpoint", "https://aws-us-east-2.adama-platform.com/s");
     this.identities = config.stringsOf("identities", "identities was not an array");
-    this.mode = config.strOf("mode", "simple");
     this.connections = config.intOf("connections", 100);
     this.documentsPerConnectionMin = config.intOf("documents_per_connection_min", 1);
     this.documentsPerConnectionMax = config.intOf("documents_per_connection_max", 2);

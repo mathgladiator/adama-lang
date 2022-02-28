@@ -10,7 +10,6 @@
 package org.adamalang.canary.agents.simple;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.canary.CanaryConfig;
 import org.adamalang.common.Json;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
@@ -24,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJsonStream {
   private final SimpleWebSocketConnectionAgent parent;
   private final WebClientConnection connection;
-  private final CanaryConfig config;
+  private final SimpleCanaryConfig config;
   private final SimpleExecutor agent;
   private final AtomicBoolean alive;
   private boolean waitingForFirstData;
@@ -33,7 +32,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
   private AtomicInteger messagesLeft;
   private final Random rng;
 
-  public SimpleDocumentConnectionAgent(SimpleWebSocketConnectionAgent parent, WebClientConnection connection, CanaryConfig config) {
+  public SimpleDocumentConnectionAgent(SimpleWebSocketConnectionAgent parent, WebClientConnection connection, SimpleCanaryConfig config) {
     super("agent");
     this.parent = parent;
     this.connection = connection;
@@ -52,7 +51,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
         ObjectNode send = Json.newJsonObject();
         send.put("method", "connection/send");
         send.put("connection", connectionId);
-        CanaryConfig.Message msg = config.messages[rng.nextInt(config.messages.length)];
+        SimpleCanaryConfig.Message msg = config.messages[rng.nextInt(config.messages.length)];
         send.put("channel", msg.channel);
         send.set("message", msg.message);
         long sendStart = System.currentTimeMillis();
