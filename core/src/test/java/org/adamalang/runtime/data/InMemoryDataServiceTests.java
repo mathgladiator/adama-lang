@@ -154,7 +154,7 @@ public class InMemoryDataServiceTests {
     InMemoryDataService ds = new InMemoryDataService((t) -> t.run(), time);
     Key key = new Key("space", "key");
     AtomicInteger failure = new AtomicInteger(0);
-    ds.get(key, bumpFailureDoc(failure, 198705));
+    ds.get(key, bumpFailureDoc(failure, 625676));
     ds.patch(key, new RemoteDocumentUpdate[] { update(1, null, null) }, bumpFailure(failure, 144944));
     ds.compute(key, null, 1, bumpFailureDoc(failure, 106546));
     ds.delete(key, bumpFailure(failure, 117816));
