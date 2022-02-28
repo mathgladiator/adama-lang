@@ -137,7 +137,7 @@ public class SingleThreadDiskDataServiceTests {
       {
         SimpleDataCallback cb_Rewind = new SimpleDataCallback();
         setup.service.compute(KEY1, ComputeMethod.Rewind, 100, cb_Rewind);
-        cb_Rewind.assertFailure(724012);
+        cb_Rewind.assertFailure(783395);
       }
       {
         SimpleDataCallback cbUnknown = new SimpleDataCallback();

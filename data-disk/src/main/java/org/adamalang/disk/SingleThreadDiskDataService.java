@@ -147,7 +147,7 @@ public class SingleThreadDiskDataService implements DataService {
           undo.next(toUndo.pop());
         }
         if (undo.empty()) {
-          callback.failure(new ErrorCodeException(ErrorCodes.DISK_COMPUTE_REWIND_IOEXCEPTION));
+          callback.failure(new ErrorCodeException(ErrorCodes.DISK_COMPUTE_REWIND_NOTHING_TO_DO));
           return;
         }
         callback.success(new LocalDocumentChange(undo.finish(), reads));

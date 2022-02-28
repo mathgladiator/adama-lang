@@ -44,7 +44,7 @@ public class InMemoryDataService implements DataService {
       InMemoryDocument document = datum.get(key);
       int reads = 0;
       if (document == null) {
-        callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_GET_CANT_FIND_DOCUMENT));
+        callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
         return;
       }
       AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();

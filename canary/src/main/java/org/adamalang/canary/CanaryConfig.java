@@ -73,5 +73,6 @@ public class CanaryConfig {
     while (!quitter.await(1000, TimeUnit.MILLISECONDS)) {
       metrics.snapshot();
     }
+    metrics.snapshot();
   }
 }

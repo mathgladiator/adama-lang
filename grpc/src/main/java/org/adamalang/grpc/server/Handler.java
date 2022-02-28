@@ -275,7 +275,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
             return;
           }
           case UPDATE: {
-            stream.execute(new ItemAction<>(ErrorCodes.GRPC_STREAM_UPDATE_TIMEOUT, ErrorCodes.GRPC_STREAM_UPDATE_TIMEOUT, nexus.metrics.server_stream_update.start()) {
+            stream.execute(new ItemAction<>(ErrorCodes.GRPC_STREAM_UPDATE_TIMEOUT, ErrorCodes.GRPC_STREAM_UPDATE_REJECTED, nexus.metrics.server_stream_update.start()) {
               @Override
               protected void executeNow(CoreStream item) {
                 item.updateView(new JsonStreamReader(payload.getUpdate().getState()));
