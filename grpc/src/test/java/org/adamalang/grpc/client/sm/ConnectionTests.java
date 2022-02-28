@@ -106,7 +106,7 @@ public class ConnectionTests {
                 })
             .open();
         Assert.assertTrue(latch.await(25000, TimeUnit.MILLISECONDS));
-        Assert.assertEquals(198705, codeFound.get());
+        Assert.assertEquals(625676, codeFound.get());
       } finally {
         routingExecutor.shutdown();
       }
