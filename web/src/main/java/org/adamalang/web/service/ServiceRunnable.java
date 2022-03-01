@@ -69,7 +69,7 @@ public class ServiceRunnable implements Runnable {
             LOGGER.info("found-certificate-and-key");
           }
           final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-          final EventLoopGroup workerGroup = new NioEventLoopGroup(2);
+          final EventLoopGroup workerGroup = new NioEventLoopGroup(webConfig.workerThreads);
           try {
             final var b = new ServerBootstrap();
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new Initializer(webConfig, metrics, base, context));

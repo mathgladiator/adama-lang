@@ -26,6 +26,9 @@ public class SingleThreadDiskDataService implements DataService {
   public SingleThreadDiskDataService(File root, DiskMetrics metrics) {
     this.root = root;
     this.metrics = metrics;
+    if (!(root.exists() && root.isDirectory()) && !root.mkdir()) {
+      throw new RuntimeException("failed to create root directory:" + root.getAbsolutePath());
+    }
   }
 
   private File fileFor(Key key) {

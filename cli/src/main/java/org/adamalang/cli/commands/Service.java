@@ -15,6 +15,8 @@ import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.disk.DiskMetrics;
+import org.adamalang.disk.SingleThreadDiskDataService;
 import org.adamalang.extern.AssetUploader;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
@@ -46,7 +48,9 @@ import org.adamalang.overlord.grpc.OverlordClient;
 import org.adamalang.overlord.grpc.OverlordServer;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
+import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.PrefixSplitDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.natives.NtAsset;
@@ -69,6 +73,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -156,10 +161,14 @@ public class Service {
     DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
     DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(prometheusMetricsFactory, "deployed"));
     BackendMetrics backendMetrics = new BackendMetrics(prometheusMetricsFactory);
-    ThreadedDataService dataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(backendMetrics, dataBaseBackend));
+    ThreadedDataService dbDataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(backendMetrics, dataBaseBackend));
+    PrefixSplitDataService carveMemoryOff = new PrefixSplitDataService(dbDataService, "mem_", new ThreadedDataService(dataThreads, () -> new InMemoryDataService((r) -> r.run(), TimeSource.REAL_TIME)));
+    DiskMetrics diskMetrics = new DiskMetrics(prometheusMetricsFactory);
+    File dataDirectory = new File(config.get_string("data_directory", "data"));
+    PrefixSplitDataService carveDiskOff = new PrefixSplitDataService(carveMemoryOff, "disk_", new ThreadedDataService(dataThreads, () -> new SingleThreadDiskDataService(dataDirectory, diskMetrics)));
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
-    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), dataService, TimeSource.REAL_TIME, coreThreads);
+    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), carveDiskOff, TimeSource.REAL_TIME, coreThreads);
 
     engine.newApp("adama", port, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
@@ -387,6 +396,8 @@ public class Service {
     new DataBaseMetrics(metricsFactory, "frontend");
     new DataBaseMetrics(metricsFactory, "backend");
     new DataBaseMetrics(metricsFactory, "deployed");
+    metricsFactory.page("disk", "Disk");
+    new DiskMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }

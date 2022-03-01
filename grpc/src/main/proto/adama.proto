@@ -166,6 +166,10 @@ message StreamMessageClient {
   }
 }
 
+message StreamMessageClientBatch {
+  repeated StreamMessageClient client = 1;
+}
+
 message Establish {
 }
 
@@ -192,3 +196,6 @@ message StreamMessageServer {
   }
 }
 
+message StreamMessageServerBatch {
+  repeated StreamMessageServer server = 1;
+}

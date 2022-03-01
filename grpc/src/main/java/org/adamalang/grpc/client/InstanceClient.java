@@ -26,9 +26,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a managed client that makes talking to the gRPC server nice */
 public class InstanceClient implements AutoCloseable {
-  public final SimpleExecutor executor;
-  public final AdamaGrpc.AdamaStub stub;
   public final String target;
+  private final SimpleExecutor executor;
+  private final AdamaGrpc.AdamaStub stub;
   private final ClientMetrics metrics;
   private final HeatMonitor monitor;
   private final Lifecycle lifecycle;
@@ -42,8 +42,8 @@ public class InstanceClient implements AutoCloseable {
   private int backoff;
 
   public InstanceClient(MachineIdentity identity, ClientMetrics metrics, HeatMonitor monitor, String target, SimpleExecutor executor, Lifecycle lifecycle, ExceptionLogger logger) throws Exception {
-    this.executor = executor;
     this.target = target;
+    this.executor = executor;
     this.metrics = metrics;
     this.monitor = monitor;
     this.table = new CallbackTable();

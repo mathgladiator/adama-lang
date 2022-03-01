@@ -20,6 +20,10 @@ public class Init {
   public static void execute(Config config, String[] args) throws Exception {
     System.out.println("Hello, and welcome to the " + Util.prefix("Adama Tool", Util.ANSI.Green) + " account on-boarding experience!");
     System.out.println("");
+    System.out.println(Util.prefix("WARNING!! ", Util.ANSI.Red) + "Please be advised that this is alpha software available as an early release. For more details, please see:");
+    System.out.println("");
+    System.out.println(Util.prefix("  https://www.adama-platform.com/2022/02/25/early-access-launch-and-confession.html", Util.ANSI.Green));
+    System.out.println("");
     System.out.println("Before you begin, you should read " + Util.prefix("terms & conditions", Util.ANSI.Yellow) + " on the website:");
     System.out.println();
     System.out.println(Util.prefix("  https://www.adama-platform.com/terms-and-conditions.html", Util.ANSI.Green));
@@ -28,9 +32,9 @@ public class Init {
     System.out.println();
     System.out.println(Util.prefix("  https://www.adama-platform.com/privacy.html", Util.ANSI.Green));
     System.out.println();
-    System.out.println("This tool is about to ask for your email, and that is used as your developer account id." +
-        " As of 2022-02-17, the email is only used for account verification, but we reserve the " + Util.prefix("option to use for updates in the future.", Util.ANSI.Yellow) +
-        " We will never share with third parties because tools to distribute updates." +
+    System.out.println("This tool is about to ask for your email, and that is used as your developer account." +
+        " As of March 3rd 2022 the email is only used for account verification, but we reserve the " + Util.prefix("option to use for updates in the future.", Util.ANSI.Yellow) +
+        " We will never share with third parties beyond tools to distribute updates about the service." +
         " Heck! we haven't yet written the code to dump emails into software which will handle that for us, and if we are successful enough with traction then we will not need to.");
     System.out.println();
     System.out.print("So, look, go tell your friends about how neat this software is and then we will be too busy with feature requests to even hire a marketing person.");

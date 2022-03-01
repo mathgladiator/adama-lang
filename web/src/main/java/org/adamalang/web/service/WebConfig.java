@@ -23,6 +23,8 @@ public class WebConfig {
   public final int idleReadSeconds;
   public final int idleWriteSeconds;
   public final int idleAllSeconds;
+  public final int bossThreads;
+  public final int workerThreads;
 
   public WebConfig(ConfigObject config) {
     // HTTP properties
@@ -38,5 +40,7 @@ public class WebConfig {
     this.idleAllSeconds = config.intOf("websocket_all_idle_sec", 15);
     this.maxWebSocketFrameSize = config.intOf("websocket_max_frame_size", 1048576);
     this.heartbeatTimeMilliseconds = config.intOf("websocket_heart_beat_ms", 1000);
+    this.bossThreads = config.intOf("http_boss_threads", 2);
+    this.workerThreads = config.intOf("http_worker_threads", 16);
   }
 }

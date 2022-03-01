@@ -30,11 +30,14 @@ public class Server implements AutoCloseable {
     this.alive = new AtomicBoolean(false);
     this.server = null;
     this.handler = new Handler(nexus);
-    this.serverSupplier = ExceptionSupplier.TO_RUNTIME(() -> NettyServerBuilder.forPort(nexus.port).addService(handler).sslContext(GrpcSslContexts //
+    this.serverSupplier = ExceptionSupplier.TO_RUNTIME(() -> NettyServerBuilder.forPort(nexus.port) //
+        .addService(handler) //
+        .sslContext(GrpcSslContexts //
         .forServer(nexus.identity.getCert(), nexus.identity.getKey()) //
         .trustManager(nexus.identity.getTrust()) //
         .clientAuth(ClientAuth.REQUIRE) //
-        .build()).build());
+        .build()) //
+        .build());
   }
 
   /** Start serving requests. */

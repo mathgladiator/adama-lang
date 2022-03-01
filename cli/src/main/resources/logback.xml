@@ -1,5 +1,5 @@
 <configuration>
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
@@ -11,8 +11,11 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="ASYNC-ERROR" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ERROR" />
+    </appender>
 
-    <appender name="ACCESS-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/access.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/access.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
@@ -24,10 +27,14 @@
             <pattern>%d{HH:mm:ss.SSS}=%msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="ASYNC-ACCESS" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ACCESS" />
+    </appender>
+
     <logger name="access" level="DEBUG" additivity="false">
-        <appender-ref ref="ACCESS-FILE"/>
+        <appender-ref ref="ASYNC-ACCESS"/>
     </logger>
     <root level="ERROR">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="ASYNC-ERROR" />
     </root>
 </configuration>

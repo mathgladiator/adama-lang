@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Files;
 
 public class SingleThreadDiskDataServiceTests {
   public static final Key KEY1 = new Key("space", "key1");
@@ -33,7 +34,6 @@ public class SingleThreadDiskDataServiceTests {
 
     public Setup() throws Exception {
       this.root = new File(File.createTempFile("xxx", "yyy").getParentFile(), "disk-data-" + System.currentTimeMillis());
-      root.mkdirs();
       service = new SingleThreadDiskDataService(root, new DiskMetrics(new NoOpMetricsFactory()));
     }
 
@@ -47,6 +47,18 @@ public class SingleThreadDiskDataServiceTests {
       test.accept(setup);
     } finally {
       setup.clean();
+    }
+  }
+
+  @Test
+  public void failedToCreateDirectory() throws Exception {
+    File file = File.createTempFile("xxx", "yyy");
+    Files.writeString(file.toPath(), "x");
+    try {
+      new SingleThreadDiskDataService(file, new DiskMetrics(new NoOpMetricsFactory()));
+      Assert.fail();
+    } catch (RuntimeException re) {
+      Assert.assertTrue(re.getMessage().startsWith("failed to create root directory:"));
     }
   }
 
