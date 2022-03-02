@@ -31,9 +31,9 @@ if client:
     cwd = os.getcwd()
     os.chdir("client")
     if production:
-        os.system("yarn release")
+        os.system("npm run build")
     else:
-        os.system("yarn build")
+        os.system("npm run build")
     os.chdir(cwd)
     args = ["cp", "./client/dist/libadama.js", "./release/"]
     os.system(" ".join(args))

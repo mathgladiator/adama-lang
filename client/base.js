@@ -1,1 +1,0 @@
-export * from './dist/libadama.base.js';
