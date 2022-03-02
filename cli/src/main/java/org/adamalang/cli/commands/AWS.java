@@ -17,6 +17,7 @@ import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.extern.aws.AWSConfig;
 import org.adamalang.extern.aws.AWSMetrics;
+import org.adamalang.extern.aws.S3;
 import org.adamalang.extern.aws.SES;
 
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class AWS {
     System.out.println("    " + Util.prefix("setup", Util.ANSI.Green) + "             Interactive setup for the config");
     System.out.println("    " + Util.prefix("test-email", Util.ANSI.Green) + "        Test Email via AWS");
     System.out.println("    " + Util.prefix("memory-test", Util.ANSI.Green) + "       Crash by allocating memory");
+    System.out.println("    " + Util.prefix("release", Util.ANSI.Green) + "           Release the binary to the world");
   }
 
   public static void awsTestEmail(Config config) throws Exception {

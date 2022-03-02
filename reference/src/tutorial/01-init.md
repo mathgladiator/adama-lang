@@ -4,6 +4,8 @@
 java -jar adama.jar init
 ```
 
+<font color="red">Please note the notice about early access!</font>
+
 This will then prompt you with a blurb of text that outlines that providing your email will be implicit acceptance to Adama's terms, conditions, and privacy policy. You should read them!
 
 Once we have your email, we will send you a verification email with a code. Please copy and paste that code into the terminal, and your account will be setup.

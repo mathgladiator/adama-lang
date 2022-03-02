@@ -16,18 +16,25 @@ import org.adamalang.cli.Util;
 import org.adamalang.common.Json;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ec2.Ec2Client;
 import software.amazon.awssdk.services.ec2.model.*;
 import software.amazon.awssdk.services.ec2.model.Tag;
 import software.amazon.awssdk.services.elasticloadbalancingv2.ElasticLoadBalancingV2Client;
 import software.amazon.awssdk.services.elasticloadbalancingv2.model.*;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -50,6 +57,9 @@ public class Fleet {
       case "show":
         fleetShow(config, next);
         return;
+      case "release":
+        fleetReleaseClients(config);
+        return;
       case "launch":
         fleetLaunch(config, next);
         return;
@@ -62,6 +72,7 @@ public class Fleet {
         return;
     }
   }
+
 
   public static void fleetsHelp(String[] args) {
     if (args.length > 0) {
@@ -80,6 +91,49 @@ public class Fleet {
     System.out.println("    " + Util.prefix("launch", Util.ANSI.Green) + "            Launch a new instance");
     System.out.println("    " + Util.prefix("deploy", Util.ANSI.Green) + "            Generate a fleet config and deploy the jar");
     System.out.println("    " + Util.prefix("show", Util.ANSI.Green) + "              Show the current capacity in the given region");
+    System.out.println("    " + Util.prefix("release", Util.ANSI.Green) + "           Upload the jar to S3");
+  }
+
+  public static void fleetReleaseClients(Config config) throws Exception {
+    S3Client s3 = getS3(config);
+    String bucket = config.get_string("aws_s3_release_bucket", null);
+    File adamaJar = new File("adama.jar");
+    MessageDigest md5 = MessageDigest.getInstance("MD5");
+    MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+    FileInputStream inputJar = new FileInputStream(adamaJar);
+    byte[] buffer = new byte[64 * 1024];
+    int rd;
+    try {
+      while ((rd = inputJar.read(buffer)) > 0) {
+        sha256.update(buffer, 0, rd);
+        md5.update(buffer, 0, rd);
+      }
+    } finally {
+      inputJar.close();
+    }
+    System.out.println("Uploading to:" + bucket);
+    String contentMd5 = Base64.getEncoder().encodeToString(md5.digest());
+    String contentSha256 = Base64.getEncoder().encodeToString(sha256.digest());
+    System.out.println("Content-MD5:" + contentMd5);
+    System.out.println("adama.jar...");
+    s3.putObject(PutObjectRequest.builder().bucket(bucket).key("adama.jar").acl(ObjectCannedACL.PUBLIC_READ).contentMD5(contentMd5).build(), RequestBody.fromFile(adamaJar));
+    s3.putObject(PutObjectRequest.builder().bucket(bucket).key("adama.jar.sha-256").acl(ObjectCannedACL.PUBLIC_READ).contentType("text/plain").build(), RequestBody.fromString(contentSha256));
+    s3.putObject(PutObjectRequest.builder().bucket(bucket).key("adama.jar.md5").acl(ObjectCannedACL.PUBLIC_READ).contentType("text/plain").build(), RequestBody.fromString(contentMd5));
+
+    md5.reset();
+    File adamaJs = new File("libadama.js");
+    if (adamaJs.exists()) {
+      System.out.println("libadama.js...");
+      FileInputStream inputJs = new FileInputStream(adamaJs);
+      try {
+        while ((rd = inputJs.read(buffer)) > 0) {
+          md5.update(buffer, 0, rd);
+        }
+      } finally {
+        inputJs.close();
+      }
+      s3.putObject(PutObjectRequest.builder().bucket(bucket).key("libadama.js").acl(ObjectCannedACL.PUBLIC_READ).contentMD5(Base64.getEncoder().encodeToString(md5.digest())).build(), RequestBody.fromFile(adamaJs));
+    }
   }
 
   private static void fleetConfigure(Config config, String[] args) throws Exception {
@@ -277,6 +331,7 @@ public class Fleet {
 
     System.err.println("bastion:" + bastionPublicIp);
   }
+
   private static Ec2Client getEC2(Config config) {
     String accessKeyId = config.get_string("aws_ec2_access_key_id", null);
     String secretAccessKey = config.get_string("aws_ec2_secret_access_key", null);
@@ -303,6 +358,32 @@ public class Fleet {
     };
 
     return Ec2Client.builder().credentialsProvider(provider).region(Region.of(region)).build();
+  }
+
+  private static S3Client getS3(Config config) {
+    String accessKeyId = config.get_string("aws_ec2_access_key_id", null);
+    String secretAccessKey = config.get_string("aws_ec2_secret_access_key", null);
+    String region = config.get_string("aws_ec2_region", null);
+    if (accessKeyId == null || secretAccessKey == null || region == null) {
+      throw new NullPointerException("not configured for fleet management");
+    }
+    AwsCredentialsProvider provider = new AwsCredentialsProvider() {
+      @Override
+      public AwsCredentials resolveCredentials() {
+        return new AwsCredentials() {
+          @Override
+          public String accessKeyId() {
+            return accessKeyId;
+          }
+
+          @Override
+          public String secretAccessKey() {
+            return secretAccessKey;
+          }
+        };
+      }
+    };
+    return S3Client.builder().region(Region.of(region)).credentialsProvider(provider).build();
   }
 
   private static String roleOf(Instance instance) {

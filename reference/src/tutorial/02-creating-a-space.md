@@ -36,4 +36,5 @@ For me, using my freshly made account to test this tooling and your experience, 
 
 This object reveals the name of the space, role of the person doing the listing, date when the space was created, whether or not the space is currently enabled, and finally the total storage used by the space.
 
-The space is now created in an empty state, so [we can move on and make the space useful.](03-space.md) 
+The space is now created in an empty state, so [let's create some people to leverage it.](03-authorities.md)
+

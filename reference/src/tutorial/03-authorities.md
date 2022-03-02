@@ -11,11 +11,11 @@ java -jar adama.jar authority create
 This will return a document like
 ```json
 {
-  "authority" : "Z2YISR3YMJRYCHN29XZ2"
+  "authority" : "Z2YISR3YMJN29XZ2"
 }
 ```
 
-The **Z2YISR3YMJRYCHN29XZ2** is a unique key for developers to use to identify their users. If you accidentally clear your terminal or lose that id, then you can list your authorities via:
+The **Z2YISR3YMJN29XZ2** is a unique key for developers to use to identify their users. If you accidentally clear your terminal or lose that id, then you can list your authorities via:
 
 ```shell
 java -jar adama.jar authority list
@@ -25,20 +25,20 @@ With the name of the authority in hand, we will use the tool to create a keystor
 
 ```shell
 java -jar adama.jar authority create-local \
- --authority Z2YISR3YMJRYCHN29XZ2 \
+ --authority Z2YISR3YMJN29XZ2 \
  --keystore my.keystore.json \
  --private first.private.key.json
 ```
 
 This will create two files within your working directory:
 * **my.keystore.json** is a collection of public keys used by Adama to validate a private
-* **first.private.key.json** is a private key used by your software to sign your users' id. ***This requires safe-keeping!***
+* **first.private.key.json** is a private key used by your software to sign your users' id. <font color="red">***This requires safe-keeping!***</font>
 
 This keystore and private key were created entirely locally on your machine (for exceptional security), and now you upload ***only*** the keystore with:
 
 ```shell
 java -jar adama.jar authority set \
-  --authority Z2YISR3YMJRYCHN29XZ2
+  --authority Z2YISR3YMJN29XZ2 \
   --keystore my.keystore.json
 ```
 
@@ -47,8 +47,8 @@ Consuming the private key will require some crypto libraries in some infrastruct
 
 ```shell
 java -jar adama.jar authority sign \
-  --key first.private.key.json
-  --agent user001 \\
+  --key first.private.key.json \
+  --agent user001 
 ```
 
 which will dump out a JWT token with the agent 'user001' as the subject:
@@ -65,8 +65,7 @@ java -jar adama.jar authority sign \
   --agent user002 \\
 ```
 
-We will use the corresponding tokens for user001 and user002 to [chat with each other. Check out the next step in the tutorial](05-js-client.md)
-
+We will use the corresponding tokens for user001 and user002 to [chat with each other by configuring the space.](04-space.md)
 
 
 
