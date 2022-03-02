@@ -259,11 +259,6 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   @Override
-  public void add(final ImportDocument importDocument) {
-    importFile(importDocument.filename, importDocument);
-  }
-
-  @Override
   public void add(final IsEnum storage) {
     if (storage instanceof TyType) {
       if (types.containsKey(storage.name())) {

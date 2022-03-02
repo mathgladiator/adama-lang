@@ -89,11 +89,6 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   }
 
   @Override
-  public void add(final ImportDocument importDocument) {
-    importDocument.emit(this);
-  }
-
-  @Override
   public void add(final IsEnum storage) {
     if (storage instanceof TyNativeEnum) {
       ((TyNativeEnum) storage).emit(this);

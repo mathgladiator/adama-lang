@@ -448,17 +448,6 @@ public class Parser {
           return define_document_event(op, DocumentEvent.AskAssetAttachment);
         case "@static":
           return define_static(op);
-        case "import": {
-          final var importName = tokens.pop();
-          if (importName == null) {
-            throw new ParseException("Parser tried to read a string literal, but got end of stream", tokens.getLastTokenIfAvailable());
-          } else if (!importName.isStringLiteral()) {
-            throw new ParseException("Parser tried to read a string literal, but got a " + importName.majorType + " instead", importName);
-          }
-          final var semicolon = consumeExpectedSymbol(";");
-          final var importDocument = new ImportDocument(op, importName, semicolon);
-          return doc -> doc.add(importDocument);
-        }
         case "view": {
           final var ntype = native_type();
           final var name = id();

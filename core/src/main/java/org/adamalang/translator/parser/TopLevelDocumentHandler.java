@@ -39,8 +39,6 @@ public interface TopLevelDocumentHandler {
 
   void add(FieldDefinition fd);
 
-  void add(ImportDocument importDocument);
-
   void add(IsEnum storage);
 
   void add(IsStructure storage);
