@@ -1,6 +1,6 @@
 <img align="right" src="docs/static/img/adama-height-196.jpg">
 
-# AdamaDB & Adama Programming Language
+# Adama Platform (Mono Repo)
 
 The mission of Adama is to simplify building online board games. With a bit of spit, polish, and
 some [Yak shaving](https://en.wiktionary.org/wiki/yak_shaving), it ended up as a custom database and programming
@@ -16,13 +16,13 @@ Now, the entire purpose is to play an online board game, but this extends well b
 those values will take time to communicate. For now, the key is that players connect to a shared document, and the
 document enforces both rules and privacy via the Adama language.
 
-For more information on why, please refer to [the origin story](http://www.adama-lang.org/docs/why-the-origin-story)
-over at http://www.adama-lang.org/
+For more information, please refer to the [website: https://www.adama-platform.com/](https://www.adama-platform.com/)
 
 # What is the status
-
-Let's just say that the E2E experience is completely broken at the moment. I had a devkit, but stopped maintaining it
-for a variety of reasons. Expect and update in February 2022 with a sense of a SaaS offering.
+If you are interested in contributing, then let me know!
+This README is scant on details since they are evolving fast.
+As of 3/3/2022, the software is in an "early release" state which can be used with limited capacity right now.
+Check out [early access launch preview](https://www.adama-platform.com/2022/03/02/early-access-launch-and-confession.html)
 
 # License
 
