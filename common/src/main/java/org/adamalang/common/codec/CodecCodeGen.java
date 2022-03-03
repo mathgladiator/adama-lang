@@ -84,9 +84,6 @@ public class CodecCodeGen {
     if (field.getType().getAnnotation(TypeId.class) != null) {
       return "write(buf, " + value + ");";
     }
-
-
-
     throw new RuntimeException(field.getName() + " has a type we don't know about.. yet");
   }
 
@@ -112,7 +109,8 @@ public class CodecCodeGen {
       int[] caseIds = versions(clazz);
       for (int caseId : caseIds) {
         sb.append("      case ").append(caseId).append(":\n");
-        sb.append("        handler.handle(readBody_").append(caseId).append("(buf));\n");
+
+        sb.append("        handler.handle(readBody_").append(caseId).append("(buf, new ").append(clazz.getSimpleName()).append("()));\n");
         sb.append("        return;\n");
       }
     }
@@ -120,13 +118,23 @@ public class CodecCodeGen {
     sb.append("  }\n");
 
     for (Class<?> clazz : classes) {
+      int[] caseIds = versions(clazz);
       sb.append("\n");
       sb.append("  public static ").append(clazz.getSimpleName()).append(" read_").append(clazz.getSimpleName()).append("(ByteBuf buf) {\n");
       sb.append("    switch (buf.readIntLE()) {\n");
-      int[] caseIds = versions(clazz);
       for (int caseId : caseIds) {
         sb.append("      case ").append(caseId).append(":\n");
-        sb.append("        return readBody_").append(caseId).append("(buf);\n");
+        sb.append("        return readBody_").append(caseId).append("(buf, new ").append(clazz.getSimpleName()).append("());\n");
+      }
+      sb.append("    }\n");
+      sb.append("    return null;\n");
+      sb.append("  }\n");
+      sb.append("\n");
+      sb.append("  public static ").append(clazz.getSimpleName()).append(" readRegister_").append(clazz.getSimpleName()).append("(ByteBuf buf, ").append(clazz.getSimpleName()).append(" o) {\n");
+      sb.append("    switch (buf.readIntLE()) {\n");
+      for (int caseId : caseIds) {
+        sb.append("      case ").append(caseId).append(":\n");
+        sb.append("        return readBody_").append(caseId).append("(buf, o);\n");
       }
       sb.append("    }\n");
       sb.append("    return null;\n");
@@ -134,12 +142,11 @@ public class CodecCodeGen {
       for (int caseId : caseIds) {
         boolean primary = caseId == caseIds[0];
         sb.append("\n");
-        sb.append("  private static " + clazz.getSimpleName() + " readBody_"+caseId+"(ByteBuf buf) {\n");
-        sb.append("    ").append(clazz.getSimpleName()).append(" o_").append(caseId).append(" = new ").append(clazz.getSimpleName()).append("();\n"); // TODO: consider building a register since we can simply copy data out
+        sb.append("  private static " + clazz.getSimpleName() + " readBody_"+caseId+"(ByteBuf buf, ").append(clazz.getSimpleName()).append(" o) {\n");
         for (Field field : getFields(clazz, primary)) {
-          sb.append("    o_").append(caseId).append(".").append(field.getName()).append(" = ").append(readerOf(field)).append(";\n");
+          sb.append("    o.").append(field.getName()).append(" = ").append(readerOf(field)).append(";\n");
         }
-        sb.append("    return o_"+caseId+";\n");
+        sb.append("    return o;\n");
         sb.append("  }\n");
       }
     }

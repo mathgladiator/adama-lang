@@ -16,13 +16,13 @@ public class GeneratedCodecMe {
   public static void route(ByteBuf buf, Handler handler) {
     switch (buf.readIntLE()) {
       case 123:
-        handler.handle(readBody_123(buf));
+        handler.handle(readBody_123(buf, new TestClassA()));
         return;
       case 42:
-        handler.handle(readBody_42(buf));
+        handler.handle(readBody_42(buf, new TestClassA()));
         return;
       case 4242:
-        handler.handle(readBody_4242(buf));
+        handler.handle(readBody_4242(buf, new TestClassB()));
         return;
     }
   }
@@ -30,44 +30,59 @@ public class GeneratedCodecMe {
   public static TestClassA read_TestClassA(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 123:
-        return readBody_123(buf);
+        return readBody_123(buf, new TestClassA());
       case 42:
-        return readBody_42(buf);
+        return readBody_42(buf, new TestClassA());
     }
     return null;
   }
 
-  private static TestClassA readBody_123(ByteBuf buf) {
-    TestClassA o_123 = new TestClassA();
-    o_123.x = buf.readIntLE();
-    o_123.str = Helper.readString(buf);
-    o_123.w = buf.readDoubleLE();
-    o_123.sssshort = buf.readShortLE();
-    return o_123;
+  public static TestClassA readRegister_TestClassA(ByteBuf buf, TestClassA o) {
+    switch (buf.readIntLE()) {
+      case 123:
+        return readBody_123(buf, o);
+      case 42:
+        return readBody_42(buf, o);
+    }
+    return null;
   }
 
-  private static TestClassA readBody_42(ByteBuf buf) {
-    TestClassA o_42 = new TestClassA();
-    o_42.x = buf.readIntLE();
-    o_42.z = buf.readDoubleLE();
-    o_42.w = buf.readDoubleLE();
-    o_42.sssshort = buf.readShortLE();
-    return o_42;
+  private static TestClassA readBody_123(ByteBuf buf, TestClassA o) {
+    o.x = buf.readIntLE();
+    o.str = Helper.readString(buf);
+    o.w = buf.readDoubleLE();
+    o.sssshort = buf.readShortLE();
+    return o;
+  }
+
+  private static TestClassA readBody_42(ByteBuf buf, TestClassA o) {
+    o.x = buf.readIntLE();
+    o.z = buf.readDoubleLE();
+    o.w = buf.readDoubleLE();
+    o.sssshort = buf.readShortLE();
+    return o;
   }
 
   public static TestClassB read_TestClassB(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 4242:
-        return readBody_4242(buf);
+        return readBody_4242(buf, new TestClassB());
     }
     return null;
   }
 
-  private static TestClassB readBody_4242(ByteBuf buf) {
-    TestClassB o_4242 = new TestClassB();
-    o_4242.x = buf.readIntLE();
-    o_4242.embed = read_TestClassA(buf);
-    return o_4242;
+  public static TestClassB readRegister_TestClassB(ByteBuf buf, TestClassB o) {
+    switch (buf.readIntLE()) {
+      case 4242:
+        return readBody_4242(buf, o);
+    }
+    return null;
+  }
+
+  private static TestClassB readBody_4242(ByteBuf buf, TestClassB o) {
+    o.x = buf.readIntLE();
+    o.embed = read_TestClassA(buf);
+    return o;
   }
 
   public static void write(ByteBuf buf, TestClassA o) {
