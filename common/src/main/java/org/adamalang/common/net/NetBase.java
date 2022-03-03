@@ -39,6 +39,7 @@ public class NetBase {
     for (CountDownLatch blocker : blockers) {
       standardBlockerWait(blocker);
     }
+    blockers.clear();
     bossGroup.shutdownGracefully();
     workerGroup.shutdownGracefully();
   }

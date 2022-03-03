@@ -7,21 +7,24 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.grpc;
+package org.adamalang.net;
 
-import org.adamalang.common.*;
+import org.adamalang.common.MachineIdentity;
+import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.grpc.server.Server;
-import org.adamalang.grpc.server.ServerMetrics;
-import org.adamalang.grpc.server.ServerNexus;
+import org.adamalang.common.net.NetBase;
+import org.adamalang.net.server.Server;
+import org.adamalang.net.server.ServerMetrics;
+import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.sys.CoreMetrics;
-import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
+import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.EnvironmentState;
 import org.adamalang.translator.env.GlobalObjectPool;
@@ -31,19 +34,22 @@ import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
 import java.io.File;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestBed implements AutoCloseable {
-  public final SimpleExecutor clientExecutor;
+  public final NetBase base;
   public final MachineIdentity identity;
+  public final SimpleExecutor clientExecutor;
   public final MeteringPubSub meteringPubSub;
   private final Server server;
   public final AtomicInteger deploymentScans;
   public final CoreService coreService;
 
   public TestBed(int port, String code) throws Exception {
-    clientExecutor = SimpleExecutor.create("testbed-client");
+    this.base = new NetBase(1, 2);
+    clientExecutor = SimpleExecutor.create("client-executor");
     deploymentScans = new AtomicInteger(0);
     JsonStreamWriter planWriter = new JsonStreamWriter();
     planWriter.beginObject();
@@ -73,8 +79,7 @@ public class TestBed implements AutoCloseable {
             2);
 
     this.identity = MachineIdentity.fromFile(prefixForLocalhost());
-
-    ServerNexus nexus = new ServerNexus(identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, (space) -> {
+    ServerNexus nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, (space) -> {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();
       }
@@ -98,12 +103,12 @@ public class TestBed implements AutoCloseable {
   }
 
   public void stopServer() throws Exception {
-    server.close();
+    base.shutdown();
   }
 
   @Override
   public void close() throws Exception {
-    server.close();
+    base.shutdown();
     clientExecutor.shutdown();
   }
 }
