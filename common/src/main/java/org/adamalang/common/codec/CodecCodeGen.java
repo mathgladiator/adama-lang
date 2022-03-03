@@ -3,7 +3,9 @@ package org.adamalang.common.codec;
 import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 /** exceptionally simply code generator for building codecs against a Netty ByteBuf. The ideal is to minimize as much overhead as possible and get bytes in and out using Netty's data structures */
 public class CodecCodeGen {
@@ -20,6 +22,18 @@ public class CodecCodeGen {
     } else {
       return new int[] { currentTypeId };
     }
+  }
+
+  private static HashSet<String> flows(Class<?> clazz) {
+    Flow flow = clazz.getAnnotation(Flow.class);
+    if (flow == null) {
+      throw new RuntimeException(clazz.getSimpleName() + " has no @Flow");
+    }
+    HashSet<String> flows = new HashSet<>();
+    for (String part : flow.value().split(Pattern.quote("|"))) {
+      flows.add(part);
+    }
+    return flows;
   }
 
   public static Field[] getFields(Class<?> clazz, boolean isNew) {
@@ -50,17 +64,26 @@ public class CodecCodeGen {
   }
 
   public static String readerOf(Field field) {
-    if (field.getType() == int.class || field.getType() == Integer.class) {
+    if (field.getType() == int.class) {
       return "buf.readIntLE()";
     }
-    if (field.getType() == short.class || field.getType() == Short.class) {
+    if (field.getType() == short.class) {
       return "buf.readShortLE()";
     }
-    if (field.getType() == double.class || field.getType() == Double.class) {
+    if (field.getType() == double.class) {
       return "buf.readDoubleLE()";
+    }
+    if (field.getType() == long.class) {
+      return "buf.readLongLE()";
+    }
+    if (field.getType() == boolean.class) {
+      return "buf.readBoolean()";
     }
     if (field.getType() == String.class) {
       return "Helper.readString(buf)";
+    }
+    if (field.getType() == String[].class) {
+      return "Helper.readStringArray(buf)";
     }
     if (field.getType().getAnnotation(TypeId.class) != null) {
       return "read_" + field.getType().getSimpleName() + "(buf)";
@@ -69,17 +92,26 @@ public class CodecCodeGen {
   }
 
   public static String write(Field field, String value) {
-    if (field.getType() == int.class || field.getType() == Integer.class) {
+    if (field.getType() == int.class) {
       return "buf.writeIntLE("+value+")";
     }
-    if (field.getType() == short.class || field.getType() == Short.class) {
+    if (field.getType() == short.class) {
       return "buf.writeShortLE("+value+")";
     }
-    if (field.getType() == double.class || field.getType() == Double.class) {
+    if (field.getType() == double.class) {
       return "buf.writeDoubleLE("+value+")";
+    }
+    if (field.getType() == long.class) {
+      return "buf.writeLongLE("+value+")";
+    }
+    if (field.getType() == boolean.class) {
+      return "buf.writeBoolean("+value+")";
     }
     if (field.getType() == String.class) {
       return "Helper.writeString(buf, "+value+");";
+    }
+    if (field.getType() == String[].class) {
+      return "Helper.writeStringArray(buf, "+value+");";
     }
     if (field.getType().getAnnotation(TypeId.class) != null) {
       return "write(buf, " + value + ");";
@@ -98,24 +130,47 @@ public class CodecCodeGen {
     }
     sb.append("\n");
     sb.append("public class ").append(className).append(" {\n");
-    sb.append("  public static interface Handler {\n");
+
+    HashSet<String> allFlows = new HashSet<>();
     for (Class<?> clazz : classes) {
-      sb.append("    public void handle(").append(clazz.getSimpleName()).append(" payload);\n");
+      allFlows.addAll(flows(clazz));
     }
-    sb.append("  }\n\n");
-    sb.append("  public static void route(ByteBuf buf, Handler handler) {\n");
-    sb.append("    switch (buf.readIntLE()) {\n");
+    HashSet<Integer> codesInUse = new HashSet<>();
     for (Class<?> clazz : classes) {
       int[] caseIds = versions(clazz);
       for (int caseId : caseIds) {
-        sb.append("      case ").append(caseId).append(":\n");
-
-        sb.append("        handler.handle(readBody_").append(caseId).append("(buf, new ").append(clazz.getSimpleName()).append("()));\n");
-        sb.append("        return;\n");
+        if (codesInUse.contains(caseId)) {
+          throw new RuntimeException("Duplicate type:" + caseId);
+        }
+        codesInUse.add(caseId);
       }
     }
-    sb.append("    }\n");
-    sb.append("  }\n");
+
+    for (String flow : allFlows) {
+      sb.append("\n");
+      sb.append("  public static interface Handler").append(flow).append(" {\n");
+      for (Class<?> clazz : classes) {
+        if (flows(clazz).contains(flow)) {
+          sb.append("    public void handle(").append(clazz.getSimpleName()).append(" payload);\n");
+        }
+      }
+      sb.append("  }\n\n");
+      sb.append("  public static void route(ByteBuf buf, Handler").append(flow).append(" handler) {\n");
+      sb.append("    switch (buf.readIntLE()) {\n");
+      for (Class<?> clazz : classes) {
+        if (flows(clazz).contains(flow)) {
+          int[] caseIds = versions(clazz);
+          for (int caseId : caseIds) {
+            sb.append("      case ").append(caseId).append(":\n");
+
+            sb.append("        handler.handle(readBody_").append(caseId).append("(buf, new ").append(clazz.getSimpleName()).append("()));\n");
+            sb.append("        return;\n");
+          }
+        }
+      }
+      sb.append("    }\n");
+      sb.append("  }\n");
+    }
 
     for (Class<?> clazz : classes) {
       int[] caseIds = versions(clazz);

@@ -6,6 +6,7 @@ import org.junit.Test;
 public class CodecCodeGenTests {
   @TypeId(123)
   @PriorTypeId(42)
+  @Flow("X")
   public static class TestClassA {
 
     @FieldOrder(1)
@@ -24,9 +25,16 @@ public class CodecCodeGenTests {
 
     @FieldOrder(5)
     public short sssshort;
+
+    @FieldOrder(6)
+    public boolean bbb;
+
+    @FieldOrder(7)
+    public String[] strarr;
   }
 
   @TypeId(4242)
+  @Flow("X|Y")
   public static class TestClassB {
 
     @FieldOrder(1)
@@ -34,6 +42,9 @@ public class CodecCodeGenTests {
 
     @FieldOrder(2)
     public TestClassA embed;
+
+    @FieldOrder(3)
+    public long lng;
   }
 
 
@@ -43,6 +54,30 @@ public class CodecCodeGenTests {
     System.err.println(java);
   }
 
+  @Test
+  public void dupe() {
+    try {
+      CodecCodeGen.assembleCodec("org.adamalang.common.codec", "GeneratedCodecMe", TestClassA.class, TestClassA.class);
+      Assert.fail();
+    } catch (RuntimeException re) {
+      Assert.assertEquals("Duplicate type:123", re.getMessage());
+    }
+  }
+
+  public static class NoFlow {
+  }
+
+  @Test
+  public void problem_no_flow() {
+    try {
+      CodecCodeGen.assembleCodec("C", "C", NoFlow.class);
+      Assert.fail();
+    } catch (RuntimeException re) {
+      Assert.assertEquals("NoFlow has no @Flow", re.getMessage());
+    }
+  }
+
+  @Flow("X")
   public static class NoType {
   }
 
@@ -57,6 +92,7 @@ public class CodecCodeGenTests {
   }
 
   @TypeId(42)
+  @Flow("X")
   public static class NoOrder {
     public double w;
   }
@@ -73,6 +109,7 @@ public class CodecCodeGenTests {
 
 
   @TypeId(42)
+  @Flow("X")
   public static class DupeOrder {
     @FieldOrder(1)
     public double w;
@@ -92,6 +129,7 @@ public class CodecCodeGenTests {
   }
 
   @TypeId(42)
+  @Flow("X")
   public static class BadType {
     @FieldOrder(1)
     public CodecCodeGenTests badType;

@@ -8,12 +8,13 @@ import org.adamalang.common.codec.CodecCodeGenTests.TestClassA;
 import org.adamalang.common.codec.CodecCodeGenTests.TestClassB;
 
 public class GeneratedCodecMe {
-  public static interface Handler {
+
+  public static interface HandlerX {
     public void handle(TestClassA payload);
     public void handle(TestClassB payload);
   }
 
-  public static void route(ByteBuf buf, Handler handler) {
+  public static void route(ByteBuf buf, HandlerX handler) {
     switch (buf.readIntLE()) {
       case 123:
         handler.handle(readBody_123(buf, new TestClassA()));
@@ -21,6 +22,18 @@ public class GeneratedCodecMe {
       case 42:
         handler.handle(readBody_42(buf, new TestClassA()));
         return;
+      case 4242:
+        handler.handle(readBody_4242(buf, new TestClassB()));
+        return;
+    }
+  }
+
+  public static interface HandlerY {
+    public void handle(TestClassB payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerY handler) {
+    switch (buf.readIntLE()) {
       case 4242:
         handler.handle(readBody_4242(buf, new TestClassB()));
         return;
@@ -52,6 +65,8 @@ public class GeneratedCodecMe {
     o.str = Helper.readString(buf);
     o.w = buf.readDoubleLE();
     o.sssshort = buf.readShortLE();
+    o.bbb = buf.readBoolean();
+    o.strarr = Helper.readStringArray(buf);
     return o;
   }
 
@@ -60,6 +75,8 @@ public class GeneratedCodecMe {
     o.z = buf.readDoubleLE();
     o.w = buf.readDoubleLE();
     o.sssshort = buf.readShortLE();
+    o.bbb = buf.readBoolean();
+    o.strarr = Helper.readStringArray(buf);
     return o;
   }
 
@@ -82,6 +99,7 @@ public class GeneratedCodecMe {
   private static TestClassB readBody_4242(ByteBuf buf, TestClassB o) {
     o.x = buf.readIntLE();
     o.embed = read_TestClassA(buf);
+    o.lng = buf.readLongLE();
     return o;
   }
 
@@ -95,6 +113,8 @@ public class GeneratedCodecMe {
     Helper.writeString(buf, o.str);;
     buf.writeDoubleLE(o.w);
     buf.writeShortLE(o.sssshort);
+    buf.writeBoolean(o.bbb);
+    Helper.writeStringArray(buf, o.strarr);;
   }
 
   public static void write(ByteBuf buf, TestClassB o) {
@@ -105,5 +125,6 @@ public class GeneratedCodecMe {
     buf.writeIntLE(4242);
     buf.writeIntLE(o.x);
     write(buf, o.embed);;
+    buf.writeLongLE(o.lng);
   }
 }

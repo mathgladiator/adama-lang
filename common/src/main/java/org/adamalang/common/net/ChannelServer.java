@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 
+/** the server side of the connection */
 public class ChannelServer extends ChannelCommon {
   private final Handler handler;
 

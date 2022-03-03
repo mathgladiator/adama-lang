@@ -16,6 +16,8 @@ public class GeneratedCodecMeTests {
       a.x = 14000000;
       a.w = 1;
       a.z = 3.14;
+      a.bbb = true;
+      a.strarr = new String[] { "A", "B", "C" };
       GeneratedCodecMe.write(buf, a);
     }
     {
@@ -26,6 +28,11 @@ public class GeneratedCodecMeTests {
       Assert.assertEquals(1, a.w, 0.00001);
       // Z is dropped due to it being an old field
       Assert.assertEquals(0.0, a.z, 0.00001);
+      Assert.assertTrue(a.bbb);
+      Assert.assertEquals(3, a.strarr.length);
+      Assert.assertEquals("A", a.strarr[0]);
+      Assert.assertEquals("B", a.strarr[1]);
+      Assert.assertEquals("C", a.strarr[2]);
     }
   }
 
@@ -41,6 +48,8 @@ public class GeneratedCodecMeTests {
       b.embed.x = 14000000;
       b.embed.w = 1;
       b.embed.z = 3.14;
+      b.embed.bbb = false;
+      b.embed.strarr = null;
       GeneratedCodecMe.write(buf, b);
     }
     {
@@ -53,6 +62,8 @@ public class GeneratedCodecMeTests {
       Assert.assertEquals(1, a.w, 0.00001);
       // Z is dropped due to it being an old field
       Assert.assertEquals(0.0, a.z, 0.00001);
+      Assert.assertFalse(a.bbb);
+      Assert.assertNull(a.strarr);
     }
   }
 
@@ -86,16 +97,19 @@ public class GeneratedCodecMeTests {
   @Test
   public void null_object() {
     ByteBuf buf = Unpooled.buffer();
+
     {
       CodecCodeGenTests.TestClassB b = new CodecCodeGenTests.TestClassB();
       b.x = 40;
       b.embed = null;
+      b.lng = -124;
       GeneratedCodecMe.write(buf, b);
     }
     {
       CodecCodeGenTests.TestClassB b = GeneratedCodecMe.read_TestClassB(buf);
       Assert.assertEquals(40, b.x);
       Assert.assertNull(b.embed);
+      Assert.assertEquals(-124, b.lng);
     }
   }
 }

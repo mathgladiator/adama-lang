@@ -14,6 +14,8 @@ import org.adamalang.common.MachineIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.Supplier;
+
 /** a wrapper around netty to provider common network primitives */
 public class Server {
   private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);

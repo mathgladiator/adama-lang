@@ -12,7 +12,7 @@ import org.adamalang.common.ErrorCodeException;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-/** a single connection */
+/** a single connection for client side */
 public class ChannelClient extends ChannelCommon {
   private final Lifecycle lifecycle;
   private HashMap<Integer, Consumer<Boolean>> initiations;

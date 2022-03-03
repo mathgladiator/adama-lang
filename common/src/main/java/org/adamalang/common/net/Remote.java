@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.util.HashMap;
 
+/** a callback to isolate a single sub-channel within a channel */
 public class Remote implements ByteStream {
   private final HashMap<Integer, ByteStream> streams;
   private final int id;
