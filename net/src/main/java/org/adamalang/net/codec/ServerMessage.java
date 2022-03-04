@@ -52,7 +52,7 @@ public class ServerMessage {
   }
 
   @TypeId(12546)
-  @Flow("Metering")
+  @Flow("Document")
   public static class StreamStatus {
     @FieldOrder(1)
     public int code;
@@ -87,18 +87,18 @@ public class ServerMessage {
   }
 
   @TypeId(5122)
-  @Flow("Heat")
+  @Flow("Info")
   public static class HeatPayload {
     @FieldOrder(1)
-    double cpu;
+    public double cpu;
     @FieldOrder(2)
-    double mem;
+    public double mem;
   }
 
   @TypeId(7232)
-  @Flow("Inventory")
+  @Flow("Info")
   public static class InventoryHeartbeat {
     @FieldOrder(1)
-    String[] spaces;
+    public String[] spaces;
   }
 }

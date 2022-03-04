@@ -17,6 +17,8 @@ import org.adamalang.common.net.ChannelClient;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
+import org.adamalang.net.client.bidi.DocumentExchange;
+import org.adamalang.net.client.bidi.MeteringExchange;
 import org.adamalang.net.client.contracts.*;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
@@ -63,6 +65,48 @@ public class InstanceClient implements AutoCloseable {
       base.connect(this.target, new org.adamalang.common.net.Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {
+          channel.open(new ServerCodec.StreamInfo() {
+            @Override
+            public void handle(ServerMessage.HeatPayload heat) {
+              monitor.heat(target, heat.cpu, heat.mem);
+            }
+
+            @Override
+            public void handle(ServerMessage.InventoryHeartbeat payload) {
+              // TODO: route inventory, yay?
+            }
+
+            @Override
+            public void completed() {
+
+            }
+
+            @Override
+            public void error(int errorCode) {
+
+            }
+          }, new Callback<ByteStream>() {
+            @Override
+            public void success(ByteStream value) {
+              if (monitor != null) {
+                ByteBuf buf = value.create(8);
+                ClientCodec.write(buf, new ClientMessage.RequestHeat());
+                value.next(buf);
+              }
+              {
+                ByteBuf buf = value.create(8);
+                ClientCodec.write(buf, new ClientMessage.RequestInventoryHeartbeat());
+                value.next(buf);
+              }
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              // SHOULD NOT HAPPEN unless disconnected, need to inst
+              // TODO: instrument
+            }
+          });
+
           executor.execute(new NamedRunnable("channel-client-ready") {
             @Override
             public void execute() throws Exception {
@@ -270,39 +314,102 @@ public class InstanceClient implements AutoCloseable {
   }
 
   public void startMeteringExchange(MeteringStream meteringStream) {
-    /*
     executor.execute(new NamedRunnable("metering-exchange") {
       @Override
       public void execute() throws Exception {
-        MeteringObserver observer = new MeteringObserver(meteringStream);
-        observer.start(stub.meteringExchange(observer));
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_METERING_TIMEOUT, ErrorCodes.ADAMA_NET_METERING_REJECTED, metrics.client_metering_exchange.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            MeteringExchange exchange = new MeteringExchange(target, meteringStream);
+            client.open(exchange, exchange);
+          }
+
+          @Override
+          protected void failure(int code) {
+            meteringStream.failure(code);
+          }
+        });
       }
     });
-     */
   }
 
-  public void scanDeployments(String space, ScanDeploymentCallback callback) {
-    // stub.scanDeployments(ScanDeploymentsRequest.newBuilder().setSpace(space).build(), ScanDeploymentCallback.WRAP(callback));
+  public void scanDeployments(String space, Callback<Void> callback) {
+    executor.execute(new NamedRunnable("execute-scan") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_SCAN_DEPLOYMENT_TIMEOUT, ErrorCodes.ADAMA_NET_SCAN_DEPLOYMENT_REJECTED, metrics.client_scan_deployment.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamDeployment() {
+              @Override
+              public void handle(ServerMessage.ScanDeploymentResponse payload) {
+                callback.success(null);
+              }
+
+              @Override
+              public void completed() {
+
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new Callback<ByteStream>() {
+              @Override
+              public void success(ByteStream stream) {
+                ByteBuf toWrite = stream.create(space.length() + 10);
+                ClientMessage.ScanDeploymentRequest scan = new ClientMessage.ScanDeploymentRequest();
+                scan.space = space;
+                ClientCodec.write(toWrite, scan);
+                stream.next(toWrite);
+                stream.completed();
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                callback.failure(ex);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
   }
 
   /** connect to a document */
-  public long connect(String agent, String authority, String space, String key, String viewerState, Events events) {
-    /*
-    long docId = table.id();
-    executor.execute(new NamedRunnable("client-connect", target, space, key) {
+  public void connect(String agent, String authority, String space, String key, String viewerState, String origin, Events events) {
+    ClientMessage.StreamConnect connectMessage = new ClientMessage.StreamConnect();
+    connectMessage.agent = agent;
+    connectMessage.authority = authority;
+    connectMessage.space = space;
+    connectMessage.key = key;
+    connectMessage.viewerState = viewerState;
+    connectMessage.origin = origin;
+
+
+    executor.execute(new NamedRunnable("document-exchange") {
       @Override
       public void execute() throws Exception {
-        if (InstanceClient.this.upstream != null) {
-          table.associate(docId, events);
-          upstream.onNext(StreamMessageClient.newBuilder().setId(docId).setConnect(StreamConnect.newBuilder().setAgent(agent).setAuthority(authority).setSpace(space).setKey(key).setState(viewerState).build()).build());
-        } else {
-          events.disconnected();
-        }
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_CONNECT_DOCUMENT_TIMEOUT, ErrorCodes.ADAMA_NET_CONNECT_DOCUMENT_REJECTED, metrics.client_document_exchange.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            DocumentExchange exchange = new DocumentExchange(connectMessage, events);
+            client.open(exchange, exchange);
+          }
+
+          @Override
+          protected void failure(int code) {
+            events.error(code);
+          }
+        });
       }
     });
-    return docId;
-    */
-    return 0;
   }
 
   @Override
@@ -327,281 +434,4 @@ public class InstanceClient implements AutoCloseable {
       }
     });
   }
-/*
-  private class MeteringObserver implements StreamObserver<MeteringReverse> {
-    private final MeteringStream meteringStream;
-    boolean completedThisSide = false;
-    private StreamObserver<MeteringForward> upstream;
-    private String batchRemoved;
-
-    public MeteringObserver(MeteringStream meteringStream) {
-      this.meteringStream = meteringStream;
-      this.batchRemoved = null;
-    }
-
-    public void start(StreamObserver<MeteringForward> upstream) {
-      this.upstream = upstream;
-      // start the conversation
-      upstream.onNext(MeteringForward.newBuilder().setBegin(MeteringBegin.newBuilder().build()).build());
-    }
-
-    @Override
-    public void onNext(MeteringReverse reverse) {
-      switch (reverse.getOperationCase()) {
-        case FOUND: {
-          executor.execute(new NamedRunnable("asking-to-remove") {
-            @Override
-            public void execute() throws Exception {
-              MeteringBatchFound found = reverse.getFound();
-              MeteringObserver.this.batchRemoved = found.getBatch();
-              upstream.onNext(MeteringForward.newBuilder().setRemove(MeteringDeleteBatch.newBuilder().setId(found.getId()).build()).build());
-            }
-          });
-          return;
-        }
-        case REMOVED: {
-          executor.execute(new NamedRunnable("removing-batch") {
-            @Override
-            public void execute() throws Exception {
-              meteringStream.handle(target, batchRemoved, () -> {
-                executor.execute(new NamedRunnable("batch-processed") {
-                  @Override
-                  public void execute() throws Exception {
-                    upstream.onNext(MeteringForward.newBuilder().setBegin(MeteringBegin.newBuilder().build()).build());
-                  }
-                });
-              });
-            }
-          });
-          return;
-        }
-      }
-    }
-
-    @Override
-    public void onError(Throwable throwable) {
-      meteringStream.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_METERING_UNKNOWN_EXCEPTION, throwable, logger).code);
-    }
-
-    @Override
-    public void onCompleted() {
-      meteringStream.finished();
-      if (!completedThisSide) {
-        upstream.onCompleted();
-        completedThisSide = true;
-      }
-    }
-  }
-
-  public class InstanceRemote implements Remote {
-    private final long docId;
-
-    public InstanceRemote(long docId) {
-      this.docId = docId;
-    }
-
-    @Override
-    public void canAttach(AskAttachmentCallback callback) {
-      long askId = table.id();
-      executor.execute(new NamedRunnable("client-ask-attachment", target) {
-        @Override
-        public void execute() throws Exception {
-          if (upstream != null) {
-            table.associate(askId, callback);
-            upstream.onNext(StreamMessageClient.newBuilder().setId(askId).setAct(docId).setAsk(StreamAskAttachmentRequest.newBuilder().build()).build());
-          } else {
-            callback.error(ErrorCodes.GRPC_ASK_FAILED_NOT_CONNECTED);
-          }
-        }
-      });
-    }
-
-    @Override
-    public void attach(String id, String name, String contentType, long size, String md5, String sha384, SeqCallback callback) {
-      long attachId = table.id();
-      executor.execute(new NamedRunnable("client-attach", target) {
-        @Override
-        public void execute() throws Exception {
-          if (upstream != null) {
-            table.associate(attachId, callback);
-            upstream.onNext(StreamMessageClient.newBuilder().setId(attachId).setAct(docId).setAttach(StreamAttach.newBuilder().setId(id).setFilename(name).setContentType(contentType).setSize(size).setMd5(md5).setSha384(sha384).build()).build());
-          } else {
-            callback.error(ErrorCodes.GRPC_ATTACHED_FAILED_NOT_CONNECTED);
-          }
-        }
-      });
-    }
-
-    @Override
-    public void update(String viewerState) {
-      long updateId = table.id();
-      executor.execute(new NamedRunnable("client-update", target) {
-        @Override
-        public void execute() throws Exception {
-          if (upstream != null) {
-            upstream.onNext(StreamMessageClient.newBuilder().setId(updateId).setAct(docId).setUpdate(StreamUpdate.newBuilder().setState(viewerState).build()).build());
-          }
-        }
-      });
-    }
-
-    @Override
-    public void send(String channel, String marker, String message, SeqCallback callback) {
-      long sendId = table.id();
-      executor.execute(new NamedRunnable("client-send", target, channel) {
-        @Override
-        public void execute() throws Exception {
-          if (upstream != null) {
-            table.associate(sendId, callback);
-            StreamSend.Builder send = StreamSend.newBuilder().setChannel(channel).setMessage(message);
-            if (marker != null) {
-              send.setMarker(marker);
-            }
-            upstream.onNext(StreamMessageClient.newBuilder().setId(sendId).setAct(docId).setSend(send.build()).build());
-          } else {
-            callback.error(ErrorCodes.GRPC_SEND_FAILED_NOT_CONNECTED);
-          }
-        }
-      });
-    }
-
-    @Override
-    public void disconnect() {
-      executor.execute(new NamedRunnable("client-disconnect", target) {
-        @Override
-        public void execute() throws Exception {
-          if (upstream != null) {
-            upstream.onNext(StreamMessageClient.newBuilder().setId(table.id()).setAct(docId).setDisconnect(StreamDisconnect.newBuilder().build()).build());
-          }
-        }
-      });
-    }
-  }
-
-  private class MultiplexObserver implements StreamObserver<StreamMessageServer> {
-    private StreamObserver<StreamMessageClient> upstream = null;
-
-    @Override
-    public void onNext(StreamMessageServer message) {
-      switch (message.getByTypeCase()) {
-        case ESTABLISH:
-          executor.execute(new NamedRunnable("client-established", target) {
-            @Override
-            public void execute() throws Exception {
-              if (alive.get()) {
-                InstanceClient.this.upstream = MultiplexObserver.this.upstream;
-                backoff = 1;
-                lifecycle.connected(InstanceClient.this);
-                if (monitor != null) {
-                  upstream.onNext(StreamMessageClient.newBuilder().setMonitor(RequestHeat.newBuilder().build()).build());
-                }
-              }
-            }
-          });
-          return;
-        case HEAT:
-          if (monitor != null) {
-            HeatPayload heat = message.getHeat();
-            executor.execute(new NamedRunnable("route-heat") {
-              @Override
-              public void execute() throws Exception {
-                monitor.heat(target, heat.getCpu(), heat.getMemory());
-              }
-            });
-          }
-        case HEARTBEAT:
-          executor.execute(new NamedRunnable("client-heartbeat", target) {
-            @Override
-            public void execute() {
-              lifecycle.heartbeat(InstanceClient.this, message.getHeartbeat().getSpacesList());
-            }
-          });
-          return;
-        case DATA:
-          executor.execute(new NamedRunnable("client-data", target) {
-            @Override
-            public void execute() throws Exception {
-              Events events = table.documentsOf(message.getId());
-              if (events != null) {
-                events.delta(message.getData().getDelta());
-              }
-            }
-          });
-          return;
-        case ERROR:
-          executor.execute(new NamedRunnable("client-error", target) {
-            @Override
-            public void execute() throws Exception {
-              table.error(message.getId(), message.getError().getCode());
-            }
-          });
-          return;
-        case RESPONSE:
-          executor.execute(new NamedRunnable("client-ask-attachment-response", target) {
-            @Override
-            public void execute() throws Exception {
-              table.finishAsk(message.getId(), message.getResponse().getAllowed());
-            }
-          });
-          return;
-        case RESULT:
-          executor.execute(new NamedRunnable("client-seq-result", target) {
-            @Override
-            public void execute() throws Exception {
-              table.finishSeq(message.getId(), message.getResult().getSeq());
-            }
-          });
-          return;
-        case STATUS:
-          executor.execute(new NamedRunnable("client-status", target, message.getStatus().getCode().toString()) {
-            @Override
-            public void execute() throws Exception {
-              if (message.getStatus().getCode() == StreamStatusCode.Connected) {
-                Events events = table.documentsOf(message.getId());
-                if (events != null) {
-                  events.connected(new InstanceRemote(message.getId()));
-                }
-              } else {
-                table.disconnectDocument(message.getId());
-              }
-            }
-          });
-          return;
-      }
-    }
-
-    @Override
-    public void onError(Throwable throwable) {
-      backoff += (rng.nextDouble() * backoff + 1);
-      logger.convertedToErrorCode(throwable, ErrorCodes.GRPC_FAILURE);
-      onCompleted();
-    }
-
-    @Override
-    public void onCompleted() {
-      executor.execute(new NamedRunnable("client-completed", target) {
-        @Override
-        public void execute() throws Exception {
-          boolean send = InstanceClient.this.upstream != null;
-          downstream = null;
-          upstream = null;
-          InstanceClient.this.upstream = null;
-          table.kill();
-          if (send) {
-            lifecycle.disconnected(InstanceClient.this);
-          }
-          if (alive.get()) {
-            executor.schedule(new NamedRunnable("client-reconnecting", target) {
-              @Override
-              public void execute() throws Exception {
-                downstream = new MultiplexObserver();
-                downstream.upstream = stub.multiplexedProtocol(downstream);
-              }
-            }, backoff);
-          }
-        }
-      });
-    }
-  }
-  */
 }

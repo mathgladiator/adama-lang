@@ -28,40 +28,6 @@ import org.adamalang.net.codec.ServerMessage.PingResponse;
 
 public class ServerCodec {
 
-  public static abstract class StreamHeat implements ByteStream {
-    public abstract void handle(HeatPayload payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 5122:
-          handle(readBody_5122(buf, new HeatPayload()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerHeat {
-    public void handle(HeatPayload payload);
-  }
-
-  public static void route(ByteBuf buf, HandlerHeat handler) {
-    switch (buf.readIntLE()) {
-      case 5122:
-        handler.handle(readBody_5122(buf, new HeatPayload()));
-        return;
-    }
-  }
-
   public static abstract class StreamCreation implements ByteStream {
     public abstract void handle(CreateResponse payload);
 
@@ -198,6 +164,49 @@ public class ServerCodec {
     }
   }
 
+  public static abstract class StreamInfo implements ByteStream {
+    public abstract void handle(InventoryHeartbeat payload);
+
+    public abstract void handle(HeatPayload payload);
+
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 7232:
+          handle(readBody_7232(buf, new InventoryHeartbeat()));
+          return;
+        case 5122:
+          handle(readBody_5122(buf, new HeatPayload()));
+          return;
+      }
+    }
+  }
+
+  public static interface HandlerInfo {
+    public void handle(InventoryHeartbeat payload);
+    public void handle(HeatPayload payload);
+  }
+
+  public static void route(ByteBuf buf, HandlerInfo handler) {
+    switch (buf.readIntLE()) {
+      case 7232:
+        handler.handle(readBody_7232(buf, new InventoryHeartbeat()));
+        return;
+      case 5122:
+        handler.handle(readBody_5122(buf, new HeatPayload()));
+        return;
+    }
+  }
+
   public static abstract class StreamDocument implements ByteStream {
     public abstract void handle(StreamSeqResponse payload);
 
@@ -206,6 +215,8 @@ public class ServerCodec {
     public abstract void handle(StreamError payload);
 
     public abstract void handle(StreamData payload);
+
+    public abstract void handle(StreamStatus payload);
 
     @Override
     public void request(int bytes) {
@@ -231,6 +242,9 @@ public class ServerCodec {
         case 10546:
           handle(readBody_10546(buf, new StreamData()));
           return;
+        case 12546:
+          handle(readBody_12546(buf, new StreamStatus()));
+          return;
       }
     }
   }
@@ -240,6 +254,7 @@ public class ServerCodec {
     public void handle(StreamAskAttachmentResponse payload);
     public void handle(StreamError payload);
     public void handle(StreamData payload);
+    public void handle(StreamStatus payload);
   }
 
   public static void route(ByteBuf buf, HandlerDocument handler) {
@@ -256,46 +271,13 @@ public class ServerCodec {
       case 10546:
         handler.handle(readBody_10546(buf, new StreamData()));
         return;
-    }
-  }
-
-  public static abstract class StreamInventory implements ByteStream {
-    public abstract void handle(InventoryHeartbeat payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 7232:
-          handle(readBody_7232(buf, new InventoryHeartbeat()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerInventory {
-    public void handle(InventoryHeartbeat payload);
-  }
-
-  public static void route(ByteBuf buf, HandlerInventory handler) {
-    switch (buf.readIntLE()) {
-      case 7232:
-        handler.handle(readBody_7232(buf, new InventoryHeartbeat()));
+      case 12546:
+        handler.handle(readBody_12546(buf, new StreamStatus()));
         return;
     }
   }
 
   public static abstract class StreamMetering implements ByteStream {
-    public abstract void handle(StreamStatus payload);
-
     public abstract void handle(MeteringBatchRemoved payload);
 
     public abstract void handle(MeteringBatchFound payload);
@@ -312,9 +294,6 @@ public class ServerCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
-        case 12546:
-          handle(readBody_12546(buf, new StreamStatus()));
-          return;
         case 1248:
           handle(readBody_1248(buf, new MeteringBatchRemoved()));
           return;
@@ -326,16 +305,12 @@ public class ServerCodec {
   }
 
   public static interface HandlerMetering {
-    public void handle(StreamStatus payload);
     public void handle(MeteringBatchRemoved payload);
     public void handle(MeteringBatchFound payload);
   }
 
   public static void route(ByteBuf buf, HandlerMetering handler) {
     switch (buf.readIntLE()) {
-      case 12546:
-        handler.handle(readBody_12546(buf, new StreamStatus()));
-        return;
       case 1248:
         handler.handle(readBody_1248(buf, new MeteringBatchRemoved()));
         return;
@@ -362,6 +337,7 @@ public class ServerCodec {
   }
 
   private static InventoryHeartbeat readBody_7232(ByteBuf buf, InventoryHeartbeat o) {
+    o.spaces = Helper.readStringArray(buf);
     return o;
   }
 
@@ -382,6 +358,8 @@ public class ServerCodec {
   }
 
   private static HeatPayload readBody_5122(ByteBuf buf, HeatPayload o) {
+    o.cpu = buf.readDoubleLE();
+    o.mem = buf.readDoubleLE();
     return o;
   }
 
@@ -619,6 +597,7 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(7232);
+    Helper.writeStringArray(buf, o.spaces);;
   }
 
   public static void write(ByteBuf buf, HeatPayload o) {
@@ -627,6 +606,8 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(5122);
+    buf.writeDoubleLE(o.cpu);
+    buf.writeDoubleLE(o.mem);
   }
 
   public static void write(ByteBuf buf, StreamSeqResponse o) {
