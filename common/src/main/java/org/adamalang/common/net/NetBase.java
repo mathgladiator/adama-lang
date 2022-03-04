@@ -60,6 +60,9 @@ public class NetBase {
   }
 
   public void connect(String target, Lifecycle lifecycle) {
+    if (!alive.get()) {
+      lifecycle.failed(new ErrorCodeException(ErrorCodes.NET_SHUTTING_DOWN));
+    }
     try {
       String[] parts = target.split(Pattern.quote(":"));
       String peerHost = parts[0];
@@ -69,7 +72,7 @@ public class NetBase {
       bootstrap.remoteAddress(peerHost, peerPort);
       bootstrap.channel(NioSocketChannel.class);
       bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-      bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 2500);
+      bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 250);
       bootstrap.option(ChannelOption.TCP_NODELAY, true);
       bootstrap.handler(new ChannelInitializer<SocketChannel>() {
         @Override

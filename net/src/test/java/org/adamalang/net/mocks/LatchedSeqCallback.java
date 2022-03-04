@@ -9,13 +9,14 @@
  */
 package org.adamalang.net.mocks;
 
-import org.adamalang.net.client.contracts.SeqCallback;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class LatchedSeqCallback implements SeqCallback {
+public class LatchedSeqCallback implements Callback<Integer> {
   private final CountDownLatch latch;
   private boolean error;
   private int value;
@@ -27,16 +28,16 @@ public class LatchedSeqCallback implements SeqCallback {
   }
 
   @Override
-  public void success(int seq) {
+  public void success(Integer seq) {
     this.error = false;
     this.value = seq;
     latch.countDown();
   }
 
   @Override
-  public void error(int code) {
+  public void failure(ErrorCodeException ex) {
     this.error = true;
-    this.value = code;
+    this.value = ex.code;
     latch.countDown();
   }
 

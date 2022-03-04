@@ -42,6 +42,9 @@ public class ItemQueue<T> {
 
   public void unready() {
     this.item = null;
+  }
+
+  public void nuke() {
     if (buffer != null) {
       for (ItemAction<T> action : buffer) {
         action.killDueToReject();
@@ -51,6 +54,10 @@ public class ItemQueue<T> {
   }
 
   public void add(ItemAction<T> action) {
+    add(action, timeout);
+  }
+
+  public void add(ItemAction<T> action, int customTimeout) {
     if (buffer == null) {
       buffer = new ArrayList<>();
     }
@@ -58,13 +65,13 @@ public class ItemQueue<T> {
       action.killDueToReject();
     } else {
       buffer.add(action);
-      executor.schedule(new NamedRunnable("expire-action") {
-        @Override
-        public void execute() throws Exception {
-          action.killDueToTimeout();
-          buffer.remove(action);
-        }
-      }, timeout);
+      action.setCancelTimeout(executor.schedule(new NamedRunnable("expire-action") {
+          @Override
+          public void execute() throws Exception {
+            action.killDueToTimeout();
+            buffer.remove(action);
+          }
+        }, customTimeout));
     }
   }
 }

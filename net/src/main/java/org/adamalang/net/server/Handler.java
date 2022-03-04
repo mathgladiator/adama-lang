@@ -10,16 +10,22 @@
 package org.adamalang.net.server;
 
 import io.netty.buffer.ByteBuf;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtClient;
 
 public class Handler implements ByteStream, ClientCodec.HandlerServer {
+  private final ServerNexus nexus;
   private final ByteStream upstream;
 
-  public Handler(ByteStream upstream) {
+  public Handler(ServerNexus nexus, ByteStream upstream) {
+    this.nexus = nexus;
     this.upstream = upstream;
   }
 
@@ -94,12 +100,12 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer {
   }
 
   @Override
-  public void handle(ClientMessage.MeteringDeleteBatch payload) {
+  public void handle(ClientMessage.MeteringBegin payload) {
 
   }
 
   @Override
-  public void handle(ClientMessage.MeteringBegin payload) {
+  public void handle(ClientMessage.MeteringDeleteBatch payload) {
 
   }
 
@@ -110,12 +116,40 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer {
 
   @Override
   public void handle(ClientMessage.ReflectRequest payload) {
+    nexus.service.reflect(new Key(payload.space, payload.key), new Callback<>() {
+      @Override
+      public void success(String value) {
+        ServerMessage.ReflectResponse response = new ServerMessage.ReflectResponse();
+        response.schema = value;
+        ByteBuf buf = upstream.create(8 + value.length());
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
 
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
   }
 
   @Override
   public void handle(ClientMessage.CreateRequest payload) {
+    nexus.service.create(new NtClient(payload.agent, payload.authority), new Key(payload.space, payload.key), payload.arg, payload.entropy, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        ByteBuf buf = upstream.create(8);
+        ServerCodec.write(buf, new ServerMessage.CreateResponse());
+        upstream.next(buf);
+        upstream.completed();
+      }
 
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    });
   }
 
   @Override
@@ -123,5 +157,6 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer {
     ByteBuf buf = upstream.create(8);
     ServerCodec.write(buf, new ServerMessage.PingResponse());
     upstream.next(buf);
+    upstream.completed();
   }
 }

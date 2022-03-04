@@ -59,6 +59,10 @@ public class ClientCodec {
     public abstract void handle(PingRequest payload);
 
     @Override
+    public void request(int bytes) {
+    }
+
+    @Override
     public ByteBuf create(int size) {
       throw new UnsupportedOperationException();
     }

@@ -52,9 +52,12 @@ public class ChannelClient extends ChannelCommon {
     }
     initiations.clear();
     lifecycle.disconnected();
-    if (!sentConnected) {
-      lifecycle.failed(new ErrorCodeException(ErrorCodes.NET_CONNECT_FAILED_TO_CONNECT_LONG));
-    }
+  }
+
+  public void close() {
+    context.executor().execute(() -> {
+      context.close();
+    });
   }
 
   public void open(ByteStream downstream, Callback<ByteStream> opened) {

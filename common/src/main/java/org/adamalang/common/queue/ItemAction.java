@@ -13,16 +13,19 @@ import org.adamalang.common.metrics.ItemActionMonitor;
 
 /** an unit of work that sits within a queue for processing */
 public abstract class ItemAction<T> {
+  private static final Runnable DEFAULT_CANCEL_TIMEOUT = () -> {};
   private final int errorTimeout;
   private final int errorRejected;
   private final ItemActionMonitor.ItemActionMonitorInstance monitor;
   private boolean alive;
+  private Runnable cancelTimeout;
 
   public ItemAction(int errorTimeout, int errorRejected, ItemActionMonitor.ItemActionMonitorInstance monitor) {
     this.alive = true;
     this.errorTimeout = errorTimeout;
     this.errorRejected = errorRejected;
     this.monitor = monitor;
+    this.cancelTimeout = DEFAULT_CANCEL_TIMEOUT;
   }
 
   /** is the queue action alive */
@@ -35,6 +38,7 @@ public abstract class ItemAction<T> {
     if (alive) {
       executeNow(item);
       alive = false;
+      cancelTimeout.run();
       monitor.executed();
     }
   }
@@ -57,6 +61,11 @@ public abstract class ItemAction<T> {
       alive = false;
       failure(errorRejected);
       monitor.rejected();
+      cancelTimeout.run();
     }
+  }
+
+  public void setCancelTimeout(Runnable cancelTimeout) {
+    this.cancelTimeout = cancelTimeout;
   }
 }

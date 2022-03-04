@@ -9,13 +9,14 @@
  */
 package org.adamalang.net.mocks;
 
-import org.adamalang.net.client.contracts.CreateCallback;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
 import org.junit.Assert;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class AssertCreateFailure implements CreateCallback {
+public class AssertCreateFailure implements Callback<Void> {
 
   private final CountDownLatch latch;
   public int code;
@@ -25,15 +26,16 @@ public class AssertCreateFailure implements CreateCallback {
   }
 
   @Override
-  public void created() {
+  public void success(Void value) {
     latch.countDown();
     Assert.fail();
   }
 
   @Override
-  public void error(int code) {
-    this.code = code;
+  public void failure(ErrorCodeException ex) {
+    this.code = ex.code;
     latch.countDown();
+
   }
 
   public void await(int expectedCode) {

@@ -73,7 +73,7 @@ public class ItemQueueTests {
   }
 
   @Test
-  public void rejectAllOnUnReady() throws Exception {
+  public void nuke() throws Exception {
     SimpleExecutor executor = SimpleExecutor.create("items");
     try {
       ItemQueue<String> queue = new ItemQueue<>(executor, 100, 5000);
@@ -83,6 +83,7 @@ public class ItemQueueTests {
         queue.add(items[k]);
       }
       queue.unready();
+      queue.nuke();
       for (int k = 0; k < items.length; k++) {
         items[k].awaitDone();
       }

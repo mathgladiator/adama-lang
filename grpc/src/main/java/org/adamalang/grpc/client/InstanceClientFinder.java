@@ -193,6 +193,7 @@ public class InstanceClientFinder {
           createdClient.close();
           client = null;
           queue.unready();
+          queue.nuke();
         }
       });
     }

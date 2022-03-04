@@ -167,6 +167,9 @@ public class CodecCodeGen {
         }
       }
       sb.append("    @Override\n");
+      sb.append("    public void request(int bytes) {\n");
+      sb.append("    }\n\n");
+      sb.append("    @Override\n");
       sb.append("    public ByteBuf create(int size) {\n");
       sb.append("      throw new UnsupportedOperationException();\n");
       sb.append("    }\n\n");

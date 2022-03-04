@@ -19,7 +19,7 @@ public class Server {
   public Server(ServerNexus nexus) throws Exception {
     org.adamalang.common.net.Server server = new org.adamalang.common.net.Server( );
     this.serverThreadSupplier = ExceptionSupplier.TO_RUNTIME(() -> {
-      return server.start(nexus.base, nexus.port, upstream -> new Handler(upstream));
+      return server.start(nexus.base, nexus.port, upstream -> new Handler(nexus, upstream));
     });
   }
 

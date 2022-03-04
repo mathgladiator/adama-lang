@@ -25,7 +25,6 @@ public class ClientMetrics {
   public final Runnable client_too_many_failures_disconnected_by_peer;
   public final ItemActionMonitor client_metering_exchange;
   public final ItemActionMonitor client_reflection;
-  public final ItemActionMonitor client_create;
   public final ItemActionMonitor client_connection_send;
   public final ItemActionMonitor client_connection_update;
   public final ItemActionMonitor client_connection_attach;
@@ -33,7 +32,8 @@ public class ClientMetrics {
   public final StreamMonitor client_open_document;
 
   public final ItemActionMonitor client_ping;
-
+  public final ItemActionMonitor client_create;
+  public final ItemActionMonitor client_close;
 
   public ClientMetrics(MetricsFactory factory) {
     // old client here; move down as needed
@@ -46,8 +46,6 @@ public class ClientMetrics {
     client_too_many_failures_finding_client = factory.counter("client_too_many_failures_finding_client");
     client_too_many_failures_disconnected_by_peer = factory.counter("client_too_many_failures_disconnected_by_peer");
     client_metering_exchange = factory.makeItemActionMonitor("client_metering_exchange");
-    client_reflection = factory.makeItemActionMonitor("client_reflection");
-    client_create = factory.makeItemActionMonitor("client_create");
     client_connection_send = factory.makeItemActionMonitor("client_connection_send");
     client_connection_update = factory.makeItemActionMonitor("client_connection_update");
     client_connection_attach = factory.makeItemActionMonitor("client_connection_attach");
@@ -56,5 +54,8 @@ public class ClientMetrics {
 
     // new client here
     client_ping = factory.makeItemActionMonitor("client_ping");
+    client_create = factory.makeItemActionMonitor("client_create");
+    client_reflection = factory.makeItemActionMonitor("client_reflection");
+    client_close = factory.makeItemActionMonitor("client_close");
   }
 }

@@ -32,6 +32,10 @@ public class ServerCodec {
     public abstract void handle(HeatPayload payload);
 
     @Override
+    public void request(int bytes) {
+    }
+
+    @Override
     public ByteBuf create(int size) {
       throw new UnsupportedOperationException();
     }
@@ -60,6 +64,10 @@ public class ServerCodec {
 
   public static abstract class StreamCreation implements ByteStream {
     public abstract void handle(CreateResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
 
     @Override
     public ByteBuf create(int size) {
@@ -92,6 +100,10 @@ public class ServerCodec {
     public abstract void handle(PingResponse payload);
 
     @Override
+    public void request(int bytes) {
+    }
+
+    @Override
     public ByteBuf create(int size) {
       throw new UnsupportedOperationException();
     }
@@ -122,6 +134,10 @@ public class ServerCodec {
     public abstract void handle(ScanDeploymentResponse payload);
 
     @Override
+    public void request(int bytes) {
+    }
+
+    @Override
     public ByteBuf create(int size) {
       throw new UnsupportedOperationException();
     }
@@ -150,6 +166,10 @@ public class ServerCodec {
 
   public static abstract class StreamReflection implements ByteStream {
     public abstract void handle(ReflectResponse payload);
+
+    @Override
+    public void request(int bytes) {
+    }
 
     @Override
     public ByteBuf create(int size) {
@@ -186,6 +206,10 @@ public class ServerCodec {
     public abstract void handle(StreamError payload);
 
     public abstract void handle(StreamData payload);
+
+    @Override
+    public void request(int bytes) {
+    }
 
     @Override
     public ByteBuf create(int size) {
@@ -239,6 +263,10 @@ public class ServerCodec {
     public abstract void handle(InventoryHeartbeat payload);
 
     @Override
+    public void request(int bytes) {
+    }
+
+    @Override
     public ByteBuf create(int size) {
       throw new UnsupportedOperationException();
     }
@@ -271,6 +299,10 @@ public class ServerCodec {
     public abstract void handle(MeteringBatchRemoved payload);
 
     public abstract void handle(MeteringBatchFound payload);
+
+    @Override
+    public void request(int bytes) {
+    }
 
     @Override
     public ByteBuf create(int size) {

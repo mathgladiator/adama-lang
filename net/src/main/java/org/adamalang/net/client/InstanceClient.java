@@ -18,6 +18,8 @@ import org.adamalang.common.net.NetBase;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.contracts.*;
+import org.adamalang.net.codec.ClientCodec;
+import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
 
@@ -53,136 +55,218 @@ public class InstanceClient implements AutoCloseable {
     this.logger = logger;
     this.alive = new AtomicBoolean(true);
     this.backoff = 1;
+    retryConnection();
+  }
 
+  private void retryConnection() {
+    if (alive.get()) {
+      base.connect(this.target, new org.adamalang.common.net.Lifecycle() {
+        @Override
+        public void connected(ChannelClient channel) {
+          executor.execute(new NamedRunnable("channel-client-ready") {
+            @Override
+            public void execute() throws Exception {
+              backoff = 1;
+              if (alive.get()) {
+                client.ready(channel);
+              }
+            }
+          });
+        }
 
-    /*
-    executor.execute(new NamedRunnable("client-setup", target) {
-      @Override
-      public void execute() throws Exception {
-        downstream = new MultiplexObserver();
-        downstream.upstream = stub.multiplexedProtocol(downstream);
-      }
-    });
-    */
+        @Override
+        public void failed(ErrorCodeException ex) {
+          executor.execute(new NamedRunnable("channel-client-failed") {
+            @Override
+            public void execute() throws Exception {
+              client.unready();
+              scheduleWithinExecutor();
+            }
+          });
+        }
+
+        @Override
+        public void disconnected() {
+          executor.execute(new NamedRunnable("channel-client-disconnect") {
+            @Override
+            public void execute() throws Exception {
+              client.unready();
+              scheduleWithinExecutor();
+            }
+          });
+        }
+
+        private void scheduleWithinExecutor() {
+          backoff = (int) (1 + backoff * Math.random());
+          if (backoff > 2000) {
+            backoff = (int) (1500 + 500 * Math.random());
+          }
+          executor.schedule(new NamedRunnable("client-retry") {
+            @Override
+            public void execute() throws Exception {
+              retryConnection();
+            }
+          }, backoff);
+        }
+      });
+    }
   }
 
   /** block the current thread to ensure the client is connected right now */
   public boolean ping(int timeLimit) throws Exception {
     AtomicBoolean success = new AtomicBoolean(false);
     CountDownLatch latch = new CountDownLatch(1);
-    client.add(new ItemAction<>(ErrorCodes.ADAMA_NET_PING_TIMEOUT, ErrorCodes.ADAMA_NET_PING_REJECTED, metrics.client_ping.start()) {
+    executor.execute(new NamedRunnable("execute-ping") {
       @Override
-      protected void executeNow(ChannelClient client) {
-        client.open(new ServerCodec.StreamPing() {
+      public void execute() throws Exception {
+        client.add(new ItemAction<>(ErrorCodes.ADAMA_NET_PING_TIMEOUT, ErrorCodes.ADAMA_NET_PING_REJECTED, metrics.client_ping.start()) {
           @Override
-          public void handle(ServerMessage.PingResponse payload) {
-            success.set(true);
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamPing() {
+              @Override
+              public void handle(ServerMessage.PingResponse payload) {
+                success.set(true);
+              }
+
+              @Override
+              public void completed() {
+                latch.countDown();
+              }
+
+              @Override
+              public void error(int code) {
+                latch.countDown();
+              }
+            }, new Callback<ByteStream>() {
+              @Override
+              public void success(ByteStream stream) {
+                ByteBuf toWrite = stream.create(4);
+                ClientCodec.write(toWrite, new ClientMessage.PingRequest());
+                stream.next(toWrite);
+                stream.completed();
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                latch.countDown();
+              }
+            });
           }
 
           @Override
-          public void request(int bytes) {
-
-          }
-
-          @Override
-          public void completed() {
+          protected void failure(int code) {
             latch.countDown();
           }
-
-          @Override
-          public void error(int errorCode) {
-            latch.countDown();
-          }
-        }, new Callback<ByteStream>() {
-          @Override
-          public void success(ByteStream value) {
-
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-
-          }
-        });
-      }
-
-      @Override
-      protected void failure(int code) {
-        latch.countDown();
+        }, timeLimit);
       }
     });
     latch.await(timeLimit, TimeUnit.MILLISECONDS);
     return success.get();
-    /*
-    int backoff = 5;
-    int time = 0;
-    do {
-      AtomicBoolean success = new AtomicBoolean(false);
-      CountDownLatch latch = new CountDownLatch(1);
-      this.stub.ping(PingRequest.newBuilder().build(), new StreamObserver<>() {
-        @Override
-        public void onNext(PingResponse pingResponse) {
-          success.set(true);
-          latch.countDown();
-        }
-
-        @Override
-        public void onError(Throwable throwable) {
-          latch.countDown();
-        }
-
-        @Override
-        public void onCompleted() {
-          latch.countDown();
-        }
-      });
-      latch.await(timeLimit - time, TimeUnit.MILLISECONDS);
-      if (success.get()) {
-        return true;
-      }
-      Thread.sleep(backoff);
-      time += backoff;
-      backoff += Math.round(backoff * rng.nextDouble() + 1);
-    } while (time < timeLimit);
-    return false;
-    */
   }
 
   /** create a document */
-  public void create(String agent, String authority, String space, String key, String entropy, String arg, CreateCallback callback) {
-    /*
-    CreateRequest.Builder builder = CreateRequest.newBuilder().setAgent(agent).setAuthority(authority).setSpace(space).setKey(key).setArg(arg);
-    if (entropy != null) {
-      builder.setEntropy(entropy);
-    }
-    CreateRequest request = builder.build();
-    stub.create(request, CreateCallback.WRAP(callback, logger));
-    */
-  }
-
-  public void reflect(String space, String key, Callback<String> callback) {
-    /*
-    executor.execute(new NamedRunnable("reflect") {
+  public void create(String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
+    executor.execute(new NamedRunnable("execute-create") {
       @Override
       public void execute() throws Exception {
-        stub.reflect(ReflectRequest.newBuilder().setSpace(space).setKey(key).build(), new StreamObserver<ReflectResponse>() {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_CREATE_TIMEOUT, ErrorCodes.ADAMA_NET_CREATE_REJECTED, metrics.client_create.start()) {
           @Override
-          public void onNext(ReflectResponse reflectResponse) {
-            callback.success(reflectResponse.getSchema());
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamCreation() {
+              @Override
+              public void handle(ServerMessage.CreateResponse payload) {
+                callback.success(null);
+              }
+
+              @Override
+              public void completed() {
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new Callback<ByteStream>() {
+              @Override
+              public void success(ByteStream stream) {
+                ByteBuf toWrite = stream.create(agent.length() + authority.length() + space.length() + key.length() + entropy.length() + arg.length() + origin.length() + 40);
+                ClientMessage.CreateRequest create = new ClientMessage.CreateRequest();
+                create.origin = origin;
+                create.agent = agent;
+                create.authority = authority;
+                create.space = space;
+                create.key = key;
+                create.entropy = entropy;
+                create.arg = arg;
+                ClientCodec.write(toWrite, create);
+                stream.next(toWrite);
+                stream.completed();
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                callback.failure(ex);
+              }
+            });
           }
 
           @Override
-          public void onError(Throwable throwable) {
-            callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.GRPC_REFLECT_UNKNOWN_EXCEPTION, throwable, logger));
-          }
-
-          @Override
-          public void onCompleted() {
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
           }
         });
       }
     });
-     */
+  }
+
+  public void reflect(String space, String key, Callback<String> callback) {
+    executor.execute(new NamedRunnable("execute-reflect") {
+      @Override
+      public void execute() throws Exception {
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_CREATE_TIMEOUT, ErrorCodes.ADAMA_NET_CREATE_REJECTED, metrics.client_create.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.open(new ServerCodec.StreamReflection() {
+              @Override
+              public void handle(ServerMessage.ReflectResponse payload) {
+                callback.success(payload.schema);
+              }
+
+              @Override
+              public void completed() {
+
+              }
+
+              @Override
+              public void error(int errorCode) {
+                callback.failure(new ErrorCodeException(errorCode));
+              }
+            }, new Callback<ByteStream>() {
+              @Override
+              public void success(ByteStream stream) {
+                ByteBuf toWrite = stream.create(space.length() + key.length() + 10);
+                ClientMessage.ReflectRequest reflect = new ClientMessage.ReflectRequest();
+                reflect.space = space;
+                reflect.key = key;
+                ClientCodec.write(toWrite, reflect);
+                stream.next(toWrite);
+                stream.completed();
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                callback.failure(ex);
+              }
+            });
+          }
+
+          @Override
+          protected void failure(int code) {
+            callback.failure(new ErrorCodeException(code));
+          }
+        });
+      }
+    });
   }
 
   public void startMeteringExchange(MeteringStream meteringStream) {
@@ -223,20 +307,25 @@ public class InstanceClient implements AutoCloseable {
 
   @Override
   public void close() {
-    /*
-    executor.execute(new NamedRunnable("client-close", target) {
+    alive.set(false);
+    executor.execute(new NamedRunnable("close-connection") {
       @Override
       public void execute() throws Exception {
-        alive.set(false);
-        if (downstream != null) {
-          downstream.onCompleted();
-        }
-        if (upstream != null) {
-          upstream.onCompleted();
-        }
+        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_CLOSE_TIMEOUT, ErrorCodes.ADAMA_NET_CLOSE_REJECTED, metrics.client_close.start()) {
+          @Override
+          protected void executeNow(ChannelClient client) {
+            client.close();
+          }
+
+          @Override
+          protected void failure(int code) {
+            // don't care
+          }
+        });
+        client.unready();
+        client.nuke();
       }
     });
-    */
   }
 /*
   private class MeteringObserver implements StreamObserver<MeteringReverse> {

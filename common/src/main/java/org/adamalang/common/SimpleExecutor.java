@@ -9,10 +9,7 @@
  */
 package org.adamalang.common;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /** wraps Java executor for time and simplifies for Adama */
 public interface SimpleExecutor {
@@ -24,8 +21,8 @@ public interface SimpleExecutor {
     }
 
     @Override
-    public void schedule(NamedRunnable command, long milliseconds) {
-      // no-op
+    public Runnable schedule(NamedRunnable command, long milliseconds) {
+      return () -> {};
     }
 
     @Override
@@ -44,8 +41,9 @@ public interface SimpleExecutor {
       }
 
       @Override
-      public void schedule(NamedRunnable command, long milliseconds) {
-        realExecutor.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
+      public Runnable schedule(NamedRunnable command, long milliseconds) {
+        ScheduledFuture<?> future = realExecutor.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
+        return () -> future.cancel(false);
       }
 
       @Override
@@ -64,7 +62,7 @@ public interface SimpleExecutor {
   void execute(NamedRunnable command);
 
   /** schedule the given command to run after some milliseconds within the executor */
-  void schedule(NamedRunnable command, long milliseconds);
+  Runnable schedule(NamedRunnable command, long milliseconds);
 
   /** shutdown the executor */
   CountDownLatch shutdown();

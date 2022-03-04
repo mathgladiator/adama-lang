@@ -77,7 +77,9 @@ public class ConnectionGiveUpOnConnectDeadTests {
                           public void execute(NamedRunnable command) {}
 
                           @Override
-                          public void schedule(NamedRunnable command, long milliseconds) {}
+                          public Runnable schedule(NamedRunnable command, long milliseconds) {
+                            return () -> {};
+                          }
 
                           @Override
                           public CountDownLatch shutdown() {

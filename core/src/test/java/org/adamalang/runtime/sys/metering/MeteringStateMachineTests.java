@@ -47,8 +47,9 @@ public class MeteringStateMachineTests {
                 }
 
                 @Override
-                public void schedule(NamedRunnable command, long milliseconds) {
+                public Runnable schedule(NamedRunnable command, long milliseconds) {
                   service.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
+                  return () -> {};
                 }
 
                 @Override
@@ -96,8 +97,9 @@ public class MeteringStateMachineTests {
                 }
 
                 @Override
-                public void schedule(NamedRunnable command, long milliseconds) {
+                public Runnable schedule(NamedRunnable command, long milliseconds) {
                   service.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
+                  return () -> {};
                 }
 
                 @Override
@@ -183,8 +185,9 @@ public class MeteringStateMachineTests {
                 }
 
                 @Override
-                public void schedule(NamedRunnable command, long milliseconds) {
+                public Runnable schedule(NamedRunnable command, long milliseconds) {
                   service.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
+                  return () -> {};
                 }
 
                 @Override

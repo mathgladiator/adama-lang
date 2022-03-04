@@ -124,14 +124,17 @@ public class NetSuiteTests {
 
             @Override
             public void failure(ErrorCodeException ex) {
-
+              ex.printStackTrace();
             }
           });
         }
 
+        int attemptsLeft = 3;
         @Override
         public void failed(ErrorCodeException ex) {
-          ex.printStackTrace();
+          if (attemptsLeft-- > 0) {
+            base.connect("127.0.0.1:5001", this);
+          }
         }
 
         @Override
@@ -142,6 +145,24 @@ public class NetSuiteTests {
       Assert.assertTrue(phases.await(2000, TimeUnit.MILLISECONDS));
     } finally {
       base.shutdown();
+      CountDownLatch latchFailed = new CountDownLatch(1);
+      base.connect("127.0.0.1:5001", new Lifecycle() {
+        @Override
+        public void connected(ChannelClient channel) {
+
+        }
+
+        @Override
+        public void failed(ErrorCodeException ex) {
+          latchFailed.countDown();
+        }
+
+        @Override
+        public void disconnected() {
+
+        }
+      });
+      Assert.assertTrue(latchFailed.await(1000, TimeUnit.MILLISECONDS));
     }
   }
 
@@ -150,7 +171,7 @@ public class NetSuiteTests {
   public void sad_remote_error() throws Exception {
     NetBase base = new NetBase(identity(), 2, 4);
     try {
-      Runnable waitForServer = Server.start(base, 5001, new Handler() {
+      Runnable waitForServer = Server.start(base, 5002, new Handler() {
         @Override
         public ByteStream create(ByteStream upstream) {
           return new ByteStream() {
@@ -194,7 +215,7 @@ public class NetSuiteTests {
       thread.start();
       System.err.println("Server running");
       CountDownLatch phases = new CountDownLatch(10);
-      base.connect("127.0.0.1:5001", new Lifecycle() {
+      base.connect("127.0.0.1:5002", new Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {
           System.err.println("client connected");
@@ -247,9 +268,12 @@ public class NetSuiteTests {
           });
         }
 
+        int attemptsLeft = 3;
         @Override
         public void failed(ErrorCodeException ex) {
-          ex.printStackTrace();
+          if (attemptsLeft-- > 0) {
+            base.connect("127.0.0.1:5001", this);
+          }
         }
 
         @Override
