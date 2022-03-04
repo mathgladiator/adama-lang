@@ -20,7 +20,7 @@ public class ServerTests {
   @Test
   public void ping() throws Exception {
     try (TestBed bed = new TestBed( 20000, "@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
-      InstanceClient ic = new InstanceClient(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null, "127.0.0.1:20000", bed.clientExecutor, null, null);
+      InstanceClient ic = new InstanceClient(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null, "127.0.0.1:20000", bed.clientExecutor, null);
       try {
         Assert.assertFalse(ic.ping(2500));
         bed.startServer();

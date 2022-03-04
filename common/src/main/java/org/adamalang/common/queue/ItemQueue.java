@@ -58,6 +58,10 @@ public class ItemQueue<T> {
   }
 
   public void add(ItemAction<T> action, int customTimeout) {
+    if (item != null) {
+      action.execute(item);
+      return;
+    }
     if (buffer == null) {
       buffer = new ArrayList<>();
     }

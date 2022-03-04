@@ -380,6 +380,7 @@ public class ServerCodec {
   }
 
   private static StreamSeqResponse readBody_1632(ByteBuf buf, StreamSeqResponse o) {
+    o.op = buf.readIntLE();
     o.seq = buf.readIntLE();
     return o;
   }
@@ -401,6 +402,7 @@ public class ServerCodec {
   }
 
   private static StreamAskAttachmentResponse readBody_15546(ByteBuf buf, StreamAskAttachmentResponse o) {
+    o.op = buf.readIntLE();
     o.allowed = buf.readBoolean();
     return o;
   }
@@ -422,6 +424,7 @@ public class ServerCodec {
   }
 
   private static StreamError readBody_19546(ByteBuf buf, StreamError o) {
+    o.op = buf.readIntLE();
     o.code = buf.readIntLE();
     return o;
   }
@@ -616,6 +619,7 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(1632);
+    buf.writeIntLE(o.op);
     buf.writeIntLE(o.seq);
   }
 
@@ -625,6 +629,7 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(15546);
+    buf.writeIntLE(o.op);
     buf.writeBoolean(o.allowed);
   }
 
@@ -634,6 +639,7 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(19546);
+    buf.writeIntLE(o.op);
     buf.writeIntLE(o.code);
   }
 

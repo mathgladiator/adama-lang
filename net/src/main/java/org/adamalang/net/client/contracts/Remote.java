@@ -12,7 +12,7 @@ package org.adamalang.net.client.contracts;
 import org.adamalang.common.Callback;
 
 public interface Remote {
-  void canAttach(AskAttachmentCallback callback);
+  void canAttach(Callback<Boolean> callback);
 
   void attach(String id, String name, String contentType, long size, String md5, String sha384, Callback<Integer> callback);
 

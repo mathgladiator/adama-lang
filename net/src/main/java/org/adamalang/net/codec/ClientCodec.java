@@ -14,15 +14,15 @@ import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ClientMessage.RequestInventoryHeartbeat;
 import org.adamalang.net.codec.ClientMessage.RequestHeat;
-import org.adamalang.net.codec.ClientMessage.StreamDisconnect;
 import org.adamalang.net.codec.ClientMessage.StreamAttach;
 import org.adamalang.net.codec.ClientMessage.StreamAskAttachmentRequest;
+import org.adamalang.net.codec.ClientMessage.StreamDisconnect;
 import org.adamalang.net.codec.ClientMessage.StreamUpdate;
 import org.adamalang.net.codec.ClientMessage.StreamSend;
 import org.adamalang.net.codec.ClientMessage.StreamConnect;
 import org.adamalang.net.codec.ClientMessage.MeteringDeleteBatch;
 import org.adamalang.net.codec.ClientMessage.MeteringBegin;
-import org.adamalang.net.codec.ClientMessage.ScanDeploymentRequest;
+import org.adamalang.net.codec.ClientMessage.ScanDeployment;
 import org.adamalang.net.codec.ClientMessage.ReflectRequest;
 import org.adamalang.net.codec.ClientMessage.CreateRequest;
 import org.adamalang.net.codec.ClientMessage.PingRequest;
@@ -34,11 +34,11 @@ public class ClientCodec {
 
     public abstract void handle(RequestHeat payload);
 
-    public abstract void handle(StreamDisconnect payload);
-
     public abstract void handle(StreamAttach payload);
 
     public abstract void handle(StreamAskAttachmentRequest payload);
+
+    public abstract void handle(StreamDisconnect payload);
 
     public abstract void handle(StreamUpdate payload);
 
@@ -50,7 +50,7 @@ public class ClientCodec {
 
     public abstract void handle(MeteringBegin payload);
 
-    public abstract void handle(ScanDeploymentRequest payload);
+    public abstract void handle(ScanDeployment payload);
 
     public abstract void handle(ReflectRequest payload);
 
@@ -76,14 +76,14 @@ public class ClientCodec {
         case 1919:
           handle(readBody_1919(buf, new RequestHeat()));
           return;
-        case 17345:
-          handle(readBody_17345(buf, new StreamDisconnect()));
-          return;
         case 16345:
           handle(readBody_16345(buf, new StreamAttach()));
           return;
         case 15345:
           handle(readBody_15345(buf, new StreamAskAttachmentRequest()));
+          return;
+        case 13335:
+          handle(readBody_13335(buf, new StreamDisconnect()));
           return;
         case 14345:
           handle(readBody_14345(buf, new StreamUpdate()));
@@ -101,7 +101,7 @@ public class ClientCodec {
           handle(readBody_1243(buf, new MeteringBegin()));
           return;
         case 8921:
-          handle(readBody_8921(buf, new ScanDeploymentRequest()));
+          handle(readBody_8921(buf, new ScanDeployment()));
           return;
         case 6735:
           handle(readBody_6735(buf, new ReflectRequest()));
@@ -119,15 +119,15 @@ public class ClientCodec {
   public static interface HandlerServer {
     public void handle(RequestInventoryHeartbeat payload);
     public void handle(RequestHeat payload);
-    public void handle(StreamDisconnect payload);
     public void handle(StreamAttach payload);
     public void handle(StreamAskAttachmentRequest payload);
+    public void handle(StreamDisconnect payload);
     public void handle(StreamUpdate payload);
     public void handle(StreamSend payload);
     public void handle(StreamConnect payload);
     public void handle(MeteringDeleteBatch payload);
     public void handle(MeteringBegin payload);
-    public void handle(ScanDeploymentRequest payload);
+    public void handle(ScanDeployment payload);
     public void handle(ReflectRequest payload);
     public void handle(CreateRequest payload);
     public void handle(PingRequest payload);
@@ -141,14 +141,14 @@ public class ClientCodec {
       case 1919:
         handler.handle(readBody_1919(buf, new RequestHeat()));
         return;
-      case 17345:
-        handler.handle(readBody_17345(buf, new StreamDisconnect()));
-        return;
       case 16345:
         handler.handle(readBody_16345(buf, new StreamAttach()));
         return;
       case 15345:
         handler.handle(readBody_15345(buf, new StreamAskAttachmentRequest()));
+        return;
+      case 13335:
+        handler.handle(readBody_13335(buf, new StreamDisconnect()));
         return;
       case 14345:
         handler.handle(readBody_14345(buf, new StreamUpdate()));
@@ -166,7 +166,7 @@ public class ClientCodec {
         handler.handle(readBody_1243(buf, new MeteringBegin()));
         return;
       case 8921:
-        handler.handle(readBody_8921(buf, new ScanDeploymentRequest()));
+        handler.handle(readBody_8921(buf, new ScanDeployment()));
         return;
       case 6735:
         handler.handle(readBody_6735(buf, new ReflectRequest()));
@@ -220,26 +220,6 @@ public class ClientCodec {
     return o;
   }
 
-  public static StreamDisconnect read_StreamDisconnect(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 17345:
-        return readBody_17345(buf, new StreamDisconnect());
-    }
-    return null;
-  }
-
-  public static StreamDisconnect readRegister_StreamDisconnect(ByteBuf buf, StreamDisconnect o) {
-    switch (buf.readIntLE()) {
-      case 17345:
-        return readBody_17345(buf, o);
-    }
-    return null;
-  }
-
-  private static StreamDisconnect readBody_17345(ByteBuf buf, StreamDisconnect o) {
-    return o;
-  }
-
   public static StreamAttach read_StreamAttach(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 16345:
@@ -257,6 +237,7 @@ public class ClientCodec {
   }
 
   private static StreamAttach readBody_16345(ByteBuf buf, StreamAttach o) {
+    o.op = buf.readIntLE();
     o.id = Helper.readString(buf);
     o.filename = Helper.readString(buf);
     o.contentType = Helper.readString(buf);
@@ -283,6 +264,27 @@ public class ClientCodec {
   }
 
   private static StreamAskAttachmentRequest readBody_15345(ByteBuf buf, StreamAskAttachmentRequest o) {
+    o.op = buf.readIntLE();
+    return o;
+  }
+
+  public static StreamDisconnect read_StreamDisconnect(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 13335:
+        return readBody_13335(buf, new StreamDisconnect());
+    }
+    return null;
+  }
+
+  public static StreamDisconnect readRegister_StreamDisconnect(ByteBuf buf, StreamDisconnect o) {
+    switch (buf.readIntLE()) {
+      case 13335:
+        return readBody_13335(buf, o);
+    }
+    return null;
+  }
+
+  private static StreamDisconnect readBody_13335(ByteBuf buf, StreamDisconnect o) {
     return o;
   }
 
@@ -324,6 +326,7 @@ public class ClientCodec {
   }
 
   private static StreamSend readBody_13345(ByteBuf buf, StreamSend o) {
+    o.op = buf.readIntLE();
     o.channel = Helper.readString(buf);
     o.marker = Helper.readString(buf);
     o.message = Helper.readString(buf);
@@ -397,15 +400,15 @@ public class ClientCodec {
     return o;
   }
 
-  public static ScanDeploymentRequest read_ScanDeploymentRequest(ByteBuf buf) {
+  public static ScanDeployment read_ScanDeployment(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 8921:
-        return readBody_8921(buf, new ScanDeploymentRequest());
+        return readBody_8921(buf, new ScanDeployment());
     }
     return null;
   }
 
-  public static ScanDeploymentRequest readRegister_ScanDeploymentRequest(ByteBuf buf, ScanDeploymentRequest o) {
+  public static ScanDeployment readRegister_ScanDeployment(ByteBuf buf, ScanDeployment o) {
     switch (buf.readIntLE()) {
       case 8921:
         return readBody_8921(buf, o);
@@ -413,7 +416,7 @@ public class ClientCodec {
     return null;
   }
 
-  private static ScanDeploymentRequest readBody_8921(ByteBuf buf, ScanDeploymentRequest o) {
+  private static ScanDeployment readBody_8921(ByteBuf buf, ScanDeployment o) {
     o.space = Helper.readString(buf);
     return o;
   }
@@ -503,20 +506,13 @@ public class ClientCodec {
     buf.writeIntLE(1919);
   }
 
-  public static void write(ByteBuf buf, StreamDisconnect o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(17345);
-  }
-
   public static void write(ByteBuf buf, StreamAttach o) {
     if (o == null) {
       buf.writeIntLE(0);
       return;
     }
     buf.writeIntLE(16345);
+    buf.writeIntLE(o.op);
     Helper.writeString(buf, o.id);;
     Helper.writeString(buf, o.filename);;
     Helper.writeString(buf, o.contentType);;
@@ -531,6 +527,15 @@ public class ClientCodec {
       return;
     }
     buf.writeIntLE(15345);
+    buf.writeIntLE(o.op);
+  }
+
+  public static void write(ByteBuf buf, StreamDisconnect o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(13335);
   }
 
   public static void write(ByteBuf buf, StreamUpdate o) {
@@ -548,6 +553,7 @@ public class ClientCodec {
       return;
     }
     buf.writeIntLE(13345);
+    buf.writeIntLE(o.op);
     Helper.writeString(buf, o.channel);;
     Helper.writeString(buf, o.marker);;
     Helper.writeString(buf, o.message);;
@@ -584,7 +590,7 @@ public class ClientCodec {
     buf.writeIntLE(1243);
   }
 
-  public static void write(ByteBuf buf, ScanDeploymentRequest o) {
+  public static void write(ByteBuf buf, ScanDeployment o) {
     if (o == null) {
       buf.writeIntLE(0);
       return;

@@ -84,7 +84,6 @@ public class ChannelClient extends ChannelCommon {
     ByteBuf inBuffer = (ByteBuf) msg;
     byte type = inBuffer.readByte();
     int id = inBuffer.readIntLE();
-
     if (type == 0x10) {
       Consumer<Boolean> callback = initiations.remove(id);
       if (callback != null) {

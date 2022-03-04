@@ -30,21 +30,20 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** a managed client that makes talking to the gRPC server nice */
+/** a client using the common-net code to connect to a remote server */
 public class InstanceClient implements AutoCloseable {
   private final NetBase base;
   public final String target;
   private final SimpleExecutor executor;
   private final ClientMetrics metrics;
   private final HeatMonitor monitor;
-  private final Lifecycle lifecycle;
   private final Random rng;
   private final ExceptionLogger logger;
   private final AtomicBoolean alive;
   private int backoff;
   private ItemQueue<ChannelClient> client;
 
-  public InstanceClient(NetBase base, ClientMetrics metrics, HeatMonitor monitor, String target, SimpleExecutor executor, Lifecycle lifecycle, ExceptionLogger logger) throws Exception {
+  public InstanceClient(NetBase base, ClientMetrics metrics, HeatMonitor monitor, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
     this.base = base;
     this.target = target;
     this.executor = executor;
@@ -52,8 +51,6 @@ public class InstanceClient implements AutoCloseable {
     this.monitor = monitor;
     this.rng = new Random();
     this.client = new ItemQueue<>(executor, 64, 2500);
-  //  this.downstream = null;
-    this.lifecycle = lifecycle;
     this.logger = logger;
     this.alive = new AtomicBoolean(true);
     this.backoff = 1;
@@ -65,6 +62,7 @@ public class InstanceClient implements AutoCloseable {
       base.connect(this.target, new org.adamalang.common.net.Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {
+          metrics.client_info_start.run();
           channel.open(new ServerCodec.StreamInfo() {
             @Override
             public void handle(ServerMessage.HeatPayload heat) {
@@ -78,32 +76,31 @@ public class InstanceClient implements AutoCloseable {
 
             @Override
             public void completed() {
-
+              metrics.client_info_completed.run();
+              // TODO: this could be a useful signal that a disconnect is inbound
             }
 
             @Override
             public void error(int errorCode) {
-
+              logger.convertedToErrorCode(new NullPointerException("base.connect error:" + errorCode), errorCode);
+              metrics.client_info_failed_downstream.run();
             }
-          }, new Callback<ByteStream>() {
+          }, new Callback<>() {
             @Override
-            public void success(ByteStream value) {
+            public void success(ByteStream stream) {
               if (monitor != null) {
-                ByteBuf buf = value.create(8);
-                ClientCodec.write(buf, new ClientMessage.RequestHeat());
-                value.next(buf);
+                ByteBuf monitorWrite = stream.create(8);
+                ClientCodec.write(monitorWrite, new ClientMessage.RequestHeat());
+                stream.next(monitorWrite);
               }
-              {
-                ByteBuf buf = value.create(8);
-                ClientCodec.write(buf, new ClientMessage.RequestInventoryHeartbeat());
-                value.next(buf);
-              }
+              ByteBuf requestInventoryWrite = stream.create(8);
+              ClientCodec.write(requestInventoryWrite, new ClientMessage.RequestInventoryHeartbeat());
+              stream.next(requestInventoryWrite);
             }
 
             @Override
             public void failure(ErrorCodeException ex) {
-              // SHOULD NOT HAPPEN unless disconnected, need to inst
-              // TODO: instrument
+              metrics.client_info_failed_ask.run();
             }
           });
 
@@ -141,16 +138,19 @@ public class InstanceClient implements AutoCloseable {
         }
 
         private void scheduleWithinExecutor() {
-          backoff = (int) (1 + backoff * Math.random());
-          if (backoff > 2000) {
-            backoff = (int) (1500 + 500 * Math.random());
-          }
-          executor.schedule(new NamedRunnable("client-retry") {
-            @Override
-            public void execute() throws Exception {
-              retryConnection();
+          if (alive.get()) {
+            metrics.client_retry.run();
+            backoff = (int) (1 + backoff * Math.random());
+            if (backoff > 1000) {
+              backoff = (int) (500 + 500 * Math.random());
             }
-          }, backoff);
+            executor.schedule(new NamedRunnable("client-retry") {
+              @Override
+              public void execute() throws Exception {
+                retryConnection();
+              }
+            }, backoff);
+          }
         }
       });
     }
@@ -187,7 +187,6 @@ public class InstanceClient implements AutoCloseable {
                 ByteBuf toWrite = stream.create(4);
                 ClientCodec.write(toWrite, new ClientMessage.PingRequest());
                 stream.next(toWrite);
-                stream.completed();
               }
 
               @Override
@@ -209,7 +208,8 @@ public class InstanceClient implements AutoCloseable {
   }
 
   /** create a document */
-  public void create(String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
+  public void create(String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callbackRaw) {
+    Callback<Void> callback = metrics.client_create_cb.wrap(callbackRaw);
     executor.execute(new NamedRunnable("execute-create") {
       @Override
       public void execute() throws Exception {
@@ -230,7 +230,7 @@ public class InstanceClient implements AutoCloseable {
               public void error(int errorCode) {
                 callback.failure(new ErrorCodeException(errorCode));
               }
-            }, new Callback<ByteStream>() {
+            }, new Callback<>() {
               @Override
               public void success(ByteStream stream) {
                 ByteBuf toWrite = stream.create(agent.length() + authority.length() + space.length() + key.length() + entropy.length() + arg.length() + origin.length() + 40);
@@ -244,7 +244,6 @@ public class InstanceClient implements AutoCloseable {
                 create.arg = arg;
                 ClientCodec.write(toWrite, create);
                 stream.next(toWrite);
-                stream.completed();
               }
 
               @Override
@@ -256,6 +255,7 @@ public class InstanceClient implements AutoCloseable {
 
           @Override
           protected void failure(int code) {
+            System.err.println("item-queue: failure");
             callback.failure(new ErrorCodeException(code));
           }
         });
@@ -263,7 +263,8 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
-  public void reflect(String space, String key, Callback<String> callback) {
+  public void reflect(String space, String key, Callback<String> callbackRaw) {
+    Callback<String> callback = metrics.client_reflection_cb.wrap(callbackRaw);
     executor.execute(new NamedRunnable("execute-reflect") {
       @Override
       public void execute() throws Exception {
@@ -294,7 +295,6 @@ public class InstanceClient implements AutoCloseable {
                 reflect.key = key;
                 ClientCodec.write(toWrite, reflect);
                 stream.next(toWrite);
-                stream.completed();
               }
 
               @Override
@@ -333,7 +333,8 @@ public class InstanceClient implements AutoCloseable {
     });
   }
 
-  public void scanDeployments(String space, Callback<Void> callback) {
+  public void scanDeployments(String space, Callback<Void> callbackRaw) {
+    Callback<Void> callback = metrics.client_scan_deployment_cb.wrap(callbackRaw);
     executor.execute(new NamedRunnable("execute-scan") {
       @Override
       public void execute() throws Exception {
@@ -359,11 +360,10 @@ public class InstanceClient implements AutoCloseable {
               @Override
               public void success(ByteStream stream) {
                 ByteBuf toWrite = stream.create(space.length() + 10);
-                ClientMessage.ScanDeploymentRequest scan = new ClientMessage.ScanDeploymentRequest();
+                ClientMessage.ScanDeployment scan = new ClientMessage.ScanDeployment();
                 scan.space = space;
                 ClientCodec.write(toWrite, scan);
                 stream.next(toWrite);
-                stream.completed();
               }
 
               @Override
@@ -383,16 +383,14 @@ public class InstanceClient implements AutoCloseable {
   }
 
   /** connect to a document */
-  public void connect(String agent, String authority, String space, String key, String viewerState, String origin, Events events) {
+  public void connect(String origin, String agent, String authority, String space, String key, String viewerState, Events events) {
     ClientMessage.StreamConnect connectMessage = new ClientMessage.StreamConnect();
+    connectMessage.origin = origin;
     connectMessage.agent = agent;
     connectMessage.authority = authority;
     connectMessage.space = space;
     connectMessage.key = key;
     connectMessage.viewerState = viewerState;
-    connectMessage.origin = origin;
-
-
     executor.execute(new NamedRunnable("document-exchange") {
       @Override
       public void execute() throws Exception {

@@ -467,11 +467,7 @@ public class Handler extends AdamaGrpc.AdamaImplBase {
     }
 
     public void execute(ItemAction<CoreStream> task) {
-      if (stream != null) {
-        task.execute(stream);
-      } else {
-        queue.add(task);
-      }
+      queue.add(task);
     }
 
     public void ready(CoreStream stream) {

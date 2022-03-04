@@ -69,6 +69,9 @@ public class ServerMessage {
   @Flow("Document")
   public static class StreamError {
     @FieldOrder(1)
+    public int op;
+
+    @FieldOrder(2)
     public int code;
   }
 
@@ -76,6 +79,9 @@ public class ServerMessage {
   @Flow("Document")
   public static class StreamAskAttachmentResponse {
     @FieldOrder(1)
+    public int op;
+
+    @FieldOrder(2)
     public boolean allowed;
   }
 
@@ -83,6 +89,9 @@ public class ServerMessage {
   @Flow("Document")
   public static class StreamSeqResponse {
     @FieldOrder(1)
+    public int op;
+
+    @FieldOrder(2)
     public int seq;
   }
 

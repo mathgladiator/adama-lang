@@ -154,11 +154,7 @@ public class Connection {
   }
 
   private void bufferOrExecute(ItemAction<Remote> action) {
-    if (state == Label.Connected) {
-      action.execute(foundRemote);
-    } else {
-      queue.add(action);
-    }
+    queue.add(action);
   }
 
   public void canAttach(AskAttachmentCallback callback) {

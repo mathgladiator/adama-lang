@@ -58,7 +58,7 @@ public class ClientMessage {
 
   @TypeId(8921)
   @Flow("Server")
-  public static class ScanDeploymentRequest {
+  public static class ScanDeployment {
     @FieldOrder(1)
     public String space;
   }
@@ -96,10 +96,12 @@ public class ClientMessage {
   @Flow("Server")
   public static class StreamSend {
     @FieldOrder(1)
-    public String channel;
+    public int op;
     @FieldOrder(2)
-    public String marker;
+    public String channel;
     @FieldOrder(3)
+    public String marker;
+    @FieldOrder(4)
     public String message;
   }
 
@@ -110,36 +112,41 @@ public class ClientMessage {
     public String viewerState;
   }
 
+  @TypeId(13335)
+  @Flow("Server")
+  public static class StreamDisconnect {
+  }
+
   @TypeId(15345)
   @Flow("Server")
   public static class StreamAskAttachmentRequest {
+    @FieldOrder(1)
+    public int op;
   }
 
   @TypeId(16345)
   @Flow("Server")
   public static class StreamAttach {
     @FieldOrder(1)
-    public String id;
+    public int op;
 
     @FieldOrder(2)
-    public String filename;
+    public String id;
 
     @FieldOrder(3)
-    public String contentType;
+    public String filename;
 
     @FieldOrder(4)
-    public long size;
+    public String contentType;
 
     @FieldOrder(5)
-    public String md5;
+    public long size;
 
     @FieldOrder(6)
-    public String sha384;
-  }
+    public String md5;
 
-  @TypeId(17345)
-  @Flow("Server")
-  public static class StreamDisconnect {
+    @FieldOrder(7)
+    public String sha384;
   }
 
   @TypeId(1919)

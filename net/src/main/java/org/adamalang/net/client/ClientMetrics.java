@@ -9,10 +9,7 @@
  */
 package org.adamalang.net.client;
 
-import org.adamalang.common.metrics.Inflight;
-import org.adamalang.common.metrics.ItemActionMonitor;
-import org.adamalang.common.metrics.MetricsFactory;
-import org.adamalang.common.metrics.StreamMonitor;
+import org.adamalang.common.metrics.*;
 
 public class ClientMetrics {
   public final Inflight client_state_machines_alive;
@@ -23,7 +20,6 @@ public class ClientMetrics {
   public final ItemActionMonitor client_find_client;
   public final Runnable client_too_many_failures_finding_client;
   public final Runnable client_too_many_failures_disconnected_by_peer;
-  public final ItemActionMonitor client_reflection;
   public final ItemActionMonitor client_connection_send;
   public final ItemActionMonitor client_connection_update;
   public final ItemActionMonitor client_connection_attach;
@@ -32,10 +28,21 @@ public class ClientMetrics {
 
   public final ItemActionMonitor client_ping;
   public final ItemActionMonitor client_create;
+  public final CallbackMonitor client_create_cb;
   public final ItemActionMonitor client_close;
+  public final ItemActionMonitor client_reflection;
+  public final CallbackMonitor client_reflection_cb;
   public final ItemActionMonitor client_metering_exchange;
   public final ItemActionMonitor client_scan_deployment;
+  public final CallbackMonitor client_scan_deployment_cb;
   public final ItemActionMonitor client_document_exchange;
+
+  public final Runnable client_retry;
+  public final Runnable client_info_start;
+  public final Runnable client_info_completed;
+  public final Runnable client_info_failed_downstream;
+  public final Runnable client_info_failed_ask;
+
 
   public ClientMetrics(MetricsFactory factory) {
     // old client here; move down as needed
@@ -57,9 +64,18 @@ public class ClientMetrics {
     // new client here
     client_ping = factory.makeItemActionMonitor("client_ping");
     client_create = factory.makeItemActionMonitor("client_create");
+    client_create_cb = factory.makeCallbackMonitor("client_create");
     client_reflection = factory.makeItemActionMonitor("client_reflection");
+    client_reflection_cb = factory.makeCallbackMonitor("client_reflection");
     client_close = factory.makeItemActionMonitor("client_close");
     client_scan_deployment = factory.makeItemActionMonitor("client_scan_deployment");
+    client_scan_deployment_cb = factory.makeCallbackMonitor("client_scan_deployment");
     client_document_exchange = factory.makeItemActionMonitor("client_document_exchange");
+
+    client_retry = factory.counter("client_retry");
+    client_info_start = factory.counter("client_info_start");
+    client_info_completed = factory.counter("client_info_completed");
+    client_info_failed_downstream = factory.counter("client_info_failed_downstream");
+    client_info_failed_ask = factory.counter("client_info_failed_ask");
   }
 }

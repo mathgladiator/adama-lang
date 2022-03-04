@@ -38,7 +38,7 @@ public class AssertCreateSuccess implements Callback<Void> {
 
   public void await() {
     try {
-      Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+      Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
       Assert.assertTrue(success);
     } catch (InterruptedException ie) {
       Assert.fail();

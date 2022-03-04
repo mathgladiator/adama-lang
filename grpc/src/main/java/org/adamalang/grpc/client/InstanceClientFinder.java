@@ -202,11 +202,7 @@ public class InstanceClientFinder {
       executor.execute(new NamedRunnable("finder-proxy-add", createdClient.target) {
         @Override
         public void execute() throws Exception {
-          if (client != null) {
-            action.execute(client);
-          } else {
-            queue.add(action);
-          }
+          queue.add(action);
         }
       });
     }

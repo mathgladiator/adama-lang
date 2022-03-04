@@ -115,4 +115,23 @@ public class ItemQueueTests {
       executor.shutdown().await(1000, TimeUnit.MILLISECONDS);
     }
   }
+
+  @Test
+  public void ready() throws Exception {
+    SimpleExecutor executor = SimpleExecutor.create("items");
+    try {
+      ItemQueue<String> queue = new ItemQueue<>(executor, 100, 25);
+      MyItemAction[] items = new MyItemAction[20];
+      queue.ready("x");
+      for (int k = 0; k < items.length; k++) {
+        items[k] = new MyItemAction();
+        queue.add(items[k]);
+      }
+      for (int k = 0; k < items.length; k++) {
+        items[k].awaitDone();
+      }
+    } finally{
+      executor.shutdown().await(1000, TimeUnit.MILLISECONDS);
+    }
+  }
 }
