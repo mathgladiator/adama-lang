@@ -10,9 +10,8 @@
 package org.adamalang.net.codec;
 
 import io.netty.buffer.ByteBuf;
-
 import org.adamalang.common.codec.Helper;
-
+import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ServerMessage.InventoryHeartbeat;
 import org.adamalang.net.codec.ServerMessage.HeatPayload;
 import org.adamalang.net.codec.ServerMessage.StreamSeqResponse;
@@ -29,6 +28,24 @@ import org.adamalang.net.codec.ServerMessage.PingResponse;
 
 public class ServerCodec {
 
+  public static abstract class StreamHeat implements ByteStream {
+    public abstract void handle(HeatPayload payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 5122:
+          handle(readBody_5122(buf, new HeatPayload()));
+          return;
+      }
+    }
+  }
+
   public static interface HandlerHeat {
     public void handle(HeatPayload payload);
   }
@@ -38,6 +55,24 @@ public class ServerCodec {
       case 5122:
         handler.handle(readBody_5122(buf, new HeatPayload()));
         return;
+    }
+  }
+
+  public static abstract class StreamCreation implements ByteStream {
+    public abstract void handle(CreateResponse payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 12524:
+          handle(readBody_12524(buf, new CreateResponse()));
+          return;
+      }
     }
   }
 
@@ -53,6 +88,24 @@ public class ServerCodec {
     }
   }
 
+  public static abstract class StreamPing implements ByteStream {
+    public abstract void handle(PingResponse payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 24322:
+          handle(readBody_24322(buf, new PingResponse()));
+          return;
+      }
+    }
+  }
+
   public static interface HandlerPing {
     public void handle(PingResponse payload);
   }
@@ -62,6 +115,24 @@ public class ServerCodec {
       case 24322:
         handler.handle(readBody_24322(buf, new PingResponse()));
         return;
+    }
+  }
+
+  public static abstract class StreamDeployment implements ByteStream {
+    public abstract void handle(ScanDeploymentResponse payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 8922:
+          handle(readBody_8922(buf, new ScanDeploymentResponse()));
+          return;
+      }
     }
   }
 
@@ -77,6 +148,24 @@ public class ServerCodec {
     }
   }
 
+  public static abstract class StreamReflection implements ByteStream {
+    public abstract void handle(ReflectResponse payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 6736:
+          handle(readBody_6736(buf, new ReflectResponse()));
+          return;
+      }
+    }
+  }
+
   public static interface HandlerReflection {
     public void handle(ReflectResponse payload);
   }
@@ -86,6 +175,39 @@ public class ServerCodec {
       case 6736:
         handler.handle(readBody_6736(buf, new ReflectResponse()));
         return;
+    }
+  }
+
+  public static abstract class StreamDocument implements ByteStream {
+    public abstract void handle(StreamSeqResponse payload);
+
+    public abstract void handle(StreamAskAttachmentResponse payload);
+
+    public abstract void handle(StreamError payload);
+
+    public abstract void handle(StreamData payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 1632:
+          handle(readBody_1632(buf, new StreamSeqResponse()));
+          return;
+        case 15546:
+          handle(readBody_15546(buf, new StreamAskAttachmentResponse()));
+          return;
+        case 19546:
+          handle(readBody_19546(buf, new StreamError()));
+          return;
+        case 10546:
+          handle(readBody_10546(buf, new StreamData()));
+          return;
+      }
     }
   }
 
@@ -113,6 +235,24 @@ public class ServerCodec {
     }
   }
 
+  public static abstract class StreamInventory implements ByteStream {
+    public abstract void handle(InventoryHeartbeat payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 7232:
+          handle(readBody_7232(buf, new InventoryHeartbeat()));
+          return;
+      }
+    }
+  }
+
   public static interface HandlerInventory {
     public void handle(InventoryHeartbeat payload);
   }
@@ -122,6 +262,34 @@ public class ServerCodec {
       case 7232:
         handler.handle(readBody_7232(buf, new InventoryHeartbeat()));
         return;
+    }
+  }
+
+  public static abstract class StreamMetering implements ByteStream {
+    public abstract void handle(StreamStatus payload);
+
+    public abstract void handle(MeteringBatchRemoved payload);
+
+    public abstract void handle(MeteringBatchFound payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 12546:
+          handle(readBody_12546(buf, new StreamStatus()));
+          return;
+        case 1248:
+          handle(readBody_1248(buf, new MeteringBatchRemoved()));
+          return;
+        case 1246:
+          handle(readBody_1246(buf, new MeteringBatchFound()));
+          return;
+      }
     }
   }
 

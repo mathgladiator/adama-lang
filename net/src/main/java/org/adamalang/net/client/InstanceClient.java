@@ -18,6 +18,8 @@ import org.adamalang.common.net.NetBase;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.contracts.*;
+import org.adamalang.net.codec.ServerCodec;
+import org.adamalang.net.codec.ServerMessage;
 
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -71,30 +73,25 @@ public class InstanceClient implements AutoCloseable {
     client.add(new ItemAction<>(ErrorCodes.ADAMA_NET_PING_TIMEOUT, ErrorCodes.ADAMA_NET_PING_REJECTED, metrics.client_ping.start()) {
       @Override
       protected void executeNow(ChannelClient client) {
-        client.open(new ByteStream() {
+        client.open(new ServerCodec.StreamPing() {
+          @Override
+          public void handle(ServerMessage.PingResponse payload) {
+            success.set(true);
+          }
+
           @Override
           public void request(int bytes) {
 
           }
 
           @Override
-          public ByteBuf create(int bestGuessForSize) {
-            return null;
-          }
-
-          @Override
-          public void next(ByteBuf buf) {
-
-          }
-
-          @Override
           public void completed() {
-
+            latch.countDown();
           }
 
           @Override
           public void error(int errorCode) {
-
+            latch.countDown();
           }
         }, new Callback<ByteStream>() {
           @Override

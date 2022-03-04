@@ -10,9 +10,8 @@
 package org.adamalang.net.codec;
 
 import io.netty.buffer.ByteBuf;
-
 import org.adamalang.common.codec.Helper;
-
+import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ClientMessage.RequestInventoryHeartbeat;
 import org.adamalang.net.codec.ClientMessage.RequestHeat;
 import org.adamalang.net.codec.ClientMessage.StreamDisconnect;
@@ -29,6 +28,89 @@ import org.adamalang.net.codec.ClientMessage.CreateRequest;
 import org.adamalang.net.codec.ClientMessage.PingRequest;
 
 public class ClientCodec {
+
+  public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(RequestInventoryHeartbeat payload);
+
+    public abstract void handle(RequestHeat payload);
+
+    public abstract void handle(StreamDisconnect payload);
+
+    public abstract void handle(StreamAttach payload);
+
+    public abstract void handle(StreamAskAttachmentRequest payload);
+
+    public abstract void handle(StreamUpdate payload);
+
+    public abstract void handle(StreamSend payload);
+
+    public abstract void handle(StreamConnect payload);
+
+    public abstract void handle(MeteringDeleteBatch payload);
+
+    public abstract void handle(MeteringBegin payload);
+
+    public abstract void handle(ScanDeploymentRequest payload);
+
+    public abstract void handle(ReflectRequest payload);
+
+    public abstract void handle(CreateRequest payload);
+
+    public abstract void handle(PingRequest payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 7231:
+          handle(readBody_7231(buf, new RequestInventoryHeartbeat()));
+          return;
+        case 1919:
+          handle(readBody_1919(buf, new RequestHeat()));
+          return;
+        case 17345:
+          handle(readBody_17345(buf, new StreamDisconnect()));
+          return;
+        case 16345:
+          handle(readBody_16345(buf, new StreamAttach()));
+          return;
+        case 15345:
+          handle(readBody_15345(buf, new StreamAskAttachmentRequest()));
+          return;
+        case 14345:
+          handle(readBody_14345(buf, new StreamUpdate()));
+          return;
+        case 13345:
+          handle(readBody_13345(buf, new StreamSend()));
+          return;
+        case 12345:
+          handle(readBody_12345(buf, new StreamConnect()));
+          return;
+        case 1245:
+          handle(readBody_1245(buf, new MeteringDeleteBatch()));
+          return;
+        case 1243:
+          handle(readBody_1243(buf, new MeteringBegin()));
+          return;
+        case 8921:
+          handle(readBody_8921(buf, new ScanDeploymentRequest()));
+          return;
+        case 6735:
+          handle(readBody_6735(buf, new ReflectRequest()));
+          return;
+        case 12523:
+          handle(readBody_12523(buf, new CreateRequest()));
+          return;
+        case 24321:
+          handle(readBody_24321(buf, new PingRequest()));
+          return;
+      }
+    }
+  }
 
   public static interface HandlerServer {
     public void handle(RequestInventoryHeartbeat payload);

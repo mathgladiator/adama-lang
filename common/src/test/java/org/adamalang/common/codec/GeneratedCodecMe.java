@@ -1,22 +1,37 @@
-/*
- * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
- *
- * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
- *
- * See http://www.adama-lang.org/ for more information.
- *
- * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
- */
 package org.adamalang.common.codec;
 
 import io.netty.buffer.ByteBuf;
-
 import org.adamalang.common.codec.Helper;
-
+import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.codec.CodecCodeGenTests.TestClassA;
 import org.adamalang.common.codec.CodecCodeGenTests.TestClassB;
 
 public class GeneratedCodecMe {
+
+  public static abstract class StreamX implements ByteStream {
+    public abstract void handle(TestClassA payload);
+
+    public abstract void handle(TestClassB payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 123:
+          handle(readBody_123(buf, new TestClassA()));
+          return;
+        case 42:
+          handle(readBody_42(buf, new TestClassA()));
+          return;
+        case 4242:
+          handle(readBody_4242(buf, new TestClassB()));
+          return;
+      }
+    }
+  }
 
   public static interface HandlerX {
     public void handle(TestClassA payload);
@@ -34,6 +49,23 @@ public class GeneratedCodecMe {
       case 4242:
         handler.handle(readBody_4242(buf, new TestClassB()));
         return;
+    }
+  }
+
+  public static abstract class StreamY implements ByteStream {
+    public abstract void handle(TestClassB payload);
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 4242:
+          handle(readBody_4242(buf, new TestClassB()));
+          return;
+      }
     }
   }
 

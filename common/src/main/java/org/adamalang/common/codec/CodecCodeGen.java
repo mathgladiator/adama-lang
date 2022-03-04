@@ -9,7 +9,7 @@
  */
 package org.adamalang.common.codec;
 
-import io.netty.buffer.ByteBuf;
+import org.adamalang.common.DefaultCopyright;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
@@ -130,10 +130,12 @@ public class CodecCodeGen {
 
   public static String assembleCodec(String packageName, String className, Class<?>... classes) {
     StringBuilder sb = new StringBuilder();
+    sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
     sb.append("package " + packageName + ";\n\n");
 
-    sb.append("import io.netty.buffer.ByteBuf;\n\n");
-    sb.append("import org.adamalang.common.codec.Helper;\n\n");
+    sb.append("import io.netty.buffer.ByteBuf;\n");
+    sb.append("import org.adamalang.common.codec.Helper;\n");
+    sb.append("import org.adamalang.common.net.ByteStream;\n");
     for (Class<?> clazz : classes) {
       sb.append("import ").append(clazz.getName().replace('$', '.')).append(";\n");
     }
@@ -156,6 +158,34 @@ public class CodecCodeGen {
     }
 
     for (String flow : allFlows) {
+      sb.append("\n");
+      sb.append("  public static abstract class Stream").append(flow).append(" implements ByteStream {\n");
+      for (Class<?> clazz : classes) {
+        if (flows(clazz).contains(flow)) {
+          sb.append("    public abstract void handle(").append(clazz.getSimpleName()).append(" payload);\n");
+          sb.append("\n");
+        }
+      }
+      sb.append("    @Override\n");
+      sb.append("    public ByteBuf create(int size) {\n");
+      sb.append("      throw new UnsupportedOperationException();\n");
+      sb.append("    }\n\n");
+      sb.append("    @Override\n");
+      sb.append("    public void next(ByteBuf buf) {\n");
+      sb.append("      switch (buf.readIntLE()) {\n");
+      for (Class<?> clazz : classes) {
+        if (flows(clazz).contains(flow)) {
+          int[] caseIds = versions(clazz);
+          for (int caseId : caseIds) {
+            sb.append("        case ").append(caseId).append(":\n");
+            sb.append("          handle(readBody_").append(caseId).append("(buf, new ").append(clazz.getSimpleName()).append("()));\n");
+            sb.append("          return;\n");
+          }
+        }
+      }
+      sb.append("      }\n");
+      sb.append("    }\n");
+      sb.append("  }\n");
       sb.append("\n");
       sb.append("  public static interface Handler").append(flow).append(" {\n");
       for (Class<?> clazz : classes) {
