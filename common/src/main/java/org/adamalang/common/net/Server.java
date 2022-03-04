@@ -1,3 +1,12 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See http://www.adama-lang.org/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ */
 package org.adamalang.common.net;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -20,12 +29,12 @@ import java.util.function.Supplier;
 public class Server {
   private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
-  public static Runnable start(NetBase base, MachineIdentity identity, int port, Handler handler) throws Exception {
+  public static Runnable start(NetBase base, int port, Handler handler) throws Exception {
     ServerBootstrap bootstrap = new ServerBootstrap();
     bootstrap.group(base.bossGroup, base.workerGroup);
     bootstrap.channel(NioServerSocketChannel.class);
     bootstrap.localAddress(port);
-    SslContext sslContext = SslContextBuilder.forServer(identity.getCert(), identity.getKey()).trustManager(identity.getTrust()).clientAuth(ClientAuth.REQUIRE).build();
+    SslContext sslContext = base.makeServerSslContext();
     bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
       protected void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(sslContext.newHandler(ch.alloc()));

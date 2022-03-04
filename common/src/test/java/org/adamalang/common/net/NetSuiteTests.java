@@ -1,3 +1,12 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See http://www.adama-lang.org/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ */
 package org.adamalang.common.net;
 
 import io.netty.buffer.ByteBuf;
@@ -26,10 +35,9 @@ public class NetSuiteTests {
 
   @Test
   public void happy() throws Exception {
-    MachineIdentity identity = identity();
-    NetBase base = new NetBase(2, 4);
+    NetBase base = new NetBase(identity(), 2, 4);
     try {
-      Runnable waitForServer = Server.start(base, identity, 5001, new Handler() {
+      Runnable waitForServer = Server.start(base, 5001, new Handler() {
         @Override
         public ByteStream create(ByteStream upstream) {
           return new ByteStream() {
@@ -68,9 +76,8 @@ public class NetSuiteTests {
       Thread thread = new Thread(waitForServer);
       thread.start();
       System.err.println("Server running");
-      Client client = new Client(base, identity);
       CountDownLatch phases = new CountDownLatch(102);
-      client.connect("127.0.0.1:5001", new Lifecycle() {
+      base.connect("127.0.0.1:5001", new Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {
           System.err.println("client connected");
@@ -141,10 +148,9 @@ public class NetSuiteTests {
 
   @Test
   public void sad_remote_error() throws Exception {
-    MachineIdentity identity = identity();
-    NetBase base = new NetBase(2, 4);
+    NetBase base = new NetBase(identity(), 2, 4);
     try {
-      Runnable waitForServer = Server.start(base, identity, 5001, new Handler() {
+      Runnable waitForServer = Server.start(base, 5001, new Handler() {
         @Override
         public ByteStream create(ByteStream upstream) {
           return new ByteStream() {
@@ -187,9 +193,8 @@ public class NetSuiteTests {
       Thread thread = new Thread(waitForServer);
       thread.start();
       System.err.println("Server running");
-      Client client = new Client(base, identity);
       CountDownLatch phases = new CountDownLatch(10);
-      client.connect("127.0.0.1:5001", new Lifecycle() {
+      base.connect("127.0.0.1:5001", new Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {
           System.err.println("client connected");

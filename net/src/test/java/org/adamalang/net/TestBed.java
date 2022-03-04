@@ -48,7 +48,7 @@ public class TestBed implements AutoCloseable {
   public final CoreService coreService;
 
   public TestBed(int port, String code) throws Exception {
-    this.base = new NetBase(1, 2);
+    this.base = new NetBase(MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     clientExecutor = SimpleExecutor.create("client-executor");
     deploymentScans = new AtomicInteger(0);
     JsonStreamWriter planWriter = new JsonStreamWriter();
@@ -78,7 +78,7 @@ public class TestBed implements AutoCloseable {
             TimeSource.REAL_TIME,
             2);
 
-    this.identity = MachineIdentity.fromFile(prefixForLocalhost());
+    this.identity = this.base.identity;
     ServerNexus nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, (space) -> {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();

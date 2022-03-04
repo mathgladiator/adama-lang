@@ -1,7 +1,15 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See http://www.adama-lang.org/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ */
 package org.adamalang.common.net;
 
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.MachineIdentity;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,12 +19,10 @@ import java.util.concurrent.TimeUnit;
 public class ClientTests {
   @Test
   public void nope() throws Exception {
-    MachineIdentity identity = NetSuiteTests.identity();
-    NetBase base = new NetBase(2, 4);
+    NetBase base = new NetBase(NetSuiteTests.identity(), 1, 4);
     try {
-      Client client = new Client(base, identity);
       CountDownLatch latch = new CountDownLatch(1);
-      client.connect("192.1.200.1:4242", new Lifecycle() {
+      base.connect("192.1.200.1:4242", new Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {
         }
@@ -43,12 +49,10 @@ public class ClientTests {
 
   @Test
   public void badtarget() throws Exception {
-    MachineIdentity identity = NetSuiteTests.identity();
-    NetBase base = new NetBase(2, 4);
+    NetBase base = new NetBase(NetSuiteTests.identity(), 2, 4);
     try {
-      Client client = new Client(base, identity);
       CountDownLatch latch = new CountDownLatch(1);
-      client.connect("192.1.200.1", new Lifecycle() {
+      base.connect("192.1.200.1", new Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {
         }
