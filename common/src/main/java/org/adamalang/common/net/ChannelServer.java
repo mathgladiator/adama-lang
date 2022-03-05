@@ -12,14 +12,25 @@ package org.adamalang.common.net;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.socket.SocketChannel;
 
 /** the server side of the connection */
 public class ChannelServer extends ChannelCommon {
+  private final SocketChannelSet set;
   private final Handler handler;
+  private final int id;
 
-  public ChannelServer(Handler handler) {
+  public ChannelServer(SocketChannel socket, SocketChannelSet set, Handler handler) {
     super(2);
+    this.set = set;
     this.handler = handler;
+    this.id = set.add(socket);
+  }
+
+  @Override
+  public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    super.channelInactive(ctx);
+    set.remove(this.id);
   }
 
   @Override
