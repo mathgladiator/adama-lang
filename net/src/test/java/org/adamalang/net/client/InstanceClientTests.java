@@ -24,11 +24,10 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class InstanceClientTests {
   @Test
-  public void stubPersistent() throws Exception {
+  public void persistent() throws Exception {
     try (TestBed bed =
         new TestBed(
             10001,
@@ -47,7 +46,19 @@ public class InstanceClientTests {
           client.create("origin", "nope", "nope", "space", "2", "123", "{}", success);
           success.await();
         }
-        // TODO: meaningful way of shutting down the server
+        bed.stopServer();
+        int attempt = 25;
+        while (client.ping(100) && attempt-- > 0) {
+          System.err.println("Still alive");
+        }
+        Assert.assertFalse(client.ping(1250));
+        {
+          bed.startServer();
+          Assert.assertTrue(client.ping(2500));
+          AssertCreateSuccess success = new AssertCreateSuccess();
+          client.create("origin", "nope", "nope", "space", "3", "123", "{}", success);
+          success.await();
+        }
       }
     }
   }

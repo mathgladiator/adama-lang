@@ -107,17 +107,18 @@ public class NetBase {
     bootstrap.channel(NioServerSocketChannel.class);
     bootstrap.localAddress(port);
     SslContext sslContext = makeServerSslContext();
+    SocketChannelSet set = new SocketChannelSet();
     bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
       protected void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(sslContext.newHandler(ch.alloc()));
         ch.pipeline().addLast(new LengthFieldPrepender(4));
         ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(65535,0, 4, 0, 4));
-        ch.pipeline().addLast(new ChannelServer(handler));
+        ch.pipeline().addLast(new ChannelServer(ch, set, handler));
       }
     });
     ChannelFuture future = bootstrap.bind();
-    Runnable blocker = blocker();
     LOGGER.info("started");
+    CountDownLatch waitForEndLatch = new CountDownLatch(1);
     return new ServerHandle() {
       @Override
       public void waitForEnd() {
@@ -127,15 +128,23 @@ public class NetBase {
         } catch (Exception ex) {
           LOGGER.info("failure", ex);
           ex.printStackTrace();
-        } finally {
-          blocker.run();
         }
         LOGGER.info("finished");
+        waitForEndLatch.countDown();
       }
 
       @Override
       public void kill() {
-        future.channel().close();
+        try {
+          future.channel().close().sync();
+          if (future.channel().parent() != null) {
+            future.channel().parent().close().sync();
+          }
+          set.kill();
+          waitForEndLatch.await(1000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException ie) {
+          throw new RuntimeException(ie);
+        }
       }
     };
   }
