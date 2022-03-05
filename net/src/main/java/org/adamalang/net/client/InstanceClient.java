@@ -43,8 +43,8 @@ public class InstanceClient implements AutoCloseable {
   private final Random rng;
   private final ExceptionLogger logger;
   private final AtomicBoolean alive;
-  private int backoff;
   private final ItemQueue<ChannelClient> client;
+  private int backoff;
 
   public InstanceClient(NetBase base, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
     this.base = base;
@@ -341,7 +341,6 @@ public class InstanceClient implements AutoCloseable {
 
               @Override
               public void completed() {
-
               }
 
               @Override

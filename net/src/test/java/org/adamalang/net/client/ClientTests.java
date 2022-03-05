@@ -35,7 +35,7 @@ public class ClientTests {
       bed.startServer();
       Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
-        client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:12500"));
+        waitForRouting(bed, client);
         CountDownLatch latchGetDeployTargets = new CountDownLatch(1);
         client.getDeploymentTargets(
             "space",
@@ -64,7 +64,7 @@ public class ClientTests {
         client.randomMeteringExchange(new MeteringStream() {
           @Override
           public void handle(String target, String batch, Runnable after) {
-
+            after.run();
           }
 
           @Override
@@ -138,7 +138,8 @@ public class ClientTests {
 
           @Override
           public void failure(ErrorCodeException ex) {
-            Assert.assertEquals(969806, ex.code);
+            System.err.println("EX:" + ex.code);
+            Assert.assertEquals(753724, ex.code);
             latchFailedOnReflectionBadSpace.countDown();
           }
         });
@@ -156,20 +157,22 @@ public class ClientTests {
   public void no_capacity() throws Exception {
     try (TestBed bed =
              new TestBed(
-                 12500,
+                 12501,
                  "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
         CountDownLatch latch1Failed = new CountDownLatch(1);
+        client.notifyDeployment("127.0.0.1:" + bed.port, "space");
         client.create("origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
           public void success(Void value) {
-
+            System.err.println("Success");
           }
 
           @Override
           public void failure(ErrorCodeException ex) {
-            Assert.assertEquals(912447, ex.code);
+            System.err.println("L1:" + ex.code);
+            Assert.assertEquals(753724, ex.code);
             latch1Failed.countDown();
           }
         });
@@ -181,7 +184,8 @@ public class ClientTests {
 
           @Override
           public void failure(int code) {
-            Assert.assertEquals(909436, code);
+            System.err.println("L2:" + code);
+            Assert.assertEquals(753724, code);
             latch2Failed.countDown();
           }
 
@@ -198,7 +202,8 @@ public class ClientTests {
 
           @Override
           public void failure(ErrorCodeException ex) {
-            Assert.assertEquals(969806, ex.code);
+            System.err.println("L3:" + ex.code);
+            Assert.assertEquals(753724, ex.code);
             latch3Failed.countDown();
           }
         });
@@ -226,28 +231,12 @@ public class ClientTests {
   public void not_allowed_create() throws Exception {
     try (TestBed bed =
              new TestBed(
-                 12501,
+                 12502,
                  "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
-        client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:12501"));
-        CountDownLatch latchFound = new CountDownLatch(1);
-        for (int k = 0; k < 10; k++) {
-          client.routing().get(
-              "space",
-              "key",
-              new Consumer<String>() {
-                @Override
-                public void accept(String s) {
-                  if (s != null) {
-                    latchFound.countDown();
-                  }
-                }
-              });
-          latchFound.await(500, TimeUnit.MILLISECONDS);
-        }
-        Assert.assertTrue(latchFound.await(1000, TimeUnit.MILLISECONDS));
+        waitForRouting(bed, client);
         CountDownLatch latchFailed = new CountDownLatch(1);
         client.create("origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
@@ -268,30 +257,39 @@ public class ClientTests {
     }
   }
 
-/*
-  @Test
-  public void bad_client() throws Exception {
-    try (NaughtyServer server = NaughtyServer.start().port(12505).establish(true).inventory("space").billing(false).build()) {
-      Client client = new Client(server.identity, new ClientMetrics(new NoOpMetricsFactory()), null);
-      client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:12505"));
-      CountDownLatch latchFound = new CountDownLatch(1);
-      for (int k = 0; k < 10; k++) {
-        client.routing().get(
-            "space",
-            "key",
-            new Consumer<String>() {
-              @Override
-              public void accept(String s) {
-                if (s != null) {
-                  latchFound.countDown();
-                }
+  public static void waitForRouting(TestBed bed, Client client) throws InterruptedException {
+    client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + bed.port));
+    CountDownLatch latchFound = new CountDownLatch(1);
+    for (int k = 0; k < 10; k++) {
+      client.routing().get(
+          "space",
+          "key",
+          new Consumer<String>() {
+            @Override
+            public void accept(String s) {
+              if (s != null) {
+                latchFound.countDown();
               }
-            });
-        latchFound.await(1500, TimeUnit.MILLISECONDS);
+            }
+          });
+      if (latchFound.await(1500, TimeUnit.MILLISECONDS)) {
+        break;
       }
-      CountDownLatch failure1 = new CountDownLatch(1);
-      CountDownLatch failure2 = new CountDownLatch(1);
-      client.notifyDeployment("127.0.0.1:12505", "*");
+    }
+  }
+
+  @Test
+  public void bad_server() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 12503,
+                 "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+      bed.naughty().inventory("space").failEverything().start();
+      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      waitForRouting(bed, client);
+      CountDownLatch failures = new CountDownLatch(5);
+      client.notifyDeployment("127.0.0.1:" + bed.port, "*");
+      client.notifyDeployment("127.0.0.1:" + (bed.port + 1), "*");
       client.randomMeteringExchange(
           new MeteringStream() {
             @Override
@@ -301,8 +299,9 @@ public class ClientTests {
 
             @Override
             public void failure(int code) {
-              Assert.assertEquals(782348, code);
-              failure1.countDown();
+              System.err.println("RME:" + code);
+              Assert.assertEquals(123456789, code);
+              failures.countDown();
             }
 
             @Override
@@ -316,8 +315,9 @@ public class ClientTests {
 
         @Override
         public void failure(ErrorCodeException ex) {
-          Assert.assertEquals(969806, ex.code);
-          failure2.countDown();
+          System.err.println("R1:" + ex.code);
+          Assert.assertEquals(753724, ex.code);
+          failures.countDown();
         }
       });
       client.reflect("space", "y", new Callback<String>() {
@@ -328,85 +328,82 @@ public class ClientTests {
 
         @Override
         public void failure(ErrorCodeException ex) {
-          Assert.assertEquals(791567, ex.code);
-          failure2.countDown();
+          System.err.println("R2:" + ex.code);
+          Assert.assertEquals(123456789, ex.code);
+          failures.countDown();
         }
       });
-      Assert.assertTrue(failure1.await(2000, TimeUnit.MILLISECONDS));
-      Assert.assertTrue(failure2.await(2000, TimeUnit.MILLISECONDS));
-    }
-  }
-
-  @Test
-  public void too_much_queue() throws Exception {
-    try (NaughtyServer server = NaughtyServer.start().port(12505).establish(false).inventory("space").billing(false).build()) {
-      Client client = new Client(server.identity, new ClientMetrics(new NoOpMetricsFactory()), null);
-      client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:12505"));
-      CountDownLatch latchFound = new CountDownLatch(1);
-      for (int k = 0; k < 10; k++) {
-        client.routing().get(
-            "space",
-            "key",
-            new Consumer<String>() {
-              @Override
-              public void accept(String s) {
-                if (s != null) {
-                  latchFound.countDown();
-                }
-              }
-            });
-        latchFound.await(1500, TimeUnit.MILLISECONDS);
-      }
-      CountDownLatch failure1 = new CountDownLatch(1);
-      CountDownLatch failure2 = new CountDownLatch(1);
-      CountDownLatch failure3 = new CountDownLatch(1);
-      for (int k = 0; k < 512; k++) {
-        client.notifyDeployment("127.0.0.1:12505", "*");
-      }
-      client.randomMeteringExchange(
-          new MeteringStream() {
-            @Override
-            public void handle(String target, String batch, Runnable after) {
-              after.run();
-            }
-
-            @Override
-            public void failure(int code) {
-              Assert.assertEquals(998499, code);
-              failure1.countDown();
-            }
-
-            @Override
-            public void finished() {}
-          });
-      client.reflect("space", "y", new Callback<String>() {
+      client.connect("origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
         @Override
-        public void success(String value) {
+        public void connected() {
 
         }
 
         @Override
-        public void failure(ErrorCodeException ex) {
-          Assert.assertEquals(983117, ex.code);
-          failure2.countDown();
-        }
-      });
-      client.create("x", "y", "space", "key", null, "{}", new CreateCallback() {
-        @Override
-        public void created() {
+        public void delta(String data) {
 
         }
 
         @Override
         public void error(int code) {
-          Assert.assertEquals(996436, code);
-          failure3.countDown();
+          System.err.println("CONN:" + code);
+          Assert.assertEquals(123456789, code);
+          failures.countDown();
+        }
+
+        @Override
+        public void disconnected() {
+
         }
       });
-      Assert.assertTrue(failure1.await(2000, TimeUnit.MILLISECONDS));
-      Assert.assertTrue(failure2.await(2000, TimeUnit.MILLISECONDS));
-      Assert.assertTrue(failure3.await(2000, TimeUnit.MILLISECONDS));
+      client.create("origin", "agent", "au", "space", "key", null, "{}", new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          System.err.println("CR:" + ex.code);
+          Assert.assertEquals(123456789, ex.code);
+          failures.countDown();
+        }
+      });
+      Assert.assertTrue(failures.await(5000, TimeUnit.MILLISECONDS));
     }
   }
-  */
+
+  @Test
+  public void fakes() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 12507,
+                 "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+      bed.naughty().inventory("space").start();
+      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      waitForRouting(bed, client);
+      client.notifyDeployment("127.0.0.1:12505", "*");
+      CountDownLatch meteringLatch = new CountDownLatch(2);
+      client.randomMeteringExchange(
+          new MeteringStream() {
+            @Override
+            public void handle(String target, String batch, Runnable after) {
+              if ("fake-batch".equals(batch)) {
+                meteringLatch.countDown();
+              }
+              after.run();
+            }
+
+            @Override
+            public void failure(int code) {
+            }
+
+            @Override
+            public void finished() {
+              meteringLatch.countDown();
+            }
+          });
+      Assert.assertTrue(meteringLatch.await(2000, TimeUnit.MILLISECONDS));
+    }
+  }
 }

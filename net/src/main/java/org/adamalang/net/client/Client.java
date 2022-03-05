@@ -9,7 +9,6 @@
  */
 package org.adamalang.net.client;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.ItemActionMonitor;
 import org.adamalang.common.net.NetBase;
@@ -122,21 +121,17 @@ public class Client {
 
   public void randomMeteringExchange(MeteringStream metering) {
     engine.random(target -> {
-      if (target != null) {
-        finder.find(target, new Callback<InstanceClient>() {
-          @Override
-          public void success(InstanceClient value) {
-            value.startMeteringExchange(metering);
-          }
+      finder.find(target, new Callback<InstanceClient>() {
+        @Override
+        public void success(InstanceClient value) {
+          value.startMeteringExchange(metering);
+        }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            metering.failure(ex.code);
-          }
-        });
-      } else {
-        metering.failure(ErrorCodes.API_METERING_FAILED_FINDING_RANDOM_HOST);
-      }
+        @Override
+        public void failure(ErrorCodeException ex) {
+          metering.failure(ex.code);
+        }
+      });
     });
   }
 
@@ -145,54 +140,45 @@ public class Client {
   }
 
   public void reflect(String space, String key, Callback<String> callback) {
-    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_reflection.start();
     engine.get(space, key, (target) -> {
-      if (target != null) {
-        finder.find(target, new Callback<InstanceClient>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.reflect(space, key, new Callback<String>() {
-              @Override
-              public void success(String value) {
-                callback.success(value);
-              }
+      finder.find(target, new Callback<InstanceClient>() {
+        @Override
+        public void success(InstanceClient client) {
+          client.reflect(space, key, new Callback<String>() {
+            @Override
+            public void success(String value) {
+              callback.success(value);
+            }
 
-              @Override
-              public void failure(ErrorCodeException ex) {
-                callback.failure(ex);
-              }
-            });
-          }
+            @Override
+            public void failure(ErrorCodeException ex) {
+              callback.failure(ex);
+            }
+          });
+        }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
-      } else {
-        callback.failure(new ErrorCodeException(ErrorCodes.API_REFLECT_CANT_FIND_CAPACITY));
-      }
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
     });
   }
 
   public void create(String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_create.start();
     engine.get(space, key, (target) -> {
-      if (target != null) {
-        finder.find(target, new Callback<InstanceClient>() {
-          @Override
-          public void success(InstanceClient client) {
-            client.create(origin, agent, authority, space, key, entropy, arg, callback);
-          }
+      finder.find(target, new Callback<InstanceClient>() {
+        @Override
+        public void success(InstanceClient client) {
+          client.create(origin, agent, authority, space, key, entropy, arg, callback);
+        }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-
-          }
-        });
-      } else {
-        callback.failure(new ErrorCodeException(ErrorCodes.API_CREATE_CANT_FIND_CAPACITY));
-      }
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
     });
   }
 

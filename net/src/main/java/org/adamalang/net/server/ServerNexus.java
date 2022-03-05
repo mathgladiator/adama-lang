@@ -10,7 +10,6 @@
 package org.adamalang.net.server;
 
 import org.adamalang.common.MachineIdentity;
-import org.adamalang.common.net.ByteStream;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.sys.CoreService;

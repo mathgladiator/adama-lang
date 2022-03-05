@@ -19,6 +19,7 @@ import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
+import org.adamalang.net.mocks.NaughyHandler;
 import org.adamalang.net.mocks.StdErrLogger;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
@@ -47,7 +48,7 @@ public class TestBed implements AutoCloseable {
   public final MachineIdentity identity;
   public final SimpleExecutor clientExecutor;
   public final MeteringPubSub meteringPubSub;
-  private final ServerNexus nexus;
+  public final ServerNexus nexus;
   public final AtomicInteger deploymentScans;
   public final CoreService coreService;
   private ServerHandle handle;
@@ -137,16 +138,23 @@ public class TestBed implements AutoCloseable {
   }
 
   public void startManual(org.adamalang.common.net.Handler handler) throws Exception {
-    if (handle != null) {
+    if (handle == null) {
       handle = this.base.serve(port, handler);
       serverExit = new CountDownLatch(1);
+      CountDownLatch waitUntilThreadUp = new CountDownLatch(1);
       new Thread(() -> {
+        waitUntilThreadUp.countDown();
         handle.waitForEnd();
         serverExit.countDown();
       }).start();
+      Assert.assertTrue(waitUntilThreadUp.await(1000, TimeUnit.MILLISECONDS));
     } else {
       Assert.fail();
     }
+  }
+
+  public NaughyHandler.NaughtyBits naughty() {
+    return new NaughyHandler.NaughtyBits(this);
   }
 
   public void stopServer() throws Exception {

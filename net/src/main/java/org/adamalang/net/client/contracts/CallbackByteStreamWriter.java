@@ -29,6 +29,6 @@ public abstract class CallbackByteStreamWriter<T> implements Callback<ByteStream
 
   @Override
   public void failure(ErrorCodeException ex) {
-    callback.failure(ex);;
+    callback.failure(ex);
   }
 }
