@@ -17,14 +17,14 @@ public class Server {
   private final Supplier<Runnable> serverThreadSupplier;
 
   public Server(ServerNexus nexus) throws Exception {
-    org.adamalang.common.net.Server server = new org.adamalang.common.net.Server( );
+    org.adamalang.common.net.Server server = new org.adamalang.common.net.Server();
     this.serverThreadSupplier = ExceptionSupplier.TO_RUNTIME(() -> {
-      return server.start(nexus.base, nexus.port, upstream -> new Handler(nexus, upstream));
+      return org.adamalang.common.net.Server.start(nexus.base, nexus.port, upstream -> new Handler(nexus, upstream));
     });
   }
 
   /** Start serving requests. */
   public void start() {
-      new Thread(serverThreadSupplier.get()).start();
+    new Thread(serverThreadSupplier.get()).start();
   }
 }

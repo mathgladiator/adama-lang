@@ -16,6 +16,7 @@ import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClient;
+import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.mocks.StdErrLogger;
 import org.adamalang.net.server.Server;
@@ -95,8 +96,12 @@ public class TestBed implements AutoCloseable {
   }
 
   public InstanceClient makeClient() throws Exception {
+    return makeClient(null);
+  }
+
+  public InstanceClient makeClient(HeatMonitor monitor) throws Exception {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
-    return new InstanceClient(base, metrics, null, new RoutingTarget() {
+    return new InstanceClient(base, metrics, monitor, new RoutingTarget() {
       @Override
       public void integrate(String target, Collection<String> spaces) {
 

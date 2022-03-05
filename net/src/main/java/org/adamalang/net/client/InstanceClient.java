@@ -19,7 +19,10 @@ import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.bidi.DocumentExchange;
 import org.adamalang.net.client.bidi.MeteringExchange;
-import org.adamalang.net.client.contracts.*;
+import org.adamalang.net.client.contracts.Events;
+import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.net.client.contracts.MeteringStream;
+import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
@@ -33,9 +36,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a client using the common-net code to connect to a remote server */
 public class InstanceClient implements AutoCloseable {
-  private final NetBase base;
+  public static final int WAITING_QUEUE = 64;
   public final String target;
   public final SimpleExecutor executor;
+  private final NetBase base;
   private final ClientMetrics metrics;
   private final RoutingTarget routing;
   private final HeatMonitor monitor;
@@ -43,7 +47,7 @@ public class InstanceClient implements AutoCloseable {
   private final ExceptionLogger logger;
   private final AtomicBoolean alive;
   private int backoff;
-  private ItemQueue<ChannelClient> client;
+  private final ItemQueue<ChannelClient> client;
 
   public InstanceClient(NetBase base, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
     this.base = base;
@@ -53,7 +57,7 @@ public class InstanceClient implements AutoCloseable {
     this.monitor = monitor;
     this.routing = routing;
     this.rng = new Random();
-    this.client = new ItemQueue<>(executor, 64, 2500);
+    this.client = new ItemQueue<>(executor, WAITING_QUEUE, 2500);
     this.logger = logger;
     this.alive = new AtomicBoolean(true);
     this.backoff = 1;
@@ -68,13 +72,13 @@ public class InstanceClient implements AutoCloseable {
           metrics.client_info_start.run();
           channel.open(new ServerCodec.StreamInfo() {
             @Override
-            public void handle(ServerMessage.HeatPayload heat) {
-              monitor.heat(target, heat.cpu, heat.mem);
+            public void handle(ServerMessage.InventoryHeartbeat payload) {
+              routing.integrate(InstanceClient.this.target, Arrays.asList(payload.spaces));
             }
 
             @Override
-            public void handle(ServerMessage.InventoryHeartbeat payload) {
-              routing.integrate(InstanceClient.this.target, Arrays.asList(payload.spaces));
+            public void handle(ServerMessage.HeatPayload heat) {
+              monitor.heat(target, heat.cpu, heat.mem);
             }
 
             @Override
@@ -257,7 +261,6 @@ public class InstanceClient implements AutoCloseable {
 
           @Override
           protected void failure(int code) {
-            System.err.println("item-queue: failure");
             callback.failure(new ErrorCodeException(code));
           }
         });

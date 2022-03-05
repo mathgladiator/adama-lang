@@ -10,9 +10,11 @@
 package org.adamalang.net.server;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.util.concurrent.ScheduledFuture;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
@@ -24,20 +26,33 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.CoreStream;
+import org.adamalang.runtime.sys.metering.MeterReading;
+
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Handler implements ByteStream, ClientCodec.HandlerServer, Streamback {
+  private static final ServerMessage.CreateResponse SHARED_CREATE_RESPONSE_EMPTY = new ServerMessage.CreateResponse();
   private final ServerNexus nexus;
   private final ByteStream upstream;
+  private final AtomicBoolean alive;
   private CoreStream stream;
+  private ScheduledFuture<?> futureHeat;
 
   public Handler(ServerNexus nexus, ByteStream upstream) {
     this.nexus = nexus;
     this.upstream = upstream;
+    this.futureHeat = null;
+    this.alive = new AtomicBoolean(true);
   }
 
   @Override
   public void request(int bytes) {
     // proxy to the appropriate thing; if stream, then send to the core stream
+    if (stream != null) {
+      // TODO: proxy flow control to the stream
+    }
   }
 
   // IGNORE
@@ -53,6 +68,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void completed() {
+    alive.set(false);
     if (stream != null) {
       stream.disconnect();
       stream = null;
@@ -60,31 +76,45 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     if (upstream != null) {
       upstream.completed();
     }
+    if (futureHeat != null) {
+      futureHeat.cancel(false);
+      futureHeat = null;
+    }
   }
 
   @Override
   public void error(int errorCode) {
-    if (stream != null) {
-      stream.disconnect();
-      stream = null;
-    }
+    completed();
   }
 
   @Override
   public void handle(ClientMessage.RequestInventoryHeartbeat payload) {
+    nexus.meteringPubSub.subscribe((bills) -> {
+      if (alive.get()) {
+        ArrayList<String> spaces = new ArrayList<>();
+        for (MeterReading meterReading : bills) {
+          spaces.add(meterReading.space);
+        }
+        ServerMessage.InventoryHeartbeat inventoryHeartbeat = new ServerMessage.InventoryHeartbeat();
+        inventoryHeartbeat.spaces = spaces.toArray(new String[spaces.size()]);
+        ByteBuf buf = upstream.create(24);
+        ServerCodec.write(buf, inventoryHeartbeat);
+        upstream.next(buf);
+      }
+      return alive.get();
+    });
   }
 
   @Override
   public void handle(ClientMessage.RequestHeat payload) {
-
-  }
-
-  @Override
-  public void handle(ClientMessage.StreamDisconnect payload) {
-    if (stream != null) {
-      stream.disconnect();
-      stream = null;
-    }
+    futureHeat = nexus.base.workerGroup.scheduleAtFixedRate(() -> {
+      ServerMessage.HeatPayload heat = new ServerMessage.HeatPayload();
+      heat.cpu = MachineHeat.cpu();
+      heat.mem = MachineHeat.memory();
+      ByteBuf buf = upstream.create(24);
+      ServerCodec.write(buf, heat);
+      upstream.next(buf);
+    }, 25, 250, TimeUnit.MILLISECONDS);
   }
 
   @Override
@@ -142,6 +172,14 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
+  public void handle(ClientMessage.StreamDisconnect payload) {
+    if (stream != null) {
+      stream.disconnect();
+      stream = null;
+    }
+  }
+
+  @Override
   public void handle(ClientMessage.StreamUpdate payload) {
     if (stream != null) {
       stream.updateView(new JsonStreamReader(payload.viewerState));
@@ -176,6 +214,102 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   }
 
   @Override
+  public void handle(ClientMessage.StreamConnect payload) {
+    nexus.service.connect(new NtClient(payload.agent, payload.authority), new Key(payload.space, payload.key), payload.viewerState, this);
+  }
+
+  @Override
+  public void handle(ClientMessage.MeteringDeleteBatch payload) {
+    try {
+      nexus.meteringBatchMaker.deleteBatch(payload.id);
+      ByteBuf toWrite = upstream.create(4);
+      ServerCodec.write(toWrite, new ServerMessage.MeteringBatchRemoved());
+      upstream.next(toWrite);
+    } catch (Exception ex) {
+      upstream.error(-1);
+    }
+  }
+
+  @Override
+  public void handle(ClientMessage.MeteringBegin payload) {
+    try {
+      String id = nexus.meteringBatchMaker.getNextAvailableBatchId();
+      if (id != null) {
+        String batch = nexus.meteringBatchMaker.getBatch(id);
+        ServerMessage.MeteringBatchFound found = new ServerMessage.MeteringBatchFound();
+        found.id = id;
+        found.batch = batch;
+        ByteBuf toWrite = upstream.create(id.length() + batch.length() + 8);
+        ServerCodec.write(toWrite, found);
+        upstream.next(toWrite);
+      } else {
+        upstream.completed();
+      }
+    } catch (Exception ex) {
+      upstream.error(-1);
+    }
+  }
+
+  @Override
+  public void handle(ClientMessage.ScanDeployment payload) {
+    try {
+      nexus.scanForDeployments.accept(payload.space);
+      ByteBuf buf = upstream.create(4);
+      ServerCodec.write(buf, new ServerMessage.ScanDeploymentResponse());
+      upstream.next(buf);
+      upstream.completed();
+    } catch (Exception ex) {
+      upstream.error(ErrorCodes.GRPC_HANDLER_SCAN_EXCEPTION);
+    }
+  }
+
+  @Override
+  public void handle(ClientMessage.ReflectRequest payload) {
+    nexus.service.reflect(new Key(payload.space, payload.key), nexus.metrics.server_reflect.wrap(new Callback<>() {
+      @Override
+      public void success(String value) {
+        ServerMessage.ReflectResponse response = new ServerMessage.ReflectResponse();
+        response.schema = value;
+        ByteBuf buf = upstream.create(8 + value.length());
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    }));
+  }
+
+  @Override
+  public void handle(ClientMessage.CreateRequest payload) {
+    nexus.service.create(new NtClient(payload.agent, payload.authority), new Key(payload.space, payload.key), payload.arg, payload.entropy, nexus.metrics.server_create.wrap(new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        ByteBuf buf = upstream.create(8);
+        ServerCodec.write(buf, SHARED_CREATE_RESPONSE_EMPTY);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    }));
+  }
+
+  @Override
+  public void handle(ClientMessage.PingRequest payload) {
+    ByteBuf buf = upstream.create(8);
+    ServerCodec.write(buf, new ServerMessage.PingResponse());
+    upstream.next(buf);
+    upstream.completed();
+  }
+
+  @Override
   public void onSetupComplete(CoreStream stream) {
     this.stream = stream;
   }
@@ -204,75 +338,5 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void failure(ErrorCodeException exception) {
     upstream.error(exception.code);
-  }
-
-  @Override
-  public void handle(ClientMessage.StreamConnect payload) {
-    nexus.service.connect(new NtClient(payload.agent, payload.authority), new Key(payload.space, payload.key), payload.viewerState, this);
-  }
-
-  @Override
-  public void handle(ClientMessage.MeteringBegin payload) {
-  }
-
-  @Override
-  public void handle(ClientMessage.MeteringDeleteBatch payload) {
-  }
-
-  @Override
-  public void handle(ClientMessage.ScanDeployment payload) {
-    nexus.scanForDeployments.accept(payload.space);
-    ByteBuf buf = upstream.create(4);
-    ServerCodec.write(buf, new ServerMessage.ScanDeploymentResponse());
-    upstream.next(buf);
-    upstream.completed();
-  }
-
-  @Override
-  public void handle(ClientMessage.ReflectRequest payload) {
-    nexus.service.reflect(new Key(payload.space, payload.key), nexus.metrics.server_reflect.wrap(new Callback<>() {
-      @Override
-      public void success(String value) {
-        ServerMessage.ReflectResponse response = new ServerMessage.ReflectResponse();
-        response.schema = value;
-        ByteBuf buf = upstream.create(8 + value.length());
-        ServerCodec.write(buf, response);
-        upstream.next(buf);
-        upstream.completed();
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        upstream.error(ex.code);
-      }
-    }));
-  }
-
-  private static final ServerMessage.CreateResponse SHARED_CREATE_RESPONSE_EMPTY = new ServerMessage.CreateResponse();
-
-  @Override
-  public void handle(ClientMessage.CreateRequest payload) {
-    nexus.service.create(new NtClient(payload.agent, payload.authority), new Key(payload.space, payload.key), payload.arg, payload.entropy, nexus.metrics.server_create.wrap(new Callback<Void>() {
-      @Override
-      public void success(Void value) {
-        ByteBuf buf = upstream.create(8);
-        ServerCodec.write(buf, SHARED_CREATE_RESPONSE_EMPTY);
-        upstream.next(buf);
-        upstream.completed();
-      }
-
-      @Override
-      public void failure(ErrorCodeException ex) {
-        upstream.error(ex.code);
-      }
-    }));
-  }
-
-  @Override
-  public void handle(ClientMessage.PingRequest payload) {
-    ByteBuf buf = upstream.create(8);
-    ServerCodec.write(buf, new ServerMessage.PingResponse());
-    upstream.next(buf);
-    upstream.completed();
   }
 }

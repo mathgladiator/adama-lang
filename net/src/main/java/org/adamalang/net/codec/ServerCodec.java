@@ -12,47 +12,9 @@ package org.adamalang.net.codec;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
-import org.adamalang.net.codec.ServerMessage.InventoryHeartbeat;
-import org.adamalang.net.codec.ServerMessage.HeatPayload;
-import org.adamalang.net.codec.ServerMessage.StreamSeqResponse;
-import org.adamalang.net.codec.ServerMessage.StreamAskAttachmentResponse;
-import org.adamalang.net.codec.ServerMessage.StreamError;
-import org.adamalang.net.codec.ServerMessage.StreamData;
-import org.adamalang.net.codec.ServerMessage.StreamStatus;
-import org.adamalang.net.codec.ServerMessage.MeteringBatchRemoved;
-import org.adamalang.net.codec.ServerMessage.MeteringBatchFound;
-import org.adamalang.net.codec.ServerMessage.ScanDeploymentResponse;
-import org.adamalang.net.codec.ServerMessage.ReflectResponse;
-import org.adamalang.net.codec.ServerMessage.CreateResponse;
-import org.adamalang.net.codec.ServerMessage.PingResponse;
+import org.adamalang.net.codec.ServerMessage.*;
 
 public class ServerCodec {
-
-  public static abstract class StreamCreation implements ByteStream {
-    public abstract void handle(CreateResponse payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 12524:
-          handle(readBody_12524(buf, new CreateResponse()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerCreation {
-    public void handle(CreateResponse payload);
-  }
 
   public static void route(ByteBuf buf, HandlerCreation handler) {
     switch (buf.readIntLE()) {
@@ -62,30 +24,8 @@ public class ServerCodec {
     }
   }
 
-  public static abstract class StreamPing implements ByteStream {
-    public abstract void handle(PingResponse payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 24322:
-          handle(readBody_24322(buf, new PingResponse()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerPing {
-    public void handle(PingResponse payload);
+  private static CreateResponse readBody_12524(ByteBuf buf, CreateResponse o) {
+    return o;
   }
 
   public static void route(ByteBuf buf, HandlerPing handler) {
@@ -96,30 +36,8 @@ public class ServerCodec {
     }
   }
 
-  public static abstract class StreamDeployment implements ByteStream {
-    public abstract void handle(ScanDeploymentResponse payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 8922:
-          handle(readBody_8922(buf, new ScanDeploymentResponse()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerDeployment {
-    public void handle(ScanDeploymentResponse payload);
+  private static PingResponse readBody_24322(ByteBuf buf, PingResponse o) {
+    return o;
   }
 
   public static void route(ByteBuf buf, HandlerDeployment handler) {
@@ -130,30 +48,8 @@ public class ServerCodec {
     }
   }
 
-  public static abstract class StreamReflection implements ByteStream {
-    public abstract void handle(ReflectResponse payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 6736:
-          handle(readBody_6736(buf, new ReflectResponse()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerReflection {
-    public void handle(ReflectResponse payload);
+  private static ScanDeploymentResponse readBody_8922(ByteBuf buf, ScanDeploymentResponse o) {
+    return o;
   }
 
   public static void route(ByteBuf buf, HandlerReflection handler) {
@@ -164,36 +60,9 @@ public class ServerCodec {
     }
   }
 
-  public static abstract class StreamInfo implements ByteStream {
-    public abstract void handle(InventoryHeartbeat payload);
-
-    public abstract void handle(HeatPayload payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 7232:
-          handle(readBody_7232(buf, new InventoryHeartbeat()));
-          return;
-        case 5122:
-          handle(readBody_5122(buf, new HeatPayload()));
-          return;
-      }
-    }
-  }
-
-  public static interface HandlerInfo {
-    public void handle(InventoryHeartbeat payload);
-    public void handle(HeatPayload payload);
+  private static ReflectResponse readBody_6736(ByteBuf buf, ReflectResponse o) {
+    o.schema = Helper.readString(buf);
+    return o;
   }
 
   public static void route(ByteBuf buf, HandlerInfo handler) {
@@ -207,54 +76,15 @@ public class ServerCodec {
     }
   }
 
-  public static abstract class StreamDocument implements ByteStream {
-    public abstract void handle(StreamSeqResponse payload);
-
-    public abstract void handle(StreamAskAttachmentResponse payload);
-
-    public abstract void handle(StreamError payload);
-
-    public abstract void handle(StreamData payload);
-
-    public abstract void handle(StreamStatus payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 1632:
-          handle(readBody_1632(buf, new StreamSeqResponse()));
-          return;
-        case 15546:
-          handle(readBody_15546(buf, new StreamAskAttachmentResponse()));
-          return;
-        case 19546:
-          handle(readBody_19546(buf, new StreamError()));
-          return;
-        case 10546:
-          handle(readBody_10546(buf, new StreamData()));
-          return;
-        case 12546:
-          handle(readBody_12546(buf, new StreamStatus()));
-          return;
-      }
-    }
+  private static InventoryHeartbeat readBody_7232(ByteBuf buf, InventoryHeartbeat o) {
+    o.spaces = Helper.readStringArray(buf);
+    return o;
   }
 
-  public static interface HandlerDocument {
-    public void handle(StreamSeqResponse payload);
-    public void handle(StreamAskAttachmentResponse payload);
-    public void handle(StreamError payload);
-    public void handle(StreamData payload);
-    public void handle(StreamStatus payload);
+  private static HeatPayload readBody_5122(ByteBuf buf, HeatPayload o) {
+    o.cpu = buf.readDoubleLE();
+    o.mem = buf.readDoubleLE();
+    return o;
   }
 
   public static void route(ByteBuf buf, HandlerDocument handler) {
@@ -277,36 +107,32 @@ public class ServerCodec {
     }
   }
 
-  public static abstract class StreamMetering implements ByteStream {
-    public abstract void handle(MeteringBatchRemoved payload);
-
-    public abstract void handle(MeteringBatchFound payload);
-
-    @Override
-    public void request(int bytes) {
-    }
-
-    @Override
-    public ByteBuf create(int size) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void next(ByteBuf buf) {
-      switch (buf.readIntLE()) {
-        case 1248:
-          handle(readBody_1248(buf, new MeteringBatchRemoved()));
-          return;
-        case 1246:
-          handle(readBody_1246(buf, new MeteringBatchFound()));
-          return;
-      }
-    }
+  private static StreamSeqResponse readBody_1632(ByteBuf buf, StreamSeqResponse o) {
+    o.op = buf.readIntLE();
+    o.seq = buf.readIntLE();
+    return o;
   }
 
-  public static interface HandlerMetering {
-    public void handle(MeteringBatchRemoved payload);
-    public void handle(MeteringBatchFound payload);
+  private static StreamAskAttachmentResponse readBody_15546(ByteBuf buf, StreamAskAttachmentResponse o) {
+    o.op = buf.readIntLE();
+    o.allowed = buf.readBoolean();
+    return o;
+  }
+
+  private static StreamError readBody_19546(ByteBuf buf, StreamError o) {
+    o.op = buf.readIntLE();
+    o.code = buf.readIntLE();
+    return o;
+  }
+
+  private static StreamData readBody_10546(ByteBuf buf, StreamData o) {
+    o.delta = Helper.readString(buf);
+    return o;
+  }
+
+  private static StreamStatus readBody_12546(ByteBuf buf, StreamStatus o) {
+    o.code = buf.readIntLE();
+    return o;
   }
 
   public static void route(ByteBuf buf, HandlerMetering handler) {
@@ -318,6 +144,16 @@ public class ServerCodec {
         handler.handle(readBody_1246(buf, new MeteringBatchFound()));
         return;
     }
+  }
+
+  private static MeteringBatchRemoved readBody_1248(ByteBuf buf, MeteringBatchRemoved o) {
+    return o;
+  }
+
+  private static MeteringBatchFound readBody_1246(ByteBuf buf, MeteringBatchFound o) {
+    o.id = Helper.readString(buf);
+    o.batch = Helper.readString(buf);
+    return o;
   }
 
   public static InventoryHeartbeat read_InventoryHeartbeat(ByteBuf buf) {
@@ -336,11 +172,6 @@ public class ServerCodec {
     return null;
   }
 
-  private static InventoryHeartbeat readBody_7232(ByteBuf buf, InventoryHeartbeat o) {
-    o.spaces = Helper.readStringArray(buf);
-    return o;
-  }
-
   public static HeatPayload read_HeatPayload(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 5122:
@@ -355,12 +186,6 @@ public class ServerCodec {
         return readBody_5122(buf, o);
     }
     return null;
-  }
-
-  private static HeatPayload readBody_5122(ByteBuf buf, HeatPayload o) {
-    o.cpu = buf.readDoubleLE();
-    o.mem = buf.readDoubleLE();
-    return o;
   }
 
   public static StreamSeqResponse read_StreamSeqResponse(ByteBuf buf) {
@@ -379,12 +204,6 @@ public class ServerCodec {
     return null;
   }
 
-  private static StreamSeqResponse readBody_1632(ByteBuf buf, StreamSeqResponse o) {
-    o.op = buf.readIntLE();
-    o.seq = buf.readIntLE();
-    return o;
-  }
-
   public static StreamAskAttachmentResponse read_StreamAskAttachmentResponse(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 15546:
@@ -399,12 +218,6 @@ public class ServerCodec {
         return readBody_15546(buf, o);
     }
     return null;
-  }
-
-  private static StreamAskAttachmentResponse readBody_15546(ByteBuf buf, StreamAskAttachmentResponse o) {
-    o.op = buf.readIntLE();
-    o.allowed = buf.readBoolean();
-    return o;
   }
 
   public static StreamError read_StreamError(ByteBuf buf) {
@@ -423,12 +236,6 @@ public class ServerCodec {
     return null;
   }
 
-  private static StreamError readBody_19546(ByteBuf buf, StreamError o) {
-    o.op = buf.readIntLE();
-    o.code = buf.readIntLE();
-    return o;
-  }
-
   public static StreamData read_StreamData(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 10546:
@@ -443,11 +250,6 @@ public class ServerCodec {
         return readBody_10546(buf, o);
     }
     return null;
-  }
-
-  private static StreamData readBody_10546(ByteBuf buf, StreamData o) {
-    o.delta = Helper.readString(buf);
-    return o;
   }
 
   public static StreamStatus read_StreamStatus(ByteBuf buf) {
@@ -466,11 +268,6 @@ public class ServerCodec {
     return null;
   }
 
-  private static StreamStatus readBody_12546(ByteBuf buf, StreamStatus o) {
-    o.code = buf.readIntLE();
-    return o;
-  }
-
   public static MeteringBatchRemoved read_MeteringBatchRemoved(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 1248:
@@ -485,10 +282,6 @@ public class ServerCodec {
         return readBody_1248(buf, o);
     }
     return null;
-  }
-
-  private static MeteringBatchRemoved readBody_1248(ByteBuf buf, MeteringBatchRemoved o) {
-    return o;
   }
 
   public static MeteringBatchFound read_MeteringBatchFound(ByteBuf buf) {
@@ -507,12 +300,6 @@ public class ServerCodec {
     return null;
   }
 
-  private static MeteringBatchFound readBody_1246(ByteBuf buf, MeteringBatchFound o) {
-    o.id = Helper.readString(buf);
-    o.batch = Helper.readString(buf);
-    return o;
-  }
-
   public static ScanDeploymentResponse read_ScanDeploymentResponse(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 8922:
@@ -527,10 +314,6 @@ public class ServerCodec {
         return readBody_8922(buf, o);
     }
     return null;
-  }
-
-  private static ScanDeploymentResponse readBody_8922(ByteBuf buf, ScanDeploymentResponse o) {
-    return o;
   }
 
   public static ReflectResponse read_ReflectResponse(ByteBuf buf) {
@@ -549,11 +332,6 @@ public class ServerCodec {
     return null;
   }
 
-  private static ReflectResponse readBody_6736(ByteBuf buf, ReflectResponse o) {
-    o.schema = Helper.readString(buf);
-    return o;
-  }
-
   public static CreateResponse read_CreateResponse(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 12524:
@@ -568,10 +346,6 @@ public class ServerCodec {
         return readBody_12524(buf, o);
     }
     return null;
-  }
-
-  private static CreateResponse readBody_12524(ByteBuf buf, CreateResponse o) {
-    return o;
   }
 
   public static PingResponse read_PingResponse(ByteBuf buf) {
@@ -590,17 +364,13 @@ public class ServerCodec {
     return null;
   }
 
-  private static PingResponse readBody_24322(ByteBuf buf, PingResponse o) {
-    return o;
-  }
-
   public static void write(ByteBuf buf, InventoryHeartbeat o) {
     if (o == null) {
       buf.writeIntLE(0);
       return;
     }
     buf.writeIntLE(7232);
-    Helper.writeStringArray(buf, o.spaces);;
+    Helper.writeStringArray(buf, o.spaces);
   }
 
   public static void write(ByteBuf buf, HeatPayload o) {
@@ -649,7 +419,7 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(10546);
-    Helper.writeString(buf, o.delta);;
+    Helper.writeString(buf, o.delta);
   }
 
   public static void write(ByteBuf buf, StreamStatus o) {
@@ -675,8 +445,8 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(1246);
-    Helper.writeString(buf, o.id);;
-    Helper.writeString(buf, o.batch);;
+    Helper.writeString(buf, o.id);
+    Helper.writeString(buf, o.batch);
   }
 
   public static void write(ByteBuf buf, ScanDeploymentResponse o) {
@@ -693,7 +463,7 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(6736);
-    Helper.writeString(buf, o.schema);;
+    Helper.writeString(buf, o.schema);
   }
 
   public static void write(ByteBuf buf, CreateResponse o) {
@@ -710,5 +480,229 @@ public class ServerCodec {
       return;
     }
     buf.writeIntLE(24322);
+  }
+
+  public interface HandlerCreation {
+    void handle(CreateResponse payload);
+  }
+
+  public interface HandlerPing {
+    void handle(PingResponse payload);
+  }
+
+  public interface HandlerDeployment {
+    void handle(ScanDeploymentResponse payload);
+  }
+
+  public interface HandlerReflection {
+    void handle(ReflectResponse payload);
+  }
+
+  public interface HandlerInfo {
+    void handle(InventoryHeartbeat payload);
+
+    void handle(HeatPayload payload);
+  }
+
+  public interface HandlerDocument {
+    void handle(StreamSeqResponse payload);
+
+    void handle(StreamAskAttachmentResponse payload);
+
+    void handle(StreamError payload);
+
+    void handle(StreamData payload);
+
+    void handle(StreamStatus payload);
+  }
+
+  public interface HandlerMetering {
+    void handle(MeteringBatchRemoved payload);
+
+    void handle(MeteringBatchFound payload);
+  }
+
+  public static abstract class StreamCreation implements ByteStream {
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 12524:
+          handle(readBody_12524(buf, new CreateResponse()));
+          return;
+      }
+    }
+
+    public abstract void handle(CreateResponse payload);
+  }
+
+  public static abstract class StreamPing implements ByteStream {
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 24322:
+          handle(readBody_24322(buf, new PingResponse()));
+          return;
+      }
+    }
+
+    public abstract void handle(PingResponse payload);
+  }
+
+  public static abstract class StreamDeployment implements ByteStream {
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 8922:
+          handle(readBody_8922(buf, new ScanDeploymentResponse()));
+          return;
+      }
+    }
+
+    public abstract void handle(ScanDeploymentResponse payload);
+  }
+
+  public static abstract class StreamReflection implements ByteStream {
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 6736:
+          handle(readBody_6736(buf, new ReflectResponse()));
+          return;
+      }
+    }
+
+    public abstract void handle(ReflectResponse payload);
+  }
+
+  public static abstract class StreamInfo implements ByteStream {
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 7232:
+          handle(readBody_7232(buf, new InventoryHeartbeat()));
+          return;
+        case 5122:
+          handle(readBody_5122(buf, new HeatPayload()));
+          return;
+      }
+    }
+
+    public abstract void handle(InventoryHeartbeat payload);
+
+    public abstract void handle(HeatPayload payload);
+  }
+
+  public static abstract class StreamDocument implements ByteStream {
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 1632:
+          handle(readBody_1632(buf, new StreamSeqResponse()));
+          return;
+        case 15546:
+          handle(readBody_15546(buf, new StreamAskAttachmentResponse()));
+          return;
+        case 19546:
+          handle(readBody_19546(buf, new StreamError()));
+          return;
+        case 10546:
+          handle(readBody_10546(buf, new StreamData()));
+          return;
+        case 12546:
+          handle(readBody_12546(buf, new StreamStatus()));
+          return;
+      }
+    }
+
+    public abstract void handle(StreamSeqResponse payload);
+
+    public abstract void handle(StreamAskAttachmentResponse payload);
+
+    public abstract void handle(StreamError payload);
+
+    public abstract void handle(StreamData payload);
+
+    public abstract void handle(StreamStatus payload);
+  }
+
+  public static abstract class StreamMetering implements ByteStream {
+    @Override
+    public void request(int bytes) {
+    }
+
+    @Override
+    public ByteBuf create(int size) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void next(ByteBuf buf) {
+      switch (buf.readIntLE()) {
+        case 1248:
+          handle(readBody_1248(buf, new MeteringBatchRemoved()));
+          return;
+        case 1246:
+          handle(readBody_1246(buf, new MeteringBatchFound()));
+          return;
+      }
+    }
+
+    public abstract void handle(MeteringBatchRemoved payload);
+
+    public abstract void handle(MeteringBatchFound payload);
   }
 }

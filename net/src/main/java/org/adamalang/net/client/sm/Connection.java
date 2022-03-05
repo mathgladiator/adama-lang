@@ -35,13 +35,13 @@ public class Connection {
   private final String agent;
   private final String authority;
   private final Key key;
-  private String viewerState;
   private final SimpleEvents events;
   // the buffer of actions to execute once we have a remote
   private final ItemQueue<Remote> queue;
   // the state machine registers itself with the routing table which will tell it where to go
   Runnable unsubscribeFromRouting;
   boolean routingAlive;
+  private String viewerState;
   // the state machine is complicated because of the two stages.
   // first, we have to find a client
   // second, then using that client we have to connect
@@ -140,6 +140,10 @@ public class Connection {
     });
   }
 
+  private void bufferOrExecute(ItemAction<Remote> action) {
+    queue.add(action);
+  }
+
   public void update(String viewerState) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_update.start();
     base.executor.execute(new NamedRunnable("connection-update") {
@@ -153,14 +157,11 @@ public class Connection {
           }
 
           @Override
-          protected void failure(int code) { }
+          protected void failure(int code) {
+          }
         });
       }
     });
-  }
-
-  private void bufferOrExecute(ItemAction<Remote> action) {
-    queue.add(action);
   }
 
   public void canAttach(Callback<Boolean> callback) {

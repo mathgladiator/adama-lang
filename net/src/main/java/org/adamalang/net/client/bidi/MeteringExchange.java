@@ -3,7 +3,6 @@ package org.adamalang.net.client.bidi;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.codec.ClientCodec;
@@ -35,6 +34,12 @@ public class MeteringExchange extends ServerCodec.StreamMetering implements Call
     metering.failure(ex.code);
   }
 
+  private void begin() {
+    ByteBuf buf = upstream.create(4);
+    ClientCodec.write(buf, COMMON_BEGIN);
+    upstream.next(buf);
+  }
+
   @Override
   public void completed() {
     metering.finished();
@@ -43,12 +48,6 @@ public class MeteringExchange extends ServerCodec.StreamMetering implements Call
   @Override
   public void error(int errorCode) {
     metering.failure(errorCode);
-  }
-
-  private void begin() {
-    ByteBuf buf = upstream.create(4);
-    ClientCodec.write(buf, COMMON_BEGIN);
-    upstream.next(buf);
   }
 
   @Override

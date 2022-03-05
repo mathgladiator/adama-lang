@@ -9,15 +9,18 @@
  */
 package org.adamalang.net.client;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
+import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.contracts.Remote;
 import org.adamalang.net.mocks.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -75,7 +78,6 @@ public class InstanceClientTests {
             }
           };
       Runnable happy = events.latchAt(5);
-      bed.startServer();
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
@@ -134,7 +136,6 @@ public class InstanceClientTests {
             }
           };
       Runnable happy = events.latchAt(3);
-      bed.startServer();
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
@@ -301,6 +302,56 @@ public class InstanceClientTests {
         events.assertWrite(0, "CONNECTED");
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         events.assertWrite(2, "DISCONNECTED");
+      }
+    }
+  }
+
+  @Test
+  public void queueFull() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 10007,
+                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+      try (InstanceClient client = bed.makeClient()) {
+        ArrayList<AssertCreateSuccess> delayed = new ArrayList<>();
+        for (int k = 0; k < InstanceClient.WAITING_QUEUE; k++) {
+          AssertCreateSuccess success = new AssertCreateSuccess();
+          client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+          delayed.add(success);
+        }
+        AssertCreateFailure failure = new AssertCreateFailure();
+        client.create("origin", "nope", "nope", "space", "1", "123", "{}", failure);
+        failure.await(737336);
+
+        LatchedVoidCallback scanCallback = new LatchedVoidCallback();
+        client.scanDeployments("space", scanCallback);
+        scanCallback.assertFail(787514);
+
+        MockEvents connectEvents = new MockEvents();
+        Runnable waitError = connectEvents.latchAt(1);
+        client.connect("origin", "nope", "nope", "space", "1", "{}", connectEvents);
+        waitError.run();
+        connectEvents.assertWrite(0, "ERROR:702524");
+
+        MockMeteringFlow meteringFlow = new MockMeteringFlow();
+        Runnable waitFlowError = meteringFlow.latchAt(1);
+        client.startMeteringExchange(meteringFlow);
+        waitFlowError.run();
+        meteringFlow.assertWrite(0, "ERROR:786495");
+
+        LatchedVoidCallback reflectCallback = new LatchedVoidCallback();
+        client.reflect("space", "key", new Callback<String>() {
+          @Override
+          public void success(String value) {
+            reflectCallback.success(null);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            reflectCallback.failure(ex);
+          }
+        });
+        reflectCallback.assertFail(737336);
       }
     }
   }
@@ -630,122 +681,95 @@ public class InstanceClientTests {
       }
     }
   }
-
+*/
   @Test
   public void scanDeploymentsSuccessAndFailures() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10012,
             "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       CountDownLatch latch = new CountDownLatch(3);
-      try (InstanceClient client =
-          new InstanceClient(
-              bed.identity,
-              metrics,
-              null,
-              "127.0.0.1:10012",
-              bed.clientExecutor,
-              new Lifecycle() {
-                @Override
-                public void connected(InstanceClient client) {
-                  client.scanDeployments(
-                      "space",
-                      new ScanDeploymentCallback() {
-                        @Override
-                        public void success() {
-                          System.err.println("first good");
-                          latch.countDown();
-                          client.scanDeployments(
-                              "space",
-                              new ScanDeploymentCallback() {
-                                @Override
-                                public void success() {
-                                  System.err.println("second good");
-                                  latch.countDown();
-                                  client.scanDeployments(
-                                      "space",
-                                      new ScanDeploymentCallback() {
-                                        @Override
-                                        public void success() {}
+      try (InstanceClient client = bed.makeClient()) {
+        client.scanDeployments("space", new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            latch.countDown();
+            client.scanDeployments("space", new Callback<Void>() {
+              @Override
+              public void success(Void value) {
+                latch.countDown();
+                client.scanDeployments("space", new Callback<Void>() {
+                  @Override
+                  public void success(Void value) {
 
-                                        @Override
-                                        public void failure() {
-                                          System.err.println("third bad");
-                                          latch.countDown();
-                                        }
-                                      });
-                                }
+                  }
 
-                                @Override
-                                public void failure() {}
-                              });
-                        }
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    latch.countDown();
+                  }
+                });
+              }
 
-                        @Override
-                        public void failure() {}
-                      });
-                }
+              @Override
+              public void failure(ErrorCodeException ex) {
 
-                @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
+              }
+            });
+          }
 
-                @Override
-                public void disconnected(InstanceClient client) {}
-              },
-              (t, errorCode) -> {
-                System.err.println("EXCEPTION:" + t.getMessage());
-              })) {
-        bed.startServer();
-        Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
       }
     }
   }
 
   @Test
   public void heatMonitoring() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
-        new TestBed(
-            10012,
-            "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+             new TestBed(
+                 10012,
+                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
       CountDownLatch latch = new CountDownLatch(3);
-      HeatMonitor monitor =
-          new HeatMonitor() {
-            @Override
-            public void heat(String target, double cpu, double memory) {
-              latch.countDown();
-            }
-          };
-      try (InstanceClient client =
-          new InstanceClient(
-              bed.identity,
-              metrics,
-              monitor,
-              "127.0.0.1:10012",
-              bed.clientExecutor,
-              new Lifecycle() {
-                @Override
-                public void connected(InstanceClient client) {}
-
-                @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
-
-                @Override
-                public void disconnected(InstanceClient client) {}
-              },
-              (t, errorCode) -> {
-                System.err.println("EXCEPTION:" + t.getMessage());
-              })) {
-        bed.startServer();
+      HeatMonitor monitor = (target, cpu, memory) -> latch.countDown();
+      try (InstanceClient client = bed.makeClient(monitor)) {
         Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
-        bed.stopServer();
       }
     }
   }
 
+  @Test
+  public void reflect() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 10012,
+                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+      bed.startServer();
+      try (InstanceClient client = bed.makeClient()) {
+        CountDownLatch latchGotHappy = new CountDownLatch(1);
+        client.reflect("space", "key", new Callback<String>() {
+          @Override
+          public void success(String value) {
+            latchGotHappy.countDown();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+
+          }
+        });
+        Assert.assertTrue(latchGotHappy.await(5000, TimeUnit.MILLISECONDS));
+      }
+    }
+  }
+
+  /*
   @Test
   public void naughtyFailureReflection() throws Exception {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
