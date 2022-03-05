@@ -152,7 +152,6 @@ public class ClientTests {
     }
   }
 
-  /*
   @Test
   public void no_capacity() throws Exception {
     try (TestBed bed =
@@ -162,14 +161,15 @@ public class ClientTests {
       Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
         CountDownLatch latch1Failed = new CountDownLatch(1);
-        client.create("me", "dev", "space", "key1", null, "{}", new CreateCallback() {
+        client.create("origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
-          public void created() {
+          public void success(Void value) {
+
           }
 
           @Override
-          public void error(int code) {
-            Assert.assertEquals(912447, code);
+          public void failure(ErrorCodeException ex) {
+            Assert.assertEquals(912447, ex.code);
             latch1Failed.countDown();
           }
         });
@@ -229,7 +229,7 @@ public class ClientTests {
                  12501,
                  "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
-      Client client = new Client(bed.identity, new ClientMetrics(new NoOpMetricsFactory()), null);
+      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
         client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:12501"));
         CountDownLatch latchFound = new CountDownLatch(1);
@@ -249,14 +249,15 @@ public class ClientTests {
         }
         Assert.assertTrue(latchFound.await(1000, TimeUnit.MILLISECONDS));
         CountDownLatch latchFailed = new CountDownLatch(1);
-        client.create("me", "dev", "space", "key1", null, "{}", new CreateCallback() {
+        client.create("origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
-          public void created() {
+          public void success(Void value) {
+
           }
 
           @Override
-          public void error(int code) {
-            Assert.assertEquals(134259, code);
+          public void failure(ErrorCodeException ex) {
+            Assert.assertEquals(134259, ex.code);
             latchFailed.countDown();
           }
         });
@@ -267,7 +268,7 @@ public class ClientTests {
     }
   }
 
-
+/*
   @Test
   public void bad_client() throws Exception {
     try (NaughtyServer server = NaughtyServer.start().port(12505).establish(true).inventory("space").billing(false).build()) {

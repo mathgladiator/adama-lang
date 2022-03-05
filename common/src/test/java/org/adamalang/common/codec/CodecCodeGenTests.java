@@ -16,6 +16,7 @@ public class CodecCodeGenTests {
   @TypeId(123)
   @PriorTypeId(42)
   @Flow("X")
+  @MakeReadRegister
   public static class TestClassA {
 
     @FieldOrder(1)

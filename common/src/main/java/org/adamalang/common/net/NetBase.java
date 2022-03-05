@@ -10,12 +10,14 @@
 package org.adamalang.common.net;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
@@ -26,6 +28,8 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.MachineIdentity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -35,6 +39,7 @@ import java.util.regex.Pattern;
 
 /** defines the threading base for the common networking library */
 public class NetBase {
+  private static final Logger LOGGER = LoggerFactory.getLogger(NetBase.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(NetBase.class);
 
   public final NioEventLoopGroup bossGroup;
@@ -94,6 +99,45 @@ public class NetBase {
     } catch (Exception ex) {
       lifecycle.failed(ErrorCodeException.detectOrWrap(ErrorCodes.NET_CONNECT_FAILED_UNKNOWN, ex, EXLOGGER));
     }
+  }
+
+  public ServerHandle serve(int port, Handler handler) throws Exception {
+    ServerBootstrap bootstrap = new ServerBootstrap();
+    bootstrap.group(bossGroup, workerGroup);
+    bootstrap.channel(NioServerSocketChannel.class);
+    bootstrap.localAddress(port);
+    SslContext sslContext = makeServerSslContext();
+    bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
+      protected void initChannel(SocketChannel ch) throws Exception {
+        ch.pipeline().addLast(sslContext.newHandler(ch.alloc()));
+        ch.pipeline().addLast(new LengthFieldPrepender(4));
+        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(65535,0, 4, 0, 4));
+        ch.pipeline().addLast(new ChannelServer(handler));
+      }
+    });
+    ChannelFuture future = bootstrap.bind();
+    Runnable blocker = blocker();
+    LOGGER.info("started");
+    return new ServerHandle() {
+      @Override
+      public void waitForEnd() {
+        LOGGER.info("waiting");
+        try {
+          future.channel().closeFuture().sync();
+        } catch (Exception ex) {
+          LOGGER.info("failure", ex);
+          ex.printStackTrace();
+        } finally {
+          blocker.run();
+        }
+        LOGGER.info("finished");
+      }
+
+      @Override
+      public void kill() {
+        future.channel().close();
+      }
+    };
   }
 
   public void waitForShutdown() throws InterruptedException {

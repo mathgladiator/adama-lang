@@ -14,12 +14,13 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.ServerHandle;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.mocks.StdErrLogger;
-import org.adamalang.net.server.Server;
+import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.data.InMemoryDataService;
@@ -30,18 +31,14 @@ import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
-import org.adamalang.translator.env.CompilerOptions;
-import org.adamalang.translator.env.EnvironmentState;
-import org.adamalang.translator.env.GlobalObjectPool;
-import org.adamalang.translator.jvm.LivingDocumentFactory;
-import org.adamalang.translator.parser.Parser;
-import org.adamalang.translator.parser.token.TokenEngine;
-import org.adamalang.translator.tree.Document;
+import org.junit.Assert;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestBed implements AutoCloseable {
@@ -50,9 +47,11 @@ public class TestBed implements AutoCloseable {
   public final MachineIdentity identity;
   public final SimpleExecutor clientExecutor;
   public final MeteringPubSub meteringPubSub;
-  private final Server server;
+  private final ServerNexus nexus;
   public final AtomicInteger deploymentScans;
   public final CoreService coreService;
+  private ServerHandle handle;
+  private CountDownLatch serverExit;
 
   public TestBed(int port, String code) throws Exception {
     this.base = new NetBase(MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
@@ -87,12 +86,13 @@ public class TestBed implements AutoCloseable {
             2);
 
     this.identity = this.base.identity;
-    ServerNexus nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, (space) -> {
+    this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, (space) -> {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();
       }
     }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("x23", "x23").getParentFile(),  1800000L), port, 2);
-    this.server = new Server(nexus);
+    this.handle = null;
+    this.serverExit = null;
   }
 
   public InstanceClient makeClient() throws Exception {
@@ -121,15 +121,50 @@ public class TestBed implements AutoCloseable {
   }
 
   public void startServer() throws Exception {
-    server.start();
+    if (handle == null) {
+      handle = this.base.serve(port, (upstream) -> new Handler(nexus, upstream));
+      serverExit = new CountDownLatch(1);
+      CountDownLatch waitUntilThreadUp = new CountDownLatch(1);
+      new Thread(() -> {
+        waitUntilThreadUp.countDown();
+        handle.waitForEnd();
+        serverExit.countDown();
+      }).start();
+      Assert.assertTrue(waitUntilThreadUp.await(1000, TimeUnit.MILLISECONDS));
+    } else {
+      Assert.fail();
+    }
+  }
+
+  public void startManual(org.adamalang.common.net.Handler handler) throws Exception {
+    if (handle != null) {
+      handle = this.base.serve(port, handler);
+      serverExit = new CountDownLatch(1);
+      new Thread(() -> {
+        handle.waitForEnd();
+        serverExit.countDown();
+      }).start();
+    } else {
+      Assert.fail();
+    }
   }
 
   public void stopServer() throws Exception {
-    base.shutdown();
+    if (handle != null) {
+      handle.kill();
+      Assert.assertTrue(serverExit.await(5000, TimeUnit.MILLISECONDS));
+      handle = null;
+      serverExit = null;
+    } else {
+      Assert.fail();
+    }
   }
 
   @Override
   public void close() throws Exception {
+    if (handle != null) {
+      stopServer();
+    }
     base.shutdown();
     clientExecutor.shutdown();
   }

@@ -37,7 +37,7 @@ public class NetSuiteTests {
   public void happy() throws Exception {
     NetBase base = new NetBase(identity(), 2, 4);
     try {
-      Runnable waitForServer = Server.start(base, 5001, new Handler() {
+      ServerHandle handle = base.serve(5001, new Handler() {
         @Override
         public ByteStream create(ByteStream upstream) {
           return new ByteStream() {
@@ -73,76 +73,81 @@ public class NetSuiteTests {
           };
         }
       });
-      Thread thread = new Thread(waitForServer);
-      thread.start();
-      System.err.println("Server running");
-      CountDownLatch phases = new CountDownLatch(102);
-      base.connect("127.0.0.1:5001", new Lifecycle() {
-        @Override
-        public void connected(ChannelClient channel) {
-          System.err.println("client connected");
-          channel.open(new ByteStream() {
-            @Override
-            public ByteBuf create(int bestGuessForSize) {
-              return null;
-            }
-
-            @Override
-            public void request(int bytes) {
-              System.err.println("client|Request=" + bytes);
-              phases.countDown();
-            }
-
-            @Override
-            public void next(ByteBuf buf) {
-              int value = buf.readIntLE();
-              System.err.println("client|Data=" + value);
-              phases.countDown();
-            }
-
-            @Override
-            public void completed() {
-              System.err.println("Completed");
-            }
-
-            @Override
-            public void error(int errorCode) {
-              System.err.println("Client error:" + + errorCode);
-            }
-          }, new Callback<ByteStream>() {
-            @Override
-            public void success(ByteStream value) {
-              value.request(1000);
-              for (int k = 0; k < 100; k++) {
-                ByteBuf toSend = value.create(4);
-                toSend.writeIntLE(42 + k);
-                value.next(toSend);
+      try {
+        CountDownLatch phases = new CountDownLatch(102);
+        Thread thread = new Thread(() -> handle.waitForEnd());
+        thread.start();
+        System.err.println("Server running");
+        base.connect("127.0.0.1:5001", new Lifecycle() {
+          @Override
+          public void connected(ChannelClient channel) {
+            System.err.println("client connected");
+            channel.open(new ByteStream() {
+              @Override
+              public ByteBuf create(int bestGuessForSize) {
+                return null;
               }
-              value.completed();
-              phases.countDown(); // GOT CONNECTED
-            }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-              ex.printStackTrace();
-            }
-          });
-        }
+              @Override
+              public void request(int bytes) {
+                System.err.println("client|Request=" + bytes);
+                phases.countDown();
+              }
 
-        int attemptsLeft = 3;
-        @Override
-        public void failed(ErrorCodeException ex) {
-          if (attemptsLeft-- > 0) {
-            base.connect("127.0.0.1:5001", this);
+              @Override
+              public void next(ByteBuf buf) {
+                int value = buf.readIntLE();
+                System.err.println("client|Data=" + value);
+                phases.countDown();
+              }
+
+              @Override
+              public void completed() {
+                System.err.println("Completed");
+              }
+
+              @Override
+              public void error(int errorCode) {
+                System.err.println("Client error:" + +errorCode);
+              }
+            }, new Callback<ByteStream>() {
+              @Override
+              public void success(ByteStream value) {
+                value.request(1000);
+                for (int k = 0; k < 100; k++) {
+                  ByteBuf toSend = value.create(4);
+                  toSend.writeIntLE(42 + k);
+                  value.next(toSend);
+                }
+                value.completed();
+                phases.countDown(); // GOT CONNECTED
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                ex.printStackTrace();
+              }
+            });
           }
-        }
 
-        @Override
-        public void disconnected() {
+          int attemptsLeft = 3;
 
-        }
-      });
-      Assert.assertTrue(phases.await(2000, TimeUnit.MILLISECONDS));
+          @Override
+          public void failed(ErrorCodeException ex) {
+            if (attemptsLeft-- > 0) {
+              base.connect("127.0.0.1:5001", this);
+            }
+          }
+
+          @Override
+          public void disconnected() {
+
+          }
+        });
+        Assert.assertTrue(phases.await(2000, TimeUnit.MILLISECONDS));
+      } finally {
+        handle.kill();
+      }
     } finally {
       base.shutdown();
       CountDownLatch latchFailed = new CountDownLatch(1);
@@ -164,126 +169,127 @@ public class NetSuiteTests {
       });
       Assert.assertTrue(latchFailed.await(1000, TimeUnit.MILLISECONDS));
     }
+    base.waitForShutdown();
   }
-
 
   @Test
   public void sad_remote_error() throws Exception {
     NetBase base = new NetBase(identity(), 2, 4);
     try {
-      Runnable waitForServer = Server.start(base, 5002, new Handler() {
+      ServerHandle handle = base.serve(5002, upstream -> new ByteStream() {
         @Override
-        public ByteStream create(ByteStream upstream) {
-          return new ByteStream() {
-            @Override
-            public ByteBuf create(int bestGuessForSize) { // Not used on server side
-              return null;
-            }
-
-            @Override
-            public void request(int bytes) {
-              System.err.println("server|Request=" + bytes);
-              upstream.request(bytes * 2);
-            }
-
-            @Override
-            public void next(ByteBuf buf) {
-              int val = buf.readIntLE();
-              System.err.println("Server|Data=" + val);
-              if (val == 50) {
-                upstream.error(7209550);
-              } else {
-                ByteBuf toSend = upstream.create(4);
-                toSend.writeIntLE(val);
-                upstream.next(toSend);
-              }
-            }
-
-            @Override
-            public void completed() {
-              System.err.println("server|Done");
-            }
-
-            @Override
-            public void error(int errorCode) {
-              System.err.println("server|Error:" + errorCode);
-            }
-          };
-        }
-      });
-      Thread thread = new Thread(waitForServer);
-      thread.start();
-      System.err.println("Server running");
-      CountDownLatch phases = new CountDownLatch(10);
-      base.connect("127.0.0.1:5002", new Lifecycle() {
-        @Override
-        public void connected(ChannelClient channel) {
-          System.err.println("client connected");
-          channel.open(new ByteStream() {
-            @Override
-            public ByteBuf create(int bestGuessForSize) {
-              return null;
-            }
-
-            @Override
-            public void request(int bytes) {
-              System.err.println("client|Request=" + bytes);
-              phases.countDown();
-            }
-
-            @Override
-            public void next(ByteBuf buf) {
-              int value = buf.readIntLE();
-              System.err.println("client|Data=" + value);
-              phases.countDown();
-            }
-
-            @Override
-            public void completed() {
-              System.err.println("Completed");
-            }
-
-            @Override
-            public void error(int errorCode) {
-              System.err.println("Client error:" + + errorCode);
-              phases.countDown();
-            }
-          }, new Callback<ByteStream>() {
-            @Override
-            public void success(ByteStream value) {
-              value.request(1000);
-              for (int k = 0; k < 100; k++) {
-                ByteBuf toSend = value.create(4);
-                toSend.writeIntLE(42 + k);
-                value.next(toSend);
-              }
-              value.completed();
-              phases.countDown(); // GOT CONNECTED
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-
-            }
-          });
+        public ByteBuf create(int bestGuessForSize) { // Not used on server side
+          return null;
         }
 
-        int attemptsLeft = 3;
         @Override
-        public void failed(ErrorCodeException ex) {
-          if (attemptsLeft-- > 0) {
-            base.connect("127.0.0.1:5001", this);
+        public void request(int bytes) {
+          System.err.println("server|Request=" + bytes);
+          upstream.request(bytes * 2);
+        }
+
+        @Override
+        public void next(ByteBuf buf) {
+          int val = buf.readIntLE();
+          System.err.println("Server|Data=" + val);
+          if (val == 50) {
+            upstream.error(7209550);
+          } else {
+            ByteBuf toSend = upstream.create(4);
+            toSend.writeIntLE(val);
+            upstream.next(toSend);
           }
         }
 
         @Override
-        public void disconnected() {
+        public void completed() {
+          System.err.println("server|Done");
+        }
 
+        @Override
+        public void error(int errorCode) {
+          System.err.println("server|Error:" + errorCode);
         }
       });
-      Assert.assertTrue(phases.await(2000, TimeUnit.MILLISECONDS));
+      try {
+        CountDownLatch phases = new CountDownLatch(10);
+        Thread thread = new Thread(() -> handle.waitForEnd());
+        thread.start();
+        System.err.println("Server running");
+        base.connect("127.0.0.1:5002", new Lifecycle() {
+          @Override
+          public void connected(ChannelClient channel) {
+            System.err.println("client connected");
+            channel.open(new ByteStream() {
+              @Override
+              public ByteBuf create(int bestGuessForSize) {
+                return null;
+              }
+
+              @Override
+              public void request(int bytes) {
+                System.err.println("client|Request=" + bytes);
+                phases.countDown();
+              }
+
+              @Override
+              public void next(ByteBuf buf) {
+                int value = buf.readIntLE();
+                System.err.println("client|Data=" + value);
+                phases.countDown();
+              }
+
+              @Override
+              public void completed() {
+                System.err.println("Completed");
+              }
+
+              @Override
+              public void error(int errorCode) {
+                System.err.println("Client error:" + +errorCode);
+                phases.countDown();
+              }
+            }, new Callback<ByteStream>() {
+              @Override
+              public void success(ByteStream value) {
+                value.request(1000);
+                for (int k = 0; k < 100; k++) {
+                  ByteBuf toSend = value.create(4);
+                  toSend.writeIntLE(42 + k);
+                  value.next(toSend);
+                }
+                value.completed();
+                phases.countDown(); // GOT CONNECTED
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+
+              }
+            });
+          }
+
+          int attemptsLeft = 3;
+
+          @Override
+          public void failed(ErrorCodeException ex) {
+            if (attemptsLeft-- > 0) {
+              base.connect("127.0.0.1:5001", this);
+            }
+          }
+
+          @Override
+          public void disconnected() {
+
+          }
+        });
+        Assert.assertTrue(phases.await(2000, TimeUnit.MILLISECONDS));
+      } finally {
+        handle.kill();
+      }
     } finally {
       base.shutdown();
     }
+    base.waitForShutdown();
   }
 }

@@ -37,11 +37,11 @@ public class InstanceClientTests {
         {
           AssertCreateFailure failure = new AssertCreateFailure();
           client.create("origin", "nope", "nope", "space", "1", null, "{}", failure);
-          Assert.assertFalse(client.ping(2500));
+          Assert.assertFalse(client.ping(1250));
           failure.await(720955);
         }
         bed.startServer();
-        Assert.assertTrue(client.ping(15000));
+        Assert.assertTrue(client.ping(7500));
         {
           AssertCreateSuccess success = new AssertCreateSuccess();
           client.create("origin", "nope", "nope", "space", "2", "123", "{}", success);

@@ -227,15 +227,18 @@ public class CodecCodeGen {
       sb.append("    return null;\n");
       sb.append("  }\n");
       sb.append("\n");
-      sb.append("  public static ").append(clazz.getSimpleName()).append(" readRegister_").append(clazz.getSimpleName()).append("(ByteBuf buf, ").append(clazz.getSimpleName()).append(" o) {\n");
-      sb.append("    switch (buf.readIntLE()) {\n");
-      for (int caseId : caseIds) {
-        sb.append("      case ").append(caseId).append(":\n");
-        sb.append("        return readBody_").append(caseId).append("(buf, o);\n");
+
+      if (clazz.getAnnotation(MakeReadRegister.class) != null) {
+        sb.append("  public static ").append(clazz.getSimpleName()).append(" readRegister_").append(clazz.getSimpleName()).append("(ByteBuf buf, ").append(clazz.getSimpleName()).append(" o) {\n");
+        sb.append("    switch (buf.readIntLE()) {\n");
+        for (int caseId : caseIds) {
+          sb.append("      case ").append(caseId).append(":\n");
+          sb.append("        return readBody_").append(caseId).append("(buf, o);\n");
+        }
+        sb.append("    }\n");
+        sb.append("    return null;\n");
+        sb.append("  }\n");
       }
-      sb.append("    }\n");
-      sb.append("    return null;\n");
-      sb.append("  }\n");
       for (int caseId : caseIds) {
         boolean primary = caseId == caseIds[0];
         sb.append("\n");

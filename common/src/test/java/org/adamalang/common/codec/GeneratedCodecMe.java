@@ -148,13 +148,6 @@ public class GeneratedCodecMe {
     return null;
   }
 
-  public static TestClassB readRegister_TestClassB(ByteBuf buf, TestClassB o) {
-    switch (buf.readIntLE()) {
-      case 4242:
-        return readBody_4242(buf, o);
-    }
-    return null;
-  }
 
   private static TestClassB readBody_4242(ByteBuf buf, TestClassB o) {
     o.x = buf.readIntLE();
