@@ -74,12 +74,12 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     events.error(errorCode);
   }
 
+  private synchronized Callback<?> get(int op) {
+    return opHandlers.remove(op);
+  }
   @Override
   public void handle(ServerMessage.StreamSeqResponse payload) {
-    Callback<Integer> handler;
-    synchronized (opHandlers) {
-      handler = (Callback<Integer>) opHandlers.remove(payload.op);
-    }
+    Callback<Integer> handler =  (Callback<Integer>) get(payload.op);
     if (handler != null) {
       handler.success(payload.seq);
     }
@@ -87,10 +87,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
 
   @Override
   public void handle(ServerMessage.StreamAskAttachmentResponse payload) {
-    Callback<Boolean> handler;
-    synchronized (opHandlers) {
-      handler = (Callback<Boolean>) opHandlers.remove(payload.op);
-    }
+    Callback<Boolean> handler =  (Callback<Boolean>) get(payload.op);
     if (handler != null) {
       handler.success(payload.allowed);
     }
@@ -98,10 +95,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
 
   @Override
   public void handle(ServerMessage.StreamError payload) {
-    Callback<Integer> handler;
-    synchronized (opHandlers) {
-      handler = (Callback<Integer>) opHandlers.remove(payload.op);
-    }
+    Callback<Integer> handler =  (Callback<Integer>) get(payload.op);
     if (handler != null) {
       handler.failure(new ErrorCodeException(payload.code));
     }

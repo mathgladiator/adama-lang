@@ -60,8 +60,6 @@ public class InstanceClientTests {
             "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble<who, viewer> zpx = viewer.z + x;")) {
       bed.startServer();
       MockEvents events = new MockEvents();
-      Runnable gotFirstData = events.latchAt(2);
-      Runnable gotViewUpdate = events.latchAt(3);
       Runnable happy = events.latchAt(5);
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
@@ -69,9 +67,7 @@ public class InstanceClientTests {
         success.await();
         client.connect("origin", "nope", "test", "space", "1", "{}", events);
         Remote remote = events.getRemote();
-        gotFirstData.run();
         remote.update("{\"z\":100}");
-        gotViewUpdate.run();
         remote.send("foo", "marker", "{\"z\":\"100\"}", new Callback<Integer>() {
           @Override
           public void success(Integer value) {

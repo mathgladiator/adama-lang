@@ -309,7 +309,6 @@ public class CoreService {
     Callback<Integer> onConnected = new Callback<>() {
       @Override
       public void success(Integer dontCare) {
-        stream.status(Streamback.StreamStatus.Connected);
         document.createPrivateView(who, new Perspective() {
           @Override
           public void data(String data) {
@@ -325,6 +324,7 @@ public class CoreService {
           @Override
           public void success(PrivateView view) {
             stream.onSetupComplete(new CoreStream(metrics, who, inventory, document, view));
+            stream.status(Streamback.StreamStatus.Connected);
           }
 
           @Override
