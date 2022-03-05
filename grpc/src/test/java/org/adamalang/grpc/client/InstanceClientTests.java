@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InstanceClientTests {
+  /*
   @Test
   public void stubPersistent() throws Exception {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
@@ -68,7 +69,7 @@ public class InstanceClientTests {
       }
     }
   }
-
+  */
   @Test
   public void multiplexPersistent() throws Exception {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());

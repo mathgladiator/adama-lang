@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class InstanceClientTests {
   @Test
@@ -56,38 +57,37 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10003,
-            "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble<who, viewer> zpx = viewer.z + x;")) {
+            "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble<who, viewer> zpx = viewer.z + x;")) {
       bed.startServer();
-      MockEvents events =
-          new MockEvents() {
-            @Override
-            public void connected(Remote remote) {
-              remote.update("{\"z\":100}");
-              remote.send("foo", "marker", "{\"z\":\"100\"}", new Callback<Integer>() {
-                @Override
-                public void success(Integer value) {
-                  remote.disconnect();
-                }
-
-                @Override
-                public void failure(ErrorCodeException ex) {
-                  System.err.println("error!:" + ex.code);
-                }
-              });
-              super.connected(remote);
-            }
-          };
+      MockEvents events = new MockEvents();
+      Runnable gotFirstData = events.latchAt(2);
+      Runnable gotViewUpdate = events.latchAt(3);
       Runnable happy = events.latchAt(5);
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
         client.connect("origin", "nope", "test", "space", "1", "{}", events);
+        Remote remote = events.getRemote();
+        gotFirstData.run();
+        remote.update("{\"z\":100}");
+        gotViewUpdate.run();
+        remote.send("foo", "marker", "{\"z\":\"100\"}", new Callback<Integer>() {
+          @Override
+          public void success(Integer value) {
+            remote.disconnect();
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            System.err.println("error!:" + ex.code);
+          }
+        });
         happy.run();
         events.assertWrite(0, "CONNECTED");
-        events.assertWrite(1, "DELTA:{\"data\":{\"x\":123,\"zpx\":123},\"seq\":4}");
-        events.assertWrite(2, "DELTA:{\"data\":{\"zpx\":223},\"seq\":5}");
-        events.assertWrite(3, "DELTA:{\"data\":{\"x\":223,\"zpx\":323},\"seq\":7}");
+        events.assertWrite(1, "DELTA:{\"data\":{\"x\":1000,\"zpx\":1000},\"seq\":4}");
+        events.assertWrite(2, "DELTA:{\"data\":{\"zpx\":1100},\"seq\":5}");
+        events.assertWrite(3, "DELTA:{\"data\":{\"x\":1100,\"zpx\":1200},\"seq\":7}");
         events.assertWrite(4, "DISCONNECTED");
       }
     }

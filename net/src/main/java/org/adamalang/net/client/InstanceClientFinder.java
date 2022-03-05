@@ -13,6 +13,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.net.client.contracts.Remote;
 import org.adamalang.net.client.routing.RoutingEngine;
 
 import java.util.Iterator;
@@ -21,6 +22,7 @@ import java.util.Random;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /** You ask it for clients, and you get clients */
@@ -32,7 +34,6 @@ public class InstanceClientFinder {
   private final ConcurrentHashMap<String, InstanceClient> clients;
   private final SimpleExecutor[] clientExecutors;
   private final SimpleExecutor mapExecutor;
-
   private final ExceptionLogger logger;
   private final Random rng;
 

@@ -16,14 +16,24 @@ import org.junit.Assert;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MockEvents implements Events {
   private final ArrayList<String> history;
   private ArrayList<CountDownLatch> latches;
+  private final AtomicReference<Remote> gotRemote;
+  private CountDownLatch remoteFound;
 
   public MockEvents() {
     this.history = new ArrayList<>();
     latches = new ArrayList<>();
+    this.gotRemote = new AtomicReference<>();
+    this.remoteFound = new CountDownLatch(1);
+  }
+
+  public Remote getRemote() throws Exception {
+    Assert.assertTrue(remoteFound.await(5000, TimeUnit.MILLISECONDS));
+    return gotRemote.get();
   }
 
   public synchronized Runnable latchAt(int write) {
@@ -45,6 +55,8 @@ public class MockEvents implements Events {
 
   @Override
   public void connected(Remote remote) {
+    gotRemote.set(remote);
+    remoteFound.countDown();
     write("CONNECTED");
   }
 
