@@ -236,7 +236,7 @@ public class InstanceClient implements AutoCloseable {
             }, new CallbackByteStreamWriter(callback) {
               @Override
               public void write(ByteStream stream) {
-                ByteBuf toWrite = stream.create(agent.length() + authority.length() + space.length() + key.length() + entropy.length() + arg.length() + origin.length() + 40);
+                ByteBuf toWrite = stream.create(agent.length() + authority.length() + space.length() + key.length() + (entropy != null ? entropy.length() : 0) + arg.length() + origin.length() + 40);
                 ClientMessage.CreateRequest create = new ClientMessage.CreateRequest();
                 create.origin = origin;
                 create.agent = agent;

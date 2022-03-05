@@ -1,0 +1,105 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See http://www.adama-lang.org/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ */
+package org.adamalang.net.client.sm;
+
+import org.adamalang.ErrorCodes;
+import org.adamalang.common.*;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.net.TestBed;
+import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.InstanceClient;
+import org.adamalang.net.client.InstanceClientFinder;
+import org.adamalang.net.client.routing.MockSpaceTrackingEvents;
+import org.adamalang.net.client.routing.RoutingEngine;
+import org.adamalang.net.mocks.LatchedSeqCallback;
+import org.adamalang.net.mocks.MockSimpleEvents;
+import org.adamalang.net.mocks.SlowSingleThreadedExecutorFactory;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.natives.NtClient;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
+public class ConnectionTrafficShift {
+
+  @Test
+  public void validateTrafficShiftOnNewHost() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    TestBed[] servers = new TestBed[2];
+    SimpleExecutor executor = SimpleExecutor.create("executor");
+    ExceptionLogger logger = (t, c) -> {};
+    try {
+      for (int k = 0; k < servers.length; k++) {
+        servers[k] =
+            new TestBed(
+                20005 + k,
+                "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
+
+        CountDownLatch latchMade = new CountDownLatch(1);
+        servers[k].coreService.create(
+            NtClient.NO_ONE,
+            new Key("space", "key"),
+            "{}",
+            null,
+            new Callback<Void>() {
+              @Override
+              public void success(Void value) {
+                latchMade.countDown();
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {}
+            });
+        Assert.assertTrue(latchMade.await(1000, TimeUnit.MILLISECONDS));
+        servers[k].startServer();
+      }
+      // we use the direct engine to control the connection... directly
+      RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      try {
+        // finder.sync(Helper.setOf("127.0.0.1:20005", "127.0.0.1:20006"));
+        finder.sync(Helper.setOf("127.0.0.1:20005"));
+        MockSimpleEvents events = new MockSimpleEvents();
+        Runnable eventsProducedData = events.latchAt(2);
+        Runnable eventsGotUpdate = events.latchAt(3);
+        Runnable eventsGotRollback = events.latchAt(4);
+        Runnable eventFailed = events.latchAt(5);
+        ConnectionBase base = new ConnectionBase(metrics, engine, finder, executor);
+        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        connection.open();
+        eventsProducedData.run();
+        events.assertWrite(0, "CONNECTED");
+        events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
+        LatchedSeqCallback cb1 = new LatchedSeqCallback();
+        connection.send("foo", null, "{\"z\":100}", cb1);
+        eventsGotUpdate.run();
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
+        finder.sync(Helper.setOf("127.0.0.1:20006"));
+        eventsGotRollback.run();
+        events.assertWrite(3, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
+        finder.sync(Helper.setOf());
+        eventFailed.run();
+        events.assertWrite(4, "ERROR:992319");
+      } finally {
+        finder.shutdown();
+      }
+    } finally {
+      for (int k = 0; k < servers.length; k++) {
+        if (servers[k] != null) {
+          servers[k].close();
+        }
+      }
+      executor.shutdown();
+    }
+  }
+}

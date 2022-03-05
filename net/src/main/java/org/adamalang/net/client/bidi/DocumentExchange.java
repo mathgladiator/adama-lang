@@ -31,6 +31,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
   private int nextOp;
   private final HashMap<Integer, Callback<?>> opHandlers;
   private boolean dead;
+  private boolean shouldSendDisconnect;
 
   public DocumentExchange(ClientMessage.StreamConnect connectMessage, Events events) {
     this.connectMessage = connectMessage;
@@ -38,9 +39,58 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     nextOp = 1;
     opHandlers = new HashMap<>();
     dead = false;
+    shouldSendDisconnect = true;
   }
 
-  @Override
+  /** internal: kill the exchange */
+  private synchronized ArrayList<Callback<?>> killWithLock() {
+    dead = true;
+    ArrayList<Callback<?>> result = new ArrayList<>(opHandlers.values());
+    opHandlers.clear();
+    return result;
+  }
+
+  /** internal: get a callback for the inflight operation */
+  private synchronized Callback<?> get(int op) {
+    return opHandlers.remove(op);
+  }
+
+  /** internal: kill the exchange and signal all inflight operations */
+  private void kill() {
+    for (Callback<?> callback : killWithLock()) {
+      callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_CONNECTION_DONE));
+    }
+  }
+
+  /** internal: bind the callback to a local id */
+  private synchronized int bind(Callback<?> callback) {
+    if (dead) {
+      callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_CONNECTION_DONE));
+      return -1;
+    }
+    int op = nextOp++;
+    while (opHandlers.containsKey(op)) {
+      op++;
+      nextOp++;
+      if (op < 1) {
+        op = 1;
+        nextOp = 2;
+      }
+    }
+    opHandlers.put(op, callback);
+    return op;
+  }
+
+  /** internal: debounce the disconnect signal as it can be originate in multiple ways */
+  private synchronized boolean debounceDisconnect() {
+    if (shouldSendDisconnect) {
+      shouldSendDisconnect = false;
+      return true;
+    }
+    return false;
+  }
+
+  @Override // From Callback<ByteStream> which happens when the stream is created on both sides
   public void success(ByteStream upstream) {
     this.upstream = upstream;
     ByteBuf toWrite = upstream.create(connectMessage.agent.length() + connectMessage.authority.length() + connectMessage.viewerState.length() + connectMessage.key.length() + connectMessage.space.length() + connectMessage.origin.length() + 40);
@@ -49,44 +99,30 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     connectMessage = null;
   }
 
-  @Override
+  @Override // from Callback<ByteStream>
   public void failure(ErrorCodeException ex) {
-    events.error(ex.code);
-    disconnected();
+    error(ex.code);
   }
 
-  private void disconnected() {
-    kill();
-    events.disconnected();
-  }
-
-  private void kill() {
-    for (Callback<?> callback : killWithLock()) {
-      callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_CONNECTION_DONE));
+  @Override // from ByteStream (a stream level problem)
+  public void error(int errorCode) {
+    if (errorCode != ErrorCodes.NET_DISCONNECT) {
+      events.error(errorCode);
+    } else {
+      // the network was disconnected, so treat like a disconnect
+      completed();
     }
   }
 
-  private synchronized ArrayList<Callback<?>> killWithLock() {
-    dead = true;
-    ArrayList<Callback<?>> result = new ArrayList<>(opHandlers.values());
-    opHandlers.clear();
-    return result;
-  }
-
-  @Override
+  @Override // From ByteStream (the server can't really complete this except in error modes)
   public void completed() {
-    disconnected();
+    kill();
+    if (debounceDisconnect()) {
+      events.disconnected();
+    }
   }
 
-  @Override
-  public void error(int errorCode) {
-    events.error(errorCode);
-  }
-
-  private synchronized Callback<?> get(int op) {
-    return opHandlers.remove(op);
-  }
-  @Override
+  @Override // From ServerCodec.StreamDocument
   public void handle(ServerMessage.StreamSeqResponse payload) {
     Callback<Integer> handler =  (Callback<Integer>) get(payload.op);
     if (handler != null) {
@@ -94,7 +130,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
-  @Override
+  @Override // From ServerCodec.StreamDocument
   public void handle(ServerMessage.StreamAskAttachmentResponse payload) {
     Callback<Boolean> handler =  (Callback<Boolean>) get(payload.op);
     if (handler != null) {
@@ -102,7 +138,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
-  @Override
+  @Override // From ServerCodec.StreamDocument
   public void handle(ServerMessage.StreamError payload) {
     Callback<Integer> handler =  (Callback<Integer>) get(payload.op);
     if (handler != null) {
@@ -110,21 +146,21 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
-  @Override
+  @Override // From ServerCodec.StreamDocument
   public void handle(ServerMessage.StreamData payload) {
     events.delta(payload.delta);
   }
 
-  @Override
+  @Override // From ServerCodec.StreamDocument
   public void handle(ServerMessage.StreamStatus payload) {
     if (payload.code == 1) {
       events.connected(this);
     } else {
-      events.disconnected();
+      completed();
     }
   }
 
-  @Override
+  @Override // From Remote
   public void canAttach(Callback<Boolean> callback) {
     int op = bind(callback);
     if (op > 0) {
@@ -136,25 +172,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
-  private synchronized int bind(Callback<?> callback) {
-    if (dead) {
-      callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_CONNECTION_DONE));
-      return -1;
-    }
-    int op = nextOp++;
-    while (opHandlers.containsKey(op)) {
-      op++;
-      nextOp++;
-    }
-    if (op < 1) {
-      op = 1;
-      nextOp = 2;
-    }
-    opHandlers.put(op, callback);
-    return op;
-  }
-
-  @Override
+  @Override // From Remote
   public void attach(String id, String name, String contentType, long size, String md5, String sha384, Callback<Integer> callback) {
     int op = bind(callback);
     if (op > 0) {
@@ -172,7 +190,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
-  @Override
+  @Override // From Remote
   public void send(String channel, String marker, String message, Callback<Integer> callback) {
     int op = bind(callback);
     if (op > 0) {
@@ -187,7 +205,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
-  @Override
+  @Override // From Remote
   public void update(String viewerState) {
     ClientMessage.StreamUpdate update = new ClientMessage.StreamUpdate();
     update.viewerState = viewerState;
@@ -196,7 +214,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     upstream.next(toWrite);
   }
 
-  @Override
+  @Override // From Remote
   public void disconnect() {
     kill();
     ClientMessage.StreamDisconnect disconnect = new ClientMessage.StreamDisconnect();
