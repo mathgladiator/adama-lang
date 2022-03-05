@@ -19,10 +19,7 @@ import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.bidi.DocumentExchange;
 import org.adamalang.net.client.bidi.MeteringExchange;
-import org.adamalang.net.client.contracts.Events;
-import org.adamalang.net.client.contracts.HeatMonitor;
-import org.adamalang.net.client.contracts.MeteringStream;
-import org.adamalang.net.client.contracts.RoutingTarget;
+import org.adamalang.net.client.contracts.*;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
@@ -147,8 +144,8 @@ public class InstanceClient implements AutoCloseable {
           if (alive.get()) {
             metrics.client_retry.run();
             backoff = (int) (1 + backoff * Math.random());
-            if (backoff > 1000) {
-              backoff = (int) (500 + 500 * Math.random());
+            if (backoff > 500) {
+              backoff = (int) (250 + 250 * Math.random());
             }
             executor.schedule(new NamedRunnable("client-retry") {
               @Override
@@ -236,9 +233,9 @@ public class InstanceClient implements AutoCloseable {
               public void error(int errorCode) {
                 callback.failure(new ErrorCodeException(errorCode));
               }
-            }, new Callback<>() {
+            }, new CallbackByteStreamWriter(callback) {
               @Override
-              public void success(ByteStream stream) {
+              public void write(ByteStream stream) {
                 ByteBuf toWrite = stream.create(agent.length() + authority.length() + space.length() + key.length() + entropy.length() + arg.length() + origin.length() + 40);
                 ClientMessage.CreateRequest create = new ClientMessage.CreateRequest();
                 create.origin = origin;
@@ -250,11 +247,6 @@ public class InstanceClient implements AutoCloseable {
                 create.arg = arg;
                 ClientCodec.write(toWrite, create);
                 stream.next(toWrite);
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-                callback.failure(ex);
               }
             });
           }
@@ -291,20 +283,15 @@ public class InstanceClient implements AutoCloseable {
               public void error(int errorCode) {
                 callback.failure(new ErrorCodeException(errorCode));
               }
-            }, new Callback<ByteStream>() {
+            }, new CallbackByteStreamWriter(callback) {
               @Override
-              public void success(ByteStream stream) {
+              public void write(ByteStream stream) {
                 ByteBuf toWrite = stream.create(space.length() + key.length() + 10);
                 ClientMessage.ReflectRequest reflect = new ClientMessage.ReflectRequest();
                 reflect.space = space;
                 reflect.key = key;
                 ClientCodec.write(toWrite, reflect);
                 stream.next(toWrite);
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-                callback.failure(ex);
               }
             });
           }
@@ -361,19 +348,14 @@ public class InstanceClient implements AutoCloseable {
               public void error(int errorCode) {
                 callback.failure(new ErrorCodeException(errorCode));
               }
-            }, new Callback<ByteStream>() {
+            }, new CallbackByteStreamWriter(callback) {
               @Override
-              public void success(ByteStream stream) {
+              public void write(ByteStream stream) {
                 ByteBuf toWrite = stream.create(space.length() + 10);
                 ClientMessage.ScanDeployment scan = new ClientMessage.ScanDeployment();
                 scan.space = space;
                 ClientCodec.write(toWrite, scan);
                 stream.next(toWrite);
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {
-                callback.failure(ex);
               }
             });
           }
