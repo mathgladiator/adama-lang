@@ -252,7 +252,6 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void handle(ClientMessage.CreateRequest payload) {
-    System.err.println("server-got-create");
     nexus.service.create(new NtClient(payload.agent, payload.authority), new Key(payload.space, payload.key), payload.arg, payload.entropy, nexus.metrics.server_create.wrap(new Callback<Void>() {
       @Override
       public void success(Void value) {
@@ -260,7 +259,6 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
         ServerCodec.write(buf, SHARED_CREATE_RESPONSE_EMPTY);
         upstream.next(buf);
         upstream.completed();
-        System.err.println("sent-response");
       }
 
       @Override

@@ -12,6 +12,7 @@ package org.adamalang.net.client.routing;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
 import org.adamalang.runtime.data.Key;
 
@@ -19,7 +20,7 @@ import java.util.Collection;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
-public class RoutingEngine {
+public class RoutingEngine implements RoutingTarget {
   private final ClientMetrics metrics;
   private final SimpleExecutor executor;
   private final RoutingTable table;
@@ -63,6 +64,7 @@ public class RoutingEngine {
     });
   }
 
+  @Override
   public void integrate(String target, Collection<String> newSpaces) {
     executor.execute(new NamedRunnable("routing-integrate", target) {
       @Override

@@ -25,19 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class InstanceClientTests {
   @Test
   public void stubPersistent() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10001,
             "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
-      try (InstanceClient client =
-          new InstanceClient(
-              bed.base,
-              metrics,
-              null,
-              "127.0.0.1:10001",
-              bed.clientExecutor,
-              new StdErrLogger())) {
+      try (InstanceClient client = bed.makeClient()) {
         {
           AssertCreateFailure failure = new AssertCreateFailure();
           client.create("origin", "nope", "nope", "space", "1", null, "{}", failure);
@@ -58,7 +50,6 @@ public class InstanceClientTests {
 
   @Test
   public void sendAndDisconnect() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10003,
@@ -85,16 +76,7 @@ public class InstanceClientTests {
           };
       Runnable happy = events.latchAt(5);
       bed.startServer();
-      try (InstanceClient client =
-          new InstanceClient(
-              bed.base,
-              metrics,
-              null,
-              "127.0.0.1:10003",
-              bed.clientExecutor,
-              (t, errorCode) -> {
-                System.err.println("EXCEPTION:" + t.getMessage());
-              })) {
+      try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
@@ -111,7 +93,6 @@ public class InstanceClientTests {
 
   @Test
   public void disconnectThenSendFailure() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10004,
@@ -154,16 +135,7 @@ public class InstanceClientTests {
           };
       Runnable happy = events.latchAt(3);
       bed.startServer();
-      try (InstanceClient client =
-          new InstanceClient(
-              bed.base,
-              metrics,
-              null,
-              "127.0.0.1:10004",
-              bed.clientExecutor,
-              (t, ec) -> {
-                System.err.println("EXCEPTION:" + t.getMessage());
-              })) {
+      try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
         client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
@@ -177,7 +149,6 @@ public class InstanceClientTests {
       }
     }
   }
-  /*
 
   @Test
   public void cantAttachPolicy() throws Exception {
@@ -187,59 +158,33 @@ public class InstanceClientTests {
             10005,
             "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
-      MockClentLifecycle lifecycle = new MockClentLifecycle();
       CountDownLatch cantAttachLatch = new CountDownLatch(1);
       MockEvents events =
           new MockEvents() {
             @Override
             public void connected(Remote remote) {
-              remote.canAttach(
-                  new AskAttachmentCallback() {
-                    @Override
-                    public void allow() {}
+              remote.canAttach(new Callback<>() {
+                @Override
+                public void success(Boolean value) {
+                  if (!value) {
+                    remote.disconnect();
+                    cantAttachLatch.countDown();
+                  }
+                }
 
-                    @Override
-                    public void reject() {
-                      remote.disconnect();
-                      cantAttachLatch.countDown();
-                    }
-
-                    @Override
-                    public void error(int code) {}
-                  });
+                @Override
+                public void failure(ErrorCodeException ex) {
+                }
+              });
               super.connected(remote);
             }
           };
       Runnable happy = events.latchAt(3);
-      try (InstanceClient client =
-          new InstanceClient(
-              bed.identity,
-              metrics,
-              null,
-              "127.0.0.1:10005",
-              bed.clientExecutor,
-              new Lifecycle() {
-                @Override
-                public void connected(InstanceClient client) {
-                  AssertCreateSuccess success = new AssertCreateSuccess();
-                  client.create("nope", "nope", "space", "1", "123", "{}", success);
-                  success.await();
-                  client.connect("nope", "test", "space", "1", "{}", events);
-                  lifecycle.connected(client);
-                }
-
-                @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
-
-                @Override
-                public void disconnected(InstanceClient client) {
-                  lifecycle.disconnected(client);
-                }
-              },
-              (t, errorCode) -> {
-                System.err.println("EXCEPTION:" + t.getMessage());
-              })) {
-        bed.startServer();
+      try (InstanceClient client = bed.makeClient()) {
+        AssertCreateSuccess success = new AssertCreateSuccess();
+        client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+        success.await();
+        client.connect("origin", "nope", "test", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(cantAttachLatch.await(2000, TimeUnit.MILLISECONDS));
         events.assertWrite(0, "CONNECTED");
@@ -251,80 +196,47 @@ public class InstanceClientTests {
 
   @Test
   public void canAttachThenAttach() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10006,
             "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } @can_attach(who) { return true; } @attached (who, what) { x++; } ")) {
       bed.startServer();
-      MockClentLifecycle lifecycle = new MockClentLifecycle();
       CountDownLatch canAttachLatch = new CountDownLatch(1);
       MockEvents events =
           new MockEvents() {
             @Override
             public void connected(Remote remote) {
-              remote.canAttach(
-                  new AskAttachmentCallback() {
-                    @Override
-                    public void allow() {
-                      remote.attach(
-                          "id",
-                          "name",
-                          "text/json",
-                          42,
-                          "x",
-                          "y",
-                          new SeqCallback() {
-                            @Override
-                            public void success(int seq) {
-                              remote.disconnect();
-                              canAttachLatch.countDown();
-                            }
+              remote.canAttach(new Callback<Boolean>() {
+                @Override
+                public void success(Boolean value) {
+                  if (value) {
+                    remote.attach("id", "name", "text/json", 42, "x", "y", new Callback<Integer>() {
+                      @Override
+                      public void success(Integer value) {
+                        remote.disconnect();
+                        canAttachLatch.countDown();
+                      }
+                      @Override
+                      public void failure(ErrorCodeException ex) {
+                        System.err.println("didNOT");
+                      }
+                    });
+                  }
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
 
-                            @Override
-                            public void error(int code) {}
-                          });
-                    }
-
-                    @Override
-                    public void reject() {}
-
-                    @Override
-                    public void error(int code) {}
-                  });
+                }
+              });
               super.connected(remote);
             }
           };
       Runnable happy = events.latchAt(4);
-      try (InstanceClient client =
-          new InstanceClient(
-              bed.identity,
-              metrics,
-              null,
-              "127.0.0.1:10006",
-              bed.clientExecutor,
-              new Lifecycle() {
-                @Override
-                public void connected(InstanceClient client) {
-                  AssertCreateSuccess success = new AssertCreateSuccess();
-                  client.create("nope", "nope", "space", "1", "123", "{}", success);
-                  success.await();
-                  client.connect("nope", "test", "space", "1", "{}", events);
-                  lifecycle.connected(client);
-                }
-
-                @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
-
-                @Override
-                public void disconnected(InstanceClient client) {
-                  lifecycle.disconnected(client);
-                }
-              },
-              (t, errorCode) -> {
-                System.err.println("EXCEPTION:" + t.getMessage());
-              })) {
-        bed.startServer();
+      try (InstanceClient client = bed.makeClient()) {
+        AssertCreateSuccess success = new AssertCreateSuccess();
+        client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+        success.await();
+        client.connect("origin","nope", "nope", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(canAttachLatch.await(2000, TimeUnit.MILLISECONDS));
         events.assertWrite(0, "CONNECTED");
@@ -337,13 +249,11 @@ public class InstanceClientTests {
 
   @Test
   public void cantAttachDisconnect() throws Exception {
-    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     try (TestBed bed =
         new TestBed(
             10007,
             "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       bed.startServer();
-      MockClentLifecycle lifecycle = new MockClentLifecycle();
       CountDownLatch cantAttachLatch = new CountDownLatch(1);
       AtomicInteger error = new AtomicInteger(0);
       MockEvents events =
@@ -364,56 +274,30 @@ public class InstanceClientTests {
 
             @Override
             public void disconnected() {
-              remote.canAttach(
-                  new AskAttachmentCallback() {
-                    @Override
-                    public void allow() {}
+              remote.canAttach(new Callback<Boolean>() {
+                @Override
+                public void success(Boolean value) {
 
-                    @Override
-                    public void reject() {}
+                }
 
-                    @Override
-                    public void error(int code) {
-                      error.set(code);
-                      cantAttachLatch.countDown();
-                    }
-                  });
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  error.set(ex.code);
+                  cantAttachLatch.countDown();
+                }
+              });
               super.disconnected();
             }
           };
       Runnable happy = events.latchAt(3);
-      try (InstanceClient client =
-          new InstanceClient(
-              bed.identity,
-              metrics,
-              null,
-              "127.0.0.1:10007",
-              bed.clientExecutor,
-              new Lifecycle() {
-                @Override
-                public void connected(InstanceClient client) {
-                  AssertCreateSuccess success = new AssertCreateSuccess();
-                  client.create("nope", "nope", "space", "1", "123", "{}", success);
-                  success.await();
-                  client.connect("nope", "test", "space", "1", "{}", events);
-                  lifecycle.connected(client);
-                }
-
-                @Override
-                public void heartbeat(InstanceClient client, Collection<String> spaces) {}
-
-                @Override
-                public void disconnected(InstanceClient client) {
-                  lifecycle.disconnected(client);
-                }
-              },
-              (t, errorCode) -> {
-                System.err.println("EXCEPTION:" + t.getMessage());
-              })) {
-        bed.startServer();
+      try (InstanceClient client = bed.makeClient()) {
+        AssertCreateSuccess success = new AssertCreateSuccess();
+        client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+        success.await();
+        client.connect("origin", "nope", "test", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(cantAttachLatch.await(2000, TimeUnit.MILLISECONDS));
-        Assert.assertEquals(798735, error.get());
+        Assert.assertEquals(769085, error.get());
         events.assertWrite(0, "CONNECTED");
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         events.assertWrite(2, "DISCONNECTED");
@@ -421,6 +305,7 @@ public class InstanceClientTests {
     }
   }
 
+  /*
   @Test
   public void cantAttachSocketDisconnect() throws Exception {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());

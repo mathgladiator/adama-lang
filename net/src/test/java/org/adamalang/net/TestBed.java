@@ -14,6 +14,10 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.InstanceClient;
+import org.adamalang.net.client.contracts.RoutingTarget;
+import org.adamalang.net.mocks.StdErrLogger;
 import org.adamalang.net.server.Server;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
@@ -34,12 +38,14 @@ import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.Document;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TestBed implements AutoCloseable {
   public final NetBase base;
+  public final int port;
   public final MachineIdentity identity;
   public final SimpleExecutor clientExecutor;
   public final MeteringPubSub meteringPubSub;
@@ -49,6 +55,7 @@ public class TestBed implements AutoCloseable {
 
   public TestBed(int port, String code) throws Exception {
     this.base = new NetBase(MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
+    this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");
     deploymentScans = new AtomicInteger(0);
     JsonStreamWriter planWriter = new JsonStreamWriter();
@@ -85,6 +92,16 @@ public class TestBed implements AutoCloseable {
       }
     }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("x23", "x23").getParentFile(),  1800000L), port, 2);
     this.server = new Server(nexus);
+  }
+
+  public InstanceClient makeClient() throws Exception {
+    ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+    return new InstanceClient(base, metrics, null, new RoutingTarget() {
+      @Override
+      public void integrate(String target, Collection<String> spaces) {
+
+      }
+    },"127.0.0.1:" + port, clientExecutor, new StdErrLogger());
   }
 
   public static String prefixForLocalhost() {

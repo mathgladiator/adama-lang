@@ -25,6 +25,7 @@ import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -34,8 +35,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class InstanceClient implements AutoCloseable {
   private final NetBase base;
   public final String target;
-  private final SimpleExecutor executor;
+  public final SimpleExecutor executor;
   private final ClientMetrics metrics;
+  private final RoutingTarget routing;
   private final HeatMonitor monitor;
   private final Random rng;
   private final ExceptionLogger logger;
@@ -43,12 +45,13 @@ public class InstanceClient implements AutoCloseable {
   private int backoff;
   private ItemQueue<ChannelClient> client;
 
-  public InstanceClient(NetBase base, ClientMetrics metrics, HeatMonitor monitor, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
+  public InstanceClient(NetBase base, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
     this.base = base;
     this.target = target;
     this.executor = executor;
     this.metrics = metrics;
     this.monitor = monitor;
+    this.routing = routing;
     this.rng = new Random();
     this.client = new ItemQueue<>(executor, 64, 2500);
     this.logger = logger;
@@ -71,13 +74,12 @@ public class InstanceClient implements AutoCloseable {
 
             @Override
             public void handle(ServerMessage.InventoryHeartbeat payload) {
-              // TODO: route inventory, yay?
+              routing.integrate(InstanceClient.this.target, Arrays.asList(payload.spaces));
             }
 
             @Override
             public void completed() {
               metrics.client_info_completed.run();
-              // TODO: this could be a useful signal that a disconnect is inbound
             }
 
             @Override
