@@ -62,7 +62,7 @@ public class InstanceClient implements AutoCloseable {
   }
 
   private void retryConnection() {
-    if (alive.get()) {
+    if (alive.get() && base.alive()) {
       base.connect(this.target, new org.adamalang.common.net.Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {

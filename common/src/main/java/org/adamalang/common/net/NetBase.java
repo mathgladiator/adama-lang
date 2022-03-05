@@ -41,7 +41,6 @@ import java.util.regex.Pattern;
 public class NetBase {
   private static final Logger LOGGER = LoggerFactory.getLogger(NetBase.class);
   private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(NetBase.class);
-
   public final NioEventLoopGroup bossGroup;
   public final NioEventLoopGroup workerGroup;
   public final MachineIdentity identity;
@@ -62,6 +61,10 @@ public class NetBase {
 
   public SslContext makeServerSslContext() throws Exception {
     return SslContextBuilder.forServer(identity.getCert(), identity.getKey()).trustManager(identity.getTrust()).clientAuth(ClientAuth.REQUIRE).build();
+  }
+
+  public boolean alive() {
+    return alive.get();
   }
 
   public void connect(String target, Lifecycle lifecycle) {
