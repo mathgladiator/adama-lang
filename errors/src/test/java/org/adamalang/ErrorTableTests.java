@@ -11,9 +11,9 @@ package org.adamalang;
 
 import org.junit.Test;
 
-public class GenerateTablesTest {
+public class ErrorTableTests {
   @Test
-  public void coverage() throws Exception {
-    GenerateTables.generate();
+  public void coverage() {
+    System.err.println(ErrorTable.INSTANCE.descriptions);
   }
 }

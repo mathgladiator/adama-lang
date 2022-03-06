@@ -1,3 +1,12 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See http://www.adama-lang.org/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ */
 package org.adamalang;
 
 import java.util.HashMap;
@@ -78,8 +87,6 @@ public class ErrorTable {
     descriptions.put(148095, "no description of error (yet)");
     names.put(146558, "FACTORY_CANT_INVOKE_CAN_INVENT");
     descriptions.put(146558, "no description of error (yet)");
-    names.put(117923, "FACTORY_CANT_INVOKE_CONFIG");
-    descriptions.put(117923, "no description of error (yet)");
     names.put(144416, "CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION");
     descriptions.put(144416, "no description of error (yet)");
     names.put(130092, "SERVICE_DOCUMENT_ALREADY_CREATED");
@@ -88,8 +95,6 @@ public class ErrorTable {
     descriptions.put(134259, "no description of error (yet)");
     names.put(134195, "DOCUMENT_SELF_DESTRUCT_SUCCESSFUL");
     descriptions.put(134195, "no description of error (yet)");
-    names.put(198705, "INMEMORY_DATA_GET_CANT_FIND_DOCUMENT");
-    descriptions.put(198705, "no description of error (yet)");
     names.put(116787, "INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS");
     descriptions.put(116787, "no description of error (yet)");
     names.put(144944, "INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT");
@@ -125,11 +130,13 @@ public class ErrorTable {
     names.put(621580, "UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF");
     descriptions.put(621580, "no description of error (yet)");
     names.put(625676, "UNIVERSAL_LOOKUP_FAILED");
-    descriptions.put(625676, "no description of error (yet)");
+    descriptions.put(625676, "The given document was not found");
+    userspace.add(625676);
     names.put(667658, "UNIVERSAL_INITIALIZE_FAILURE");
-    descriptions.put(667658, "no description of error (yet)");
+    descriptions.put(667658, "The given document already exists");
+    userspace.add(667658);
     names.put(640009, "PATCH_FAILURE");
-    descriptions.put(640009, "no description of error (yet)");
+    descriptions.put(640009, "The document change was unabled to be patched");
     names.put(605195, "COMPUTE_FAILURE");
     descriptions.put(605195, "no description of error (yet)");
     names.put(669710, "GET_FAILURE");
@@ -168,10 +175,10 @@ public class ErrorTable {
     descriptions.put(654339, "no description of error (yet)");
     names.put(117818, "DEPLOYMENT_PLAN_MUST_BE_ROOT_OBJECT");
     descriptions.put(117818, "The deployment plan must be a object");
-userspace.add(117818);
+    userspace.add(117818);
     names.put(115788, "DEPLOYMENT_PLAN_NO_VERSIONS");
     descriptions.put(115788, "The deployment plan lacked a versions object within the root object");
-userspace.add(115788);
+    userspace.add(115788);
     names.put(143948, "DEPLOYMENT_PLAN_NO_DEFAULT");
     descriptions.put(143948, "no description of error (yet)");
     names.put(155711, "DEPLOYMENT_PLAN_VERSIONS_MUST_BE_OBJECT");
@@ -190,13 +197,13 @@ userspace.add(115788);
     descriptions.put(145980, "no description of error (yet)");
     names.put(117823, "DEPLOYMENT_CANT_PARSE_LANGUAGE");
     descriptions.put(117823, "The given Adama file was unable to be parsed; see the associated errorJson()");
-userspace.add(117823);
+    userspace.add(117823);
     names.put(132157, "DEPLOYMENT_CANT_TYPE_LANGUAGE");
     descriptions.put(132157, "The given Adama file was unable to be typed; see associated errorJson()");
-userspace.add(132157);
+    userspace.add(132157);
     names.put(134214, "DEPLOYMENT_FACTORY_CANT_FIND_SPACE");
     descriptions.put(134214, "The space was not found on the given Adama host. Either this means the space doesn't exist, or a routing issue caused by a poor deployment or capacity management resulted in a invalid mapping");
-userspace.add(134214);
+    userspace.add(134214);
     names.put(143430, "DEPLOYMENT_UNKNOWN_FIELD_ROOT");
     descriptions.put(143430, "no description of error (yet)");
     names.put(116812, "DEPLOYMENT_UNKNOWN_FIELD_STAGE");
@@ -380,7 +387,7 @@ userspace.add(134214);
     names.put(967804, "API_CHANNEL_VALIDATION_BAD_MIDDLE_CHARACTER");
     descriptions.put(967804, "no description of error (yet)");
     names.put(950384, "API_GOODWILL_EXCEPTION");
-    descriptions.put(950384, "no description of error (yet)");
+    descriptions.put(950384, "The given document ran out of compute tokens. This is most likely due to an infinite loop.");
     names.put(901232, "AWS_EMAIL_SEND_FAILURE");
     descriptions.put(901232, "no description of error (yet)");
     names.put(798735, "GRPC_COMMON_FAILED_TO_FIND_STREAM_USING_GIVEN_ACT");
@@ -391,8 +398,6 @@ userspace.add(134214);
     descriptions.put(701452, "no description of error (yet)");
     names.put(786442, "GRPC_ATTACHED_FAILED_NOT_CONNECTED");
     descriptions.put(786442, "no description of error (yet)");
-    names.put(790528, "GRPC_UPDATE_FAILED_NOT_CONNECTED");
-    descriptions.put(790528, "no description of error (yet)");
     names.put(723982, "GRPC_CREATE_UNKNOWN_EXCEPTION");
     descriptions.put(723982, "no description of error (yet)");
     names.put(786441, "GRPC_DISCONNECT");

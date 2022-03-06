@@ -44,12 +44,11 @@ public class ErrorCodes {
   public static final int FACTORY_CANT_INVOKE_CAN_CREATE = 180858;
   public static final int FACTORY_CANT_INVOKE_CAN_SEND_WHILE_DISCONNECTED = 148095;
   public static final int FACTORY_CANT_INVOKE_CAN_INVENT = 146558;
-  public static final int FACTORY_CANT_INVOKE_CONFIG = 117923;
   public static final int CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION = 144416;
   public static final int SERVICE_DOCUMENT_ALREADY_CREATED = 130092;
   public static final int SERVICE_DOCUMENT_REJECTED_CREATION = 134259;
   public static final int DOCUMENT_SELF_DESTRUCT_SUCCESSFUL = 134195;
-  public static final int INMEMORY_DATA_GET_CANT_FIND_DOCUMENT = 198705;
+
   public static final int INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS = 116787;
   public static final int INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT = 144944;
   public static final int INMEMORY_DATA_COMPUTE_CANT_FIND_DOCUMENT = 106546;
@@ -72,9 +71,15 @@ public class ErrorCodes {
    * all DataService implementations must use this for a patch failure due to sequencer out of whack
    */
   public static final int UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF = 621580;
+  @User
+  @Description("The given document was not found")
   public static final int UNIVERSAL_LOOKUP_FAILED = 625676;
+
+  @User
+  @Description("The given document already exists")
   public static final int UNIVERSAL_INITIALIZE_FAILURE = 667658;
 
+  @Description("The document change was unabled to be patched")
   public static final int PATCH_FAILURE = 640009;
   public static final int COMPUTE_FAILURE = 605195;
   public static final int GET_FAILURE = 669710;
@@ -307,6 +312,7 @@ public class ErrorCodes {
   public static final int API_CHANNEL_VALIDATION_BAD_START_CHARACTER = 908415;
   public static final int API_CHANNEL_VALIDATION_BAD_MIDDLE_CHARACTER = 967804;
 
+  @Description("The given document ran out of compute tokens. This is most likely due to an infinite loop.")
   public static final int API_GOODWILL_EXCEPTION = 950384;
 
   public static final int AWS_EMAIL_SEND_FAILURE = 901232;
@@ -350,7 +356,6 @@ public class ErrorCodes {
   public static final int GRPC_SEND_FAILED_NOT_CONNECTED = 777231;
   public static final int GRPC_ASK_FAILED_NOT_CONNECTED = 701452;
   public static final int GRPC_ATTACHED_FAILED_NOT_CONNECTED = 786442;
-  public static final int GRPC_UPDATE_FAILED_NOT_CONNECTED = 790528;
   public static final int GRPC_CREATE_UNKNOWN_EXCEPTION = 723982;
   public static final int GRPC_DISCONNECT = 786441;
   public static final int GRPC_FAILURE = 716812;
