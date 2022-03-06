@@ -6,7 +6,7 @@ The mission of Adama is to simplify building online board games. With a bit of s
 some [Yak shaving](https://en.wiktionary.org/wiki/yak_shaving), it ended up as a custom database and programming
 language. So, let's talk about what this thing is, and this animated GIF is a good summary:
 
-<img src="docs/static/img/20200804-adama-introduction-animated.gif">
+<img src="https://www.adama-platform.com/i/20200804-adama-introduction-animated.gif">
 
 Neat, right? Adama, the language, is a way of laying out state and then defining how to manipulate that state within a
 closed container. Manipulation of state is done by people via messages, and the document is computed reactively similar
