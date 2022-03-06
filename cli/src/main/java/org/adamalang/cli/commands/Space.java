@@ -125,6 +125,10 @@ public class Space {
     String singleFile = Util.extractWithDefault("--file", "-f", null, args);
     final String planJson;
     if (singleFile != null) {
+      System.out.println("validating file...");
+      if (!Code.compileFile(config, args)) {
+        return;
+      }
       String singleScript = Files.readString(new File(singleFile).toPath());
       ObjectNode plan = Json.newJsonObject();
       plan.putObject("versions").put("file", singleScript);
@@ -132,12 +136,15 @@ public class Space {
       plan.putArray("plan");
       planJson = plan.toString();
     } else {
+      System.out.println("validating plan...");
+      if (!Code.validatePlan(config, args)) {
+        return;
+      }
       String planFile = Util.extractOrCrash("--plan", "-p", args);
       planJson = Files.readString(new File(planFile).toPath());
     }
-    System.out.println("validating plan...");
     DeploymentPlan localPlan = new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());
-    System.out.println("compiling plan...");
+    System.out.println("final check of plan...");
     new DeploymentFactory(space, "Space_" + space, new AtomicInteger(0), null, localPlan);
     System.out.println("deploying plan...");
 

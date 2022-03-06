@@ -15,6 +15,7 @@ import java.io.File;
 import java.nio.file.Files;
 
 public class Generate {
+  // TODO: remove and make part of the primary code generator
   public static void main(String[] args) throws Exception {
     String client = CodecCodeGen.assembleCodec("org.adamalang.net.codec", "ClientCodec", ClientMessage.class.getDeclaredClasses());
     String server = CodecCodeGen.assembleCodec("org.adamalang.net.codec", "ServerCodec", ServerMessage.class.getDeclaredClasses());

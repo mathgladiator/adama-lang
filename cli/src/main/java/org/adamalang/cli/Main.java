@@ -9,64 +9,77 @@
  */
 package org.adamalang.cli;
 
+import org.adamalang.ErrorTable;
 import org.adamalang.cli.commands.*;
+import org.adamalang.common.ErrorCodeException;
 
 public class Main {
 
   public static void main(String[] preFilteredArgs) throws Exception {
-    Config config = new Config(preFilteredArgs);
-    if (preFilteredArgs.length == 0) {
-      rootHelp();
-      return;
-    }
-    String[] args = config.argsForTool;
-    String command = Util.normalize(args[0]);
-    String[] next = Util.tail(args);
-    switch (command) {
-      case "authority":
-        Authority.execute(config, next);
-        return;
-      case "aws":
-        AWS.execute(config, next);
-        return;
-      case "business":
-        Business.execute(config, next);
-        return;
-      case "code":
-        Code.execute(config, next);
-        return;
-      case "contrib":
-        Contrib.execute(config, next);
-        return;
-      case "database":
-        Database.execute(config, next);
-        return;
-      case "documents":
-      case "document":
-        Documents.execute(config, next);
-        return;
-      case "fleet":
-        Fleet.execute(config, next);
-        return;
-      case "init":
-        Init.execute(config, next);
-        return;
-      case "security":
-        Security.execute(config, next);
-        return;
-      case "service":
-        Service.execute(config, next);
-        return;
-      case "space":
-      case "spaces":
-        Space.execute(config, next);
-        return;
-      case "stress":
-        Stress.execute(config, next);
-        return;
-      case "help":
+    try {
+      Config config = new Config(preFilteredArgs);
+      if (preFilteredArgs.length == 0) {
         rootHelp();
         return;
+      }
+      String[] args = config.argsForTool;
+      String command = Util.normalize(args[0]);
+      String[] next = Util.tail(args);
+      switch (command) {
+        case "authority":
+          Authority.execute(config, next);
+          return;
+        case "aws":
+          AWS.execute(config, next);
+          return;
+        case "business":
+          Business.execute(config, next);
+          return;
+        case "code":
+          Code.execute(config, next);
+          return;
+        case "contrib":
+          Contrib.execute(config, next);
+          return;
+        case "database":
+          Database.execute(config, next);
+          return;
+        case "documents":
+        case "document":
+          Documents.execute(config, next);
+          return;
+        case "fleet":
+          Fleet.execute(config, next);
+          return;
+        case "init":
+          Init.execute(config, next);
+          return;
+        case "security":
+          Security.execute(config, next);
+          return;
+        case "service":
+          Service.execute(config, next);
+          return;
+        case "space":
+        case "spaces":
+          Space.execute(config, next);
+          return;
+        case "stress":
+          Stress.execute(config, next);
+          return;
+        case "help":
+          rootHelp();
+          return;
+      }
+    } catch (Exception ex) {
+      if (ex instanceof ErrorCodeException) {
+        System.err.println(Util.prefix("[ERROR]", Util.ANSI.Red));
+        System.err.println("#:" + ((ErrorCodeException) ex).code);
+        System.err.println("Name:" + ErrorTable.INSTANCE.names.get(((ErrorCodeException) ex).code));
+        System.err.println("Description:" + ErrorTable.INSTANCE.descriptions.get(((ErrorCodeException) ex).code));
+      } else {
+        ex.printStackTrace();
+      }
     }
   }
 

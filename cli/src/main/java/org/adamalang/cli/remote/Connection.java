@@ -10,6 +10,7 @@
 package org.adamalang.cli.remote;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.Json;
 import org.adamalang.web.client.WebClientConnection;
 import org.adamalang.web.contracts.WebJsonStream;
@@ -43,7 +44,7 @@ public class Connection implements AutoCloseable {
 
       @Override
       public void failure(int code) {
-        failure.set(new Exception("Error:" + code));
+        failure.set(new ErrorCodeException(code));
         latch.countDown();
       }
     });
@@ -51,25 +52,6 @@ public class Connection implements AutoCloseable {
     if (failure.get() != null) {
       throw failure.get();
     }
-  }
-
-  public int open(ObjectNode request, Consumer<ObjectNode> stream, Consumer<Exception> error) throws Exception {
-    return connection.execute(request, new WebJsonStream() {
-      @Override
-      public void data(ObjectNode node) {
-        stream.accept(node);
-      }
-
-      @Override
-      public void complete() {
-
-      }
-
-      @Override
-      public void failure(int code) {
-        error.accept(new Exception("Code:" + code));
-      }
-    });
   }
 
   @Override
@@ -93,7 +75,7 @@ public class Connection implements AutoCloseable {
 
       @Override
       public void failure(int code) {
-        value.set(new Exception("Error:" + code));
+        value.set(new ErrorCodeException(code));
         latch.countDown();
       }
     });

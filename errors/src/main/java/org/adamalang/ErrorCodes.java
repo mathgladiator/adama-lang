@@ -97,7 +97,12 @@ public class ErrorCodes {
   public static final int FRONTEND_AUTHORITY_DELETE_NOT_FOUND_OR_INCORRECT = 654339;
 
 
+  @User
+  @Description("The deployment plan must be a object")
   public static final int DEPLOYMENT_PLAN_MUST_BE_ROOT_OBJECT = 117818;
+
+  @User
+  @Description("The deployment plan lacked a versions object within the root object")
   public static final int DEPLOYMENT_PLAN_NO_VERSIONS = 115788;
   public static final int DEPLOYMENT_PLAN_NO_DEFAULT = 143948;
   public static final int DEPLOYMENT_PLAN_VERSIONS_MUST_BE_OBJECT = 155711;
@@ -107,8 +112,17 @@ public class ErrorCodes {
   public static final int DEPLOYMENT_PLAN_VERSION_MUST_EXIST = 120895;
   public static final int DEPLOYMENT_PLAN_PLAN_NO_VERSION = 199768;
   public static final int DEPLOYMENT_PLAN_MUST_HAVE_DEFAULT = 145980;
+
+  @User
+  @Description("The given Adama file was unable to be parsed; see the associated errorJson()")
   public static final int DEPLOYMENT_CANT_PARSE_LANGUAGE = 117823;
+
+  @User
+  @Description("The given Adama file was unable to be typed; see associated errorJson()")
   public static final int DEPLOYMENT_CANT_TYPE_LANGUAGE = 132157;
+
+  @User
+  @Description("The space was not found on the given Adama host. Either this means the space doesn't exist, or a routing issue caused by a poor deployment or capacity management resulted in a invalid mapping")
   public static final int DEPLOYMENT_FACTORY_CANT_FIND_SPACE = 134214;
   public static final int DEPLOYMENT_UNKNOWN_FIELD_ROOT = 143430;
   public static final int DEPLOYMENT_UNKNOWN_FIELD_STAGE = 116812;
