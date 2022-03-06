@@ -68,7 +68,7 @@ channel say(client who, Say what) {
   
   // since you are paying for the chat, let's cap the 
   // size to 50 total messages.
-  (iterate _chat order by when desc offset 50).delete()
+  (iterate _chat order by when desc offset 50).delete();
 }
 ```
 

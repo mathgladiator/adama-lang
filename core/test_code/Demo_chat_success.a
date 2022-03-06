@@ -1,6 +1,3 @@
-# Chat
-
-```adama
 
 @static {
   // anyone can create
@@ -39,5 +36,3 @@ channel say(client who, Say what) {
 
 // emit the data out
 public formula chat = iterate _chat;
-
-```
