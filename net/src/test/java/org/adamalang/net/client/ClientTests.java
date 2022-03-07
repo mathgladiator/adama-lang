@@ -16,6 +16,9 @@ import org.adamalang.net.TestBed;
 import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
+import org.adamalang.net.mocks.MockMeteringFlow;
+import org.adamalang.runtime.sys.PredictiveInventory;
+import org.adamalang.runtime.sys.metering.MeterReading;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -154,10 +157,52 @@ public class ClientTests {
   }
 
   @Test
-  public void no_capacity() throws Exception {
+  public void metering_happy() throws Exception {
     try (TestBed bed =
              new TestBed(
                  12501,
+                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+      bed.startServer();
+      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      try {
+        waitForRouting(bed, client);
+        {
+          MockMeteringFlow mock = new MockMeteringFlow();
+          Runnable latch = mock.latchAt(1);
+          client.randomMeteringExchange(mock);
+          latch.run();
+          mock.assertWrite(0, "FINISHED");
+        }
+
+        CountDownLatch finished = new CountDownLatch(1);
+        bed.batchMaker.write(new MeterReading(0, System.currentTimeMillis(), "space", "hash", new PredictiveInventory.MeteringSample(0, 1, 2, 3, 4)));
+        bed.batchMaker.flush(finished);
+        Assert.assertTrue(finished.await(5000, TimeUnit.MILLISECONDS));
+        String id = bed.batchMaker.getNextAvailableBatchId();
+        Assert.assertNotNull(id);
+
+
+        {
+          MockMeteringFlow mock = new MockMeteringFlow();
+          Runnable latch = mock.latchAt(2);
+          client.randomMeteringExchange(mock);
+          latch.run();
+          mock.assertWrite(0, "HANDLE!");
+          mock.assertWrite(1, "FINISHED");
+        }
+
+
+      } finally{
+        client.shutdown();
+      }
+    }
+  }
+
+  @Test
+  public void no_capacity() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 12502,
                  "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
@@ -231,7 +276,7 @@ public class ClientTests {
   public void not_allowed_create() throws Exception {
     try (TestBed bed =
              new TestBed(
-                 12502,
+                 12503,
                  "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
@@ -282,7 +327,7 @@ public class ClientTests {
   public void bad_server() throws Exception {
     try (TestBed bed =
              new TestBed(
-                 12503,
+                 12504,
                  "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").failEverything().start();
       Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
@@ -377,7 +422,7 @@ public class ClientTests {
   public void fakes() throws Exception {
     try (TestBed bed =
              new TestBed(
-                 12507,
+                 12505,
                  "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").start();
       Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);

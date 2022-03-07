@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * writes billing information to disk for querying; this is designed to survive a process restart
@@ -80,6 +81,51 @@ public class DiskMeteringBatchMaker {
     output.close();
   }
 
+  private void cut() throws Exception {
+    String batchId = UUID.randomUUID() + "_" + time.nowMilliseconds();
+    File cuttingBatch = new File(root, "CUT-" + batchId);
+    try {
+      output.flush();
+      output.close();
+      current.renameTo(cuttingBatch);
+      oldestTime = time.nowMilliseconds();
+      output = new FileOutputStream(current, true);
+      MeterReducer reducer = new MeterReducer(time);
+      try (FileReader reader = new FileReader(cuttingBatch)) {
+        try (BufferedReader buffered = new BufferedReader(reader)) {
+          String ln;
+          while ((ln = buffered.readLine()) != null) {
+            MeterReading meterReading = MeterReading.unpack(new JsonStreamReader(ln));
+            if (meterReading != null) {
+              reducer.next(meterReading);
+            }
+          }
+        }
+      }
+      File inflightSummary = new File(root, "TEMP-SUMMARY-" + batchId);
+      File finalSummary = new File(root, "SUMMARY-" + batchId);
+      Files.writeString(inflightSummary.toPath(), reducer.toJson());
+      inflightSummary.renameTo(finalSummary);
+    } finally {
+      // if we fail, then we simply delete the batch
+      cuttingBatch.delete();
+    }
+  }
+
+  public void flush(CountDownLatch done) {
+    this.executor.execute(new NamedRunnable("billing-flush") {
+      @Override
+      public void execute() throws Exception {
+        try {
+          cut();
+          done.countDown();
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      }
+    });
+  }
+
   public void write(MeterReading meterReading) {
     byte[] meterBytes = (meterReading.packup() + "\n").getBytes(StandardCharsets.UTF_8);
     this.executor.execute(new NamedRunnable("billing-add-sample") {
@@ -90,34 +136,7 @@ public class DiskMeteringBatchMaker {
         // problem
         long delta = time.nowMilliseconds() - oldestTime;
         if (delta > cutOffMilliseconds) {
-          String batchId = UUID.randomUUID() + "_" + time.nowMilliseconds();
-          File cuttingBatch = new File(root, "CUT-" + batchId);
-          try {
-            output.flush();
-            output.close();
-            current.renameTo(cuttingBatch);
-            oldestTime = time.nowMilliseconds();
-            output = new FileOutputStream(current, true);
-            MeterReducer reducer = new MeterReducer(time);
-            try (FileReader reader = new FileReader(cuttingBatch)) {
-              try (BufferedReader buffered = new BufferedReader(reader)) {
-                String ln;
-                while ((ln = buffered.readLine()) != null) {
-                  MeterReading meterReading = MeterReading.unpack(new JsonStreamReader(ln));
-                  if (meterReading != null) {
-                    reducer.next(meterReading);
-                  }
-                }
-              }
-            }
-            File inflightSummary = new File(root, "TEMP-SUMMARY-" + batchId);
-            File finalSummary = new File(root, "SUMMARY-" + batchId);
-            Files.writeString(inflightSummary.toPath(), reducer.toJson());
-            inflightSummary.renameTo(finalSummary);
-          } finally {
-            // if we fail, then we simply delete the batch
-            cuttingBatch.delete();
-          }
+          cut();
         }
       }
     });

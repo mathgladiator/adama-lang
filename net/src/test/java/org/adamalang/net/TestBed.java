@@ -25,6 +25,7 @@ import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.data.InMemoryDataService;
+import org.adamalang.runtime.deploy.DeploymentFactory;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -53,8 +54,11 @@ public class TestBed implements AutoCloseable {
   public final CoreService coreService;
   private ServerHandle handle;
   private CountDownLatch serverExit;
+  public final DiskMeteringBatchMaker batchMaker;
+  private final File billingRoot;
 
   public TestBed(int port, String code) throws Exception {
+    DeploymentFactory.compile("X", code);
     this.base = new NetBase(MachineIdentity.fromFile(prefixForLocalhost()), 1, 2);
     this.port = port;
     clientExecutor = SimpleExecutor.create("client-executor");
@@ -87,11 +91,16 @@ public class TestBed implements AutoCloseable {
             2);
 
     this.identity = this.base.identity;
+
+    billingRoot = new File(File.createTempFile("x23",  "x23").getParentFile(), "Billing-" + System.currentTimeMillis());
+    billingRoot.mkdir();
+
+    this.batchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, billingRoot,  1800000L);
     this.nexus = new ServerNexus(this.base, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), base, (space) -> {
       if (deploymentScans.incrementAndGet() == 3) {
         throw new NullPointerException();
       }
-    }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("x23", "x23").getParentFile(),  1800000L), port, 2);
+    }, meteringPubSub, batchMaker, port, 2);
     this.handle = null;
     this.serverExit = null;
   }
@@ -170,6 +179,10 @@ public class TestBed implements AutoCloseable {
 
   @Override
   public void close() throws Exception {
+    for (File file : billingRoot.listFiles()) {
+      file.delete();
+    }
+    billingRoot.delete();
     if (handle != null) {
       stopServer();
     }

@@ -51,6 +51,15 @@ public class LatchedSeqCallback implements Callback<Integer> {
     }
   }
 
+  public void assertJustSuccess() {
+    try {
+      Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
+      Assert.assertFalse(error);
+    } catch (Exception ex) {
+      Assert.fail();
+    }
+  }
+
   public void assertFail(int c) {
     try {
       Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));

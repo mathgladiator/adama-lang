@@ -28,6 +28,7 @@ import org.adamalang.runtime.data.Key;
  * connection; this is s sizeable state machine.
  */
 public class Connection {
+  public static final int MAGIC_CONNECTION_QUEUE_SIZE = 16;
   // these can be put under a base
   private final ConnectionBase base;
   // these are critical to the request (i.e they are the request)
@@ -70,7 +71,7 @@ public class Connection {
     this.state = Label.NotConnected;
     this.target = null;
     this.foundClient = null;
-    this.queue = new ItemQueue<>(base.executor, 16, 2500);
+    this.queue = new ItemQueue<>(base.executor, MAGIC_CONNECTION_QUEUE_SIZE, 2500);
     this.foundRemote = null;
     this.backoffFindInstance = 1;
     this.backoffConnectPeer = 1;

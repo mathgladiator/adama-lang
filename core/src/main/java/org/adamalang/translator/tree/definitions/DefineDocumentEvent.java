@@ -58,6 +58,13 @@ public class DefineDocumentEvent extends Definition {
 
   @Override
   public void typing(final Environment environment) {
+    switch (which) {
+      case AssetAttachment: {
+        if (parameterNameToken == null) {
+          environment.document.createError(this, String.format("The @attached requires two parameters @attached(who, what)"), "DocumentEvents");
+        }
+      }
+    }
     ControlFlow codeControlFlow = code.typing(nextEnvironment(environment));
     if (codeControlFlow == ControlFlow.Open) {
       switch (which) {

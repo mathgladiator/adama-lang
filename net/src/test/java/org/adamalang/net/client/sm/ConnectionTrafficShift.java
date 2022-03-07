@@ -39,30 +39,7 @@ public class ConnectionTrafficShift {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
     try {
-      for (int k = 0; k < servers.length; k++) {
-        servers[k] =
-            new TestBed(
-                20005 + k,
-                "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
-
-        CountDownLatch latchMade = new CountDownLatch(1);
-        servers[k].coreService.create(
-            NtClient.NO_ONE,
-            new Key("space", "key"),
-            "{}",
-            null,
-            new Callback<Void>() {
-              @Override
-              public void success(Void value) {
-                latchMade.countDown();
-              }
-
-              @Override
-              public void failure(ErrorCodeException ex) {}
-            });
-        Assert.assertTrue(latchMade.await(1000, TimeUnit.MILLISECONDS));
-        servers[k].startServer();
-      }
+      ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       // we use the direct engine to control the connection... directly
       RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
@@ -94,11 +71,7 @@ public class ConnectionTrafficShift {
         finder.shutdown();
       }
     } finally {
-      for (int k = 0; k < servers.length; k++) {
-        if (servers[k] != null) {
-          servers[k].close();
-        }
-      }
+      ComplexHelper.stopCapacity(servers);
       executor.shutdown();
     }
   }

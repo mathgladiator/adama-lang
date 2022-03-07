@@ -39,7 +39,7 @@ public class MockMeteringFlow implements MeteringStream {
   }
 
   private synchronized void write(String x) {
-    System.err.println("SMOCK:" + x);
+    System.err.println("METER:" + x);
     history.add(x);
     for (CountDownLatch latch : latches) {
       latch.countDown();
@@ -53,7 +53,7 @@ public class MockMeteringFlow implements MeteringStream {
 
   @Override
   public synchronized void handle(String target, String batch, Runnable after) {
-    write("HANDLE:" + batch);
+    write("HANDLE!");
     after.run();
   }
 

@@ -1120,4 +1120,44 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
+  private String cached_SoloArg_5 = null;
+  private String get_SoloArg_5() {
+    if (cached_SoloArg_5 != null) {
+      return cached_SoloArg_5;
+    }
+    cached_SoloArg_5 = generateTestOutput(false, "SoloArg_5", "./test_code/Assets_SoloArg_failure.a");
+    return cached_SoloArg_5;
+  }
+
+  @Test
+  public void testSoloArgFailure() {
+    assertLiveFail(get_SoloArg_5());
+  }
+
+  @Test
+  public void testSoloArgNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_SoloArg_5());
+  }
+
+  @Test
+  public void testSoloArgExceptionFree() {
+    assertExceptionFree(get_SoloArg_5());
+  }
+
+  @Test
+  public void testSoloArgTODOFree() {
+    assertTODOFree(get_SoloArg_5());
+  }
+
+  @Test
+  public void stable_SoloArg_5() {
+    String live = get_SoloArg_5();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Assets_SoloArg_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":15},\"end\":{\"line\":1,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @attached requires two parameters @attached(who, what) (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
 }

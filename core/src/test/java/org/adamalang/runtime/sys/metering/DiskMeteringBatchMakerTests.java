@@ -17,6 +17,8 @@ import org.junit.Test;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class DiskMeteringBatchMakerTests {
 
@@ -56,6 +58,12 @@ public class DiskMeteringBatchMakerTests {
           "{\"time\":\"3751000\",\"spaces\":{\"space\":{\"cpu\":\"18853739684\",\"messages\":\"3602000\",\"count_p95\":\"4\",\"memory_p95\":\"1000\",\"connections_p95\":\"128\"}}}",
           maker.getBatch(batchId));
       maker.deleteBatch(batchId);
+      CountDownLatch latchFlush = new CountDownLatch(1);
+      maker.flush(latchFlush);
+      Assert.assertTrue(latchFlush.await(1000, TimeUnit.MILLISECONDS));
+      String batchId2 = maker.getNextAvailableBatchId();
+      maker.deleteBatch(batchId2);
+
     } finally {
       for (File child : root.listFiles()) {
         if (child.getName().startsWith("SUMMARY")) {
