@@ -131,6 +131,7 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
       ByteBuf buf = upstream.create(24);
       ServerCodec.write(buf, inventoryHeartbeat);
       upstream.next(buf);
+      upstream.completed(); // this is for coverage, not the spec
     } else {
       real.handle(payload);
     }

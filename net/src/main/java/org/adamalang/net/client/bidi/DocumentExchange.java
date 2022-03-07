@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DocumentExchange extends ServerCodec.StreamDocument implements Callback<ByteStream>, Remote {
+  public static final int MAX_ATTEMPTS_TO_CREATE_OP = 1024;
   private final HashMap<Integer, Callback<?>> opHandlers;
   public ClientMessage.StreamConnect connectMessage;
   public Events events;
@@ -92,6 +93,7 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
   public void error(int errorCode) {
     if (errorCode != ErrorCodes.NET_DISCONNECT) {
       events.error(errorCode);
+      kill();
     } else {
       // the network was disconnected, so treat like a disconnect
       completed();
@@ -160,13 +162,18 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
       return -1;
     }
     int op = nextOp++;
-    while (opHandlers.containsKey(op)) {
+    int attempts = MAX_ATTEMPTS_TO_CREATE_OP;
+    while (opHandlers.containsKey(op) && attempts-- > 0) {
       op++;
       nextOp++;
       if (op < 1) {
         op = 1;
         nextOp = 2;
       }
+    }
+    if (attempts <= 0) {
+      callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_FAILED_FINDING_SUBID));
+      return -1;
     }
     opHandlers.put(op, callback);
     return op;

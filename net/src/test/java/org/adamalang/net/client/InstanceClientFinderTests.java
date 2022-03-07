@@ -74,6 +74,11 @@ public class InstanceClientFinderTests {
           latchFoundSame.countDown();
         }, targets.size() - 1);
         Assert.assertTrue(latchFoundSame.await(5000, TimeUnit.MILLISECONDS));
+        CountDownLatch foundNewOne = new CountDownLatch(1);
+        finder.findCapacity(new TreeSet<>(), (x) -> {
+          foundNewOne.countDown();
+        }, 1);
+        Assert.assertTrue(foundNewOne.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch latchFound = new CountDownLatch(1);
         finder.find("127.0.0.1:20005", new Callback<InstanceClient>() {
           @Override

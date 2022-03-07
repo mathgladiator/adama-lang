@@ -143,7 +143,7 @@ public class InstanceClient implements AutoCloseable {
         private void scheduleWithinExecutor() {
           if (alive.get()) {
             metrics.client_retry.run();
-            backoff = (int) (1 + backoff * Math.random());
+            backoff = (int) (5 + backoff + backoff * Math.random());
             if (backoff > 500) {
               backoff = (int) (250 + 250 * Math.random());
             }

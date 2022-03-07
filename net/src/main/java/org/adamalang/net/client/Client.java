@@ -20,10 +20,9 @@ import org.adamalang.net.client.routing.RoutingEngine;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.client.sm.ConnectionBase;
 
-import java.util.Collection;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -190,10 +189,14 @@ public class Client {
   }
 
   public void shutdown() {
-    finder.shutdown();
+    ArrayList<CountDownLatch> latches = new ArrayList<>(executors.length);
     for (SimpleExecutor executor : executors) {
-      executor.shutdown();
+      latches.add(executor.shutdown());
     }
-    routingExecutor.shutdown();
+    for (CountDownLatch latch : latches) {
+      AwaitHelper.block(latch, 500);
+    }
+    AwaitHelper.block(finder.shutdown(), 1000);
+    AwaitHelper.block(routingExecutor.shutdown(), 1000);
   }
 }
