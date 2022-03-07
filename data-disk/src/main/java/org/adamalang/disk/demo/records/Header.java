@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk.records;
+package org.adamalang.disk.demo.records;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

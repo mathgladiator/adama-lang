@@ -7,9 +7,9 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk.records;
+package org.adamalang.disk.demo.records;
 
-import org.adamalang.disk.BadConsumer;
+import org.adamalang.disk.demo.BadConsumer;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.natives.NtClient;

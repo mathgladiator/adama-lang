@@ -7,13 +7,13 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk;
+package org.adamalang.disk.demo;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.disk.records.Header;
-import org.adamalang.disk.records.BatchPatch;
+import org.adamalang.disk.demo.records.Header;
+import org.adamalang.disk.demo.records.BatchPatch;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.json.JsonAlgebra;

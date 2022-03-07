@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk;
+package org.adamalang.disk.demo;
 
 import org.adamalang.common.metrics.CallbackMonitor;
 import org.adamalang.common.metrics.MetricsFactory;
