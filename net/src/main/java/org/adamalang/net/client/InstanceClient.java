@@ -20,6 +20,8 @@ import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.bidi.DocumentExchange;
 import org.adamalang.net.client.bidi.MeteringExchange;
 import org.adamalang.net.client.contracts.*;
+import org.adamalang.net.client.contracts.impl.CallbackByteStreamInfo;
+import org.adamalang.net.client.contracts.impl.CallbackByteStreamWriter;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
@@ -88,24 +90,7 @@ public class InstanceClient implements AutoCloseable {
               logger.convertedToErrorCode(new NullPointerException("base.connect error:" + errorCode), errorCode);
               metrics.client_info_failed_downstream.run();
             }
-          }, new Callback<>() {
-            @Override
-            public void success(ByteStream stream) {
-              if (monitor != null) {
-                ByteBuf monitorWrite = stream.create(8);
-                ClientCodec.write(monitorWrite, new ClientMessage.RequestHeat());
-                stream.next(monitorWrite);
-              }
-              ByteBuf requestInventoryWrite = stream.create(8);
-              ClientCodec.write(requestInventoryWrite, new ClientMessage.RequestInventoryHeartbeat());
-              stream.next(requestInventoryWrite);
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              metrics.client_info_failed_ask.run();
-            }
-          });
+          }, new CallbackByteStreamInfo(monitor, metrics));
 
           executor.execute(new NamedRunnable("channel-client-ready") {
             @Override

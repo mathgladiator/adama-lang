@@ -451,4 +451,43 @@ public class ClientTests {
       Assert.assertTrue(meteringLatch.await(2000, TimeUnit.MILLISECONDS));
     }
   }
+
+  @Test
+  public void shut_server() throws Exception {
+    try (TestBed bed =
+             new TestBed(
+                 12506,
+                 "@static { create(who) { return false; } invent(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+      bed.naughty().inventory("space").closeStream().start();
+      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      waitForRouting(bed, client);
+      CountDownLatch closures = new CountDownLatch(1);
+      client.connect("origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
+        @Override
+        public void connected() {
+          System.err.println("connected!");
+        }
+
+        @Override
+        public void delta(String data) {
+          System.err.println("data:" + data);
+        }
+
+        @Override
+        public void error(int code) {
+          System.err.println("error:" + code);
+          Assert.assertEquals(947263, code);
+          closures.countDown();
+        }
+
+        @Override
+        public void disconnected() {
+          System.err.println("disconnected");
+        }
+      });
+      long started = System.currentTimeMillis();
+      Assert.assertTrue(closures.await(15000, TimeUnit.MILLISECONDS));
+      System.err.println("TOOK:" + (System.currentTimeMillis() - started));
+    }
+  }
 }

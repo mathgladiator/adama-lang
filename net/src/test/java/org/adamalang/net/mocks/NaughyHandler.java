@@ -22,11 +22,9 @@ import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.sys.CoreStream;
-import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Streamback {
   private static final ServerMessage.CreateResponse SHARED_CREATE_RESPONSE_EMPTY = new ServerMessage.CreateResponse();
@@ -40,11 +38,18 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
     public HashSet<String> inventory;
     private final TestBed bed;
     private boolean fail;
+    private boolean closeStream;
 
     public NaughtyBits(TestBed bed) {
       this.bed = bed;
       this.fail = false;
       this.inventory = null;
+      this.closeStream = false;
+    }
+
+    public NaughtyBits closeStream() {
+      this.closeStream = true;
+      return this;
     }
 
     public NaughtyBits failEverything() {
@@ -193,6 +198,10 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
 
   @Override
   public void handle(ClientMessage.StreamConnect payload) {
+    if (bits.closeStream) {
+      upstream.completed();
+      return;
+    }
     if (bits.fail) {
       upstream.error(123456789);
       return;

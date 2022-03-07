@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.net.client.contracts;
+package org.adamalang.net.client.contracts.impl;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;

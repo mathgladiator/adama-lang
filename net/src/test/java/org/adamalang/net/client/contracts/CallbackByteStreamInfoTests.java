@@ -10,23 +10,14 @@
 package org.adamalang.net.client.contracts;
 
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.net.ByteStream;
-import org.adamalang.net.client.contracts.impl.CallbackByteStreamWriter;
-import org.adamalang.net.mocks.LatchedVoidCallback;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.contracts.impl.CallbackByteStreamInfo;
 import org.junit.Test;
 
-public class CallbackByteStreamWriterTests {
-
+public class CallbackByteStreamInfoTests {
   @Test
-  public void proxy() {
-    LatchedVoidCallback callback = new LatchedVoidCallback();
-    CallbackByteStreamWriter<Void> test = new CallbackByteStreamWriter<Void>(callback) {
-      @Override
-      public void write(ByteStream stream) {
-
-      }
-    };
-    test.failure(new ErrorCodeException(123));
-    callback.assertFail(123);
+  public void hacky() {
+    new CallbackByteStreamInfo(null, new ClientMetrics(new NoOpMetricsFactory())).failure(new ErrorCodeException(-1));
   }
 }

@@ -284,7 +284,7 @@ public class Connection {
               fireFindClient();
             }
           }, backoffConnectPeer);
-          backoffConnectPeer = (int) (backoffConnectPeer + Math.random() * backoffConnectPeer + 1);
+          backoffConnectPeer = (int) (backoffConnectPeer + 2 * Math.random() * backoffConnectPeer);
         } else {
           base.metrics.client_too_many_failures_disconnected_by_peer.run();
           handle_onError(ErrorCodes.STATE_MACHINE_UNABLE_TO_RECONNECT);
@@ -431,9 +431,6 @@ public class Connection {
       case ConnectedStoppingPleaseReconnect:
         state = Label.ConnectedStopping;
         return;
-      case WaitingForDisconnect:
-        // NO-OP
-        return;
     }
   }
 
@@ -458,14 +455,6 @@ public class Connection {
       case ConnectedStopping:
         state = Label.ConnectedStoppingPleaseReconnect;
         return;
-      case WaitingForDisconnect:
-        // just ignore it
-        return;
     }
-  }
-
-  @Override
-  public String toString() {
-    return "state=" + state;
   }
 }
