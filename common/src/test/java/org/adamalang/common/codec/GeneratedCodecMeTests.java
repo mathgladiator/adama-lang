@@ -59,6 +59,7 @@ public class GeneratedCodecMeTests {
       b.embed.z = 3.14;
       b.embed.bbb = false;
       b.embed.strarr = null;
+      b.arr = new CodecCodeGenTests.TestClassA[] { b.embed };
       GeneratedCodecMe.write(buf, b);
     }
     {

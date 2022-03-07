@@ -9,20 +9,14 @@
  */
 package org.adamalang.disk.wal;
 
-import org.adamalang.common.Callback;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.codec.CodecCodeGen;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.nio.file.Files;
 
-public class FlushBus {
-  private ArrayList<Callback<?>> callbacks;
-  private SimpleExecutor executor;
-
-  public FlushBus(SimpleExecutor executor) {
-    this.callbacks = new ArrayList<>();
-    this.executor = executor;
-  }
-
-  public void flush(Callback<?> callback) {
+public class Generate {
+  public static void main(String[] args) throws Exception {
+    String codec = CodecCodeGen.assembleCodec("org.adamalang.disk.wal", "WriteAheadMessageCodec", WriteAheadMessage.class.getDeclaredClasses());
+    Files.writeString(new File("./data-disk/src/main/java/org/adamalang/disk/wal/WriteAheadMessageCodec.java").toPath(), codec);
   }
 }

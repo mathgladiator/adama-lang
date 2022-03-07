@@ -97,6 +97,10 @@ public class CodecCodeGen {
     if (field.getType().getAnnotation(TypeId.class) != null) {
       return "read_" + field.getType().getSimpleName() + "(buf)";
     }
+    if (field.getType().isArray()) {
+      Class<?> elementType = field.getType().getComponentType();
+      return "Helper.readArray(buf, (n) -> new " + elementType.getSimpleName() + "[n], () -> read_" + elementType.getSimpleName() + "(buf))";
+    }
     throw new RuntimeException(field.getName() + " has a type we don't know about.. yet");
   }
 
@@ -124,6 +128,9 @@ public class CodecCodeGen {
     }
     if (field.getType().getAnnotation(TypeId.class) != null) {
       return "write(buf, " + value + ");";
+    }
+    if (field.getType().isArray()) {
+      return "Helper.writeArray(buf, " + value + ", (item) -> write(buf, item))";
     }
     throw new RuntimeException(field.getName() + " has a type we don't know about.. yet");
   }

@@ -55,6 +55,9 @@ public class CodecCodeGenTests {
 
     @FieldOrder(3)
     public long lng;
+
+    @FieldOrder(4)
+    public TestClassA[] arr;
   }
 
 

@@ -7,22 +7,18 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk.wal;
+package org.adamalang.disk.memory;
 
-import org.adamalang.common.Callback;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.disk.wal.WriteAheadMessage;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-public class FlushBus {
-  private ArrayList<Callback<?>> callbacks;
-  private SimpleExecutor executor;
+public class DocumentMemoryLog {
+  public Map<String, Object> document;
+  public ArrayList<WriteAheadMessage> changes;
 
-  public FlushBus(SimpleExecutor executor) {
-    this.callbacks = new ArrayList<>();
-    this.executor = executor;
-  }
-
-  public void flush(Callback<?> callback) {
+  public void flush() {
+    // Open the document's log for append
   }
 }

@@ -12,8 +12,34 @@ package org.adamalang.common.codec;
 import io.netty.buffer.ByteBuf;
 
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Helper {
+
+  public static <T> T[] readArray(ByteBuf buf, Function<Integer, T[]> maker, Supplier<T> read) {
+    int count = buf.readIntLE();
+    if (count == 0) {
+      return null;
+    }
+    T[] arr = maker.apply(count - 1);
+    for (int k = 0; k < arr.length; k++) {
+      arr[k] = read.get();
+    }
+    return arr;
+  }
+
+  public static <T> void writeArray(ByteBuf buf, T[] arr, Consumer<T> write) {
+    if (arr == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(arr.length + 1);
+    for (int k = 0; k < arr.length; k++) {
+      write.accept(arr[k]);
+    }
+  }
 
   public static String readString(ByteBuf buf) {
     int count = buf.readIntLE();

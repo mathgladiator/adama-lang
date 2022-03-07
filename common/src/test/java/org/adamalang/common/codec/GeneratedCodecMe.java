@@ -153,6 +153,7 @@ public class GeneratedCodecMe {
     o.x = buf.readIntLE();
     o.embed = read_TestClassA(buf);
     o.lng = buf.readLongLE();
+    o.arr = Helper.readArray(buf, (n) -> new TestClassA[n], () -> read_TestClassA(buf));
     return o;
   }
 
@@ -179,5 +180,6 @@ public class GeneratedCodecMe {
     buf.writeIntLE(o.x);
     write(buf, o.embed);;
     buf.writeLongLE(o.lng);
+    Helper.writeArray(buf, o.arr, (item) -> write(buf, item));
   }
 }
