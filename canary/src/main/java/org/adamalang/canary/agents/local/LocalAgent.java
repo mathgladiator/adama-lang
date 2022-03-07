@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.canary.local;
+package org.adamalang.canary.agents.local;
 
 import org.adamalang.canary.agents.simple.SimpleCanaryConfig;
 import org.adamalang.common.Callback;
@@ -66,10 +66,12 @@ public class LocalAgent implements Streamback {
       }
       SimpleCanaryConfig.Message msg = config.messages[rng.nextInt(config.messages.length)];
       config.metrics.messages_sent.incrementAndGet();
+      long started = System.currentTimeMillis();
       stream.send(msg.channel, null, msg.message.toString(), new Callback<Integer>() {
         @Override
         public void success(Integer value) {
           config.metrics.messages_failed.incrementAndGet();
+          config.metrics.record_send_latency((int) (System.currentTimeMillis() - started));
         }
 
         @Override

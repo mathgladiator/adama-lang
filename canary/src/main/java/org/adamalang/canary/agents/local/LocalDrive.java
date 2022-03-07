@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.canary.local;
+package org.adamalang.canary.agents.local;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.ExceptionLogger;
@@ -23,7 +23,6 @@ import org.adamalang.runtime.sys.metering.MeteringPubSub;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 

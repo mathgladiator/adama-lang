@@ -33,6 +33,7 @@ import java.util.function.Consumer;
 
 /** A LivingDocument tied to a document id and DataService */
 public class DurableLivingDocument {
+  public static final int MAGIC_MAXIMUM_DOCUMENT_QUEUE = 256;
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DurableLivingDocument.class);
   public final DocumentThreadBase base;
   public final Key key;
@@ -412,7 +413,7 @@ public class DurableLivingDocument {
       return;
     }
     if (inflightPatch) {
-      if (outstandingExecutionsWhichRequireDrain >= 256 && !forceIntoQueue) {
+      if (outstandingExecutionsWhichRequireDrain >= MAGIC_MAXIMUM_DOCUMENT_QUEUE && !forceIntoQueue) {
         base.metrics.document_queue_running_behind.run();
         callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_QUEUE_BUSY_WAY_BEHIND));
         return;

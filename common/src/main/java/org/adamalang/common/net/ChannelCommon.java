@@ -66,7 +66,7 @@ public abstract class ChannelCommon extends ChannelInboundHandlerAdapter  {
     scheduledFlush = context.executor().schedule(() -> {
       context.flush();
       scheduledFlush = null;
-    }, 1, TimeUnit.MILLISECONDS);
+    }, 50000, TimeUnit.NANOSECONDS);
   }
 
   protected void sendConfirmRemoval(ChannelHandlerContext context, int id) {

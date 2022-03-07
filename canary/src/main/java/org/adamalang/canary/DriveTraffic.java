@@ -9,10 +9,14 @@
  */
 package org.adamalang.canary;
 
+import org.adamalang.canary.agents.grpc.LocalGrpcCanaryConfig;
+import org.adamalang.canary.agents.grpc.LocalGrpcDrive;
+import org.adamalang.canary.agents.net.LocalNetCanaryConfig;
+import org.adamalang.canary.agents.net.LocalNetDrive;
 import org.adamalang.canary.agents.simple.SimpleCanaryConfig;
 import org.adamalang.canary.agents.simple.SimpleDrive;
-import org.adamalang.canary.local.LocalCanaryConfig;
-import org.adamalang.canary.local.LocalDrive;
+import org.adamalang.canary.agents.local.LocalCanaryConfig;
+import org.adamalang.canary.agents.local.LocalDrive;
 import org.adamalang.common.*;
 
 public class DriveTraffic {
@@ -23,6 +27,12 @@ public class DriveTraffic {
     }
     if ("local".equals(mode)) {
       LocalDrive.go(new LocalCanaryConfig(config));
+    }
+    if ("localnet".equals(mode)) {
+      LocalNetDrive.go(new LocalNetCanaryConfig(config));
+    }
+    if ("localgrpc".equals(mode)) {
+      LocalGrpcDrive.go(new LocalGrpcCanaryConfig(config));
     }
   }
 }

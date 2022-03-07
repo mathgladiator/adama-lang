@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.canary.local;
+package org.adamalang.canary.agents.local;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.canary.Metrics;
