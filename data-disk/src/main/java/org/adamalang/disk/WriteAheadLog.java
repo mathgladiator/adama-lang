@@ -14,7 +14,6 @@ import io.netty.buffer.Unpooled;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.common.SimpleExecutor;
 import org.adamalang.disk.wal.WriteAheadMessage;
 
 import java.io.File;
@@ -31,7 +30,7 @@ public class WriteAheadLog {
 
   private File currentFile;
   private FileOutputStream output;
-  private int at = 0;
+  private int at;
   private boolean flushScheduled;
   private long bytesWritten;
 
@@ -51,7 +50,6 @@ public class WriteAheadLog {
     this.at = 0;
     this.flushScheduled = false;
     this.bytesWritten = 0;
-
 
     this.buffer = Unpooled.buffer(cutOffBytesFlush);
     this.callbacks = new ArrayList<>();
