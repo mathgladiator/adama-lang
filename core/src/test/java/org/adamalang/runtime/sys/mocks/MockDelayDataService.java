@@ -111,8 +111,8 @@ public class MockDelayDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, String snapshot, int history, Callback<Integer> callback) {
-    enqueue(() -> parent.compactAndSnapshot(key, snapshot, history, callback));
+  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+    enqueue(() -> parent.compactAndSnapshot(key, seq, snapshot, history, callback));
   }
 
   public synchronized Runnable latchAt(int count) {

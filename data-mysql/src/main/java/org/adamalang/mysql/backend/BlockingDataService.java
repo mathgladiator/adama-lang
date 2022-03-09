@@ -255,7 +255,7 @@ public class BlockingDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, String snapshot, int history, Callback<Integer> callback) {
+  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     dataBase.transact((connection) -> {
       // look up the index to get the id
       LookupResult lookup = lookup(connection, key);

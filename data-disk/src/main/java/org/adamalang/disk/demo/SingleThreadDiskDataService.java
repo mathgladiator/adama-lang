@@ -217,7 +217,7 @@ public class SingleThreadDiskDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, String snapshot, int history, Callback<Integer> callbackRaw) {
+  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callbackRaw) {
     Callback<Integer> callback = metrics.disk_delete.wrap(callbackRaw);
     if (history <= 0) {
       callback.failure(new ErrorCodeException(ErrorCodes.DISK_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY));

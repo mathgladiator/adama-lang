@@ -40,6 +40,8 @@ public interface WriteAheadMessage {
     public String key;
     @FieldOrder(3)
     public int history;
+    @FieldOrder(4)
+    public String patch;
 
     @Override
     public void write(ByteBuf buf) {
@@ -105,10 +107,11 @@ public interface WriteAheadMessage {
     @FieldOrder(2)
     public String key;
     @FieldOrder(3)
-    public int history;
+    public int seq;
     @FieldOrder(4)
+    public int history;
+    @FieldOrder(5)
     public String document;
-
     @Override
     public void write(ByteBuf buf) {
       WriteAheadMessageCodec.write(buf, this);

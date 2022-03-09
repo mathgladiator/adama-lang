@@ -30,6 +30,6 @@ public interface DataService {
   void delete(Key key, Callback<Void> callback);
 
   /** Compact the storage backing a key such that the given value is shown as the history */
-  void compactAndSnapshot(Key key, String snapshot, int history, Callback<Integer> callback);
+  void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback);
 
 }

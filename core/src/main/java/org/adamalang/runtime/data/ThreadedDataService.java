@@ -79,7 +79,7 @@ public class ThreadedDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, String snapshot, int history, Callback<Integer> callback) {
-    at(key, (service) -> service.compactAndSnapshot(key, snapshot, history, callback));
+  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+    at(key, (service) -> service.compactAndSnapshot(key, seq, snapshot, history, callback));
   }
 }

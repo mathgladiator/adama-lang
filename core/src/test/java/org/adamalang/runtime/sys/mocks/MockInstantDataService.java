@@ -154,7 +154,7 @@ public class MockInstantDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, String snapshot, int history, Callback<Integer> callback) {
+  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     callback.success(-1);
   }
 
