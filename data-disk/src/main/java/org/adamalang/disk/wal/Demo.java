@@ -14,7 +14,7 @@ import io.netty.buffer.Unpooled;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.disk.DiskWriteAheadLog;
+import org.adamalang.disk.WriteAheadLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -80,11 +80,12 @@ public class Demo {
     }
   }
 
+  /*
   private static void logger(File root) throws Exception {
 
     SimpleExecutor executor = SimpleExecutor.create("wal");
-    DiskWriteAheadLog log1 = new DiskWriteAheadLog(executor, new File("WAL2a"), 8192 * 2, 5);
-    DiskWriteAheadLog log2 = new DiskWriteAheadLog(executor, new File("WAL2b"), 8192 * 2, 5);
+    WriteAheadLog log1 = new WriteAheadLog(executor, new File("WAL2a"), 8192 * 2, 5);
+    WriteAheadLog log2 = new WriteAheadLog(executor, new File("WAL2b"), 8192 * 2, 5);
     long started = System.currentTimeMillis();
     int N = 20000;
     CountDownLatch latch = new CountDownLatch(N);
@@ -123,4 +124,5 @@ public class Demo {
       logger(root);
     }
   }
+  */
 }

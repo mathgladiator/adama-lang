@@ -11,7 +11,7 @@ public interface SnapshotFileStreamEvents {
   public boolean onHeader(SnapshotHeader header) throws IOException;
 
   /** snapshot of the document (after header); return true if you want to continue reading */
-  public boolean onDocument(String document) throws IOException;
+  public boolean onDocument(byte[] document) throws IOException;
 
   /** undo (after documents and undo); return true if you want to continue reading */
   public boolean onUndo(int seq, String undo) throws IOException;
@@ -24,7 +24,8 @@ public interface SnapshotFileStreamEvents {
     SnapshotHeader header = SnapshotHeader.read(data);
     if (events.onHeader(header)) {
       byte[] document = new byte[header.documentSize];
-      if (events.onDocument(new String(document, StandardCharsets.UTF_8))) {
+      data.readFully(document);
+      if (events.onDocument(document)) {
         while (data.readBoolean()) {
           int seq = data.readInt();
           byte[] undo = new byte[data.readInt()];
@@ -52,8 +53,8 @@ public interface SnapshotFileStreamEvents {
       }
 
       @Override
-      public boolean onDocument(String document) throws IOException {
-        output.write(document.getBytes(StandardCharsets.UTF_8));
+      public boolean onDocument(byte[] document) throws IOException {
+        output.write(document);
         return true;
       }
 

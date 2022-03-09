@@ -9,12 +9,15 @@
  */
 package org.adamalang.disk;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.disk.wal.WriteAheadMessage;
 import org.adamalang.runtime.data.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /** the disk data service which aims for low latency commits */
 public class DiskDataService implements DataService {
@@ -26,58 +29,30 @@ public class DiskDataService implements DataService {
 
   @Override // GET
   public void get(Key key, Callback<LocalDocumentChange> callback) {
-    DocumentMemoryLog memory = base.memory.get(key);
-    if (memory != null) {
-      if (memory.deleted()) {
-        callback.failure(new ErrorCodeException(-1));
-        return;
-      }
-      if (memory.hasSnapshot()) {
-        // callback.success(new LocalDocumentChange(memory.current(), memory.outstanding()));
-        return;
-      }
-    }
-    /*
-    File snapshot = base.fileFor(key, "SNAPSHOT");
-    if (snapshot.exists()) {
-      // TODO: load snapshot and get (seq, snapshot, history)
-      File forward = base.fileFor(key, "FORWARD");
-      if (forward.exists()) {
-        // TODO: READ Changes from FORWARD, apply to SNAPSHOT
-      }
-      if (memory != null) {
-        // memory.replay()
-      }
-      // EMIT SNAPSHOT + FORWARD[redo]
-    } else {
+    DocumentMemoryLog memory = base.getOrCreate(key);
+    if (memory.get_IsDeleted()) {
       callback.failure(new ErrorCodeException(-1));
+      return;
     }
-    */
-
-
-    // if the Integrator has a snapshot if exists in memory
-    //    if the snapshot indicates a delete
-    //      failure
-    //    use the snapshot
-    // else if it exists on disk
-    //    pull a snapshot from disk
-    // else
-    //    failed not found
-    // pull the sequencer of the snapshot
-    // pull updates from the WAL
-    // apply updates to the snapshot
+    try {
+      callback.success(memory.get_Load());
+    } catch (IOException ioe) {
+      if (ioe instanceof FileNotFoundException) {
+        callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
+      } else {
+        callback.failure(new ErrorCodeException(-1, ioe));
+      }
+      base.remove(key);
+    }
   }
 
   @Override // WRITE
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
     DocumentMemoryLog memory = base.memory.get(key);
-    if (memory != null) {
-      if (!memory.deleted()) {
-        callback.failure(new ErrorCodeException(-1));
-        return;
-      }
-    } else {
-      // TODL if File exists, then failure and return
+    if (memory.canInitialize()) {
+      callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
+      base.remove(key);
+      return;
     }
 
     WriteAheadMessage.Initialize initialize = new WriteAheadMessage.Initialize();
@@ -85,12 +60,21 @@ public class DiskDataService implements DataService {
     initialize.key = key.key;
     initialize.initialize = new WriteAheadMessage.Change();
     initialize.initialize.copyFrom(patch);
-    base.log.write(initialize, callback);
-    initialize.apply(base.getOrCreate(key));
+
+    base.log.write(initialize, new ApplyMessageCallback<>(memory, initialize, callback));
   }
 
   @Override // WRITE
   public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
+    DocumentMemoryLog memory = base.memory.get(key);
+    if (!memory.ensureLoaded(callback)) {
+      base.remove(key);
+      return;
+    }
+    if (!memory.canPatch(patches[0].seqBegin)) {
+      callback.failure(new ErrorCodeException(-1));
+      return;
+    }
     WriteAheadMessage.Patch patch = new WriteAheadMessage.Patch();
     patch.space = key.space;
     patch.key = key.key;
@@ -99,8 +83,7 @@ public class DiskDataService implements DataService {
       patch.changes[k] = new WriteAheadMessage.Change();
       patch.changes[k].copyFrom(patches[k]);
     }
-    base.log.write(patch, callback);
-    patch.apply(base.getOrCreate(key));
+    base.log.write(patch, new ApplyMessageCallback<>(memory, patch, callback));
   }
 
   @Override // READ
@@ -116,22 +99,29 @@ public class DiskDataService implements DataService {
 
   @Override // WRITE
   public void delete(Key key, Callback<Void> callback) {
+    DocumentMemoryLog memory = base.memory.get(key);
     WriteAheadMessage.Delete delete = new WriteAheadMessage.Delete();
     delete.space = key.space;
     delete.key = key.key;
-    base.log.write(delete, callback);
-    delete.apply(base.getOrCreate(key));
+
+    base.log.write(delete, new ApplyMessageCallback<>(memory, delete, callback));
   }
 
   @Override // WRITE
   public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+    DocumentMemoryLog memory = base.memory.get(key);
+    if (!memory.ensureLoaded(callback)) {
+      base.remove(key);
+      return;
+    }
     WriteAheadMessage.Snapshot snap = new WriteAheadMessage.Snapshot();
     snap.space = key.space;
     snap.key = key.key;
     snap.seq = seq;
     snap.history = history;
     snap.document = snapshot;
-    base.log.write(snap, new Callback<Void>() {
+
+    Callback<Void> adaptedCallback = new Callback<Void>() {
       @Override
       public void success(Void value) {
         callback.success(history);
@@ -141,7 +131,8 @@ public class DiskDataService implements DataService {
       public void failure(ErrorCodeException ex) {
         callback.failure(ex);
       }
-    });
-    snap.apply(base.getOrCreate(key));
+    };
+
+    base.log.write(snap, new ApplyMessageCallback<>(memory, snap, adaptedCallback));
   }
 }

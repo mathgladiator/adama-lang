@@ -22,36 +22,49 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DiskWriteAheadLog {
-  private final SimpleExecutor executor;
+public class WriteAheadLog {
+  private final DiskBase base;
+  private final File root;
+  private final int cutOffBytesFlush;
+  private final int flushPeriodMilliseconds;
+  private final long bytesBeforeLogCut;
+
+  private File currentFile;
   private FileOutputStream output;
+  private int at = 0;
   private boolean flushScheduled;
-  private File file;
+  private long bytesWritten;
+
   private ByteBuf buffer;
   private ArrayList<Callback<Void>> callbacks;
-  private int cutOffBytes;
-  private int flushPeriodMilliseconds;
-  private long bytesWritten;
   private byte[] mem;
 
-  public DiskWriteAheadLog(SimpleExecutor executor, File file, int cutOffBytes, int flushPeriodMilliseconds) throws IOException {
-    this.executor = executor;
-    this.file = file;
-    this.buffer = Unpooled.buffer(cutOffBytes);
-    this.callbacks = new ArrayList<>();
+  public WriteAheadLog(DiskBase base, File root, int cutOffBytesFlush, int flushPeriodMilliseconds, long bytesBeforeLogCut) {
+    this.base = base;
+    this.root = root;
+    this.cutOffBytesFlush = cutOffBytesFlush;
     this.flushPeriodMilliseconds = flushPeriodMilliseconds;
-    this.cutOffBytes = cutOffBytes;
-    this.output = new FileOutputStream(file);
-    this.mem = new byte[cutOffBytes * 2];
+    this.bytesBeforeLogCut = bytesBeforeLogCut;
+
+    this.currentFile = null;
+    this.output = null;
+    this.at = 0;
+    this.flushScheduled = false;
+    this.bytesWritten = 0;
+
+
+    this.buffer = Unpooled.buffer(cutOffBytesFlush);
+    this.callbacks = new ArrayList<>();
+    this.mem = new byte[cutOffBytesFlush * 2];
   }
 
-  // Not thread safe
-  public long getBytesWritten() {
-    return bytesWritten;
-  }
-
-  private void flushWhileInExecutor() {
+  private void flushMemory() {
     try {
+      if (output == null) {
+        currentFile = new File(root, "WAL-" + at);
+        at++;
+        output = new FileOutputStream(currentFile);
+      }
       if (buffer.hasArray()) {
         byte[] bytes = buffer.array();
         bytesWritten += bytes.length;
@@ -61,7 +74,7 @@ public class DiskWriteAheadLog {
           int toRead = buffer.readableBytes();
           bytesWritten += toRead;
           if (mem.length <= toRead) {
-            mem = new byte[toRead + cutOffBytes];
+            mem = new byte[toRead + cutOffBytesFlush];
           }
           buffer.readBytes(mem, 0, toRead);
           output.write(mem, 0, toRead);
@@ -74,6 +87,11 @@ public class DiskWriteAheadLog {
       callbacks.clear();
       this.buffer.resetReaderIndex();
       this.buffer.resetWriterIndex();
+      if (bytesWritten > bytesBeforeLogCut) {
+        output.close();
+        output = null;
+        base.flush(currentFile);
+      }
     } catch (IOException io) {
       for (Callback<Void> callback : callbacks) {
         callback.failure(new ErrorCodeException(-1));
@@ -83,29 +101,20 @@ public class DiskWriteAheadLog {
   }
 
   public void write(WriteAheadMessage message, Callback<Void> callback) {
-    executor.execute(new NamedRunnable("wal-write") {
-      @Override
-      public void execute() throws Exception {
-        message.write(buffer);
-        callbacks.add(callback);
-        if (buffer.readableBytes() > cutOffBytes) {
-          flushWhileInExecutor();
+    message.write(buffer);
+    callbacks.add(callback);
+    if (buffer.readableBytes() > cutOffBytesFlush) {
+      flushMemory();
+    }
+    if (!flushScheduled) {
+      flushScheduled = true;
+      base.executor.schedule(new NamedRunnable("wal-flush") {
+        @Override
+        public void execute() throws Exception {
+          flushMemory();
+          flushScheduled = false;
         }
-        if (!flushScheduled) {
-          flushScheduled = true;
-          executor.schedule(new NamedRunnable("wal-flush") {
-            @Override
-            public void execute() throws Exception {
-              flushWhileInExecutor();
-              flushScheduled = false;
-            }
-          }, flushPeriodMilliseconds);
-        }
-      }
-    });
-  }
-
-  public void close() throws Exception {
-    output.close();
+      }, flushPeriodMilliseconds);
+    }
   }
 }
