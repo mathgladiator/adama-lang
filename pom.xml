@@ -20,7 +20,6 @@
         <module>core</module>
         <module>lsp</module>
         <module>web</module>
-        <module>grpc</module>
         <module>data-mysql</module>
         <module>apikit</module>
         <module>cli</module>

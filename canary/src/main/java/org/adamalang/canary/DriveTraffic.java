@@ -9,8 +9,6 @@
  */
 package org.adamalang.canary;
 
-import org.adamalang.canary.agents.grpc.LocalGrpcCanaryConfig;
-import org.adamalang.canary.agents.grpc.LocalGrpcDrive;
 import org.adamalang.canary.agents.net.LocalNetCanaryConfig;
 import org.adamalang.canary.agents.net.LocalNetDrive;
 import org.adamalang.canary.agents.simple.SimpleCanaryConfig;
@@ -30,9 +28,6 @@ public class DriveTraffic {
     }
     if ("localnet".equals(mode)) {
       LocalNetDrive.go(new LocalNetCanaryConfig(config));
-    }
-    if ("localgrpc".equals(mode)) {
-      LocalGrpcDrive.go(new LocalGrpcCanaryConfig(config));
     }
   }
 }
