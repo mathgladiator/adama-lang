@@ -13,11 +13,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.disk.demo.DiskMetrics;
+import org.adamalang.disk.demo.SingleThreadDiskDataService;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
+import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
@@ -50,10 +53,15 @@ public class LocalNetDrive {
     planNode.putArray("plan");
     DeploymentPlan plan = new DeploymentPlan(planNode.toString(), logger);
     deploymentFactoryBase.deploy(config.space, plan);
-    InMemoryDataService memoryDataService = new InMemoryDataService(Executors.newSingleThreadExecutor(), TimeSource.REAL_TIME);
+    final DataService dataService;
+    if (config.data.equals("disk")) {
+      dataService = new SingleThreadDiskDataService(new File("./canary_data"), new DiskMetrics(new NoOpMetricsFactory()));
+    } else {
+      dataService = new InMemoryDataService(Executors.newSingleThreadExecutor(), TimeSource.REAL_TIME);
+    }
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(new NoOpMetricsFactory());
-    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), memoryDataService, TimeSource.REAL_TIME, config.coreThreads);
+    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), dataService, TimeSource.REAL_TIME, config.coreThreads);
 
     SimpleExecutor executor = SimpleExecutor.create("billing");
     File billingRoot = new File(File.createTempFile("x23",  "x23").getParentFile(), "Billing-" + System.currentTimeMillis());

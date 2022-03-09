@@ -14,6 +14,9 @@ import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.Json;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.disk.demo.DiskMetrics;
+import org.adamalang.disk.demo.SingleThreadDiskDataService;
+import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
@@ -43,10 +46,15 @@ public class LocalDrive {
     planNode.putArray("plan");
     DeploymentPlan plan = new DeploymentPlan(planNode.toString(), logger);
     deploymentFactoryBase.deploy(config.space, plan);
-    InMemoryDataService memoryDataService = new InMemoryDataService(Executors.newSingleThreadExecutor(), TimeSource.REAL_TIME);
+    final DataService dataService;
+    if (config.data.equals("disk")) {
+      dataService = new SingleThreadDiskDataService(new File("./canary_data"), new DiskMetrics(new NoOpMetricsFactory()));
+    } else {
+      dataService = new InMemoryDataService(Executors.newSingleThreadExecutor(), TimeSource.REAL_TIME);
+    }
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(new NoOpMetricsFactory());
-    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), memoryDataService, TimeSource.REAL_TIME, config.coreThreads);
+    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), dataService, TimeSource.REAL_TIME, config.coreThreads);
     LocalAgent[] agents = new LocalAgent[config.agents];
     ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     for (int k = 0; k < agents.length; k++) {

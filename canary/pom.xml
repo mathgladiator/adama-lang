@@ -21,6 +21,11 @@
             <artifactId>net</artifactId>
             <version>0.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.adamalang</groupId>
+            <artifactId>data-disk</artifactId>
+            <version>0.2</version>
+        </dependency>
     </dependencies>
     <properties>
         <jdk.version>11</jdk.version>

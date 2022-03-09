@@ -19,6 +19,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class LocalCanaryConfig {
+  public final String data;
   public final String source;
   public final int agents;
   public final String space;
@@ -33,6 +34,7 @@ public class LocalCanaryConfig {
   public final int coreThreads;
 
   public LocalCanaryConfig(ConfigObject config) {
+    this.data = config.strOf("data", "in-memory");
     this.source = config.strOf("source", "canary.adama");
     this.space = config.strOf("space", "demo");
     this.agents = config.intOf("agents", 1);

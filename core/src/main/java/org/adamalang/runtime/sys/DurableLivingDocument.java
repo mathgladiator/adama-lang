@@ -10,10 +10,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.Callback;
-import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.*;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
@@ -80,7 +77,9 @@ public class DurableLivingDocument {
         }
         inflightCompact = true;
         base.metrics.document_compacting.run();
-        base.service.compact(key, currentFactory.maximum_history, new Callback<>() {
+        JsonStreamWriter writer = new JsonStreamWriter();
+        document.__dump(writer);
+        base.service.compactAndSnapshot(key, writer.toString(), currentFactory.maximum_history, new Callback<>() {
           @Override
           public void success(Integer value) {
             base.executor.execute(new NamedRunnable("compact-complete") {

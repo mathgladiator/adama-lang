@@ -256,7 +256,7 @@ public class InMemoryDataServiceTests {
 
       }
     });
-    ds.compact(key, 100, new Callback<Integer>() {
+    ds.compactAndSnapshot(key, "{}", 100, new Callback<Integer>() {
       @Override
       public void success(Integer value) {
         Assert.assertEquals(900, (int) value);
@@ -294,7 +294,7 @@ public class InMemoryDataServiceTests {
 
       }
     });
-    ds.compact(key, 1000, new Callback<Integer>() {
+    ds.compactAndSnapshot(key, "{}", 1000, new Callback<Integer>() {
       @Override
       public void success(Integer value) {
         Assert.assertEquals(0, (int) value);
@@ -307,7 +307,7 @@ public class InMemoryDataServiceTests {
       }
     });
 
-    ds.compact(new Key("spaaaaaace", "keeeey"), 1000, new Callback<Integer>() {
+    ds.compactAndSnapshot(new Key("spaaaaaace", "keeeey"), "{}", 1000, new Callback<Integer>() {
       @Override
       public void success(Integer value) {
       }

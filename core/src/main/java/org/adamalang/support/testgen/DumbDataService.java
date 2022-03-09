@@ -112,7 +112,7 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void compact(Key key, int history, Callback<Integer> callback) {
+  public void compactAndSnapshot(Key key, String snapshot, int history, Callback<Integer> callback) {
     throw new UnsupportedOperationException();
   }
 

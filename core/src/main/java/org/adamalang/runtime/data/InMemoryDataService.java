@@ -164,7 +164,7 @@ public class InMemoryDataService implements DataService {
   }
 
   @Override
-  public void compact(Key key, int history, Callback<Integer> callback) {
+  public void compactAndSnapshot(Key key, String snapshot, int history, Callback<Integer> callback) {
     executor.execute(() -> {
       InMemoryDocument document = datum.get(key);
       if (document != null) {

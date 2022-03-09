@@ -147,9 +147,9 @@ public class ServiceCompactingTests {
     AtomicBoolean compactOn = new AtomicBoolean(false);
     InMemoryDataService dataService = new InMemoryDataService(executor, TimeSource.REAL_TIME) {
       @Override
-      public void compact(Key key, int history, Callback<Integer> callback) {
+      public void compactAndSnapshot(Key key, String snapshot, int history, Callback<Integer> callback) {
         if (compactOn.get()) {
-          super.compact(key, history, callback);
+          super.compactAndSnapshot(key, snapshot, history, callback);
           return;
         }
         callback.failure(new ErrorCodeException(-1));
