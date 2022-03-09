@@ -38,6 +38,7 @@ public interface SnapshotFileStreamEvents {
         while (data.readBoolean()) {
           int seq = data.readInt();
           byte[] undo = new byte[data.readInt()];
+          data.readFully(undo);
           if (!events.onUndo(seq, new String(undo, StandardCharsets.UTF_8))) {
             events.onFinished(!data.readBoolean());
             return;

@@ -11,7 +11,6 @@ package org.adamalang.disk;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.disk.files.ForwardFileStreamEvents;
 import org.adamalang.disk.files.SnapshotFileStreamEvents;
 import org.adamalang.disk.files.SnapshotHeader;
 import org.adamalang.disk.wal.WriteAheadMessage;
@@ -124,14 +123,16 @@ public class DocumentMemoryLog {
   }
 
   private void compact() {
-    AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
-    merge.next(document);
-    for (Redo redo : redoLog) {
-      seq = redo.seq;
-      merge.next(redo.redo);
+    if (redoLog.size() > 0) {
+      AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
+      merge.next(document);
+      for (Redo redo : redoLog) {
+        seq = redo.seq;
+        merge.next(redo.redo);
+      }
+      redoLog.clear();
+      document = merge.finish();
     }
-    redoLog.clear();
-    document = merge.finish();
   }
 
   public boolean get_IsDeleted() {
@@ -147,7 +148,7 @@ public class DocumentMemoryLog {
       return new LocalDocumentChange(document, 1);
     } else {
       compact();
-      return new LocalDocumentChange(document, 1 + redoLogSize);
+      return new LocalDocumentChange(document, 1);
     }
   }
 

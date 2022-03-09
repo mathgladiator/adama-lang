@@ -37,7 +37,7 @@ public class SnapshotHeader {
 
   /** write the header to the output stream */
   public void write(DataOutputStream data) throws IOException {
-    data.write(042);
+    data.writeInt(0x424213);
     data.writeInt(seq);
     data.writeInt(history);
     data.writeInt(documentSize);
