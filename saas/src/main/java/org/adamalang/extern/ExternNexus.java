@@ -12,8 +12,8 @@ package org.adamalang.extern;
 import org.adamalang.api.ApiMetrics;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.frontend.FrontendConfig;
-import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.net.client.Client;
 import org.adamalang.web.io.JsonLogger;
 
 import java.io.File;

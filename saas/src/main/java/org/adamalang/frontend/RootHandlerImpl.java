@@ -19,11 +19,6 @@ import org.adamalang.api.*;
 import org.adamalang.common.*;
 import org.adamalang.connection.Session;
 import org.adamalang.extern.ExternNexus;
-import org.adamalang.grpc.client.contracts.AskAttachmentCallback;
-import org.adamalang.grpc.client.contracts.CreateCallback;
-import org.adamalang.grpc.client.contracts.SeqCallback;
-import org.adamalang.grpc.client.contracts.SimpleEvents;
-import org.adamalang.grpc.client.sm.Connection;
 import org.adamalang.mysql.backend.BackendOperations;
 import org.adamalang.mysql.backend.data.DocumentIndex;
 import org.adamalang.mysql.deployments.Deployments;
@@ -35,6 +30,8 @@ import org.adamalang.mysql.frontend.data.BillingUsage;
 import org.adamalang.mysql.frontend.data.IdHashPairing;
 import org.adamalang.mysql.frontend.data.Role;
 import org.adamalang.mysql.frontend.data.SpaceListingItem;
+import org.adamalang.net.client.contracts.SimpleEvents;
+import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.results.AuthenticatedUser;
@@ -342,15 +339,15 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
     try {
-      nexus.client.create(request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new CreateCallback() {
+      nexus.client.create("origin", request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
         @Override
-        public void created() {
+        public void success(Void value) {
           responder.complete();
         }
 
         @Override
-        public void error(int code) {
-          responder.error(new ErrorCodeException(code));
+        public void failure(ErrorCodeException ex) {
+          responder.error(ex);
         }
       });
     } catch (Exception ex) {
@@ -381,7 +378,7 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void bind() {
-        connection = nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", new SimpleEvents() {
+        connection = nexus.client.connect("origin", request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", new SimpleEvents() {
           @Override
           public void connected() {
           }
@@ -411,15 +408,15 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void handle(ConnectionSendRequest request, SeqResponder responder) {
-        connection.send(request.channel, null, request.message.toString(), new SeqCallback() {
+        connection.send(request.channel, null, request.message.toString(), new Callback<Integer>() {
           @Override
-          public void success(int seq) {
+          public void success(Integer seq) {
             responder.complete(seq);
           }
 
           @Override
-          public void error(int code) {
-            responder.error(new ErrorCodeException(code));
+          public void failure(ErrorCodeException ex) {
+            responder.error(ex);
           }
         });
       }
@@ -446,23 +443,23 @@ public class RootHandlerImpl implements RootHandler {
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder startResponder) {
     AtomicReference<Connection> connection = new AtomicReference<>(null);
     AtomicBoolean clean = new AtomicBoolean(false);
-    connection.set(nexus.client.connect(request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", new SimpleEvents() {
+    connection.set(nexus.client.connect("origin", request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", new SimpleEvents() {
       @Override
       public void connected() {
-        connection.get().canAttach(new AskAttachmentCallback() {
+        connection.get().canAttach(new Callback<Boolean>() {
           @Override
-          public void allow() {
-            startResponder.next(65536);
+          public void success(Boolean value) {
+            if (value) {
+              startResponder.next(65536);
+            } else {
+              startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_NOT_ALLOWED));
+            }
           }
 
           @Override
-          public void reject() {
-            startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_NOT_ALLOWED));
-          }
+          public void failure(ErrorCodeException ex) {
+            startResponder.error(ex);
 
-          @Override
-          public void error(int code) {
-            startResponder.error(new ErrorCodeException(code));
           }
         });
       }
@@ -545,18 +542,18 @@ public class RootHandlerImpl implements RootHandler {
           nexus.uploader.upload(new Key(request.space, request.key), asset, file, new Callback<Void>() {
             @Override
             public void success(Void value) {
-              connection.get().attach(id, asset.name, asset.contentType, asset.size, asset.md5, asset.sha384, new SeqCallback() {
+              connection.get().attach(id, asset.name, asset.contentType, asset.size, asset.md5, asset.sha384, new Callback<Integer>() {
                 @Override
-                public void success(int seq) {
+                public void success(Integer value) {
                   clean.set(true);
                   disconnect(0L);
                   finishResponder.complete();
                 }
 
                 @Override
-                public void error(int code) {
+                public void failure(ErrorCodeException ex) {
                   disconnect(0L);
-                  finishResponder.error(new ErrorCodeException(code));
+                  finishResponder.error(ex);
                 }
               });
             }

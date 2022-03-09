@@ -83,4 +83,35 @@ public interface WriteAheadMessage {
     }
   }
 
+  @TypeId(0x25)
+  @Flow("WAL")
+  public static class Delete implements WriteAheadMessage {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+
+    @Override
+    public void write(ByteBuf buf) {
+      WriteAheadMessageCodec.write(buf, this);
+    }
+  }
+
+  @TypeId(0x30)
+  @Flow("WAL")
+  public static class Snapshot implements WriteAheadMessage {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public int history;
+    @FieldOrder(4)
+    public String document;
+
+    @Override
+    public void write(ByteBuf buf) {
+      WriteAheadMessageCodec.write(buf, this);
+    }
+  }
 }

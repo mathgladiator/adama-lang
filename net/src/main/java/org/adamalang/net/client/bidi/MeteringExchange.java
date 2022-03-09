@@ -61,9 +61,7 @@ public class MeteringExchange extends ServerCodec.StreamMetering implements Call
 
   @Override
   public void handle(ServerMessage.MeteringBatchRemoved payload) {
-    metering.handle(target, batchToRemove, () -> {
-      begin();
-    });
+    metering.handle(target, batchToRemove, this::begin);
   }
 
   @Override

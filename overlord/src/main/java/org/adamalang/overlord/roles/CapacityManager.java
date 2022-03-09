@@ -11,12 +11,12 @@ package org.adamalang.overlord.roles;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.grpc.client.Client;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.mysql.frontend.Spaces;
 import org.adamalang.mysql.frontend.data.InternalDeploymentPlan;
+import org.adamalang.net.client.Client;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;

@@ -11,10 +11,10 @@ package org.adamalang.overlord.roles;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
-import org.adamalang.grpc.client.Client;
-import org.adamalang.grpc.client.contracts.MeteringStream;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.frontend.Metering;
+import org.adamalang.net.client.Client;
+import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.overlord.html.FixedHtmlStringLoggerTable;

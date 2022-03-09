@@ -228,5 +228,6 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     ByteBuf toWrite = upstream.create(4);
     ClientCodec.write(toWrite, disconnect);
     upstream.next(toWrite);
+    upstream.completed();
   }
 }

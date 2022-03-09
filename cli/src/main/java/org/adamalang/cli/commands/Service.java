@@ -14,6 +14,8 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.ServerHandle;
 import org.adamalang.disk.demo.DiskMetrics;
 import org.adamalang.disk.demo.SingleThreadDiskDataService;
 import org.adamalang.extern.AssetUploader;
@@ -29,11 +31,6 @@ import org.adamalang.frontend.FrontendConfig;
 import org.adamalang.gossip.Engine;
 import org.adamalang.gossip.EngineRole;
 import org.adamalang.gossip.GossipMetricsImpl;
-import org.adamalang.grpc.client.Client;
-import org.adamalang.grpc.client.ClientMetrics;
-import org.adamalang.grpc.server.Server;
-import org.adamalang.grpc.server.ServerMetrics;
-import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
@@ -41,6 +38,11 @@ import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
+import org.adamalang.net.client.Client;
+import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.server.Handler;
+import org.adamalang.net.server.ServerMetrics;
+import org.adamalang.net.server.ServerNexus;
 import org.adamalang.overlord.Overlord;
 import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.grpc.OverlordClient;
@@ -220,10 +222,12 @@ public class Service {
 
     // prime the host with spaces
     scanForDeployments.accept("*");
-    ServerNexus nexus = new ServerNexus(identity, service, new ServerMetrics(prometheusMetricsFactory), deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, port, 4);
+    NetBase netBase = new NetBase(identity, 1, 2);
+    ServerNexus nexus = new ServerNexus(netBase, identity, service, new ServerMetrics(prometheusMetricsFactory), deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, port, 4);
 
-    Server server = new Server(nexus);
-    server.start();
+    ServerHandle handle = netBase.serve(port, (upstream) -> new Handler(nexus, upstream));
+    Thread serverThread = new Thread(() -> handle.waitForEnd());
+    serverThread.start();
     Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
       @Override
       public void run() throws Exception {
@@ -231,7 +235,8 @@ public class Service {
         // This will send to all connections an empty list which will remove from the routing table. At this point, we should wait all connections migrate away
 
         // TODO: for each connection, remove from routing table, stop
-        server.close();
+        handle.kill();
+        netBase.shutdown();
       }
     })));
   }
@@ -293,7 +298,8 @@ public class Service {
     System.err.println("gossiping on:" + gossipPort);
     WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
     System.err.println("standing up http on:" + webConfig.port);
-    Client client = new Client(identity, new ClientMetrics(prometheusMetricsFactory), null);
+    NetBase netBase = new NetBase(identity, 1, 2);
+    Client client = new Client(netBase, new ClientMetrics(prometheusMetricsFactory), null);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
 
     engine.subscribe("adama", (targets) -> {
@@ -339,8 +345,6 @@ public class Service {
     });
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus, propigatedHandler);
-
-
 
     // TODO: have some sense of health checking in the web package
     // TODO: should also have web heat flow to overlord

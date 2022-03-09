@@ -210,6 +210,9 @@ public class Connection {
       @Override
       public void execute() throws Exception {
         if (routingAlive) {
+          base.metrics.client_state_machines_alive.down();
+          routingAlive = false;
+
           // this will trigger a target change to null which will take care of a great deal of
           // things
           if (unsubscribeFromRouting != null) {
@@ -217,8 +220,6 @@ public class Connection {
             unsubscribeFromRouting = null;
           }
 
-          base.metrics.client_state_machines_alive.down();
-          routingAlive = false;
           switch (state) {
             case Connected:
               state = Label.WaitingForDisconnect;

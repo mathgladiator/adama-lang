@@ -202,7 +202,7 @@ public class InMemoryDataServiceTests {
     ds.initialize(
         key,
         update(1, "{\"x\":1}", "{\"x\":0,\"y\":0}"),
-        bumpFailure(failure, ErrorCodes.INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS));
+        bumpFailure(failure, ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
     ds.patch(key, new RemoteDocumentUpdate[] { update(2, "{\"x\":2}", "{\"x\":1}") }, bumpSuccess(success));
     ds.patch(key, new RemoteDocumentUpdate[] { update(3, "{\"x\":3}", "{\"x\":2}") }, bumpSuccess(success));
     ds.compute(

@@ -13,10 +13,11 @@ import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.net.NetBase;
 import org.adamalang.gossip.Engine;
-import org.adamalang.grpc.client.Client;
-import org.adamalang.grpc.client.ClientMetrics;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.net.client.Client;
+import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.overlord.grpc.OverlordServer;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
@@ -47,9 +48,12 @@ public class Overlord {
     // we will be monitoring the heat on each host within this table
     HeatTable heatTable = new HeatTable(handler);
 
+    // setup the foundation
+    NetBase netBase = new NetBase(identity, 1, 2);
+
     // build a full mesh from overlord to all clients
     String adamaRole = "adama";
-    Client client = new Client(identity, new ClientMetrics(metricsFactory), (target, cpu, memory) -> {
+    Client client = new Client(netBase, new ClientMetrics(metricsFactory), (target, cpu, memory) -> {
       heatTable.onSample(target, adamaRole, cpu, memory);
     });
     engine.subscribe(adamaRole, client.getTargetPublisher());

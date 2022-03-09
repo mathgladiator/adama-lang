@@ -58,7 +58,7 @@ public class ServiceImplicitCreateTests {
   }
 
   @Test
-  public void race_cause_retry() throws Exception {
+  public void race_cause_create_storm_but_both_work() throws Exception {
     LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG);
     MockInstantLivingDocumentFactoryFactory factoryFactory =
         new MockInstantLivingDocumentFactoryFactory(factory);
@@ -72,14 +72,14 @@ public class ServiceImplicitCreateTests {
       Runnable latchClient1 = streamback1.latchAt(2);
       Runnable latchClient2 = streamback2.latchAt(2);
       Runnable onlyOneAsks = dataService.latchAt(1);
-      Runnable bothTryToCreate = dataService.latchAt(3);
-      Runnable latchData = realDataService.latchLogAt(5);
+      Runnable onlyOneCreates = dataService.latchAt(2);
+      Runnable latchData = realDataService.latchLogAt(4);
       dataService.pause();
       service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
       service.connect(NtClient.NO_ONE, KEY, "{}", streamback2);
       onlyOneAsks.run();
       dataService.once();
-      bothTryToCreate.run();
+      onlyOneCreates.run();
       dataService.unpause();
       latchData.run();
       latchClient1.run();
@@ -119,7 +119,7 @@ public class ServiceImplicitCreateTests {
     try {
       MockStreamback streamback1 = new MockStreamback();
       service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
-      streamback1.await_failure(625676);
+      streamback1.await_failure(-123);
     } finally {
       service.shutdown();
     }
@@ -139,14 +139,14 @@ public class ServiceImplicitCreateTests {
       MockStreamback streamback1 = new MockStreamback();
       MockStreamback streamback2 = new MockStreamback();
       Runnable bothAskingOnlyOne = dataService.latchAt(1);
-      Runnable bothCreating = dataService.latchAt(3);
-      Runnable latchData = realDataService.latchLogAt(4);
+      Runnable onlyOneAsks = dataService.latchAt(2);
+      Runnable latchData = realDataService.latchLogAt(3);
       dataService.pause();
       service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
       service.connect(NtClient.NO_ONE, KEY, "{}", streamback2);
       bothAskingOnlyOne.run();
       dataService.once();
-      bothCreating.run();
+      onlyOneAsks.run();
       dataService.unpause();
       latchData.run();
     } finally {

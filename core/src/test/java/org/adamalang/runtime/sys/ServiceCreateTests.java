@@ -98,10 +98,14 @@ public class ServiceCreateTests {
     try {
       NullCallbackLatch created1 = new NullCallbackLatch();
       NullCallbackLatch created2 = new NullCallbackLatch();
-      Runnable latchTwoCalls = factoryFactory.latchAt(2);
+      Runnable latchTwoCalls = factoryFactory.latchAt(1);
+      Runnable latchSecond = factoryFactory.latchAt(2);
+
       service.create(NtClient.NO_ONE, KEY, "{}", null, created1);
       service.create(NtClient.NO_ONE, KEY, "{}", null, created2);
       latchTwoCalls.run();
+      factoryFactory.satisfyAll(KEY, factory);
+      latchSecond.run();
       factoryFactory.satisfyAll(KEY, factory);
       created1.await_success();
       created2.await_failure();

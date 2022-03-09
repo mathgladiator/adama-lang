@@ -49,7 +49,6 @@ public class ErrorCodes {
   public static final int SERVICE_DOCUMENT_REJECTED_CREATION = 134259;
   public static final int DOCUMENT_SELF_DESTRUCT_SUCCESSFUL = 134195;
 
-  public static final int INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS = 116787;
   public static final int INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT = 144944;
   public static final int INMEMORY_DATA_COMPUTE_CANT_FIND_DOCUMENT = 106546;
   public static final int INMEMORY_DATA_COMPUTE_PATCH_NOTHING_TODO = 120944;

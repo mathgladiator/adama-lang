@@ -11,16 +11,13 @@ package org.adamalang;
 
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.ServerHandle;
 import org.adamalang.extern.AssetUploader;
 import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.frontend.BootstrapFrontend;
 import org.adamalang.frontend.FrontendConfig;
-import org.adamalang.grpc.client.Client;
-import org.adamalang.grpc.client.ClientMetrics;
-import org.adamalang.grpc.server.Server;
-import org.adamalang.grpc.server.ServerMetrics;
-import org.adamalang.grpc.server.ServerNexus;
 import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseMetrics;
@@ -31,6 +28,11 @@ import org.adamalang.mysql.deployments.DeployedInstaller;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
+import org.adamalang.net.client.Client;
+import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.server.Handler;
+import org.adamalang.net.server.ServerMetrics;
+import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
@@ -74,7 +76,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public final SimpleExecutor clientExecutor;
   public final DeploymentFactoryBase deploymentFactoryBase;
   public final CoreService coreService;
-  public final Server server;
+  public final NetBase netBase;
+  public final ServerHandle serverHandle;
 
   public TestFrontEnd() throws Exception {
     int port = 10000;
@@ -102,8 +105,9 @@ public class TestFrontEnd implements AutoCloseable, Email {
     // TODO: setup a backend server
     MachineIdentity identity = MachineIdentity.fromFile("localhost.identity");
 
+    this.netBase = new NetBase(identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");
-    ServerNexus backendNexus = new ServerNexus(identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, (space) -> {
+    ServerNexus backendNexus = new ServerNexus(netBase, identity, coreService, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, (space) -> {
       try {
         if (!"*".equals(space)) {
           Deployment deployment = Deployments.get(dataBase, identity.ip + ":" + port, space);
@@ -126,9 +130,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
       }
     }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("x23", "x23").getParentFile(),  1800000L), port, 2);
 
-    server = new Server(backendNexus);
-    server.start();
-    Client client = new Client(identity, new ClientMetrics(new NoOpMetricsFactory()), null);
+    serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
+    Client client = new Client(netBase, new ClientMetrics(new NoOpMetricsFactory()), null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
     this.attachmentRoot = new File(File.createTempFile("x23", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
     AssetUploader uploader = new AssetUploader() {
@@ -165,7 +168,9 @@ public class TestFrontEnd implements AutoCloseable, Email {
     connection.kill();
     nexus.close();
     clientExecutor.shutdown();
-    server.close();
+    serverHandle.kill();
+    netBase.shutdown();
+    serverHandle.waitForEnd();
     connection.keepalive();
   }
 

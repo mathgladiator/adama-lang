@@ -15,6 +15,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.common.metrics.StreamMonitor;
 import org.adamalang.common.net.ByteStream;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
@@ -39,12 +40,15 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   private final AtomicBoolean alive;
   private CoreStream stream;
   private ScheduledFuture<?> futureHeat;
+  private StreamMonitor.StreamMonitorInstance monitorStreamback;
 
   public Handler(ServerNexus nexus, ByteStream upstream) {
     this.nexus = nexus;
     this.upstream = upstream;
     this.futureHeat = null;
     this.alive = new AtomicBoolean(true);
+    nexus.metrics.server_handlers_active.up();
+    this.monitorStreamback = null;
   }
 
   @Override
@@ -68,6 +72,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void completed() {
+    nexus.metrics.server_handlers_active.down();
     alive.set(false);
     if (stream != null) {
       stream.disconnect();
@@ -120,7 +125,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.StreamAttach payload) {
     if (stream != null) {
-      stream.attach(new NtAsset(payload.id, payload.filename, payload.contentType, payload.size, payload.md5, payload.sha384), new Callback<Integer>() {
+      stream.attach(new NtAsset(payload.id, payload.filename, payload.contentType, payload.size, payload.md5, payload.sha384), nexus.metrics.server_stream_attach.wrap(new Callback<Integer>() {
         @Override
         public void success(Integer seq) {
           ServerMessage.StreamSeqResponse response = new ServerMessage.StreamSeqResponse();
@@ -140,14 +145,14 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
           ServerCodec.write(errorBuf, error);
           upstream.next(errorBuf);
         }
-      });
+      }));
     }
   }
 
   @Override
   public void handle(ClientMessage.StreamAskAttachmentRequest payload) {
     if (stream != null) {
-      stream.canAttach(new Callback<Boolean>() {
+      stream.canAttach(nexus.metrics.server_stream_ask.wrap(new Callback<Boolean>() {
         @Override
         public void success(Boolean value) {
           ServerMessage.StreamAskAttachmentResponse response = new ServerMessage.StreamAskAttachmentResponse();
@@ -167,13 +172,14 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
           ServerCodec.write(errorBuf, error);
           upstream.next(errorBuf);
         }
-      });
+      }));
     }
   }
 
   @Override
   public void handle(ClientMessage.StreamDisconnect payload) {
     if (stream != null) {
+      nexus.metrics.server_stream_disconnect.run();
       stream.disconnect();
       stream = null;
     }
@@ -182,6 +188,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.StreamUpdate payload) {
     if (stream != null) {
+      nexus.metrics.server_stream_update.run();
       stream.updateView(new JsonStreamReader(payload.viewerState));
     }
   }
@@ -189,7 +196,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.StreamSend payload) {
     if (stream != null) {
-      stream.send(payload.channel, payload.marker, payload.message, new Callback<>() {
+      stream.send(payload.channel, payload.marker, payload.message, nexus.metrics.server_stream_send.wrap(new Callback<>() {
         @Override
         public void success(Integer value) {
           ServerMessage.StreamSeqResponse response = new ServerMessage.StreamSeqResponse();
@@ -209,18 +216,20 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
           ServerCodec.write(errorBuf, error);
           upstream.next(errorBuf);
         }
-      });
+      }));
     }
   }
 
   @Override
   public void handle(ClientMessage.StreamConnect payload) {
+    monitorStreamback = nexus.metrics.server_stream.start();
     nexus.service.connect(new NtClient(payload.agent, payload.authority), new Key(payload.space, payload.key), payload.viewerState, this);
   }
 
   @Override
   public void handle(ClientMessage.MeteringDeleteBatch payload) {
     try {
+      nexus.metrics.server_metering_delete_batch.run();
       nexus.meteringBatchMaker.deleteBatch(payload.id);
       ByteBuf toWrite = upstream.create(4);
       ServerCodec.write(toWrite, new ServerMessage.MeteringBatchRemoved());
@@ -234,6 +243,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.MeteringBegin payload) {
     try {
       String id = nexus.meteringBatchMaker.getNextAvailableBatchId();
+      nexus.metrics.server_metering_begin.run();
       if (id != null) {
         String batch = nexus.meteringBatchMaker.getBatch(id);
         ServerMessage.MeteringBatchFound found = new ServerMessage.MeteringBatchFound();
@@ -253,6 +263,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.ScanDeployment payload) {
     try {
+      nexus.metrics.server_scan_deployment.run();
       nexus.scanForDeployments.accept(payload.space);
       ByteBuf buf = upstream.create(4);
       ServerCodec.write(buf, new ServerMessage.ScanDeploymentResponse());
@@ -322,12 +333,14 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     ServerCodec.write(buffer, statusToUse);
     upstream.next(buffer);
     if (status == StreamStatus.Disconnected) {
+      monitorStreamback.finish();
       upstream.completed();
     }
   }
 
   @Override
   public void next(String data) {
+    monitorStreamback.progress();
     ByteBuf buffer = upstream.create(16 + data.length());
     ServerMessage.StreamData dataToUse = new ServerMessage.StreamData();
     dataToUse.delta = data;
@@ -337,6 +350,8 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void failure(ErrorCodeException exception) {
+    monitorStreamback.failure(exception.code);
     upstream.error(exception.code);
+    completed();
   }
 }

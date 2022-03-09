@@ -116,12 +116,8 @@ public class DiskMeteringBatchMaker {
     this.executor.execute(new NamedRunnable("billing-flush") {
       @Override
       public void execute() throws Exception {
-        try {
-          cut();
-          done.countDown();
-        } catch (Exception ex) {
-          ex.printStackTrace();
-        }
+        cut();
+        done.countDown();
       }
     });
   }

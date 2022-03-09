@@ -120,7 +120,7 @@ public class Client {
 
   public void randomMeteringExchange(MeteringStream metering) {
     engine.random(target -> {
-      finder.find(target, new Callback<InstanceClient>() {
+      finder.find(target, new Callback<>() {
         @Override
         public void success(InstanceClient value) {
           value.startMeteringExchange(metering);

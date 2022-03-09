@@ -12,6 +12,8 @@ package org.adamalang.disk.wal;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.disk.wal.WriteAheadMessage.Snapshot;
+import org.adamalang.disk.wal.WriteAheadMessage.Delete;
 import org.adamalang.disk.wal.WriteAheadMessage.Patch;
 import org.adamalang.disk.wal.WriteAheadMessage.Change;
 import org.adamalang.disk.wal.WriteAheadMessage.Compact;
@@ -20,6 +22,10 @@ import org.adamalang.disk.wal.WriteAheadMessage.Initialize;
 public class WriteAheadMessageCodec {
 
   public static abstract class StreamWAL implements ByteStream {
+    public abstract void handle(Snapshot payload);
+
+    public abstract void handle(Delete payload);
+
     public abstract void handle(Patch payload);
 
     public abstract void handle(Compact payload);
@@ -38,6 +44,12 @@ public class WriteAheadMessageCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
+        case 48:
+          handle(readBody_48(buf, new Snapshot()));
+          return;
+        case 37:
+          handle(readBody_37(buf, new Delete()));
+          return;
         case 32:
           handle(readBody_32(buf, new Patch()));
           return;
@@ -52,6 +64,8 @@ public class WriteAheadMessageCodec {
   }
 
   public static interface HandlerWAL {
+    public void handle(Snapshot payload);
+    public void handle(Delete payload);
     public void handle(Patch payload);
     public void handle(Compact payload);
     public void handle(Initialize payload);
@@ -59,6 +73,12 @@ public class WriteAheadMessageCodec {
 
   public static void route(ByteBuf buf, HandlerWAL handler) {
     switch (buf.readIntLE()) {
+      case 48:
+        handler.handle(readBody_48(buf, new Snapshot()));
+        return;
+      case 37:
+        handler.handle(readBody_37(buf, new Delete()));
+        return;
       case 32:
         handler.handle(readBody_32(buf, new Patch()));
         return;
@@ -103,6 +123,38 @@ public class WriteAheadMessageCodec {
         handler.handle(readBody_21(buf, new Change()));
         return;
     }
+  }
+
+  public static Snapshot read_Snapshot(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 48:
+        return readBody_48(buf, new Snapshot());
+    }
+    return null;
+  }
+
+
+  private static Snapshot readBody_48(ByteBuf buf, Snapshot o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    o.history = buf.readIntLE();
+    o.document = Helper.readString(buf);
+    return o;
+  }
+
+  public static Delete read_Delete(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 37:
+        return readBody_37(buf, new Delete());
+    }
+    return null;
+  }
+
+
+  private static Delete readBody_37(ByteBuf buf, Delete o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    return o;
   }
 
   public static Patch read_Patch(ByteBuf buf) {
@@ -168,6 +220,28 @@ public class WriteAheadMessageCodec {
     o.space = Helper.readString(buf);
     o.key = Helper.readString(buf);
     return o;
+  }
+
+  public static void write(ByteBuf buf, Snapshot o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(48);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+    buf.writeIntLE(o.history);
+    Helper.writeString(buf, o.document);;
+  }
+
+  public static void write(ByteBuf buf, Delete o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(37);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
   }
 
   public static void write(ByteBuf buf, Patch o) {

@@ -60,7 +60,7 @@ public class InMemoryDataService implements DataService {
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
     executor.execute(() -> {
       if (datum.containsKey(key)) {
-        callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS));
+        callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
         return;
       }
       InMemoryDocument document = new InMemoryDocument();

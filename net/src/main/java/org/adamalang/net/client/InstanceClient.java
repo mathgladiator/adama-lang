@@ -68,6 +68,7 @@ public class InstanceClient implements AutoCloseable {
       base.connect(this.target, new org.adamalang.common.net.Lifecycle() {
         @Override
         public void connected(ChannelClient channel) {
+          metrics.client_connection_alive.up();
           metrics.client_info_start.run();
           channel.open(new ServerCodec.StreamInfo() {
             @Override
@@ -116,6 +117,7 @@ public class InstanceClient implements AutoCloseable {
 
         @Override
         public void disconnected() {
+          metrics.client_connection_alive.down();
           executor.execute(new NamedRunnable("channel-client-disconnect") {
             @Override
             public void execute() throws Exception {
@@ -294,11 +296,11 @@ public class InstanceClient implements AutoCloseable {
     executor.execute(new NamedRunnable("metering-exchange") {
       @Override
       public void execute() throws Exception {
-        client.add(new ItemAction<ChannelClient>(ErrorCodes.ADAMA_NET_METERING_TIMEOUT, ErrorCodes.ADAMA_NET_METERING_REJECTED, metrics.client_metering_exchange.start()) {
+        client.add(new ItemAction<>(ErrorCodes.ADAMA_NET_METERING_TIMEOUT, ErrorCodes.ADAMA_NET_METERING_REJECTED, metrics.client_metering_exchange.start()) {
           @Override
           protected void executeNow(ChannelClient client) {
-            MeteringExchange exchange = new MeteringExchange(target, meteringStream);
-            client.open(exchange, exchange);
+              MeteringExchange exchange = new MeteringExchange(target, meteringStream);
+              client.open(exchange, exchange);
           }
 
           @Override

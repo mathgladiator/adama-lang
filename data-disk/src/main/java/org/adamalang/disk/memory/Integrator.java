@@ -12,8 +12,17 @@ package org.adamalang.disk.memory;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.disk.wal.WriteAheadMessage;
+import org.adamalang.runtime.data.Key;
+
+import java.util.HashMap;
 
 public class Integrator {
+  private HashMap<Key, DocumentMemoryLog> logs;
+
+  public Integrator() {
+    this.logs = new HashMap<>();
+  }
+
   public <T> Callback<T> write(WriteAheadMessage message, Callback<T> user) {
     return new Callback<T>() {
       @Override

@@ -102,7 +102,11 @@ public class CoreService {
 
   /** create a document */
   public void create(NtClient who, Key key, String arg, String entropy, Callback<Void> callbackReal) {
-    Callback<Void> callback = metrics.serviceCreate.wrap(callbackReal);
+    createInternal(who, key, arg, entropy, metrics.serviceCreate.wrap(callbackReal));;
+  }
+
+  /** internal: actually create with the given callback */
+  private void createInternal(NtClient who, Key key, String arg, String entropy, Callback<Void> callback) {
     // jump into thread caching which thread
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
@@ -114,6 +118,25 @@ public class CoreService {
           callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED));
           return;
         }
+
+        // since create will typically fail, we want to only retry the requests if there are concurrent calls
+        ArrayList<Runnable> concurrentCreateCalls = base.mapCreationsInflightRetryBuffer.get(key);
+        if (concurrentCreateCalls != null) {
+          concurrentCreateCalls.add(() -> create(who, key, arg, entropy, callback));
+          return;
+        }
+        base.mapCreationsInflightRetryBuffer.put(key, new ArrayList<>());
+        Runnable executeConcurrent = () -> {
+          base.executor.execute(new NamedRunnable("retry-connect") {
+            @Override
+            public void execute() throws Exception {
+              for (Runnable other : base.mapCreationsInflightRetryBuffer.remove(key)) {
+                other.run();
+              }
+            }
+          });
+        };
+
         // estimate the impact
         base.getOrCreateInventory(key.space).grow();
         // fetch the factory
@@ -123,10 +146,12 @@ public class CoreService {
             try {
               if (!factory.canCreate(who)) {
                 callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_REJECTED_CREATION));
+                executeConcurrent.run();
                 return;
               }
             } catch (ErrorCodeException exNew) {
               callback.failure(exNew);
+              executeConcurrent.run();
               return;
             }
             // bring the document into existence
@@ -142,11 +167,13 @@ public class CoreService {
                     callback.success(null);
                   }
                 });
+                executeConcurrent.run();
               }
 
               @Override
               public void failure(ErrorCodeException ex) {
                 callback.failure(ex);
+                executeConcurrent.run();
               }
             }));
           }
@@ -154,6 +181,7 @@ public class CoreService {
           @Override
           public void failure(ErrorCodeException ex) {
             callback.failure(ex);
+            executeConcurrent.run();
           }
         }));
       }
@@ -165,7 +193,7 @@ public class CoreService {
     connect(who, key, stream, viewerState, true);
   }
 
-  /** internal: do the connect with retry */
+  /** internal: do the connect with retry when connect executes create */
   private void connect(NtClient who, Key key, Streamback stream, String viewerState, boolean canRetry) {
     // TODO: instrument the stream
     load(key, new Callback<>() {
@@ -185,19 +213,18 @@ public class CoreService {
                   stream.failure(exOriginal);
                   return;
                 }
-                // IMPLICIT CREATE can create a connect storm
                 create(who, key, "{}", null, metrics.implicitCreate.wrap(new Callback<Void>() {
                   @Override
                   public void success(Void value) {
-                    connect(who, key, stream, viewerState, false);
+                    connect(who, key, stream, viewerState, canRetry);
                   }
 
                   @Override
-                  public void failure(ErrorCodeException ex) {
-                    if (ex.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE || ex.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED) {
-                      connect(who, key, stream, viewerState, false);
+                  public void failure(ErrorCodeException exNew) {
+                    if (exNew.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE || exNew.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED || exNew.code == ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED) {
+                      connect(who, key, stream, viewerState, canRetry);
                     } else {
-                      stream.failure(exOriginal);
+                      stream.failure(exNew);
                     }
                   }
                 }));
@@ -208,7 +235,7 @@ public class CoreService {
 
             @Override
             public void failure(ErrorCodeException ex) {
-              stream.failure(exOriginal);
+              stream.failure(ex);
             }
           }));
           return;
