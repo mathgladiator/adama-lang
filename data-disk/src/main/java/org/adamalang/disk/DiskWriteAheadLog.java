@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk.wal;
+package org.adamalang.disk;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -15,14 +15,14 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.disk.wal.WriteAheadMessage;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
-public class DiskWriteAheadLog implements WriteAheadLog {
+public class DiskWriteAheadLog {
   private final SimpleExecutor executor;
   private FileOutputStream output;
   private boolean flushScheduled;
@@ -82,7 +82,6 @@ public class DiskWriteAheadLog implements WriteAheadLog {
     }
   }
 
-  @Override
   public void write(WriteAheadMessage message, Callback<Void> callback) {
     executor.execute(new NamedRunnable("wal-write") {
       @Override

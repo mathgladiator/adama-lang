@@ -16,7 +16,6 @@ import org.adamalang.disk.wal.WriteAheadMessage.Snapshot;
 import org.adamalang.disk.wal.WriteAheadMessage.Delete;
 import org.adamalang.disk.wal.WriteAheadMessage.Patch;
 import org.adamalang.disk.wal.WriteAheadMessage.Change;
-import org.adamalang.disk.wal.WriteAheadMessage.Compact;
 import org.adamalang.disk.wal.WriteAheadMessage.Initialize;
 
 public class WriteAheadMessageCodec {
@@ -27,8 +26,6 @@ public class WriteAheadMessageCodec {
     public abstract void handle(Delete payload);
 
     public abstract void handle(Patch payload);
-
-    public abstract void handle(Compact payload);
 
     public abstract void handle(Initialize payload);
 
@@ -53,9 +50,6 @@ public class WriteAheadMessageCodec {
         case 32:
           handle(readBody_32(buf, new Patch()));
           return;
-        case 16:
-          handle(readBody_16(buf, new Compact()));
-          return;
         case 5:
           handle(readBody_5(buf, new Initialize()));
           return;
@@ -67,7 +61,6 @@ public class WriteAheadMessageCodec {
     public void handle(Snapshot payload);
     public void handle(Delete payload);
     public void handle(Patch payload);
-    public void handle(Compact payload);
     public void handle(Initialize payload);
   }
 
@@ -82,14 +75,12 @@ public class WriteAheadMessageCodec {
       case 32:
         handler.handle(readBody_32(buf, new Patch()));
         return;
-      case 16:
-        handler.handle(readBody_16(buf, new Compact()));
-        return;
       case 5:
         handler.handle(readBody_5(buf, new Initialize()));
         return;
     }
   }
+
 
   public static abstract class StreamPatchItem implements ByteStream {
     public abstract void handle(Change payload);
@@ -125,6 +116,20 @@ public class WriteAheadMessageCodec {
     }
   }
 
+  public static WriteAheadMessage read_WriteAheadMessage(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 48:
+        return readBody_48(buf, new Snapshot());
+      case 37:
+        return readBody_37(buf, new Delete());
+      case 32:
+        return readBody_32(buf, new Patch());
+      case 5:
+        return readBody_5(buf, new Initialize());
+    }
+    return null;
+  }
+
   public static Snapshot read_Snapshot(ByteBuf buf) {
     switch (buf.readIntLE()) {
       case 48:
@@ -137,6 +142,7 @@ public class WriteAheadMessageCodec {
   private static Snapshot readBody_48(ByteBuf buf, Snapshot o) {
     o.space = Helper.readString(buf);
     o.key = Helper.readString(buf);
+    o.seq = buf.readIntLE();
     o.history = buf.readIntLE();
     o.document = Helper.readString(buf);
     return o;
@@ -183,27 +189,16 @@ public class WriteAheadMessageCodec {
 
 
   private static Change readBody_21(ByteBuf buf, Change o) {
+    o.agent = Helper.readString(buf);
+    o.authority = Helper.readString(buf);
     o.seq_begin = buf.readIntLE();
     o.seq_end = buf.readIntLE();
     o.request = Helper.readString(buf);
     o.redo = Helper.readString(buf);
     o.undo = Helper.readString(buf);
-    return o;
-  }
-
-  public static Compact read_Compact(ByteBuf buf) {
-    switch (buf.readIntLE()) {
-      case 16:
-        return readBody_16(buf, new Compact());
-    }
-    return null;
-  }
-
-
-  private static Compact readBody_16(ByteBuf buf, Compact o) {
-    o.space = Helper.readString(buf);
-    o.key = Helper.readString(buf);
-    o.history = buf.readIntLE();
+    o.active = buf.readBoolean();
+    o.delay = buf.readIntLE();
+    o.dAssetBytes = buf.readLongLE();
     return o;
   }
 
@@ -219,6 +214,7 @@ public class WriteAheadMessageCodec {
   private static Initialize readBody_5(ByteBuf buf, Initialize o) {
     o.space = Helper.readString(buf);
     o.key = Helper.readString(buf);
+    o.initialize = read_Change(buf);
     return o;
   }
 
@@ -230,6 +226,7 @@ public class WriteAheadMessageCodec {
     buf.writeIntLE(48);
     Helper.writeString(buf, o.space);;
     Helper.writeString(buf, o.key);;
+    buf.writeIntLE(o.seq);
     buf.writeIntLE(o.history);
     Helper.writeString(buf, o.document);;
   }
@@ -261,22 +258,16 @@ public class WriteAheadMessageCodec {
       return;
     }
     buf.writeIntLE(21);
+    Helper.writeString(buf, o.agent);;
+    Helper.writeString(buf, o.authority);;
     buf.writeIntLE(o.seq_begin);
     buf.writeIntLE(o.seq_end);
     Helper.writeString(buf, o.request);;
     Helper.writeString(buf, o.redo);;
     Helper.writeString(buf, o.undo);;
-  }
-
-  public static void write(ByteBuf buf, Compact o) {
-    if (o == null) {
-      buf.writeIntLE(0);
-      return;
-    }
-    buf.writeIntLE(16);
-    Helper.writeString(buf, o.space);;
-    Helper.writeString(buf, o.key);;
-    buf.writeIntLE(o.history);
+    buf.writeBoolean(o.active);
+    buf.writeIntLE(o.delay);
+    buf.writeLongLE(o.dAssetBytes);
   }
 
   public static void write(ByteBuf buf, Initialize o) {
@@ -287,5 +278,6 @@ public class WriteAheadMessageCodec {
     buf.writeIntLE(5);
     Helper.writeString(buf, o.space);;
     Helper.writeString(buf, o.key);;
+    write(buf, o.initialize);;
   }
 }

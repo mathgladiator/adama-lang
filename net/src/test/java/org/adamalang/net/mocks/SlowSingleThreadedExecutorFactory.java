@@ -143,6 +143,12 @@ public class SlowSingleThreadedExecutorFactory implements SimpleExecutorFactory,
   }
 
   @Override
+  public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
+    add(command);
+    return () -> {};
+  }
+
+  @Override
   public CountDownLatch shutdown() {
     return null;
   }

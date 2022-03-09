@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk.memory;
+package org.adamalang.disk;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;

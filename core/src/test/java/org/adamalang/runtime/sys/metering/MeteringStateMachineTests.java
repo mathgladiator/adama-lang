@@ -53,6 +53,12 @@ public class MeteringStateMachineTests {
                 }
 
                 @Override
+                public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
+                  service.schedule(command, nanoseconds, TimeUnit.NANOSECONDS);
+                  return () -> {};
+                }
+
+                @Override
                 public CountDownLatch shutdown() {
                   return new CountDownLatch(0);
                 }
@@ -99,6 +105,12 @@ public class MeteringStateMachineTests {
                 @Override
                 public Runnable schedule(NamedRunnable command, long milliseconds) {
                   service.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
+                  return () -> {};
+                }
+
+                @Override
+                public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
+                  service.schedule(command, nanoseconds, TimeUnit.NANOSECONDS);
                   return () -> {};
                 }
 
@@ -187,6 +199,12 @@ public class MeteringStateMachineTests {
                 @Override
                 public Runnable schedule(NamedRunnable command, long milliseconds) {
                   service.schedule(command, milliseconds, TimeUnit.MILLISECONDS);
+                  return () -> {};
+                }
+
+                @Override
+                public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
+                  service.schedule(command, nanoseconds, TimeUnit.NANOSECONDS);
                   return () -> {};
                 }
 

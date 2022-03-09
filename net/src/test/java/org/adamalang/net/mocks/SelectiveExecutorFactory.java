@@ -137,6 +137,11 @@ public class SelectiveExecutorFactory implements SimpleExecutorFactory, SimpleEx
   }
 
   @Override
+  public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
+    return this.schedule(command, nanoseconds / 1000000);
+  }
+
+  @Override
   public CountDownLatch shutdown() {
     return executor.shutdown();
   }
@@ -152,6 +157,11 @@ public class SelectiveExecutorFactory implements SimpleExecutorFactory, SimpleEx
       @Override
       public Runnable schedule(NamedRunnable command, long milliseconds) {
         return SelectiveExecutorFactory.this.schedule(command, milliseconds);
+      }
+
+      @Override
+      public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
+        return this.schedule(command, nanoseconds);
       }
 
       @Override

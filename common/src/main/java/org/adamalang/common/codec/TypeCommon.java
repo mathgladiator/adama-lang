@@ -7,18 +7,16 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk.memory;
+package org.adamalang.common.codec;
 
-import org.adamalang.disk.wal.WriteAheadMessage;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-public class DocumentMemoryLog {
-  public Map<String, Object> document;
-  public ArrayList<WriteAheadMessage> changes;
-
-  public void flush() {
-    // Open the document's log for append
-  }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+/** the type id of the current version */
+public @interface TypeCommon {
+  public String value();
 }

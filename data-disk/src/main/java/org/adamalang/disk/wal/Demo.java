@@ -14,10 +14,10 @@ import io.netty.buffer.Unpooled;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.disk.DiskWriteAheadLog;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

@@ -26,6 +26,11 @@ public interface SimpleExecutor {
     }
 
     @Override
+    public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
+      return () -> {};
+    }
+
+    @Override
     public CountDownLatch shutdown() {
       return new CountDownLatch(0);
     }
@@ -47,6 +52,12 @@ public interface SimpleExecutor {
       }
 
       @Override
+      public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
+        ScheduledFuture<?> future = realExecutor.schedule(command, nanoseconds, TimeUnit.NANOSECONDS);
+        return () -> future.cancel(false);
+      }
+
+      @Override
       public CountDownLatch shutdown() {
         CountDownLatch latch = new CountDownLatch(1);
         realExecutor.execute(() -> {
@@ -63,6 +74,8 @@ public interface SimpleExecutor {
 
   /** schedule the given command to run after some milliseconds within the executor */
   Runnable schedule(NamedRunnable command, long milliseconds);
+  
+  Runnable scheduleNano(NamedRunnable command, long nanoseconds);
 
   /** shutdown the executor */
   CountDownLatch shutdown();

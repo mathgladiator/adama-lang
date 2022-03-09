@@ -12,8 +12,10 @@ package org.adamalang.common.codec;
 import org.adamalang.common.DefaultCopyright;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 /** exceptionally simply code generator for building codecs against a Netty ByteBuf. The ideal is to minimize as much overhead as possible and get bytes in and out using Netty's data structures */
@@ -219,7 +221,35 @@ public class CodecCodeGen {
       }
       sb.append("    }\n");
       sb.append("  }\n");
+      sb.append("\n");
     }
+
+
+    TreeSet<String> commons = new TreeSet<>();
+    for (Class<?> clazz : classes) {
+      TypeCommon tc = clazz.getAnnotation(TypeCommon.class);
+      if (tc != null) {
+        commons.add(tc.value());
+      }
+    }
+    for (String common : commons) {
+      sb.append("  public static ").append(common).append(" read_").append(common).append("(ByteBuf buf) {\n");
+      sb.append("    switch (buf.readIntLE()) {\n");
+      for (Class<?> clazz : classes) {
+        TypeCommon tc = clazz.getAnnotation(TypeCommon.class);
+        if (tc != null && common.equals(tc.value())) {
+          int[] caseIds = versions(clazz);
+          for (int caseId : caseIds) {
+            sb.append("      case ").append(caseId).append(":\n");
+            sb.append("        return readBody_").append(caseId).append("(buf, new ").append(clazz.getSimpleName()).append("());\n");
+          }
+        }
+      }
+      sb.append("    }\n");
+      sb.append("    return null;\n");
+      sb.append("  }\n");
+    }
+
 
     for (Class<?> clazz : classes) {
       int[] caseIds = versions(clazz);
