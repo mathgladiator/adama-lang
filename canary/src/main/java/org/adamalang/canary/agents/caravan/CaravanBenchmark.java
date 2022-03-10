@@ -76,17 +76,13 @@ public class CaravanBenchmark {
             blah = blah + blah + blah + blah;
           }
           Key key = new Key("space", "key");
-          long now = System.currentTimeMillis();
           CountDownLatch init = new CountDownLatch(1);
           service.initialize(key, INIT, wrap(inc, init));
           init.await(100, TimeUnit.MILLISECONDS);
-          System.err.println(System.currentTimeMillis() - now);
           for (int k = 0; k < N; k++) {
-            now = System.currentTimeMillis();
             CountDownLatch latch = new CountDownLatch(1);
             service.patch(key, new RemoteDocumentUpdate[]{UPDATE(k + 2, blah)}, wrap(inc, latch));
             latch.await(100, TimeUnit.MILLISECONDS);
-            System.err.println(System.currentTimeMillis() - now);
           }
         } catch (Exception ex) {
           ex.printStackTrace();
