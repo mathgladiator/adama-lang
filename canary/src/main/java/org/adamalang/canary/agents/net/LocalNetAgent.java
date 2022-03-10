@@ -9,18 +9,14 @@
  */
 package org.adamalang.canary.agents.net;
 
-import org.adamalang.canary.agents.local.LocalCanaryConfig;
 import org.adamalang.canary.agents.simple.SimpleCanaryConfig;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
-import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtClient;
-import org.adamalang.runtime.sys.CoreService;
-import org.adamalang.runtime.sys.CoreStream;
 
 import java.util.Random;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,7 +33,8 @@ public class LocalNetAgent implements SimpleEvents {
   private final Key key;
   private final ScheduledExecutorService executor;
   private final Random rng;
-  private AtomicBoolean dedupe;
+  private final AtomicBoolean firstData = new AtomicBoolean(true);
+  private final AtomicBoolean dedupe;
   private Connection connection;
 
   public LocalNetAgent(Client client, LocalNetCanaryConfig config, int agentId, ScheduledExecutorService executor) {
@@ -58,6 +55,14 @@ public class LocalNetAgent implements SimpleEvents {
   @Override
   public void connected() {
 
+  }
+
+  @Override
+  public void delta(String data) {
+    if (firstData.compareAndSet(true, false)) {
+      kickOffAfterFirstData();
+    }
+    config.metrics.deltas.incrementAndGet();
   }
 
   private void kickOffAfterFirstData() {
@@ -87,17 +92,7 @@ public class LocalNetAgent implements SimpleEvents {
           config.metrics.messages_failed.incrementAndGet();
         }
       });
-    }, (int) (config.messageDelayMs * Math.random()),  config.messageDelayMs, TimeUnit.MILLISECONDS));
-  }
-
-  private final AtomicBoolean firstData = new AtomicBoolean(true);
-
-  @Override
-  public void delta(String data) {
-    if (firstData.compareAndSet(true, false)) {
-      kickOffAfterFirstData();
-    }
-    config.metrics.deltas.incrementAndGet();
+    }, (int) (config.messageDelayMs * Math.random()), config.messageDelayMs, TimeUnit.MILLISECONDS));
   }
 
   @Override

@@ -1,3 +1,12 @@
+/*
+ * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
+ *
+ * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
+ *
+ * See http://www.adama-lang.org/ for more information.
+ *
+ * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
+ */
 package org.adamalang.canary.agents.diskbench;
 
 import io.netty.buffer.ByteBuf;
@@ -10,10 +19,22 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 public class DiskBenchmark {
-  public static class Sample {
-    public int latency;
-    public long bytesWritten;
-    public int messages;
+  public static void go() throws Exception {
+    File root = new File(".");
+    long mb = 8 * 1024 * 1024;
+    System.out.println("cutoff,ms,MB/sec,qps");
+    for (int cutoff : new int[]{64, 128, 196, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152}) {
+      ArrayList<Integer> latency = new ArrayList<>();
+      Sample warmup = sample(root, cutoff, mb);
+      for (int k = 0; k < 40 * 2; k++) {
+        latency.add(sample(root, cutoff, mb).latency);
+      }
+      latency.sort(Integer::compare);
+      int ms = latency.get(38 * 2);
+      long rate = (long) ((1000.0 / 1024.0 * warmup.bytesWritten / (1024.0 * ms)));
+      int qps = (int) (warmup.messages * 1000.0 / ms);
+      System.out.println(cutoff + "," + ms + "," + rate + "," + qps);
+    }
   }
 
   private static Sample sample(File root, int cutoff, long bytesToWrite) throws Exception {
@@ -54,21 +75,9 @@ public class DiskBenchmark {
     return sample;
   }
 
-  public static void go() throws Exception {
-    File root = new File(".");
-    long mb = 8 * 1024 * 1024;
-    System.out.println("cutoff,ms,MB/sec,qps");
-    for (int cutoff : new int[] { 64, 128, 196, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152}) {
-      ArrayList<Integer> latency = new ArrayList<>();
-      Sample warmup = sample(root, cutoff, mb);
-      for (int k = 0; k < 40 * 2; k++) {
-        latency.add(sample(root, cutoff, mb).latency);
-      }
-      latency.sort(Integer::compare);
-      int ms = latency.get(38 * 2);
-      long rate = (long)((1000.0/1024.0 * warmup.bytesWritten / (1024.0 * ms)));
-      int qps = (int) (warmup.messages * 1000.0 / ms);
-      System.out.println(cutoff + "," + ms + "," + rate + "," + qps);
-    }
+  public static class Sample {
+    public int latency;
+    public long bytesWritten;
+    public int messages;
   }
 }

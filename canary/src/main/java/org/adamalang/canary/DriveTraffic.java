@@ -9,14 +9,15 @@
  */
 package org.adamalang.canary;
 
+import org.adamalang.canary.agents.caravan.CaravanBenchmark;
 import org.adamalang.canary.agents.diskbench.DiskBenchmark;
+import org.adamalang.canary.agents.local.LocalCanaryConfig;
+import org.adamalang.canary.agents.local.LocalDrive;
 import org.adamalang.canary.agents.net.LocalNetCanaryConfig;
 import org.adamalang.canary.agents.net.LocalNetDrive;
 import org.adamalang.canary.agents.simple.SimpleCanaryConfig;
 import org.adamalang.canary.agents.simple.SimpleDrive;
-import org.adamalang.canary.agents.local.LocalCanaryConfig;
-import org.adamalang.canary.agents.local.LocalDrive;
-import org.adamalang.common.*;
+import org.adamalang.common.ConfigObject;
 
 public class DriveTraffic {
   public static void execute(ConfigObject config) throws Exception {
@@ -32,6 +33,9 @@ public class DriveTraffic {
     }
     if ("diskbench".equals(mode)) {
       DiskBenchmark.go();
+    }
+    if ("caravan".equals(mode)) {
+      CaravanBenchmark.go();
     }
   }
 }

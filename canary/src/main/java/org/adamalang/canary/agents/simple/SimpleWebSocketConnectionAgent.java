@@ -23,8 +23,8 @@ public class SimpleWebSocketConnectionAgent implements WebLifecycle {
   private final SimpleCanaryConfig config;
   private final WebClientBase base;
   private SimpleDocumentConnectionAgent[] agents;
-  private AtomicBoolean alive;
-  private AtomicInteger connectionsLeft;
+  private final AtomicBoolean alive;
+  private final AtomicInteger connectionsLeft;
 
   public SimpleWebSocketConnectionAgent(SimpleExecutor executor, SimpleCanaryConfig config, WebClientBase base) {
     this.executor = executor;

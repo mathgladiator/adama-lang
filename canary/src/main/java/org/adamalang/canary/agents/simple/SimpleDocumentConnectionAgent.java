@@ -26,11 +26,11 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
   private final SimpleCanaryConfig config;
   private final SimpleExecutor agent;
   private final AtomicBoolean alive;
+  private final Random rng;
   private boolean waitingForFirstData;
   private int connectionId;
   private long kickoffStarted;
-  private AtomicInteger messagesLeft;
-  private final Random rng;
+  private final AtomicInteger messagesLeft;
 
   public SimpleDocumentConnectionAgent(SimpleWebSocketConnectionAgent parent, WebClientConnection connection, SimpleCanaryConfig config) {
     super("agent");
@@ -85,6 +85,13 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
     }
   }
 
+  public void kill() {
+    if (alive.compareAndSet(true, false)) {
+      agent.shutdown();
+      parent.reportDeath();
+    }
+  }
+
   public void kickOff() {
     ObjectNode request = Json.newJsonObject();
     request.put("method", "connection/create");
@@ -95,13 +102,6 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
     kickoffStarted = System.currentTimeMillis();
     waitingForFirstData = true;
     connectionId = connection.execute(request, this);
-  }
-
-  public void kill() {
-    if (alive.compareAndSet(true, false)) {
-      agent.shutdown();
-      parent.reportDeath();
-    }
   }
 
   @Override

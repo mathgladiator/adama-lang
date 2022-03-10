@@ -32,9 +32,9 @@ public class LocalAgent implements Streamback {
   private final NtClient who;
   private final Key key;
   private final ScheduledExecutorService executor;
-  private CoreStream stream;
   private final Random rng;
-  private AtomicBoolean dedupe;
+  private CoreStream stream;
+  private final AtomicBoolean dedupe;
 
   public LocalAgent(CoreService service, LocalCanaryConfig config, int agentId, ScheduledExecutorService executor) {
     this.service = service;
@@ -80,7 +80,7 @@ public class LocalAgent implements Streamback {
           config.metrics.messages_failed.incrementAndGet();
         }
       });
-    }, (int) (config.messageDelayMs * Math.random()),  config.messageDelayMs, TimeUnit.MILLISECONDS));
+    }, (int) (config.messageDelayMs * Math.random()), config.messageDelayMs, TimeUnit.MILLISECONDS));
   }
 
   @Override

@@ -28,6 +28,7 @@ public class Metrics {
   private int prior_messages_sent;
   private int prior_messages_acked;
   private int prior_messages_failed;
+
   public Metrics() {
     this.deltas = new AtomicInteger(0);
     this.messages_sent = new AtomicInteger(0);
@@ -60,6 +61,24 @@ public class Metrics {
     }
   }
 
+  public synchronized void snapshot() {
+    StringBuilder sb = new StringBuilder();
+    boolean append = false;
+    for (Map.Entry<Integer, Integer> entry : failure_reasons.entrySet()) {
+      if (append) {
+        sb.append("|");
+      }
+      append = true;
+      sb.append(entry.getKey() + "=" + entry.getValue());
+    }
+    int p95Latency = p95_latency();
+    System.out.println((deltas.get() - prior_deltas) + "," + (messages_sent.get() - prior_messages_sent) + "," + (messages_acked.get() - prior_messages_acked) + "," + (messages_failed.get() - prior_messages_failed) + "," + stream_failed.get() + "," + p95Latency + "," + sb);
+    this.prior_deltas = deltas.get();
+    this.prior_messages_sent = messages_sent.get();
+    this.prior_messages_acked = messages_acked.get();
+    this.prior_messages_failed = messages_failed.get();
+  }
+
   private int p95_latency() {
     if (send_latency.size() > 200) {
       ArrayList<Integer> copy = new ArrayList<>(send_latency);
@@ -76,24 +95,5 @@ public class Metrics {
     } else {
       return -1;
     }
-  }
-
-
-  public synchronized void snapshot() {
-    StringBuilder sb = new StringBuilder();
-    boolean append = false;
-    for (Map.Entry<Integer, Integer> entry : failure_reasons.entrySet()) {
-      if (append) {
-        sb.append("|");
-      }
-      append = true;
-      sb.append(entry.getKey() + "=" + entry.getValue());
-    }
-    int p95Latency = p95_latency();
-    System.out.println((deltas.get() - prior_deltas) + "," + (messages_sent.get() - prior_messages_sent) + "," + (messages_acked.get() - prior_messages_acked) + "," + (messages_failed.get() - prior_messages_failed) + "," + stream_failed.get() + "," + p95Latency + "," + sb.toString());
-    this.prior_deltas = deltas.get();
-    this.prior_messages_sent = messages_sent.get();
-    this.prior_messages_acked = messages_acked.get();
-    this.prior_messages_failed = messages_failed.get();
   }
 }

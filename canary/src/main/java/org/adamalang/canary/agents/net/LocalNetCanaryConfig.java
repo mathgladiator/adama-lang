@@ -59,6 +59,13 @@ public class LocalNetCanaryConfig {
     this.metrics = new Metrics();
   }
 
+  public void blockUntilQuit() throws Exception {
+    while (!quitter.await(1000, TimeUnit.MILLISECONDS)) {
+      metrics.snapshot();
+    }
+    metrics.snapshot();
+  }
+
   public static class Message {
     public final String channel;
     public final ObjectNode message;
@@ -69,12 +76,5 @@ public class LocalNetCanaryConfig {
       messageRaw.remove("@channel");
       message = messageRaw;
     }
-  }
-
-  public void blockUntilQuit() throws Exception {
-    while (!quitter.await(1000, TimeUnit.MILLISECONDS)) {
-      metrics.snapshot();
-    }
-    metrics.snapshot();
   }
 }
