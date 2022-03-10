@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class ApplyMessageCallbackTests {
   @Test
-  public void proxy_error() {
+  public void proxy_error() throws Exception {
     SimpleMockCallback callback = new SimpleMockCallback();
     ApplyMessageCallback<Void> wrapped = new ApplyMessageCallback<>(null, null, callback);
     wrapped.failure(new ErrorCodeException(44));

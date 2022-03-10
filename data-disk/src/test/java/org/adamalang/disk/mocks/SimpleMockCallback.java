@@ -31,32 +31,33 @@ public class SimpleMockCallback implements Callback<Void> {
 
   @Override
   public synchronized void success(Void value) {
-    latch.countDown();
     count++;
     success = true;
+    latch.countDown();
   }
 
   @Override
   public synchronized void failure(ErrorCodeException ex) {
-    latch.countDown();
-    ex.printStackTrace();
     count++;
     success = false;
     reason = ex.code;
+    latch.countDown();
   }
 
-  public void await() throws Exception {
+  public void assertSuccess() throws Exception {
     Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    synchronized (this) {
+      Assert.assertEquals(1, count);
+      Assert.assertTrue(success);
+    }
   }
 
-  public synchronized void assertSuccess() {
-    Assert.assertEquals(1, count);
-    Assert.assertTrue(success);
-  }
-
-  public synchronized void assertFailure(int code) {
-    Assert.assertEquals(1, count);
-    Assert.assertFalse(success);
-    Assert.assertEquals(code, this.reason);
+  public void assertFailure(int code) throws Exception {
+    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    synchronized (this) {
+      Assert.assertEquals(1, count);
+      Assert.assertFalse(success);
+      Assert.assertEquals(code, this.reason);
+    }
   }
 }

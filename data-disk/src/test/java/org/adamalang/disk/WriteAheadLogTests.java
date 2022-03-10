@@ -17,10 +17,13 @@ import org.adamalang.disk.wal.WriteAheadMessage;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.natives.NtClient;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class WriteAheadLogTests {
 
@@ -90,11 +93,26 @@ public class WriteAheadLogTests {
           }
         });
       }
+      CountDownLatch latchClose = new CountDownLatch(1);
+      base.executor.execute(new NamedRunnable("flush-it") {
+        @Override
+        public void execute() throws Exception {
+          log.close();
+          latchClose.countDown();
+        }
+      });
       for (SimpleMockCallback callback : callbacks) {
-        callback.await();
         callback.assertSuccess();
       }
-
+      Assert.assertTrue(latchClose.await(5000, TimeUnit.MILLISECONDS));
+      SimpleMockCallback failure = new SimpleMockCallback();
+      base.executor.execute(new NamedRunnable("enqueue") {
+        @Override
+        public void execute() throws Exception {
+          log.write(patch(0), failure);
+        }
+      });
+      failure.assertFailure(703539);
     } finally {
       base.shutdown();
     }

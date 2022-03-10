@@ -9,6 +9,7 @@
  */
 package org.adamalang.disk;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.disk.files.SnapshotFileStreamEvents;
@@ -142,7 +143,7 @@ public class DocumentMemoryLog {
     }
   }
 
-  public boolean get_IsDeleted() {
+  public boolean isAvailable() {
     if (reset) {
       return true;
     }
@@ -184,7 +185,7 @@ public class DocumentMemoryLog {
       load();
       return true;
     } catch (IOException io) {
-      callback.failure(new ErrorCodeException(-1, io));
+      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_CANT_LOAD_IOEXCEPTION, io));
       return false;
     }
   }

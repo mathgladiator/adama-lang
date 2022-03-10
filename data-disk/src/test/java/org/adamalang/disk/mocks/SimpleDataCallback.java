@@ -14,18 +14,23 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.LocalDocumentChange;
 import org.junit.Assert;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 public class SimpleDataCallback implements Callback<LocalDocumentChange> {
   public String value;
   private boolean success;
   private int count;
   private int reason;
   public int reads;
+  private CountDownLatch latch;
 
   public SimpleDataCallback() {
     this.success = false;
     this.count = 0;
     this.reason = 0;
     this.reads = 0;
+    latch = new CountDownLatch(1);
   }
 
   @Override
@@ -34,6 +39,7 @@ public class SimpleDataCallback implements Callback<LocalDocumentChange> {
     count++;
     success = true;
     this.reads = value.reads;
+    latch.countDown();
   }
 
   @Override
@@ -41,16 +47,23 @@ public class SimpleDataCallback implements Callback<LocalDocumentChange> {
     count++;
     success = false;
     reason = ex.code;
+    latch.countDown();
   }
 
-  public void assertSuccess() {
-    Assert.assertEquals(1, count);
-    Assert.assertTrue(success);
+  public void assertSuccess() throws Exception {
+    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    synchronized (this) {
+      Assert.assertEquals(1, count);
+      Assert.assertTrue(success);
+    }
   }
 
-  public void assertFailure(int code) {
-    Assert.assertEquals(1, count);
-    Assert.assertFalse(success);
-    Assert.assertEquals(code, this.reason);
+  public void assertFailure(int code) throws Exception {
+    Assert.assertTrue(latch.await(5000, TimeUnit.MILLISECONDS));
+    synchronized (this) {
+      Assert.assertEquals(1, count);
+      Assert.assertFalse(success);
+      Assert.assertEquals(code, this.reason);
+    }
   }
 }

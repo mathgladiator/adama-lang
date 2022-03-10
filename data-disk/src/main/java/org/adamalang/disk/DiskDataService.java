@@ -36,8 +36,8 @@ public class DiskDataService implements DataService {
       @Override
       public void execute() throws Exception {
         DocumentMemoryLog memory = base.getOrCreate(key);
-        if (memory.get_IsDeleted()) {
-          callback.failure(new ErrorCodeException(-1));
+        if (!memory.isAvailable()) {
+          callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
           return;
         }
         try {
@@ -46,7 +46,7 @@ public class DiskDataService implements DataService {
           if (ioe instanceof FileNotFoundException) {
             callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
           } else {
-            callback.failure(new ErrorCodeException(-1, ioe));
+            callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_GET_IOEXCEPTION, ioe));
           }
           base.remove(key);
         }
@@ -91,7 +91,7 @@ public class DiskDataService implements DataService {
         }
 
         if (!memory.canPatch(patches[0].seqBegin)) {
-          callback.failure(new ErrorCodeException(-1));
+          callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
           return;
         }
         WriteAheadMessage.Patch patch = new WriteAheadMessage.Patch();

@@ -41,7 +41,6 @@ public class DiskBase {
     }
   }
 
-  //     this.log = new WriteAheadLog(this, walWorkingDirectory, 8196, 1, 32 * 1024 * 1024);
   public DocumentMemoryLog getOrCreate(Key key) {
     DocumentMemoryLog log = memory.get(key);
     if (log == null) {
@@ -69,6 +68,7 @@ public class DiskBase {
           executor.schedule(this, 25000);
         } catch (NoSuchElementException nss) {
           fileToDelete.delete();
+          after.run();
         }
       }
     }, 5000);

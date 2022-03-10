@@ -11,6 +11,7 @@ package org.adamalang.disk;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -65,20 +66,14 @@ public class WriteAheadLog {
         at++;
         output = new FileOutputStream(currentFile);
       }
-      if (buffer.hasArray()) {
-        byte[] bytes = buffer.array();
-        bytesWritten += bytes.length;
-        output.write(buffer.array());
-      } else {
-        while (buffer.isReadable()) {
-          int toRead = buffer.readableBytes();
-          bytesWritten += toRead;
-          if (mem.length <= toRead) {
-            mem = new byte[toRead + cutOffBytesFlush];
-          }
-          buffer.readBytes(mem, 0, toRead);
-          output.write(mem, 0, toRead);
+      while (buffer.isReadable()) {
+        int toRead = buffer.readableBytes();
+        bytesWritten += toRead;
+        if (mem.length <= toRead) {
+          mem = new byte[toRead + cutOffBytesFlush];
         }
+        buffer.readBytes(mem, 0, toRead);
+        output.write(mem, 0, toRead);
       }
       output.flush();
       for (Callback<Void> callback : callbacks) {
@@ -87,22 +82,29 @@ public class WriteAheadLog {
       callbacks.clear();
       this.buffer.resetReaderIndex();
       this.buffer.resetWriterIndex();
-      if (bytesWritten > bytesBeforeLogCut) {
+      if (bytesWritten > bytesBeforeLogCut || !alive) {
         output.close();
         output = null;
         base.flush(currentFile, () -> {});
       }
     } catch (IOException io) {
       for (Callback<Void> callback : callbacks) {
-        callback.failure(new ErrorCodeException(-1));
+        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_LOGGER_IOEXCEPTION));
       }
       callbacks.clear();
     }
   }
 
+  public void close() {
+    alive = false;
+    if (!flushScheduled) {
+      flushMemory();
+    }
+  }
+
   public void write(WriteAheadMessage message, Callback<Void> callback) {
     if (!alive) {
-      callback.failure(new ErrorCodeException(-1));
+      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_LOGGER_SHUTDOWN));
       return;
     }
     message.write(buffer);

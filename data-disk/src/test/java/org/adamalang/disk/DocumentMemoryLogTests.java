@@ -336,7 +336,7 @@ public class DocumentMemoryLogTests {
     assertGet(log, "{\"x\":1,\"y\":4}");
     patch(log, UPDATE_2, UPDATE_3, UPDATE_4);
     log.delete();
-    Assert.assertTrue(log.get_IsDeleted());
+    Assert.assertTrue(log.isAvailable());
     init(log);
     assertGet(log, "{\"x\":1,\"y\":4}");
     patch(log, UPDATE_2, UPDATE_3, UPDATE_4);
@@ -347,7 +347,7 @@ public class DocumentMemoryLogTests {
     }
     log.delete();
     log.flush();
-    Assert.assertTrue(log.get_IsDeleted());
+    Assert.assertTrue(log.isAvailable());
   }
 
   @Test
@@ -364,7 +364,7 @@ public class DocumentMemoryLogTests {
     assertGet(log, "{\"x\":1,\"y\":4}");
     patch(log, UPDATE_2, UPDATE_3, UPDATE_4);
     log.delete();
-    Assert.assertTrue(log.get_IsDeleted());
+    Assert.assertTrue(log.isAvailable());
     Assert.assertTrue(makeLog().canInitialize());
     init(log);
     assertGet(log, "{\"x\":1,\"y\":4}");
@@ -376,7 +376,7 @@ public class DocumentMemoryLogTests {
     }
     log.delete();
     log.flush();
-    Assert.assertTrue(log.get_IsDeleted());
+    Assert.assertTrue(log.isAvailable());
   }
 
   @Test
