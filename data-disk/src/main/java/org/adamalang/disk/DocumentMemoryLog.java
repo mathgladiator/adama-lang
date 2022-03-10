@@ -16,6 +16,7 @@ import org.adamalang.disk.files.SnapshotFileStreamEvents;
 import org.adamalang.disk.files.SnapshotHeader;
 import org.adamalang.disk.wal.WriteAheadMessage;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.LocalDocumentChange;
 import org.adamalang.runtime.json.JsonAlgebra;
 
@@ -23,9 +24,9 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Stack;
 
 public class DocumentMemoryLog {
   private static class Undo {
@@ -49,7 +50,7 @@ public class DocumentMemoryLog {
 
   // coordinates for the file on disk
   public final File spacePath;
-  private final String key;
+  public final Key key;
 
   // is the file loaded, alive, in need of a reset
   private boolean loaded;
@@ -62,14 +63,14 @@ public class DocumentMemoryLog {
   private long assetBytes;
   private boolean active;
   private ArrayList<Redo> redoLog;
-  private Stack<Undo> undoStack;
+  private ArrayDeque<Undo> undoStack;
   private ArrayList<Undo> undoHistory;
 
   public File suffixFile(String suffix) {
-    return new File(spacePath, key + "." + suffix);
+    return new File(spacePath, key.key + "." + suffix);
   }
 
-  public DocumentMemoryLog(File spacePath, String key) {
+  public DocumentMemoryLog(Key key, File spacePath) {
     this.spacePath = spacePath;
     this.key = key;
     this.loaded = false;
@@ -80,8 +81,9 @@ public class DocumentMemoryLog {
     this.assetBytes = 0L;
     this.active = true;
     this.redoLog = new ArrayList<>();
-    this.undoStack = new Stack<>();
+    this.undoStack = new ArrayDeque<>();
     this.undoHistory = new ArrayList<>();
+    spacePath.mkdir();
   }
 
   public void apply(WriteAheadMessage.Initialize init) {
@@ -143,24 +145,30 @@ public class DocumentMemoryLog {
     }
   }
 
+  public boolean isActive() {
+    return active;
+  }
+
   public boolean isAvailable() {
     if (reset) {
+      return false;
+    }
+    if (loaded) {
       return true;
     }
-    return !suffixFile("SNAPSHOT").exists();
+    return suffixFile("SNAPSHOT").exists();
+  }
+
+  public int holding() {
+    return 1 + undoHistory.size() + undoStack.size();
   }
 
   public LocalDocumentChange get_Load() throws IOException {
     if (!loaded) {
       load();
     }
-    int redoLogSize = redoLog.size();
-    if (redoLogSize == 0) {
-      return new LocalDocumentChange(document, 1);
-    } else {
-      compact();
-      return new LocalDocumentChange(document, 1);
-    }
+    compact();
+    return new LocalDocumentChange(document, holding());
   }
 
   public boolean canInitialize() {
@@ -227,6 +235,45 @@ public class DocumentMemoryLog {
     loaded = true;
   }
 
+  public String computeRewind(int seq) {
+    ArrayList<Undo> todo = new ArrayList<>();
+    boolean found = false;
+
+    for (Undo undo : undoStack) {
+      if (undo.seq >= seq) {
+        todo.add(undo);
+        if (undo.seq == seq) {
+          found = true;
+        }
+      } else {
+        break;
+      }
+    }
+    for (Undo undo : undoHistory) {
+      if (undo.seq >= seq) {
+        todo.add(undo);
+        if (undo.seq == seq) {
+          found = true;
+        }
+      } else {
+        break;
+      }
+    }
+    if (found) {
+      AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator(true);
+      for (Undo undo : todo) {
+        merge.next(undo.undo);
+      }
+      return merge.finish();
+    }
+    return null;
+  }
+
+  public String patchHead(int seq) {
+    compact();
+    return null;
+  }
+
   public void flush() throws IOException {
     if (reset) {
       suffixFile("SNAPSHOT").delete();
@@ -246,8 +293,9 @@ public class DocumentMemoryLog {
       SnapshotFileStreamEvents writer = SnapshotFileStreamEvents.writerFor(new DataOutputStream(output));
       writer.onHeader(new SnapshotHeader(seq, history, documentBytes.length, assetBytes, active));
       writer.onDocument(documentBytes);
-      while (!undoStack.empty() && newUndoHistory.size() < history) {
-        Undo undo = undoStack.pop();
+      Iterator<Undo> undoIt = undoStack.iterator();
+      while (undoIt.hasNext() && newUndoHistory.size() < history) {
+        Undo undo = undoIt.next();
         writer.onUndo(undo.seq, undo.undo);
         newUndoHistory.add(undo);
       }

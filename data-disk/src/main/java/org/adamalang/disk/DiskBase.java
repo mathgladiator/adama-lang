@@ -48,14 +48,10 @@ public class DiskBase {
       if (spacePath.exists()) {
         spacePath.mkdirs();
       }
-      log = new DocumentMemoryLog(spacePath, key.key);
+      log = new DocumentMemoryLog(key, spacePath);
       memory.put(key, log);
     }
     return log;
-  }
-
-  public void remove(Key key) {
-    memory.remove(key);
   }
 
   public void flush(File fileToDelete, Runnable after) {
@@ -64,7 +60,11 @@ public class DiskBase {
       @Override
       public void execute() throws Exception {
         try {
-          logs.removeFirst().flush();
+          DocumentMemoryLog log = logs.removeFirst();
+          log.flush();
+          if (!log.isActive()) {
+            memory.remove(log.key);
+          }
           executor.schedule(this, 25000);
         } catch (NoSuchElementException nss) {
           fileToDelete.delete();
@@ -78,5 +78,13 @@ public class DiskBase {
     // TODO: fail all new writes
     // TODO: tell WAL to flush
     executor.shutdown();
+  }
+
+  public void scan() {
+    // TODO: list all WAL(s)
+    // TODO: order the WAL(s)
+    // FOR EACH WAL
+       // STREAM IT
+       // APPLY IT
   }
 }

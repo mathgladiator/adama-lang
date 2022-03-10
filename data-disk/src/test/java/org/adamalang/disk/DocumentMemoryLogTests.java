@@ -14,6 +14,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.disk.files.SnapshotFileStreamEvents;
 import org.adamalang.disk.files.SnapshotHeader;
 import org.adamalang.disk.wal.WriteAheadMessage;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.LocalDocumentChange;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
@@ -41,12 +42,12 @@ public class DocumentMemoryLogTests {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
     }
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2);
     patch(log, UPDATE_3, UPDATE_4);
-    assertGet(log, "{\"x\":4,\"y\":4}");
+    assertGet(log, "{\"x\":4,\"y\":4}", 4);
     snapshot(log, "{\"x\":10,\"y\":10}", 4, 5);
-    assertGet(log, "{\"x\":10,\"y\":10}");
+    assertGet(log, "{\"x\":10,\"y\":10}", 4);
     log.flush();
     assertFile(log, "{\"x\":10,\"y\":10}", 3);
   }
@@ -54,7 +55,7 @@ public class DocumentMemoryLogTests {
   private DocumentMemoryLog makeLog() throws Exception {
     File path = new File(File.createTempFile("prefix", "suffix").getParentFile(), "_log_" + System.currentTimeMillis());
     path.mkdir();
-    return new DocumentMemoryLog(path, "key");
+    return new DocumentMemoryLog(new Key("space", "key"), path);
   }
 
   private void init(DocumentMemoryLog log) {
@@ -65,10 +66,10 @@ public class DocumentMemoryLogTests {
     log.apply(initialize);
   }
 
-  private void assertGet(DocumentMemoryLog log, String state) throws Exception {
+  private void assertGet(DocumentMemoryLog log, String state, int reads) throws Exception {
     LocalDocumentChange change = log.get_Load();
     Assert.assertEquals(state, change.patch);
-    Assert.assertEquals(1, change.reads);
+    Assert.assertEquals(reads, change.reads);
   }
 
   private void patch(DocumentMemoryLog log, RemoteDocumentUpdate... updates) {
@@ -152,13 +153,13 @@ public class DocumentMemoryLogTests {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
     }
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2);
     log.flush();
     patch(log, UPDATE_3, UPDATE_4);
-    assertGet(log, "{\"x\":4,\"y\":4}");
+    assertGet(log, "{\"x\":4,\"y\":4}", 4);
     snapshot(log, "{\"x\":10,\"y\":10}", 4, 5);
-    assertGet(log, "{\"x\":10,\"y\":10}");
+    assertGet(log, "{\"x\":10,\"y\":10}", 4);
     log.flush();
     assertFile(log, "{\"x\":10,\"y\":10}", 3);
   }
@@ -173,16 +174,16 @@ public class DocumentMemoryLogTests {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
     }
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2);
     log.flush();
     patch(log, UPDATE_3, UPDATE_4);
     log.flush();
-    assertGet(log, "{\"x\":4,\"y\":4}");
+    assertGet(log, "{\"x\":4,\"y\":4}", 4);
     log.flush();
     snapshot(log, "{\"x\":10,\"y\":10}", 4, 5);
     log.flush();
-    assertGet(log, "{\"x\":10,\"y\":10}");
+    assertGet(log, "{\"x\":10,\"y\":10}", 4);
     log.flush();
     assertFile(log, "{\"x\":10,\"y\":10}", 3);
   }
@@ -197,13 +198,14 @@ public class DocumentMemoryLogTests {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
     }
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2);
     patch(log, UPDATE_3, UPDATE_4);
-    assertGet(log, "{\"x\":4,\"y\":4}");
+    assertGet(log, "{\"x\":4,\"y\":4}", 4);
     snapshot(log, "{\"x\":10,\"y\":10}", 4, 1);
-    assertGet(log, "{\"x\":10,\"y\":10}");
+    assertGet(log, "{\"x\":10,\"y\":10}", 4);
     log.flush();
+    assertGet(log, "{\"x\":10,\"y\":10}", 2);
     assertFile(log, "{\"x\":10,\"y\":10}", 1);
   }
 
@@ -217,13 +219,13 @@ public class DocumentMemoryLogTests {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
     }
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2);
     log.flush();
     patch(log, UPDATE_3, UPDATE_4);
-    assertGet(log, "{\"x\":4,\"y\":4}");
+    assertGet(log, "{\"x\":4,\"y\":4}", 4);
     snapshot(log, "{\"x\":10,\"y\":10}", 4, 2);
-    assertGet(log, "{\"x\":10,\"y\":10}");
+    assertGet(log, "{\"x\":10,\"y\":10}", 4);
     log.flush();
     assertFile(log, "{\"x\":10,\"y\":10}", 2);
   }
@@ -238,17 +240,17 @@ public class DocumentMemoryLogTests {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
     }
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2);
     log.flush();
     patch(log, UPDATE_3);
     log.flush();
     patch(log, UPDATE_4);
     log.flush();
-    assertGet(log, "{\"x\":4,\"y\":4}");
+    assertGet(log, "{\"x\":4,\"y\":4}", 4);
     snapshot(log, "{\"x\":10,\"y\":10}", 4, 2);
     log.flush();
-    assertGet(log, "{\"x\":10,\"y\":10}");
+    assertGet(log, "{\"x\":10,\"y\":10}", 3);
     log.flush();
     assertFile(log, "{\"x\":10,\"y\":10}", 2);
   }
@@ -263,7 +265,7 @@ public class DocumentMemoryLogTests {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
     }
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2);
     patch(log, UPDATE_3);
     patch(log, UPDATE_4);
@@ -282,7 +284,7 @@ public class DocumentMemoryLogTests {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
     }
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2);
     log.flush();
     patch(log, UPDATE_3);
@@ -298,7 +300,7 @@ public class DocumentMemoryLogTests {
   }
 
   private DocumentMemoryLog cleanStateOf(DocumentMemoryLog log) {
-    return new DocumentMemoryLog(log.spacePath, "key");
+    return new DocumentMemoryLog(new Key("space", "key"), log.spacePath);
   }
 
   @Test
@@ -312,7 +314,7 @@ public class DocumentMemoryLogTests {
     }
     Assert.assertTrue(log.canInitialize());
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     Assert.assertTrue(log.canPatch(UPDATE_2.seqBegin));
     patch(log, UPDATE_2, UPDATE_3, UPDATE_4);
     snapshot(log, "{\"x\":10,\"y\":10}", 4, 2);
@@ -333,12 +335,12 @@ public class DocumentMemoryLogTests {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
     }
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2, UPDATE_3, UPDATE_4);
     log.delete();
-    Assert.assertTrue(log.isAvailable());
+    Assert.assertFalse(log.isAvailable());
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2, UPDATE_3, UPDATE_4);
     log.flush();
     assertFile(log, "{\"x\":4,\"y\":4}", 3);
@@ -347,7 +349,7 @@ public class DocumentMemoryLogTests {
     }
     log.delete();
     log.flush();
-    Assert.assertTrue(log.isAvailable());
+    Assert.assertFalse(log.isAvailable());
   }
 
   @Test
@@ -361,13 +363,13 @@ public class DocumentMemoryLogTests {
     }
     Assert.assertTrue(makeLog().canInitialize());
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2, UPDATE_3, UPDATE_4);
     log.delete();
-    Assert.assertTrue(log.isAvailable());
+    Assert.assertFalse(log.isAvailable());
     Assert.assertTrue(makeLog().canInitialize());
     init(log);
-    assertGet(log, "{\"x\":1,\"y\":4}");
+    assertGet(log, "{\"x\":1,\"y\":4}", 1);
     patch(log, UPDATE_2, UPDATE_3, UPDATE_4);
     log.flush();
     assertFile(log, "{\"x\":4,\"y\":4}", 3);
@@ -376,7 +378,7 @@ public class DocumentMemoryLogTests {
     }
     log.delete();
     log.flush();
-    Assert.assertTrue(log.isAvailable());
+    Assert.assertFalse(log.isAvailable());
   }
 
   @Test

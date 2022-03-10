@@ -9,10 +9,10 @@
  */
 package org.adamalang.disk;
 
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.disk.demo.BadConsumer;
-import org.adamalang.disk.demo.SingleThreadDiskDataServiceTests;
 import org.adamalang.disk.mocks.SimpleDataCallback;
 import org.adamalang.disk.mocks.SimpleIntCallback;
 import org.adamalang.disk.mocks.SimpleMockCallback;
@@ -25,6 +25,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class DiskDataServiceTests {
@@ -42,7 +43,6 @@ public class DiskDataServiceTests {
       new RemoteDocumentUpdate(
           4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
 
-
   private static class Setup {
     private final SimpleExecutor executor;
     private final File root;
@@ -56,6 +56,18 @@ public class DiskDataServiceTests {
       this.base = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), executor, root);
       this.log = new WriteAheadLog(base, 8196, 1000000, 64 * 1024);
       this.service = new DiskDataService(base, log);
+    }
+
+    public void flush(Key key) throws Exception {
+      CountDownLatch latch = new CountDownLatch(1);
+      executor.execute(new NamedRunnable("flushing-key", key.space, key.key) {
+        @Override
+        public void execute() throws Exception {
+          base.memory.get(key).flush();
+          latch.countDown();
+        }
+      });
+      Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
     }
 
     private void clean() {
@@ -88,16 +100,13 @@ public class DiskDataServiceTests {
       setup.service.compactAndSnapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
       cb_CompactFailsFNF.assertFailure(724019);
 
-
-
-      /*
       SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
       setup.service.compute(KEY1, ComputeMethod.Rewind, 1, cb_ComputeFailsFNF_Rewind);
-      cb_ComputeFailsFNF_Rewind.assertFailure(790544);
+      cb_ComputeFailsFNF_Rewind.assertFailure(724019);
 
       SimpleDataCallback cb_ComputeFailsFNF_HeadPatch= new SimpleDataCallback();
       setup.service.compute(KEY1, ComputeMethod.HeadPatch, 1, cb_ComputeFailsFNF_HeadPatch);
-      cb_ComputeFailsFNF_HeadPatch.assertFailure(790544);
+      cb_ComputeFailsFNF_HeadPatch.assertFailure(724019);
 
       SimpleMockCallback cb_DeleteSuccessFNF = new SimpleMockCallback();
       setup.service.delete(KEY1, cb_DeleteSuccessFNF);
@@ -127,6 +136,7 @@ public class DiskDataServiceTests {
       Assert.assertEquals("{\"x\":4,\"y\":4}", cb_GetIsMergedResults.value);
       Assert.assertEquals(4, cb_GetIsMergedResults.reads);
 
+      /*
       {
         SimpleDataCallback cb_HeadPatch = new SimpleDataCallback();
         setup.service.compute(KEY1, ComputeMethod.HeadPatch, 2, cb_HeadPatch);
@@ -165,56 +175,66 @@ public class DiskDataServiceTests {
         setup.service.compute(KEY1, ComputeMethod.Rewind, 100, cb_Rewind);
         cb_Rewind.assertFailure(783395);
       }
+      */
       {
         SimpleDataCallback cbUnknown = new SimpleDataCallback();
         setup.service.compute(KEY1, null, 100, cbUnknown);
-        cbUnknown.assertFailure(705583);
+        cbUnknown.assertFailure(732208);
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{}", 100, cb_CompactWorks);
+        setup.service.compactAndSnapshot(KEY1, 1, "{\"x\":10,\"y\":10}", 100, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
+        setup.flush(KEY1);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
         cb_GetCompactedResults.assertSuccess();
-        Assert.assertEquals("{\"x\":4,\"y\":4}", cb_GetCompactedResults.value);
+        Assert.assertEquals("{\"x\":10,\"y\":10}", cb_GetCompactedResults.value);
         Assert.assertEquals(4, cb_GetCompactedResults.reads);
       }
       {
         SimpleIntCallback cbCompactFailsNegHistory = new SimpleIntCallback();
         setup.service.compactAndSnapshot(KEY1, 1, "{}", -1, cbCompactFailsNegHistory);
-        cbCompactFailsNegHistory.assertFailure(777259);
+        cbCompactFailsNegHistory.assertFailure(734263);
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{}",2, cb_CompactWorks);
+        setup.service.compactAndSnapshot(KEY1, 1, "{\"x\":11,\"y\":11}",2, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(2);
+        setup.flush(KEY1);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
         cb_GetCompactedResults.assertSuccess();
-        Assert.assertEquals("{\"x\":4,\"y\":4}", cb_GetCompactedResults.value);
-        Assert.assertEquals(2, cb_GetCompactedResults.reads);
+        Assert.assertEquals("{\"x\":11,\"y\":11}", cb_GetCompactedResults.value);
+        Assert.assertEquals(3, cb_GetCompactedResults.reads);
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{}", 1, cb_CompactWorks);
-        cb_CompactWorks.assertSuccess(1);
+        setup.service.compactAndSnapshot(KEY1, 1, "{\"x\":12,\"y\":12}", 1, cb_CompactWorks);
+        cb_CompactWorks.assertSuccess(2);
+        setup.flush(KEY1);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
         cb_GetCompactedResults.assertSuccess();
-        Assert.assertEquals("{\"x\":4,\"y\":4}", cb_GetCompactedResults.value);
-        Assert.assertEquals(1, cb_GetCompactedResults.reads);
+        Assert.assertEquals("{\"x\":12,\"y\":12}", cb_GetCompactedResults.value);
+        Assert.assertEquals(2, cb_GetCompactedResults.reads);
       }
 
       SimpleMockCallback cb_InitFailAlreadyExists = new SimpleMockCallback();
       setup.service.initialize(KEY1, UPDATE_1, cb_InitFailAlreadyExists);
       cb_InitFailAlreadyExists.assertFailure(667658);
 
-      SimpleMockCallback cb_DeleteWorks = new SimpleMockCallback();
-      setup.service.delete(KEY1, cb_DeleteWorks);
-      cb_DeleteWorks.assertSuccess();
-
-       */
+      {
+        SimpleMockCallback cb_DeleteWorks = new SimpleMockCallback();
+        setup.service.delete(KEY1, cb_DeleteWorks);
+        cb_DeleteWorks.assertSuccess();
+      }
+      setup.flush(KEY1);
+      {
+        SimpleMockCallback cb_DeleteWorks = new SimpleMockCallback();
+        setup.service.delete(KEY1, cb_DeleteWorks);
+        cb_DeleteWorks.assertSuccess();
+      }
     });
   }
 }

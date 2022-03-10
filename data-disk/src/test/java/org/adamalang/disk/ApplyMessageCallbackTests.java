@@ -12,6 +12,7 @@ package org.adamalang.disk;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.disk.mocks.SimpleMockCallback;
 import org.adamalang.disk.wal.WriteAheadMessage;
+import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ public class ApplyMessageCallbackTests {
 
   @Test
   public void success_applies() throws IOException {
-    DocumentMemoryLog log = new DocumentMemoryLog(File.createTempFile("prefix", "suffix").getParentFile(), "temp");
+    DocumentMemoryLog log = new DocumentMemoryLog(new Key("space", "key"), File.createTempFile("prefix", "suffix").getParentFile());
     SimpleMockCallback callback = new SimpleMockCallback();
     WriteAheadMessage.Initialize initialize = new WriteAheadMessage.Initialize();
     initialize.space = "space";

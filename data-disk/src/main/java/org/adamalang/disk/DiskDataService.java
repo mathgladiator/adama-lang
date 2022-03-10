@@ -48,7 +48,6 @@ public class DiskDataService implements DataService {
           } else {
             callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_GET_IOEXCEPTION, ioe));
           }
-          base.remove(key);
         }
       }
     });
@@ -60,10 +59,9 @@ public class DiskDataService implements DataService {
     base.executor.execute(new NamedRunnable("dds-initialize") {
       @Override
       public void execute() throws Exception {
-        DocumentMemoryLog memory = base.memory.get(key);
-        if (memory.canInitialize()) {
+        DocumentMemoryLog memory = base.getOrCreate(key);
+        if (!memory.canInitialize()) {
           callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
-          base.remove(key);
           return;
         }
 
@@ -86,7 +84,6 @@ public class DiskDataService implements DataService {
       public void execute() throws Exception {
         DocumentMemoryLog memory = base.getOrCreate(key);
         if (!memory.ensureLoaded(callback)) {
-          base.memory.remove(key);
           return;
         }
 
@@ -110,15 +107,20 @@ public class DiskDataService implements DataService {
   @Override // READ
   public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callbackRaw) {
     Callback<LocalDocumentChange> callback = this.base.metrics.disk_data_compute.wrap(callbackRaw);
-    base.executor.execute(new NamedRunnable("dds-compute", method.toString()) {
+    base.executor.execute(new NamedRunnable("dds-compute") {
       @Override
       public void execute() throws Exception {
+        DocumentMemoryLog memory = base.getOrCreate(key);
+        if (!memory.ensureLoaded(callback)) {
+          return;
+        }
+
         if (method == ComputeMethod.HeadPatch) {
           callback.failure(new ErrorCodeException(-1));
         } else if (method == ComputeMethod.Rewind) {
           callback.failure(new ErrorCodeException(-1));
         } else {
-          callback.failure(new ErrorCodeException(-1));
+          callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_COMPUTE_METHOD_NOT_FOUND));
         }
       }
     });
@@ -130,11 +132,15 @@ public class DiskDataService implements DataService {
     base.executor.execute(new NamedRunnable("dds-delete") {
       @Override
       public void execute() throws Exception {
-        DocumentMemoryLog memory = base.memory.get(key);
+        DocumentMemoryLog memory = base.getOrCreate(key);
+        if (!memory.isAvailable()) {
+          callback.success(null);
+          return;
+        }
+
         WriteAheadMessage.Delete delete = new WriteAheadMessage.Delete();
         delete.space = key.space;
         delete.key = key.key;
-
         log.write(delete, new ApplyMessageCallback<>(memory, delete, callback));
       }
     });
@@ -143,14 +149,19 @@ public class DiskDataService implements DataService {
   @Override // WRITE
   public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callbackRaw) {
     Callback<Integer> callback = this.base.metrics.disk_data_snapshot.wrap(callbackRaw);
+    if (history <= 0) {
+      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY));
+      return;
+    }
     base.executor.execute(new NamedRunnable("dds-snapshot") {
       @Override
       public void execute() throws Exception {
         DocumentMemoryLog memory = base.getOrCreate(key);
         if (!memory.ensureLoaded(callback)) {
-          base.memory.remove(key);
           return;
         }
+
+        int holding = Math.max(memory.holding() - history, 0);
 
         WriteAheadMessage.Snapshot snap = new WriteAheadMessage.Snapshot();
         snap.space = key.space;
@@ -160,9 +171,10 @@ public class DiskDataService implements DataService {
         snap.document = snapshot;
 
         Callback<Void> adaptedCallback = new Callback<Void>() {
+          // This is all sorts of wrong, need to computeASize() - history
           @Override
           public void success(Void value) {
-            callback.success(history);
+            callback.success(holding);
           }
 
           @Override

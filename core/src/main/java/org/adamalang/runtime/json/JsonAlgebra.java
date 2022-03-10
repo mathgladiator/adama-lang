@@ -48,6 +48,9 @@ public class JsonAlgebra {
 
   /** an accumulator/fold version of merge */
   public static AutoMorphicAccumulator<String> mergeAccumulator() {
+    return mergeAccumulator(true);
+  }
+  public static AutoMorphicAccumulator<String> mergeAccumulator(boolean keepNulls) {
     return new AutoMorphicAccumulator<>() {
       private Object state = null;
 
@@ -62,7 +65,7 @@ public class JsonAlgebra {
         if (state == null) {
           state = reader.readJavaTree();
         } else {
-          state = merge(state, reader.readJavaTree(), false);
+          state = merge(state, reader.readJavaTree(), keepNulls);
         }
       }
 
