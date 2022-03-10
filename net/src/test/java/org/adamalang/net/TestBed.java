@@ -92,7 +92,7 @@ public class TestBed implements AutoCloseable {
 
     this.identity = this.base.identity;
 
-    billingRoot = new File(File.createTempFile("x23",  "x23").getParentFile(), "Billing-" + System.currentTimeMillis());
+    billingRoot = new File(File.createTempFile("ADAMATEST_",  "x23").getParentFile(), "Billing-" + System.currentTimeMillis());
     billingRoot.mkdir();
 
     this.batchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, billingRoot,  1800000L);

@@ -128,12 +128,12 @@ public class TestFrontEnd implements AutoCloseable, Email {
       } catch (Exception ex) {
         ex.printStackTrace();
       }
-    }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("x23", "x23").getParentFile(),  1800000L), port, 2);
+    }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(),  1800000L), port, 2);
 
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     Client client = new Client(netBase, new ClientMetrics(new NoOpMetricsFactory()), null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
-    this.attachmentRoot = new File(File.createTempFile("x23", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
+    this.attachmentRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
     AssetUploader uploader = new AssetUploader() {
       @Override
       public void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback) {

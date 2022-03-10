@@ -64,7 +64,7 @@ public class LocalNetDrive {
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), dataService, TimeSource.REAL_TIME, config.coreThreads);
 
     SimpleExecutor executor = SimpleExecutor.create("billing");
-    File billingRoot = new File(File.createTempFile("x23", "x23").getParentFile(), "Billing-" + System.currentTimeMillis());
+    File billingRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "Billing-" + System.currentTimeMillis());
     billingRoot.mkdir();
     MachineIdentity identity = MachineIdentity.fromFile(config.identityFile);
     NetBase netBase = new NetBase(identity, 1, 4);

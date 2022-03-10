@@ -42,7 +42,7 @@ public class SingleThreadDiskDataServiceTests {
     public final SingleThreadDiskDataService service;
 
     public Setup() throws Exception {
-      this.root = new File(File.createTempFile("xxx", "yyy").getParentFile(), "disk-data-" + System.currentTimeMillis());
+      this.root = new File(File.createTempFile("ADAMATEST_", "yyy").getParentFile(), "disk-data-" + System.currentTimeMillis());
       service = new SingleThreadDiskDataService(root, new DiskMetrics(new NoOpMetricsFactory()));
     }
 
@@ -61,7 +61,7 @@ public class SingleThreadDiskDataServiceTests {
 
   @Test
   public void failedToCreateDirectory() throws Exception {
-    File file = File.createTempFile("xxx", "yyy");
+    File file = File.createTempFile("ADAMATEST_", "yyy");
     Files.writeString(file.toPath(), "x");
     try {
       new SingleThreadDiskDataService(file, new DiskMetrics(new NoOpMetricsFactory()));

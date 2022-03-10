@@ -20,7 +20,7 @@ import java.nio.file.Files;
 public class DiskBaseTests {
   @Test
   public void flow() throws Exception {
-    File file = new File(File.createTempFile("prefix", "suffix").getParentFile(), " base"+ System.currentTimeMillis());
+    File file = new File(File.createTempFile("ADAMATEST_", "suffix").getParentFile(), " base"+ System.currentTimeMillis());
     file.mkdir();
     File fileA = new File(file, "wal");
     File fileB = new File(file, "data");

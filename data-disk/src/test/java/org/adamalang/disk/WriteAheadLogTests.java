@@ -57,7 +57,7 @@ public class WriteAheadLogTests {
 
   @Test
   public void battery() throws Exception {
-    File file = new File(File.createTempFile("prefix", "suffix").getParentFile(), "base_"+ System.currentTimeMillis());
+    File file = new File(File.createTempFile("ADAMATEST_", "suffix").getParentFile(), "base_"+ System.currentTimeMillis());
     DiskBase base = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), SimpleExecutor.create("executor"), file);
     try {
       WriteAheadLog log = new WriteAheadLog(base, 8196, 1000000, 64 * 1024);

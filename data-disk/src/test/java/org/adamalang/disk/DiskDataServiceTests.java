@@ -52,7 +52,7 @@ public class DiskDataServiceTests {
 
     public Setup() throws Exception {
       this.executor = SimpleExecutor.create("executor");
-      this.root = new File(File.createTempFile("xxx", "yyy").getParentFile(), "base-" + System.currentTimeMillis());
+      this.root = new File(File.createTempFile("ADAMATEST_", "yyy").getParentFile(), "base-" + System.currentTimeMillis());
       this.base = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), executor, root);
       this.log = new WriteAheadLog(base, 8196, 1000000, 64 * 1024);
       this.service = new DiskDataService(base, log);

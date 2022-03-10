@@ -26,7 +26,7 @@ public class PrometheusDashboardTests {
     pd.page("y", "Y");
     pd.makeRequestResponseMonitor("rrm");
     pd.makeStreamMonitor("sm");
-    File parentTemp = File.createTempFile("Tempy", "tampy").getParentFile();
+    File parentTemp = File.createTempFile("ADAMATEST_", "tampy").getParentFile();
     File prometh = new File(parentTemp, "promethesus-" + System.currentTimeMillis());
     try {
       prometh.mkdir();

@@ -54,7 +54,7 @@ public class DocumentMemoryLogTests {
 
   private DocumentMemoryLog makeLog() throws Exception {
     Thread.sleep(1);
-    File path = new File(File.createTempFile("prefix", "suffix").getParentFile(), "_log_" + System.currentTimeMillis() + "_" + Math.random());
+    File path = new File(File.createTempFile("ADAMATEST_", "suffix").getParentFile(), "_log_" + System.currentTimeMillis() + "_" + Math.random());
     path.mkdir();
     return new DocumentMemoryLog(new Key("space", "key"), path);
   }

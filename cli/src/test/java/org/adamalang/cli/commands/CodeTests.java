@@ -23,7 +23,7 @@ public class CodeTests {
 
   @Test
   public void validation_plan() throws Exception {
-    File temp = File.createTempFile("xzz", System.currentTimeMillis() + ".plan");
+    File temp = File.createTempFile("ADAMATEST_", System.currentTimeMillis() + ".plan");
     Code.execute(null, new String[] { "validate-plan", "--plan", temp.getParentFile().getAbsolutePath()});
     Code.execute(null, new String[] { "validate-plan", "--plan", new File(temp.getParentFile(), "NOOOO.adama").getAbsolutePath()});
 
@@ -41,7 +41,7 @@ public class CodeTests {
 
   @Test
   public void validation_file() throws Exception {
-    File temp = File.createTempFile("xzz", System.currentTimeMillis() + ".adama");
+    File temp = File.createTempFile("ADAMATEST_", System.currentTimeMillis() + ".adama");
     Code.execute(null, new String[] { "compile-file", "--file", temp.getParentFile().getAbsolutePath()});
     Code.execute(null, new String[] { "compile-file", "--file", new File(temp.getParentFile(), "NOOOO.adama").getAbsolutePath()});
 

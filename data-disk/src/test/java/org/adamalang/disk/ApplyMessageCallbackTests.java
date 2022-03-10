@@ -30,7 +30,7 @@ public class ApplyMessageCallbackTests {
 
   @Test
   public void success_applies() throws IOException {
-    DocumentMemoryLog log = new DocumentMemoryLog(new Key("space", "key"), File.createTempFile("prefix", "suffix").getParentFile());
+    DocumentMemoryLog log = new DocumentMemoryLog(new Key("space", "key"), File.createTempFile("ADAMATEST_", "suffix").getParentFile());
     SimpleMockCallback callback = new SimpleMockCallback();
     WriteAheadMessage.Initialize initialize = new WriteAheadMessage.Initialize();
     initialize.space = "space";

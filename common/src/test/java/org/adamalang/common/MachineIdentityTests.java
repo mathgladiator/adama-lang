@@ -19,10 +19,10 @@ import java.nio.file.Files;
 public class MachineIdentityTests {
   @Test
   public void io() throws Exception {
-    File trust = File.createTempFile("prefix", "trust");
-    File cert = File.createTempFile("prefix", "cert");
-    File key = File.createTempFile("prefix", "key");
-    File json = File.createTempFile("prefix", "identity");
+    File trust = File.createTempFile("ADAMATEST_", "trust");
+    File cert = File.createTempFile("ADAMATEST_", "cert");
+    File key = File.createTempFile("ADAMATEST_", "key");
+    File json = File.createTempFile("ADAMATEST_", "identity");
     Files.writeString(trust.toPath(), "X");
     Files.writeString(cert.toPath(), "Y");
     Files.writeString(key.toPath(), "Z");

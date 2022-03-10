@@ -36,7 +36,7 @@ public class DumbS3AndSESCoverageTest {
     SES ses = new SES(config, new AWSMetrics(new NoOpMetricsFactory()));
     Assert.assertFalse(ses.sendCode("x@x.com", "123"));
     S3 s3 = new S3(config, new AWSMetrics(new NoOpMetricsFactory()));
-    s3.upload(new Key("space", "key"), NtAsset.NOTHING, File.createTempFile("xxxxx", "y1234"), new Callback<Void>() {
+    s3.upload(new Key("space", "key"), NtAsset.NOTHING, File.createTempFile("ADAMATEST_", "y1234"), new Callback<Void>() {
       @Override
       public void success(Void value) {
         Assert.fail();

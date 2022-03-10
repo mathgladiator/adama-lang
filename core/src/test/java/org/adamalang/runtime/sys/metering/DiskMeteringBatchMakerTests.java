@@ -39,7 +39,7 @@ public class DiskMeteringBatchMakerTests {
   public void happy() throws Exception {
     boolean failedDelete = false;
     MockTime time = new MockTime(150000);
-    File root = new File(File.createTempFile("root", "123").getParentFile(), "temp_" + System.currentTimeMillis());
+    File root = new File(File.createTempFile("ADAMATEST_", "123").getParentFile(), "temp_" + System.currentTimeMillis());
     try {
       root.mkdirs();
       Assert.assertTrue(root.isDirectory());
@@ -80,7 +80,7 @@ public class DiskMeteringBatchMakerTests {
   public void recoverFromClose() throws Exception {
     boolean failedDelete = false;
     MockTime time = new MockTime(150000);
-    File root = new File(File.createTempFile("root", "123").getParentFile(), "temp_" + System.currentTimeMillis());
+    File root = new File(File.createTempFile("ADAMATEST_", "123").getParentFile(), "temp_" + System.currentTimeMillis());
     try {
       root.mkdirs();
       Assert.assertTrue(root.isDirectory());
@@ -121,7 +121,7 @@ public class DiskMeteringBatchMakerTests {
   public void recoverFromCorruptionButExperienceDataLoss() throws Exception {
     boolean failedDelete = false;
     MockTime time = new MockTime(150000);
-    File root = new File(File.createTempFile("root", "123").getParentFile(), "temp_" + System.currentTimeMillis());
+    File root = new File(File.createTempFile("ADAMATEST_", "123").getParentFile(), "temp_" + System.currentTimeMillis());
     try {
       root.mkdirs();
       Assert.assertTrue(root.isDirectory());
