@@ -45,8 +45,15 @@ public class ErrorCodes {
   public static final int FACTORY_CANT_INVOKE_CAN_SEND_WHILE_DISCONNECTED = 148095;
   public static final int FACTORY_CANT_INVOKE_CAN_INVENT = 146558;
   public static final int CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION = 144416;
+
+  @User
+  @Description("The document is already created, so please try connecting instead. This happens when two create calls are executed")
   public static final int SERVICE_DOCUMENT_ALREADY_CREATED = 130092;
+
+  @User
+  @Description("The document was rejected because the @static { create(who) {...} } policy returned false. Either your are not allowed to create the document, or the create() call doesn't exist or is buggy.")
   public static final int SERVICE_DOCUMENT_REJECTED_CREATION = 134259;
+
   public static final int DOCUMENT_SELF_DESTRUCT_SUCCESSFUL = 134195;
 
   public static final int INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT = 144944;

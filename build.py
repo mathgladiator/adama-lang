@@ -33,7 +33,7 @@ if client:
     if production:
         os.system("npm run build")
     else:
-        os.system("npm run build")
+        os.system("npm run devbuild")
     os.chdir(cwd)
     args = ["cp", "./client/dist/libadama.js", "./release/"]
     os.system(" ".join(args))

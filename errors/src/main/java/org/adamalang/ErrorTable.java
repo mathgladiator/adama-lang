@@ -1,12 +1,3 @@
-/*
- * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
- *
- * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
- *
- * See http://www.adama-lang.org/ for more information.
- *
- * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
- */
 package org.adamalang;
 
 import java.util.HashMap;
@@ -90,13 +81,13 @@ public class ErrorTable {
     names.put(144416, "CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION");
     descriptions.put(144416, "no description of error (yet)");
     names.put(130092, "SERVICE_DOCUMENT_ALREADY_CREATED");
-    descriptions.put(130092, "no description of error (yet)");
+    descriptions.put(130092, "The document is already created, so please try connecting instead. This happens when two create calls are executed");
+    userspace.add(130092);
     names.put(134259, "SERVICE_DOCUMENT_REJECTED_CREATION");
-    descriptions.put(134259, "no description of error (yet)");
+    descriptions.put(134259, "The document was rejected because the create() returned false. Either your are not allowed to create the document, or the create() call doesn't exist or is buggy.");
+    userspace.add(134259);
     names.put(134195, "DOCUMENT_SELF_DESTRUCT_SUCCESSFUL");
     descriptions.put(134195, "no description of error (yet)");
-    names.put(116787, "INMEMORY_DATA_INITIALIZED_UNABLE_ALREADY_EXISTS");
-    descriptions.put(116787, "no description of error (yet)");
     names.put(144944, "INMEMORY_DATA_PATCH_CANT_FIND_DOCUMENT");
     descriptions.put(144944, "no description of error (yet)");
     names.put(106546, "INMEMORY_DATA_COMPUTE_CANT_FIND_DOCUMENT");
@@ -236,6 +227,14 @@ public class ErrorTable {
     descriptions.put(928828, "no description of error (yet)");
     names.put(900104, "API_SPACE_CREATE_UNKNOWN_EXCEPTION");
     descriptions.put(900104, "no description of error (yet)");
+    names.put(991368, "API_SET_PASSWORD_UNKNOWN_EXCEPTION");
+    descriptions.put(991368, "no description of error (yet)");
+    names.put(983199, "API_SET_PASSWORD_ONLY_ADAMA_DEV_EXCEPTION");
+    descriptions.put(983199, "no description of error (yet)");
+    names.put(985216, "API_SET_PASSWORD_INVALID");
+    descriptions.put(985216, "no description of error (yet)");
+    names.put(904327, "API_LOGIN_UNKNOWN_EXCEPTION");
+    descriptions.put(904327, "no description of error (yet)");
     names.put(965636, "API_INIT_SETUP_UNKNOWN_EXCEPTION");
     descriptions.put(965636, "no description of error (yet)");
     names.put(946179, "API_INIT_COMPLETE_UNKNOWN_EXCEPTION");
@@ -500,5 +499,19 @@ public class ErrorTable {
     descriptions.put(719932, "no description of error (yet)");
     names.put(753724, "ADAMA_NET_FAILED_FIND_TARGET");
     descriptions.put(753724, "no description of error (yet)");
+    names.put(797755, "ADAMA_NET_FAILED_FINDING_SUBID");
+    descriptions.put(797755, "no description of error (yet)");
+    names.put(783411, "CARAVAN_DISK_GET_IOEXCEPTION");
+    descriptions.put(783411, "no description of error (yet)");
+    names.put(724019, "CARAVAN_DISK_CANT_LOAD_IOEXCEPTION");
+    descriptions.put(724019, "no description of error (yet)");
+    names.put(703539, "CARAVAN_DISK_LOGGER_SHUTDOWN");
+    descriptions.put(703539, "no description of error (yet)");
+    names.put(792631, "CARAVAN_DISK_LOGGER_IOEXCEPTION");
+    descriptions.put(792631, "no description of error (yet)");
+    names.put(732208, "CARAVAN_DISK_COMPUTE_METHOD_NOT_FOUND");
+    descriptions.put(732208, "no description of error (yet)");
+    names.put(734263, "CARAVAN_DISK_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY");
+    descriptions.put(734263, "no description of error (yet)");
   }
 }
