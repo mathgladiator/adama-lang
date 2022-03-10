@@ -52,6 +52,12 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="password" type="string" missing-error="465917" logged="false">
+        <documentation>
+            The password for your account.
+        </documentation>
+    </parameter-definition>
+
     <parameter-definition name="arg" type="json-object" missing-error="461826">
         <documentation>
             Documents are constructed with a message argument per the @construct event. The 'arg' is an object which is
@@ -412,6 +418,20 @@
             public key will be stored to validate future requests made by this developer machine.
 
             A public key will be held onto for 30 days.
+        </documentation>
+    </method>
+
+    <method name="account/set-password" responder="simple">
+        <parameter name="identity"/>
+        <parameter name="password"/>
+        <documentation>
+        </documentation>
+    </method>
+
+    <method name="account/login" responder="initiation">
+        <parameter name="email"/>
+        <parameter name="password"/>
+        <documentation>
         </documentation>
     </method>
 
@@ -1050,7 +1070,6 @@
 439295
 439292
 428028
-465917
 402428
 488444
 471036

@@ -97,6 +97,42 @@ public class ConnectionRouter {
                 }
               });
             } return;
+            case "account/set-password": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AccountSetPassword.start();
+              AccountSetPasswordRequest.resolve(nexus, request, new Callback<>() {
+                @Override
+                public void success(AccountSetPasswordRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new SimpleResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
+            case "account/login": {
+              RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_AccountLogin.start();
+              AccountLoginRequest.resolve(nexus, request, new Callback<>() {
+                @Override
+                public void success(AccountLoginRequest resolved) {
+                  resolved.logInto(_accessLogItem);
+                  handler.handle(nexus.session, resolved, new InitiationResponder(new SimpleMetricsProxyResponder(mInstance, responder, _accessLogItem, nexus.logger)));
+                }
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  mInstance.failure(ex.code);
+                  _accessLogItem.put("success", false);
+                  _accessLogItem.put("failure-code", ex.code);
+                  nexus.logger.log(_accessLogItem);
+                  responder.error(ex);
+                }
+              });
+            } return;
             case "probe": {
               RequestResponseMonitor.RequestResponseMonitorInstance mInstance = nexus.metrics.monitor_Probe.start();
               ProbeRequest.resolve(nexus, request, new Callback<>() {

@@ -15,6 +15,7 @@ public class HelpCoverageTests {
   @Test
   public void coverage() throws Exception {
     Main.main(new String[] {});
+    Main.main(new String[] {"account"});
     Main.main(new String[] {"authority"});
     Main.main(new String[] {"aws"});
     Main.main(new String[] {"code"});
@@ -27,6 +28,7 @@ public class HelpCoverageTests {
     Main.main(new String[] {"space"});
     Main.main(new String[] {"help"});
 
+    Main.main(new String[] {"account", "help"});
     Main.main(new String[] {"authority", "help"});
     Main.main(new String[] {"aws", "help"});
     Main.main(new String[] {"code", "help"});

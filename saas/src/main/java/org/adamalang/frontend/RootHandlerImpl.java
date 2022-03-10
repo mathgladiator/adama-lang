@@ -61,6 +61,37 @@ public class RootHandlerImpl implements RootHandler {
 
   }
 
+  @Override
+  public void handle(Session session, AccountSetPasswordRequest request, SimpleResponder responder) {
+    try {
+      if (request.who.source == AuthenticatedUser.Source.Adama) {
+        String hash = SCryptUtil.scrypt(request.password, 16384, 8, 1);
+        Users.setPasswordHash(nexus.dataBaseManagement, request.who.id, hash);
+        responder.complete();
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SET_PASSWORD_ONLY_ADAMA_DEV_EXCEPTION));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_SET_PASSWORD_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
+
+  @Override
+  public void handle(Session session, AccountLoginRequest request, InitiationResponder responder) {
+    try {
+      String hash = Users.getPasswordHash(nexus.dataBaseManagement, request.userId);
+      if (SCryptUtil.check(request.password, hash)) {
+        KeyPair pair = Keys.keyPairFor(SignatureAlgorithm.ES256);
+        String publicKey = new String(Base64.getEncoder().encode(pair.getPublic().getEncoded()));
+        Users.addKey(nexus.dataBaseManagement, request.userId, publicKey, System.currentTimeMillis() + 14 * 24 * 60 * 60000);
+        responder.complete(Jwts.builder().setSubject("" + request.userId).setIssuer("adama").signWith(pair.getPrivate()).compact());
+      } else {
+        responder.error(new ErrorCodeException(ErrorCodes.API_SET_PASSWORD_INVALID));
+      }
+    } catch (Exception ex) {
+      responder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_LOGIN_UNKNOWN_EXCEPTION, ex, LOGGER));
+    }
+  }
 
   @Override
   public void handle(Session session, InitSetupAccountRequest request, SimpleResponder responder) {

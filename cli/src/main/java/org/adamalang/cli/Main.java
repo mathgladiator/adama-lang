@@ -26,6 +26,9 @@ public class Main {
       String command = Util.normalize(args[0]);
       String[] next = Util.tail(args);
       switch (command) {
+        case "account":
+          Account.execute(config, next);
+          return;
         case "authority":
           Authority.execute(config, next);
           return;
@@ -93,6 +96,7 @@ public class Main {
     System.out.println("    " + Util.prefix("--config", Util.ANSI.Green) + "          Supplies a config file path other than the default (~/.adama)");
     System.out.println();
     System.out.println(Util.prefix("SUBCOMMANDS:", Util.ANSI.Yellow));
+    System.out.println("    " + Util.prefix("account", Util.ANSI.Green) + "           Manage your account");
     System.out.println("    " + Util.prefix("authority", Util.ANSI.Green) + "         Manage authorities");
     System.out.println("    " + Util.prefix("aws", Util.ANSI.Green) + "               Tools for working with AWS");
     System.out.println("    " + Util.prefix("business", Util.ANSI.Green) + "          Business tools to support developers");

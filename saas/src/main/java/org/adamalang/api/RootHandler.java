@@ -16,6 +16,10 @@ public interface RootHandler {
 
   public void handle(Session session, InitCompleteAccountRequest request, InitiationResponder responder);
 
+  public void handle(Session session, AccountSetPasswordRequest request, SimpleResponder responder);
+
+  public void handle(Session session, AccountLoginRequest request, InitiationResponder responder);
+
   public void handle(Session session, ProbeRequest request, SimpleResponder responder);
 
   public void handle(Session session, AuthorityCreateRequest request, ClaimResultResponder responder);

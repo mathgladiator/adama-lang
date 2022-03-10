@@ -13,6 +13,12 @@ public key will be stored to validate future requests made by this developer mac
 
 A public key will be held onto for 30 days.
 
+## Method: account/set-password
+
+
+## Method: account/login
+
+
 ## Method: probe
 This is useful to validate an identity without executing anything
 

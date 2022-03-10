@@ -731,6 +731,26 @@ export class Connection {
       request: {"method":"init/complete-account", "id":id, "email": email, "revoke": revoke, "code": code}
     });
   }
+  AccountSetPassword(identity: string, password: string, responder: SimpleResponder) {
+    var self = this;
+    self.nextId++;
+    var id = self.nextId;
+    return self.__execute_rr({
+      id: id,
+      responder: responder,
+      request: {"method":"account/set-password", "id":id, "identity": identity, "password": password}
+    });
+  }
+  AccountLogin(email: string, password: string, responder: InitiationResponder) {
+    var self = this;
+    self.nextId++;
+    var id = self.nextId;
+    return self.__execute_rr({
+      id: id,
+      responder: responder,
+      request: {"method":"account/login", "id":id, "email": email, "password": password}
+    });
+  }
   Probe(identity: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
