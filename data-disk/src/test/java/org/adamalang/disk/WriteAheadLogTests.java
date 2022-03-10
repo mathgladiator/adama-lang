@@ -9,5 +9,94 @@
  */
 package org.adamalang.disk;
 
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.disk.mocks.SimpleMockCallback;
+import org.adamalang.disk.wal.WriteAheadMessage;
+import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.natives.NtClient;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.ArrayList;
+
 public class WriteAheadLogTests {
+
+  private static final RemoteDocumentUpdate INIT =
+      new RemoteDocumentUpdate(
+          1, 1, NtClient.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
+
+  private static RemoteDocumentUpdate UPDATE(int n) {
+    return new RemoteDocumentUpdate(
+        n,
+        n,
+        null,
+        "REQUEST",
+        "{\"x\":" + n + "}",
+        "{\"x\":" + (n-1) + "}",
+        false,
+        0,
+        100,
+        UpdateType.AddUserData);
+  }
+
+  public static WriteAheadMessage.Patch patch(int n) {
+    WriteAheadMessage.Patch patch = new WriteAheadMessage.Patch();
+    patch.key = "key";
+    patch.space = "space";
+    patch.changes = new WriteAheadMessage.Change[] { new WriteAheadMessage.Change() };
+    patch.changes[0].copyFrom(UPDATE(n));
+    return patch;
+  }
+
+
+  @Test
+  public void battery() throws Exception {
+    File file = new File(File.createTempFile("prefix", "suffix").getParentFile(), "base_"+ System.currentTimeMillis());
+    DiskBase base = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), SimpleExecutor.create("executor"), file);
+    try {
+      WriteAheadLog log = new WriteAheadLog(base, 8196, 1000000, 64 * 1024);
+      WriteAheadMessage.Initialize initialize = new WriteAheadMessage.Initialize();
+      initialize.space = "space";
+      initialize.key = "key";
+      initialize.initialize = new WriteAheadMessage.Change();
+
+      ArrayList<SimpleMockCallback> callbacks = new ArrayList<>();
+      {
+        SimpleMockCallback callbackInit = new SimpleMockCallback();
+        callbacks.add(callbackInit);
+        base.executor.execute(new NamedRunnable("enqueue") {
+          @Override
+          public void execute() throws Exception {
+            base.executor.execute(new NamedRunnable("enqueue") {
+              @Override
+              public void execute() throws Exception {
+                log.write(initialize, callbackInit);
+              }
+            });
+          }
+        });
+      }
+      for (int k = 0; k < 1024 * 64; k++) {
+        SimpleMockCallback callback = new SimpleMockCallback();
+        callbacks.add(callback);
+        final int j = 2 + k;
+        base.executor.execute(new NamedRunnable("enqueue") {
+          @Override
+          public void execute() throws Exception {
+            log.write(patch(j), callback);
+          }
+        });
+      }
+      for (SimpleMockCallback callback : callbacks) {
+        callback.await();
+        callback.assertSuccess();
+      }
+
+    } finally {
+      base.shutdown();
+    }
+  }
 }

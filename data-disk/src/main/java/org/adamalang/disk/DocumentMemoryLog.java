@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.Iterator;
 import java.util.Stack;
 
 public class DocumentMemoryLog {
@@ -47,24 +47,24 @@ public class DocumentMemoryLog {
   }
 
   // coordinates for the file on disk
-  private final File spacePath;
+  public final File spacePath;
   private final String key;
 
   // is the file loaded, alive, in need of a reset
   private boolean loaded;
-  private boolean alive;
   private boolean reset;
 
   // document state
   private String document;
   private int seq;
   private int history;
+  private long assetBytes;
   private boolean active;
   private ArrayList<Redo> redoLog;
   private Stack<Undo> undoStack;
   private ArrayList<Undo> undoHistory;
 
-  private File suffixFile(String suffix) {
+  public File suffixFile(String suffix) {
     return new File(spacePath, key + "." + suffix);
   }
 
@@ -72,54 +72,61 @@ public class DocumentMemoryLog {
     this.spacePath = spacePath;
     this.key = key;
     this.loaded = false;
-    this.alive = suffixFile("SNAPSHOT").exists();
     this.reset = false;
     this.document = null;
     this.seq = -1;
     this.history = 10000;
+    this.assetBytes = 0L;
     this.active = true;
     this.redoLog = new ArrayList<>();
     this.undoStack = new Stack<>();
     this.undoHistory = new ArrayList<>();
   }
 
-  public void initialize(WriteAheadMessage.Initialize init) {
+  public void apply(WriteAheadMessage.Initialize init) {
     this.loaded = true;
-    this.alive = true;
     document = init.initialize.redo;
     seq = init.initialize.seq_end;
+    this.assetBytes = init.initialize.dAssetBytes;
     this.redoLog.clear();
     this.undoStack.clear();
     this.undoHistory.clear();
   }
 
-  public void patch(WriteAheadMessage.Patch patch) {
+  public void apply(WriteAheadMessage.Patch patch) {
     for (WriteAheadMessage.Change change : patch.changes) {
       if (change.seq_begin == seq + 1) {
         seq = change.seq_end;
         redoLog.add(new Redo(change.redo, seq));
         undoStack.push(new Undo(change.undo, seq));
         active = change.active;
+        assetBytes += change.dAssetBytes;
+      }
+    }
+  }
+
+  public void apply(WriteAheadMessage.Snapshot snapshot) {
+    this.document = snapshot.document;
+    this.seq = snapshot.seq;
+    this.history = snapshot.history;
+    Iterator<Redo> it = redoLog.iterator();
+    while (it.hasNext()) {
+      Redo redo = it.next();
+      if (redo.seq <= snapshot.seq) {
+        it.remove();
       }
     }
   }
 
   public void delete() {
     this.loaded = false;
-    this.alive = false;
     this.reset = true;
     this.document = null;
     this.seq = -1;
+    this.assetBytes = 0L;
     this.redoLog.clear();
     this.undoStack.clear();
     this.undoHistory.clear();
-  }
-
-  public void snapshot(WriteAheadMessage.Snapshot snapshot) {
-    this.document = snapshot.document;
-    this.seq = snapshot.seq;
-    this.history = snapshot.history;
-    this.redoLog.clear();
   }
 
   private void compact() {
@@ -136,7 +143,10 @@ public class DocumentMemoryLog {
   }
 
   public boolean get_IsDeleted() {
-    return !alive;
+    if (reset) {
+      return true;
+    }
+    return !suffixFile("SNAPSHOT").exists();
   }
 
   public LocalDocumentChange get_Load() throws IOException {
@@ -156,7 +166,10 @@ public class DocumentMemoryLog {
     if (loaded) {
       return false;
     }
-    return !suffixFile("SNAPSHOT").exists();
+    if (suffixFile("SNAPSHOT").exists()) {
+      return false;
+    }
+    return true;
   }
 
   public boolean canPatch(int seq) {
@@ -185,6 +198,7 @@ public class DocumentMemoryLog {
           history = header.history;
           seq = header.seq;
           active = header.active;
+          assetBytes = header.assetBytes;
           return true;
         }
 
@@ -213,6 +227,14 @@ public class DocumentMemoryLog {
   }
 
   public void flush() throws IOException {
+    if (reset) {
+      suffixFile("SNAPSHOT").delete();
+      reset = false;
+    }
+    if (!loaded) {
+      return;
+    }
+
     // compact the data
     compact();
     File toWrite = suffixFile("SNAPSHOT.temp");
@@ -221,7 +243,7 @@ public class DocumentMemoryLog {
     ArrayList<Undo> newUndoHistory = new ArrayList<>();
     try {
       SnapshotFileStreamEvents writer = SnapshotFileStreamEvents.writerFor(new DataOutputStream(output));
-      writer.onHeader(new SnapshotHeader(seq, history, documentBytes.length, active));
+      writer.onHeader(new SnapshotHeader(seq, history, documentBytes.length, assetBytes, active));
       writer.onDocument(documentBytes);
       while (!undoStack.empty() && newUndoHistory.size() < history) {
         Undo undo = undoStack.pop();

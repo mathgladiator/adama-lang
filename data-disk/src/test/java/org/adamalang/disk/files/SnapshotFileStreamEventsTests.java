@@ -27,7 +27,7 @@ public class SnapshotFileStreamEventsTests {
       SnapshotFileStreamEvents writer = SnapshotFileStreamEvents.writerFor(new DataOutputStream(output));
       byte[] doc = "Howdy".getBytes(StandardCharsets.UTF_8);
       docLen = doc.length;
-      writer.onHeader(new SnapshotHeader(123, 42, doc.length, false));
+      writer.onHeader(new SnapshotHeader(123, 42, doc.length, 42, false));
       writer.onDocument(doc);
       writer.onUndo(1, "UNDO1");
       writer.onUndo(2, "UNDO2");

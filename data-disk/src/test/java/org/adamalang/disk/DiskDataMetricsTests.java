@@ -9,5 +9,12 @@
  */
 package org.adamalang.disk;
 
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.junit.Test;
+
 public class DiskDataMetricsTests {
+  @Test
+  public void coverage() {
+    new DiskDataMetrics(new NoOpMetricsFactory());
+  }
 }

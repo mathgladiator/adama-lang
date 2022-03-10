@@ -9,5 +9,45 @@
  */
 package org.adamalang.disk;
 
+import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.File;
+import java.nio.file.Files;
+
 public class DiskBaseTests {
+  @Test
+  public void flow() throws Exception {
+    File file = new File(File.createTempFile("prefix", "suffix").getParentFile(), " base"+ System.currentTimeMillis());
+    file.mkdir();
+    File fileA = new File(file, "wal");
+    File fileB = new File(file, "data");
+    new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, file);
+    Assert.assertTrue(fileA.exists());
+    Assert.assertTrue(fileB.exists());
+    fileA.delete();
+    fileB.delete();
+    Files.writeString(fileA.toPath(), "X");
+    Files.writeString(fileB.toPath(), "X");
+    try {
+      new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, file);
+      Assert.fail();
+    } catch (Exception ex) {
+      Assert.assertTrue(ex.getMessage().startsWith("Failed to detect/find/create wal working directory:"));;
+    }
+    fileA.delete();
+    try {
+      new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, file);
+      Assert.fail();
+    } catch (Exception ex) {
+      Assert.assertTrue(ex.getMessage().startsWith("Failed to detect/find/create root directory:"));;
+    }
+    fileB.delete();
+    new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, file);
+    fileA.delete();
+    fileB.delete();
+    file.delete();
+  }
 }

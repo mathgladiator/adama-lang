@@ -17,11 +17,13 @@ public class SnapshotHeader {
   public final int history;
   public final int documentSize;
   public final boolean active;
+  public final long assetBytes;
 
-  public SnapshotHeader(int seq, int history, int documentSize, boolean active) {
+  public SnapshotHeader(int seq, int history, int documentSize, long assetBytes, boolean active) {
     this.seq = seq;
     this.history = history;
     this.documentSize = documentSize;
+    this.assetBytes = assetBytes;
     this.active = active;
   }
 
@@ -31,8 +33,9 @@ public class SnapshotHeader {
     int seq = data.readInt();
     int history = data.readInt();
     int documentSize = data.readInt();
+    long assetBytes = data.readLong();
     boolean active = data.readBoolean();
-    return new SnapshotHeader(seq, history, documentSize, active);
+    return new SnapshotHeader(seq, history, documentSize, assetBytes, active);
   }
 
   /** write the header to the output stream */
@@ -41,6 +44,12 @@ public class SnapshotHeader {
     data.writeInt(seq);
     data.writeInt(history);
     data.writeInt(documentSize);
+    data.writeLong(assetBytes);
     data.writeBoolean(active);
+  }
+
+  @Override
+  public String toString() {
+    return "SnapshotHeader{" + "seq=" + seq + ", history=" + history + ", documentSize=" + documentSize + ", active=" + active + ", assetBytes=" + assetBytes + '}';
   }
 }

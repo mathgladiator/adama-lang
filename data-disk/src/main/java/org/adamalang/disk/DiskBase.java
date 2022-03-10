@@ -19,32 +19,33 @@ import java.util.*;
 public class DiskBase {
   public final SimpleExecutor executor;
   public final HashMap<Key, DocumentMemoryLog> memory;
-  public final File rootDirectory;
+  public final File dataDirectory;
   public final File walWorkingDirectory;
   public final int walCutOffBytes;
   public final int nanosecondsToFlush;
-  public final WriteAheadLog log = null;
-  public final DiskDataMetrics metrics = null;
+  public final DiskDataMetrics metrics;
 
-  public DiskBase(SimpleExecutor executor, File walWorkingDirectory, File root) throws Exception {
+  public DiskBase(DiskDataMetrics metrics, SimpleExecutor executor, File root) throws Exception {
     this.executor = executor;
+    this.metrics = metrics;
     this.memory = new HashMap<>();
-    this.walWorkingDirectory = walWorkingDirectory;
-    this.rootDirectory = root;
+    this.walWorkingDirectory = new File(root, "wal");
+    this.dataDirectory = new File(root, "data");
     this.walCutOffBytes = 16 * 1024 * 1024;
     this.nanosecondsToFlush = 1000000;
-    if (!(walWorkingDirectory.exists() && walWorkingDirectory.isDirectory()) && !walWorkingDirectory.mkdir()) {
-      throw new RuntimeException("Failed to detect/find/create root directory:" + root.getAbsolutePath());
+    if (!(walWorkingDirectory.exists() && walWorkingDirectory.isDirectory()) && !walWorkingDirectory.mkdirs()) {
+      throw new RuntimeException("Failed to detect/find/create wal working directory:" + walWorkingDirectory.getAbsolutePath());
     }
-    if (!(rootDirectory.exists() && rootDirectory.isDirectory()) && !rootDirectory.mkdir()) {
-      throw new RuntimeException("Failed to detect/find/create root directory:" + root.getAbsolutePath());
+    if (!(dataDirectory.exists() && dataDirectory.isDirectory()) && !dataDirectory.mkdirs()) {
+      throw new RuntimeException("Failed to detect/find/create root directory:" + dataDirectory.getAbsolutePath());
     }
   }
 
+  //     this.log = new WriteAheadLog(this, walWorkingDirectory, 8196, 1, 32 * 1024 * 1024);
   public DocumentMemoryLog getOrCreate(Key key) {
     DocumentMemoryLog log = memory.get(key);
     if (log == null) {
-      File spacePath = new File(rootDirectory, key.space);
+      File spacePath = new File(dataDirectory, key.space);
       if (spacePath.exists()) {
         spacePath.mkdirs();
       }
@@ -58,7 +59,7 @@ public class DiskBase {
     memory.remove(key);
   }
 
-  public void flush(File fileToDelete) {
+  public void flush(File fileToDelete, Runnable after) {
     LinkedList<DocumentMemoryLog> logs = new LinkedList<>(memory.values());
     executor.scheduleNano(new NamedRunnable("flushing-document") {
       @Override
@@ -71,5 +72,11 @@ public class DiskBase {
         }
       }
     }, 5000);
+  }
+
+  public void shutdown() {
+    // TODO: fail all new writes
+    // TODO: tell WAL to flush
+    executor.shutdown();
   }
 }

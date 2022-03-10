@@ -40,7 +40,7 @@ public interface WriteAheadMessage {
 
     @Override
     public void apply(DocumentMemoryLog log) {
-      log.initialize(this);
+      log.apply(this);
     }
   }
 
@@ -102,7 +102,7 @@ public interface WriteAheadMessage {
 
     @Override
     public void apply(DocumentMemoryLog log) {
-      log.patch(this);
+      log.apply(this);
     }
   }
 
@@ -148,7 +148,7 @@ public interface WriteAheadMessage {
 
     @Override
     public void apply(DocumentMemoryLog log) {
-      log.snapshot(this);
+      log.apply(this);
     }
   }
 }

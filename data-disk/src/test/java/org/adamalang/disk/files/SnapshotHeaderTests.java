@@ -16,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.nio.charset.StandardCharsets;
 
 public class SnapshotHeaderTests {
 
@@ -35,32 +34,40 @@ public class SnapshotHeaderTests {
   @Test
   public void sanity() throws Exception {
     {
-      SnapshotHeader header = identity(new SnapshotHeader(0, 0, 0, false));
+      SnapshotHeader header = identity(new SnapshotHeader(0, 0, 0, 0, false));
       Assert.assertEquals(0, header.seq);
       Assert.assertEquals(0, header.history);
       Assert.assertEquals(0, header.documentSize);
+      Assert.assertEquals(0, header.assetBytes);
       Assert.assertFalse(header.active);
+      System.err.println(header.toString());
     }
     {
-      SnapshotHeader header = identity(new SnapshotHeader(1, 2, 3, true));
+      SnapshotHeader header = identity(new SnapshotHeader(1, 2, 3, 4, true));
       Assert.assertEquals(1, header.seq);
       Assert.assertEquals(2, header.history);
       Assert.assertEquals(3, header.documentSize);
+      Assert.assertEquals(4, header.assetBytes);
       Assert.assertTrue(header.active);
+      System.err.println(header.toString());
     }
     {
-      SnapshotHeader header = identity(new SnapshotHeader(1000000000, 1000000000, 1000000000, true));
+      SnapshotHeader header = identity(new SnapshotHeader(1000000000, 1000000000, 1000000000, 1000000000000L,true));
       Assert.assertEquals(1000000000, header.seq);
       Assert.assertEquals(1000000000, header.history);
       Assert.assertEquals(1000000000, header.documentSize);
+      Assert.assertEquals(1000000000000L, header.assetBytes);
       Assert.assertTrue(header.active);
+      System.err.println(header.toString());
     }
     {
-      SnapshotHeader header = identity(new SnapshotHeader(-1000000, -1000000, -1000000, false));
+      SnapshotHeader header = identity(new SnapshotHeader(-1000000, -1000000, -1000000, -1000000000000L,false));
       Assert.assertEquals(-1000000, header.seq);
       Assert.assertEquals(-1000000, header.history);
       Assert.assertEquals(-1000000, header.documentSize);
+      Assert.assertEquals(-1000000000000L, header.assetBytes);
       Assert.assertFalse(header.active);
+      System.err.println(header.toString());
     }
 
   }

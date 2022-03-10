@@ -16,16 +16,17 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.disk.wal.WriteAheadMessage;
 import org.adamalang.runtime.data.*;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /** the disk data service which aims for low latency commits */
 public class DiskDataService implements DataService {
   private final DiskBase base;
+  private final WriteAheadLog log;
 
-  public DiskDataService(DiskBase base) {
+  public DiskDataService(DiskBase base, WriteAheadLog log) {
     this.base = base;
+    this.log = log;
   }
 
   @Override // GET
@@ -72,7 +73,7 @@ public class DiskDataService implements DataService {
         initialize.initialize = new WriteAheadMessage.Change();
         initialize.initialize.copyFrom(patch);
 
-        base.log.write(initialize, new ApplyMessageCallback<>(memory, initialize, callback));
+        log.write(initialize, new ApplyMessageCallback<>(memory, initialize, callback));
       }
     });
   }
@@ -83,11 +84,12 @@ public class DiskDataService implements DataService {
     base.executor.execute(new NamedRunnable("dds-patch") {
       @Override
       public void execute() throws Exception {
-        DocumentMemoryLog memory = base.memory.get(key);
+        DocumentMemoryLog memory = base.getOrCreate(key);
         if (!memory.ensureLoaded(callback)) {
-          base.remove(key);
+          base.memory.remove(key);
           return;
         }
+
         if (!memory.canPatch(patches[0].seqBegin)) {
           callback.failure(new ErrorCodeException(-1));
           return;
@@ -100,7 +102,7 @@ public class DiskDataService implements DataService {
           patch.changes[k] = new WriteAheadMessage.Change();
           patch.changes[k].copyFrom(patches[k]);
         }
-        base.log.write(patch, new ApplyMessageCallback<>(memory, patch, callback));
+        log.write(patch, new ApplyMessageCallback<>(memory, patch, callback));
       }
     });
   }
@@ -133,7 +135,7 @@ public class DiskDataService implements DataService {
         delete.space = key.space;
         delete.key = key.key;
 
-        base.log.write(delete, new ApplyMessageCallback<>(memory, delete, callback));
+        log.write(delete, new ApplyMessageCallback<>(memory, delete, callback));
       }
     });
   }
@@ -144,11 +146,12 @@ public class DiskDataService implements DataService {
     base.executor.execute(new NamedRunnable("dds-snapshot") {
       @Override
       public void execute() throws Exception {
-        DocumentMemoryLog memory = base.memory.get(key);
+        DocumentMemoryLog memory = base.getOrCreate(key);
         if (!memory.ensureLoaded(callback)) {
-          base.remove(key);
+          base.memory.remove(key);
           return;
         }
+
         WriteAheadMessage.Snapshot snap = new WriteAheadMessage.Snapshot();
         snap.space = key.space;
         snap.key = key.key;
@@ -168,7 +171,7 @@ public class DiskDataService implements DataService {
           }
         };
 
-        base.log.write(snap, new ApplyMessageCallback<>(memory, snap, adaptedCallback));
+        log.write(snap, new ApplyMessageCallback<>(memory, snap, adaptedCallback));
       }
     });
   }
