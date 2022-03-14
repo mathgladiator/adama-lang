@@ -17,6 +17,7 @@ import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
 import org.adamalang.common.Validators;
 import org.adamalang.runtime.deploy.DeploymentFactory;
+import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 
 import java.io.File;
@@ -145,7 +146,8 @@ public class Space {
     }
     DeploymentPlan localPlan = new DeploymentPlan(planJson, (t, c) -> t.printStackTrace());
     System.out.println("final check of plan...");
-    new DeploymentFactory(space, "Space_" + space, new AtomicInteger(0), null, localPlan);
+    String spacePrefix = DeploymentFactoryBase.getSpaceClassNamePrefix(space);
+    new DeploymentFactory(space, spacePrefix, new AtomicInteger(0), null, localPlan);
     System.out.println("deploying plan...");
 
     try (WebSocketClient client = new WebSocketClient(config)) {

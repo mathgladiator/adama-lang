@@ -39,17 +39,7 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
   }
 
   public void deploy(String space, DeploymentPlan plan) throws ErrorCodeException {
-    DeploymentFactory prior = spaces.get(space);
-    StringBuilder spacePrefix = new StringBuilder().append("Space_");
-    for (int k = 0; k < space.length(); k++) {
-      char ch = space.charAt(k);
-      if (Character.isAlphabetic(ch)) {
-        spacePrefix.append(ch);
-      }
-    }
-    spacePrefix.append("_");
-    DeploymentFactory newFactory = new DeploymentFactory(space, spacePrefix.toString(), newClassId, prior, plan);
-    spaces.put(space, newFactory);
+    spaces.put(space, new DeploymentFactory(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan));
   }
 
   @Override
@@ -65,5 +55,18 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
   @Override
   public Collection<String> spacesAvailable() {
     return spaces.keySet();
+  }
+
+  /** issue #108; expose this internal bit for others to use to keep sanity in check */
+  public static String getSpaceClassNamePrefix(String space) {
+    StringBuilder spacePrefix = new StringBuilder().append("Space_");
+    for (int k = 0; k < space.length(); k++) {
+      char ch = space.charAt(k);
+      if (Character.isAlphabetic(ch)) {
+        spacePrefix.append(ch);
+      }
+    }
+    spacePrefix.append("_");
+    return spacePrefix.toString();
   }
 }
