@@ -9,8 +9,6 @@
  */
 package org.adamalang.web.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -19,9 +17,6 @@ import io.netty.handler.codec.http.*;
 import org.adamalang.web.contracts.HttpHandler;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebConfig webConfig;
@@ -55,6 +50,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       metrics.webhandler_found.run();
     }
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
+    boolean isAdamaClient = "/libadama.js".equals(req.uri());
     // send the default response for bad or health checks
     final HttpResponseStatus status;
     final byte[] content;
@@ -64,6 +60,11 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       status = HttpResponseStatus.OK;
       content = ("HEALTHY:" + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8);
       contentType = "text/text; charset=UTF-8";
+    } else if (isAdamaClient) {
+      metrics.webhandler_client_download.run();
+      status = HttpResponseStatus.OK;
+      content = JavaScriptClient.ADAMA_JS_CLIENT_BYTES;
+      contentType = "text/javascript; charset=UTF-8";
     } else if (httpResult != null) {
       status = HttpResponseStatus.OK;
       content = httpResult.body;

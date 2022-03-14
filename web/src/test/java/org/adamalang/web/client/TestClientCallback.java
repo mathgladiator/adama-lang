@@ -76,8 +76,8 @@ public class TestClientCallback {
     Assert.assertTrue(this.writes.get(write).startsWith(data));
   }
 
-  public void assertDataPrefix(String data) {
-    Assert.assertTrue(this.data.startsWith(data));
+  public void assertDataPrefix(String prefix) {
+    Assert.assertTrue(this.data.startsWith(prefix));
   }
 
   public void closed() {
@@ -97,8 +97,10 @@ public class TestClientCallback {
     Assert.assertTrue(disconnectLatch.await(5000, TimeUnit.MILLISECONDS));
   }
 
+  public boolean keepPings = false;
+
   public void successfulResponse(String data) {
-    if (!data.contains("ping")) {
+    if (!data.contains("ping") || keepPings) {
       this.data += data;
     }
     writes.add(data);

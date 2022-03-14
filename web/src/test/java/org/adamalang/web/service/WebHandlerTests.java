@@ -59,6 +59,17 @@ public class WebHandlerTests {
 
       {
         TestClientCallback callback = new TestClientCallback();
+        callback.keepPings = true; // Hack since the libadama.js HAS "ping" in it
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get("/libadama.js")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertDataPrefix("!function(e,t){");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
             .post("/crash", "{}")

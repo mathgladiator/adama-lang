@@ -8,7 +8,7 @@ Note, this example is derived from the [chat example available from github.](htt
 <html>
  <head>
  <title>Adama Vanilla.JS Chat</title>
-  <script src="http://releases.adama-platform.com/libadama.js"></script>
+  <script src="https://aws-us-east-2.adama-platform.com/libadama.js"></script>
  </head>
  <body>
   <div id="status"></div>

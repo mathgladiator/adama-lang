@@ -48,8 +48,16 @@ public class SpacePolicyLocator {
       public void execute() throws Exception {
         try {
           SpaceInfo space = Spaces.getSpaceInfo(dataBase, spaceName);
-          policies.putIfAbsent(spaceName, new SpacePolicy(space));
+          boolean schedule = policies.putIfAbsent(spaceName, new SpacePolicy(space)) == null;
           callback.success(policies.get(spaceName));
+          if (schedule) {
+            executor.schedule(new NamedRunnable("expire-policy") {
+              @Override
+              public void execute() throws Exception {
+                policies.remove(spaceName);
+              }
+            }, 30000);
+          }
         } catch (Exception ex) {
           callback.failure(
               ErrorCodeException.detectOrWrap(

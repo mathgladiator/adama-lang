@@ -25,6 +25,7 @@ public class WebMetrics {
   public final Runnable webhandler_exception;
   public final Runnable webhandler_found;
   public final Runnable webhandler_healthcheck;
+  public final Runnable webhandler_client_download;
 
   public final Runnable websockets_start;
   public final Runnable websockets_end;
@@ -40,6 +41,7 @@ public class WebMetrics {
     this.websockets_end = factory.counter("websockets_end");
     this.websockets_uncaught_exception = factory.counter("websockets_uncaught_exception");
     this.websockets_end_exception = factory.counter("websockets_end_exception");
+    this.webhandler_client_download = factory.counter("webhandler_client_download");
 
     this.webhandler_get = factory.counter("webhandler_get");
     this.webhandler_post = factory.counter("webhandler_post");
