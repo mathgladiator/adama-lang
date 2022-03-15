@@ -102,7 +102,7 @@ public class ErrorCodes {
   public static final int FRONTEND_INTERNAL_PLAN_DOESNT_EXIST = 654341;
   public static final int INVALID_ROLE = 688141;
   public static final int FRONTEND_AUTHORITY_ALREADY_EXISTS = 601088;
-  public static final int FRONTEND_AUTHORITY_SET_NOT_FOUNDOR_WRONG_OWNER = 634880;
+  public static final int FRONTEND_AUTHORITY_SET_NOT_FOUND_OR_WRONG_OWNER = 634880;
   public static final int FRONTEND_AUTHORITY_CHANGE_OWNER_NOT_FOUND_OR_INCORRECT = 662528;
   public static final int FRONTEND_AUTHORITY_GET_NOT_FOUND_INTERNAL = 643072;
   public static final int FRONTEND_AUTHORITY_GET_NOT_FOUND_PUBLIC = 626691;

@@ -73,6 +73,8 @@ public class DocumentMemoryLog {
   private ArrayList<Undo> undoHistory;
   private int refs;
   private final ArrayList<PostFlushCleanupEvent> cleanup;
+  private long lastActivity;
+  private boolean hasActivityToFlush;
 
   public File suffixFile(String suffix) {
     // TODO: make a better version of this
@@ -102,6 +104,21 @@ public class DocumentMemoryLog {
     spacePath.mkdir();
     this.refs = 0;
     cleanup = new ArrayList<>();
+    this.lastActivity = System.currentTimeMillis();
+    this.hasActivityToFlush = true;
+  }
+
+  private void resetLastActivity() {
+    this.lastActivity = System.currentTimeMillis();
+    this.hasActivityToFlush = true;
+  }
+
+  public long age() {
+    return System.currentTimeMillis() - lastActivity;
+  }
+
+  public boolean hasActivityToFlush() {
+    return hasActivityToFlush;
   }
 
   public void attach(PostFlushCleanupEvent event) {
@@ -109,10 +126,12 @@ public class DocumentMemoryLog {
   }
 
   public void incRef() {
+    resetLastActivity();
     this.refs++;
   }
 
   public void decRef() {
+    resetLastActivity();
     this.refs--;
   }
 
@@ -124,6 +143,7 @@ public class DocumentMemoryLog {
     this.redoLog.clear();
     this.undoStack.clear();
     this.undoHistory.clear();
+    resetLastActivity();
   }
 
   public boolean canPatch(int seq) {
@@ -140,6 +160,7 @@ public class DocumentMemoryLog {
         assetBytes += change.dAssetBytes;
       }
     }
+    resetLastActivity();
   }
 
   public void apply(WriteAheadMessage.Snapshot snapshot) {
@@ -153,9 +174,8 @@ public class DocumentMemoryLog {
           it.remove();
         }
       }
-    } else {
-      System.err.println("late sequence");
     }
+    resetLastActivity();
   }
 
   public void delete() {
@@ -167,6 +187,7 @@ public class DocumentMemoryLog {
     this.redoLog.clear();
     this.undoStack.clear();
     this.undoHistory.clear();
+    resetLastActivity();
   }
 
   private void compact() {
@@ -179,6 +200,7 @@ public class DocumentMemoryLog {
       }
       redoLog.clear();
       document = merge.finish();
+      resetLastActivity();
     }
   }
 
@@ -274,6 +296,8 @@ public class DocumentMemoryLog {
       input.close();
     }
     loaded = true;
+    resetLastActivity();
+
   }
 
   public String computeRewind(int seq) {
@@ -374,5 +398,7 @@ public class DocumentMemoryLog {
       post.finished();
     }
     cleanup.clear();
+    resetLastActivity();
+    this.hasActivityToFlush = false;
   }
 }

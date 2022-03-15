@@ -224,6 +224,7 @@ public class CoreService {
                     if (exNew.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE || exNew.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED || exNew.code == ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED) {
                       connect(who, key, stream, viewerState, canRetry);
                     } else {
+                      metrics.failed_invention.run();
                       stream.failure(exNew);
                     }
                   }

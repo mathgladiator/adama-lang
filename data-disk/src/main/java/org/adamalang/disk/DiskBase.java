@@ -67,13 +67,14 @@ public class DiskBase {
           while (System.currentTimeMillis() < started + 5) {
             for (int j = 0; j < 5; j++) {
               DocumentMemoryLog log = currentScanQueue.removeFirst();
-              log.flush();
-              // TODO: interesting logic to explore.
-              /*
-              if (log.refZero()) {
+              if (log.hasActivityToFlush()) {
+                metrics.disk_data_flush_file.run();
+                log.flush();
+              } else if (log.refZero() && log.age() >= 60000) {
                 memory.remove(log.key);
+                metrics.disk_data_unload.run();
+                // TODO: schedule an archival if available
               }
-              */
             }
           }
         } catch (NoSuchElementException nsee) {
@@ -102,7 +103,7 @@ public class DiskBase {
 
 
   public void attachFile(File fileToDelete) {
-    PostFlushCleanupEvent event = new PostFlushCleanupEvent(fileToDelete, memory.size());
+    PostFlushCleanupEvent event = new PostFlushCleanupEvent(metrics.disk_data_open_wal_files, fileToDelete, memory.size());
     for (DocumentMemoryLog log : memory.values()) {
       log.attach(event);
     }

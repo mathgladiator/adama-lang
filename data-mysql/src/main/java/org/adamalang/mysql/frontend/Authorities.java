@@ -40,7 +40,7 @@ public class Authorities {
         statement.setInt(2, ownerId);
         statement.setString(3, authority);
         if (statement.executeUpdate() != 1) {
-          throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_SET_NOT_FOUNDOR_WRONG_OWNER);
+          throw new ErrorCodeException(ErrorCodes.FRONTEND_AUTHORITY_SET_NOT_FOUND_OR_WRONG_OWNER);
         }
       }
     }

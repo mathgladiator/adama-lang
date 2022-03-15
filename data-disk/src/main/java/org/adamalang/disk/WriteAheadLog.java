@@ -67,6 +67,7 @@ public class WriteAheadLog {
       if (output == null) {
         currentFile = new File(root, "WAL-" + at);
         at++;
+        base.metrics.disk_data_open_wal_files.up();
         output = new DataOutputStream(new FileOutputStream(currentFile));
         bytesWritten = 0;
       }
