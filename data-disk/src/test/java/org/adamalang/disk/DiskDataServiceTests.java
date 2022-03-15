@@ -71,7 +71,7 @@ public class DiskDataServiceTests {
     }
 
     private void clean() {
-      log.close();
+      log.close().run();
       base.shutdown();
     }
   }
@@ -126,9 +126,30 @@ public class DiskDataServiceTests {
       setup.service.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_2 }, cb_PatchOne);
       cb_PatchOne.assertSuccess();
 
+      {
+        SimpleMockCallback cb_PatchFourAheadOfSchedule = new SimpleMockCallback();
+        setup.service.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_4 }, cb_PatchFourAheadOfSchedule);
+        cb_PatchFourAheadOfSchedule.assertFailure(621580);
+      }
+
       SimpleMockCallback cb_PatchTwo = new SimpleMockCallback();
       setup.service.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb_PatchTwo);
       cb_PatchTwo.assertSuccess();
+
+      {
+        SimpleDataCallback cb_Rewind = new SimpleDataCallback();
+        setup.service.compute(KEY1, ComputeMethod.Rewind, 2, cb_Rewind);
+        cb_Rewind.assertSuccess();
+        Assert.assertEquals(1, cb_Rewind.reads);
+        Assert.assertEquals("{\"x\":1,\"z\":42}", cb_Rewind.value);
+      }
+      {
+        SimpleDataCallback cb_Patch = new SimpleDataCallback();
+        setup.service.compute(KEY1, ComputeMethod.HeadPatch, 2, cb_Patch);
+        cb_Patch.assertSuccess();
+        Assert.assertEquals(1, cb_Patch.reads);
+        Assert.assertEquals("{\"x\":4}", cb_Patch.value);
+      }
 
       SimpleDataCallback cb_GetIsMergedResults = new SimpleDataCallback();
       setup.service.get(KEY1, cb_GetIsMergedResults);
@@ -136,46 +157,39 @@ public class DiskDataServiceTests {
       Assert.assertEquals("{\"x\":4,\"y\":4}", cb_GetIsMergedResults.value);
       Assert.assertEquals(4, cb_GetIsMergedResults.reads);
 
-      /*
       {
-        SimpleDataCallback cb_HeadPatch = new SimpleDataCallback();
-        setup.service.compute(KEY1, ComputeMethod.HeadPatch, 2, cb_HeadPatch);
-        cb_HeadPatch.assertSuccess();
-        Assert.assertEquals(4, cb_HeadPatch.reads);
-        Assert.assertEquals("{\"x\":4}", cb_HeadPatch.value);
+        SimpleDataCallback cb_Patch = new SimpleDataCallback();
+        setup.service.compute(KEY1, ComputeMethod.HeadPatch, 2, cb_Patch);
+        cb_Patch.assertFailure(787507);
       }
       {
-        SimpleDataCallback cb_HeadPatch = new SimpleDataCallback();
-        setup.service.compute(KEY1, ComputeMethod.HeadPatch, -100, cb_HeadPatch);
-        cb_HeadPatch.assertSuccess();
-        Assert.assertEquals(4, cb_HeadPatch.reads);
-        Assert.assertEquals("{\"x\":4,\"y\":4}", cb_HeadPatch.value);
+        SimpleDataCallback cb_Patch = new SimpleDataCallback();
+        setup.service.compute(KEY1, ComputeMethod.HeadPatch, -100, cb_Patch);
+        cb_Patch.assertFailure(787507);
       }
       {
-        SimpleDataCallback cb_HeadPatch = new SimpleDataCallback();
-        setup.service.compute(KEY1, ComputeMethod.HeadPatch, 100, cb_HeadPatch);
-        cb_HeadPatch.assertFailure(725039);
+        SimpleDataCallback cb_Patch = new SimpleDataCallback();
+        setup.service.compute(KEY1, ComputeMethod.HeadPatch, 100, cb_Patch);
+        cb_Patch.assertFailure(787507);
       }
       {
         SimpleDataCallback cb_Rewind = new SimpleDataCallback();
         setup.service.compute(KEY1, ComputeMethod.Rewind, 2, cb_Rewind);
         cb_Rewind.assertSuccess();
-        Assert.assertEquals(4, cb_Rewind.reads);
+        Assert.assertEquals(1, cb_Rewind.reads);
         Assert.assertEquals("{\"x\":1,\"z\":42}", cb_Rewind.value);
       }
       {
         SimpleDataCallback cb_Rewind = new SimpleDataCallback();
         setup.service.compute(KEY1, ComputeMethod.Rewind, -100, cb_Rewind);
-        cb_Rewind.assertSuccess();
-        Assert.assertEquals(4, cb_Rewind.reads);
-        Assert.assertEquals("{\"x\":0,\"z\":42,\"y\":0}", cb_Rewind.value);
+        cb_Rewind.assertFailure(791602);
       }
       {
         SimpleDataCallback cb_Rewind = new SimpleDataCallback();
         setup.service.compute(KEY1, ComputeMethod.Rewind, 100, cb_Rewind);
-        cb_Rewind.assertFailure(783395);
+        cb_Rewind.assertFailure(791602);
       }
-      */
+
       {
         SimpleDataCallback cbUnknown = new SimpleDataCallback();
         setup.service.compute(KEY1, null, 100, cbUnknown);

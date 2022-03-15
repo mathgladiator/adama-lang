@@ -7,9 +7,11 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk;
+package org.adamalang.disk.callback;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.disk.DocumentMemoryLog;
+import org.adamalang.disk.callback.ApplyMessageCallback;
 import org.adamalang.disk.mocks.SimpleMockCallback;
 import org.adamalang.disk.wal.WriteAheadMessage;
 import org.adamalang.runtime.data.Key;
@@ -22,10 +24,14 @@ import java.io.IOException;
 public class ApplyMessageCallbackTests {
   @Test
   public void proxy_error() throws Exception {
+    DocumentMemoryLog log = new DocumentMemoryLog(new Key("space", "key"), File.createTempFile("ADAMATEST_", "suffix").getParentFile());
     SimpleMockCallback callback = new SimpleMockCallback();
-    ApplyMessageCallback<Void> wrapped = new ApplyMessageCallback<>(null, null, callback);
+    Assert.assertTrue(log.refZero());
+    ApplyMessageCallback<Void> wrapped = new ApplyMessageCallback<>(log, null, callback);
+    Assert.assertFalse(log.refZero());
     wrapped.failure(new ErrorCodeException(44));
     callback.assertFailure(44);
+    Assert.assertTrue(log.refZero());
   }
 
   @Test
@@ -38,9 +44,12 @@ public class ApplyMessageCallbackTests {
     initialize.initialize = new WriteAheadMessage.Change();
     initialize.initialize.redo = "YAY";
     initialize.initialize.seq_end = 40;
+    Assert.assertTrue(log.refZero());
     ApplyMessageCallback<Void> wrapped = new ApplyMessageCallback<>(log, initialize, callback);
+    Assert.assertFalse(log.refZero());
     wrapped.success(null);
-    Assert.assertEquals("YAY", log.get_Load().patch);
+    Assert.assertTrue(log.refZero());
+    Assert.assertEquals("YAY", log.get().patch);
   }
 
 }

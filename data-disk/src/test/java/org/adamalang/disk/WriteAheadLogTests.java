@@ -27,11 +27,11 @@ import java.util.concurrent.TimeUnit;
 
 public class WriteAheadLogTests {
 
-  private static final RemoteDocumentUpdate INIT =
+  public static final RemoteDocumentUpdate INIT =
       new RemoteDocumentUpdate(
           1, 1, NtClient.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
 
-  private static RemoteDocumentUpdate UPDATE(int n) {
+  public static RemoteDocumentUpdate UPDATE(int n) {
     return new RemoteDocumentUpdate(
         n,
         n,
@@ -93,18 +93,10 @@ public class WriteAheadLogTests {
           }
         });
       }
-      CountDownLatch latchClose = new CountDownLatch(1);
-      base.executor.execute(new NamedRunnable("flush-it") {
-        @Override
-        public void execute() throws Exception {
-          log.close();
-          latchClose.countDown();
-        }
-      });
+      log.close().run();
       for (SimpleMockCallback callback : callbacks) {
         callback.assertSuccess();
       }
-      Assert.assertTrue(latchClose.await(5000, TimeUnit.MILLISECONDS));
       SimpleMockCallback failure = new SimpleMockCallback();
       base.executor.execute(new NamedRunnable("enqueue") {
         @Override

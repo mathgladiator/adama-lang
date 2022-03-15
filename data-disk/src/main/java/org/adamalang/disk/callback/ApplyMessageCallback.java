@@ -7,10 +7,11 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.disk;
+package org.adamalang.disk.callback;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.disk.DocumentMemoryLog;
 import org.adamalang.disk.wal.WriteAheadMessage;
 
 public class ApplyMessageCallback<T> implements Callback<T> {
@@ -22,16 +23,19 @@ public class ApplyMessageCallback<T> implements Callback<T> {
     this.memory = memory;
     this.message = message;
     this.callback = callback;
+    memory.incRef();
   }
 
   @Override
   public void success(T value) {
     message.apply(memory);
+    memory.decRef();
     callback.success(value);
   }
 
   @Override
   public void failure(ErrorCodeException ex) {
+    memory.decRef();
     callback.failure(ex);
   }
 }

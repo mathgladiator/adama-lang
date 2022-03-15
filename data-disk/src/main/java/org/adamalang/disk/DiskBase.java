@@ -14,6 +14,7 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.data.Key;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class DiskBase {
@@ -45,7 +46,7 @@ public class DiskBase {
     DocumentMemoryLog log = memory.get(key);
     if (log == null) {
       File spacePath = new File(dataDirectory, key.space);
-      if (spacePath.exists()) {
+      if (!spacePath.exists()) {
         spacePath.mkdirs();
       }
       log = new DocumentMemoryLog(key, spacePath);
@@ -62,7 +63,7 @@ public class DiskBase {
         try {
           DocumentMemoryLog log = logs.removeFirst();
           log.flush();
-          if (!log.isActive()) {
+          if (!log.isActive() && log.refZero()) {
             memory.remove(log.key);
           }
           executor.schedule(this, 25000);
@@ -74,17 +75,14 @@ public class DiskBase {
     }, 5000);
   }
 
-  public void shutdown() {
-    // TODO: fail all new writes
-    // TODO: tell WAL to flush
-    executor.shutdown();
+  public void flushAllNow() throws IOException {
+    for (DocumentMemoryLog log : memory.values()) {
+      log.flush();
+    }
+    memory.clear();
   }
 
-  public void scan() {
-    // TODO: list all WAL(s)
-    // TODO: order the WAL(s)
-    // FOR EACH WAL
-       // STREAM IT
-       // APPLY IT
+  public void shutdown() {
+    executor.shutdown();
   }
 }

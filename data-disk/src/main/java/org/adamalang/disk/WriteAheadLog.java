@@ -12,15 +12,15 @@ package org.adamalang.disk;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.ErrorCodes;
+import org.adamalang.common.AwaitHelper;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.disk.wal.WriteAheadMessage;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 public class WriteAheadLog {
   private boolean alive;
@@ -31,14 +31,13 @@ public class WriteAheadLog {
   private final long bytesBeforeLogCut;
 
   private File currentFile;
-  private FileOutputStream output;
+  private DataOutputStream output;
   private int at;
   private boolean flushScheduled;
   private long bytesWritten;
-
+  private byte[] mem;
   private ByteBuf buffer;
   private ArrayList<Callback<Void>> callbacks;
-  private byte[] mem;
 
   public WriteAheadLog(DiskBase base, int cutOffBytesFlush, int flushPeriodNanoseconds, long bytesBeforeLogCut) {
     this.alive = true;
@@ -56,7 +55,7 @@ public class WriteAheadLog {
 
     this.buffer = Unpooled.buffer(cutOffBytesFlush);
     this.callbacks = new ArrayList<>();
-    this.mem = new byte[cutOffBytesFlush * 2];
+    this.mem = new byte[cutOffBytesFlush / 2];
   }
 
   private void flushMemory() {
@@ -64,8 +63,12 @@ public class WriteAheadLog {
       if (output == null) {
         currentFile = new File(root, "WAL-" + at);
         at++;
-        output = new FileOutputStream(currentFile);
+        output = new DataOutputStream(new FileOutputStream(currentFile));
+        bytesWritten = 0;
       }
+
+      output.write(0x42);
+      output.writeInt(buffer.writerIndex());;
       while (buffer.isReadable()) {
         int toRead = buffer.readableBytes();
         bytesWritten += toRead;
@@ -89,17 +92,23 @@ public class WriteAheadLog {
       }
     } catch (IOException io) {
       for (Callback<Void> callback : callbacks) {
-        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_LOGGER_IOEXCEPTION));
+        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_LOGGER_IOEXCEPTION, io));
       }
       callbacks.clear();
     }
   }
 
-  public void close() {
-    alive = false;
-    if (!flushScheduled) {
-      flushMemory();
-    }
+  public Runnable close() {
+    CountDownLatch latch = new CountDownLatch(1);
+    base.executor.execute(new NamedRunnable("wal-force-flush") {
+      @Override
+      public void execute() throws Exception {
+        alive = false;
+        flushMemory();
+        latch.countDown();
+      }
+    });
+    return () -> AwaitHelper.block(latch, 2500);
   }
 
   public void write(WriteAheadMessage message, Callback<Void> callback) {

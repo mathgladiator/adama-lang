@@ -13,6 +13,8 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.disk.callback.ApplyMessageCallback;
+import org.adamalang.disk.callback.VoidToIntCallback;
 import org.adamalang.disk.wal.WriteAheadMessage;
 import org.adamalang.runtime.data.*;
 
@@ -40,15 +42,10 @@ public class DiskDataService implements DataService {
           callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
           return;
         }
-        try {
-          callback.success(memory.get_Load());
-        } catch (IOException ioe) {
-          if (ioe instanceof FileNotFoundException) {
-            callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
-          } else {
-            callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_GET_IOEXCEPTION, ioe));
-          }
+        if (!memory.ensureLoaded(callback)) {
+          return;
         }
+        callback.success(memory.get());
       }
     });
   }
@@ -116,9 +113,19 @@ public class DiskDataService implements DataService {
         }
 
         if (method == ComputeMethod.HeadPatch) {
-          callback.failure(new ErrorCodeException(-1));
+          String headPatch = memory.patchHead(seq);
+          if (headPatch != null) {
+            callback.success(new LocalDocumentChange(headPatch, 1));
+          } else {
+            callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_COMPUTE_HEADPATCH_SEQ_NOT_FOUND));
+          }
         } else if (method == ComputeMethod.Rewind) {
-          callback.failure(new ErrorCodeException(-1));
+          String rewind = memory.computeRewind(seq);
+          if (rewind != null) {
+            callback.success(new LocalDocumentChange(rewind, 1));
+          } else {
+            callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_COMPUTE_REWIND_SEQ_NOT_FOUND));
+          }
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_COMPUTE_METHOD_NOT_FOUND));
         }
@@ -170,20 +177,7 @@ public class DiskDataService implements DataService {
         snap.history = history;
         snap.document = snapshot;
 
-        Callback<Void> adaptedCallback = new Callback<Void>() {
-          // This is all sorts of wrong, need to computeASize() - history
-          @Override
-          public void success(Void value) {
-            callback.success(holding);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        };
-
-        log.write(snap, new ApplyMessageCallback<>(memory, snap, adaptedCallback));
+        log.write(snap, new ApplyMessageCallback<>(memory, snap, new VoidToIntCallback(holding, callback)));
       }
     });
   }

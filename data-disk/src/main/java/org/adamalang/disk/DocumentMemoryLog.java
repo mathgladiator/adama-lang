@@ -38,6 +38,7 @@ public class DocumentMemoryLog {
       this.seq = seq;
     }
   }
+
   private static class Redo {
     public final String redo;
     public final int seq;
@@ -65,6 +66,8 @@ public class DocumentMemoryLog {
   private ArrayList<Redo> redoLog;
   private ArrayDeque<Undo> undoStack;
   private ArrayList<Undo> undoHistory;
+  private int refs;
+
 
   public File suffixFile(String suffix) {
     return new File(spacePath, key.key + "." + suffix);
@@ -84,6 +87,15 @@ public class DocumentMemoryLog {
     this.undoStack = new ArrayDeque<>();
     this.undoHistory = new ArrayList<>();
     spacePath.mkdir();
+    this.refs = 0;
+  }
+
+  public void incRef() {
+    this.refs++;
+  }
+
+  public void decRef() {
+    this.refs--;
   }
 
   public void apply(WriteAheadMessage.Initialize init) {
@@ -96,9 +108,13 @@ public class DocumentMemoryLog {
     this.undoHistory.clear();
   }
 
+  public boolean canPatch(int seq) {
+    return loaded && this.seq + 1 == seq;
+  }
+
   public void apply(WriteAheadMessage.Patch patch) {
     for (WriteAheadMessage.Change change : patch.changes) {
-      if (change.seq_begin == seq + 1) {
+      if (change.seq_begin >= seq + 1) {
         seq = change.seq_end;
         redoLog.add(new Redo(change.redo, seq));
         undoStack.push(new Undo(change.undo, seq));
@@ -149,6 +165,10 @@ public class DocumentMemoryLog {
     return active;
   }
 
+  public boolean refZero() {
+    return refs == 0;
+  }
+
   public boolean isAvailable() {
     if (reset) {
       return false;
@@ -163,10 +183,7 @@ public class DocumentMemoryLog {
     return 1 + undoHistory.size() + undoStack.size();
   }
 
-  public LocalDocumentChange get_Load() throws IOException {
-    if (!loaded) {
-      load();
-    }
+  public LocalDocumentChange get() {
     compact();
     return new LocalDocumentChange(document, holding());
   }
@@ -181,8 +198,10 @@ public class DocumentMemoryLog {
     return true;
   }
 
-  public boolean canPatch(int seq) {
-    return loaded && this.seq + 1 == seq;
+  public void loadIfNotLoaded() throws IOException {
+    if (!loaded) {
+      load();
+    }
   }
 
   public boolean ensureLoaded(Callback<?> callback) {
@@ -270,13 +289,27 @@ public class DocumentMemoryLog {
   }
 
   public String patchHead(int seq) {
-    compact();
-    return null;
+    AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
+    boolean found = false;
+    for (Redo redo : redoLog) {
+      if (found) {
+        merge.next(redo.redo);
+      }
+      if (redo.seq == seq) {
+        found = true;
+      }
+    }
+    if (merge.empty()) {
+      return null;
+    } else {
+      return merge.finish();
+    }
   }
 
   public void flush() throws IOException {
     if (reset) {
-      suffixFile("SNAPSHOT").delete();
+      File snapshotToDelete = suffixFile("SNAPSHOT");
+      snapshotToDelete.delete();
       reset = false;
     }
     if (!loaded) {

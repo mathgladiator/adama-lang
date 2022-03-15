@@ -36,7 +36,7 @@ public class DocumentMemoryLogTests {
   public void happy() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.load();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -68,7 +68,7 @@ public class DocumentMemoryLogTests {
   }
 
   private void assertGet(DocumentMemoryLog log, String state, int reads) throws Exception {
-    LocalDocumentChange change = log.get_Load();
+    LocalDocumentChange change = log.get();
     Assert.assertEquals(state, change.patch);
     Assert.assertEquals(reads, change.reads);
   }
@@ -148,7 +148,7 @@ public class DocumentMemoryLogTests {
   public void flush_early() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.load();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -169,7 +169,7 @@ public class DocumentMemoryLogTests {
   public void flush_often() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.loadIfNotLoaded();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -193,7 +193,7 @@ public class DocumentMemoryLogTests {
   public void limit_history() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.loadIfNotLoaded();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -214,7 +214,7 @@ public class DocumentMemoryLogTests {
   public void flush_early_limit_history() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.loadIfNotLoaded();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -235,7 +235,7 @@ public class DocumentMemoryLogTests {
   public void flush_early_often_limit_history() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.loadIfNotLoaded();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -260,7 +260,7 @@ public class DocumentMemoryLogTests {
   public void no_reads() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.loadIfNotLoaded();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -279,7 +279,7 @@ public class DocumentMemoryLogTests {
   public void no_reads_flush_often() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.load();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -308,7 +308,7 @@ public class DocumentMemoryLogTests {
   public void no_reads_batch_big_flush_once() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.load();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -330,7 +330,7 @@ public class DocumentMemoryLogTests {
   public void delete_remake() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.load();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);
@@ -357,7 +357,7 @@ public class DocumentMemoryLogTests {
   public void delete_can_redo() throws Exception {
     DocumentMemoryLog log = makeLog();
     try {
-      log.get_Load();
+      log.load();
       Assert.fail();
     } catch (IOException ioe) {
       Assert.assertTrue(ioe instanceof FileNotFoundException);

@@ -14,13 +14,19 @@ import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.codec.Flow;
 import org.adamalang.common.codec.TypeCommon;
 import org.adamalang.common.codec.TypeId;
+import org.adamalang.disk.DiskBase;
 import org.adamalang.disk.DocumentMemoryLog;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 
 public interface WriteAheadMessage {
   public void write(ByteBuf buf);
 
   public void apply(DocumentMemoryLog log);
+
+  public Key key();
+
+  public boolean requiresLoad();
 
   @TypeId(0x05)
   @Flow("WAL")
@@ -41,6 +47,16 @@ public interface WriteAheadMessage {
     @Override
     public void apply(DocumentMemoryLog log) {
       log.apply(this);
+    }
+
+    @Override
+    public Key key() {
+      return new Key(space, key);
+    }
+
+    @Override
+    public boolean requiresLoad() {
+      return false;
     }
   }
 
@@ -104,6 +120,16 @@ public interface WriteAheadMessage {
     public void apply(DocumentMemoryLog log) {
       log.apply(this);
     }
+
+    @Override
+    public Key key() {
+      return new Key(space, key);
+    }
+
+    @Override
+    public boolean requiresLoad() {
+      return true;
+    }
   }
 
   @TypeId(0x25)
@@ -123,6 +149,16 @@ public interface WriteAheadMessage {
     @Override
     public void apply(DocumentMemoryLog log) {
       log.delete();
+    }
+
+    @Override
+    public Key key() {
+      return new Key(space, key);
+    }
+
+    @Override
+    public boolean requiresLoad() {
+      return false;
     }
   }
 
@@ -149,6 +185,16 @@ public interface WriteAheadMessage {
     @Override
     public void apply(DocumentMemoryLog log) {
       log.apply(this);
+    }
+
+    @Override
+    public Key key() {
+      return new Key(space, key);
+    }
+
+    @Override
+    public boolean requiresLoad() {
+      return false;
     }
   }
 }
