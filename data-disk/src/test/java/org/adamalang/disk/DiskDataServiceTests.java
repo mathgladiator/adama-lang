@@ -13,6 +13,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.disk.demo.BadConsumer;
+import org.adamalang.disk.mocks.FilteredSimpleExecutor;
 import org.adamalang.disk.mocks.SimpleDataCallback;
 import org.adamalang.disk.mocks.SimpleIntCallback;
 import org.adamalang.disk.mocks.SimpleMockCallback;
@@ -51,7 +52,12 @@ public class DiskDataServiceTests {
     private final DiskDataService service;
 
     public Setup() throws Exception {
-      this.executor = SimpleExecutor.create("executor");
+      this.executor = new FilteredSimpleExecutor(SimpleExecutor.create("executor")) {
+        @Override
+        public boolean test(NamedRunnable runnable) {
+          return !"scanner-state-machine".equals(runnable.name);
+        }
+      };
       this.root = new File(File.createTempFile("ADAMATEST_", "yyy").getParentFile(), "base-" + System.currentTimeMillis());
       this.base = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), executor, root);
       this.log = new WriteAheadLog(base, 8196, 1000000, 64 * 1024);

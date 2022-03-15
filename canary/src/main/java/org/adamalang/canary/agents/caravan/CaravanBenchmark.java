@@ -36,6 +36,7 @@ public class CaravanBenchmark {
   public static void go() throws Exception {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     DiskBase base = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), executor, new File("caravan_benchmark"));
+    base.start();
     WriteAheadLog log = new WriteAheadLog(base, 8196, 50000, 32 * 1024 * 1024);
     DiskDataService service = new DiskDataService(base, log);
     AtomicInteger queues = new AtomicInteger(0);

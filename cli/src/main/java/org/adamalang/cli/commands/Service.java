@@ -16,6 +16,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.ServerHandle;
+import org.adamalang.disk.*;
 import org.adamalang.disk.demo.DiskMetrics;
 import org.adamalang.disk.demo.SingleThreadDiskDataService;
 import org.adamalang.extern.AssetUploader;
@@ -162,9 +163,24 @@ public class Service {
     BackendMetrics backendMetrics = new BackendMetrics(prometheusMetricsFactory);
     ThreadedDataService dbDataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(backendMetrics, dataBaseBackend));
     PrefixSplitDataService carveMemoryOff = new PrefixSplitDataService(dbDataService, "mem_", new ThreadedDataService(dataThreads, () -> new InMemoryDataService((r) -> r.run(), TimeSource.REAL_TIME)));
+
+    final DiskDataService diskDataService;
+    {
+      SimpleExecutor walExecutor = SimpleExecutor.create("wal");
+      File storageDirectory = new File(config.get_string("storage_directory", "storage"));
+      storageDirectory.mkdirs();
+      DiskBase diskBase = new DiskBase(new DiskDataMetrics(prometheusMetricsFactory), walExecutor, storageDirectory);
+      Startup.transfer(diskBase);
+      diskBase.start();
+      WriteAheadLog log = new WriteAheadLog(diskBase, 8196, 100000, 16 * 1024 * 1024);
+      diskDataService = new DiskDataService(diskBase, log);
+    }
+    PrefixSplitDataService walCarveOff = new PrefixSplitDataService(carveMemoryOff, "wal_", diskDataService);
+
     DiskMetrics diskMetrics = new DiskMetrics(prometheusMetricsFactory);
-    File dataDirectory = new File(config.get_string("data_directory", "data"));
-    PrefixSplitDataService carveDiskOff = new PrefixSplitDataService(carveMemoryOff, "disk_", new ThreadedDataService(dataThreads, () -> new SingleThreadDiskDataService(dataDirectory, diskMetrics)));
+    File dataDirectory = new File(config.get_string("data_directory_demo", "data"));
+    PrefixSplitDataService carveDiskOff = new PrefixSplitDataService(walCarveOff, "disk_", new ThreadedDataService(dataThreads, () -> new SingleThreadDiskDataService(dataDirectory, diskMetrics)));
+
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
     CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), carveDiskOff, TimeSource.REAL_TIME, coreThreads);
@@ -399,6 +415,7 @@ public class Service {
     new DataBaseMetrics(metricsFactory, "deployed");
     metricsFactory.page("disk", "Disk");
     new DiskMetrics(metricsFactory);
+    new DiskDataMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }

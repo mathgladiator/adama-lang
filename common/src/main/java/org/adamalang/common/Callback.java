@@ -26,7 +26,6 @@ public interface Callback<T> {
 
     @Override
     public void failure(ErrorCodeException ex) {
-      LOGGER.convertedToErrorCode(ex, -1);
     }
   };
   Callback<Void> DONT_CARE_VOID = new Callback<Void>() {
@@ -36,7 +35,6 @@ public interface Callback<T> {
 
     @Override
     public void failure(ErrorCodeException ex) {
-      LOGGER.convertedToErrorCode(ex, -1);
     }
   };
 

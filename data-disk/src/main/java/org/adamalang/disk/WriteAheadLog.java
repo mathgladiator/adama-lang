@@ -17,12 +17,16 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.disk.wal.WriteAheadMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class WriteAheadLog {
+  private static final Logger LOGGER = LoggerFactory.getLogger(WriteAheadLog.class);
+
   private boolean alive;
   private final DiskBase base;
   private final File root;
@@ -88,13 +92,15 @@ public class WriteAheadLog {
       if (bytesWritten > bytesBeforeLogCut || !alive) {
         output.close();
         output = null;
-        base.flush(currentFile, () -> {});
+        base.attachFile(currentFile);
       }
     } catch (IOException io) {
+      LOGGER.error("failed-to-flush", io);
       for (Callback<Void> callback : callbacks) {
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_LOGGER_IOEXCEPTION, io));
       }
       callbacks.clear();
+      System.exit(200);
     }
   }
 

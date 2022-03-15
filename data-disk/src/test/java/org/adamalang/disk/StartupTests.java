@@ -56,7 +56,7 @@ public class StartupTests {
           SimpleExecutor executor = new FilteredSimpleExecutor(realExecutor) {
             @Override
             public boolean test(NamedRunnable runnable) {
-              return !"flushing-document".equals(runnable.name);
+              return !"scanner-state-machine".equals(runnable.name);
             }
           };
           DiskBase base = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), executor, root);

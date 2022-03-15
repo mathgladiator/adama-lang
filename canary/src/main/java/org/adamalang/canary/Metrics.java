@@ -91,7 +91,7 @@ public class Metrics {
     }
     if (send_latency.size() > 20) {
       send_latency.sort(Integer::compare);
-      return send_latency.get((int) (send_latency.size() * 0.95));
+      return send_latency.get((int) (send_latency.size() * 0.98));
     } else {
       return -1;
     }

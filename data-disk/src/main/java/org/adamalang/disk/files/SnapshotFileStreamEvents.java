@@ -82,7 +82,6 @@ public interface SnapshotFileStreamEvents {
       public void onFinished(boolean complete) throws IOException {
         output.writeBoolean(false);
         output.flush();
-        output.close();
       }
     };
   }

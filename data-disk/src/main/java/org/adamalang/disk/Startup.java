@@ -29,12 +29,12 @@ public class Startup {
     File[] walsInOrder = getWalFilesToIngest(base);
     for (File walFile : walsInOrder) {
       replay(walFile, base);
-      base.flushAllNow();
+      base.flushAllNow(true);
       walFile.delete();
     }
   }
 
-  public static File[] getWalFilesToIngest(DiskBase base) throws IOException {
+  private static File[] getWalFilesToIngest(DiskBase base) throws IOException {
     File[] files = base.walWorkingDirectory.listFiles();
     TreeSet<Integer> ids = new TreeSet<>();
     int minimum = Integer.MAX_VALUE;
@@ -65,7 +65,7 @@ public class Startup {
     return sorted;
   }
 
-  public static void replay(File walFile, DiskBase base) throws IOException {
+  private static void replay(File walFile, DiskBase base) throws IOException {
     FileInputStream fileInputStream = new FileInputStream(walFile);
     try {
       DataInputStream read = new DataInputStream(fileInputStream);

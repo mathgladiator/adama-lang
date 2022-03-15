@@ -83,7 +83,6 @@ public class DiskDataService implements DataService {
         if (!memory.ensureLoaded(callback)) {
           return;
         }
-
         if (!memory.canPatch(patches[0].seqBegin)) {
           callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
           return;

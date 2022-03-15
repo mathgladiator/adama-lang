@@ -19,6 +19,8 @@ import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.LocalDocumentChange;
 import org.adamalang.runtime.json.JsonAlgebra;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -27,8 +29,11 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 public class DocumentMemoryLog {
+  private static final Logger LOGGER = LoggerFactory.getLogger(DocumentMemoryLog.class);
+
   private static class Undo {
     public final String undo;
     public final int seq;
@@ -67,10 +72,18 @@ public class DocumentMemoryLog {
   private ArrayDeque<Undo> undoStack;
   private ArrayList<Undo> undoHistory;
   private int refs;
-
+  private final ArrayList<PostFlushCleanupEvent> cleanup;
 
   public File suffixFile(String suffix) {
-    return new File(spacePath, key.key + "." + suffix);
+    // TODO: make a better version of this
+    // SEE saas/src/main/java/org/adamalang/validators/ValidateKey.java
+    String fixed_filename = key.key.replaceAll(Pattern.quote("_"), "__") //
+        .replaceAll(Pattern.quote("/"), "_F") //
+        .replaceAll(Pattern.quote("+"), "_A") //
+        .replaceAll(Pattern.quote("#"), "_P") //
+        .replaceAll(Pattern.quote("="), "_E") //
+        .replaceAll(Pattern.quote("\\"), "_B");
+    return new File(spacePath, fixed_filename + "." + suffix);
   }
 
   public DocumentMemoryLog(Key key, File spacePath) {
@@ -88,6 +101,11 @@ public class DocumentMemoryLog {
     this.undoHistory = new ArrayList<>();
     spacePath.mkdir();
     this.refs = 0;
+    cleanup = new ArrayList<>();
+  }
+
+  public void attach(PostFlushCleanupEvent event) {
+    this.cleanup.add(event);
   }
 
   public void incRef() {
@@ -125,15 +143,18 @@ public class DocumentMemoryLog {
   }
 
   public void apply(WriteAheadMessage.Snapshot snapshot) {
-    this.document = snapshot.document;
-    this.seq = snapshot.seq;
-    this.history = snapshot.history;
-    Iterator<Redo> it = redoLog.iterator();
-    while (it.hasNext()) {
-      Redo redo = it.next();
-      if (redo.seq <= snapshot.seq) {
-        it.remove();
+    if (snapshot.seq <= this.seq) {
+      this.document = snapshot.document;
+      this.history = snapshot.history;
+      Iterator<Redo> it = redoLog.iterator();
+      while (it.hasNext()) {
+        Redo redo = it.next();
+        if (redo.seq <= snapshot.seq) {
+          it.remove();
+        }
       }
+    } else {
+      System.err.println("late sequence");
     }
   }
 
@@ -212,6 +233,7 @@ public class DocumentMemoryLog {
       load();
       return true;
     } catch (IOException io) {
+      LOGGER.error("failed-to-load", io);
       callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_CANT_LOAD_IOEXCEPTION, io));
       return false;
     }
@@ -220,7 +242,7 @@ public class DocumentMemoryLog {
   public void load() throws IOException {
     FileInputStream input = new FileInputStream(suffixFile("SNAPSHOT"));
     try {
-      SnapshotFileStreamEvents.read(new DataInputStream(input), new SnapshotFileStreamEvents() {
+      SnapshotFileStreamEvents.read(new DataInputStream(new BufferedInputStream(input)), new SnapshotFileStreamEvents() {
         @Override
         public boolean onHeader(SnapshotHeader header) throws IOException {
           history = header.history;
@@ -320,7 +342,7 @@ public class DocumentMemoryLog {
     compact();
     File toWrite = suffixFile("SNAPSHOT.temp");
     byte[] documentBytes = document.getBytes(StandardCharsets.UTF_8);
-    FileOutputStream output = new FileOutputStream(toWrite);
+    BufferedOutputStream output = new BufferedOutputStream(new FileOutputStream(toWrite), 64 * 1024);
     ArrayList<Undo> newUndoHistory = new ArrayList<>();
     try {
       SnapshotFileStreamEvents writer = SnapshotFileStreamEvents.writerFor(new DataOutputStream(output));
@@ -348,5 +370,9 @@ public class DocumentMemoryLog {
     Files.move(toWrite.toPath(), suffixFile("SNAPSHOT").toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
     undoHistory = newUndoHistory;
     undoStack.clear();
+    for (PostFlushCleanupEvent post: cleanup) {
+      post.finished();
+    }
+    cleanup.clear();
   }
 }

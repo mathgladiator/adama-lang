@@ -79,6 +79,7 @@ public class DurableLivingDocument {
         base.metrics.document_compacting.run();
         JsonStreamWriter writer = new JsonStreamWriter();
         document.__dump(writer);
+        int toCompactNow = size.get();
         base.service.compactAndSnapshot(key, document.__seq.get(), writer.toString(), currentFactory.maximum_history, new Callback<>() {
           @Override
           public void success(Integer value) {
@@ -86,8 +87,8 @@ public class DurableLivingDocument {
               @Override
               public void execute() throws Exception {
                 inflightCompact = false;
-                size.getAndAdd(-value);
-                if (size.get() > currentFactory.maximum_history && value > currentFactory.maximum_history / 2) {
+                size.getAndAdd(-toCompactNow);
+                if (size.get() >= currentFactory.maximum_history) {
                   queueCompact();
                 }
               }
@@ -294,7 +295,7 @@ public class DurableLivingDocument {
               if (shouldCleanUp && document.__canRemoveFromMemory()) {
                 scheduleCleanup();
               }
-              if (size.get() > currentFactory.maximum_history * 1.5) {
+              if (size.get() > currentFactory.maximum_history) {
                 queueCompact();
               }
             }
