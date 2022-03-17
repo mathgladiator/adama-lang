@@ -26,6 +26,7 @@ public class ServerMetrics {
   public final Runnable server_metering_begin;
   public final Runnable server_metering_delete_batch;
   public final Runnable server_scan_deployment;
+  public final Runnable server_channel_error;
 
   public ServerMetrics(MetricsFactory factory) {
     server_handlers_active = factory.inflight("server_handlers_active");
@@ -43,6 +44,6 @@ public class ServerMetrics {
     server_metering_begin = factory.counter("server_metering_begin");
     server_metering_delete_batch = factory.counter("server_metering_delete_batch");
     server_scan_deployment = factory.counter("server_scan_deployment");
-
+    server_channel_error = factory.counter("server_channel_error");
   }
 }

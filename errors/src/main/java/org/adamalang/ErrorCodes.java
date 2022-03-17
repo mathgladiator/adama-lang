@@ -425,6 +425,8 @@ public class ErrorCodes {
   public static final int ADAMA_NET_SCAN_DEPLOYMENT_REJECTED = 787514;
   public static final int ADAMA_NET_CONNECT_DOCUMENT_TIMEOUT = 718908;
   public static final int ADAMA_NET_CONNECT_DOCUMENT_REJECTED = 702524;
+
+  @RetryInternally
   public static final int ADAMA_NET_CONNECTION_DONE = 769085;
   public static final int ADAMA_NET_INVALID_TARGET = 719932;
   public static final int ADAMA_NET_FAILED_FIND_TARGET = 753724;

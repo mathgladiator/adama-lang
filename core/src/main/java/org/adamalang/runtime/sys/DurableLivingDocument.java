@@ -31,7 +31,7 @@ import java.util.function.Consumer;
 /** A LivingDocument tied to a document id and DataService */
 public class DurableLivingDocument {
   public static final int MAGIC_MAXIMUM_DOCUMENT_QUEUE = 256;
-  private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(DurableLivingDocument.class);
+  private static final ExceptionLogger EXLOGGER = ExceptionLogger.FOR(DurableLivingDocument.class);
   public final DocumentThreadBase base;
   public final Key key;
   private final ArrayDeque<IngestRequest> pending;
@@ -44,19 +44,21 @@ public class DurableLivingDocument {
   private int outstandingExecutionsWhichRequireDrain;
   private boolean inflightCompact;
   private AtomicInteger size;
+  private int trackingSeq;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
     this.key = key;
     this.document = document;
     this.currentFactory = currentFactory;
     this.base = base;
-    this.requiresInvalidateMilliseconds = null;
+    this.requiresInvalidateMilliseconds = document.__computeRequiresInvalidateMilliseconds();
     this.pending = new ArrayDeque<>(8);
     this.inflightPatch = false;
     this.catastrophicFailureOccurred = false;
     this.lastExpire = 0;
     this.outstandingExecutionsWhichRequireDrain = 0;
     this.size = new AtomicInteger(0);
+    this.trackingSeq = document.__seq.get();
   }
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final NtClient who, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
@@ -64,7 +66,7 @@ public class DurableLivingDocument {
       DurableLivingDocument document = new DurableLivingDocument(key, factory.create(monitor), factory, base);
       document.construct(who, arg, entropy, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST, (seq) -> document));
     } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex, LOGGER));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex, EXLOGGER));
     }
   }
 
@@ -120,13 +122,10 @@ public class DurableLivingDocument {
         doc.__dump(writer);
         DurableLivingDocument document = new DurableLivingDocument(key, doc, factory, base);
         document.size.set(data.reads);
-        if (data.reads > factory.maximum_history) {
-          document.queueCompact();
-        }
         return document;
       }));
     } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, LOGGER));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, EXLOGGER));
     }
   }
 
@@ -219,6 +218,7 @@ public class DurableLivingDocument {
   }
 
   private void executeNow(IngestRequest[] requests) {
+    inflightPatch = true;
     IngestRequest lastRequest = null;
     ArrayList<LivingDocumentChange> changes = new ArrayList<>();
     Runnable revert = () -> {
@@ -244,6 +244,7 @@ public class DurableLivingDocument {
         }
       }
       if (last == null) {
+        inflightPatch = false;
         return;
       }
       final boolean shouldCleanUp = requestsCleanUp;
@@ -251,6 +252,7 @@ public class DurableLivingDocument {
         base.executor.execute(new NamedRunnable("catastrophic-failure") {
           @Override
           public void execute() throws Exception {
+            inflightPatch = false;
             for (Callback<Integer> callback : callbacks) {
               callback.failure(ex2);
             }
@@ -270,16 +272,20 @@ public class DurableLivingDocument {
       }
       requiresInvalidateMilliseconds = last.update.requiresFutureInvalidation ? last.update.whenToInvalidateMilliseconds : null;
 
-      inflightPatch = true;
       RemoteDocumentUpdate[] patches = new RemoteDocumentUpdate[changes.size()];
       int at = 0;
       for (LivingDocumentChange change : changes) {
         patches[at] = change.update;
         at++;
+        if (trackingSeq + 1 != change.update.seqBegin) {
+          base.metrics.internal_seq_drift.run();
+        }
+        trackingSeq = change.update.seqEnd;
       }
       int seqToUse = last.update.seqEnd;
       size.addAndGet(patches.length);
-      base.service.patch(key, RemoteDocumentUpdate.compact(patches), base.metrics.document_execute_patch.wrap(new Callback<>() {
+      RemoteDocumentUpdate[] compactPatches = RemoteDocumentUpdate.compact(patches);
+      base.service.patch(key, compactPatches, base.metrics.document_execute_patch.wrap(new Callback<>() {
         @Override
         public void success(Void value) {
           base.executor.execute(new NamedRunnable("execute-now-patch-callback") {
@@ -288,7 +294,6 @@ public class DurableLivingDocument {
               for (Callback<Integer> callback : callbacks) {
                 callback.success(seqToUse);
               }
-              finishSuccessDataServicePatchWhileInExecutor();
               for (LivingDocumentChange change : changes) {
                 change.complete();
               }
@@ -298,6 +303,7 @@ public class DurableLivingDocument {
               if (size.get() > currentFactory.maximum_history) {
                 queueCompact();
               }
+              finishSuccessDataServicePatchWhileInExecutor();
             }
           });
         }
@@ -440,14 +446,17 @@ public class DurableLivingDocument {
         writer.writeFastString(entropy);
       }
       writer.endObject();
-      final var change = document.__transact(writer.toString(), currentFactory);
+      final var init = document.__transact(writer.toString(), currentFactory);
+      final var invalidate = document.__transact(forgeInvalidate(), currentFactory);
+      final var setup = RemoteDocumentUpdate.compact(new RemoteDocumentUpdate[] { init.update, invalidate.update })[0];
       size.set(1);
-      base.service.initialize(key, change.update, Callback.handoff(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_PERSIST, () -> {
-        change.complete();
-        invalidate(callback);
+      base.service.initialize(key, setup, Callback.handoff(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_PERSIST, () -> {
+        init.complete();
+        invalidate.complete();
+        callback.success(setup.seqEnd);
       }));
     } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex, LOGGER));
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex, EXLOGGER));
     }
   }
 

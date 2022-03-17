@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LocalNetCanaryConfig {
   public final String data;
+  public final String role;
   public final String source;
   public final int agents;
   public final String space;
@@ -38,6 +39,7 @@ public class LocalNetCanaryConfig {
 
   public LocalNetCanaryConfig(ConfigObject config) {
     this.data = config.strOf("data", "in-memory");
+    this.role = config.strOf("role", "both");
     this.source = config.strOf("source", "canary.adama");
     this.space = config.strOf("space", "demo");
     this.agents = config.intOf("agents", 1);

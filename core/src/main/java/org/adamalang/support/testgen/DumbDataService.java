@@ -22,28 +22,32 @@ import java.util.HashSet;
 import java.util.function.Consumer;
 
 public class DumbDataService implements DataService {
-  public static final Callback<PrivateView> NOOPPrivateView = new Callback<PrivateView>() {
+  public static Callback<PrivateView> makePrinterPrivateView(String prefix, StringBuilder sb) {
+    return new Callback<PrivateView>() {
+      @Override
+      public void success(PrivateView value) {
+        sb.append(prefix + ": CREATED PRIVATE VIEW\n");
+      }
 
-    @Override
-    public void success(PrivateView value) {
-    }
+      @Override
+      public void failure(ErrorCodeException ex) {
+        sb.append(prefix + ": FAILED PRIVATE VIEW DUE TO:" + ex.code + "\n");
+      }
+    };
+  }
+  public static Callback<Integer> makePrinterInt(String prefix, StringBuilder sb) {
+    return new Callback<>() {
+      @Override
+      public void success(Integer value) {
+        sb.append(prefix + "|SUCCESS:" + value + "\n");
+      }
 
-    @Override
-    public void failure(ErrorCodeException ex) {
-      throw new RuntimeException(ex);
-    }
-  };
-  public static final Callback<Integer> NOOPINT = new Callback<Integer>() {
-
-    @Override
-    public void success(Integer value) {
-    }
-
-    @Override
-    public void failure(ErrorCodeException ex) {
-      throw new RuntimeException(ex);
-    }
-  };
+      @Override
+      public void failure(ErrorCodeException ex) {
+        sb.append(prefix + "|FAILURE:" + ex.code + "\n");
+      }
+    };
+  }
   public final HashSet<Key> deleted;
   public boolean deletesWork = true;
   public boolean computesWork = true;

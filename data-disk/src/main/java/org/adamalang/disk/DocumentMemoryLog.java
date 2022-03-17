@@ -71,7 +71,6 @@ public class DocumentMemoryLog {
   private ArrayList<Redo> redoLog;
   private ArrayDeque<Undo> undoStack;
   private ArrayList<Undo> undoHistory;
-  private int refs;
   private final ArrayList<PostFlushCleanupEvent> cleanup;
   private long lastActivity;
   private boolean hasActivityToFlush;
@@ -102,7 +101,6 @@ public class DocumentMemoryLog {
     this.undoStack = new ArrayDeque<>();
     this.undoHistory = new ArrayList<>();
     spacePath.mkdir();
-    this.refs = 0;
     cleanup = new ArrayList<>();
     this.lastActivity = System.currentTimeMillis();
     this.hasActivityToFlush = true;
@@ -125,16 +123,6 @@ public class DocumentMemoryLog {
     this.cleanup.add(event);
   }
 
-  public void incRef() {
-    resetLastActivity();
-    this.refs++;
-  }
-
-  public void decRef() {
-    resetLastActivity();
-    this.refs--;
-  }
-
   public void apply(WriteAheadMessage.Initialize init) {
     this.loaded = true;
     document = init.initialize.redo;
@@ -148,6 +136,14 @@ public class DocumentMemoryLog {
 
   public boolean canPatch(int seq) {
     return loaded && this.seq + 1 == seq;
+  }
+
+  public int seq() {
+    return this.seq;
+  }
+
+  public boolean isLoaded() {
+    return loaded;
   }
 
   public void apply(WriteAheadMessage.Patch patch) {
@@ -206,10 +202,6 @@ public class DocumentMemoryLog {
 
   public boolean isActive() {
     return active;
-  }
-
-  public boolean refZero() {
-    return refs == 0;
   }
 
   public boolean isAvailable() {

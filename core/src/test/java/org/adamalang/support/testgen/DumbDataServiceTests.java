@@ -14,6 +14,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.ComputeMethod;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.LocalDocumentChange;
+import org.adamalang.runtime.json.PrivateView;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -78,15 +79,6 @@ public class DumbDataServiceTests {
   }
 
   @Test
-  public void noopint() {
-    try {
-      DumbDataService.NOOPINT.failure(new ErrorCodeException(0, new Exception()));
-      Assert.fail();
-    } catch (RuntimeException re) {
-    }
-  }
-
-  @Test
   public void nocompact() {
     try {
       new DumbDataService((up) -> {}).compactAndSnapshot(null, 1, "{}",-1, null);
@@ -96,11 +88,14 @@ public class DumbDataServiceTests {
   }
 
   @Test
-  public void pv() {
-    try {
-      DumbDataService.NOOPPrivateView.failure(new ErrorCodeException(0, new Exception()));
-      Assert.fail();
-    } catch (RuntimeException re) {
-    }
+  public void printer_coverage() {
+    StringBuilder sb = new StringBuilder();
+    Callback<Integer> cb1 = DumbDataService.makePrinterInt("X", sb);
+    Callback<PrivateView> cb2 = DumbDataService.makePrinterPrivateView("Y", sb);
+    cb1.success(123);
+    cb2.success(null);
+    cb1.failure(new ErrorCodeException(123));
+    cb2.failure(new ErrorCodeException(456));
+    Assert.assertEquals("X|SUCCESS:123\n" + "Y: CREATED PRIVATE VIEW\n" + "X|FAILURE:123\n" + "Y: FAILED PRIVATE VIEW DUE TO:456\n", sb.toString());
   }
 }

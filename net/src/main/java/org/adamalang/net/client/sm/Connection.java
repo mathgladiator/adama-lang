@@ -10,6 +10,7 @@
 package org.adamalang.net.client.sm;
 
 import org.adamalang.ErrorCodes;
+import org.adamalang.ErrorTable;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -122,6 +123,10 @@ public class Connection {
 
   /** send the remote peer a message */
   public void send(String channel, String marker, String message, Callback<Integer> callback) {
+    send(channel, marker, message, true, callback);
+  }
+
+  private void send(String channel, String marker, String message, boolean retry, Callback<Integer> callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = base.metrics.client_connection_send.start();
     base.executor.execute(new NamedRunnable("connection-send", key.space, key.key, channel) {
       @Override
@@ -129,7 +134,26 @@ public class Connection {
         bufferOrExecute(new ItemAction<>(ErrorCodes.API_SEND_TIMEOUT, ErrorCodes.API_SEND_REJECTED, mInstance) {
           @Override
           protected void executeNow(Remote remote) {
-            remote.send(channel, marker, message, callback);
+            remote.send(channel, marker, message, new Callback<Integer>() {
+              @Override
+              public void success(Integer value) {
+                callback.success(value);
+              }
+
+              @Override
+              public void failure(ErrorCodeException ex) {
+                if (ErrorTable.INSTANCE.shouldRetry(ex.code) && retry) {
+                  base.executor.schedule(new NamedRunnable("send-retry") {
+                    @Override
+                    public void execute() throws Exception {
+                      send(channel, marker, message, false, callback);
+                    }
+                  }, 100);
+                } else {
+                  callback.failure(ex);
+                }
+              }
+            });
           }
 
           @Override
@@ -318,7 +342,7 @@ public class Connection {
   }
 
   private void handle_onFailedFindingClient() {
-    if (backoffFindInstance < 1000) {
+    if (backoffFindInstance < 2500) {
       base.executor.schedule(new NamedRunnable("connection-failed-retry") {
         @Override
         public void execute() throws Exception {
@@ -367,7 +391,12 @@ public class Connection {
         base.executor.execute(new NamedRunnable("connection-error") {
           @Override
           public void execute() throws Exception {
-            handle_onError(code);
+            if (ErrorTable.INSTANCE.shouldRetry(code)) {
+              System.err.println("detected retry");
+              handle_onDisconnected();
+            } else {
+              handle_onError(code);
+            }
           }
         });
       }

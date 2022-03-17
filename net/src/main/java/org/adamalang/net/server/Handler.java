@@ -89,6 +89,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void error(int errorCode) {
+    nexus.metrics.server_channel_error.run();
     completed();
   }
 

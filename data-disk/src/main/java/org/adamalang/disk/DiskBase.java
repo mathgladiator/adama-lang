@@ -70,7 +70,7 @@ public class DiskBase {
               if (log.hasActivityToFlush()) {
                 metrics.disk_data_flush_file.run();
                 log.flush();
-              } else if (log.refZero() && log.age() >= 60000) {
+              } else if (log.age() >= 60000) {
                 memory.remove(log.key);
                 metrics.disk_data_unload.run();
                 // TODO: schedule an archival if available

@@ -16,11 +16,22 @@ public class ErrorTable {
   public static final ErrorTable INSTANCE = new ErrorTable();
   public final HashMap<Integer, String> names;
   public final HashMap<Integer, String> descriptions;
-  public final HashSet<Integer> userspace;
+  private final HashSet<Integer> userspace;
+  private final HashSet<Integer> retry;
+
+  public boolean shouldRetry(int code) {
+    return retry.contains(code);
+  }
+
+  public boolean isUserProblem(int code) {
+    return userspace.contains(code);
+  }
+
   public ErrorTable() {
     names = new HashMap<>();
     descriptions = new HashMap<>();
     userspace = new HashSet<>();
+    retry = new HashSet<>();
     names.put(123392, "DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE");
     descriptions.put(123392, "no description of error (yet)");
     names.put(198657, "DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST");
@@ -93,7 +104,7 @@ public class ErrorTable {
     descriptions.put(130092, "The document is already created, so please try connecting instead. This happens when two create calls are executed");
     userspace.add(130092);
     names.put(134259, "SERVICE_DOCUMENT_REJECTED_CREATION");
-    descriptions.put(134259, "The document was rejected because the create() returned false. Either your are not allowed to create the document, or the create() call doesn't exist or is buggy.");
+    descriptions.put(134259, "The document was rejected because the @static { create(who) {...} } policy returned false. Either your are not allowed to create the document, or the create() call doesn't exist or is buggy.");
     userspace.add(134259);
     names.put(134195, "DOCUMENT_SELF_DESTRUCT_SUCCESSFUL");
     descriptions.put(134195, "no description of error (yet)");
@@ -163,7 +174,7 @@ public class ErrorTable {
     descriptions.put(688141, "no description of error (yet)");
     names.put(601088, "FRONTEND_AUTHORITY_ALREADY_EXISTS");
     descriptions.put(601088, "no description of error (yet)");
-    names.put(634880, "FRONTEND_AUTHORITY_SET_NOT_FOUNDOR_WRONG_OWNER");
+    names.put(634880, "FRONTEND_AUTHORITY_SET_NOT_FOUND_OR_WRONG_OWNER");
     descriptions.put(634880, "no description of error (yet)");
     names.put(662528, "FRONTEND_AUTHORITY_CHANGE_OWNER_NOT_FOUND_OR_INCORRECT");
     descriptions.put(662528, "no description of error (yet)");
@@ -504,6 +515,7 @@ public class ErrorTable {
     descriptions.put(702524, "no description of error (yet)");
     names.put(769085, "ADAMA_NET_CONNECTION_DONE");
     descriptions.put(769085, "no description of error (yet)");
+    retry.add(769085);
     names.put(719932, "ADAMA_NET_INVALID_TARGET");
     descriptions.put(719932, "no description of error (yet)");
     names.put(753724, "ADAMA_NET_FAILED_FIND_TARGET");
@@ -522,5 +534,9 @@ public class ErrorTable {
     descriptions.put(732208, "no description of error (yet)");
     names.put(734263, "CARAVAN_DISK_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY");
     descriptions.put(734263, "no description of error (yet)");
+    names.put(791602, "CARAVAN_DISK_COMPUTE_REWIND_SEQ_NOT_FOUND");
+    descriptions.put(791602, "no description of error (yet)");
+    names.put(787507, "CARAVAN_DISK_COMPUTE_HEADPATCH_SEQ_NOT_FOUND");
+    descriptions.put(787507, "no description of error (yet)");
   }
 }

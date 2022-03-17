@@ -450,14 +450,23 @@ public class GeneratedOperationalTests extends GeneratedBase {
     gold.append("\n--REFLECTION RESULTS-------------------------------------");
     gold.append("\n{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[\"setup\"]}");
     gold.append("\n--JAVA RUNNING-------------------------------------");
-    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__entropy\":\"0\"} need:true in:0");
-    gold.append("\nGOODWILL EXHAUSTED:org.adamalang.common.ErrorCodeException: code:950384:Good will exhausted:8,8 --> 8,12!!!");
-    gold.append("\n!!!");
-    gold.append("\nRuntimeException:org.adamalang.common.ErrorCodeException: code:950384:Good will exhausted:8,8 --> 8,12!!!");
-    gold.append("\n!!!");
+    gold.append("\n{\"command\":\"construct\",\"timestamp\":\"0\",\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"arg\":{},\"entropy\":\"0\"}-->{\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__entropy\":\"-4962768465676381896\",\"__messages\":null,\"__seq\":1} need:true in:10");
+    gold.append("\nCPU:200003");
+    gold.append("\nMEMORY:432");
+    gold.append("\nNO_ONE: FAILED PRIVATE VIEW DUE TO:950384");
+    gold.append("\nNO_ONE|FAILURE:184333");
+    gold.append("\nRANDO: FAILED PRIVATE VIEW DUE TO:950384");
+    gold.append("\nRANDO|FAILURE:184333");
+    gold.append("\nRANDO|FAILURE:950384");
+    gold.append("\nMEMORY:550");
+    gold.append("\n--JAVA RESULTS-------------------------------------");
+    gold.append("\n{\"z\":0,\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__auto_table_row_id\":0}");
+    gold.append("\n--DUMP RESULTS-------------------------------------");
+    gold.append("\n{\"z\":0,\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__auto_table_row_id\":0}");
+    gold.append("\n{\"z\":0,\"__state\":\"setup\",\"__constructed\":true,\"__next_time\":\"10\",\"__last_expire_time\":\"0\",\"__blocked\":false,\"__seq\":1,\"__entropy\":\"-4962768465676381896\",\"__auto_future_id\":0,\"__connection_id\":0,\"__message_id\":0,\"__time\":\"0\",\"__auto_table_row_id\":0}");
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
-    gold.append("\nAlmostTestsNotPassing");
+    gold.append("\nSuccess");
     assertStable(live, gold);
   }
 }

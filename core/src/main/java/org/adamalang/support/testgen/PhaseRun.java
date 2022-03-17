@@ -9,6 +9,7 @@
  */
 package org.adamalang.support.testgen;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -42,26 +43,20 @@ public class PhaseRun {
       DocumentThreadBase base = new DocumentThreadBase(dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
       DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "0", monitor, base, acquire);
       DurableLivingDocument doc = acquire.get();
+      doc.invalidate(Callback.DONT_CARE_INTEGER);
       outputFile.append("CPU:").append(doc.getCodeCost()).append("\n");
       outputFile.append("MEMORY:").append(doc.getMemoryBytes()).append("\n");
       doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
         outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
-      }), new JsonStreamReader("{}"), DumbDataService.NOOPPrivateView);
-      try {
-        doc.connect(NtClient.NO_ONE, DumbDataService.NOOPINT);
-      } catch (final RuntimeException e) {
-        outputFile.append("NO_ONE was DENIED\n");
-      }
+      }), new JsonStreamReader("{}"), DumbDataService.makePrinterPrivateView("NO_ONE", outputFile));
+      doc.connect(NtClient.NO_ONE, DumbDataService.makePrinterInt("NO_ONE", outputFile));
       final var rando = new NtClient("rando", "random-place");
       doc.createPrivateView(rando, wrap(str -> {
         outputFile.append("+ RANDO DELTA:").append(str).append("\n");
-      }), new JsonStreamReader("{}"), DumbDataService.NOOPPrivateView);
-      try {
-        doc.connect(rando, DumbDataService.NOOPINT);
-      } catch (final RuntimeException e) {
-        outputFile.append("RANDO was DENIED:\n");
-      }
-      doc.invalidate(DumbDataService.NOOPINT);
+      }), new JsonStreamReader("{}"), DumbDataService.makePrinterPrivateView("RANDO", outputFile));
+      doc.connect(rando, DumbDataService.makePrinterInt("RANDO", outputFile));
+      doc.invalidate(DumbDataService.makePrinterInt("RANDO", outputFile));
+
       outputFile.append("MEMORY:" + doc.getMemoryBytes() + "\n");
       outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
       outputFile.append(doc.json()).append("\n");

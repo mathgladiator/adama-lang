@@ -53,13 +53,10 @@ public class Startup {
     }
 
     File[] sorted = new File[ids.size()];
-    for (int k = 0; k < ids.size(); k++) {
-      int at = minimum + k;
-      sorted[k] = new File(base.walWorkingDirectory, "WAL-" + at);
-      if (!ids.contains(at) || !sorted[k].exists()) {
-        LOGGER.error("A gap in the WAL- prefixed files was found at {} (ABORT) ", at);
-        throw new IOException("Gap detected in WAL- prefixed files");
-      }
+    int at = 0;
+    for (int id : ids) {
+      sorted[at] = new File(base.walWorkingDirectory, "WAL-" + id);
+      at++;
     }
 
     return sorted;

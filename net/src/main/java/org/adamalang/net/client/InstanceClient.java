@@ -35,7 +35,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a client using the common-net code to connect to a remote server */
 public class InstanceClient implements AutoCloseable {
-  public static final int WAITING_QUEUE = 64;
+  public static final int MAGIC_WAITING_QUEUE = 1024;
+  public static final int MAGIC_WAIT_TIMEOUT = 1250;
   public final String target;
   public final SimpleExecutor executor;
   private final NetBase base;
@@ -56,7 +57,7 @@ public class InstanceClient implements AutoCloseable {
     this.monitor = monitor;
     this.routing = routing;
     this.rng = new Random();
-    this.client = new ItemQueue<>(executor, WAITING_QUEUE, 2500);
+    this.client = new ItemQueue<>(executor, MAGIC_WAITING_QUEUE, MAGIC_WAIT_TIMEOUT);
     this.logger = logger;
     this.alive = new AtomicBoolean(true);
     this.backoff = 1;

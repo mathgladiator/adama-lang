@@ -82,7 +82,7 @@ public class LocalNetAgent implements SimpleEvents {
       connection.send(msg.channel, null, msg.message.toString(), new Callback<Integer>() {
         @Override
         public void success(Integer value) {
-          config.metrics.messages_failed.incrementAndGet();
+          config.metrics.messages_acked.incrementAndGet();
           config.metrics.record_send_latency((int) (System.currentTimeMillis() - started));
         }
 

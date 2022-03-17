@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
+import org.adamalang.common.net.ServerHandle;
+import org.adamalang.disk.*;
 import org.adamalang.disk.demo.DiskMetrics;
 import org.adamalang.disk.demo.SingleThreadDiskDataService;
 import org.adamalang.net.client.Client;
@@ -44,46 +46,63 @@ public class LocalNetDrive {
         System.exit(100);
       }
     };
-    DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
-
-    String singleScript = Files.readString(new File(config.source).toPath());
-    ObjectNode planNode = Json.newJsonObject();
-    planNode.putObject("versions").put("file", singleScript);
-    planNode.put("default", "file");
-    planNode.putArray("plan");
-    DeploymentPlan plan = new DeploymentPlan(planNode.toString(), logger);
-    deploymentFactoryBase.deploy(config.space, plan);
-    final DataService dataService;
-    if (config.data.equals("disk")) {
-      dataService = new SingleThreadDiskDataService(new File("./canary_data"), new DiskMetrics(new NoOpMetricsFactory()));
-    } else {
-      dataService = new InMemoryDataService(Executors.newSingleThreadExecutor(), TimeSource.REAL_TIME);
-    }
-    MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
-    CoreMetrics coreMetrics = new CoreMetrics(new NoOpMetricsFactory());
-    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), dataService, TimeSource.REAL_TIME, config.coreThreads);
-
     SimpleExecutor executor = SimpleExecutor.create("billing");
-    File billingRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "Billing-" + System.currentTimeMillis());
-    billingRoot.mkdir();
     MachineIdentity identity = MachineIdentity.fromFile(config.identityFile);
     NetBase netBase = new NetBase(identity, 1, 4);
     ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    File billingRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "Billing-" + System.currentTimeMillis());
+    billingRoot.mkdir();
+    SimpleExecutor walExecutor = SimpleExecutor.create("wal");
     try {
-      DiskMeteringBatchMaker batchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, executor, billingRoot, 1800000L);
-      ServerNexus nexus = new ServerNexus(netBase, identity, service, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, (space) -> {
-      }, meteringPubSub, batchMaker, config.port, 2);
-      netBase.serve(config.port, (upstream -> new Handler(nexus, upstream)));
-      LocalNetAgent[] agents = new LocalNetAgent[config.agents];
-      Client client = new Client(netBase, new ClientMetrics(new NoOpMetricsFactory()), null);
-      client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + config.port));
-      for (int k = 0; k < agents.length; k++) {
-        agents[k] = new LocalNetAgent(client, config, k, scheduler);
+      if (config.role.equals("both") || config.role.equals("server")) {
+        DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
+        String singleScript = Files.readString(new File(config.source).toPath());
+        ObjectNode planNode = Json.newJsonObject();
+        planNode.putObject("versions").put("file", singleScript);
+        planNode.put("default", "file");
+        planNode.putArray("plan");
+        DeploymentPlan plan = new DeploymentPlan(planNode.toString(), logger);
+        deploymentFactoryBase.deploy(config.space, plan);
+        final DataService dataService;
+        if (config.data.equals("disk")) {
+          dataService = new SingleThreadDiskDataService(new File("./canary_data"), new DiskMetrics(new NoOpMetricsFactory()));
+        } else if (config.data.equals("wal")) {
+          File storageDirectory = new File("./canary_wal");
+          storageDirectory.mkdirs();
+          DiskBase diskBase = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), walExecutor, storageDirectory);
+          Startup.transfer(diskBase);
+          diskBase.start();
+          WriteAheadLog log = new WriteAheadLog(diskBase, 32768, 50000, 32 * 1024 * 1024);
+          dataService = new DiskDataService(diskBase, log);
+        } else {
+          dataService = new InMemoryDataService(Executors.newSingleThreadExecutor(), TimeSource.REAL_TIME);
+        }
+        MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
+        CoreMetrics coreMetrics = new CoreMetrics(new NoOpMetricsFactory());
+        CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), dataService, TimeSource.REAL_TIME, config.coreThreads);
+
+        DiskMeteringBatchMaker batchMaker = new DiskMeteringBatchMaker(TimeSource.REAL_TIME, executor, billingRoot, 1800000L);
+        ServerNexus nexus = new ServerNexus(netBase, identity, service, new ServerMetrics(new NoOpMetricsFactory()), deploymentFactoryBase, (space) -> {
+        }, meteringPubSub, batchMaker, config.port, 2);
+        ServerHandle handle = netBase.serve(config.port, (upstream -> new Handler(nexus, upstream)));
+        if (config.role.equals("server")) {
+          System.err.println("starting just the server...");
+          handle.waitForEnd();
+        }
       }
-      for (int k = 0; k < agents.length; k++) {
-        agents[k].kickOff();
+
+      if (config.role.equals("both") || config.role.equals("client")) {
+        LocalNetAgent[] agents = new LocalNetAgent[config.agents];
+        Client client = new Client(netBase, new ClientMetrics(new NoOpMetricsFactory()), null);
+        client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + config.port));
+        for (int k = 0; k < agents.length; k++) {
+          agents[k] = new LocalNetAgent(client, config, k, scheduler);
+        }
+        for (int k = 0; k < agents.length; k++) {
+          agents[k].kickOff();
+        }
+        config.blockUntilQuit();
       }
-      config.blockUntilQuit();
     } finally {
       for (File file : billingRoot.listFiles()) {
         file.delete();
@@ -91,6 +110,7 @@ public class LocalNetDrive {
       billingRoot.delete();
       executor.shutdown().await(1000, TimeUnit.MILLISECONDS);
       scheduler.shutdown();
+      walExecutor.shutdown();
     }
   }
 }

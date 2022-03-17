@@ -9,7 +9,6 @@
  */
 package org.adamalang.net.client;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -321,7 +320,7 @@ public class InstanceClientTests {
                  "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       try (InstanceClient client = bed.makeClient()) {
         ArrayList<AssertCreateSuccess> delayed = new ArrayList<>();
-        for (int k = 0; k < InstanceClient.WAITING_QUEUE; k++) {
+        for (int k = 0; k < InstanceClient.MAGIC_WAITING_QUEUE; k++) {
           AssertCreateSuccess success = new AssertCreateSuccess();
           client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
           delayed.add(success);

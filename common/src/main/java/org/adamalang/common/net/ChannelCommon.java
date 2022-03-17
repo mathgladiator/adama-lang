@@ -48,15 +48,16 @@ public abstract class ChannelCommon extends ChannelInboundHandlerAdapter  {
 
   @Override
   public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-    if (scheduledFlush != null) {
-      scheduledFlush.cancel(true);
-      scheduledFlush = null;
-    }
-
-    for (Map.Entry<Integer, ByteStream> stream : streams.entrySet()) {
-      stream.getValue().error(ErrorCodes.NET_DISCONNECT);
-    }
-    streams.clear();
+    ctx.executor().execute(() -> {
+      if (scheduledFlush != null) {
+        scheduledFlush.cancel(true);
+        scheduledFlush = null;
+      }
+      for (Map.Entry<Integer, ByteStream> stream : streams.entrySet()) {
+        stream.getValue().error(ErrorCodes.NET_DISCONNECT);
+      }
+      streams.clear();
+    });
   }
 
   protected void flushFromWithinContextExecutor(ChannelHandlerContext context) {
@@ -107,7 +108,10 @@ public abstract class ChannelCommon extends ChannelInboundHandlerAdapter  {
         }
       } break;
       case 0x60: {
-        streams.remove(id);
+        ByteStream stream = streams.remove(id);
+        if (stream != null) {
+          stream.completed();
+        }
       } break;
     }
   }

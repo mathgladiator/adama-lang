@@ -13,16 +13,18 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
-import org.adamalang.disk.callback.ApplyMessageCallback;
 import org.adamalang.disk.callback.VoidToIntCallback;
 import org.adamalang.disk.wal.WriteAheadMessage;
 import org.adamalang.runtime.data.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /** the disk data service which aims for low latency commits */
 public class DiskDataService implements DataService {
+  private final static Logger LOGGER = LoggerFactory.getLogger(DiskDataService.class);
   private final DiskBase base;
   private final WriteAheadLog log;
 
@@ -68,7 +70,8 @@ public class DiskDataService implements DataService {
         initialize.initialize = new WriteAheadMessage.Change();
         initialize.initialize.copyFrom(patch);
 
-        log.write(initialize, new ApplyMessageCallback<>(memory, initialize, callback));
+        initialize.apply(memory);
+        log.write(initialize, callback);
       }
     });
   }
@@ -79,23 +82,28 @@ public class DiskDataService implements DataService {
     base.executor.execute(new NamedRunnable("dds-patch") {
       @Override
       public void execute() throws Exception {
-        DocumentMemoryLog memory = base.getOrCreate(key);
-        if (!memory.ensureLoaded(callback)) {
-          return;
+        try {
+          DocumentMemoryLog memory = base.getOrCreate(key);
+          if (!memory.ensureLoaded(callback)) {
+            return;
+          }
+          if (!memory.canPatch(patches[0].seqBegin)) {
+            callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
+            return;
+          }
+          WriteAheadMessage.Patch patch = new WriteAheadMessage.Patch();
+          patch.space = key.space;
+          patch.key = key.key;
+          patch.changes = new WriteAheadMessage.Change[patches.length];
+          for (int k = 0; k < patch.changes.length; k++) {
+            patch.changes[k] = new WriteAheadMessage.Change();
+            patch.changes[k].copyFrom(patches[k]);
+          }
+          patch.apply(memory);
+          log.write(patch, callback);
+        } catch (Throwable ex) {
+          ex.printStackTrace();
         }
-        if (!memory.canPatch(patches[0].seqBegin)) {
-          callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
-          return;
-        }
-        WriteAheadMessage.Patch patch = new WriteAheadMessage.Patch();
-        patch.space = key.space;
-        patch.key = key.key;
-        patch.changes = new WriteAheadMessage.Change[patches.length];
-        for (int k = 0; k < patch.changes.length; k++) {
-          patch.changes[k] = new WriteAheadMessage.Change();
-          patch.changes[k].copyFrom(patches[k]);
-        }
-        log.write(patch, new ApplyMessageCallback<>(memory, patch, callback));
       }
     });
   }
@@ -147,7 +155,8 @@ public class DiskDataService implements DataService {
         WriteAheadMessage.Delete delete = new WriteAheadMessage.Delete();
         delete.space = key.space;
         delete.key = key.key;
-        log.write(delete, new ApplyMessageCallback<>(memory, delete, callback));
+        delete.apply(memory);
+        log.write(delete, callback);
       }
     });
   }
@@ -176,7 +185,8 @@ public class DiskDataService implements DataService {
         snap.history = history;
         snap.document = snapshot;
 
-        log.write(snap, new ApplyMessageCallback<>(memory, snap, new VoidToIntCallback(holding, callback)));
+        snap.apply(memory);
+        log.write(snap, new VoidToIntCallback(holding, callback));
       }
     });
   }

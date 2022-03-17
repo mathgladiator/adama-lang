@@ -132,6 +132,14 @@ public abstract class LivingDocument implements RxParent {
     return new LivingDocumentChange(update, broadcasts);
   }
 
+  public Integer __computeRequiresInvalidateMilliseconds() {
+    if (__state.has()) {
+      return (int) (__next_time.get() - __time.get());
+    } else {
+      return null;
+    }
+  }
+
   /** code generated: what happens when the document is constructed */
   protected abstract void __construct_intern(NtClient who, NtMessageBase message);
 

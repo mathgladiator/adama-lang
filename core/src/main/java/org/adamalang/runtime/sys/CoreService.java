@@ -19,6 +19,8 @@ import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.metering.MeteringStateMachine;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +33,7 @@ import java.util.function.Consumer;
 
 /** The core service enables consumers to manage an in-process Adama */
 public class CoreService {
+  private static final Logger LOGGER = LoggerFactory.getLogger(CoreService.class);
   private final CoreMetrics metrics;
   private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
   private final DocumentThreadBase[] bases;
@@ -158,16 +161,14 @@ public class CoreService {
             DurableLivingDocument.fresh(key, factory, who, arg, entropy, null, base, metrics.documentFresh.wrap(new Callback<>() {
               @Override
               public void success(DurableLivingDocument document) {
-                // jump into the thread; note, the data service must ensure this
-                // will
-                // succeed once
+                // jump into the thread; note, the data service must ensure this will succeed once
                 base.executor.execute(new NamedRunnable("loaded-factory", key.space) {
                   @Override
                   public void execute() throws Exception {
                     callback.success(null);
+                    executeConcurrent.run();
                   }
                 });
-                executeConcurrent.run();
               }
 
               @Override
@@ -292,12 +293,17 @@ public class CoreService {
               // pull from data source
               DurableLivingDocument.load(key, factory, null, base, metrics.documentLoad.wrap(new Callback<>() {
                 @Override
-                public void success(DurableLivingDocument document) {
+                public void success(DurableLivingDocument documentToAttemptPut) {
                   // it was found, let's try to put it into memory
                   base.executor.execute(new NamedRunnable("document-made") {
                     @Override
                     public void execute() throws Exception {
-                      base.map.put(key, document);
+                      DurableLivingDocument priorDocumentFound = base.map.putIfAbsent(key, documentToAttemptPut);
+                      if (priorDocumentFound != null) {
+                        metrics.document_collision.run();
+                        CoreService.LOGGER.error("found-prior-value, using it: {}", key.key);
+                      }
+                      DurableLivingDocument document = priorDocumentFound == null ? documentToAttemptPut : priorDocumentFound;
                       metrics.inflight_documents.up();
                       for (Callback<DurableLivingDocument> callbackToSignal : base.mapInsertsInflight.remove(key)) {
                         callbackToSignal.success(document);

@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime;
 
+import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.Perspective;
@@ -121,7 +122,7 @@ public class LivingDocumentTests {
         new RealDocumentSetup(
             "public int v; @construct { v = 1; transition #foo; } #foo { v = 2; preempt #zoo; block; } #zoo { v = 3; } ");
     Assert.assertEquals(
-        3,
+        2,
         ((int)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
                 .get("v")));
@@ -972,6 +973,7 @@ public class LivingDocumentTests {
     final var setup =
         new RealDocumentSetup(
             "@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}");
+    setup.document.invalidate(Callback.DONT_CARE_INTEGER);
     String t =
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
             .get("t")
@@ -987,6 +989,7 @@ public class LivingDocumentTests {
             "@connected(who) { return who == @no_one; } @construct { transition #next; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next; } } #end {}",
             null,
             false);
+    setup.document.invalidate(Callback.DONT_CARE_INTEGER);
     String t =
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
             .get("t")
@@ -1026,15 +1029,16 @@ public class LivingDocumentTests {
     final var setup =
         new RealDocumentSetup(
             "@connected(who) { return who == @no_one; } @construct { transition #next in 0.25; } int t = 0; #next { t++; if (t == 10) { transition #end; } else { transition #next in 0.25; } } #end {}");
+    setup.document.invalidate(Callback.DONT_CARE_INTEGER);
     Integer bumpTimeMs;
-    int k = 2;
+    int k = 3;
     while ((bumpTimeMs = setup.document.getAndCleanRequiresInvalidateMilliseconds()) != null) {
       setup.time.time += bumpTimeMs;
       setup.document.invalidate(new RealDocumentSetup.AssertInt(k));
       k++;
-      if (k == 11) k++; // huh, strange
+      if (k == 12) k++; // huh, strange
     }
-    Assert.assertEquals(13, k);
+    Assert.assertEquals(14, k);
   }
 
   @Test

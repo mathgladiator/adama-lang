@@ -43,15 +43,15 @@ public class ServiceImplicitCreateTests {
     try {
       MockStreamback streamback = new MockStreamback();
       Runnable latchClient = streamback.latchAt(2);
-      Runnable latchData = dataService.latchLogAt(5);
+      Runnable latchData = dataService.latchLogAt(4);
       service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
       streamback.await_began();
       latchData.run();
       latchClient.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
-      dataService.assertLogAt(0, "INIT:space/key:0->{\"__constructed\":true}");
-      Assert.assertTrue(dataService.getLogAt(3).contains("\"__connection_id\":1,\"x\":42"));
+      dataService.assertLogAtStartsWith(0, "INIT:space/key:1->{\"__constructed\":true,\"__messages\":null,\"__seq\":1,");
+      Assert.assertTrue(dataService.getLogAt(2).contains("\"__connection_id\":1,\"x\":42"));
     } finally {
       service.shutdown();
     }

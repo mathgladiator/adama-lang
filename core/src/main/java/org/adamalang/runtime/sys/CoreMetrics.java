@@ -44,6 +44,9 @@ public class CoreMetrics {
   public final Runnable document_catastrophic_failure;
   public final Runnable document_compacting;
   public final Runnable failed_invention;
+  public final Runnable internal_seq_drift;
+  public final Runnable document_collision;
+
 
   public CoreMetrics(MetricsFactory metricsFactory) {
     serviceCreate = metricsFactory.makeCallbackMonitor("core_service_create");
@@ -75,5 +78,7 @@ public class CoreMetrics {
     document_catastrophic_failure = metricsFactory.counter("core_document_catastrophic_failure");
     document_compacting = metricsFactory.counter("core_document_compacting");
     failed_invention = metricsFactory.counter("core_document_failed_invention");
+    internal_seq_drift = metricsFactory.counter("core_document_internal_seq_drift");
+    document_collision = metricsFactory.counter("core_document_document_collision");
   }
 }
