@@ -17,18 +17,23 @@ public class GeneratedOperationalTests extends GeneratedBase {
     if (cached_Goodwill_1 != null) {
       return cached_Goodwill_1;
     }
-    cached_Goodwill_1 = generateTestOutput(false, "Goodwill_1", "./test_code/Operational_Goodwill_failure.a");
+    cached_Goodwill_1 = generateTestOutput(true, "Goodwill_1", "./test_code/Operational_Goodwill_success.a");
     return cached_Goodwill_1;
   }
 
   @Test
-  public void testGoodwillFailure() {
-    assertLiveFail(get_Goodwill_1());
+  public void testGoodwillEmission() {
+    assertEmissionGood(get_Goodwill_1());
   }
 
   @Test
-  public void testGoodwillNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_Goodwill_1());
+  public void testGoodwillSuccess() {
+    assertLivePass(get_Goodwill_1());
+  }
+
+  @Test
+  public void testGoodwillGoodWillHappy() {
+    assertGoodWillHappy(get_Goodwill_1());
   }
 
   @Test
@@ -45,7 +50,9 @@ public class GeneratedOperationalTests extends GeneratedBase {
   public void stable_Goodwill_1() {
     String live = get_Goodwill_1();
     StringBuilder gold = new StringBuilder();
-    gold.append("Path:Operational_Goodwill_failure.a");
+    gold.append("Path:Operational_Goodwill_success.a");
+    gold.append("\n--EMISSION-----------------------------------------");
+    gold.append("\nEmission Success, Yay");
     gold.append("\n--ISSUES-------------------------------------------");
     gold.append("\n[]\"--JAVA---------------------------------------------");
     gold.append("\nimport org.adamalang.runtime.async.*;");
