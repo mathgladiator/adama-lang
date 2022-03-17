@@ -30,7 +30,7 @@ public class MockSimpleEvents implements SimpleEvents {
     latches.add(latch);
     return () -> {
       try {
-        Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(latch.await(20000, TimeUnit.MILLISECONDS));
       } catch (InterruptedException ie) {
         Assert.fail();
       }
