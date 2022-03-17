@@ -15,7 +15,9 @@ import org.adamalang.runtime.data.Key;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class DiskBase {
   public final SimpleExecutor executor;
@@ -47,6 +49,39 @@ public class DiskBase {
 
   public void start() {
     executor.schedule(new Scanner(), 10);
+  }
+
+  public DocumentMemoryLog getOrCreate(Key key) {
+    DocumentMemoryLog log = memory.get(key);
+    if (log == null) {
+      File spacePath = new File(dataDirectory, key.space);
+      if (!spacePath.exists()) {
+        spacePath.mkdirs();
+      }
+      log = new DocumentMemoryLog(key, spacePath);
+      memory.put(key, log);
+    }
+    return log;
+  }
+
+  public void attachFile(File fileToDelete) {
+    PostFlushCleanupEvent event = new PostFlushCleanupEvent(metrics.disk_data_open_wal_files, fileToDelete, memory.size());
+    for (DocumentMemoryLog log : memory.values()) {
+      log.attach(event);
+    }
+  }
+
+  public void flushAllNow(boolean reset) throws IOException {
+    for (DocumentMemoryLog log : memory.values()) {
+      log.flush();
+    }
+    if (reset) {
+      memory.clear();
+    }
+  }
+
+  public void shutdown() {
+    executor.shutdown();
   }
 
   private class Scanner extends NamedRunnable {
@@ -86,39 +121,5 @@ public class DiskBase {
         executor.schedule(this, 5);
       }
     }
-  }
-
-  public DocumentMemoryLog getOrCreate(Key key) {
-    DocumentMemoryLog log = memory.get(key);
-    if (log == null) {
-      File spacePath = new File(dataDirectory, key.space);
-      if (!spacePath.exists()) {
-        spacePath.mkdirs();
-      }
-      log = new DocumentMemoryLog(key, spacePath);
-      memory.put(key, log);
-    }
-    return log;
-  }
-
-
-  public void attachFile(File fileToDelete) {
-    PostFlushCleanupEvent event = new PostFlushCleanupEvent(metrics.disk_data_open_wal_files, fileToDelete, memory.size());
-    for (DocumentMemoryLog log : memory.values()) {
-      log.attach(event);
-    }
-  }
-
-  public void flushAllNow(boolean reset) throws IOException {
-    for (DocumentMemoryLog log : memory.values()) {
-      log.flush();
-    }
-    if (reset) {
-      memory.clear();
-    }
-  }
-
-  public void shutdown() {
-    executor.shutdown();
   }
 }

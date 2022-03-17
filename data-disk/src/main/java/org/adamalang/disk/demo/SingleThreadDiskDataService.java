@@ -12,8 +12,8 @@ package org.adamalang.disk.demo;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.disk.demo.records.Header;
 import org.adamalang.disk.demo.records.BatchPatch;
+import org.adamalang.disk.demo.records.Header;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
 import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.json.JsonAlgebra;
@@ -38,13 +38,6 @@ public class SingleThreadDiskDataService implements DataService {
     if (!(root.exists() && root.isDirectory()) && !root.mkdir()) {
       throw new RuntimeException("failed to create root directory:" + root.getAbsolutePath());
     }
-  }
-
-  private File fileFor(Key key) {
-    return new File(new File(root, key.space), key.key + ".log");
-  }
-  private File fileFor2(Key key) {
-    return new File(new File(root, key.space), key.key + ".log.progress");
   }
 
   @Override
@@ -76,6 +69,10 @@ public class SingleThreadDiskDataService implements DataService {
     } catch (FileNotFoundException ex) {
       callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED, ex));
     }
+  }
+
+  private File fileFor(Key key) {
+    return new File(new File(root, key.space), key.key + ".log");
   }
 
   @Override
@@ -119,7 +116,7 @@ public class SingleThreadDiskDataService implements DataService {
       } finally {
         output.close();
       }
-      callback.success( null );
+      callback.success(null);
     } catch (IOException ex) {
       LOGGER.error("disk-patch-failure", ex);
       callback.failure(new ErrorCodeException(ErrorCodes.DISK_PATCH_IO_EXCEPTION, ex));
@@ -285,5 +282,9 @@ public class SingleThreadDiskDataService implements DataService {
     } else {
       callback.success(0);
     }
+  }
+
+  private File fileFor2(Key key) {
+    return new File(new File(root, key.space), key.key + ".log.progress");
   }
 }

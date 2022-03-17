@@ -16,6 +16,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-/** should the code gen make readRegister */
-public @interface MakeReadRegister {
+/** should the code gen make readRegister */ public @interface MakeReadRegister {
 }

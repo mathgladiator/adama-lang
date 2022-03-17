@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-/** the order in which a field is serialized. This is required for long term stability */
-public @interface FieldOrder {
-  public int value();
+/** the order in which a field is serialized. This is required for long term stability */ public @interface FieldOrder {
+  int value();
 }

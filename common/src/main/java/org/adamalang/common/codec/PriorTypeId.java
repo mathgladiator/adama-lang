@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-/** the type id of the previous version */
-public @interface PriorTypeId {
-  public int value();
+/** the type id of the previous version */ public @interface PriorTypeId {
+  int value();
 }

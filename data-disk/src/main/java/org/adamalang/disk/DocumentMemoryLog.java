@@ -33,60 +33,24 @@ import java.util.regex.Pattern;
 
 public class DocumentMemoryLog {
   private static final Logger LOGGER = LoggerFactory.getLogger(DocumentMemoryLog.class);
-
-  private static class Undo {
-    public final String undo;
-    public final int seq;
-
-    private Undo(String undo, int seq) {
-      this.undo = undo;
-      this.seq = seq;
-    }
-  }
-
-  private static class Redo {
-    public final String redo;
-    public final int seq;
-
-    private Redo(String redo, int seq) {
-      this.redo = redo;
-      this.seq = seq;
-    }
-  }
-
   // coordinates for the file on disk
   public final File spacePath;
   public final Key key;
-
+  private final ArrayList<PostFlushCleanupEvent> cleanup;
   // is the file loaded, alive, in need of a reset
   private boolean loaded;
   private boolean reset;
-
   // document state
   private String document;
   private int seq;
   private int history;
   private long assetBytes;
   private boolean active;
-  private ArrayList<Redo> redoLog;
-  private ArrayDeque<Undo> undoStack;
+  private final ArrayList<Redo> redoLog;
+  private final ArrayDeque<Undo> undoStack;
   private ArrayList<Undo> undoHistory;
-  private final ArrayList<PostFlushCleanupEvent> cleanup;
   private long lastActivity;
   private boolean hasActivityToFlush;
-
-  public File suffixFile(String suffix) {
-    // TODO: make a better version of this
-    // SEE saas/src/main/java/org/adamalang/validators/ValidateKey.java
-    String fixed_filename = key.key.replaceAll(Pattern.quote("_"), "__") //
-        .replaceAll(Pattern.quote("/"), "_F") //
-        .replaceAll(Pattern.quote("+"), "_A") //
-        .replaceAll(Pattern.quote("#"), "_P") //
-        .replaceAll(Pattern.quote("="), "_E") //
-        .replaceAll(Pattern.quote("\\"), "_B");
-    return new File(spacePath, fixed_filename + "." + suffix);
-  }
-
   public DocumentMemoryLog(Key key, File spacePath) {
     this.spacePath = spacePath;
     this.key = key;
@@ -102,11 +66,6 @@ public class DocumentMemoryLog {
     this.undoHistory = new ArrayList<>();
     spacePath.mkdir();
     cleanup = new ArrayList<>();
-    this.lastActivity = System.currentTimeMillis();
-    this.hasActivityToFlush = true;
-  }
-
-  private void resetLastActivity() {
     this.lastActivity = System.currentTimeMillis();
     this.hasActivityToFlush = true;
   }
@@ -132,6 +91,11 @@ public class DocumentMemoryLog {
     this.undoStack.clear();
     this.undoHistory.clear();
     resetLastActivity();
+  }
+
+  private void resetLastActivity() {
+    this.lastActivity = System.currentTimeMillis();
+    this.hasActivityToFlush = true;
   }
 
   public boolean canPatch(int seq) {
@@ -186,20 +150,6 @@ public class DocumentMemoryLog {
     resetLastActivity();
   }
 
-  private void compact() {
-    if (redoLog.size() > 0) {
-      AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
-      merge.next(document);
-      for (Redo redo : redoLog) {
-        seq = redo.seq;
-        merge.next(redo.redo);
-      }
-      redoLog.clear();
-      document = merge.finish();
-      resetLastActivity();
-    }
-  }
-
   public boolean isActive() {
     return active;
   }
@@ -214,8 +164,16 @@ public class DocumentMemoryLog {
     return suffixFile("SNAPSHOT").exists();
   }
 
-  public int holding() {
-    return 1 + undoHistory.size() + undoStack.size();
+  public File suffixFile(String suffix) {
+    // TODO: make a better version of this
+    // SEE saas/src/main/java/org/adamalang/validators/ValidateKey.java
+    String fixed_filename = key.key.replaceAll(Pattern.quote("_"), "__") //
+        .replaceAll(Pattern.quote("/"), "_F") //
+        .replaceAll(Pattern.quote("+"), "_A") //
+        .replaceAll(Pattern.quote("#"), "_P") //
+        .replaceAll(Pattern.quote("="), "_E") //
+        .replaceAll(Pattern.quote("\\"), "_B");
+    return new File(spacePath, fixed_filename + "." + suffix);
   }
 
   public LocalDocumentChange get() {
@@ -223,33 +181,34 @@ public class DocumentMemoryLog {
     return new LocalDocumentChange(document, holding());
   }
 
+  private void compact() {
+    if (redoLog.size() > 0) {
+      AutoMorphicAccumulator<String> merge = JsonAlgebra.mergeAccumulator();
+      merge.next(document);
+      for (Redo redo : redoLog) {
+        seq = redo.seq;
+        merge.next(redo.redo);
+      }
+      redoLog.clear();
+      document = merge.finish();
+      resetLastActivity();
+    }
+  }
+
+  public int holding() {
+    return 1 + undoHistory.size() + undoStack.size();
+  }
+
   public boolean canInitialize() {
     if (loaded) {
       return false;
     }
-    if (suffixFile("SNAPSHOT").exists()) {
-      return false;
-    }
-    return true;
+    return !suffixFile("SNAPSHOT").exists();
   }
 
   public void loadIfNotLoaded() throws IOException {
     if (!loaded) {
       load();
-    }
-  }
-
-  public boolean ensureLoaded(Callback<?> callback) {
-    if (loaded) {
-      return true;
-    }
-    try {
-      load();
-      return true;
-    } catch (IOException io) {
-      LOGGER.error("failed-to-load", io);
-      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_CANT_LOAD_IOEXCEPTION, io));
-      return false;
     }
   }
 
@@ -290,6 +249,20 @@ public class DocumentMemoryLog {
     loaded = true;
     resetLastActivity();
 
+  }
+
+  public boolean ensureLoaded(Callback<?> callback) {
+    if (loaded) {
+      return true;
+    }
+    try {
+      load();
+      return true;
+    } catch (IOException io) {
+      LOGGER.error("failed-to-load", io);
+      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_CANT_LOAD_IOEXCEPTION, io));
+      return false;
+    }
   }
 
   public String computeRewind(int seq) {
@@ -386,11 +359,31 @@ public class DocumentMemoryLog {
     Files.move(toWrite.toPath(), suffixFile("SNAPSHOT").toPath(), StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
     undoHistory = newUndoHistory;
     undoStack.clear();
-    for (PostFlushCleanupEvent post: cleanup) {
+    for (PostFlushCleanupEvent post : cleanup) {
       post.finished();
     }
     cleanup.clear();
     resetLastActivity();
     this.hasActivityToFlush = false;
+  }
+
+  private static class Undo {
+    public final String undo;
+    public final int seq;
+
+    private Undo(String undo, int seq) {
+      this.undo = undo;
+      this.seq = seq;
+    }
+  }
+
+  private static class Redo {
+    public final String redo;
+    public final int seq;
+
+    private Redo(String redo, int seq) {
+      this.redo = redo;
+      this.seq = seq;
+    }
   }
 }

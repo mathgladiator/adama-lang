@@ -16,20 +16,8 @@ import java.nio.charset.StandardCharsets;
 
 /** since a snapshot file may be large, we stream it via events */
 public interface SnapshotFileStreamEvents {
-  /** header; return true if you want to continue reading */
-  public boolean onHeader(SnapshotHeader header) throws IOException;
-
-  /** snapshot of the document (after header); return true if you want to continue reading */
-  public boolean onDocument(byte[] document) throws IOException;
-
-  /** undo (after documents and undo); return true if you want to continue reading */
-  public boolean onUndo(int seq, String undo) throws IOException;
-
-  /** finished */
-  public void onFinished(boolean complete) throws IOException;
-
   /** stream a snapshot file from a DataInputStream */
-  public static void read(DataInputStream data, SnapshotFileStreamEvents events) throws IOException {
+  static void read(DataInputStream data, SnapshotFileStreamEvents events) throws IOException {
     SnapshotHeader header = SnapshotHeader.read(data);
     if (events.onHeader(header)) {
       byte[] document = new byte[header.documentSize];
@@ -53,8 +41,20 @@ public interface SnapshotFileStreamEvents {
     }
   }
 
+  /** header; return true if you want to continue reading */
+  boolean onHeader(SnapshotHeader header) throws IOException;
+
+  /** snapshot of the document (after header); return true if you want to continue reading */
+  boolean onDocument(byte[] document) throws IOException;
+
+  /** undo (after documents and undo); return true if you want to continue reading */
+  boolean onUndo(int seq, String undo) throws IOException;
+
+  /** finished */
+  void onFinished(boolean complete) throws IOException;
+
   /** create a writer to produce a snapshot file */
-  public static SnapshotFileStreamEvents writerFor(DataOutputStream output) {
+  static SnapshotFileStreamEvents writerFor(DataOutputStream output) {
     return new SnapshotFileStreamEvents() {
       @Override
       public boolean onHeader(SnapshotHeader header) throws IOException {

@@ -20,6 +20,7 @@ public class VoidToIntCallback implements Callback<Void> {
     this.held = held;
     this.callback = callback;
   }
+
   @Override
   public void success(Void value) {
     callback.success(held);

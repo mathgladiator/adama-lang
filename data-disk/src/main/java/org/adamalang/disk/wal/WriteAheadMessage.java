@@ -14,24 +14,23 @@ import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.codec.Flow;
 import org.adamalang.common.codec.TypeCommon;
 import org.adamalang.common.codec.TypeId;
-import org.adamalang.disk.DiskBase;
 import org.adamalang.disk.DocumentMemoryLog;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 
 public interface WriteAheadMessage {
-  public void write(ByteBuf buf);
+  void write(ByteBuf buf);
 
-  public void apply(DocumentMemoryLog log);
+  void apply(DocumentMemoryLog log);
 
-  public Key key();
+  Key key();
 
-  public boolean requiresLoad();
+  boolean requiresLoad();
 
   @TypeId(0x05)
   @Flow("WAL")
   @TypeCommon("WriteAheadMessage")
-  public static class Initialize implements WriteAheadMessage {
+  class Initialize implements WriteAheadMessage {
     @FieldOrder(1)
     public String space;
     @FieldOrder(2)
@@ -62,7 +61,7 @@ public interface WriteAheadMessage {
 
   @TypeId(0x15)
   @Flow("PatchItem")
-  public static class Change {
+  class Change {
     @FieldOrder(1)
     public String agent;
     @FieldOrder(2)
@@ -103,7 +102,7 @@ public interface WriteAheadMessage {
   @TypeId(0x20)
   @Flow("WAL")
   @TypeCommon("WriteAheadMessage")
-  public static class Patch implements WriteAheadMessage {
+  class Patch implements WriteAheadMessage {
     @FieldOrder(1)
     public String space;
     @FieldOrder(2)
@@ -135,7 +134,7 @@ public interface WriteAheadMessage {
   @TypeId(0x25)
   @Flow("WAL")
   @TypeCommon("WriteAheadMessage")
-  public static class Delete implements WriteAheadMessage {
+  class Delete implements WriteAheadMessage {
     @FieldOrder(1)
     public String space;
     @FieldOrder(2)
@@ -165,7 +164,7 @@ public interface WriteAheadMessage {
   @TypeId(0x30)
   @Flow("WAL")
   @TypeCommon("WriteAheadMessage")
-  public static class Snapshot implements WriteAheadMessage {
+  class Snapshot implements WriteAheadMessage {
     @FieldOrder(1)
     public String space;
     @FieldOrder(2)

@@ -16,6 +16,5 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-/** mark the field as an old version; this helps for removing data from the picture */
-public @interface FieldOld {
+/** mark the field as an old version; this helps for removing data from the picture */ public @interface FieldOld {
 }

@@ -22,16 +22,16 @@ public class PrefixSplitDataService implements DataService {
     this.dataServiceB = dataServiceB;
   }
 
+  @Override
+  public void get(Key key, Callback<LocalDocumentChange> callback) {
+    ds(key).get(key, callback);
+  }
+
   public DataService ds(Key key) {
     if (key.key.startsWith(prefixB)) {
       return dataServiceB;
     }
     return dataServiceA;
-  }
-
-  @Override
-  public void get(Key key, Callback<LocalDocumentChange> callback) {
-    ds(key).get(key, callback);
   }
 
   @Override

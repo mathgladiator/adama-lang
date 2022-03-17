@@ -20,17 +20,6 @@ import java.nio.charset.StandardCharsets;
 
 /** codec for a batch of patches */
 public class BatchPatch {
-  private static void writeString(DataOutputStream output, String x) throws IOException {
-    output.writeInt(x.length());
-    output.write(x.getBytes(StandardCharsets.UTF_8));
-  }
-
-  public static String readString(DataInputStream input) throws IOException {
-    byte[] b = new byte[input.readInt()];
-    input.readFully(b);
-    return new String(b, StandardCharsets.UTF_8);
-  }
-
   public static void write(RemoteDocumentUpdate[] updates, DataOutputStream output) throws IOException {
     output.write(0x99);
     output.writeInt(updates.length);
@@ -50,6 +39,11 @@ public class BatchPatch {
       output.writeInt(update.whenToInvalidateMilliseconds);
       output.writeLong(update.assetBytes);
     }
+  }
+
+  private static void writeString(DataOutputStream output, String x) throws IOException {
+    output.writeInt(x.length());
+    output.write(x.getBytes(StandardCharsets.UTF_8));
   }
 
   public static RemoteDocumentUpdate[] read(int version, DataInputStream input) throws IOException {
@@ -76,5 +70,11 @@ public class BatchPatch {
       updates[k] = new RemoteDocumentUpdate(seqBegin, seqEnd, who, request, redo, undo, requiresFutureInvalidation, whenToInvalidateMilliseconds, assetBytes, UpdateType.Internal);
     }
     return updates;
+  }
+
+  public static String readString(DataInputStream input) throws IOException {
+    byte[] b = new byte[input.readInt()];
+    input.readFully(b);
+    return new String(b, StandardCharsets.UTF_8);
   }
 }

@@ -21,10 +21,10 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /** since both the server and client share some common things, we group them here */
-public abstract class ChannelCommon extends ChannelInboundHandlerAdapter  {
+public abstract class ChannelCommon extends ChannelInboundHandlerAdapter {
   protected final HashMap<Integer, ByteStream> streams;
-  protected ScheduledFuture<?> scheduledFlush;
   private final int initialId;
+  protected ScheduledFuture<?> scheduledFlush;
   private int nextId;
 
   public ChannelCommon(int initialId) {
@@ -60,14 +60,45 @@ public abstract class ChannelCommon extends ChannelInboundHandlerAdapter  {
     });
   }
 
-  protected void flushFromWithinContextExecutor(ChannelHandlerContext context) {
-    if (scheduledFlush != null) {
-      return;
+  protected void routeCommon(byte type, int id, ByteBuf inBuffer, ChannelHandlerContext ctx) {
+    switch (type) {
+      case 0x20: {
+        ByteStream stream = streams.get(id);
+        if (stream != null) {
+          stream.next(inBuffer);
+        }
+      }
+      break;
+      case 0x30: {
+        ByteStream stream = streams.get(id);
+        if (stream != null) {
+          stream.request(inBuffer.readIntLE());
+        }
+      }
+      break;
+      case 0x40: {
+        ByteStream stream = streams.remove(id);
+        if (stream != null) {
+          stream.completed();
+        }
+        sendConfirmRemoval(ctx, id);
+      }
+      break;
+      case 0x50: {
+        ByteStream stream = streams.remove(id);
+        if (stream != null) {
+          stream.error(inBuffer.readIntLE());
+        }
+      }
+      break;
+      case 0x60: {
+        ByteStream stream = streams.remove(id);
+        if (stream != null) {
+          stream.completed();
+        }
+      }
+      break;
     }
-    scheduledFlush = context.executor().schedule(() -> {
-      context.flush();
-      scheduledFlush = null;
-    }, 50000, TimeUnit.NANOSECONDS);
   }
 
   protected void sendConfirmRemoval(ChannelHandlerContext context, int id) {
@@ -80,39 +111,13 @@ public abstract class ChannelCommon extends ChannelInboundHandlerAdapter  {
     });
   }
 
-  protected void routeCommon(byte type, int id, ByteBuf inBuffer, ChannelHandlerContext ctx) {
-    switch (type) {
-      case 0x20: {
-        ByteStream stream = streams.get(id);
-        if (stream != null) {
-          stream.next(inBuffer);
-        }
-      } break;
-      case 0x30: {
-        ByteStream stream = streams.get(id);
-        if (stream != null) {
-          stream.request(inBuffer.readIntLE());
-        }
-      } break;
-      case 0x40: {
-        ByteStream stream = streams.remove(id);
-        if (stream != null) {
-          stream.completed();
-        }
-        sendConfirmRemoval(ctx, id);
-      } break;
-      case 0x50: {
-        ByteStream stream = streams.remove(id);
-        if (stream != null) {
-          stream.error(inBuffer.readIntLE());
-        }
-      } break;
-      case 0x60: {
-        ByteStream stream = streams.remove(id);
-        if (stream != null) {
-          stream.completed();
-        }
-      } break;
+  protected void flushFromWithinContextExecutor(ChannelHandlerContext context) {
+    if (scheduledFlush != null) {
+      return;
     }
+    scheduledFlush = context.executor().schedule(() -> {
+      context.flush();
+      scheduledFlush = null;
+    }, 50000, TimeUnit.NANOSECONDS);
   }
 }

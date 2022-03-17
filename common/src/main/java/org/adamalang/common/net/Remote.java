@@ -30,14 +30,6 @@ public class Remote implements ByteStream {
   }
 
   @Override
-  public ByteBuf create(int bestGuessForSize) {
-    ByteBuf request = Unpooled.buffer();
-    request.writeByte(0x20);
-    request.writeIntLE(id);
-    return request;
-  }
-
-  @Override
   public void request(int bytes) {
     context.executor().execute(() -> {
       ByteBuf request = Unpooled.buffer();
@@ -47,6 +39,14 @@ public class Remote implements ByteStream {
       context.write(request);
       requestFlush.run();
     });
+  }
+
+  @Override
+  public ByteBuf create(int bestGuessForSize) {
+    ByteBuf request = Unpooled.buffer();
+    request.writeByte(0x20);
+    request.writeIntLE(id);
+    return request;
   }
 
   @Override

@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-/** the flows (| seperated) of the given field */
-public @interface Flow {
-  public String value();
+/** the flows (| seperated) of the given field */ public @interface Flow {
+  String value();
 }

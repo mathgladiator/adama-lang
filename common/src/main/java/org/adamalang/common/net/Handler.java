@@ -13,5 +13,5 @@ package org.adamalang.common.net;
 public interface Handler {
 
   /** create a stream */
-  public ByteStream create(ByteStream upstream);
+  ByteStream create(ByteStream upstream);
 }

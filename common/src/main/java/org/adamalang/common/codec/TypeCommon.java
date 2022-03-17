@@ -16,7 +16,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-/** the type id of the current version */
-public @interface TypeCommon {
-  public String value();
+/** the type id of the current version */ public @interface TypeCommon {
+  String value();
 }

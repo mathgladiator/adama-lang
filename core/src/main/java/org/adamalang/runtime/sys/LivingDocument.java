@@ -440,12 +440,12 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
+  /** parse the message for the channel, and cache the result */
+  protected abstract Object __parse_message(String channel, JsonStreamReader reader);
+
   protected abstract boolean __is_direct_channel(String channel);
 
   protected abstract void __handle_direct(NtClient who, String channel, Object message) throws AbortMessageException;
-
-  /** parse the message for the channel, and cache the result */
-  protected abstract Object __parse_message(String channel, JsonStreamReader reader);
 
   /** code generated: insert data */
   public abstract void __insert(JsonStreamReader __reader);

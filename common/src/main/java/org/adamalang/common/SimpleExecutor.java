@@ -22,12 +22,14 @@ public interface SimpleExecutor {
 
     @Override
     public Runnable schedule(NamedRunnable command, long milliseconds) {
-      return () -> {};
+      return () -> {
+      };
     }
 
     @Override
     public Runnable scheduleNano(NamedRunnable command, long nanoseconds) {
-      return () -> {};
+      return () -> {
+      };
     }
 
     @Override
@@ -74,7 +76,7 @@ public interface SimpleExecutor {
 
   /** schedule the given command to run after some milliseconds within the executor */
   Runnable schedule(NamedRunnable command, long milliseconds);
-  
+
   Runnable scheduleNano(NamedRunnable command, long nanoseconds);
 
   /** shutdown the executor */

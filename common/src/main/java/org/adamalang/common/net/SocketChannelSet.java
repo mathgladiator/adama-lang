@@ -12,7 +12,10 @@ package org.adamalang.common.net;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.socket.SocketChannel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Random;
 
 /** we monitor the inflight connections so we can terminate them all */
 public class SocketChannelSet {
@@ -38,12 +41,6 @@ public class SocketChannelSet {
     map.remove(key);
   }
 
-  private synchronized Collection<SocketChannel> killUnderLock() {
-    ArrayList<SocketChannel> list = new ArrayList<>(map.values());
-    map.clear();
-    return list;
-  }
-
   public void kill() {
     ArrayList<ChannelFuture> futures = new ArrayList<>();
     for (SocketChannel channel : killUnderLock()) {
@@ -52,5 +49,11 @@ public class SocketChannelSet {
     for (ChannelFuture future : futures) {
       future.syncUninterruptibly();
     }
+  }
+
+  private synchronized Collection<SocketChannel> killUnderLock() {
+    ArrayList<SocketChannel> list = new ArrayList<>(map.values());
+    map.clear();
+    return list;
   }
 }

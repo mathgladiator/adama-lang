@@ -10,10 +10,16 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
-import org.adamalang.common.*;
-import org.adamalang.runtime.data.*;
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.data.ComputeMethod;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.LocalDocumentChange;
+import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.exceptions.PerformDocumentDeleteException;
 import org.adamalang.runtime.exceptions.PerformDocumentRewindException;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -43,7 +49,7 @@ public class DurableLivingDocument {
   private long lastExpire;
   private int outstandingExecutionsWhichRequireDrain;
   private boolean inflightCompact;
-  private AtomicInteger size;
+  private final AtomicInteger size;
   private int trackingSeq;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
@@ -67,6 +73,68 @@ public class DurableLivingDocument {
       document.construct(who, arg, entropy, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST, (seq) -> document));
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex, EXLOGGER));
+    }
+  }
+
+  private void construct(final NtClient who, final String arg, final String entropy, Callback<Integer> callback) {
+    try {
+      final var writer = forge("construct", who);
+      writer.writeObjectFieldIntro("arg");
+      writer.injectJson(arg);
+      if (entropy != null) {
+        writer.writeObjectFieldIntro("entropy");
+        writer.writeFastString(entropy);
+      }
+      writer.endObject();
+      final var init = document.__transact(writer.toString(), currentFactory);
+      final var invalidate = document.__transact(forgeInvalidate(), currentFactory);
+      final var setup = RemoteDocumentUpdate.compact(new RemoteDocumentUpdate[]{init.update, invalidate.update})[0];
+      size.set(1);
+      base.service.initialize(key, setup, Callback.handoff(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_PERSIST, () -> {
+        init.complete();
+        invalidate.complete();
+        callback.success(setup.seqEnd);
+      }));
+    } catch (Throwable ex) {
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex, EXLOGGER));
+    }
+  }
+
+  public JsonStreamWriter forge(final String command, final NtClient who) {
+    final var writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("command");
+    writer.writeFastString(command);
+    writer.writeObjectFieldIntro("timestamp");
+    writer.writeLong(base.time.nowMilliseconds());
+    if (who != null) {
+      writer.writeObjectFieldIntro("who");
+      writer.writeNtClient(who);
+    }
+    return writer;
+  }
+
+  private String forgeInvalidate() {
+    final var request = forge("invalidate", null);
+    request.endObject();
+    return request.toString();
+  }
+
+  public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
+    try {
+      LivingDocument doc = factory.create(monitor);
+      base.service.get(key, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_READ, (data) -> {
+        JsonStreamReader reader = new JsonStreamReader(data.patch);
+        reader.ingestDedupe(doc.__get_intern_strings());
+        doc.__insert(reader);
+        JsonStreamWriter writer = new JsonStreamWriter();
+        doc.__dump(writer);
+        DurableLivingDocument document = new DurableLivingDocument(key, doc, factory, base);
+        document.size.set(data.reads);
+        return document;
+      }));
+    } catch (Throwable ex) {
+      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, EXLOGGER));
     }
   }
 
@@ -111,24 +179,6 @@ public class DurableLivingDocument {
     });
   }
 
-  public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
-    try {
-      LivingDocument doc = factory.create(monitor);
-      base.service.get(key, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_READ, (data) -> {
-        JsonStreamReader reader = new JsonStreamReader(data.patch);
-        reader.ingestDedupe(doc.__get_intern_strings());
-        doc.__insert(reader);
-        JsonStreamWriter writer = new JsonStreamWriter();
-        doc.__dump(writer);
-        DurableLivingDocument document = new DurableLivingDocument(key, doc, factory, base);
-        document.size.set(data.reads);
-        return document;
-      }));
-    } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, EXLOGGER));
-    }
-  }
-
   public LivingDocument document() {
     return document;
   }
@@ -152,20 +202,6 @@ public class DurableLivingDocument {
     document = newDocument;
     currentFactory = factory;
     invalidate(callback);
-  }
-
-  public JsonStreamWriter forge(final String command, final NtClient who) {
-    final var writer = new JsonStreamWriter();
-    writer.beginObject();
-    writer.writeObjectFieldIntro("command");
-    writer.writeFastString(command);
-    writer.writeObjectFieldIntro("timestamp");
-    writer.writeLong(base.time.nowMilliseconds());
-    if (who != null) {
-      writer.writeObjectFieldIntro("who");
-      writer.writeNtClient(who);
-    }
-    return writer;
   }
 
   public void triggerExpire() {
@@ -434,36 +470,6 @@ public class DurableLivingDocument {
     } else {
       executeNow(new IngestRequest[]{request});
     }
-  }
-
-  private void construct(final NtClient who, final String arg, final String entropy, Callback<Integer> callback) {
-    try {
-      final var writer = forge("construct", who);
-      writer.writeObjectFieldIntro("arg");
-      writer.injectJson(arg);
-      if (entropy != null) {
-        writer.writeObjectFieldIntro("entropy");
-        writer.writeFastString(entropy);
-      }
-      writer.endObject();
-      final var init = document.__transact(writer.toString(), currentFactory);
-      final var invalidate = document.__transact(forgeInvalidate(), currentFactory);
-      final var setup = RemoteDocumentUpdate.compact(new RemoteDocumentUpdate[] { init.update, invalidate.update })[0];
-      size.set(1);
-      base.service.initialize(key, setup, Callback.handoff(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_PERSIST, () -> {
-        init.complete();
-        invalidate.complete();
-        callback.success(setup.seqEnd);
-      }));
-    } catch (Throwable ex) {
-      callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_CONSTRUCT_DRIVE, ex, EXLOGGER));
-    }
-  }
-
-  private String forgeInvalidate() {
-    final var request = forge("invalidate", null);
-    request.endObject();
-    return request.toString();
   }
 
   public void invalidate(Callback<Integer> callback) {

@@ -9,7 +9,9 @@
  */
 package org.adamalang.disk.files;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /** the header contains useful information regarding the snapshot */
 public class SnapshotHeader {

@@ -13,7 +13,8 @@ import org.adamalang.common.metrics.ItemActionMonitor;
 
 /** an unit of work that sits within a queue for processing */
 public abstract class ItemAction<T> {
-  private static final Runnable DEFAULT_CANCEL_TIMEOUT = () -> {};
+  private static final Runnable DEFAULT_CANCEL_TIMEOUT = () -> {
+  };
   private final int errorTimeout;
   private final int errorRejected;
   private final ItemActionMonitor.ItemActionMonitorInstance monitor;

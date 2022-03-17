@@ -13,8 +13,6 @@ import org.adamalang.runtime.contracts.CanGetAndSet;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
-import org.adamalang.runtime.natives.NtComplex;
-import org.adamalang.runtime.natives.NtMaybe;
 
 /** a reactive string */
 public class RxString extends RxBase implements Comparable<RxString>, CanGetAndSet<String> {

@@ -70,12 +70,12 @@ public class ItemQueue<T> {
     } else {
       buffer.add(action);
       action.setCancelTimeout(executor.schedule(new NamedRunnable("expire-action") {
-          @Override
-          public void execute() throws Exception {
-            action.killDueToTimeout();
-            buffer.remove(action);
-          }
-        }, customTimeout));
+        @Override
+        public void execute() throws Exception {
+          action.killDueToTimeout();
+          buffer.remove(action);
+        }
+      }, customTimeout));
     }
   }
 }

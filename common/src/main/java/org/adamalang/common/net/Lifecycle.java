@@ -11,14 +11,14 @@ package org.adamalang.common.net;
 
 import org.adamalang.common.ErrorCodeException;
 
-/** each connection has a separate lifecycle from birth to death*/
+/** each connection has a separate lifecycle from birth to death */
 public interface Lifecycle {
   /** the connection was created and achieved glorious success */
-  public void connected(ChannelClient channel);
+  void connected(ChannelClient channel);
 
   /** the connection failed to connect */
-  public void failed(ErrorCodeException ex);
+  void failed(ErrorCodeException ex);
 
   /** the successful connection was later disconnected */
-  public void disconnected();
+  void disconnected();
 }

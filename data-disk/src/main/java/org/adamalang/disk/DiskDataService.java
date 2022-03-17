@@ -19,9 +19,6 @@ import org.adamalang.runtime.data.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.HashSet;
-
 /** the disk data service which aims for low latency commits */
 public class DiskDataService implements DataService {
   private final static Logger LOGGER = LoggerFactory.getLogger(DiskDataService.class);

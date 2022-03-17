@@ -20,28 +20,29 @@ import org.adamalang.disk.wal.WriteAheadMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class WriteAheadLog {
   private static final Logger LOGGER = LoggerFactory.getLogger(WriteAheadLog.class);
-
-  private boolean alive;
   private final DiskBase base;
   private final File root;
   private final int cutOffBytesFlush;
   private final int flushPeriodNanoseconds;
   private final long bytesBeforeLogCut;
-
+  private boolean alive;
   private File currentFile;
   private DataOutputStream output;
   private int at;
   private boolean flushScheduled;
   private long bytesWritten;
   private byte[] mem;
-  private ByteBuf buffer;
-  private ArrayList<Callback<Void>> callbacks;
+  private final ByteBuf buffer;
+  private final ArrayList<Callback<Void>> callbacks;
 
   public WriteAheadLog(DiskBase base, int cutOffBytesFlush, int flushPeriodNanoseconds, long bytesBeforeLogCut) {
     this.alive = true;
@@ -62,6 +63,19 @@ public class WriteAheadLog {
     this.mem = new byte[cutOffBytesFlush / 2];
   }
 
+  public Runnable close() {
+    CountDownLatch latch = new CountDownLatch(1);
+    base.executor.execute(new NamedRunnable("wal-force-flush") {
+      @Override
+      public void execute() throws Exception {
+        alive = false;
+        flushMemory();
+        latch.countDown();
+      }
+    });
+    return () -> AwaitHelper.block(latch, 2500);
+  }
+
   private void flushMemory() {
     try {
       if (output == null) {
@@ -73,7 +87,7 @@ public class WriteAheadLog {
       }
 
       output.write(0x42);
-      output.writeInt(buffer.writerIndex());;
+      output.writeInt(buffer.writerIndex());
       while (buffer.isReadable()) {
         int toRead = buffer.readableBytes();
         bytesWritten += toRead;
@@ -103,19 +117,6 @@ public class WriteAheadLog {
       callbacks.clear();
       System.exit(200);
     }
-  }
-
-  public Runnable close() {
-    CountDownLatch latch = new CountDownLatch(1);
-    base.executor.execute(new NamedRunnable("wal-force-flush") {
-      @Override
-      public void execute() throws Exception {
-        alive = false;
-        flushMemory();
-        latch.countDown();
-      }
-    });
-    return () -> AwaitHelper.block(latch, 2500);
   }
 
   public void write(WriteAheadMessage message, Callback<Void> callback) {

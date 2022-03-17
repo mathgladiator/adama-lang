@@ -29,6 +29,11 @@ public class NtComplex {
     return Double.compare(ntComplex.real, real) == 0 && Double.compare(ntComplex.imaginary, imaginary) == 0;
   }
 
+  @Override
+  public String toString() {
+    return real + " " + imaginary + "i";
+  }
+
   public boolean zero() {
     return LibMath.near(real, 0) && LibMath.near(imaginary, 0);
   }
@@ -40,10 +45,5 @@ public class NtComplex {
 
   public long memory() {
     return 16;
-  }
-
-  @Override
-  public String toString() {
-    return real + " " + imaginary + "i";
   }
 }

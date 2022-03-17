@@ -11,7 +11,10 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
-import org.adamalang.runtime.contracts.*;
+import org.adamalang.runtime.contracts.DeploymentMonitor;
+import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
+import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -105,7 +108,7 @@ public class CoreService {
 
   /** create a document */
   public void create(NtClient who, Key key, String arg, String entropy, Callback<Void> callbackReal) {
-    createInternal(who, key, arg, entropy, metrics.serviceCreate.wrap(callbackReal));;
+    createInternal(who, key, arg, entropy, metrics.serviceCreate.wrap(callbackReal));
   }
 
   /** internal: actually create with the given callback */

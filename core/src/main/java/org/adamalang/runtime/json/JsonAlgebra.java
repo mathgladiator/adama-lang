@@ -12,7 +12,6 @@ package org.adamalang.runtime.json;
 import org.adamalang.runtime.contracts.AutoMorphicAccumulator;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /** merge and roll-forward operations for JSON */
@@ -50,6 +49,7 @@ public class JsonAlgebra {
   public static AutoMorphicAccumulator<String> mergeAccumulator() {
     return mergeAccumulator(true);
   }
+
   public static AutoMorphicAccumulator<String> mergeAccumulator(boolean keepNulls) {
     return new AutoMorphicAccumulator<>() {
       private Object state = null;

@@ -12,8 +12,8 @@ package org.adamalang.runtime.deploy;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.Collection;
@@ -42,6 +42,19 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
     spaces.put(space, new DeploymentFactory(space, getSpaceClassNamePrefix(space), newClassId, spaces.get(space), plan));
   }
 
+  /** issue #108; expose this internal bit for others to use to keep sanity in check */
+  public static String getSpaceClassNamePrefix(String space) {
+    StringBuilder spacePrefix = new StringBuilder().append("Space_");
+    for (int k = 0; k < space.length(); k++) {
+      char ch = space.charAt(k);
+      if (Character.isAlphabetic(ch)) {
+        spacePrefix.append(ch);
+      }
+    }
+    spacePrefix.append("_");
+    return spacePrefix.toString();
+  }
+
   @Override
   public void fetch(Key key, Callback<LivingDocumentFactory> callback) {
     DeploymentFactory factory = spaces.get(key.space);
@@ -55,18 +68,5 @@ public class DeploymentFactoryBase implements LivingDocumentFactoryFactory {
   @Override
   public Collection<String> spacesAvailable() {
     return spaces.keySet();
-  }
-
-  /** issue #108; expose this internal bit for others to use to keep sanity in check */
-  public static String getSpaceClassNamePrefix(String space) {
-    StringBuilder spacePrefix = new StringBuilder().append("Space_");
-    for (int k = 0; k < space.length(); k++) {
-      char ch = space.charAt(k);
-      if (Character.isAlphabetic(ch)) {
-        spacePrefix.append(ch);
-      }
-    }
-    spacePrefix.append("_");
-    return spacePrefix.toString();
   }
 }

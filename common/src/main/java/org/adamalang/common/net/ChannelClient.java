@@ -24,9 +24,9 @@ import java.util.function.Consumer;
 /** a single connection for client side */
 public class ChannelClient extends ChannelCommon {
   private final Lifecycle lifecycle;
-  private HashMap<Integer, Consumer<Boolean>> initiations;
+  private final HashMap<Integer, Consumer<Boolean>> initiations;
   private ChannelHandlerContext context;
-  private ScheduledFuture<?> scheduledFlush;
+  private final ScheduledFuture<?> scheduledFlush;
   private boolean sentConnected;
 
   public ChannelClient(Lifecycle lifecycle) {
@@ -42,6 +42,22 @@ public class ChannelClient extends ChannelCommon {
     this.context = ctx;
     lifecycle.connected(this);
     this.sentConnected = true;
+  }
+
+  @Override
+  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    ByteBuf inBuffer = (ByteBuf) msg;
+    byte type = inBuffer.readByte();
+    int id = inBuffer.readIntLE();
+    if (type == 0x10) {
+      Consumer<Boolean> callback = initiations.remove(id);
+      if (callback != null) {
+        callback.accept(true);
+      }
+    } else {
+      routeCommon(type, id, inBuffer, ctx);
+    }
+    inBuffer.release();
   }
 
   @Override
@@ -69,7 +85,9 @@ public class ChannelClient extends ChannelCommon {
       buffer.writeIntLE(id);
       initiations.put(id, (success) -> {
         if (success) {
-          opened.success(new Remote(streams, id, context, () -> { flushFromWithinContextExecutor(context); }));
+          opened.success(new Remote(streams, id, context, () -> {
+            flushFromWithinContextExecutor(context);
+          }));
         } else {
           opened.failure(new ErrorCodeException(ErrorCodes.NET_FAILED_INITIATION));
         }
@@ -77,21 +95,5 @@ public class ChannelClient extends ChannelCommon {
       context.write(buffer);
       flushFromWithinContextExecutor(context);
     });
-  }
-
-  @Override
-  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-    ByteBuf inBuffer = (ByteBuf) msg;
-    byte type = inBuffer.readByte();
-    int id = inBuffer.readIntLE();
-    if (type == 0x10) {
-      Consumer<Boolean> callback = initiations.remove(id);
-      if (callback != null) {
-        callback.accept(true);
-      }
-    } else {
-      routeCommon(type, id, inBuffer, ctx);
-    }
-    inBuffer.release();
   }
 }

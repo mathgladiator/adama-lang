@@ -81,6 +81,16 @@ public class DiskMeteringBatchMaker {
     output.close();
   }
 
+  public void flush(CountDownLatch done) {
+    this.executor.execute(new NamedRunnable("billing-flush") {
+      @Override
+      public void execute() throws Exception {
+        cut();
+        done.countDown();
+      }
+    });
+  }
+
   private void cut() throws Exception {
     String batchId = UUID.randomUUID() + "_" + time.nowMilliseconds();
     File cuttingBatch = new File(root, "CUT-" + batchId);
@@ -110,16 +120,6 @@ public class DiskMeteringBatchMaker {
       // if we fail, then we simply delete the batch
       cuttingBatch.delete();
     }
-  }
-
-  public void flush(CountDownLatch done) {
-    this.executor.execute(new NamedRunnable("billing-flush") {
-      @Override
-      public void execute() throws Exception {
-        cut();
-        done.countDown();
-      }
-    });
   }
 
   public void write(MeterReading meterReading) {

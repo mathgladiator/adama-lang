@@ -46,8 +46,8 @@ public class NetBase {
   public final MachineIdentity identity;
   private final AtomicBoolean alive;
   private final CountDownLatch killLatch;
-  private ArrayList<CountDownLatch> blockers;
   private final SslContext sslContext;
+  private final ArrayList<CountDownLatch> blockers;
 
   public NetBase(MachineIdentity identity, int bossThreads, int workerThreads) throws Exception {
     this.identity = identity;
@@ -57,10 +57,6 @@ public class NetBase {
     this.alive = new AtomicBoolean(true);
     this.killLatch = new CountDownLatch(1);
     this.blockers = new ArrayList<>();
-  }
-
-  public SslContext makeServerSslContext() throws Exception {
-    return SslContextBuilder.forServer(identity.getCert(), identity.getKey()).trustManager(identity.getTrust()).clientAuth(ClientAuth.REQUIRE).build();
   }
 
   public boolean alive() {
@@ -115,7 +111,7 @@ public class NetBase {
       protected void initChannel(SocketChannel ch) throws Exception {
         ch.pipeline().addLast(sslContext.newHandler(ch.alloc()));
         ch.pipeline().addLast(new LengthFieldPrepender(4));
-        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(65535,0, 4, 0, 4));
+        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(65535, 0, 4, 0, 4));
         ch.pipeline().addLast(new ChannelServer(ch, set, handler));
       }
     });
@@ -152,6 +148,10 @@ public class NetBase {
     };
   }
 
+  public SslContext makeServerSslContext() throws Exception {
+    return SslContextBuilder.forServer(identity.getCert(), identity.getKey()).trustManager(identity.getTrust()).clientAuth(ClientAuth.REQUIRE).build();
+  }
+
   public void waitForShutdown() throws InterruptedException {
     killLatch.await();
   }
@@ -159,7 +159,9 @@ public class NetBase {
   public synchronized Runnable blocker() {
     CountDownLatch latchToBlock = new CountDownLatch(1);
     blockers.add(latchToBlock);
-    return () -> { latchToBlock.countDown(); };
+    return () -> {
+      latchToBlock.countDown();
+    };
   }
 
   public void shutdown() {
