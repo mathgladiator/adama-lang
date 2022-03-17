@@ -127,7 +127,7 @@ public class CodeGenMessageHandling {
         }
       }
       sb.append("default:").tabUp().writeNewline();
-      sb.append("return false;").tabDown().tabDown().writeNewline();
+      sb.append("return false;").tabDown().writeNewline();
       sb.append("}").tabDown().writeNewline();
       sb.append("}").writeNewline();
       sb.append("@Override").writeNewline();
