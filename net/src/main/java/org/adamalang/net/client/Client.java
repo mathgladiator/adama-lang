@@ -22,7 +22,6 @@ import org.adamalang.net.client.sm.ConnectionBase;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -35,9 +34,11 @@ public class Client {
   private final InstanceClientFinder finder;
   private final SimpleExecutor[] executors;
   private final Random rng;
+  private final ClientConfig config;
 
-  public Client(NetBase base, ClientMetrics metrics, HeatMonitor monitor) {
+  public Client(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor) {
     this.base = base;
+    this.config = config;
     this.metrics = metrics;
     this.routingExecutor = SimpleExecutor.create("routing");
     this.engine = new RoutingEngine(metrics, routingExecutor, new SpaceTrackingEvents() {
@@ -53,7 +54,7 @@ public class Client {
       public void lostInterestInSpace(String space) {
       }
     }, 250, 250);
-    this.finder = new InstanceClientFinder(base, metrics, monitor, SimpleExecutorFactory.DEFAULT, 4, engine, ExceptionLogger.FOR(Client.class));
+    this.finder = new InstanceClientFinder(base, config, metrics, monitor, SimpleExecutorFactory.DEFAULT, 4, engine, ExceptionLogger.FOR(Client.class));
     this.executors = SimpleExecutorFactory.DEFAULT.makeMany("connections", 2);
     this.rng = new Random();
   }
@@ -182,7 +183,7 @@ public class Client {
   }
 
   public Connection connect(String origin, String agent, String authority, String space, String key, String viewerState, SimpleEvents events) {
-    ConnectionBase base = new ConnectionBase(metrics, engine, finder, executors[rng.nextInt(executors.length)]);
+    ConnectionBase base = new ConnectionBase(config, metrics, engine, finder, executors[rng.nextInt(executors.length)]);
     Connection connection = new Connection(base, origin, agent, authority, space, key, viewerState, events);
     connection.open();
     return connection;

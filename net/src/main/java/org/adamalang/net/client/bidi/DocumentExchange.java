@@ -57,6 +57,13 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     error(ex.code);
   }
 
+  /** internal: kill the exchange and signal all inflight operations */
+  private void kill() {
+    for (Callback<?> callback : killWithLock()) {
+      callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_CONNECTION_DONE));
+    }
+  }
+
   @Override // From ByteStream (the server can't really complete this except in error modes)
   public void completed() {
     kill();
@@ -65,11 +72,12 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
     }
   }
 
-  /** internal: kill the exchange and signal all inflight operations */
-  private void kill() {
-    for (Callback<?> callback : killWithLock()) {
-      callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_CONNECTION_DONE));
-    }
+  /** internal: kill the exchange */
+  private synchronized ArrayList<Callback<?>> killWithLock() {
+    dead = true;
+    ArrayList<Callback<?>> result = new ArrayList<>(opHandlers.values());
+    opHandlers.clear();
+    return result;
   }
 
   /** internal: debounce the disconnect signal as it can be originate in multiple ways */
@@ -79,14 +87,6 @@ public class DocumentExchange extends ServerCodec.StreamDocument implements Call
       return true;
     }
     return false;
-  }
-
-  /** internal: kill the exchange */
-  private synchronized ArrayList<Callback<?>> killWithLock() {
-    dead = true;
-    ArrayList<Callback<?>> result = new ArrayList<>(opHandlers.values());
-    opHandlers.clear();
-    return result;
   }
 
   @Override // from ByteStream (a stream level problem)

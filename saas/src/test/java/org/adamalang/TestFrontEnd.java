@@ -29,6 +29,7 @@ import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.net.client.Client;
+import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
@@ -131,7 +132,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
     }, meteringPubSub, new DiskMeteringBatchMaker(TimeSource.REAL_TIME, clientExecutor, File.createTempFile("ADAMATEST_", "x23").getParentFile(),  1800000L), port, 2);
 
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
-    Client client = new Client(netBase, new ClientMetrics(new NoOpMetricsFactory()), null);
+    ClientConfig clientConfig = new ClientConfig();
+    Client client = new Client(netBase, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
     this.attachmentRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
     AssetUploader uploader = new AssetUploader() {

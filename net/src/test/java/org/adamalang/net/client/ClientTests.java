@@ -36,7 +36,8 @@ public class ClientTests {
                  12500,
                  "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
-      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      ClientConfig clientConfig = new TestClientConfig();
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
         waitForRouting(bed, client);
         CountDownLatch latchGetDeployTargets = new CountDownLatch(1);
@@ -163,7 +164,8 @@ public class ClientTests {
                  12501,
                  "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
-      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      ClientConfig clientConfig = new TestClientConfig();
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
         waitForRouting(bed, client);
         {
@@ -204,7 +206,8 @@ public class ClientTests {
              new TestBed(
                  12502,
                  "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
-      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      ClientConfig clientConfig = new TestClientConfig();
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
         CountDownLatch latch1Failed = new CountDownLatch(1);
         client.notifyDeployment("127.0.0.1:" + bed.port, "space");
@@ -279,7 +282,8 @@ public class ClientTests {
                  12503,
                  "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
-      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      ClientConfig clientConfig = new TestClientConfig();
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
       try {
         waitForRouting(bed, client);
         CountDownLatch latchFailed = new CountDownLatch(1);
@@ -330,7 +334,8 @@ public class ClientTests {
                  12504,
                  "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").failEverything().start();
-      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      ClientConfig clientConfig = new TestClientConfig();
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
       waitForRouting(bed, client);
       CountDownLatch failures = new CountDownLatch(5);
       client.notifyDeployment("127.0.0.1:" + bed.port, "*");
@@ -425,7 +430,8 @@ public class ClientTests {
                  12505,
                  "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").start();
-      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      ClientConfig clientConfig = new TestClientConfig();
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
       waitForRouting(bed, client);
       client.notifyDeployment("127.0.0.1:12505", "*");
       CountDownLatch meteringLatch = new CountDownLatch(2);
@@ -459,7 +465,8 @@ public class ClientTests {
                  12506,
                  "@static { create(who) { return false; } invent(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").closeStream().start();
-      Client client = new Client(bed.base, new ClientMetrics(new NoOpMetricsFactory()), null);
+      ClientConfig clientConfig = new TestClientConfig();
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
       waitForRouting(bed, client);
       CountDownLatch closures = new CountDownLatch(1);
       client.connect("origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {

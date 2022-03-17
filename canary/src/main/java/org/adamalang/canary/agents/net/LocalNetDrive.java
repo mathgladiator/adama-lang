@@ -18,6 +18,7 @@ import org.adamalang.disk.*;
 import org.adamalang.disk.demo.DiskMetrics;
 import org.adamalang.disk.demo.SingleThreadDiskDataService;
 import org.adamalang.net.client.Client;
+import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
@@ -91,9 +92,10 @@ public class LocalNetDrive {
         }
       }
 
+      ClientConfig clientConfig = new ClientConfig();
       if (config.role.equals("both") || config.role.equals("client")) {
         LocalNetAgent[] agents = new LocalNetAgent[config.agents];
-        Client client = new Client(netBase, new ClientMetrics(new NoOpMetricsFactory()), null);
+        Client client = new Client(netBase, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
         client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + config.port));
         for (int k = 0; k < agents.length; k++) {
           agents[k] = new LocalNetAgent(client, config, k, scheduler);

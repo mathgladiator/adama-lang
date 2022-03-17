@@ -32,6 +32,7 @@ public class InstanceClientFinderTests {
     SimpleExecutor routingExecutor = SimpleExecutor.create("routing");
     ExceptionLogger logger = (t, c) -> {};
     try {
+      TestClientConfig clientConfig = new TestClientConfig();
       TreeSet<String> targets = new TreeSet<>();
       for (int k = 0; k < servers.length; k++) {
         servers[k] =
@@ -64,7 +65,7 @@ public class InstanceClientFinderTests {
               },
               50,
               25);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         finder.sync(targets);
         Assert.assertTrue(primed.await(25000, TimeUnit.MILLISECONDS));

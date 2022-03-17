@@ -10,12 +10,15 @@
 package org.adamalang.net.client.sm;
 
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
 import org.adamalang.net.client.routing.RoutingEngine;
 
 /** each state machine has some common ground, and we form a base around that */
 public class ConnectionBase {
+  public final ClientConfig config;
+
   // metrics for the client
   public final ClientMetrics metrics;
 
@@ -28,7 +31,8 @@ public class ConnectionBase {
   // how we handle thread safety and time
   public final SimpleExecutor executor;
 
-  public ConnectionBase(ClientMetrics metrics, RoutingEngine engine, InstanceClientFinder mesh, SimpleExecutor executor) {
+  public ConnectionBase(ClientConfig config, ClientMetrics metrics, RoutingEngine engine, InstanceClientFinder mesh, SimpleExecutor executor) {
+    this.config = config;
     this.metrics = metrics;
     this.engine = engine;
     this.mesh = mesh;

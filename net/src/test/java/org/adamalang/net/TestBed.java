@@ -15,8 +15,10 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.ServerHandle;
+import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClient;
+import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.mocks.NaughyHandler;
@@ -56,6 +58,7 @@ public class TestBed implements AutoCloseable {
   private CountDownLatch serverExit;
   public final DiskMeteringBatchMaker batchMaker;
   private final File billingRoot;
+  public final ClientConfig clientConfig;
 
   public TestBed(int port, String code) throws Exception {
     DeploymentFactory.compile("X", code);
@@ -103,6 +106,7 @@ public class TestBed implements AutoCloseable {
     }, meteringPubSub, batchMaker, port, 2);
     this.handle = null;
     this.serverExit = null;
+    this.clientConfig = new TestClientConfig();
   }
 
   public InstanceClient makeClient() throws Exception {
@@ -110,8 +114,9 @@ public class TestBed implements AutoCloseable {
   }
 
   public InstanceClient makeClient(HeatMonitor monitor) throws Exception {
+
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
-    return new InstanceClient(base, metrics, monitor, new RoutingTarget() {
+    return new InstanceClient(base, clientConfig, metrics, monitor, new RoutingTarget() {
       @Override
       public void integrate(String target, Collection<String> spaces) {
 

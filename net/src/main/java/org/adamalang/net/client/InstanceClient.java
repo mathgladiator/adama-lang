@@ -19,7 +19,10 @@ import org.adamalang.common.queue.ItemAction;
 import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.bidi.DocumentExchange;
 import org.adamalang.net.client.bidi.MeteringExchange;
-import org.adamalang.net.client.contracts.*;
+import org.adamalang.net.client.contracts.Events;
+import org.adamalang.net.client.contracts.HeatMonitor;
+import org.adamalang.net.client.contracts.MeteringStream;
+import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamInfo;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamWriter;
 import org.adamalang.net.codec.ClientCodec;
@@ -35,8 +38,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /** a client using the common-net code to connect to a remote server */
 public class InstanceClient implements AutoCloseable {
-  public static final int MAGIC_WAITING_QUEUE = 1024;
-  public static final int MAGIC_WAIT_TIMEOUT = 1250;
   public final String target;
   public final SimpleExecutor executor;
   private final NetBase base;
@@ -47,17 +48,19 @@ public class InstanceClient implements AutoCloseable {
   private final ExceptionLogger logger;
   private final AtomicBoolean alive;
   private final ItemQueue<ChannelClient> client;
+  private final ClientConfig config;
   private int backoff;
 
-  public InstanceClient(NetBase base, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
+  public InstanceClient(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
     this.base = base;
+    this.config = config;
     this.target = target;
     this.executor = executor;
     this.metrics = metrics;
     this.monitor = monitor;
     this.routing = routing;
     this.rng = new Random();
-    this.client = new ItemQueue<>(executor, MAGIC_WAITING_QUEUE, MAGIC_WAIT_TIMEOUT);
+    this.client = new ItemQueue<>(executor, config.getClientQueueSize(), config.getClientQueueTimeoutMS());
     this.logger = logger;
     this.alive = new AtomicBoolean(true);
     this.backoff = 1;
@@ -300,8 +303,8 @@ public class InstanceClient implements AutoCloseable {
         client.add(new ItemAction<>(ErrorCodes.ADAMA_NET_METERING_TIMEOUT, ErrorCodes.ADAMA_NET_METERING_REJECTED, metrics.client_metering_exchange.start()) {
           @Override
           protected void executeNow(ChannelClient client) {
-              MeteringExchange exchange = new MeteringExchange(target, meteringStream);
-              client.open(exchange, exchange);
+            MeteringExchange exchange = new MeteringExchange(target, meteringStream);
+            client.open(exchange, exchange);
           }
 
           @Override

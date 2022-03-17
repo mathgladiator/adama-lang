@@ -13,9 +13,7 @@ import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.queue.ItemAction;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.ClientMetrics;
-import org.adamalang.net.client.InstanceClient;
-import org.adamalang.net.client.InstanceClientFinder;
+import org.adamalang.net.client.*;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
 import org.adamalang.net.client.routing.RoutingEngine;
@@ -67,10 +65,11 @@ public class ConnectionTests {
                 },
                 50,
                 25);
-        InstanceClientFinder finder = new InstanceClientFinder(server.base, metrics, null, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
+        ClientConfig clientConfig = new TestClientConfig();
+        InstanceClientFinder finder = new InstanceClientFinder(server.base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
         finder.sync(new TreeSet<>(Collections.singleton("127.0.0.1:30000")));
         Assert.assertTrue(primed.await(15000, TimeUnit.MILLISECONDS));
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, server.clientExecutor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, server.clientExecutor);
         CountDownLatch latch = new CountDownLatch(1);
         AtomicInteger codeFound = new AtomicInteger(0);
         new Connection(
@@ -149,8 +148,9 @@ public class ConnectionTests {
                 },
                 50,
                 25);
+        ClientConfig clientConfig = new TestClientConfig();
         InstanceClientFinder finder =
-            new InstanceClientFinder(server.base, metrics, null, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
+            new InstanceClientFinder(server.base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
         finder.sync(new TreeSet<>(Collections.singleton("127.0.0.1:30001")));
         Assert.assertTrue(primed.await(15000, TimeUnit.MILLISECONDS));
         CountDownLatch created = new CountDownLatch(1);
@@ -178,7 +178,7 @@ public class ConnectionTests {
           }
         });
         Assert.assertTrue(created.await(1000, TimeUnit.MILLISECONDS));
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, server.clientExecutor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, server.clientExecutor);
         CountDownLatch latch = new CountDownLatch(1);
         CountDownLatch latchD = new CountDownLatch(1);
         Connection connection =
@@ -233,6 +233,7 @@ public class ConnectionTests {
       server.startServer();
       SimpleExecutor routingExecutor = SimpleExecutor.create("routing");
       try {
+        ClientConfig clientConfig = new TestClientConfig();
         ExceptionLogger logger = (t, c) -> {};
         CountDownLatch primed = new CountDownLatch(1);
         RoutingEngine engine =
@@ -260,8 +261,8 @@ public class ConnectionTests {
                 50,
                 25);
         InstanceClientFinder finder =
-            new InstanceClientFinder(server.base, metrics, null, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, server.clientExecutor);
+            new InstanceClientFinder(server.base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 1, engine, logger);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, server.clientExecutor);
         Connection connection =
             new Connection(
                 base,

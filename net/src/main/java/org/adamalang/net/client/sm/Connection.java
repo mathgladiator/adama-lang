@@ -29,7 +29,6 @@ import org.adamalang.runtime.data.Key;
  * connection; this is s sizeable state machine.
  */
 public class Connection {
-  public static final int MAGIC_CONNECTION_QUEUE_SIZE = 16;
   // these can be put under a base
   private final ConnectionBase base;
   // these are critical to the request (i.e they are the request)
@@ -72,7 +71,7 @@ public class Connection {
     this.state = Label.NotConnected;
     this.target = null;
     this.foundClient = null;
-    this.queue = new ItemQueue<>(base.executor, MAGIC_CONNECTION_QUEUE_SIZE, 2500);
+    this.queue = new ItemQueue<>(base.executor, base.config.getConnectionQueueSize(), base.config.getConnectionQueueTimeoutMS());
     this.foundRemote = null;
     this.backoffFindInstance = 1;
     this.backoffConnectPeer = 1;
@@ -148,7 +147,7 @@ public class Connection {
                     public void execute() throws Exception {
                       send(channel, marker, message, false, callback);
                     }
-                  }, 100);
+                  }, base.config.getSendRetryDelayMS());
                 } else {
                   callback.failure(ex);
                 }
@@ -163,10 +162,6 @@ public class Connection {
         });
       }
     });
-  }
-
-  private void bufferOrExecute(ItemAction<Remote> action) {
-    queue.add(action);
   }
 
   public void update(String viewerState) {
@@ -187,6 +182,10 @@ public class Connection {
         });
       }
     });
+  }
+
+  private void bufferOrExecute(ItemAction<Remote> action) {
+    queue.add(action);
   }
 
   public void canAttach(Callback<Boolean> callback) {
@@ -301,7 +300,7 @@ public class Connection {
       case FoundClientConnectingTryNewTarget:
       case ConnectedStoppingPleaseReconnect:
       case Connected:
-        if (backoffConnectPeer < 2000) {
+        if (backoffConnectPeer < base.config.getConnectionMaximumBackoffConnectionFailuresMS()) {
           state = Label.FindingClientWait;
           base.executor.schedule(new NamedRunnable("connection-retry") {
             @Override
@@ -342,7 +341,7 @@ public class Connection {
   }
 
   private void handle_onFailedFindingClient() {
-    if (backoffFindInstance < 2500) {
+    if (backoffFindInstance < base.config.connectionMaximumBackoffFindingClientFailuresMS()) {
       base.executor.schedule(new NamedRunnable("connection-failed-retry") {
         @Override
         public void execute() throws Exception {

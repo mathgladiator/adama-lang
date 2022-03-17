@@ -9,26 +9,18 @@
  */
 package org.adamalang.net.client.sm;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
+import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
-import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.InstanceClientFinder;
+import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.routing.MockSpaceTrackingEvents;
 import org.adamalang.net.client.routing.RoutingEngine;
 import org.adamalang.net.mocks.LatchedSeqCallback;
 import org.adamalang.net.mocks.MockSimpleEvents;
-import org.adamalang.net.mocks.SlowSingleThreadedExecutorFactory;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.natives.NtClient;
-import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Collections;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class ConnectionTrafficShift {
 
@@ -39,10 +31,11 @@ public class ConnectionTrafficShift {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
     try {
+      ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       // we use the direct engine to control the connection... directly
       RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         // finder.sync(Helper.setOf("127.0.0.1:20005", "127.0.0.1:20006"));
         finder.sync(Helper.setOf("127.0.0.1:20005"));
@@ -51,7 +44,7 @@ public class ConnectionTrafficShift {
         Runnable eventsGotUpdate = events.latchAt(3);
         Runnable eventsGotRollback = events.latchAt(4);
         Runnable eventFailed = events.latchAt(5);
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
         Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
         connection.open();
         eventsProducedData.run();

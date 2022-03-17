@@ -40,6 +40,7 @@ import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.net.client.Client;
+import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
@@ -315,7 +316,8 @@ public class Service {
     WebConfig webConfig = new WebConfig(new ConfigObject(config.get_or_create_child("web")));
     System.err.println("standing up http on:" + webConfig.port);
     NetBase netBase = new NetBase(identity, 1, 2);
-    Client client = new Client(netBase, new ClientMetrics(prometheusMetricsFactory), null);
+    ClientConfig clientConfig = new ClientConfig();
+    Client client = new Client(netBase, clientConfig, new ClientMetrics(prometheusMetricsFactory), null);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
 
     engine.subscribe("adama", (targets) -> {

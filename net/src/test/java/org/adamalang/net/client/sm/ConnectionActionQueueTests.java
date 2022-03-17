@@ -12,8 +12,10 @@ package org.adamalang.net.client.sm;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
+import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
+import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.routing.MockSpaceTrackingEvents;
 import org.adamalang.net.client.routing.RoutingEngine;
 import org.adamalang.net.mocks.LatchedSeqCallback;
@@ -30,11 +32,12 @@ public class ConnectionActionQueueTests {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
     try {
+      ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
@@ -56,14 +59,14 @@ public class ConnectionActionQueueTests {
             }
           });
         }
-        for (int k = Connection.MAGIC_CONNECTION_QUEUE_SIZE; k < callbacks.size(); k++) {
+        for (int k = clientConfig.getConnectionQueueSize(); k < callbacks.size(); k++) {
           callbacks.get(k).assertFail(901163);
         }
         finder.sync(Helper.setOf("127.0.0.1:" + servers[0].port));
         connection.open();
         gotConnected.run();
         gotData.run();
-        for (int k = 0; k < Connection.MAGIC_CONNECTION_QUEUE_SIZE; k++) {
+        for (int k = 0; k < clientConfig.getConnectionQueueSize(); k++) {
           callbacks.get(k).assertJustSuccess();
         }
       } finally {
@@ -81,11 +84,12 @@ public class ConnectionActionQueueTests {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
     try {
+      ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
@@ -96,14 +100,14 @@ public class ConnectionActionQueueTests {
           callbacks.add(callback);
           connection.attach("id", "name", "content-type", 42, "md5", "sha256", callback);
         }
-        for (int k = Connection.MAGIC_CONNECTION_QUEUE_SIZE; k < callbacks.size(); k++) {
+        for (int k = clientConfig.getConnectionQueueSize(); k < callbacks.size(); k++) {
           callbacks.get(k).assertFail(913447);
         }
         finder.sync(Helper.setOf("127.0.0.1:" + servers[0].port));
         connection.open();
         gotConnected.run();
         gotData.run();
-        for (int k = 0; k < Connection.MAGIC_CONNECTION_QUEUE_SIZE; k++) {
+        for (int k = 0; k < clientConfig.getConnectionQueueSize(); k++) {
           callbacks.get(k).assertJustSuccess();
         }
       } finally {
@@ -121,11 +125,12 @@ public class ConnectionActionQueueTests {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
     try {
+      ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
@@ -136,14 +141,14 @@ public class ConnectionActionQueueTests {
           callbacks.add(callback);
           connection.send("foo", "marker-" + k, "{}", callback);
         }
-        for (int k = Connection.MAGIC_CONNECTION_QUEUE_SIZE; k < callbacks.size(); k++) {
+        for (int k = clientConfig.getConnectionQueueSize(); k < callbacks.size(); k++) {
           callbacks.get(k).assertFail(916520);
         }
         finder.sync(Helper.setOf("127.0.0.1:" + servers[0].port));
         connection.open();
         gotConnected.run();
         gotData.run();
-        for (int k = 0; k < Connection.MAGIC_CONNECTION_QUEUE_SIZE; k++) {
+        for (int k = 0; k < clientConfig.getConnectionQueueSize(); k++) {
           callbacks.get(k).assertJustSuccess();
         }
       } finally {
@@ -161,11 +166,12 @@ public class ConnectionActionQueueTests {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
     try {
+      ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.VIEW_MIRROR);
       RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);

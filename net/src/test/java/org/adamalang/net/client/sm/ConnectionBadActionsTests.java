@@ -12,8 +12,10 @@ package org.adamalang.net.client.sm;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
+import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
+import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.routing.MockSpaceTrackingEvents;
 import org.adamalang.net.client.routing.RoutingEngine;
 import org.adamalang.net.mocks.LatchedSeqCallback;
@@ -30,11 +32,12 @@ public class ConnectionBadActionsTests {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
     try {
+      ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.BAD_CODE);
       RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
@@ -77,11 +80,12 @@ public class ConnectionBadActionsTests {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
     try {
+      ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.BAD_CODE);
       RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
@@ -114,11 +118,12 @@ public class ConnectionBadActionsTests {
     SimpleExecutor executor = SimpleExecutor.create("executor");
     ExceptionLogger logger = (t, c) -> {};
     try {
+      ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.BAD_CODE);
       RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
-      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
+      InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
-        ConnectionBase base = new ConnectionBase(metrics, engine, finder, executor);
+        ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);

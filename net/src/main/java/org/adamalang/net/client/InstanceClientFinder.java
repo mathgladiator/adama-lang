@@ -34,9 +34,11 @@ public class InstanceClientFinder {
   private final SimpleExecutor mapExecutor;
   private final ExceptionLogger logger;
   private final Random rng;
+  private final ClientConfig config;
 
-  public InstanceClientFinder(NetBase base, ClientMetrics metrics, HeatMonitor monitor, SimpleExecutorFactory threadFactory, int nThreads, RoutingEngine engine, ExceptionLogger logger) {
+  public InstanceClientFinder(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, SimpleExecutorFactory threadFactory, int nThreads, RoutingEngine engine, ExceptionLogger logger) {
     this.base = base;
+    this.config = config;
     this.metrics = metrics;
     this.monitor = monitor;
     this.engine = engine;
@@ -86,7 +88,7 @@ public class InstanceClientFinder {
       public void execute() throws Exception {
         for (String target : targets) {
           if (!clients.containsKey(target)) {
-            clients.put(target, new InstanceClient(base, metrics, monitor, engine, target, clientExecutors[0], logger));
+            clients.put(target, new InstanceClient(base, config, metrics, monitor, engine, target, clientExecutors[rng.nextInt(clientExecutors.length)], logger));
           }
         }
         Iterator<Map.Entry<String, InstanceClient>> it = clients.entrySet().iterator();
