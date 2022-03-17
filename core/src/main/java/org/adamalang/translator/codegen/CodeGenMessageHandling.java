@@ -16,9 +16,7 @@ import org.adamalang.translator.tree.definitions.MessageHandlerBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeMessage;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 /** responsible for writing all channel and message handlers */
 public class CodeGenMessageHandling {
@@ -30,6 +28,7 @@ public class CodeGenMessageHandling {
     final var channelsPerMessageArrayType = new LinkedHashMap<String, ArrayList<String>>();
     final var channelsDefined = new HashSet<String>();
     final var resetFutureQueueBody = new StringBuilderWithTabs().tabUp().tabUp();
+    HashMap<String, String> executeDirect = new HashMap<>();
     for (final DefineHandler handler : environment.document.handlers) {
       if (channelsDefined.contains(handler.channel)) {
         environment.document.createError(handler, String.format("Channel '%s' is already handled", handler.channel), "MessageHandlers");
@@ -94,7 +93,10 @@ public class CodeGenMessageHandling {
           dispatch.append("case \"").append(handler.channel).append("\":").tabUp().writeNewline();
           dispatch.append("__task.setAction(() -> handleChannelMessage_").append(handler.channel).append("(__task.who, (RTx").append(handler.typeName);
           if (handler.isArray) {
+            executeDirect.put(handler.channel, handler.typeName + "[]");
             dispatch.append("[]");
+          } else {
+            executeDirect.put(handler.channel, handler.typeName);
           }
           dispatch.append(")(__task.message)));").writeNewline();
           dispatch.append("return;").tabDown().writeNewline();
@@ -110,6 +112,49 @@ public class CodeGenMessageHandling {
       }
     }
     sb.append(classFields.toString());
+    if (executeDirect.size() > 0) {
+      sb.append("@Override").writeNewline();
+      sb.append("protected boolean __is_direct_channel(String channel) {").tabUp().writeNewline();
+      sb.append("switch (channel) {").tabUp().writeNewline();
+      int directCountDownUntilTab = executeDirect.size();
+      for (String channelDirect: executeDirect.keySet()) {
+        directCountDownUntilTab--;
+        sb.append("case \"").append(channelDirect).append("\":");
+        if (directCountDownUntilTab == 0) {
+          sb.tabDown().writeNewline();
+        } else {
+          sb.writeNewline();
+        }
+      }
+      sb.append("default:").tabUp().writeNewline();
+      sb.append("return false;").tabDown().tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+      sb.append("@Override").writeNewline();
+      sb.append("protected void __handle_direct(NtClient __who, String __channel, JsonStreamReader __reader) throws AbortMessageException {").tabUp().writeNewline();
+      sb.append("switch (__channel) {").tabUp().writeNewline();
+      directCountDownUntilTab = executeDirect.size();
+      for (Map.Entry<String, String> entry : executeDirect.entrySet()) {
+        directCountDownUntilTab--;
+        sb.append("case \"").append(entry.getKey()).append("\":").tabUp().writeNewline();
+        sb.append("handleChannelMessage_").append(entry.getKey()).append("(__who, (RTx").append(entry.getValue()).append(") __parse_message(__channel, __reader));").writeNewline();
+        sb.append("return;").tabDown().writeNewline();
+
+      }
+      sb.append("default:").tabUp().writeNewline();
+      sb.append("return;").tabDown().tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+    } else {
+      sb.append("@Override").writeNewline();
+      sb.append("protected boolean __is_direct_channel(String channel) {").tabUp().writeNewline();
+      sb.append("return false;").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+      sb.append("@Override").writeNewline();
+      sb.append("protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {").tabUp().writeNewline();
+      sb.append("return;").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+    }
     if (environment.document.handlers.size() > 0) {
       sb.append("@Override").writeNewline();
       sb.append("protected void __route(AsyncTask __task) {").tabUp().writeNewline();
@@ -120,7 +165,7 @@ public class CodeGenMessageHandling {
       sb.append("}").tabDown().writeNewline();
       sb.append("}").writeNewline();
       sb.append("@Override").writeNewline();
-      sb.append("protected Object __parse_message2(String __channel, JsonStreamReader __reader) {").tabUp().writeNewline();
+      sb.append("protected Object __parse_message(String __channel, JsonStreamReader __reader) {").tabUp().writeNewline();
       sb.append("switch (__channel) {").tabUp().writeNewline();
       sb.append(parser2.toString());
       sb.append("default:").tabUp().writeNewline();
@@ -134,7 +179,7 @@ public class CodeGenMessageHandling {
       sb.append("return;").tabDown().writeNewline();
       sb.append("}").writeNewline();
       sb.append("@Override").writeNewline();
-      sb.append("protected Object __parse_message2(String channel, JsonStreamReader __reader) {").tabUp().writeNewline();
+      sb.append("protected Object __parse_message(String channel, JsonStreamReader __reader) {").tabUp().writeNewline();
       sb.append("__reader.skipValue();").writeNewline();
       sb.append("return NtMessageBase.NULL;").tabDown().writeNewline();
       sb.append("}").writeNewline();

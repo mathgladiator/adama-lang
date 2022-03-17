@@ -820,6 +820,14 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n  private final Sink<RTxM> __queue_foo = new Sink<>(\"foo\");");
     gold.append("\n  private final NtChannel<RTxM> foo = new NtChannel<>(__futures, __queue_foo);");
     gold.append("\n  @Override");
+    gold.append("\n  protected boolean __is_direct_channel(String channel) {");
+    gold.append("\n    return false;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n    return;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __route(AsyncTask __task) {");
     gold.append("\n    switch (__task.channel) {");
     gold.append("\n      case \"foo\":");
@@ -830,7 +838,7 @@ public class GeneratedReadOnlyTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected Object __parse_message2(String __channel, JsonStreamReader __reader) {");
+    gold.append("\n  protected Object __parse_message(String __channel, JsonStreamReader __reader) {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"foo\":");
     gold.append("\n        return new RTxM(__reader);");

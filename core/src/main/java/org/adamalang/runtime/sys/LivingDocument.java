@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.Json;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.contracts.DocumentMonitor;
@@ -420,7 +421,7 @@ public abstract class LivingDocument implements RxParent {
                     timestamp = reader.readLong();
                     break;
                   case "message":
-                    message = __parse_message2(channel, reader);
+                    message = __parse_message(channel, reader);
                     break;
                   default:
                     reader.skipValue();
@@ -440,8 +441,12 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
+  protected abstract boolean __is_direct_channel(String channel);
+
+  protected abstract void __handle_direct(NtClient who, String channel, JsonStreamReader reader) throws AbortMessageException;
+
   /** parse the message for the channel, and cache the result */
-  protected abstract Object __parse_message2(String channel, JsonStreamReader reader);
+  protected abstract Object __parse_message(String channel, JsonStreamReader reader);
 
   /** code generated: insert data */
   public abstract void __insert(JsonStreamReader __reader);
@@ -670,7 +675,7 @@ public abstract class LivingDocument implements RxParent {
               patch = reader.skipValueIntoJson();
               break;
             case "message":
-              message = __parse_message2(channel, reader);
+              message = __parse_message(channel, reader);
               break;
             case "asset":
               asset = reader.readNtAsset();

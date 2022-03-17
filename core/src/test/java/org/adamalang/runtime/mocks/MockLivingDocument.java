@@ -12,6 +12,7 @@ package org.adamalang.runtime.mocks;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateView;
@@ -42,6 +43,15 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
+  protected boolean __is_direct_channel(String channel) {
+    return "__direct".equals(channel);
+  }
+
+  @Override
+  protected void __handle_direct(NtClient who, String channel, JsonStreamReader reader) throws AbortMessageException {
+  }
+
+  @Override
   public Set<String> __get_intern_strings() {
     return new HashSet<>();
   }
@@ -66,7 +76,7 @@ public class MockLivingDocument extends LivingDocument {
   public void __revert() {}
 
   @Override
-  protected Object __parse_message2(final String channel, final JsonStreamReader reader) {
+  protected Object __parse_message(final String channel, final JsonStreamReader reader) {
     return null;
   }
 
