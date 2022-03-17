@@ -363,7 +363,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1409,7 +1409,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2056,7 +2056,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2928,7 +2928,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3390,7 +3390,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3921,19 +3921,19 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient __who, String __channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient __who, String __channel, Object __message) throws AbortMessageException {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"gooarr1\":");
-    gold.append("\n        handleChannelMessage_gooarr1(__who, (RTxX[]) __parse_message(__channel, __reader));");
+    gold.append("\n        handleChannelMessage_gooarr1(__who, (RTxX[]) __message);");
     gold.append("\n        return;");
     gold.append("\n      case \"goo1\":");
-    gold.append("\n        handleChannelMessage_goo1(__who, (RTxX) __parse_message(__channel, __reader));");
+    gold.append("\n        handleChannelMessage_goo1(__who, (RTxX) __message);");
     gold.append("\n        return;");
     gold.append("\n      case \"goo2\":");
-    gold.append("\n        handleChannelMessage_goo2(__who, (RTxX) __parse_message(__channel, __reader));");
+    gold.append("\n        handleChannelMessage_goo2(__who, (RTxX) __message);");
     gold.append("\n        return;");
     gold.append("\n      case \"gooarr2\":");
-    gold.append("\n        handleChannelMessage_gooarr2(__who, (RTxX[]) __parse_message(__channel, __reader));");
+    gold.append("\n        handleChannelMessage_gooarr2(__who, (RTxX[]) __message);");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -4445,7 +4445,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4911,7 +4911,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -5435,10 +5435,10 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient __who, String __channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient __who, String __channel, Object __message) throws AbortMessageException {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"foo\":");
-    gold.append("\n        handleChannelMessage_foo(__who, (RTxF) __parse_message(__channel, __reader));");
+    gold.append("\n        handleChannelMessage_foo(__who, (RTxF) __message);");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -6063,7 +6063,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -6593,7 +6593,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -7051,7 +7051,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -7525,7 +7525,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -8142,7 +8142,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -8806,7 +8806,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -9611,7 +9611,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -10097,7 +10097,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -10542,7 +10542,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -11004,7 +11004,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -11449,7 +11449,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -11970,7 +11970,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -12531,7 +12531,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -13017,7 +13017,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -13621,7 +13621,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -14343,7 +14343,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -15010,7 +15010,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -15937,7 +15937,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -16532,7 +16532,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -17012,7 +17012,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -17467,7 +17467,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -18049,7 +18049,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -18601,7 +18601,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -19093,7 +19093,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -19746,13 +19746,13 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient __who, String __channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient __who, String __channel, Object __message) throws AbortMessageException {");
     gold.append("\n    switch (__channel) {");
     gold.append("\n      case \"foo1\":");
-    gold.append("\n        handleChannelMessage_foo1(__who, (RTx__GenFOO1) __parse_message(__channel, __reader));");
+    gold.append("\n        handleChannelMessage_foo1(__who, (RTx__GenFOO1) __message);");
     gold.append("\n        return;");
     gold.append("\n      case \"foo2\":");
-    gold.append("\n        handleChannelMessage_foo2(__who, (RTx__GenFOO2) __parse_message(__channel, __reader));");
+    gold.append("\n        handleChannelMessage_foo2(__who, (RTx__GenFOO2) __message);");
     gold.append("\n        return;");
     gold.append("\n      default:");
     gold.append("\n        return;");
@@ -20377,7 +20377,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -20978,7 +20978,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -21684,7 +21684,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -22133,7 +22133,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -22610,7 +22610,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -23246,7 +23246,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -23716,7 +23716,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -24180,7 +24180,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -24732,7 +24732,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -25206,7 +25206,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -25826,7 +25826,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {");
+    gold.append("\n  protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {");
     gold.append("\n    return;");
     gold.append("\n  }");
     gold.append("\n  @Override");

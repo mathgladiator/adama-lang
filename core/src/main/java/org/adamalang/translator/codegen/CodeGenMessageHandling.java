@@ -131,13 +131,13 @@ public class CodeGenMessageHandling {
       sb.append("}").tabDown().writeNewline();
       sb.append("}").writeNewline();
       sb.append("@Override").writeNewline();
-      sb.append("protected void __handle_direct(NtClient __who, String __channel, JsonStreamReader __reader) throws AbortMessageException {").tabUp().writeNewline();
+      sb.append("protected void __handle_direct(NtClient __who, String __channel, Object __message) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("switch (__channel) {").tabUp().writeNewline();
       directCountDownUntilTab = executeDirect.size();
       for (Map.Entry<String, String> entry : executeDirect.entrySet()) {
         directCountDownUntilTab--;
         sb.append("case \"").append(entry.getKey()).append("\":").tabUp().writeNewline();
-        sb.append("handleChannelMessage_").append(entry.getKey()).append("(__who, (RTx").append(entry.getValue()).append(") __parse_message(__channel, __reader));").writeNewline();
+        sb.append("handleChannelMessage_").append(entry.getKey()).append("(__who, (RTx").append(entry.getValue()).append(") __message);").writeNewline();
         sb.append("return;").tabDown().writeNewline();
 
       }
@@ -151,7 +151,7 @@ public class CodeGenMessageHandling {
       sb.append("return false;").tabDown().writeNewline();
       sb.append("}").writeNewline();
       sb.append("@Override").writeNewline();
-      sb.append("protected void __handle_direct(NtClient who, String channel, JsonStreamReader __reader) throws AbortMessageException {").tabUp().writeNewline();
+      sb.append("protected void __handle_direct(NtClient who, String channel, Object __message) throws AbortMessageException {").tabUp().writeNewline();
       sb.append("return;").tabDown().writeNewline();
       sb.append("}").writeNewline();
     }

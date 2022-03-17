@@ -443,7 +443,7 @@ public abstract class LivingDocument implements RxParent {
 
   protected abstract boolean __is_direct_channel(String channel);
 
-  protected abstract void __handle_direct(NtClient who, String channel, JsonStreamReader reader) throws AbortMessageException;
+  protected abstract void __handle_direct(NtClient who, String channel, Object message) throws AbortMessageException;
 
   /** parse the message for the channel, and cache the result */
   protected abstract Object __parse_message(String channel, JsonStreamReader reader);
@@ -1080,6 +1080,70 @@ public abstract class LivingDocument implements RxParent {
     }
   }
 
+  private LivingDocumentChange __transaction_send_commit(final String request, final String dedupeKey, final NtClient who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+    final var forward = new JsonStreamWriter();
+    final var reverse = new JsonStreamWriter();
+    if (marker != null) {
+      forward.writeObjectFieldIntro("__dedupe");
+      forward.beginObject();
+      forward.writeObjectFieldIntro(dedupeKey);
+      forward.writeLong(__time.get());
+      forward.endObject();
+    }
+    __seq.bumpUpPre();
+    __commit(null, forward, reverse);
+    forward.endObject();
+    reverse.endObject();
+    List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()), 0L, UpdateType.Invalidate);
+    return new LivingDocumentChange(update, broadcasts);
+  }
+
+  private LivingDocumentChange __transaction_send_enqueue(final String request, final String dedupeKey, final NtClient who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+    // create the delta
+    final var forward = new JsonStreamWriter();
+    final var reverse = new JsonStreamWriter();
+    // allocate a message id
+    final var msgId = __message_id.bumpUpPost();
+    // inject into the __messages object under the message id
+    // annotate the message with WHO
+    forward.beginObject();
+    if (marker != null) {
+      forward.writeObjectFieldIntro("__dedupe");
+      forward.beginObject();
+      forward.writeObjectFieldIntro(dedupeKey);
+      forward.writeLong(__time.get());
+      forward.endObject();
+    }
+    forward.writeObjectFieldIntro("__messages");
+    forward.beginObject();
+    forward.writeObjectFieldIntro(msgId);
+    final var task = new AsyncTask(msgId, who, channel, timestamp, message);
+    task.dump(forward);
+    forward.endObject();
+    reverse.beginObject();
+    if (marker != null) {
+      reverse.writeObjectFieldIntro("__dedupe");
+      reverse.beginObject();
+      reverse.writeObjectFieldIntro(dedupeKey);
+      reverse.writeNull();
+      reverse.endObject();
+    }
+    reverse.writeObjectFieldIntro("__messages");
+    reverse.beginObject();
+    reverse.writeObjectFieldIntro(msgId);
+    reverse.writeNull();
+    reverse.endObject();
+    __queue.add(task);
+    // commit changes (i.e. the message id)
+    __seq.bumpUpPre();
+    __commit(null, forward, reverse);
+    forward.endObject();
+    reverse.endObject();
+    final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
+    return new LivingDocumentChange(result, null);
+  }
+
   /** transaction: a person is sending the document a message */
   private LivingDocumentChange __transaction_send(final String request, final NtClient who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
@@ -1088,6 +1152,11 @@ public abstract class LivingDocument implements RxParent {
       __monitor.push("TransactionSend");
     }
     try {
+      // they must be connected
+      if (!__clients.containsKey(who) && !factory.canSendWhileDisconnected(who)) {
+        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
+      }
+
       String dedupeKey = who.agent + "/" + who.authority + "/" + marker;
       if (marker != null) {
         if (__dedupe.containsKey(dedupeKey)) {
@@ -1095,54 +1164,27 @@ public abstract class LivingDocument implements RxParent {
         }
         __dedupe.put(dedupeKey, __time.get());
       }
-      __random = new Random(Long.parseLong(__entropy.get()));
-      // they must be connected
-      if (!__clients.containsKey(who) && !factory.canSendWhileDisconnected(who)) {
-        throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
+      LivingDocumentChange change;
+      /*
+      if (__is_direct_channel(channel)) {
+        try {
+          __random = new Random(Long.parseLong(__entropy.get()) + timestamp);
+          __handle_direct(who, channel, message);
+          change = __transaction_send_commit(request, dedupeKey, who, marker, channel, timestamp, message, factory);
+        } catch (AbortMessageException ame) {
+          __revert();
+          throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT);
+        } catch (ComputeBlockedException cbe) {
+          __revert();
+          change = __transaction_send_enqueue(request, dedupeKey, who, marker, channel, timestamp, message, factory);
+        }
+      } else {
+        change = __transaction_send_enqueue(request, dedupeKey, who, marker, channel, timestamp, message, factory);
       }
-      // create the delta
-      final var forward = new JsonStreamWriter();
-      final var reverse = new JsonStreamWriter();
-      // allocate a message id
-      final var msgId = __message_id.bumpUpPost();
-      // inject into the __messages object under the message id
-      // annotate the message with WHO
-      forward.beginObject();
-      if (marker != null) {
-        forward.writeObjectFieldIntro("__dedupe");
-        forward.beginObject();
-        forward.writeObjectFieldIntro(dedupeKey);
-        forward.writeLong(__time.get());
-        forward.endObject();
-      }
-      forward.writeObjectFieldIntro("__messages");
-      forward.beginObject();
-      forward.writeObjectFieldIntro(msgId);
-      final var task = new AsyncTask(msgId, who, channel, timestamp, message);
-      task.dump(forward);
-      forward.endObject();
-      reverse.beginObject();
-      if (marker != null) {
-        reverse.writeObjectFieldIntro("__dedupe");
-        reverse.beginObject();
-        reverse.writeObjectFieldIntro(dedupeKey);
-        reverse.writeNull();
-        reverse.endObject();
-      }
-      reverse.writeObjectFieldIntro("__messages");
-      reverse.beginObject();
-      reverse.writeObjectFieldIntro(msgId);
-      reverse.writeNull();
-      reverse.endObject();
-      __queue.add(task);
-      // commit changes (i.e. the message id)
-      __seq.bumpUpPre();
-      __commit(null, forward, reverse);
-      forward.endObject();
-      reverse.endObject();
-      final var result = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), true, 0, 0L, UpdateType.AddUserData);
+      */
+      change = __transaction_send_enqueue(request, dedupeKey, who, marker, channel, timestamp, message, factory);
       exception = false;
-      return new LivingDocumentChange(result, null);
+      return change;
     } finally {
       if (__monitor != null) {
         __monitor.pop(System.nanoTime() - startedTime, exception);

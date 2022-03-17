@@ -48,7 +48,7 @@ public class MockLivingDocument extends LivingDocument {
   }
 
   @Override
-  protected void __handle_direct(NtClient who, String channel, JsonStreamReader reader) throws AbortMessageException {
+  protected void __handle_direct(NtClient who, String channel, Object message) throws AbortMessageException {
   }
 
   @Override
