@@ -1046,6 +1046,7 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    switch (channel) {");
     gold.append("\n      case \"assoc\":");
     gold.append("\n      case \"assoc2\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");

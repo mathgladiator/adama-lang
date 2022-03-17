@@ -54,7 +54,7 @@ public class ServiceTemporalTests {
       LatchCallback cb1 = new LatchCallback();
       long started = System.currentTimeMillis();
       streamback.get().send("foo", null, "{}", cb1);
-      cb1.await_success(6);
+      cb1.await_success(5);
       latch2.run();
       Assert.assertEquals(142, (int) getX(streamback, 2));
       latch3.run();

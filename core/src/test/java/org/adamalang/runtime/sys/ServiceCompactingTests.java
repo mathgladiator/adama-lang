@@ -56,7 +56,7 @@ public class ServiceCompactingTests {
       for (int k = 0; k < 100; k++) {
         LatchCallback cb1 = new LatchCallback();
         streamback.get().send("foo", null, "{}", cb1);
-        cb1.await_success(6 + 2 * k);
+        cb1.await_success(5 + k);
       }
       AtomicInteger reads = new AtomicInteger(100);
       int attempts = 25;
@@ -105,7 +105,7 @@ public class ServiceCompactingTests {
       for (int k = 0; k < 100; k++) {
         LatchCallback cb1 = new LatchCallback();
         streamback.get().send("foo", null, "{}", cb1);
-        cb1.await_success(6 + 2 * k);
+        cb1.await_success(5 + k);
       }
       AtomicInteger reads = new AtomicInteger(100);
       int attempts = 25;
@@ -166,7 +166,7 @@ public class ServiceCompactingTests {
       for (int k = 0; k < 100; k++) {
         LatchCallback cb1 = new LatchCallback();
         streamback.get().send("foo", null, "{}", cb1);
-        cb1.await_success(6 + 2 * k);
+        cb1.await_success(5 + k);
       }
       CountDownLatch nothingHappened = new CountDownLatch(1);
       dataService.get(KEY, new Callback<LocalDocumentChange>() {
@@ -188,7 +188,7 @@ public class ServiceCompactingTests {
       {
         LatchCallback cb1 = new LatchCallback();
         streamback.get().send("foo", null, "{}", cb1);
-        cb1.await_success(206);
+        cb1.await_success(105);
       }
       AtomicInteger reads = new AtomicInteger(100);
       int attempts = 25;

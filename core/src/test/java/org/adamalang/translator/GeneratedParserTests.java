@@ -3916,6 +3916,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n      case \"goo1\":");
     gold.append("\n      case \"goo2\":");
     gold.append("\n      case \"gooarr2\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");
@@ -5430,6 +5431,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    switch (channel) {");
     gold.append("\n      case \"foo\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");
@@ -19741,6 +19743,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    switch (channel) {");
     gold.append("\n      case \"foo1\":");
     gold.append("\n      case \"foo2\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");

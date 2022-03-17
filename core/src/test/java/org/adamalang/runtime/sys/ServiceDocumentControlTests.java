@@ -102,12 +102,12 @@ public class ServiceDocumentControlTests {
       streamback.get().send("goo", null, "{}", cb2);
       streamback.get().send("foo", null, "{}", cb3);
       dataService.unpause();
-      cb1.await_success(5);
+      cb1.await_success(4);
       cb2.await_failure(159869);
-      cb3.await_success(6);
+      cb3.await_success(5);
       latch2.run();
-      Assert.assertEquals("{\"data\":{\"x\":43},\"seq\":5}", streamback.get(2));
-      Assert.assertEquals("{\"data\":{\"x\":1000},\"seq\":6}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"x\":43},\"seq\":4}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":1000},\"seq\":5}", streamback.get(3));
       streamback.get().disconnect();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(4));

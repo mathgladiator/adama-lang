@@ -66,9 +66,9 @@ public class ServiceConnectTests {
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
       LatchCallback cb1 = new LatchCallback();
       streamback.get().send("foo", null, "{}", cb1);
-      cb1.await_success(6);
+      cb1.await_success(5);
       latch2.run();
-      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":6}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streamback.get(2));
       streamback.get().disconnect();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
@@ -143,9 +143,9 @@ public class ServiceConnectTests {
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":3}", streamback.get(1));
       LatchCallback cb1 = new LatchCallback();
       streamback.get().send("foo", null, "{}", cb1);
-      cb1.await_success(5);
+      cb1.await_success(4);
       latch2.run();
-      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":4}", streamback.get(2));
       streamback.get().disconnect();
       latch3.run();
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));

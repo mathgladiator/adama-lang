@@ -53,7 +53,7 @@ public class ServiceDeploymentTests {
       {
         LatchCallback callback = new LatchCallback();
         streamback.get().send("foo", null, "{}", callback);
-        callback.await_success(6);
+        callback.await_success(5);
       }
       factoryFactory.set(factoryTo);
       CountDownLatch deployed = new CountDownLatch(1);
@@ -75,14 +75,14 @@ public class ServiceDeploymentTests {
       {
         LatchCallback callback = new LatchCallback();
         streamback.get().send("foo", null, "{}", callback);
-        callback.await_success(9);
+        callback.await_success(7);
       }
       latch.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
-      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":6}", streamback.get(2));
-      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":7}", streamback.get(3));
-      Assert.assertEquals("{\"data\":{\"x\":5142},\"seq\":9}", streamback.get(4));
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":6}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"x\":5142},\"seq\":7}", streamback.get(4));
     } finally {
       service.shutdown();
     }
@@ -109,7 +109,7 @@ public class ServiceDeploymentTests {
       {
         LatchCallback callback = new LatchCallback();
         streamback.get().send("foo", null, "{}", callback);
-        callback.await_success(6);
+        callback.await_success(5);
       }
       factoryFactory.set(factoryTo);
       dataService.pause();
@@ -135,7 +135,7 @@ public class ServiceDeploymentTests {
       latch.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
-      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":6}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streamback.get(2));
       Assert.assertEquals("STATUS:Disconnected", streamback.get(3));
     } finally {
       service.shutdown();
@@ -162,7 +162,7 @@ public class ServiceDeploymentTests {
       {
         LatchCallback callback = new LatchCallback();
         streamback.get().send("foo", null, "{}", callback);
-        callback.await_success(6);
+        callback.await_success(5);
       }
       factoryFactory.set(null);
       CountDownLatch deployed = new CountDownLatch(1);
@@ -180,13 +180,13 @@ public class ServiceDeploymentTests {
       {
         LatchCallback callback = new LatchCallback();
         streamback.get().send("foo", null, "{}", callback);
-        callback.await_success(8);
+        callback.await_success(6);
       }
       latch.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
-      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":6}", streamback.get(2));
-      Assert.assertEquals("{\"data\":{\"x\":242},\"seq\":8}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":242},\"seq\":6}", streamback.get(3));
     } finally {
       service.shutdown();
     }
@@ -212,7 +212,7 @@ public class ServiceDeploymentTests {
       {
         LatchCallback callback = new LatchCallback();
         streamback.get().send("foo", null, "{}", callback);
-        callback.await_success(6);
+        callback.await_success(5);
       }
       factoryFactory.set(
           new LivingDocumentFactory(
@@ -241,13 +241,13 @@ public class ServiceDeploymentTests {
       {
         LatchCallback callback = new LatchCallback();
         streamback.get().send("foo", null, "{}", callback);
-        callback.await_success(8);
+        callback.await_success(6);
       }
       latch.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"x\":42},\"seq\":4}", streamback.get(1));
-      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":6}", streamback.get(2));
-      Assert.assertEquals("{\"data\":{\"x\":242},\"seq\":8}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"x\":142},\"seq\":5}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"x\":242},\"seq\":6}", streamback.get(3));
     } finally {
       service.shutdown();
     }

@@ -11,7 +11,6 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.Json;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.async.OutstandingFutureTracker;
 import org.adamalang.runtime.contracts.DocumentMonitor;
@@ -1083,6 +1082,8 @@ public abstract class LivingDocument implements RxParent {
   private LivingDocumentChange __transaction_send_commit(final String request, final String dedupeKey, final NtClient who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     final var forward = new JsonStreamWriter();
     final var reverse = new JsonStreamWriter();
+    forward.beginObject();
+    reverse.beginObject();
     if (marker != null) {
       forward.writeObjectFieldIntro("__dedupe");
       forward.beginObject();
@@ -1095,7 +1096,7 @@ public abstract class LivingDocument implements RxParent {
     forward.endObject();
     reverse.endObject();
     List<LivingDocumentChange.Broadcast> broadcasts = __buildBroadcastList();
-    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) (__next_time.get() - __time.get()), 0L, UpdateType.Invalidate);
+    RemoteDocumentUpdate update = new RemoteDocumentUpdate(__seq.get(), __seq.get(), who, request, forward.toString(), reverse.toString(), __state.has(), (int) Math.max(0, __next_time.get() - __time.get()), 0L, UpdateType.DirectMessageExecute);
     return new LivingDocumentChange(update, broadcasts);
   }
 
@@ -1165,7 +1166,6 @@ public abstract class LivingDocument implements RxParent {
         __dedupe.put(dedupeKey, __time.get());
       }
       LivingDocumentChange change;
-      /*
       if (__is_direct_channel(channel)) {
         try {
           __random = new Random(Long.parseLong(__entropy.get()) + timestamp);
@@ -1181,8 +1181,6 @@ public abstract class LivingDocument implements RxParent {
       } else {
         change = __transaction_send_enqueue(request, dedupeKey, who, marker, channel, timestamp, message, factory);
       }
-      */
-      change = __transaction_send_enqueue(request, dedupeKey, who, marker, channel, timestamp, message, factory);
       exception = false;
       return change;
     } finally {

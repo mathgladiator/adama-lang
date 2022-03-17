@@ -60,7 +60,7 @@ public class ConnectionTrafficShift {
         LatchedSeqCallback cb1 = new LatchedSeqCallback();
         connection.send("foo", null, "{\"z\":100}", cb1);
         eventsGotUpdate.run();
-        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":6}");
+        events.assertWrite(2, "DELTA:{\"data\":{\"x\":223},\"seq\":5}");
         finder.sync(Helper.setOf("127.0.0.1:20006"));
         eventsGotRollback.run();
         events.assertWrite(3, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");

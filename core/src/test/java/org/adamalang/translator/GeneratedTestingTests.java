@@ -1293,6 +1293,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    switch (channel) {");
     gold.append("\n      case \"chan\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");

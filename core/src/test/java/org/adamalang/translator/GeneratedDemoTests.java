@@ -449,6 +449,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    switch (channel) {");
     gold.append("\n      case \"notify\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");
@@ -1313,6 +1314,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    switch (channel) {");
     gold.append("\n      case \"publish\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");
@@ -6096,6 +6098,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    switch (channel) {");
     gold.append("\n      case \"create_new_add_on\":");
     gold.append("\n      case \"delete\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");
@@ -6836,6 +6839,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      case \"add\":");
     gold.append("\n      case \"square\":");
     gold.append("\n      case \"kill\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");
@@ -7434,6 +7438,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    switch (channel) {");
     gold.append("\n      case \"change\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");
@@ -8934,6 +8939,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  protected boolean __is_direct_channel(String channel) {");
     gold.append("\n    switch (channel) {");
     gold.append("\n      case \"say\":");
+    gold.append("\n        return true;");
     gold.append("\n    default:");
     gold.append("\n      return false;");
     gold.append("\n    }");

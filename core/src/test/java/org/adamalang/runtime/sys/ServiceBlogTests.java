@@ -46,20 +46,20 @@ public class ServiceBlogTests {
       {
         LatchCallback cb = new LatchCallback();
         streamback.get().send("publish", null, "{\"payload\":\"x\"}", cb);
-        cb.await_success(6);
+        cb.await_success(5);
       }
       time.time = 100000;
       {
         LatchCallback cb = new LatchCallback();
         streamback.get().send("publish", null, "{\"payload\":\"y\"}", cb);
-        cb.await_success(8);
+        cb.await_success(6);
       }
 
       got.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"seq\":4}", streamback.get(1));
-      Assert.assertEquals("{\"data\":{\"publishes\":{\"1\":{\"who\":{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"},\"when\":\"0\",\"payload\":\"x\"},\"@o\":[1]}},\"seq\":6}", streamback.get(2));
-      Assert.assertEquals("{\"data\":{\"publishes\":{\"2\":{\"who\":{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"},\"when\":\"100000\",\"payload\":\"y\"},\"@o\":[2],\"1\":null}},\"seq\":8}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"publishes\":{\"1\":{\"who\":{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"},\"when\":\"0\",\"payload\":\"x\"},\"@o\":[1]}},\"seq\":5}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"publishes\":{\"2\":{\"who\":{\"@t\":1,\"agent\":\"?\",\"authority\":\"?\"},\"when\":\"100000\",\"payload\":\"y\"},\"@o\":[2],\"1\":null}},\"seq\":6}", streamback.get(3));
     } finally {
       service.shutdown();
     }
@@ -86,20 +86,20 @@ public class ServiceBlogTests {
       {
         LatchCallback cb = new LatchCallback();
         streamback.get().send("notify", null, "{\"db_seq\":4}", cb);
-        cb.await_success(6);
+        cb.await_success(5);
       }
       time.time = 100000;
       {
         LatchCallback cb = new LatchCallback();
         streamback.get().send("notify", null, "{\"db_seq\":6}", cb);
-        cb.await_success(8);
+        cb.await_success(6);
       }
 
       got.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
       Assert.assertEquals("{\"data\":{\"max_db_seq\":0},\"seq\":4}", streamback.get(1));
-      Assert.assertEquals("{\"data\":{\"max_db_seq\":4},\"seq\":6}", streamback.get(2));
-      Assert.assertEquals("{\"data\":{\"max_db_seq\":6},\"seq\":8}", streamback.get(3));
+      Assert.assertEquals("{\"data\":{\"max_db_seq\":4},\"seq\":5}", streamback.get(2));
+      Assert.assertEquals("{\"data\":{\"max_db_seq\":6},\"seq\":6}", streamback.get(3));
     } finally {
       service.shutdown();
     }

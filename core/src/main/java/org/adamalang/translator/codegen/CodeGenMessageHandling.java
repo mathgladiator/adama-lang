@@ -121,7 +121,8 @@ public class CodeGenMessageHandling {
         directCountDownUntilTab--;
         sb.append("case \"").append(channelDirect).append("\":");
         if (directCountDownUntilTab == 0) {
-          sb.tabDown().writeNewline();
+          sb.tabUp().writeNewline();
+          sb.append("return true;").tabDown().tabDown().writeNewline();
         } else {
           sb.writeNewline();
         }

@@ -93,7 +93,7 @@ public class InstanceClientTests {
         events.assertWrite(0, "CONNECTED");
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":1000,\"zpx\":1000},\"seq\":4}");
         events.assertWrite(2, "DELTA:{\"data\":{\"zpx\":1100},\"seq\":5}");
-        events.assertWrite(3, "DELTA:{\"data\":{\"x\":1100,\"zpx\":1200},\"seq\":7}");
+        events.assertWrite(3, "DELTA:{\"data\":{\"x\":1100,\"zpx\":1200},\"seq\":6}");
         events.assertWrite(4, "DISCONNECTED");
       }
     }
