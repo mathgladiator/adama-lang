@@ -12,6 +12,7 @@ package org.adamalang.net.codec;
 import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.codec.Flow;
 import org.adamalang.common.codec.TypeId;
+import org.adamalang.runtime.data.LocalDocumentChange;
 
 /** messages from server to client */
 public class ServerMessage {
@@ -106,5 +107,38 @@ public class ServerMessage {
   public static class InventoryHeartbeat {
     @FieldOrder(1)
     public String[] spaces;
+  }
+
+  @TypeId(9002)
+  @Flow("ProxyVoidResponse")
+  public static class ProxyVoidResponse {
+  }
+
+  @TypeId(9004)
+  @Flow("ProxyIntResponse")
+  public static class ProxyIntResponse {
+    @FieldOrder(1)
+    public int value;
+  }
+
+  @TypeId(9006)
+  @Flow("ProxyLocalDataChange")
+  public static class ProxyLocalDataChange {
+    @FieldOrder(1)
+    public String patch;
+
+    @FieldOrder(2)
+    public int reads;
+
+    public ProxyLocalDataChange copyFrom(LocalDocumentChange change) {
+      ProxyLocalDataChange proxy = new ProxyLocalDataChange();
+      proxy.patch = change.patch;
+      proxy.reads = change.reads;
+      return proxy;
+    }
+
+    public LocalDocumentChange toLocalDocumentChange() {
+      return new LocalDocumentChange(patch, reads);
+    }
   }
 }

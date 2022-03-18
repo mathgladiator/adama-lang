@@ -16,6 +16,7 @@ import org.adamalang.net.client.contracts.HeatMonitor;
 import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
+import org.adamalang.net.client.proxy.ProxyDataService;
 import org.adamalang.net.client.routing.RoutingEngine;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.client.sm.ConnectionBase;
@@ -69,6 +70,20 @@ public class Client {
         stream.accept(target);
       }
     }, 3));
+  }
+
+  public void getProxy(String target, Callback<ProxyDataService> callback) {
+    finder.find(target, new Callback<InstanceClient>() {
+      @Override
+      public void success(InstanceClient value) {
+        callback.success(value.getProxy());
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+    });
   }
 
   public void waitForCapacity(String space, int timeout, Consumer<Boolean> done) {

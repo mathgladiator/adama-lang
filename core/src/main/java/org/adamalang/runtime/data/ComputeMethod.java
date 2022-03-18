@@ -12,7 +12,22 @@ package org.adamalang.runtime.data;
 /** the backend data service provides a variety of algorithms to execute on the log */
 public enum ComputeMethod {
   /** patch the local document to be up to date after the given sequencer */
-  HeadPatch,
+  HeadPatch(1),
   /** rewind the document to the given sequencer */
-  Rewind
+  Rewind(2);
+
+  public final int type;
+
+  ComputeMethod(int type) {
+    this.type = type;
+  }
+
+  public static ComputeMethod fromType(int type) {
+    for (ComputeMethod method: ComputeMethod.values()) {
+      if (method.type == type) {
+        return method;
+      }
+    }
+    return null;
+  }
 }

@@ -43,6 +43,7 @@ public class ClientMetrics {
   public final Runnable client_notify_deploy_failure_do;
   public final Runnable client_notify_deploy_failure_find;
 
+  public final ItemActionMonitor client_proxy;
 
   public ClientMetrics(MetricsFactory factory) {
     client_connection_alive = factory.inflight("client_connection_alive");
@@ -72,5 +73,6 @@ public class ClientMetrics {
     client_info_completed = factory.counter("client_info_completed");
     client_info_failed_downstream = factory.counter("client_info_failed_downstream");
     client_info_failed_ask = factory.counter("client_info_failed_ask");
+    client_proxy = factory.makeItemActionMonitor("client_proxy");
   }
 }

@@ -10,6 +10,7 @@
 package org.adamalang.net.server;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.util.concurrent.ScheduledFuture;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
@@ -22,7 +23,10 @@ import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.runtime.contracts.Streamback;
+import org.adamalang.runtime.data.ComputeMethod;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.LocalDocumentChange;
+import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
@@ -91,6 +95,105 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void error(int errorCode) {
     nexus.metrics.server_channel_error.run();
     completed();
+  }
+
+
+  public Callback<Integer> respondViaInteger() {
+    return new Callback<Integer>() {
+      @Override
+      public void success(Integer value) {
+        ServerMessage.ProxyIntResponse response = new ServerMessage.ProxyIntResponse();
+        response.value = value;
+        ByteBuf buf = upstream.create(8);
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    };
+  }
+
+  public Callback<Void> respondViaVoid() {
+    return new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        ServerMessage.ProxyVoidResponse response = new ServerMessage.ProxyVoidResponse();
+        ByteBuf buf = upstream.create(8);
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    };
+  }
+
+  public Callback<LocalDocumentChange> respondViaLocalDataChange() {
+    return new Callback<LocalDocumentChange>() {
+      @Override
+      public void success(LocalDocumentChange value) {
+        ServerMessage.ProxyLocalDataChange response = new ServerMessage.ProxyLocalDataChange();
+        response.reads = value.reads;
+        response.patch = value.patch;
+        ByteBuf buf = upstream.create(8);
+        ServerCodec.write(buf, response);
+        upstream.next(buf);
+        upstream.completed();
+
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        upstream.error(ex.code);
+      }
+    };
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxySnapshot payload) {
+    Key key = new Key(payload.space, payload.key);
+    nexus.service.dataService.compactAndSnapshot(key, payload.seq, payload.document, payload.history, respondViaInteger());
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyDelete payload) {
+    Key key = new Key(payload.space, payload.key);
+    nexus.service.dataService.delete(key, respondViaVoid());
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyCompute payload) {
+    Key key = new Key(payload.space, payload.key);
+    nexus.service.dataService.compute(key, ComputeMethod.fromType(payload.method), payload.seq, respondViaLocalDataChange());
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyPatch payload) {
+    Key key = new Key(payload.space, payload.key);
+    RemoteDocumentUpdate[] patches = new RemoteDocumentUpdate[payload.patches.length];
+    for (int k = 0; k < patches.length; k++) {
+      patches[k] = payload.patches[k].toRemoteDocumentUpdate();
+    }
+    nexus.service.dataService.patch(key, patches, respondViaVoid());
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyInitialize payload) {
+    Key key = new Key(payload.space, payload.key);
+    nexus.service.dataService.initialize(key, payload.initial.toRemoteDocumentUpdate(), respondViaVoid());
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyGet payload) {
+    Key key = new Key(payload.space, payload.key);
+    nexus.service.dataService.get(key, respondViaLocalDataChange());
   }
 
   @Override

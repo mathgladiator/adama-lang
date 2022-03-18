@@ -25,10 +25,12 @@ import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamInfo;
 import org.adamalang.net.client.contracts.impl.CallbackByteStreamWriter;
+import org.adamalang.net.client.proxy.ProxyDataService;
 import org.adamalang.net.codec.ClientCodec;
 import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
+import org.adamalang.runtime.data.DataService;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -50,6 +52,7 @@ public class InstanceClient implements AutoCloseable {
   private final ItemQueue<ChannelClient> client;
   private final ClientConfig config;
   private int backoff;
+  private final ProxyDataService proxy;
 
   public InstanceClient(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, RoutingTarget routing, String target, SimpleExecutor executor, ExceptionLogger logger) throws Exception {
     this.base = base;
@@ -64,7 +67,12 @@ public class InstanceClient implements AutoCloseable {
     this.logger = logger;
     this.alive = new AtomicBoolean(true);
     this.backoff = 1;
+    this.proxy = new ProxyDataService(metrics, client);
     retryConnection();
+  }
+
+  public ProxyDataService getProxy() {
+    return proxy;
   }
 
   private void retryConnection() {

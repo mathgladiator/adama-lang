@@ -9,9 +9,17 @@
  */
 package org.adamalang.net.codec;
 
+import io.netty.buffer.ByteBuf;
 import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.codec.Flow;
+import org.adamalang.common.codec.TypeCommon;
 import org.adamalang.common.codec.TypeId;
+import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.natives.NtClient;
+
+import java.security.PublicKey;
 
 /** messages from client to server */
 public class ClientMessage {
@@ -157,5 +165,127 @@ public class ClientMessage {
   @TypeId(7231)
   @Flow("Server")
   public static class RequestInventoryHeartbeat {
+  }
+
+  @TypeId(9001)
+  @Flow("Server")
+  public static class ProxyGet {
+    @FieldOrder(1)
+    public String space;
+
+    @FieldOrder(2)
+    public String key;
+  }
+
+  @TypeId(9003)
+  @Flow("PatchItem")
+  public static class RemoteDocumentUpdateItem {
+    @FieldOrder(1)
+    public String agent;
+    @FieldOrder(2)
+    public String authority;
+    @FieldOrder(3)
+    public int seq_begin;
+    @FieldOrder(4)
+    public int seq_end;
+    @FieldOrder(5)
+    public String request;
+    @FieldOrder(6)
+    public String redo;
+    @FieldOrder(7)
+    public String undo;
+    @FieldOrder(8)
+    public boolean active;
+    @FieldOrder(9)
+    public int delay;
+    @FieldOrder(10)
+    public long dAssetBytes;
+
+    public void copyFrom(RemoteDocumentUpdate update) {
+      this.seq_begin = update.seqBegin;
+      this.seq_end = update.seqEnd;
+      if (update.who != null) {
+        this.agent = update.who.agent;
+        this.authority = update.who.authority;
+      }
+      this.request = update.request;
+      this.redo = update.redo;
+      this.undo = update.undo;
+      this.active = update.requiresFutureInvalidation;
+      this.delay = update.whenToInvalidateMilliseconds;
+      this.dAssetBytes = update.assetBytes;
+    }
+
+    public RemoteDocumentUpdate toRemoteDocumentUpdate() {
+      return new RemoteDocumentUpdate(seq_begin, seq_end, agent != null ? new NtClient(agent, authority) : null, request, redo, undo, active, delay, dAssetBytes, UpdateType.Internal);
+    }
+  }
+
+  @TypeId(9005)
+  @Flow("Server")
+  public static class ProxyInitialize {
+    @FieldOrder(1)
+    public String space;
+
+    @FieldOrder(2)
+    public String key;
+
+    @FieldOrder(3)
+    public RemoteDocumentUpdateItem initial;
+
+  }
+
+  @TypeId(9007)
+  @Flow("Server")
+  public static class ProxyPatch {
+    @FieldOrder(1)
+    public String space;
+
+    @FieldOrder(2)
+    public String key;
+
+    @FieldOrder(3)
+    public RemoteDocumentUpdateItem[] patches;
+  }
+
+  @TypeId(9009)
+  @Flow("Server")
+  public static class ProxyCompute {
+    @FieldOrder(1)
+    public String space;
+
+    @FieldOrder(2)
+    public String key;
+
+    @FieldOrder(3)
+    public int method;
+
+    @FieldOrder(4)
+    public int seq;
+  }
+
+  @TypeId(9011)
+  @Flow("Server")
+  public static class ProxyDelete {
+    @FieldOrder(1)
+    public String space;
+
+    @FieldOrder(2)
+    public String key;
+  }
+
+  @TypeId(9012)
+  @Flow("Server")
+  public static class ProxySnapshot {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
+    @FieldOrder(3)
+    public int seq;
+    @FieldOrder(4)
+    public int history;
+    @FieldOrder(5)
+    public String document;
   }
 }

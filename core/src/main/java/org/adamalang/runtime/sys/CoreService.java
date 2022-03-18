@@ -37,6 +37,7 @@ import java.util.function.Consumer;
 /** The core service enables consumers to manage an in-process Adama */
 public class CoreService {
   private static final Logger LOGGER = LoggerFactory.getLogger(CoreService.class);
+  public final DataService dataService;
   private final CoreMetrics metrics;
   private final LivingDocumentFactoryFactory livingDocumentFactoryFactory;
   private final DocumentThreadBase[] bases;
@@ -51,6 +52,7 @@ public class CoreService {
    */
   public CoreService(CoreMetrics metrics, LivingDocumentFactoryFactory livingDocumentFactoryFactory, Consumer<HashMap<String, PredictiveInventory.MeteringSample>> meteringEvent, DataService dataService, TimeSource time, int nThreads) {
     this.metrics = metrics;
+    this.dataService = dataService;
     this.livingDocumentFactoryFactory = livingDocumentFactoryFactory;
     bases = new DocumentThreadBase[nThreads];
     this.alive = new AtomicBoolean(true);

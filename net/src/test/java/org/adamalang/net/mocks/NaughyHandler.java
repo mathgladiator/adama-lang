@@ -129,6 +129,36 @@ public class NaughyHandler implements ByteStream, ClientCodec.HandlerServer, Str
   }
 
   @Override
+  public void handle(ClientMessage.ProxySnapshot payload) {
+    real.failure(new ErrorCodeException(-1000));
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyDelete payload) {
+    real.failure(new ErrorCodeException(-1000));
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyCompute payload) {
+    real.failure(new ErrorCodeException(-1000));
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyPatch payload) {
+    real.failure(new ErrorCodeException(-1000));
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyInitialize payload) {
+    real.failure(new ErrorCodeException(-1000));
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyGet payload) {
+    real.failure(new ErrorCodeException(-1000));
+  }
+
+  @Override
   public void handle(ClientMessage.RequestInventoryHeartbeat payload) {
     if (bits.inventory != null) {
       ServerMessage.InventoryHeartbeat inventoryHeartbeat = new ServerMessage.InventoryHeartbeat();
