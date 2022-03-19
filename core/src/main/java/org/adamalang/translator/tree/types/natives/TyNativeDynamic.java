@@ -19,13 +19,11 @@ import org.adamalang.translator.tree.types.TySimpleNative;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
 
 public class TyNativeDynamic extends TySimpleNative implements DetailHasDeltaType, //
-    DetailEqualityTestingRequiresWrapping, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;
@@ -69,11 +67,6 @@ public class TyNativeDynamic extends TySimpleNative implements DetailHasDeltaTyp
   @Override
   public String getDeltaType(final Environment environment) {
     return "DDynamic";
-  }
-
-  @Override
-  public String getEqualityTestingBinaryPattern() {
-    return "(%s.equals(%s))";
   }
 
   @Override

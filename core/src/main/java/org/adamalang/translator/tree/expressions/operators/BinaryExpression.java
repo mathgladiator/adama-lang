@@ -12,13 +12,14 @@ package org.adamalang.translator.tree.expressions.operators;
 import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
+import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
-import org.adamalang.translator.tree.types.checking.LocalTypeAlgebraResult;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetEnums;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
-import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
+import org.adamalang.translator.tree.types.traits.IsEnum;
 
 import java.util.function.Consumer;
 
@@ -28,7 +29,6 @@ public class BinaryExpression extends Expression {
   public final BinaryOp op;
   public final Token opToken;
   public final Expression right;
-  private LocalTypeAlgebraResult typingResult;
   public BinaryOperatorResult operatorResult;
 
   public BinaryExpression(final Expression left, final Token opToken, final Expression right) {
@@ -38,7 +38,6 @@ public class BinaryExpression extends Expression {
     this.right = right;
     this.ingest(left);
     this.ingest(right);
-    typingResult = null;
   }
 
   @Override
@@ -48,26 +47,38 @@ public class BinaryExpression extends Expression {
     right.emit(yielder);
   }
 
+  private boolean areBothTypesEnums(final Environment environment, TyType left, TyType right) {
+    final var aEnum = RuleSetEnums.IsEnum(environment, left, true);
+    final var bEnum = RuleSetEnums.IsEnum(environment, right, true);
+    if (aEnum && bEnum) {
+      if (((IsEnum) left).name().equals(((IsEnum) right).name())) {
+        return true;
+      } else {
+        environment.document.createError(DocumentPosition.sum(left, right), String.format("Type check failure: enum types are incompatible '%s' vs '%s'.", left.getAdamaType(), right.getAdamaType()), "RuleSetEquality");
+        return false;
+      }
+    }
+    return false;
+  }
+
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     environment.mustBeComputeContext(this);
-    typingResult = new LocalTypeAlgebraResult(environment, left, right);
-    if (op == BinaryOp.Equal || op == BinaryOp.NotEqual) {
-      // TEST if both sides are enumerations, if so, then cool
-    }
-    switch (op) {
-      case Equal:
-      case NotEqual:
-        if (typingResult.equals()) {
-          return new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this);
-        }
-        return null;
-    }
     Environment leftEnv = op.leftAssignment ? environment.scopeWithComputeContext(ComputeContext.Assignment) : environment;
     TyType typeLeft = left.typing(leftEnv, null);
     typeLeft = environment.rules.Resolve(typeLeft, false);
     TyType typeRight = right.typing(environment, null);
     typeRight = environment.rules.Resolve(typeRight, false);
+
+    if (op == BinaryOp.Equal || op == BinaryOp.NotEqual) {
+      TyType boolType = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this);
+      if (areBothTypesEnums(environment, typeLeft, typeRight)) {
+        operatorResult = new BinaryOperatorResult(boolType, "%s " + op.javaOp + " %s", false);
+        return boolType;
+      }
+      // other special rules here; like, what? messages, tuples? anything with .equals(), where is the logic from strings
+    }
+
     operatorResult = BinaryOperatorTable.INSTANCE.find(typeLeft, op.javaOp, typeRight, environment);
     if (operatorResult != null) {
       return operatorResult.type.makeCopyWithNewPosition(typeLeft, TypeBehavior.ReadOnlyNativeValue).withPosition(typeRight);
@@ -88,19 +99,6 @@ public class BinaryExpression extends Expression {
       } else {
         sb.append(String.format("%s", String.format(operatorResult.javaPattern, leftStr, rightStr)));
       }
-      return;
     }
-    final var typeLeft = typingResult.typeLeft;
-    if (typingResult.typeLeft instanceof DetailEqualityTestingRequiresWrapping) {
-      switch (op) {
-        case Equal:
-          sb.append(String.format("%s", String.format(((DetailEqualityTestingRequiresWrapping) typeLeft).getEqualityTestingBinaryPattern(), leftStr, rightStr)));
-          return;
-        case NotEqual:
-          sb.append(String.format("!%s", String.format(((DetailEqualityTestingRequiresWrapping) typeLeft).getEqualityTestingBinaryPattern(), leftStr, rightStr)));
-          return;
-      }
-    }
-    sb.append(leftStr).append(" ").append(op.javaOp).append(" ").append(rightStr);
   }
 }

@@ -32,7 +32,6 @@ import java.util.function.Consumer;
 public class TyNativeString extends TySimpleNative implements IsNativeValue, DetailHasDeltaType, //
     CanBeMapDomain, //
     DetailTypeHasMethods, //
-    DetailEqualityTestingRequiresWrapping, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;
@@ -76,11 +75,6 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
   @Override
   public String getDeltaType(final Environment environment) {
     return "DString";
-  }
-
-  @Override
-  public String getEqualityTestingBinaryPattern() {
-    return "LibString.equality(%s, %s)";
   }
 
   @Override

@@ -21,7 +21,6 @@ import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.functions.FunctionOverloadInstance;
 import org.adamalang.translator.tree.types.natives.functions.FunctionStyleJava;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class TyNativeAsset extends TySimpleNative implements DetailHasDeltaType, //
-    DetailEqualityTestingRequiresWrapping, //
     DetailTypeHasMethods, //
     AssignmentViaNative //
 {
@@ -74,11 +72,6 @@ public class TyNativeAsset extends TySimpleNative implements DetailHasDeltaType,
   @Override
   public String getDeltaType(final Environment environment) {
     return "DAsset";
-  }
-
-  @Override
-  public String getEqualityTestingBinaryPattern() {
-    return "(%s.equals(%s))";
   }
 
   @Override

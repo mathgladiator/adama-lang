@@ -20,7 +20,6 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 
 import java.util.function.Consumer;
@@ -32,7 +31,6 @@ import java.util.function.Consumer;
 public class TyNativeStateMachineRef extends TySimpleNative implements //
     IsNativeValue, //
     DetailHasDeltaType, //
-    DetailEqualityTestingRequiresWrapping, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;
@@ -76,11 +74,6 @@ public class TyNativeStateMachineRef extends TySimpleNative implements //
   @Override
   public String getDeltaType(final Environment environment) {
     return "DFastString";
-  }
-
-  @Override
-  public String getEqualityTestingBinaryPattern() {
-    return "LibString.equality(%s, %s)";
   }
 
   @Override

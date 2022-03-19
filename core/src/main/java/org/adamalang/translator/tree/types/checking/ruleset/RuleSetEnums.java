@@ -33,7 +33,7 @@ public class RuleSetEnums {
     return null;
   }
 
-  static boolean IsEnum(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsEnum(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = RuleSetCommon.Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof IsEnum) {

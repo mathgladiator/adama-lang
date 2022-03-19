@@ -599,7 +599,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
@@ -1120,7 +1120,7 @@ public class GeneratedUnaryTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");

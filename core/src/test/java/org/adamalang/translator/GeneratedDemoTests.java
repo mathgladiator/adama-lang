@@ -1927,7 +1927,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(9);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
@@ -2832,7 +2832,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      __track(0);");
     gold.append("\n      if (place.get() == 2 || place.get() == 4) {");
     gold.append("\n        __track(1);");
-    gold.append("\n        return (who.equals(owner.get()));");
+    gold.append("\n        return (who).equals(owner.get());");
     gold.append("\n      }");
     gold.append("\n      __track(2);");
     gold.append("\n      if (place.get() == 3) {");
@@ -4110,19 +4110,19 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    __track(91);");
-    gold.append("\n    if ((current.get().equals(player1.get()))) {");
+    gold.append("\n    if ((current.get()).equals(player1.get())) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(92);");
     gold.append("\n      current.set(player2.get());");
-    gold.append("\n    } else if ((current.get().equals(player2.get()))) {");
+    gold.append("\n    } else if ((current.get()).equals(player2.get())) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(93);");
     gold.append("\n      current.set(player3.get());");
-    gold.append("\n    } else if ((current.get().equals(player3.get()))) {");
+    gold.append("\n    } else if ((current.get()).equals(player3.get())) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(94);");
     gold.append("\n      current.set(player4.get());");
-    gold.append("\n    } else if ((current.get().equals(player4.get()))) {");
+    gold.append("\n    } else if ((current.get()).equals(player4.get())) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(95);");
     gold.append("\n      current.set(player1.get());");
@@ -4250,7 +4250,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient cv) {");
     gold.append("\n    __code_cost += 5;");
     gold.append("\n    __track(123);");
-    gold.append("\n    if ((owner.get().equals(NtClient.NO_ONE))) {");
+    gold.append("\n    if ((owner.get()).equals(NtClient.NO_ONE)) {");
     gold.append("\n      __code_cost += 4;");
     gold.append("\n      __track(124);");
     gold.append("\n      owner.set(cv);");
@@ -4270,7 +4270,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      __transitionStateMachine(\"lobby\", 0);");
     gold.append("\n    }");
     gold.append("\n    __track(127);");
-    gold.append("\n    if ((owner.get().equals(cv))) {");
+    gold.append("\n    if ((owner.get()).equals(cv)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(128);");
     gold.append("\n      return true;");
@@ -4379,7 +4379,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      NtClient owner = __obj.owner.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return place == 4 && (owner.equals(who));");
+    gold.append("\n      return place == 4 && (owner).equals(who);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause2 implements WhereClause<RTxPlayer> {");
@@ -4401,7 +4401,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxPlayer __obj) {");
     gold.append("\n      NtClient link = __obj.link.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (link.equals(cv));");
+    gold.append("\n      return (link).equals(cv);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause3 implements WhereClause<RTxPlayer> {");
@@ -4424,7 +4424,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      NtClient link = __obj.link.get();");
     gold.append("\n      boolean playing = __obj.playing.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (link.equals(cv)) && !playing;");
+    gold.append("\n      return (link).equals(cv) && !playing;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause4 implements WhereClause<RTxPlayer> {");
@@ -4630,7 +4630,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      NtClient owner = __obj.owner.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner.equals(NtClient.NO_ONE));");
+    gold.append("\n      return (owner).equals(NtClient.NO_ONE);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause15 implements WhereClause<RTxPlayer> {");
@@ -4670,7 +4670,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      NtClient owner = __obj.owner.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner.equals(player1.get()));");
+    gold.append("\n      return (owner).equals(player1.get());");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause17 implements WhereClause<RTxCard> {");
@@ -4692,7 +4692,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      NtClient owner = __obj.owner.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner.equals(player2.get()));");
+    gold.append("\n      return (owner).equals(player2.get());");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause18 implements WhereClause<RTxCard> {");
@@ -4714,7 +4714,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      NtClient owner = __obj.owner.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner.equals(player3.get()));");
+    gold.append("\n      return (owner).equals(player3.get());");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause19 implements WhereClause<RTxCard> {");
@@ -4736,7 +4736,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxCard __obj) {");
     gold.append("\n      NtClient owner = __obj.owner.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner.equals(player4.get()));");
+    gold.append("\n      return (owner).equals(player4.get());");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause20 implements WhereClause<RTxCard> {");
@@ -5068,7 +5068,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      int points = __obj.points.get();");
     gold.append("\n      int suit = __obj.suit.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner.equals(current.get())) && place == 2 && (played.get() == 0 && (points_played.get() || points == 0) || played.get() > 0 && suit_in_play.get() == suit);");
+    gold.append("\n      return (owner).equals(current.get()) && place == 2 && (played.get() == 0 && (points_played.get() || points == 0) || played.get() > 0 && suit_in_play.get() == suit);");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause35 implements WhereClause<RTxCard> {");
@@ -5091,7 +5091,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      NtClient owner = __obj.owner.get();");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner.equals(current.get())) && place == 2;");
+    gold.append("\n      return (owner).equals(current.get()) && place == 2;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause36 implements WhereClause<RTxCard> {");
@@ -5217,7 +5217,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      NtClient owner = __obj.owner.get();");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner.equals(current.get())) && place == 2;");
+    gold.append("\n      return (owner).equals(current.get()) && place == 2;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause42 implements WhereClause<RTxPlayer> {");
@@ -5258,7 +5258,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      NtClient owner = __obj.owner.get();");
     gold.append("\n      int place = __obj.place.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return (owner.equals(p.link.get())) && place == 4;");
+    gold.append("\n      return (owner).equals(p.link.get()) && place == 4;");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause44 implements WhereClause<RTxPlayer> {");
@@ -5281,7 +5281,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n      boolean playing = __obj.playing.get();");
     gold.append("\n      NtClient link = __obj.link.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return playing && !(link.equals(p.link.get()));");
+    gold.append("\n      return playing && !(link).equals(p.link.get());");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private final static Comparator<RTxCard> __ORDER_Card_ordering_a = new Comparator<RTxCard>() {");
@@ -6170,7 +6170,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void handleChannelMessage_delete(NtClient who, RTxNothing arg) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
-    gold.append("\n    if ((owner.get().equals(who))) {");
+    gold.append("\n    if ((owner.get()).equals(who)) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(2);");
     gold.append("\n      __destroyDocument();");
@@ -6909,7 +6909,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  private void handleChannelMessage_kill(NtClient who, RTxNothing n) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(3);");
-    gold.append("\n    if ((who.equals(creator.get()))) {");
+    gold.append("\n    if ((who).equals(creator.get())) {");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(4);");
     gold.append("\n      __destroyDocument();");
@@ -6993,7 +6993,7 @@ public class GeneratedDemoTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(5);");
-    gold.append("\n    return (who.equals(creator.get()));");
+    gold.append("\n    return (who).equals(creator.get());");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");

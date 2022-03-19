@@ -13,6 +13,8 @@ import org.adamalang.runtime.natives.NtComplex;
 import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.reflect.Extension;
 
+import java.util.function.BiFunction;
+
 /** a very simple math library which extends some of the already exposed Math calls */
 public class LibMath {
   public static double SQRT2 = 1.4142135623730950488016887242097;
@@ -93,6 +95,13 @@ public class LibMath {
   public static boolean isTrue(NtMaybe<Boolean> x) {
     if (x.has()) {
       return x.get();
+    }
+    return false;
+  }
+
+  public static <T> boolean equality(NtMaybe<T> x, T y, BiFunction<T, T, Boolean> check) {
+    if (x.has()) {
+      return check.apply(x.get(), y);
     }
     return false;
   }

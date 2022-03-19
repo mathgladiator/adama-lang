@@ -1194,7 +1194,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
@@ -1892,7 +1892,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
@@ -3691,7 +3691,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
@@ -6083,7 +6083,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  private final RxClient owner;");
     gold.append("\n  public boolean __POLICY_saneG(NtClient who){");
     gold.append("\n    __track(0);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
@@ -6591,7 +6591,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(2);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
@@ -7465,7 +7465,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n    }");
     gold.append("\n    public boolean __POLICY_sane3(NtClient who){");
     gold.append("\n      __track(2);");
-    gold.append("\n      return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n      return (who).equals(NtClient.NO_ONE);");
     gold.append("\n    }");
     gold.append("\n    @Override");
     gold.append("\n    public long __memory() {");
@@ -8020,7 +8020,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(5);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");

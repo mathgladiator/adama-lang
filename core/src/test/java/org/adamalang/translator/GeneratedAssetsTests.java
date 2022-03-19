@@ -1094,7 +1094,7 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    __track(4);");
     gold.append("\n    final NtAsset z = y;");
     gold.append("\n    __track(5);");
-    gold.append("\n    te.set((y.equals(z)));");
+    gold.append("\n    te.set((y).equals(z));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");

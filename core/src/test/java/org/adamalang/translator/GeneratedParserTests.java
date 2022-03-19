@@ -16091,7 +16091,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n  public boolean __onConnected__0(NtClient who) {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
-    gold.append("\n    return (who.equals(NtClient.NO_ONE));");
+    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public boolean __onConnected(NtClient __cvalue) {");
@@ -16193,7 +16193,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    public boolean test(RTxX __obj) {");
     gold.append("\n      String name = __obj.name.get();");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return LibString.equality(name, \"J\");");
+    gold.append("\n      return (name).equals(\"J\");");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private class __CLOSURE_WhereClause1 implements WhereClause<RTxX> {");
@@ -16210,7 +16210,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n    @Override");
     gold.append("\n    public boolean test(RTxX z) {");
     gold.append("\n      __code_cost ++;");
-    gold.append("\n      return LibString.equality(z.name.get(), \"J\");");
+    gold.append("\n      return (z.name.get()).equals(\"J\");");
     gold.append("\n    }");
     gold.append("\n  }");
     gold.append("\n  private final static Comparator<RTxX> __ORDER_X_by_a = new Comparator<RTxX>() {");

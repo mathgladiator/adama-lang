@@ -20,7 +20,6 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.traits.IsNativeValue;
 import org.adamalang.translator.tree.types.traits.assign.AssignmentViaNative;
-import org.adamalang.translator.tree.types.traits.details.DetailEqualityTestingRequiresWrapping;
 import org.adamalang.translator.tree.types.traits.details.DetailHasDeltaType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
@@ -34,7 +33,6 @@ public class TyNativeDouble extends TySimpleNative implements //
     IsNativeValue, //
     DetailHasDeltaType, //
     DetailTypeHasMethods, //
-    DetailEqualityTestingRequiresWrapping, //
     AssignmentViaNative //
 {
   public final Token readonlyToken;
@@ -78,11 +76,6 @@ public class TyNativeDouble extends TySimpleNative implements //
   @Override
   public String getDeltaType(final Environment environment) {
     return "DDouble";
-  }
-
-  @Override
-  public String getEqualityTestingBinaryPattern() {
-    return "LibMath.near(%s, %s)";
   }
 
   @Override

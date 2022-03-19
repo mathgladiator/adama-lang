@@ -23,6 +23,7 @@ import java.util.HashMap;
 /** This is the table of how types use operators */
 public class BinaryOperatorTable {
   private final HashMap<String, BinaryOperatorResult> table;
+
   private BinaryOperatorTable() {
     this.table = new HashMap<>();
     TyType tyInt = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int"));
@@ -31,9 +32,10 @@ public class BinaryOperatorTable {
     TyType tyBoolean = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("boolean"));
     TyType tyString = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string"));
     TyType tyComplex = new TyNativeComplex(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("complex"));
-    TyType tyLabel = new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
-    TyType tyClient = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
-    TyType tyAsset = new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
+    TyType tyLabel = new TyNativeStateMachineRef(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("label"));
+    TyType tyClient = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
+    TyType tyAsset = new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("asset"));
+    TyType tyDynamic = new TyNativeDynamic(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("dynamic"));
 
     TyType tyMaybeBoolean = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyBoolean));
     TyType tyMaybeInt = new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyInt));
@@ -482,6 +484,63 @@ public class BinaryOperatorTable {
       insert(tyListRxComplex, "*=", tyComplex, tyInt, "LibArithmetic.ListMath.multByCC(%s, %s)", false);
     }
 
+    { // EQUALITY
+      insert(tyBoolean, "==", tyBoolean, tyBoolean, "%s == %s", false);
+
+      insert(tyInt, "==", tyInt, tyBoolean, "%s == %s", false);
+      insert(tyInt, "==", tyLong, tyBoolean, "%s == %s", false);
+      insert(tyLong, "==", tyInt, tyBoolean, "%s == %s", false);
+      insert(tyLong, "==", tyLong, tyBoolean, "%s == %s", false);
+
+      insert(tyDouble, "==", tyDouble, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyDouble, "==", tyInt, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyDouble, "==", tyLong, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyInt, "==", tyDouble, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyLong, "==", tyDouble, tyBoolean, "LibMath.near(%s, %s)", false);
+
+      insert(tyComplex, "==", tyComplex, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyComplex, "==", tyInt, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyComplex, "==", tyLong, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyComplex, "==", tyDouble, tyBoolean, "LibMath.near(%s, %s)", false);
+      insert(tyInt, "==", tyComplex, tyBoolean, "LibMath.near(%s, %s)", true);
+      insert(tyLong, "==", tyComplex, tyBoolean, "LibMath.near(%s, %s)", true);
+      insert(tyDouble, "==", tyComplex, tyBoolean, "LibMath.near(%s, %s)", true);
+
+      insert(tyAsset, "==", tyAsset, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyClient, "==", tyClient, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyDynamic, "==", tyDynamic, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyString, "==", tyString, tyBoolean, "(%s).equals(%s)", false);
+      insert(tyLabel, "==", tyLabel, tyBoolean, "(%s).equals(%s)", false);
+    }
+
+    { // NOT EQUAL
+      insert(tyBoolean, "!=", tyBoolean, tyBoolean, "%s != %s", false);
+
+      insert(tyInt, "!=", tyInt, tyBoolean, "%s != %s", false);
+      insert(tyInt, "!=", tyLong, tyBoolean, "%s != %s", false);
+      insert(tyLong, "!=", tyInt, tyBoolean, "%s != %s", false);
+      insert(tyLong, "!=", tyLong, tyBoolean, "%s != %s", false);
+
+      insert(tyDouble, "!=", tyDouble, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyDouble, "!=", tyInt, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyDouble, "!=", tyLong, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyInt, "!=", tyDouble, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyLong, "!=", tyDouble, tyBoolean, "!LibMath.near(%s, %s)", false);
+
+      insert(tyComplex, "!=", tyComplex, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyComplex, "!=", tyInt, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyComplex, "!=", tyLong, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyComplex, "!=", tyDouble, tyBoolean, "!LibMath.near(%s, %s)", false);
+      insert(tyInt, "!=", tyComplex, tyBoolean, "!LibMath.near(%s, %s)", true);
+      insert(tyLong, "!=", tyComplex, tyBoolean, "!LibMath.near(%s, %s)", true);
+      insert(tyDouble, "!=", tyComplex, tyBoolean, "!LibMath.near(%s, %s)", true);
+
+      insert(tyAsset, "!=", tyAsset, tyBoolean, "!(%s).equals(%s)", false);
+      insert(tyClient, "!=", tyClient, tyBoolean, "!(%s).equals(%s)", false);
+      insert(tyDynamic, "!=", tyDynamic, tyBoolean, "!(%s).equals(%s)", false);
+      insert(tyString, "!=", tyString, tyBoolean, "!(%s).equals(%s)", false);
+      insert(tyLabel, "!=", tyLabel, tyBoolean, "!(%s).equals(%s)", false);
+    }
 
   }
 

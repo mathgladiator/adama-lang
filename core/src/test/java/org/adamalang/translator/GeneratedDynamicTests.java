@@ -447,11 +447,11 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n    __track(2);");
     gold.append("\n    NtDynamic cake3 = cake1;");
     gold.append("\n    __track(3);");
-    gold.append("\n    t.set((cake1.equals(cake2)));");
+    gold.append("\n    t.set((cake1).equals(cake2));");
     gold.append("\n    __track(4);");
     gold.append("\n    cake3 = NtDynamic.NULL;");
     gold.append("\n    __track(5);");
-    gold.append("\n    t2.set((cake1.equals(NtDynamic.NULL)));");
+    gold.append("\n    t2.set((cake1).equals(NtDynamic.NULL));");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {");
