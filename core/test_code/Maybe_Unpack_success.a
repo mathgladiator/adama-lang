@@ -1,0 +1,17 @@
+message M {
+  int z;
+}
+
+record R {
+  int x;
+}
+
+public maybe<R> r;
+public formula rx = r.x;
+
+@construct {
+  let m0 = @maybe({z:123});
+  let z0 = m0.z;
+  let m1 = @maybe<M>;
+  let z1 = m1.z;
+}

@@ -11,6 +11,7 @@ package org.adamalang.runtime.natives;
 
 import java.util.Comparator;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /** a maybe for a boxed java type (i.e. Integer) */
 public class NtMaybe<T> {
@@ -108,6 +109,14 @@ public class NtMaybe<T> {
   public NtMaybe<T> withDeleteChain(final Runnable deleteChain) {
     this.deleteChain = deleteChain;
     return this;
+  }
+
+  public <O> NtMaybe<O> unpack(Function<T, O> func) {
+    if (value == null) {
+      return new NtMaybe<>();
+    } else {
+      return new NtMaybe<>(func.apply(value));
+    }
   }
 
   @Override

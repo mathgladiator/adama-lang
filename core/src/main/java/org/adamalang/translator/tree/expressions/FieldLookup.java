@@ -16,11 +16,13 @@ import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
+import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeAggregateFunctional;
 import org.adamalang.translator.tree.types.natives.functions.TyNativeFunctionInternalFieldReplacement;
 import org.adamalang.translator.tree.types.reactive.TyReactiveRecord;
 import org.adamalang.translator.tree.types.traits.IsStructure;
 import org.adamalang.translator.tree.types.traits.details.DetailComputeRequiresGet;
+import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 import org.adamalang.translator.tree.types.traits.details.DetailTypeHasMethods;
 
 import java.util.function.Consumer;
@@ -37,6 +39,8 @@ public class FieldLookup extends Expression {
   private boolean makeReactiveList;
   private boolean onlyExpression;
   private String overrideFieldName;
+  private boolean requiresMaybeUnpack;
+  private String maybeCastType;
 
   /**
    * @param expression the expression to evaluate
@@ -53,6 +57,8 @@ public class FieldLookup extends Expression {
     makeReactiveList = false;
     overrideFieldName = null;
     isGlobalObject = false;
+    requiresMaybeUnpack = false;
+    maybeCastType = null;
   }
 
   @Override
@@ -101,6 +107,10 @@ public class FieldLookup extends Expression {
           return functional;
         }
       }
+      if (environment.rules.IsMaybe(eType, true)) {
+        requiresMaybeUnpack = true;
+        eType = ((DetailContainsAnEmbeddedType) eType).getEmbeddedType(environment);
+      }
       if (eType instanceof IsStructure) {
         if (!environment.state.isContextComputation() && eType.behavior == TypeBehavior.ReadOnlyNativeValue) {
           environment.document.createError(this, String.format("The field '%s' is on a readonly message", fieldName), "FieldLookup");
@@ -110,16 +120,23 @@ public class FieldLookup extends Expression {
         if (fd != null) {
           final var actualType = environment.rules.Resolve(fd.type, false);
           if (actualType != null) {
+            TyType typeToReturn;
             if (actualType instanceof DetailComputeRequiresGet && environment.state.isContextComputation()) {
               addGet = true;
-              return ((DetailComputeRequiresGet) actualType).typeAfterGet(environment);
+              typeToReturn = ((DetailComputeRequiresGet) actualType).typeAfterGet(environment);
             } else {
-              return actualType.makeCopyWithNewPosition(this, actualType.behavior);
+              typeToReturn = actualType.makeCopyWithNewPosition(this, actualType.behavior);
+            }
+            if (requiresMaybeUnpack) {
+              maybeCastType = eType.getJavaBoxType(environment);
+              return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("MAYBE"), new TokenizedItem<>(typeToReturn));
+            } else {
+              return typeToReturn;
             }
           }
         }
       }
-      environment.document.createError(this, String.format("Record '%s' lacks field '%s'", eType.getAdamaType(), fieldName), "FieldLookup");
+      environment.document.createError(this, String.format("Type '%s' lacks field '%s'", eType.getAdamaType(), fieldName), "FieldLookup");
     }
     return null;
   }
@@ -136,7 +153,13 @@ public class FieldLookup extends Expression {
       if (overrideFieldName != null) {
         fieldNameToUse = overrideFieldName;
       }
-      if (makeReactiveList && aggregateType != null) {
+      if (requiresMaybeUnpack) {
+        sb.append("unpack((item) -> ((").append(maybeCastType).append(")").append(" item).").append(fieldNameToUse);
+        if (addGet) {
+          sb.append(".get()");
+        }
+        sb.append(")");
+      } else if (makeReactiveList && aggregateType != null) {
         sb.append("transform((item) -> item.").append(fieldNameToUse);
         if (addGet) {
           sb.append(".get()");

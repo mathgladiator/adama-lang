@@ -87,7 +87,7 @@ public class GeneratedLinqTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Linq_FieldNotFound_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Record 'list<Y>' lacks field 'z' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":8,\"character\":11},\"end\":{\"line\":8,\"character\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"Record 'Y' lacks field 'z' (FieldLookup)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":7,\"character\":11},\"end\":{\"line\":7,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'list<Y>' lacks field 'z' (FieldLookup)\"},{\"range\":{\"start\":{\"line\":8,\"character\":11},\"end\":{\"line\":8,\"character\":14}},\"severity\":1,\"source\":\"error\",\"message\":\"Type 'Y' lacks field 'z' (FieldLookup)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
