@@ -49,11 +49,6 @@ public class Rules {
     return RuleSetStructures.CanStructureAProjectIntoStructureB(environment, tyTypeA, tyTypeB, silent);
   }
 
-  /** FROM: RuleSetEquality */
-  public CanTestEqualityResult CanTestEquality(final TyType tyTypeA, final TyType tyTypeB, final boolean silent) {
-    return RuleSetEquality.CanTestEquality(environment, tyTypeA, tyTypeB, silent);
-  }
-
   public boolean CanTypeAStoreTypeB(final TyType tyTypeA, final TyType tyTypeB, final StorageTweak result, final boolean silent) {
     return RuleSetAssignment.CanTypeAStoreTypeB(environment, tyTypeA, tyTypeB, result, silent);
   }
