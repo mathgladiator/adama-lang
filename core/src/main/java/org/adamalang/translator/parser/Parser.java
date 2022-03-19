@@ -238,14 +238,32 @@ public class Parser {
       return aa;
     } else if (token.isSymbolWithTextEq("(")) {
       final var expr = expression();
-      final var endParen = tokens.pop();
-      if (endParen == null) {
+      final var endParenMaybe = tokens.pop();
+      if (endParenMaybe == null) {
         throw new ParseException("Parser expected a ), but instead got end of stream.", token);
       }
-      if (endParen.isSymbolWithTextEq(")")) {
-        return new Parentheses(token, expr, endParen);
+      if (endParenMaybe.isSymbolWithTextEq(",")) {
+        Token lastNotNullToken = endParenMaybe;
+        Token tokenToCheck = endParenMaybe;
+        AnonymousTuple anonymousTuple = new AnonymousTuple();
+        anonymousTuple.add(token, expr);
+        while (tokenToCheck != null && tokenToCheck.isSymbolWithTextEq(",")) {
+          lastNotNullToken = tokenToCheck;
+          anonymousTuple.add(tokenToCheck, expression());
+          tokenToCheck = tokens.pop();
+        }
+        if (tokenToCheck == null) {
+          throw new ParseException("Parser expected a ',' or ')', but instead got end of stream.", lastNotNullToken);
+        } else if (tokenToCheck.isSymbolWithTextEq(")")) {
+          anonymousTuple.finish(tokenToCheck);
+        } else {
+          throw new ParseException("Parser expected a ), but instead got an `" + tokenToCheck + "`", tokenToCheck);
+        }
+        return anonymousTuple;
+      } else if (endParenMaybe.isSymbolWithTextEq(")")) {
+        return new Parentheses(token, expr, endParenMaybe);
       } else {
-        throw new ParseException("Parser expected a ), but instead got an `" + endParen + "`", endParen);
+        throw new ParseException("Parser expected a ), but instead got an `" + endParenMaybe + "`", endParenMaybe);
       }
     }
     throw new ParseException(String.format("Parser expected an atomic, but instead got `%s`", token.text), token);

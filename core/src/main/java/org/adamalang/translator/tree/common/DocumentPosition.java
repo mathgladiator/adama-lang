@@ -10,6 +10,7 @@
 package org.adamalang.translator.tree.common;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.translator.parser.token.MajorTokenType;
 import org.adamalang.translator.parser.token.Token;
 
 /** Defines a position within a document. Usually, this is a construct within the document */
@@ -26,6 +27,11 @@ public class DocumentPosition {
     startLinePosition = Integer.MAX_VALUE;
     endLineIndex = 0;
     endLinePosition = 0;
+  }
+
+  /** convert the document position to a token with an identifier type */
+  public Token asIdentiferToken(String sourceName, String name) {
+    return new Token(sourceName, name, MajorTokenType.Identifier, null, startLineIndex, startLinePosition,  endLineIndex, endLinePosition);
   }
 
   /** aggregate the positions together */

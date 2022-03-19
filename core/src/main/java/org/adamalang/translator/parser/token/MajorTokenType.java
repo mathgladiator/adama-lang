@@ -14,7 +14,7 @@ public enum MajorTokenType {
   /** a comment which be a block /* or // */
   Comment(true),
   /** identifiers: [A-Za-z_][A-Za-z_0-9]* */
-  Identifer(false),
+  Identifier(false),
   /** special identifiers which are keywords in the language like for, while, do, if, etc... */
   Keyword(false),
   /** a state machine label identifier: '#' [A-Za-z_0-9]* */

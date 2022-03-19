@@ -38,48 +38,35 @@ public class PhaseRun {
       testTime.addAndGet(Math.max(patch.whenToInvalidateMilliseconds / 2, 25));
     });
     DumbDataService.DumbDurableLivingDocumentAcquire acquire = new DumbDataService.DumbDurableLivingDocumentAcquire();
-    try {
-      Key key = new Key("0", "0");
-      DocumentThreadBase base = new DocumentThreadBase(dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
-      DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "0", monitor, base, acquire);
-      DurableLivingDocument doc = acquire.get();
-      doc.invalidate(Callback.DONT_CARE_INTEGER);
-      outputFile.append("CPU:").append(doc.getCodeCost()).append("\n");
-      outputFile.append("MEMORY:").append(doc.getMemoryBytes()).append("\n");
-      doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
-        outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
-      }), new JsonStreamReader("{}"), DumbDataService.makePrinterPrivateView("NO_ONE", outputFile));
-      doc.connect(NtClient.NO_ONE, DumbDataService.makePrinterInt("NO_ONE", outputFile));
-      final var rando = new NtClient("rando", "random-place");
-      doc.createPrivateView(rando, wrap(str -> {
-        outputFile.append("+ RANDO DELTA:").append(str).append("\n");
-      }), new JsonStreamReader("{}"), DumbDataService.makePrinterPrivateView("RANDO", outputFile));
-      doc.connect(rando, DumbDataService.makePrinterInt("RANDO", outputFile));
-      doc.invalidate(DumbDataService.makePrinterInt("RANDO", outputFile));
-
-      outputFile.append("MEMORY:" + doc.getMemoryBytes() + "\n");
-      outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
-      outputFile.append(doc.json()).append("\n");
-      outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");
-      final var json = doc.json();
-      dds.setData(json);
-      outputFile.append(json).append("\n");
-      DumbDataService.DumbDurableLivingDocumentAcquire acquire2 = new DumbDataService.DumbDurableLivingDocumentAcquire();
-      DurableLivingDocument.load(key, factory, monitor, base, acquire2);
-      DurableLivingDocument doc2 = acquire2.get();
-      outputFile.append(doc2.json()).append("\n");
-      mustBeTrue(doc2.json().equals(json), "JSON don't match load, dump cycle");
-    } catch (final RuntimeException gee) {
-      passedTests.set(false);
-      Throwable search = gee;
-      while (search.getCause() != null) {
-        search = search.getCause();
-        if (search instanceof GoodwillExhaustedException) {
-          outputFile.append("GOODWILL EXHAUSTED:" + gee.getMessage()).append("!!!\n!!!\n");
-        }
-      }
-      outputFile.append("RuntimeException:" + gee.getMessage()).append("!!!\n!!!\n");
-    }
+    Key key = new Key("0", "0");
+    DocumentThreadBase base = new DocumentThreadBase(dds, new CoreMetrics(new NoOpMetricsFactory()), SimpleExecutor.NOW, time);
+    DurableLivingDocument.fresh(key, factory, NtClient.NO_ONE, "{}", "0", monitor, base, acquire);
+    DurableLivingDocument doc = acquire.get();
+    doc.invalidate(Callback.DONT_CARE_INTEGER);
+    outputFile.append("CPU:").append(doc.getCodeCost()).append("\n");
+    outputFile.append("MEMORY:").append(doc.getMemoryBytes()).append("\n");
+    doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
+      outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
+    }), new JsonStreamReader("{}"), DumbDataService.makePrinterPrivateView("NO_ONE", outputFile));
+    doc.connect(NtClient.NO_ONE, DumbDataService.makePrinterInt("NO_ONE", outputFile));
+    final var rando = new NtClient("rando", "random-place");
+    doc.createPrivateView(rando, wrap(str -> {
+      outputFile.append("+ RANDO DELTA:").append(str).append("\n");
+    }), new JsonStreamReader("{}"), DumbDataService.makePrinterPrivateView("RANDO", outputFile));
+    doc.connect(rando, DumbDataService.makePrinterInt("RANDO", outputFile));
+    doc.invalidate(DumbDataService.makePrinterInt("RANDO", outputFile));
+    outputFile.append("MEMORY:" + doc.getMemoryBytes() + "\n");
+    outputFile.append("--JAVA RESULTS-------------------------------------").append("\n");
+    outputFile.append(doc.json()).append("\n");
+    outputFile.append("--DUMP RESULTS-------------------------------------").append("\n");
+    final var json = doc.json();
+    dds.setData(json);
+    outputFile.append(json).append("\n");
+    DumbDataService.DumbDurableLivingDocumentAcquire acquire2 = new DumbDataService.DumbDurableLivingDocumentAcquire();
+    DurableLivingDocument.load(key, factory, monitor, base, acquire2);
+    DurableLivingDocument doc2 = acquire2.get();
+    outputFile.append(doc2.json()).append("\n");
+    mustBeTrue(doc2.json().equals(json), "JSON don't match load, dump cycle");
   }
 
   public static Perspective wrap(Consumer<String> consumer) {

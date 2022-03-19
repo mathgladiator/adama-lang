@@ -116,7 +116,7 @@ public class Token implements Comparable<Token> {
 
   /** helper: is the token an identifier of one of the givens */
   public boolean isIdentifier(final String... ids) {
-    if (majorType == MajorTokenType.Identifer) {
+    if (majorType == MajorTokenType.Identifier) {
       if (ids == null || ids.length == 0) {
         return true;
       }

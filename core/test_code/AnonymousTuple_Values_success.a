@@ -1,0 +1,6 @@
+@construct {
+  let x = (1, 2, 3);
+  let y = ("true", false, 3.14);
+  let z = ([1,2], true);
+  let k = x.first;
+}

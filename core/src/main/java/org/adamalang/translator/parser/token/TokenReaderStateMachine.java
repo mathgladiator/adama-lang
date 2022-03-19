@@ -69,7 +69,7 @@ class TokenReaderStateMachine {
               } else if (codepoint == '#') {
                 currentMajorTokenType = MajorTokenType.Label;
               } else {
-                currentMajorTokenType = MajorTokenType.Identifer;
+                currentMajorTokenType = MajorTokenType.Identifier;
               }
             } else if (Tables.WHITESPACE_SCANNER[codepoint]) {
               currentMajorTokenType = MajorTokenType.Whitespace;
@@ -208,7 +208,7 @@ class TokenReaderStateMachine {
       return;
     }
     var text = currentTokenBuffer.toString();
-    if (currentMajorTokenType == MajorTokenType.Identifer) {
+    if (currentMajorTokenType == MajorTokenType.Identifier) {
       if (Tables.KEYWORD_TABLE.contains(text)) {
         currentMajorTokenType = MajorTokenType.Keyword;
       }
@@ -241,7 +241,7 @@ class TokenReaderStateMachine {
       case Symbol:
       case Keyword:
       case Label:
-      case Identifer:
+      case Identifier:
         var prior = deduper.get(text);
         if (prior == null) {
           deduper.put(text, text);
