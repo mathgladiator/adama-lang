@@ -337,8 +337,19 @@ public class BinaryOperatorTable {
     // LOGIC
     {
       insert(tyBoolean, "&&", tyBoolean, tyBoolean, "%s && %s", false);
+      insert(tyBoolean, "&&", tyMaybeBoolean, tyBoolean, "LibArithmetic.And.o(%s, %s)", false);
+      insert(tyMaybeBoolean, "&&", tyBoolean, tyBoolean, "LibArithmetic.And.o(%s, %s)", false);
+      insert(tyMaybeBoolean, "&&", tyMaybeBoolean, tyBoolean, "LibArithmetic.And.o(%s, %s)", false);
+
       insert(tyBoolean, "||", tyBoolean, tyBoolean, "%s || %s", false);
+      insert(tyBoolean, "||", tyMaybeBoolean, tyBoolean, "LibArithmetic.Or.o(%s, %s)", false);
+      insert(tyMaybeBoolean, "||", tyBoolean, tyBoolean, "LibArithmetic.Or.o(%s, %s)", false);
+      insert(tyMaybeBoolean, "||", tyMaybeBoolean, tyBoolean, "LibArithmetic.Or.o(%s, %s)", false);
+
       insert(tyBoolean, "^^", tyBoolean, tyBoolean, "LibMath.xor(%s, %s)", false);
+      insert(tyBoolean, "^^", tyMaybeBoolean, tyBoolean, "LibArithmetic.Xor.o(%s, %s)", false);
+      insert(tyMaybeBoolean, "^^", tyBoolean, tyBoolean, "LibArithmetic.Xor.o(%s, %s)", false);
+      insert(tyMaybeBoolean, "^^", tyMaybeBoolean, tyBoolean, "LibArithmetic.Xor.o(%s, %s)", false);
     }
     // MOD
     {
