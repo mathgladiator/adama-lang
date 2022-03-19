@@ -1,0 +1,15 @@
+public int x;
+@construct {
+  if (@maybe(true)) {
+    x += 1;
+  }
+  if (@maybe(false)) {
+    x += 2;
+  }
+  if (@maybe<bool>) {
+    x += 4;
+  }
+  if (@maybe(false) || true) {
+    x += 8;
+  }
+}

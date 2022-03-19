@@ -10,6 +10,7 @@
 package org.adamalang.runtime.stdlib;
 
 import org.adamalang.runtime.natives.NtComplex;
+import org.adamalang.runtime.natives.NtMaybe;
 import org.adamalang.translator.reflect.Extension;
 
 /** a very simple math library which extends some of the already exposed Math calls */
@@ -87,5 +88,12 @@ public class LibMath {
   @Extension
   public static double len(final NtComplex x) {
     return Math.sqrt(x.real * x.real + x.imaginary * x.imaginary);
+  }
+
+  public static boolean isTrue(NtMaybe<Boolean> x) {
+    if (x.has()) {
+      return x.get();
+    }
+    return false;
   }
 }

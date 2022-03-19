@@ -76,7 +76,14 @@ public class MegaIf extends Statement {
         }
       } else {
         final var expressionType = branch.condition.expression.typing(environment.scopeWithComputeContext(ComputeContext.Computation), null /* nope */);
-        environment.rules.IsBoolean(expressionType, false);
+        if (environment.rules.IsMaybe(expressionType, true)) {
+          final var compute = environment.scopeWithComputeContext(ComputeContext.Computation);
+          final var subExpressionType = ((DetailContainsAnEmbeddedType) expressionType).getEmbeddedType(compute);
+          environment.rules.IsBoolean(subExpressionType, false);
+          branch.condition.extractBooleanMaybe = true;
+        } else {
+          environment.rules.IsBoolean(expressionType, false);
+        }
         if (branch.code.typing(environment) == ControlFlow.Open) {
           flow = ControlFlow.Open;
         }
@@ -117,6 +124,11 @@ public class MegaIf extends Statement {
         next.define(branch.condition.name, branch.condition.elementType, false, branch.condition.elementType);
         branch.code.specialWriteJava(sb, next, false, true);
         sb.append("}");
+      } else if (branch.condition.extractBooleanMaybe) {
+        sb.append("LibMath.isTrue(");
+        branch.condition.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
+        sb.append(")) ");
+        branch.code.writeJava(sb, environment);
       } else {
         branch.condition.expression.writeJava(sb, environment.scopeWithComputeContext(ComputeContext.Computation));
         sb.append(") ");
@@ -146,6 +158,7 @@ public class MegaIf extends Statement {
     private TyType elementType;
     private String generatedVariable;
     private TyType maybeType;
+    public boolean extractBooleanMaybe;
 
     public Condition(final Token openParen, final Expression expression, final Token asToken, final Token nameToken, final Token closeParen) {
       this.openParen = openParen;
@@ -158,6 +171,8 @@ public class MegaIf extends Statement {
         name = null;
       }
       this.closeParen = closeParen;
+      this.maybeType = null;
+      this.extractBooleanMaybe = false;
       ingest(openParen);
       ingest(closeParen);
     }
