@@ -71,6 +71,7 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
   @Override
   public void compile(final StringBuilderWithTabs sb, final Environment environment) {
     CodeGenEnums.writeEnumArray(sb, name, "ALL_VALUES", "", storage);
+    CodeGenEnums.writeEnumNext(sb, name, storage);
     for (final Map.Entry<String, HashMap<String, ArrayList<DefineDispatcher>>> dispatchers : storage.dispatchersByNameThenSignature.entrySet()) {
       CodeGenEnums.writeDispatchers(sb, storage, dispatchers.getValue(), dispatchers.getKey(), environment);
     }
@@ -121,6 +122,12 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("to_int".equals(name)) {
       return new TyNativeFunctional("to_int", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("Utility.identity", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, enumToken).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+    }
+    if ("next".equals(name)) {
+      return new TyNativeFunctional("next", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCycleNext_" + this.name, this, new ArrayList<>(), true)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+    }
+    if ("prev".equals(name)) {
+      return new TyNativeFunctional("prev", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCyclePrev_" + this.name, this, new ArrayList<>(), true)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     return storage.computeDispatcherType(name);
   }

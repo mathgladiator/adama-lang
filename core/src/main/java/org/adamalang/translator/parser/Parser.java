@@ -296,7 +296,7 @@ public class Parser {
     return b;
   }
 
-  private Token consumeExpectedIdentifer(final String ident) throws AdamaLangException {
+  private Token consumeExpectedIdentifier(final String ident) throws AdamaLangException {
     final var token = tokens.pop();
     if (token != null && token.isIdentifier(ident)) {
       return token;
@@ -416,7 +416,7 @@ public class Parser {
       }
       nextOrClose = tokens.pop();
       if (nextOrClose == null) {
-        throw new ParseException("Parser was expecting either a Symbol=} or an Identifer to define a new enum label, but got end of stream instead.", tokens.getLastTokenIfAvailable());
+        throw new ParseException("Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead.", tokens.getLastTokenIfAvailable());
       }
     }
     DefineStatic staticDefn = new DefineStatic(staticToken, open, definitions, nextOrClose);
@@ -607,7 +607,7 @@ public class Parser {
       autoId++;
       next = tokens.pop();
       if (next == null) {
-        throw new ParseException("Parser was expecting either a Symbol=} or an Identifer to define a new enum label, but got end of stream instead.", tokens.getLastTokenIfAvailable());
+        throw new ParseException("Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead.", tokens.getLastTokenIfAvailable());
       }
     }
     final var endBrace = next;
@@ -917,7 +917,7 @@ public class Parser {
   public ForEach foreach_statement_trailer(final Token foreachToken) throws AdamaLangException {
     final var openToken = consumeExpectedSymbol("(");
     final var varName = id();
-    final var inToken = consumeExpectedIdentifer("in");
+    final var inToken = consumeExpectedIdentifier("in");
     final var list = expression();
     final var endToken = consumeExpectedSymbol(")");
     final var code = block();
@@ -1360,7 +1360,7 @@ public class Parser {
         }
         case "@pump": {
           final var toAssert = expression();
-          final var intoToken = consumeExpectedIdentifer("into");
+          final var intoToken = consumeExpectedIdentifier("into");
           final var channelName = id();
           final var semiColon = consumeExpectedSymbol(";");
           return new PumpMessage(op, toAssert, intoToken, channelName, semiColon);
@@ -1498,7 +1498,7 @@ public class Parser {
       case "reduce": {
         final var onToken = tokens.popIf(t -> t.isIdentifier("on"));
         final var fieldToken = id();
-        final var viaToken = consumeExpectedIdentifer("via");
+        final var viaToken = consumeExpectedIdentifier("via");
         final var function = expression();
         return new Reduce(base, op, onToken, fieldToken, viaToken, function);
       }

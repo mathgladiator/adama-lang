@@ -127,4 +127,59 @@ public class CodeGenEnums {
     }
     sb.append("};").writeNewline();
   }
+
+
+  public static void writeEnumNext(final StringBuilderWithTabs sb, final String name, final EnumStorage storage) {
+    if (storage.options.size() > 0) {
+      HashMap<Integer, Integer> next = new HashMap<>();
+      HashMap<Integer, Integer> prev = new HashMap<>();
+      Integer prior = null;
+      Integer defaultValue = null;
+      int start = 0;
+      for (Map.Entry<String, Integer> entry : storage.options.entrySet()) {
+        if (entry.getKey().equals(storage.getDefaultLabel())) {
+          defaultValue = entry.getValue();
+        }
+        if (prior == null) {
+          start = entry.getValue();
+        } else {
+          next.put(prior, entry.getValue());
+          prev.put(entry.getValue(), prior);
+        }
+        prior = entry.getValue();
+      }
+      next.put(prior, start);
+      prev.put(start, prior);
+
+      sb.append("private static final int __EnumCycleNext_").append(name).append("(int value) {").tabUp().writeNewline();
+      sb.append("switch (value) {").tabUp().writeNewline();
+      for (Map.Entry<String, Integer> entry : storage.options.entrySet()) {
+        int cV = entry.getValue();
+        int nV = next.get(entry.getValue());
+        if (nV != cV + 1) {
+          sb.append("case ").append("" + entry.getValue()).append(":").tabUp().writeNewline();
+          sb.append("return ").append("" + next.get(entry.getValue())).append(";").tabDown().writeNewline();
+        }
+      }
+      sb.append("default:").tabUp().writeNewline();
+      sb.append("return value + 1;").tabDown().tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+
+      sb.append("private static final int __EnumCyclePrev_").append(name).append("(int value) {").tabUp().writeNewline();
+      sb.append("switch (value) {").tabUp().writeNewline();
+      for (Map.Entry<String, Integer> entry : storage.options.entrySet()) {
+        int cV = entry.getValue();
+        int nV = prev.get(entry.getValue());
+        if (nV != cV - 1) {
+          sb.append("case ").append("" + entry.getValue()).append(":").tabUp().writeNewline();
+          sb.append("return ").append("" + prev.get(entry.getValue())).append(";").tabDown().writeNewline();
+        }
+      }
+      sb.append("default:").tabUp().writeNewline();
+      sb.append("return value - 1;").tabDown().tabDown().writeNewline();
+      sb.append("}").tabDown().writeNewline();
+      sb.append("}").writeNewline();
+    }
+  }
 }

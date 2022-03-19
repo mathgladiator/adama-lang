@@ -1,0 +1,18 @@
+enum E {
+  A,
+  @default B,
+  C:4
+}
+
+public E head = E::A;
+public formula n1 = head.next();
+public formula n2 = n1.next();
+public formula n3 = n2.next();
+public formula n4 = n3.next();
+
+public formula p3 = n4.prev();
+public formula p2 = p3.prev();
+public formula p1 = p2.prev();
+public formula p0 = p1.prev();
+
+
