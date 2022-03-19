@@ -1082,6 +1082,25 @@ public class Parser {
     return native_type_base_with_behavior(readonly, readonlyToken);
   }
 
+  public TyNativeTuple native_tuple(final TypeBehavior behavior, final Token readonlyToken, final Token tupleToken) throws AdamaLangException {
+    TyNativeTuple tuple = new TyNativeTuple(behavior, readonlyToken, tupleToken);
+    final var intro = consumeExpectedSymbol("<");
+    tuple.add(intro, native_type());
+
+    final var comma = consumeExpectedSymbol(",");;
+    tuple.add(comma, native_type());
+
+    while (true) {
+      final var next = consumeExpectedSymbol(",", ">");
+      if (next.isSymbolWithTextEq(">")) {
+        tuple.finish(next);
+        return tuple;
+      } else {
+        tuple.add(next, native_type());
+      }
+    }
+  }
+
   public TyType native_type_base_with_behavior(final boolean readonly, final Token readonlyToken) throws AdamaLangException {
     final var behavior = readonly ? TypeBehavior.ReadOnlyNativeValue : TypeBehavior.ReadWriteNative;
     final var token = tokens.pop();
@@ -1119,6 +1138,8 @@ public class Parser {
         return new TyNativeMaybe(behavior, readonlyToken, token, native_parameter_type());
       case "future":
         return new TyNativeFuture(behavior, readonlyToken, token, native_parameter_type());
+      case "tuple":
+        return native_tuple(behavior, readonlyToken, token);
       default:
         return new TyNativeRef(behavior, readonlyToken, token);
     }
@@ -1405,6 +1426,7 @@ public class Parser {
       case "maybe":
       case "future":
       case "map":
+      case "tuple":
       case "table":
       case "readonly":
         return true;

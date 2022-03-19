@@ -1,0 +1,5 @@
+@construct {
+  tuple<int,int,double> x;
+  tuple<int,int,double> y = (1, 2, 3.14);
+  tuple<int,int,double> z = (1, 2, 4);
+}

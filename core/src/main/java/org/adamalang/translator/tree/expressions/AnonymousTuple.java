@@ -28,6 +28,7 @@ public class AnonymousTuple extends Expression {
     this.expressions = new ArrayList<>();
     this.suffix = null;
   }
+
   public static String nameOf(int priorSize) {
     switch (priorSize) {
       case 0:
