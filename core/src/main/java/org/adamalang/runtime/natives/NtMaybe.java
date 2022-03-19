@@ -119,6 +119,14 @@ public class NtMaybe<T> {
     }
   }
 
+  public <O> NtMaybe<O> unpackTransfer(Function<T, NtMaybe<O>> func) {
+    if (value == null) {
+      return new NtMaybe<>();
+    } else {
+      return func.apply(value);
+    }
+  }
+
   @Override
   public String toString() {
     if (value != null) {

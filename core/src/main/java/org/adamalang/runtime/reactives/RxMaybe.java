@@ -173,12 +173,4 @@ public class RxMaybe<Ty extends RxBase> extends RxBase implements RxParent, RxCh
     }
     __raiseDirty();
   }
-
-  public <O> NtMaybe<O> unpack(Function<Ty, O> func) {
-    if (value == null) {
-      return new NtMaybe<>();
-    } else {
-      return new NtMaybe<>(func.apply(value));
-    }
-  }
 }

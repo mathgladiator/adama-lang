@@ -40,6 +40,7 @@ public class FieldLookup extends Expression {
   private boolean onlyExpression;
   private String overrideFieldName;
   private boolean requiresMaybeUnpack;
+  private boolean doubleMaybeUnpack;
   private String maybeCastType;
 
   /**
@@ -118,7 +119,11 @@ public class FieldLookup extends Expression {
         final var hrs = (IsStructure) eType;
         final var fd = hrs.storage().fields.get(fieldName);
         if (fd != null) {
-          final var actualType = environment.rules.Resolve(fd.type, false);
+          TyType actualType = environment.rules.Resolve(fd.type, false);
+          if (environment.rules.IsMaybe(actualType, true) && requiresMaybeUnpack) {
+            doubleMaybeUnpack = true;
+            actualType = ((DetailContainsAnEmbeddedType) actualType).getEmbeddedType(environment);
+          }
           if (actualType != null) {
             TyType typeToReturn;
             if (actualType instanceof DetailComputeRequiresGet && environment.state.isContextComputation()) {
@@ -154,7 +159,7 @@ public class FieldLookup extends Expression {
         fieldNameToUse = overrideFieldName;
       }
       if (requiresMaybeUnpack) {
-        sb.append("unpack((item) -> ((").append(maybeCastType).append(")").append(" item).").append(fieldNameToUse);
+        sb.append("unpack").append(doubleMaybeUnpack ? "Transfer" : "").append("((item) -> ((").append(maybeCastType).append(")").append(" item).").append(fieldNameToUse);
         if (addGet) {
           sb.append(".get()");
         }
