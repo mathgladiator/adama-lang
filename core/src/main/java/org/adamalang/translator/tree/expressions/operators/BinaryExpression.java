@@ -13,13 +13,16 @@ import org.adamalang.translator.env.ComputeContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetEnums;
-import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
+import org.adamalang.translator.tree.types.checking.ruleset.RuleSetMaybe;
+import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.traits.IsEnum;
+import org.adamalang.translator.tree.types.traits.details.DetailContainsAnEmbeddedType;
 
 import java.util.function.Consumer;
 
@@ -47,7 +50,22 @@ public class BinaryExpression extends Expression {
     right.emit(yielder);
   }
 
-  private boolean areBothTypesEnums(final Environment environment, TyType left, TyType right) {
+
+  private boolean areBothTypesEnums(final Environment environment, TyType leftPreMaybe, TyType rightPreMaybe) {
+    final TyType left;
+    if (RuleSetMaybe.IsMaybe(environment, leftPreMaybe, true)) {
+      left = ((DetailContainsAnEmbeddedType) leftPreMaybe).getEmbeddedType(environment);
+    } else {
+      left = leftPreMaybe;
+    }
+
+    final TyType right;
+    if (RuleSetMaybe.IsMaybe(environment, rightPreMaybe, true)) {
+      right = ((DetailContainsAnEmbeddedType) rightPreMaybe).getEmbeddedType(environment);
+    } else {
+      right = rightPreMaybe;
+    }
+
     final var aEnum = RuleSetEnums.IsEnum(environment, left, true);
     final var bEnum = RuleSetEnums.IsEnum(environment, right, true);
     if (aEnum && bEnum) {
@@ -61,6 +79,15 @@ public class BinaryExpression extends Expression {
     return false;
   }
 
+  private TyType getEnumTypeToUse(final Environment environment, TyType type) {
+    TyType tyInt = new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("int")).withPosition(type);
+    if (RuleSetMaybe.IsMaybe(environment, type, true)) {
+      return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("maybe"), new TokenizedItem<>(tyInt)).withPosition(tyInt);
+    } else {
+      return tyInt;
+    }
+  }
+
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
     environment.mustBeComputeContext(this);
@@ -71,12 +98,10 @@ public class BinaryExpression extends Expression {
     typeRight = environment.rules.Resolve(typeRight, false);
 
     if (op == BinaryOp.Equal || op == BinaryOp.NotEqual) {
-      TyType boolType = new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, opToken).withPosition(this);
       if (areBothTypesEnums(environment, typeLeft, typeRight)) {
-        operatorResult = new BinaryOperatorResult(boolType, "%s " + op.javaOp + " %s", false);
-        return boolType;
+        typeLeft = getEnumTypeToUse(environment, typeLeft);
+        typeRight = getEnumTypeToUse(environment, typeRight);
       }
-      // other special rules here; like, what? messages, tuples? anything with .equals(), where is the logic from strings
     }
 
     operatorResult = BinaryOperatorTable.INSTANCE.find(typeLeft, op.javaOp, typeRight, environment);

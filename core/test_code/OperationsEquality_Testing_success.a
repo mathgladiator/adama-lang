@@ -1,0 +1,29 @@
+formula b0 = 1 == 1;
+formula b1 = 1 != 1;
+formula b2 = 1 == 2L;
+formula b3 = 1 != 2L;
+formula b4 = 1L == 2;
+formula b5 = 1L != 2;
+formula b6 = 1L == 2L;
+formula b7 = 1L != 2L;
+formula b8 = @maybe(1) == 1;
+formula b9 = 1 == @maybe(1);
+formula b10 = @maybe(3L) != 1L;
+formula b11 = 1L != @maybe(1L);
+formula b12 = 1.23 == 4.5;
+formula b13 = 1.23 != 4.5;
+formula b14 = @no_one == @no_one;
+formula b15 = @no_one != @no_one;
+formula b16 = 1 + 2 * @i == 2 * @i + 1;
+formula b17 = 1 + 2 * @i != 3 * @i + 1;
+
+enum E {
+X, Y, Z
+}
+
+formula e0 = E::X == E::Y;
+formula e1 = E::X != E::Y;
+formula e2 = @maybe(E::X) == E::Y;
+formula e3 = E::X != @maybe(E::Y);
+formula e4 = @maybe<E> == E::Y;
+formula e5 = E::X != @maybe<E>;
