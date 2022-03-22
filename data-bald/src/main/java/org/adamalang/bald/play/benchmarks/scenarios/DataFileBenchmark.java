@@ -1,40 +1,30 @@
-package org.adamalang.bald.benchmarks;
+package org.adamalang.bald.play.benchmarks.scenarios;
 
-import org.rocksdb.FlushOptions;
-import org.rocksdb.Options;
-import org.rocksdb.RocksDB;
+import org.adamalang.bald.data.DataFile;
+import org.adamalang.bald.organization.Heap;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 
-public class RocksDBBenchmark {
-
+public class DataFileBenchmark {
   public static void main(String[] args) throws Exception {
-    RocksDB.loadLibrary();
-    Options options = new Options();
-    options.setCreateIfMissing(true);
-
     Scenario[] scenarios = new Scenario[10];
     for (int k = 0; k < scenarios.length; k++) {
       scenarios[k] = new Scenario(2000, 50, new String[] {"0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF", "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF", "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF", "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF", "0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF"});
-
     }
-    File dbFile = File.createTempFile("rocksdb", "sample");
-    dbFile.delete();
-    dbFile.mkdirs();
+    File dbFile = File.createTempFile("datafile", "sample");
+    DataFile df = new DataFile(dbFile, 1024 * 1024 * 1024);
+    Heap heap = new Heap(1024 * 1024 * 1024);
     try {
-      RocksDB db = RocksDB.open(options, dbFile.getAbsolutePath());
       Scenario.Driver driver = new Scenario.Driver() {
         @Override
         public void append(String key, int seq, byte[] value) throws Exception {
-          db.put((key + "/" + seq).getBytes(StandardCharsets.UTF_8), value);
+          Heap.Region region = heap.ask(value.length);
+          df.write(region, value);
         }
 
         @Override
         public void flush() throws Exception {
-          FlushOptions flushOptions = new FlushOptions();
-          flushOptions.setWaitForFlush(true);
-          db.flush(flushOptions);
+          df.flush();
         }
       };
       for (int k = 0; k < scenarios.length; k++) {
@@ -43,6 +33,5 @@ public class RocksDBBenchmark {
     } finally {
       dbFile.delete();
     }
-
   }
 }

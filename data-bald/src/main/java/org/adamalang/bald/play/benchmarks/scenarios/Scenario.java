@@ -1,9 +1,8 @@
-package org.adamalang.bald.benchmarks;
+package org.adamalang.bald.play.benchmarks.scenarios;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.function.Consumer;
 
 public class Scenario {
   public interface Driver {
@@ -58,6 +57,7 @@ public class Scenario {
     for (Sample sample : list) {
       driver.append(sample.key, sample.seq, sample.value);
     }
+    driver.flush();
     long time = System.currentTimeMillis() - started;
     double MB = bytes / (1024.0 * 1024.0);
     double MBperSecond = (bytes * 1000.0) / (time * 1024 * 1024.0);

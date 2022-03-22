@@ -1,9 +1,9 @@
-package org.adamalang.bald.benchmarks;
+package org.adamalang.bald.play.benchmarks.micro;
 
 import java.io.File;
 import java.io.FileOutputStream;
 
-public class Experiment2 {
+public class Experiment1 {
 
   public static void drive(Common common) throws Exception {
     for (int repeat = 1; repeat < 1024; repeat*=2) {
@@ -11,16 +11,16 @@ public class Experiment2 {
       File file = File.createTempFile("benchmark", "one");
       try {
         common.start();
-        FileOutputStream output = new FileOutputStream(file, true);
-        try {
-          for (int writes = 0; writes < 1000; writes++) {
-            byte[] toWrite = common.pick(samples);
-              output.write(toWrite);
-              output.flush();
-            common.report(toWrite.length);
+        for (int writes = 0; writes < 1000; writes++) {
+          byte[] toWrite = common.pick(samples);
+          FileOutputStream output = new FileOutputStream(file, true);
+          try {
+            output.write(toWrite);
+            output.flush();
+          } finally {
+            output.close();
           }
-        } finally {
-          output.close();
+          common.report(toWrite.length);
         }
         common.stop();
       } finally {

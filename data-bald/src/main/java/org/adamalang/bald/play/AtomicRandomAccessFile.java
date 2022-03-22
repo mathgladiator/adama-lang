@@ -1,4 +1,4 @@
-package org.adamalang.bald.atomic;
+package org.adamalang.bald.play.atomic;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.NamedRunnable;

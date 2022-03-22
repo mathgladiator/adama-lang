@@ -1,4 +1,4 @@
-package org.adamalang.bald.benchmarks;
+package org.adamalang.bald.play.benchmarks.micro;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;

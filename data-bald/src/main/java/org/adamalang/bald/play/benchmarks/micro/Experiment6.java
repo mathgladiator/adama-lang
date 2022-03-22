@@ -1,4 +1,4 @@
-package org.adamalang.bald.benchmarks;
+package org.adamalang.bald.play.benchmarks.micro;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
@@ -6,7 +6,7 @@ import org.adamalang.common.SimpleExecutor;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class Experiment5 {
+public class Experiment6 {
 
   public static void main(String[] args) throws Exception {
     SimpleExecutor executor = SimpleExecutor.create("executor");
@@ -23,15 +23,8 @@ public class Experiment5 {
     for (int latency = 0; latency < 40; latency++) {
       final int latencyEx = latency;
       final long started = System.currentTimeMillis();
-      CountDownLatch latch = new CountDownLatch(1);
-      executor.schedule(new NamedRunnable("precision") {
-        @Override
-        public void execute() throws Exception {
-          System.out.println(latencyEx + "," + (System.currentTimeMillis() - started));
-          latch.countDown();
-        }
-      }, latency);
-      latch.await(10000, TimeUnit.MILLISECONDS);
+      Thread.sleep(latencyEx);
+      System.out.println(latencyEx + "," + (System.currentTimeMillis() - started));
     }
   }
 }
