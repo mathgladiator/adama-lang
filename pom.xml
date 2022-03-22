@@ -31,6 +31,7 @@
         <module>canary</module>
         <module>data-disk</module>
         <module>net</module>
+        <module>data-bald</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
