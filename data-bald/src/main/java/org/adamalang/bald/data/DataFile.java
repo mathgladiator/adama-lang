@@ -15,6 +15,7 @@ public class DataFile {
 
   public DataFile(File file, long size) throws IOException {
     this.raf = new RandomAccessFile(file, "rw");
+    raf.setLength(size);
     this.buffer = raf.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, size);
     this.length = this.raf.length();
   }

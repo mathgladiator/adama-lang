@@ -52,7 +52,6 @@ public class Heap {
       sb.append(current.toString());
       current = current.next;
     }
-    Executors.newSingleThreadScheduledExecutor()
     return sb.toString();
   }
 

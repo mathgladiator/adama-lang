@@ -26,12 +26,12 @@ public class Experiment7 {
     System.out.println("asked-wait-ms,achieved-wait-ms");
     for (int latency = 0; latency < 40; latency++) {
       final int latencyEx = latency;
-      final long started = System.currentTimeMillis();
+      final long started = System.nanoTime();
       CountDownLatch latch = new CountDownLatch(1);
       preciseScheduler.schedule(executor, new NamedRunnable("precision") {
         @Override
         public void execute() throws Exception {
-          System.out.println(latencyEx + "," + (System.currentTimeMillis() - started));
+          System.out.println(latencyEx + "," + (System.nanoTime() - started));
           latch.countDown();
         }
       }, latency);

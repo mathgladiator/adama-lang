@@ -19,6 +19,11 @@
             <version>0.2</version>
         </dependency>
         <dependency>
+            <groupId>org.adamalang</groupId>
+            <artifactId>data-caravan</artifactId>
+            <version>0.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.rocksdb</groupId>
             <artifactId>rocksdbjni</artifactId>
             <version>6.28.2</version>

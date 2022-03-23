@@ -28,7 +28,7 @@ public class WriteAheadLog {
   public void flush() {
     try {
       if (output == null) {
-        output = new FileOutputStream(walFile);
+        output = new DataOutputStream(new FileOutputStream(walFile));
       }
       while (buffer.isReadable()) {
         int toRead = buffer.readableBytes();

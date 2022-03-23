@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 public class DurableListStore {
   // the data structures to manage the giant linear space
+  private final DurableListStoreMetrics metrics;
   private final Index index;
   private final Heap heap;
 
@@ -38,12 +39,11 @@ public class DurableListStore {
   private long bytesWrittenToLog;
   private ArrayList<Runnable> notifications;
 
-  public DurableListStore(File storeFile, File walRoot, long size, int flushCutOffBytes, long maxLogSize) throws IOException {
-    // initialize the data structures
+  public DurableListStore(DurableListStoreMetrics metrics, File storeFile, File walRoot, long size, int flushCutOffBytes, long maxLogSize) throws IOException {
+    this.metrics = metrics;
     this.index = new Index();
     this.heap = new Heap(size);
 
-    // memory map the storage file
     this.storage = new RandomAccessFile(storeFile, "rw");
     storage.setLength(size);
     this.memory = storage.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, size);
@@ -70,7 +70,7 @@ public class DurableListStore {
   }
 
   private void openLogForWriting() throws IOException {
-    this.output = new DataOutputStream(new FileOutputStream(new File(walRoot, "WAL")));
+    this.output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(new File(walRoot, "WAL")), flushCutOffBytes * 2));
     this.bytesWrittenToLog = 0;
   }
 
@@ -169,10 +169,10 @@ public class DurableListStore {
     streamback.finished();
   }
 
-  public void trim(long id, int count, Runnable notification) {
-    this.notifications.add(notification);
+  public boolean trim(long id, int count, Runnable notification) {
     ArrayList<Region> regions = index.trim(id, count);
-    if (regions != null) {
+    if (regions != null && regions.size() > 0) {
+      this.notifications.add(notification);
       new Trim(id, regions.size()).write(buffer);
       for (Region region : regions) {
         heap.free(region);
@@ -180,7 +180,9 @@ public class DurableListStore {
       if (buffer.writerIndex() > flushCutOffBytes) {
         flush(false);
       }
+      return true;
     }
+    return false;
   }
 
   public boolean delete(long id, Runnable notification) {
@@ -206,19 +208,25 @@ public class DurableListStore {
 
   private void writePage(DataOutputStream dos, ByteBuf page) throws IOException {
     dos.writeInt(page.writerIndex());
-    while (page.isReadable()) {
-      int toRead = page.readableBytes();
-      if (toRead >= pageBuffer.length) {
-        pageBuffer = new byte[toRead + flushCutOffBytes];
+    bytesWrittenToLog += page.writerIndex();
+    if (page.hasArray() && page.writerIndex() < page.array().length) {
+      dos.write(page.array(), 0, page.writerIndex());
+    } else {
+      while (page.isReadable()) {
+        int toRead = page.readableBytes();
+        if (toRead >= pageBuffer.length) {
+          pageBuffer = new byte[toRead + flushCutOffBytes];
+        }
+        page.readBytes(pageBuffer, 0, toRead);
+        dos.write(pageBuffer, 0, toRead);
       }
-      page.readBytes(pageBuffer, 0, toRead);
-      dos.write(pageBuffer, 0, toRead);
-      bytesWrittenToLog += toRead;
     }
   }
 
   public void flush(boolean forceCutOver) {
     try {
+      metrics.flush.run();
+      memory.force();
       writePage(output, buffer);
       output.flush();
       buffer.resetReaderIndex();

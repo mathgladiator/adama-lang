@@ -1,6 +1,7 @@
 package org.adamalang.caravan.data;
 
 import org.adamalang.caravan.mocks.MockByteArrayStream;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +17,7 @@ public class DurableListStoreTests {
     testRoot.mkdirs();
     try {
       // public DurableListStore(File storeFile, File walRoot, long size, int initialWriteBufferSize, int flushCutOffBytes, long maxLogSize) throws IOException {
-      DurableListStore store = new DurableListStore(new File(testRoot, "storage"), testRoot, 64 * 1024,  64, 1024);
+      DurableListStore store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024,  64, 1024);
       AtomicInteger count = new AtomicInteger(0);
       Runnable event = () -> { count.incrementAndGet(); };
       Assert.assertFalse(store.exists(42));
