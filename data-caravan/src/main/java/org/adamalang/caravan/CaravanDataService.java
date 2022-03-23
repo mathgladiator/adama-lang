@@ -75,9 +75,9 @@ public class CaravanDataService implements DataService {
       change.copyFrom(patch);
       ByteBuf buf = Unpooled.buffer();
       EventCodec.write(buf, change);
-      if (!store.append(id, convert(buf), () -> {
+      if (store.append(id, convert(buf), () -> {
         callback.success(null);
-      })) {
+      }) == null) {
         callback.failure(new ErrorCodeException(-1));
       }
     });
@@ -95,9 +95,9 @@ public class CaravanDataService implements DataService {
       }
       ByteBuf buf = Unpooled.buffer();
       EventCodec.write(buf, batch);
-      if (!store.append(id, convert(buf), () -> {
+      if (store.append(id, convert(buf), () -> {
         callback.success(null);
-      })) {
+      }) == null) {
         callback.failure(new ErrorCodeException(-1));
       }
     });
@@ -131,10 +131,15 @@ public class CaravanDataService implements DataService {
       snap.history = history;
       ByteBuf buf = Unpooled.buffer();
       EventCodec.write(buf, snap);
-      if (!store.append(id, convert(buf), () -> {
+      Integer size = store.append(id, convert(buf), () -> {
         callback.success(0);// huh, this is interesting
-      })) {
+      });
+      if (size == null) {
         callback.failure(new ErrorCodeException(-1));
+      } else {
+        store.trim(id, size - 1, () -> {
+
+        });
       }
     });
   }

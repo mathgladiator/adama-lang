@@ -58,15 +58,15 @@ public class DurableListStoreTests {
       Assert.assertEquals(2104, count.get()); // + 1000 PUT, 1000 DELETE
 
       int fill = 0;
-      while (store.append(1, ("01234567890123456789012345678901234567890123456789Junk@" + fill).getBytes(StandardCharsets.UTF_8), event)) {
+      while (store.append(1, ("01234567890123456789012345678901234567890123456789Junk@" + fill).getBytes(StandardCharsets.UTF_8), event) != null) {
         fill++;
       }
-      Assert.assertFalse(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), event));
+      Assert.assertFalse(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), event) != null);
       Assert.assertEquals(3233, count.get());
       store.delete(1, event);
       store.flush(false);
       Assert.assertEquals(3234, count.get());
-      Assert.assertTrue(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), event));
+      Assert.assertTrue(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), event) != null);
       store.flush(false);
       Assert.assertEquals(3235, count.get());
       store.shutdown();

@@ -10,16 +10,18 @@
 package org.adamalang.canary.agents.local;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.adamalang.common.ExceptionLogger;
-import org.adamalang.common.Json;
-import org.adamalang.common.SimpleExecutor;
-import org.adamalang.common.TimeSource;
+import org.adamalang.caravan.CaravanDataService;
+import org.adamalang.caravan.contracts.TranslateKeyService;
+import org.adamalang.caravan.data.DurableListStore;
+import org.adamalang.caravan.data.DurableListStoreMetrics;
+import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.disk.*;
 import org.adamalang.disk.demo.DiskMetrics;
 import org.adamalang.disk.demo.SingleThreadDiskDataService;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.InMemoryDataService;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -60,6 +62,40 @@ public class LocalDrive {
       diskBase.start();
       WriteAheadLog log = new WriteAheadLog(diskBase, 32768, 50000, 32 * 1024 * 1024);
       dataService = new DiskDataService(diskBase, log);
+    } else if (config.data.equals("caravan")) {
+      SimpleExecutor executor = SimpleExecutor.create("wal");
+      File storageDirectory = new File("./canary_caravan");
+      storageDirectory.mkdirs();
+      DurableListStore dls = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(storageDirectory, "STORE"), storageDirectory, 1024 * 1024 * 1024, 4 * 32768, 32 * 1024 * 1024);
+      TranslateKeyService keyService = new TranslateKeyService() {
+        @Override
+        public void lookup(Key key, Callback<Long> callback) {
+          callback.success((long) key.hashCode());
+        }
+      };
+      CaravanDataService service = new CaravanDataService(keyService, dls, executor);
+      dataService = service;
+      Thread flusher = new Thread(new Runnable() {
+        @Override
+        public void run() {
+          while(true) {
+            try {
+              Thread.sleep(1);
+              service.flush();
+            } catch (InterruptedException ie) {
+              return;
+            }
+          }
+        }
+      });
+      flusher.start();
+      Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+        @Override
+        public void run() {
+          flusher.interrupt();
+        }
+      }));
+
     } else {
       dataService = new InMemoryDataService(Executors.newSingleThreadExecutor(), TimeSource.REAL_TIME);
     }

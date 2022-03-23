@@ -159,6 +159,7 @@ public class DurableListStore {
 
   /** internal: force everything to flush, prepare a new file, the move the new file in place, and open it */
   private void cutOver() throws IOException {
+    memory.force();
     output.close();
     File newFile = prepare();
     Files.move(newFile.toPath(), new File(walRoot, "WAL").toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
@@ -192,22 +193,22 @@ public class DurableListStore {
   }
 
   /** append a byte array to the given id */
-  public boolean append(long id, byte[] bytes, Runnable notification) {
+  public Integer append(long id, byte[] bytes, Runnable notification) {
     Region where = heap.ask(bytes.length);
     if (where == null) {
       // we are out of space
-      return false;
+      return null;
     }
     this.notifications.add(notification);
     // Java 13+ has a better API; worth considering...
     memory.slice().position((int) where.position).put(bytes);
-    index.append(id, where);
+    int size = index.append(id, where);
     new Append(id, where.position, bytes).write(buffer);
     if (buffer.writerIndex() > flushCutOffBytes) {
       // the buffer is full, so flush it
       flush(false);
     }
-    return true;
+    return size;
   }
 
   /** read the given object by scanning all appends */
@@ -269,7 +270,6 @@ public class DurableListStore {
     try {
       metrics.flush.run();
       if (writePage(output, buffer)) {
-        memory.force();
         output.flush();
       }
       buffer.resetReaderIndex();
