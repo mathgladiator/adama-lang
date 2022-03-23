@@ -23,6 +23,7 @@ public class Index {
     return regions.size();
   }
 
+  /** return the regions bound to an object */
   public Iterator<Region> get(long id) {
     List<Region> regions = index.get(id);
     if (regions == null) {
@@ -36,6 +37,7 @@ public class Index {
     return index.containsKey(id);
   }
 
+  /** delete an object by id; return the regions allocated to it */
   public ArrayList<Region> delete(long id) {
     return index.remove(id);
   }

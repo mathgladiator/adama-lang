@@ -29,16 +29,38 @@ public class DurableListStore {
   private final RandomAccessFile storage;
   private final MappedByteBuffer memory;
 
+  // the directory containing the write-ahead log; since we use Files.move, we create temporary files to cut over
   private final File walRoot;
 
-  private final ByteBuf buffer;
-  private DataOutputStream output;
-  private int flushCutOffBytes;
-  private byte[] pageBuffer;
-  private long maxLogSize;
-  private long bytesWrittenToLog;
-  private ArrayList<Runnable> notifications;
 
+  // We use a netty buffer for writing data; TODO: use a different construction since we have minimal overhead
+  private final ByteBuf buffer;
+  private byte[] pageBuffer;
+
+  // the write ahead log stream
+  private DataOutputStream output;
+  private long bytesWrittenToLog;
+
+  // how many bytes until we introduce a flush
+  private final int flushCutOffBytes;
+
+  // how big will we allow the log file to get
+  private final long maxLogSize;
+
+  // notifications when the requested action was committed
+  private final ArrayList<Runnable> notifications;
+
+  /**
+   * Construct the durable list store!
+   *
+   * @param metrics useful insights into the store
+   * @param storeFile the file used to store the data
+   * @param walRoot the directory containing the write ahead log
+   * @param size - the size of the file to use
+   * @param flushCutOffBytes - the number of bytes until we force a flush
+   * @param maxLogSize - how big can the log get until we flush and cut the log
+   * @throws IOException
+   */
   public DurableListStore(DurableListStoreMetrics metrics, File storeFile, File walRoot, long size, int flushCutOffBytes, long maxLogSize) throws IOException {
     this.metrics = metrics;
     this.index = new Index();
@@ -69,11 +91,13 @@ public class DurableListStore {
     openLogForWriting();
   }
 
+  /** internal: open the log for writing */
   private void openLogForWriting() throws IOException {
-    this.output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(new File(walRoot, "WAL")), flushCutOffBytes * 2));
+    this.output = new DataOutputStream(new FileOutputStream(new File(walRoot, "WAL")));
     this.bytesWrittenToLog = 0;
   }
 
+  /** internal: load and commit the data from the write-ahead log */
   private void load(File walFile) throws IOException {
     DataInputStream input = new DataInputStream(new FileInputStream(walFile));
     try {
@@ -118,6 +142,7 @@ public class DurableListStore {
     }
   }
 
+  /** internal: prepare a new write-ahead file */
   private File prepare() throws IOException {
     File newWalFile = new File(walRoot, "WAL.NEW-" + System.currentTimeMillis());
     DataOutputStream newOutput = new DataOutputStream(new FileOutputStream(newWalFile));
@@ -132,30 +157,55 @@ public class DurableListStore {
     }
   }
 
+  /** internal: force everything to flush, prepare a new file, the move the new file in place, and open it */
   private void cutOver() throws IOException {
-    output.flush();
-    memory.force();
     output.close();
     File newFile = prepare();
     Files.move(newFile.toPath(), new File(walRoot, "WAL").toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     openLogForWriting();
   }
 
+  /** internal: write a page to the log */
+  private void writePage(DataOutputStream dos, ByteBuf page) throws IOException {
+    dos.writeInt(page.writerIndex());
+    bytesWrittenToLog += page.writerIndex();
+    // TODO: we are using too many buffers, we should simply use an arraylist of writes then build it up directly
+    // maybe, it's ok to use DataOutputstream directly? maybe with BufferedOutputStream?
+    if (page.hasArray() && page.writerIndex() < page.array().length) {
+      dos.write(page.array(), 0, page.writerIndex());
+    } else {
+      // TODO: this can be optimized a bunch
+      while (page.isReadable()) {
+        int toRead = page.readableBytes();
+        if (toRead >= pageBuffer.length) {
+          pageBuffer = new byte[toRead + flushCutOffBytes];
+        }
+        page.readBytes(pageBuffer, 0, toRead);
+        dos.write(pageBuffer, 0, toRead);
+      }
+    }
+  }
+
+  /** append a byte array to the given id */
   public boolean append(long id, byte[] bytes, Runnable notification) {
     Region where = heap.ask(bytes.length);
     if (where == null) {
+      // we are out of space
       return false;
     }
     this.notifications.add(notification);
+    // Java 13+ has a better API; worth considering...
     memory.slice().position((int) where.position).put(bytes);
     index.append(id, where);
     new Append(id, where.position, bytes).write(buffer);
     if (buffer.writerIndex() > flushCutOffBytes) {
+      // the buffer is full, so flush it
       flush(false);
     }
     return true;
   }
 
+  /** read the given object by scanning all appends */
   public void read(long id, ByteArrayStream streamback) {
     Iterator<Region> it = index.get(id);
     int at = 0;
@@ -169,6 +219,7 @@ public class DurableListStore {
     streamback.finished();
   }
 
+  /** remove the $count appends from the head of the object */
   public boolean trim(long id, int count, Runnable notification) {
     ArrayList<Region> regions = index.trim(id, count);
     if (regions != null && regions.size() > 0) {
@@ -185,6 +236,7 @@ public class DurableListStore {
     return false;
   }
 
+  /** delete the given object by id */
   public boolean delete(long id, Runnable notification) {
     ArrayList<Region> regions = index.delete(id);
     if (regions != null) {
@@ -202,27 +254,12 @@ public class DurableListStore {
     }
   }
 
+  /** does the given id exist within the system */
   public boolean exists(long id) {
     return index.exists(id);
   }
 
-  private void writePage(DataOutputStream dos, ByteBuf page) throws IOException {
-    dos.writeInt(page.writerIndex());
-    bytesWrittenToLog += page.writerIndex();
-    if (page.hasArray() && page.writerIndex() < page.array().length) {
-      dos.write(page.array(), 0, page.writerIndex());
-    } else {
-      while (page.isReadable()) {
-        int toRead = page.readableBytes();
-        if (toRead >= pageBuffer.length) {
-          pageBuffer = new byte[toRead + flushCutOffBytes];
-        }
-        page.readBytes(pageBuffer, 0, toRead);
-        dos.write(pageBuffer, 0, toRead);
-      }
-    }
-  }
-
+  /** flush to disk */
   public void flush(boolean forceCutOver) {
     try {
       metrics.flush.run();
@@ -232,10 +269,11 @@ public class DurableListStore {
       buffer.resetReaderIndex();
       buffer.resetWriterIndex();
 
-      if (bytesWrittenToLog > maxLogSize || forceCutOver) {
+      if (bytesWrittenToLog >= maxLogSize || forceCutOver) {
         cutOver();
       }
 
+      // feels excessive, is it better to copy OR re-init? Could we trust the client to simply _not_ be re-entrant?
       ArrayList<Runnable> notificationClone = new ArrayList<>(notifications);
       notifications.clear();
 
