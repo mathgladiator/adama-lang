@@ -166,9 +166,13 @@ public class DurableListStore {
   }
 
   /** internal: write a page to the log */
-  private void writePage(DataOutputStream dos, ByteBuf page) throws IOException {
+  private boolean writePage(DataOutputStream dos, ByteBuf page) throws IOException {
+    if (page.writerIndex() == 0) {
+      return false;
+    }
     dos.writeInt(page.writerIndex());
     bytesWrittenToLog += page.writerIndex();
+
     // TODO: we are using too many buffers, we should simply use an arraylist of writes then build it up directly
     // maybe, it's ok to use DataOutputstream directly? maybe with BufferedOutputStream?
     if (page.hasArray() && page.writerIndex() < page.array().length) {
@@ -184,6 +188,7 @@ public class DurableListStore {
         dos.write(pageBuffer, 0, toRead);
       }
     }
+    return true;
   }
 
   /** append a byte array to the given id */
@@ -263,9 +268,10 @@ public class DurableListStore {
   public void flush(boolean forceCutOver) {
     try {
       metrics.flush.run();
-      memory.force();
-      writePage(output, buffer);
-      output.flush();
+      if (writePage(output, buffer)) {
+        memory.force();
+        output.flush();
+      }
       buffer.resetReaderIndex();
       buffer.resetWriterIndex();
 
@@ -281,6 +287,7 @@ public class DurableListStore {
         notification.run();
       }
     } catch (IOException ex) {
+      ex.printStackTrace();
       System.exit(100);
     }
   }
