@@ -2,6 +2,7 @@ package org.adamalang.bald.play.benchmarks.scenarios;
 
 import org.adamalang.bald.data.DataFile;
 import org.adamalang.bald.organization.Heap;
+import org.adamalang.bald.organization.Region;
 
 import java.io.File;
 
@@ -18,7 +19,7 @@ public class DataFileBenchmark {
       Scenario.Driver driver = new Scenario.Driver() {
         @Override
         public void append(String key, int seq, byte[] value) throws Exception {
-          Heap.Region region = heap.ask(value.length);
+          Region region = heap.ask(value.length);
           df.write(region, value);
         }
 

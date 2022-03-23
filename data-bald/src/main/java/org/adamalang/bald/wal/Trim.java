@@ -2,17 +2,17 @@ package org.adamalang.bald.wal;
 
 import io.netty.buffer.ByteBuf;
 import org.adamalang.bald.contracts.WALEntry;
-import org.adamalang.bald.organization.Heap;
+import org.adamalang.bald.organization.Region;
 
 import java.util.ArrayList;
 
 public class Trim implements WALEntry {
   private final long id;
   private final int count;
-  private final ArrayList<Heap.Region> regions;
+  private final ArrayList<Region> regions;
   private final boolean delete;
 
-  public Trim(long id, int count, ArrayList<Heap.Region> regions, boolean delete) {
+  public Trim(long id, int count, ArrayList<Region> regions, boolean delete) {
     this.id = id;
     this.count = count;
     this.regions = regions;
@@ -26,7 +26,7 @@ public class Trim implements WALEntry {
     buf.writeIntLE(count);
     buf.writeIntLE(regions.size());
     buf.writeBoolean(delete);
-    for (Heap.Region region: regions) {
+    for (Region region: regions) {
       buf.writeLongLE(region.position);
       buf.writeIntLE(region.size);
     }
@@ -37,11 +37,11 @@ public class Trim implements WALEntry {
     int count = buf.readIntLE();
     int size = buf.readIntLE();
     boolean delete = buf.readBoolean();
-    ArrayList<Heap.Region> regions = new ArrayList<>();
+    ArrayList<Region> regions = new ArrayList<>();
     for (int k = 0; k < size; k++) {
       long pos = buf.readLongLE();
       int sz = buf.readIntLE();
-      regions.add(new Heap.Region(pos, sz));
+      regions.add(new Region(pos, sz));
     }
     return new Trim(id, count, regions, delete);
   }

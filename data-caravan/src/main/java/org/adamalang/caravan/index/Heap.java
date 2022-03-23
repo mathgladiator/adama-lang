@@ -1,11 +1,10 @@
-package org.adamalang.bald.organization;
+package org.adamalang.caravan.index;
 
 import io.netty.buffer.ByteBuf;
 
-import java.util.concurrent.Executors;
-
 /** a very simple doubly-linked heap */
 public class Heap {
+  public final long maximumSize;
 
   /** a mapping of free space */
   private class FreeSpace {
@@ -25,9 +24,10 @@ public class Heap {
 
   /** construct the heap as empty with the given maximum size available */
   public Heap(long maximumSize) {
-    head = new FreeSpace();
-    head.start = 0;
-    head.size = maximumSize;
+    this.maximumSize = maximumSize;
+    this.head = new FreeSpace();
+    this.head.start = 0;
+    this.head.size = maximumSize;
   }
 
   public Region ask(int size) {
@@ -52,15 +52,10 @@ public class Heap {
       sb.append(current.toString());
       current = current.next;
     }
-    Executors.newSingleThreadScheduledExecutor()
     return sb.toString();
   }
 
   public void free(Region region) {
-    if (region.freed) {
-      throw new NullPointerException();
-    }
-    region.freed = true;
     FreeSpace current = head;
     while (current != null) {
       if (region.position + region.size == current.start) {
@@ -95,7 +90,7 @@ public class Heap {
           hole.prior = current.prior;
           current.prior = hole;
           if (hole.prior != null) {
-            hole.prior = hole;
+            hole.prior.next = hole;
           } else {
             head = hole;
           }
@@ -112,6 +107,7 @@ public class Heap {
       buf.writeBoolean(true);
       buf.writeLongLE(current.start);
       buf.writeLongLE(current.size);
+      current = current.next;
     }
     buf.writeBoolean(false);
   }

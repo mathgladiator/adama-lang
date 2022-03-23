@@ -1,11 +1,10 @@
 package org.adamalang.bald.data;
 
-import org.adamalang.bald.organization.Heap;
+import org.adamalang.bald.organization.Region;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -20,7 +19,7 @@ public class DataFile {
     this.length = this.raf.length();
   }
 
-  public void write(Heap.Region region, byte[] memory) throws IOException {
+  public void write(Region region, byte[] memory) throws IOException {
     buffer.slice().position((int) region.position).put(memory);
   }
 
@@ -28,7 +27,7 @@ public class DataFile {
     buffer.force();
   }
 
-  public byte[] read(Heap.Region region) throws IOException  {
+  public byte[] read(Region region) throws IOException  {
     byte[] mem = new byte[region.size];
     buffer.slice().position((int) region.position).get(mem);
     //buffer.slice((int) region.position, region.size).get(mem);

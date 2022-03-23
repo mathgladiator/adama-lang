@@ -3,6 +3,7 @@ package org.adamalang.bald.play.benchmarks.scenarios;
 import org.adamalang.bald.data.DataFile;
 import org.adamalang.bald.data.WriteAheadLog;
 import org.adamalang.bald.organization.Heap;
+import org.adamalang.bald.organization.Region;
 import org.adamalang.bald.wal.Append;
 
 import java.io.File;
@@ -23,7 +24,7 @@ public class BothWALAndDataFileBenchmark {
       Scenario.Driver driver = new Scenario.Driver() {
         @Override
         public void append(String key, int seq, byte[] value) throws Exception {
-          Heap.Region region = heap.ask(value.length);
+          Region region = heap.ask(value.length);
           log.write(new Append(key.hashCode(), region.position, value));
           df.write(region, value);
         }
