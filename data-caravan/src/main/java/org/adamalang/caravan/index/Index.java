@@ -2,10 +2,7 @@ package org.adamalang.caravan.index;
 
 import io.netty.buffer.ByteBuf;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /** maps longs to lists of regions */
 public class Index {
@@ -26,8 +23,16 @@ public class Index {
     return regions.size();
   }
 
+  public Iterator<Region> get(long id) {
+    List<Region> regions = index.get(id);
+    if (regions == null) {
+      regions = Collections.emptyList();
+    }
+    return regions.iterator();
+  }
+
   /** does the index contain the given id */
-  public boolean contains(long id) {
+  public boolean exists(long id) {
     return index.containsKey(id);
   }
 
@@ -37,9 +42,9 @@ public class Index {
 
   /** trim the head of an object (by id) the given count; returned the returned regions */
   public ArrayList<Region> trim(long id, int count) {
-    ArrayList<Region> trimmed = new ArrayList<>();
     ArrayList<Region> regions = index.get(id);
     if (regions != null) {
+      ArrayList<Region> trimmed = new ArrayList<>();
       Iterator<Region> it = regions.iterator();
       int k = 0;
       while (k < count && it.hasNext()) {
@@ -48,8 +53,9 @@ public class Index {
         it.remove();
         k++;
       }
+      return trimmed;
     }
-    return trimmed;
+    return null;
   }
 
   /** take a snapshot of the index */

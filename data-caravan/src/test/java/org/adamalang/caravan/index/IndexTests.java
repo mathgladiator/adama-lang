@@ -42,11 +42,11 @@ public class IndexTests {
     }
     assertEquals("1=[0,100)[100,200);2=[200,300)[300,400);3=[400,500)[500,600);4=[606,610);", index);
 
-    Assert.assertTrue(index.contains(3));
+    Assert.assertTrue(index.exists(3));
     for (Region region : index.delete(3)) {
       heap.free(region);
     }
-    Assert.assertFalse(index.contains(3));
+    Assert.assertFalse(index.exists(3));
     assertEquals("1=[0,100)[100,200);2=[200,300)[300,400);4=[606,610);", index);
 
     for (Region region : index.delete(4)) {
@@ -60,5 +60,6 @@ public class IndexTests {
     }
     assertEquals("", index);
     Assert.assertEquals("[0,1024)", heap.toString());
+    Assert.assertNull(index.trim(500, 1));
   }
 }
