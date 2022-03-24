@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Index;
+import org.adamalang.caravan.index.heaps.IndexedHeap;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class OrganizationSnapshotTests {
     final String givenHeap;
     final String givenIndex;
     {
-      Heap heap = new Heap(1024);
+      Heap heap = new IndexedHeap(1024);
       Index index = new Index();
       index.append(1, heap.ask(42));
       index.append(2, heap.ask(100));
@@ -28,7 +29,7 @@ public class OrganizationSnapshotTests {
     }
     {
       Assert.assertEquals(0x55, buf.readByte());
-      Heap heap = new Heap(1024);
+      Heap heap = new IndexedHeap(1024);
       Index index = new Index();
       OrganizationSnapshot.populateAfterTypeId(buf, heap, index);
       Assert.assertEquals(givenHeap, heap.toString());

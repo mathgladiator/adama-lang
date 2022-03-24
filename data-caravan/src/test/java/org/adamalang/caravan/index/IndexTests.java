@@ -2,6 +2,7 @@ package org.adamalang.caravan.index;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import org.adamalang.caravan.index.heaps.IndexedHeap;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,7 +20,7 @@ public class IndexTests {
   public void flow() {
     Index index = new Index();
     assertEquals("", index);
-    Heap heap = new Heap(1024);
+    Heap heap = new IndexedHeap(1024);
 
     index.append(1L, heap.ask(100));
     index.append(1L, heap.ask(100));

@@ -42,6 +42,8 @@ public class Metrics {
     this.failure_reasons = new HashMap();
     this.connect_latency = new ArrayList<>();
     this.send_latency = new ArrayList<>();
+    System.out.println("| Deltas | Sent | Send Ack | Send Fail | Stream Fail | p5 Latency | p50 Latency | p98 Latency | Errors |");
+    System.out.println("| --- | --- | --- | --- | --- | --- | --- | --- | --- |");
   }
 
   public synchronized void record_connect_latency(int x) {
@@ -71,15 +73,15 @@ public class Metrics {
       append = true;
       sb.append(entry.getKey() + "=" + entry.getValue());
     }
-    int p95Latency = p95_latency();
-    System.out.println((deltas.get() - prior_deltas) + "," + (messages_sent.get() - prior_messages_sent) + "," + (messages_acked.get() - prior_messages_acked) + "," + (messages_failed.get() - prior_messages_failed) + "," + stream_failed.get() + "," + p95Latency + "," + sb);
+    prepareForLatency();
+    System.out.println("| " + (deltas.get() - prior_deltas) + " | " + (messages_sent.get() - prior_messages_sent) + " | " + (messages_acked.get() - prior_messages_acked) + " | " + (messages_failed.get() - prior_messages_failed) + " | " + stream_failed.get() + " | " + latency(0.05) + " | " + latency(0.50) + " | " + latency(0.98) + " | " + sb + " | ");
     this.prior_deltas = deltas.get();
     this.prior_messages_sent = messages_sent.get();
     this.prior_messages_acked = messages_acked.get();
     this.prior_messages_failed = messages_failed.get();
   }
 
-  private int p95_latency() {
+  private void prepareForLatency() {
     if (send_latency.size() > 200) {
       ArrayList<Integer> copy = new ArrayList<>(send_latency);
       send_latency.clear();
@@ -89,9 +91,12 @@ public class Metrics {
         }
       }
     }
+    send_latency.sort(Integer::compare);
+  }
+
+  private int latency(double p) {
     if (send_latency.size() > 20) {
-      send_latency.sort(Integer::compare);
-      return send_latency.get((int) (send_latency.size() * 0.98));
+      return send_latency.get((int) (send_latency.size() * p));
     } else {
       return -1;
     }

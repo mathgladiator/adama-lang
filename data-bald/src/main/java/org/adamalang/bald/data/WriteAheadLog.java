@@ -37,6 +37,7 @@ public class WriteAheadLog {
         }
         buffer.readBytes(copy, 0, toRead);
         output.write(copy, 0, toRead);
+        output.flush();
       }
       buffer.resetReaderIndex();
       buffer.resetWriterIndex();

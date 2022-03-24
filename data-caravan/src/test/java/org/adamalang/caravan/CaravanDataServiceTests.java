@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 public class CaravanDataServiceTests {
   public static final Key KEY1 = new Key("space", "123");
@@ -62,7 +63,7 @@ public class CaravanDataServiceTests {
           while (true) {
             try {
               Thread.sleep(0, 800000);
-              service.flush();
+              service.flush(false).await(1000, TimeUnit.MILLISECONDS);
             } catch (InterruptedException ie) {
               return;
             }

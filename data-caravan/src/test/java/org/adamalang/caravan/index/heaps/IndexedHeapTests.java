@@ -1,16 +1,19 @@
-package org.adamalang.caravan.index;
+package org.adamalang.caravan.index.heaps;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import org.adamalang.caravan.index.Heap;
+import org.adamalang.caravan.index.Region;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class HeapTests {
-  private void assetEqualsAfterSnapshot(String expected, Heap heap) {
+public class IndexedHeapTests {
+
+  private void assetEqualsAfterSnapshot(String expected, IndexedHeap heap) {
     Assert.assertEquals(expected, heap.toString());
     ByteBuf buf = Unpooled.buffer();
     heap.snapshot(buf);
-    Heap heap2 = new Heap(heap.maximumSize);
+    IndexedHeap heap2 = new IndexedHeap(heap.maximumSize);
     heap2.load(buf);
     Assert.assertEquals(expected, heap2.toString());
   }
@@ -21,7 +24,7 @@ public class HeapTests {
 
   @Test
   public void flow() throws Exception {
-    Heap heap = new Heap(1024);
+    IndexedHeap heap = new IndexedHeap(1024);
     assetEqualsAfterSnapshot("[0,1024)", heap);
     Region a1 = heap.ask(7);
     assetEqualsAfterSnapshot("[7,1024)", heap);

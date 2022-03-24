@@ -14,6 +14,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.data.*;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
 public class CaravanDataService implements DataService {
@@ -66,15 +67,16 @@ public class CaravanDataService implements DataService {
 
   @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
+    Events.Change change = new Events.Change();
+    change.copyFrom(patch);
+    ByteBuf buf = Unpooled.buffer();
+    EventCodec.write(buf, change);
+
     execute("initialize", key, callback, (id) -> {
       if (store.exists(id)) {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
         return;
       }
-      Events.Change change = new Events.Change();
-      change.copyFrom(patch);
-      ByteBuf buf = Unpooled.buffer();
-      EventCodec.write(buf, change);
       if (store.append(id, convert(buf), () -> {
         callback.success(null);
       }) == null) {
@@ -85,17 +87,19 @@ public class CaravanDataService implements DataService {
 
   @Override
   public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
+    Events.Batch batch = new Events.Batch();
+    batch.changes = new Events.Change[patches.length];
+    for (int k = 0; k < patches.length; k++) {
+      batch.changes[k] = new Events.Change();
+      batch.changes[k].copyFrom(patches[k]);
+    }
+    ByteBuf buf = Unpooled.buffer();
+    EventCodec.write(buf, batch);
+    byte[] write = convert(buf);
+
     execute("patch", key, callback, (id) -> {
       // convert patches to byte[]
-      Events.Batch batch = new Events.Batch();
-      batch.changes = new Events.Change[patches.length];
-      for (int k = 0; k < patches.length; k++) {
-        batch.changes[k] = new Events.Change();
-        batch.changes[k].copyFrom(patches[k]);
-      }
-      ByteBuf buf = Unpooled.buffer();
-      EventCodec.write(buf, batch);
-      if (store.append(id, convert(buf), () -> {
+      if (store.append(id, write, () -> {
         callback.success(null);
       }) == null) {
         callback.failure(new ErrorCodeException(-1));
@@ -124,14 +128,16 @@ public class CaravanDataService implements DataService {
 
   @Override
   public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+    Events.Snapshot snap = new Events.Snapshot();
+    snap.seq = seq;
+    snap.document = snapshot;
+    snap.history = history;
+    ByteBuf buf = Unpooled.buffer();
+    EventCodec.write(buf, snap);
+    byte[] bytes = convert(buf);
+
     execute("snapshot", key, callback, (id) -> {
-      Events.Snapshot snap = new Events.Snapshot();
-      snap.seq = seq;
-      snap.document = snapshot;
-      snap.history = history;
-      ByteBuf buf = Unpooled.buffer();
-      EventCodec.write(buf, snap);
-      Integer size = store.append(id, convert(buf), () -> {
+      Integer size = store.append(id, bytes, () -> {
         callback.success(0);// huh, this is interesting
       });
       if (size == null) {
@@ -144,12 +150,15 @@ public class CaravanDataService implements DataService {
     });
   }
 
-  public void flush() {
+  public CountDownLatch flush(boolean force) {
+    CountDownLatch latch = new CountDownLatch(1);
     executor.execute(new NamedRunnable("flush") {
       @Override
       public void execute() throws Exception {
-        store.flush(false);
+        store.flush(force);
+        latch.countDown();
       }
     });
+    return latch;
   }
 }

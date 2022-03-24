@@ -32,6 +32,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class LocalDrive {
   public static void go(LocalCanaryConfig config) throws Exception {
@@ -66,7 +67,7 @@ public class LocalDrive {
       SimpleExecutor executor = SimpleExecutor.create("wal");
       File storageDirectory = new File("./canary_caravan");
       storageDirectory.mkdirs();
-      DurableListStore dls = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(storageDirectory, "STORE"), storageDirectory, 1024 * 1024 * 1024, 4 * 32768, 32 * 1024 * 1024);
+      DurableListStore dls = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(storageDirectory, "STORE"), storageDirectory, 1024 * 1024 * 1024, 2 * 32768, 128 * 1024 * 1024);
       TranslateKeyService keyService = new TranslateKeyService() {
         @Override
         public void lookup(Key key, Callback<Long> callback) {
@@ -78,10 +79,14 @@ public class LocalDrive {
       Thread flusher = new Thread(new Runnable() {
         @Override
         public void run() {
+          long last = System.nanoTime();
           while(true) {
             try {
-              Thread.sleep(1);
-              service.flush();
+              long now = System.nanoTime();
+              int delta = (int) (now - last);
+              Thread.sleep(0, delta >= 1000000 ? Math.max(250000, 1750000 - delta) : 750000);
+              service.flush(false).await(1, TimeUnit.MILLISECONDS);
+              last = now;
             } catch (InterruptedException ie) {
               return;
             }

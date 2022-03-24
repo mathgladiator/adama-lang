@@ -14,17 +14,21 @@ import org.slf4j.LoggerFactory;
 
 /** for complex executor bouncing, this helps understand what is going on */
 public abstract class NamedRunnable implements Runnable {
+  private static final Logger LOGGER = LoggerFactory.getLogger("nrex");
   public final String name;
-  private final Logger LOGGER = LoggerFactory.getLogger("nrex");
 
   public NamedRunnable(String first, String... tail) {
-    StringBuilder sb = new StringBuilder();
-    sb.append(first);
-    for (String fragment : tail) {
-      sb.append("/");
-      sb.append(fragment);
+    if (tail == null || tail.length == 0) {
+      this.name = first;
+    } else {
+      StringBuilder sb = new StringBuilder();
+      sb.append(first);
+      for (String fragment : tail) {
+        sb.append("/");
+        sb.append(fragment);
+      }
+      this.name = sb.toString();
     }
-    this.name = sb.toString();
   }
 
   @Override

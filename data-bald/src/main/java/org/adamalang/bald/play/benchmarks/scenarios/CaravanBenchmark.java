@@ -1,10 +1,5 @@
 package org.adamalang.bald.play.benchmarks.scenarios;
 
-import org.adamalang.bald.data.DataFile;
-import org.adamalang.bald.data.WriteAheadLog;
-import org.adamalang.bald.organization.Heap;
-import org.adamalang.bald.organization.Region;
-import org.adamalang.bald.wal.Append;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -29,7 +24,7 @@ public class CaravanBenchmark {
           // System.err.println("EXEC:" + name);
         };
       }
-    }), new File(location, "STORE"), location, 1024 * 1024 * 1024, 8 * 1024 * 1024, 16 * 1024 * 1024);
+    }), new File(location, "STORE"), location, 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
     try {
       AtomicInteger counter = new AtomicInteger(0);
       Scenario.Driver driver = new Scenario.Driver() {
@@ -37,7 +32,7 @@ public class CaravanBenchmark {
         public void append(String key, int seq, byte[] value) throws Exception {
           dls.append(seq, value, () -> {});
           if (counter.incrementAndGet() % 2500 == 0) {
-            dls.flush(false);
+            // dls.flush(false);
           }
         }
 
