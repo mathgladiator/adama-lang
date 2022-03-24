@@ -14,21 +14,24 @@ public class NtClient implements Comparable<NtClient> {
   public static NtClient NO_ONE = new NtClient("?", "?");
   public final String agent;
   public final String authority;
+  private final int cachedHash;
 
   public NtClient(final String agent, final String authority) {
     this.agent = agent == null ? "?" : agent;
     this.authority = authority == null ? "?" : authority;
+    this.cachedHash = agent.hashCode() * 31 + authority.hashCode();
   }
 
   @Override
   public int hashCode() {
-    return agent.hashCode() * 31 + authority.hashCode();
+    return cachedHash;
   }
 
   @Override
   public boolean equals(final Object o) {
     if (o instanceof NtClient) {
-      return compareTo((NtClient) o) == 0;
+      NtClient other = (NtClient) o;
+      return other == this ? true : (other.cachedHash == cachedHash ? compareTo((NtClient) o) == 0 : false);
     }
     return false;
   }
