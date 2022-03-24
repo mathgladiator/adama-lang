@@ -73,29 +73,17 @@ public class Metrics {
       append = true;
       sb.append(entry.getKey() + "=" + entry.getValue());
     }
-    prepareForLatency();
+    send_latency.sort(Integer::compare);
     System.out.println("| " + (deltas.get() - prior_deltas) + " | " + (messages_sent.get() - prior_messages_sent) + " | " + (messages_acked.get() - prior_messages_acked) + " | " + (messages_failed.get() - prior_messages_failed) + " | " + stream_failed.get() + " | " + latency(0.05) + " | " + latency(0.50) + " | " + latency(0.98) + " | " + sb + " | ");
+    send_latency.clear();
     this.prior_deltas = deltas.get();
     this.prior_messages_sent = messages_sent.get();
     this.prior_messages_acked = messages_acked.get();
     this.prior_messages_failed = messages_failed.get();
   }
 
-  private void prepareForLatency() {
-    if (send_latency.size() > 200) {
-      ArrayList<Integer> copy = new ArrayList<>(send_latency);
-      send_latency.clear();
-      for (Integer sample : copy) {
-        if (Math.random() < 0.5) {
-          send_latency.add(sample);
-        }
-      }
-    }
-    send_latency.sort(Integer::compare);
-  }
-
   private int latency(double p) {
-    if (send_latency.size() > 20) {
+    if (send_latency.size() > 10) {
       return send_latency.get((int) (send_latency.size() * p));
     } else {
       return -1;

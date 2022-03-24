@@ -67,7 +67,7 @@ public class LocalDrive {
       SimpleExecutor executor = SimpleExecutor.create("wal");
       File storageDirectory = new File("./canary_caravan");
       storageDirectory.mkdirs();
-      DurableListStore dls = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(storageDirectory, "STORE"), storageDirectory, 1024 * 1024 * 1024, 2 * 32768, 128 * 1024 * 1024);
+      DurableListStore dls = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(storageDirectory, "STORE"), storageDirectory, 1024 * 1024 * 1024, 32768, 1024 * 1024 * 1024);
       TranslateKeyService keyService = new TranslateKeyService() {
         @Override
         public void lookup(Key key, Callback<Long> callback) {
