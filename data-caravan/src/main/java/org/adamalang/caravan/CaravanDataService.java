@@ -51,9 +51,13 @@ public class CaravanDataService implements DataService {
   @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     execute("get", key, callback, (id) -> {
-      LocalCacheBuilder builder = new LocalCacheBuilder();
+      LocalCacheBuilder builder = new LocalCacheBuilder() {
+        @Override
+        public void finished() {
+          callback.success(build());
+        }
+      };
       store.read(id, builder);
-      callback.success(builder.build());
     });
   }
 

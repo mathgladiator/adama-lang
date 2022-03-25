@@ -10,7 +10,7 @@ import org.adamalang.runtime.json.JsonAlgebra;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class LocalCacheBuilder implements ByteArrayStream, EventCodec.HandlerEvent {
+public abstract class LocalCacheBuilder implements ByteArrayStream, EventCodec.HandlerEvent {
   public int currentAppendIndex;
   public String document;
   private class SeqString {
@@ -72,10 +72,4 @@ public class LocalCacheBuilder implements ByteArrayStream, EventCodec.HandlerEve
     }
     return new LocalDocumentChange(merger.finish(), count);
   }
-
-  @Override
-  public void finished() {
-
-  }
-
 }
