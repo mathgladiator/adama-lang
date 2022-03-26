@@ -11,6 +11,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.data.ComputeMethod;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
@@ -74,9 +75,10 @@ public class CaravanDataServiceTests {
     }
 
     private void clean() throws Exception {
-      store.shutdown();
+      service.flush(true).await(10000, TimeUnit.MILLISECONDS);
       this.flusher.interrupt();
       this.flusher.join();
+      store.shutdown();
     }
   }
 
@@ -92,27 +94,25 @@ public class CaravanDataServiceTests {
   @Test
   public void flow() throws Exception {
     flow((setup) -> {
-      /*
       SimpleDataCallback cb_GetFailed = new SimpleDataCallback();
       setup.service.get(KEY1, cb_GetFailed);
       cb_GetFailed.assertFailure(625676);
 
       SimpleMockCallback cb_PatchFailsFNF = new SimpleMockCallback();
       setup.service.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_2 }, cb_PatchFailsFNF);
-      cb_PatchFailsFNF.assertFailure(724019);
+      cb_PatchFailsFNF.assertFailure(707675);
 
       SimpleIntCallback cb_CompactFailsFNF = new SimpleIntCallback();
       setup.service.compactAndSnapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
-      cb_CompactFailsFNF.assertFailure(724019);
+      cb_CompactFailsFNF.assertFailure(790623);
 
       SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
       setup.service.compute(KEY1, ComputeMethod.Rewind, 1, cb_ComputeFailsFNF_Rewind);
-      cb_ComputeFailsFNF_Rewind.assertFailure(724019);
+      cb_ComputeFailsFNF_Rewind.assertFailure(790622);
 
       SimpleDataCallback cb_ComputeFailsFNF_HeadPatch= new SimpleDataCallback();
       setup.service.compute(KEY1, ComputeMethod.HeadPatch, 1, cb_ComputeFailsFNF_HeadPatch);
-      cb_ComputeFailsFNF_HeadPatch.assertFailure(724019);
-*/
+      cb_ComputeFailsFNF_HeadPatch.assertFailure(790622);
 
       SimpleMockCallback cb_DeleteSuccessFNF = new SimpleMockCallback();
       setup.service.delete(KEY1, cb_DeleteSuccessFNF);
@@ -132,14 +132,11 @@ public class CaravanDataServiceTests {
       setup.service.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_2 }, cb_PatchOne);
       cb_PatchOne.assertSuccess();
 
-      /*
       {
         SimpleMockCallback cb_PatchFourAheadOfSchedule = new SimpleMockCallback();
         setup.service.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_4 }, cb_PatchFourAheadOfSchedule);
         cb_PatchFourAheadOfSchedule.assertFailure(621580);
       }
-
-*/
 
       SimpleMockCallback cb_PatchTwo = new SimpleMockCallback();
       setup.service.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb_PatchTwo);
@@ -201,13 +198,14 @@ public class CaravanDataServiceTests {
         setup.service.compute(KEY1, ComputeMethod.Rewind, 100, cb_Rewind);
         cb_Rewind.assertFailure(791602);
       }
+      */
 
       {
         SimpleDataCallback cbUnknown = new SimpleDataCallback();
         setup.service.compute(KEY1, null, 100, cbUnknown);
-        cbUnknown.assertFailure(732208);
+        cbUnknown.assertFailure(785491);
       }
-      */
+
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
         setup.service.compactAndSnapshot(KEY1, 4, "{\"x\":10,\"y\":10}", 100, cb_CompactWorks);
@@ -218,12 +216,12 @@ public class CaravanDataServiceTests {
         Assert.assertEquals("{\"x\":10,\"y\":10}", cb_GetCompactedResults.value);
         Assert.assertEquals(1, cb_GetCompactedResults.reads);
       }
-      /*
       {
         SimpleIntCallback cbCompactFailsNegHistory = new SimpleIntCallback();
         setup.service.compactAndSnapshot(KEY1, 1, "{}", -1, cbCompactFailsNegHistory);
         cbCompactFailsNegHistory.assertFailure(734263);
       }
+      /*
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
         setup.service.compactAndSnapshot(KEY1, 1, "{\"x\":11,\"y\":11}",2, cb_CompactWorks);
@@ -251,20 +249,16 @@ public class CaravanDataServiceTests {
       SimpleMockCallback cb_InitFailAlreadyExists = new SimpleMockCallback();
       setup.service.initialize(KEY1, UPDATE_1, cb_InitFailAlreadyExists);
       cb_InitFailAlreadyExists.assertFailure(667658);
-      /*
-
       {
         SimpleMockCallback cb_DeleteWorks = new SimpleMockCallback();
         setup.service.delete(KEY1, cb_DeleteWorks);
         cb_DeleteWorks.assertSuccess();
       }
-      setup.flush(KEY1);
       {
         SimpleMockCallback cb_DeleteWorks = new SimpleMockCallback();
         setup.service.delete(KEY1, cb_DeleteWorks);
         cb_DeleteWorks.assertSuccess();
       }
-       */
     });
   }
 }

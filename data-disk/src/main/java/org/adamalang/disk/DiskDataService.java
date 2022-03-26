@@ -121,14 +121,14 @@ public class DiskDataService implements DataService {
           if (headPatch != null) {
             callback.success(new LocalDocumentChange(headPatch, 1));
           } else {
-            callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_COMPUTE_HEADPATCH_SEQ_NOT_FOUND));
+            callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_COMPUTE_HEADPATCH_SEQ_NOT_FOUND));
           }
         } else if (method == ComputeMethod.Rewind) {
           String rewind = memory.computeRewind(seq);
           if (rewind != null) {
             callback.success(new LocalDocumentChange(rewind, 1));
           } else {
-            callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_COMPUTE_REWIND_SEQ_NOT_FOUND));
+            callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_COMPUTE_REWIND_SEQ_NOT_FOUND));
           }
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_COMPUTE_METHOD_NOT_FOUND));
@@ -162,7 +162,7 @@ public class DiskDataService implements DataService {
   public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callbackRaw) {
     Callback<Integer> callback = this.base.metrics.disk_data_snapshot.wrap(callbackRaw);
     if (history <= 0) {
-      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_DISK_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY));
+      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY));
       return;
     }
     base.executor.execute(new NamedRunnable("dds-snapshot") {
