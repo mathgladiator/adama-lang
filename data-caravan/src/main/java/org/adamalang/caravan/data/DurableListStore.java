@@ -120,7 +120,7 @@ public class DurableListStore {
                 Append append = Append.readAfterTypeId(buf);
                 Region region = heap.ask(append.bytes.length);
                 if (region.position != append.position) {
-                  throw new IOException("heap corruption");
+                  throw new IOException("heap corruption!");
                 }
                 index.append(append.id, region);
                 memory.slice().position((int) region.position).put(append.bytes);
@@ -154,15 +154,12 @@ public class DurableListStore {
   private File prepare() throws IOException {
     File newWalFile = new File(walRoot, "WAL.NEW-" + System.currentTimeMillis());
     DataOutputStream newOutput = new DataOutputStream(new FileOutputStream(newWalFile));
-    try {
-      ByteBuf first = Unpooled.buffer();
-      new OrganizationSnapshot(heap, index).write(first);
-      writePage(newOutput, first);
-      newOutput.flush();
-      return newWalFile;
-    } finally {
-      newOutput.close();
-    }
+    ByteBuf first = Unpooled.buffer();
+    new OrganizationSnapshot(heap, index).write(first);
+    writePage(newOutput, first);
+    newOutput.flush();
+    newOutput.close();
+    return newWalFile;
   }
 
   /** internal: force everything to flush, prepare a new file, the move the new file in place, and open it */
