@@ -12,6 +12,8 @@ import org.adamalang.caravan.index.Index;
 import org.adamalang.caravan.index.Region;
 import org.adamalang.caravan.index.heaps.IndexedHeap;
 import org.adamalang.caravan.index.heaps.SplitHeat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.MappedByteBuffer;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class DurableListStore {
+  private static final Logger LOGGER = LoggerFactory.getLogger(DurableListStore.class);
   // the data structures to manage the giant linear space
   private final DurableListStoreMetrics metrics;
   private final Index index;
@@ -84,9 +87,10 @@ public class DurableListStore {
       try {
         load(walFile);
       } catch (IOException ioe) {
-        Files.copy(walFile.toPath(), new File(walFile, "BAD-WAL-" + System.currentTimeMillis()).toPath());
+        LOGGER.error("wal-truncated-exception:", ioe);
+        Files.copy(walFile.toPath(), new File(walRoot, "BAD-WAL-" + System.currentTimeMillis()).toPath());
       }
-      Files.move(prepare().toPath(), walFile.toPath());
+      Files.move(prepare().toPath(), walFile.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     }
     this.maxLogSize = maxLogSize;
     this.bytesWrittenToLog = 0;
@@ -95,7 +99,7 @@ public class DurableListStore {
 
   /** internal: open the log for writing */
   private void openLogForWriting() throws IOException {
-    this.output = new DataOutputStream(new FileOutputStream(new File(walRoot, "WAL")));
+    this.output = new DataOutputStream(new FileOutputStream(new File(walRoot, "WAL"), true));
     this.bytesWrittenToLog = 0;
   }
 
@@ -115,7 +119,9 @@ public class DurableListStore {
               {
                 Append append = Append.readAfterTypeId(buf);
                 Region region = heap.ask(append.bytes.length);
-                // region.position BETTER be append.position
+                if (region.position != append.position) {
+                  throw new IOException("heap corruption");
+                }
                 index.append(append.id, region);
                 memory.slice().position((int) region.position).put(append.bytes);
               }
@@ -289,12 +295,13 @@ public class DurableListStore {
         notification.run();
       }
     } catch (IOException ex) {
-      ex.printStackTrace();
+      LOGGER.error("critical-exception:", ex);
       System.exit(100);
     }
   }
 
   public void shutdown() throws IOException {
+    output.writeInt(0);
     output.flush();
     output.close();
     memory.force();

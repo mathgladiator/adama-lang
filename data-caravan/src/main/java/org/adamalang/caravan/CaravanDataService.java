@@ -7,7 +7,7 @@ import org.adamalang.caravan.contracts.TranslateKeyService;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.events.EventCodec;
 import org.adamalang.caravan.events.Events;
-import org.adamalang.caravan.events.LocalCacheBuilder;
+import org.adamalang.caravan.events.LocalCache;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
@@ -22,7 +22,7 @@ public class CaravanDataService implements DataService {
   private final TranslateKeyService translate;
   private final DurableListStore store;
   private final SimpleExecutor executor;
-  private final HashMap<Long, LocalCacheBuilder> cache;
+  private final HashMap<Long, LocalCache> cache;
 
   public CaravanDataService(TranslateKeyService translate, DurableListStore store, SimpleExecutor executor) {
     this.translate = translate;
@@ -32,7 +32,7 @@ public class CaravanDataService implements DataService {
   }
 
   /** execute with the translation service and jump into the executor */
-  private <T> void execute(String name, Key key, Callback<T> callback, BiConsumer<Long, LocalCacheBuilder> action) {
+  private <T> void execute(String name, Key key, Callback<T> callback, BiConsumer<Long, LocalCache> action) {
     translate.lookup(key, new Callback<Long>() {
       @Override
       public void success(Long id) {
@@ -59,6 +59,15 @@ public class CaravanDataService implements DataService {
     return memory;
   }
 
+  public void close(Key key, Callback<Void> callback) {
+    execute("get", key, callback, (id, cached) -> {
+      if (cached != null) {
+        cache.remove(id);
+      }
+      callback.success(null);
+    });
+  }
+
   @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     execute("get", key, callback, (id, cached) -> {
@@ -66,10 +75,10 @@ public class CaravanDataService implements DataService {
         callback.success(cached.build());
         return;
       }
-      LocalCacheBuilder builder = new LocalCacheBuilder() {
+      LocalCache builder = new LocalCache() {
         @Override
         public void finished() {
-          LocalCacheBuilder builder = this;
+          LocalCache builder = this;
           LocalDocumentChange result = builder.build();
           if (result == null) {
             callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
@@ -100,7 +109,7 @@ public class CaravanDataService implements DataService {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
         return;
       }
-      LocalCacheBuilder builder = new LocalCacheBuilder() {
+      LocalCache builder = new LocalCache() {
         @Override
         public void finished() {
 
@@ -117,7 +126,7 @@ public class CaravanDataService implements DataService {
           }
         });
       }) == null) {
-        callback.failure(new ErrorCodeException(-1));
+        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_INITIALIZE));
       }
     });
   }
@@ -152,7 +161,7 @@ public class CaravanDataService implements DataService {
           }
         });
       }) == null) {
-        callback.failure(new ErrorCodeException(-1));
+        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_PATCH));
       }
     });
   }
@@ -216,14 +225,14 @@ public class CaravanDataService implements DataService {
         callback.success(0);// huh, this is interesting
       });
       if (size == null) {
-        callback.failure(new ErrorCodeException(-1));
+        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_OUT_OF_SPACE_SNAPSHOT));
       } else {
-        int toTrim = Math.min(size - 1, cached.reset());
         cached.handle(snap);
         cached.bump();
-        store.trim(id, toTrim, () -> {
-
-        });
+        int toTrim = Math.min(size - 1, cached.reset()) - history;
+        if (toTrim > 0) {
+          store.trim(id, toTrim, () -> {});
+        }
       }
     });
   }

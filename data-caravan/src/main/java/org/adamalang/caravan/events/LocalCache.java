@@ -10,7 +10,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public abstract class LocalCacheBuilder implements ByteArrayStream, EventCodec.HandlerEvent {
+public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerEvent {
   public int currentAppendIndex;
   private int itemsInRemote;
   private class SeqString {
@@ -27,7 +27,7 @@ public abstract class LocalCacheBuilder implements ByteArrayStream, EventCodec.H
   private int seq;
   public SeqString document;
 
-  public LocalCacheBuilder() {
+  public LocalCache() {
     this.document = null;
     this.redos = new ArrayList<>();
     this.undos = new ArrayDeque<>();
@@ -57,9 +57,12 @@ public abstract class LocalCacheBuilder implements ByteArrayStream, EventCodec.H
     document = new SeqString(payload.seq, payload.document);
     Iterator<SeqString> it = redos.iterator();
     while (it.hasNext()) {
-      if (it.next().seq <= payload.seq) {
+      if (it.next().seq + payload.history <= payload.seq) {
         it.remove();
       }
+    }
+    while (undos.size() > payload.history) {
+      undos.removeLast();
     }
   }
 
@@ -73,7 +76,7 @@ public abstract class LocalCacheBuilder implements ByteArrayStream, EventCodec.H
   @Override
   public void handle(Events.Change change) {
     redos.add(new SeqString(change.seq_end, change.redo));
-    undos.addFirst(new SeqString(change.seq_end, change.undo));
+    undos.addFirst(new SeqString(change.seq_begin, change.undo));
     seq = change.seq_end;
   }
 
@@ -81,12 +84,36 @@ public abstract class LocalCacheBuilder implements ByteArrayStream, EventCodec.H
     return seq + 1 == newSeq;
   }
 
-  public String computeHeadPatch(int seq) {
-    return null;
+  public String computeHeadPatch(int seqGoal) {
+    AutoMorphicAccumulator<String> merger = JsonAlgebra.mergeAccumulator(true);
+    int last = -1;
+    for (SeqString ss : redos) {
+      if (ss.seq > seqGoal) {
+        last = ss.seq;
+        merger.next(ss.data);
+      }
+    }
+    if (merger.empty()) {
+      return null;
+    }
+    return merger.finish();
   }
 
-  public String computeRewind(int seq) {
-    return null;
+  public String computeRewind(int seqGoal) {
+    AutoMorphicAccumulator<String> merger = JsonAlgebra.mergeAccumulator(true);
+    Iterator<SeqString> it = undos.iterator();
+    int last = -1;
+    while (it.hasNext()) {
+      SeqString ss = it.next();
+      if (ss.seq >= seqGoal) {
+        merger.next(ss.data);
+        last = ss.seq;
+      }
+    }
+    if (merger.empty() || last > seqGoal) {
+      return null;
+    }
+    return merger.finish();
   }
 
   public LocalDocumentChange build() {
@@ -95,7 +122,7 @@ public abstract class LocalCacheBuilder implements ByteArrayStream, EventCodec.H
     int seqAt = -1;
     if (document != null) {
       count++;
-      seq = document.seq;
+      seqAt = document.seq;
       merger.next(document.data);
     }
     for (SeqString ss : redos) {
