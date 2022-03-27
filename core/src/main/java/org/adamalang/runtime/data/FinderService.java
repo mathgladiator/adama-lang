@@ -42,10 +42,12 @@ public interface FinderService {
   }
 
   public static class Result {
+    public final long id;
     public final Location location;
     public final String value;
 
-    public Result(Location location, String value) {
+    public Result(long id, Location location, String value) {
+      this.id = id;
       this.location = location;
       this.value = value;
     }

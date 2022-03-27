@@ -1,6 +1,5 @@
 package org.adamalang.caravan;
 
-import org.adamalang.caravan.contracts.TranslateKeyService;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
 import org.adamalang.caravan.mocks.BadConsumer;
@@ -8,13 +7,9 @@ import org.adamalang.caravan.mocks.SimpleDataCallback;
 import org.adamalang.caravan.mocks.SimpleIntCallback;
 import org.adamalang.caravan.mocks.SimpleMockCallback;
 import org.adamalang.common.Callback;
-import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.runtime.data.ComputeMethod;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.data.RemoteDocumentUpdate;
-import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,7 +33,7 @@ public class CaravanDataServiceTests {
           4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
 
   private static class Setup {
-    private final TranslateKeyService translate;
+    private final FinderService finder;
     private final DurableListStore store;
     private final SimpleExecutor executor;
     private final File root;
@@ -51,13 +46,33 @@ public class CaravanDataServiceTests {
       root.delete();
       root.mkdirs();
       this.store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(root, "STORE"), root, 1024 * 1024, 64 * 1024, 1024 * 1024 * 32);
-      this.translate = new TranslateKeyService() {
+      this.finder = new FinderService() {
         @Override
-        public void lookup(Key key, Callback<Long> callback) {
-          callback.success(Long.parseLong(key.key));
+        public void create(Key key, Callback<Void> callback) {
+
+        }
+
+        @Override
+        public void find(Key key, Callback<Result> callback) {
+          callback.success(new Result(Long.parseLong(key.key), null, null));
+        }
+
+        @Override
+        public void takeover(Key key, Callback<Void> callback) {
+
+        }
+
+        @Override
+        public void archive(Key key, String archiveKey, Callback<Void> callback) {
+
+        }
+
+        @Override
+        public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
+
         }
       };
-      this.service = new CaravanDataService(translate, store, executor);
+      this.service = new CaravanDataService(finder, store, executor);
       this.flusher = new Thread(new Runnable() {
         @Override
         public void run() {

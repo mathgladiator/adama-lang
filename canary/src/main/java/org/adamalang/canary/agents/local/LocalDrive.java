@@ -11,7 +11,6 @@ package org.adamalang.canary.agents.local;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.caravan.CaravanDataService;
-import org.adamalang.caravan.contracts.TranslateKeyService;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
 import org.adamalang.common.*;
@@ -20,6 +19,7 @@ import org.adamalang.disk.*;
 import org.adamalang.disk.demo.DiskMetrics;
 import org.adamalang.disk.demo.SingleThreadDiskDataService;
 import org.adamalang.runtime.data.DataService;
+import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
@@ -68,13 +68,33 @@ public class LocalDrive {
       File storageDirectory = new File("./canary_caravan");
       storageDirectory.mkdirs();
       DurableListStore dls = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(storageDirectory, "STORE"), storageDirectory, 1800 * 1024 * 1024, 32768, 1024 * 1024 * 1024);
-      TranslateKeyService keyService = new TranslateKeyService() {
+      FinderService finder = new FinderService() {
         @Override
-        public void lookup(Key key, Callback<Long> callback) {
-          callback.success((long) key.hashCode());
+        public void create(Key key, Callback<Void> callback) {
+
+        }
+
+        @Override
+        public void find(Key key, Callback<Result> callback) {
+          callback.success(new Result(key.hashCode(), null, null));
+        }
+
+        @Override
+        public void takeover(Key key, Callback<Void> callback) {
+
+        }
+
+        @Override
+        public void archive(Key key, String archiveKey, Callback<Void> callback) {
+
+        }
+
+        @Override
+        public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
+
         }
       };
-      CaravanDataService service = new CaravanDataService(keyService, dls, executor);
+      CaravanDataService service = new CaravanDataService(finder, dls, executor);
       dataService = service;
       Thread flusher = new Thread(new Runnable() {
         @Override

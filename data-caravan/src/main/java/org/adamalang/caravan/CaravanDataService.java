@@ -3,7 +3,6 @@ package org.adamalang.caravan;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.ErrorCodes;
-import org.adamalang.caravan.contracts.TranslateKeyService;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.events.EventCodec;
 import org.adamalang.caravan.events.Events;
@@ -19,13 +18,13 @@ import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
 
 public class CaravanDataService implements DataService {
-  private final TranslateKeyService translate;
+  private final FinderService finder;
   private final DurableListStore store;
   private final SimpleExecutor executor;
   private final HashMap<Long, LocalCache> cache;
 
-  public CaravanDataService(TranslateKeyService translate, DurableListStore store, SimpleExecutor executor) {
-    this.translate = translate;
+  public CaravanDataService(FinderService finder, DurableListStore store, SimpleExecutor executor) {
+    this.finder = finder;
     this.store = store;
     this.executor = executor;
     this.cache = new HashMap();
@@ -33,9 +32,10 @@ public class CaravanDataService implements DataService {
 
   /** execute with the translation service and jump into the executor */
   private <T> void execute(String name, Key key, Callback<T> callback, BiConsumer<Long, LocalCache> action) {
-    translate.lookup(key, new Callback<Long>() {
+    finder.find(key, new Callback<FinderService.Result>() {
       @Override
-      public void success(Long id) {
+      public void success(FinderService.Result result) {
+        long id = result.id;
         executor.execute(new NamedRunnable(name) {
           @Override
           public void execute() throws Exception {
