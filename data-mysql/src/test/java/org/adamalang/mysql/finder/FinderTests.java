@@ -15,6 +15,8 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseConfigTests;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
+import org.adamalang.mysql.mocks.SimpleIntCallback;
+import org.adamalang.mysql.mocks.SimpleLongCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
@@ -50,6 +52,21 @@ public class FinderTests {
           cb.assertFailure(625676);
         }
         {
+          SimpleLongCallback cb = new SimpleLongCallback();
+          machineA.lookup(KEY1, cb);
+          cb.assertFailure(625676);
+        }
+        {
+          SimpleLongCallback cb = new SimpleLongCallback();
+          machineA.lookup(KEY2, cb);
+          cb.assertFailure(625676);
+        }
+        {
+          SimpleFinderCallback cb = new SimpleFinderCallback();
+          machineB.find(KEY2, cb);
+          cb.assertFailure(625676);
+        }
+        {
           SimpleMockCallback callback = new SimpleMockCallback();
           machineA.takeover(KEY1, callback);
           callback.assertFailure(786509);
@@ -68,6 +85,11 @@ public class FinderTests {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machineB.find(KEY1, cb);
           cb.assertSuccess(FinderService.Location.Fresh, "");
+        }
+        {
+          SimpleLongCallback cb = new SimpleLongCallback();
+          machineA.lookup(KEY1, cb);
+          cb.assertSuccess(1);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();

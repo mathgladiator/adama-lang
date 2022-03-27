@@ -10,6 +10,7 @@
 package org.adamalang.mysql.finder;
 
 import org.adamalang.ErrorCodes;
+import org.adamalang.caravan.contracts.TranslateKeyService;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.MachineIdentity;
@@ -22,7 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class Finder implements FinderService {
+public class Finder implements FinderService, TranslateKeyService {
   private final DataBase dataBase;
   private final String targetSelf;
 
@@ -69,7 +70,27 @@ public class Finder implements FinderService {
         }
       }
       throw new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED);
-    }, callback, ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
+    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_FIND_EXCEPTION);
+  }
+
+  @Override
+  public void lookup(Key key, Callback<Long> callback) {
+    dataBase.transact((connection) -> {
+      String selectSQL = new StringBuilder() //
+          .append("SELECT `id` FROM `").append(dataBase.databaseName) //
+          .append("`.`directory` WHERE `space`=? AND `key`=?") //
+          .toString();
+      try (PreparedStatement statementInsertIndex = connection.prepareStatement(selectSQL)) {
+        statementInsertIndex.setString(1, key.space);
+        statementInsertIndex.setString(2, key.key);
+        try (ResultSet rs = statementInsertIndex.executeQuery()) {
+          if (rs.next()) {
+            return rs.getLong(1);
+          }
+        }
+      }
+      throw new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED);
+    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_LOOKUP_EXCEPTION);
   }
 
   @Override

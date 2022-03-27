@@ -26,7 +26,7 @@ public class FinderInstaller {
 
     String createDirectoryTableSQL = new StringBuilder() //
         .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`directory` (") //
-        .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
+        .append("  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,") //
         .append("  `space` VARCHAR(128) NOT NULL,") //
         .append("  `key` VARCHAR(512) NOT NULL,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
