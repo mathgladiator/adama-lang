@@ -17,6 +17,7 @@ import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtClient;
@@ -196,16 +197,17 @@ public class CoreService {
 
   /** connect the given person to the document hooking up a streamback */
   public void connect(NtClient who, Key key, String viewerState, Streamback stream) {
-    connect(who, key, stream, viewerState, true);
+    // TODO: populate the asset id encoder
+    connect(who, key, stream, viewerState, null, true);
   }
 
   /** internal: do the connect with retry when connect executes create */
-  private void connect(NtClient who, Key key, Streamback stream, String viewerState, boolean canRetry) {
+  private void connect(NtClient who, Key key, Streamback stream, String viewerState, AssetIdEncoder assetIdEncoder, boolean canRetry) {
     // TODO: instrument the stream
     load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
-        connectDirectMustBeInDocumentBase(who, document, stream, new JsonStreamReader(viewerState));
+        connectDirectMustBeInDocumentBase(who, document, stream, new JsonStreamReader(viewerState), assetIdEncoder);
       }
 
       @Override
@@ -222,13 +224,13 @@ public class CoreService {
                 create(who, key, "{}", null, metrics.implicitCreate.wrap(new Callback<Void>() {
                   @Override
                   public void success(Void value) {
-                    connect(who, key, stream, viewerState, canRetry);
+                    connect(who, key, stream, viewerState, assetIdEncoder, canRetry);
                   }
 
                   @Override
                   public void failure(ErrorCodeException exNew) {
                     if (exNew.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE || exNew.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED || exNew.code == ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED) {
-                      connect(who, key, stream, viewerState, canRetry);
+                      connect(who, key, stream, viewerState, assetIdEncoder, canRetry);
                     } else {
                       metrics.failed_invention.run();
                       stream.failure(exNew);
@@ -343,7 +345,7 @@ public class CoreService {
   }
 
   /** internal: send connection to the document if not joined, then join */
-  private void connectDirectMustBeInDocumentBase(NtClient who, DurableLivingDocument document, Streamback stream, JsonStreamReader viewerState) {
+  private void connectDirectMustBeInDocumentBase(NtClient who, DurableLivingDocument document, Streamback stream, JsonStreamReader viewerState, AssetIdEncoder assetIdEncoder) {
     PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
     Callback<Integer> onConnected = new Callback<>() {
       @Override
@@ -359,7 +361,7 @@ public class CoreService {
           public void disconnect() {
             stream.status(Streamback.StreamStatus.Disconnected);
           }
-        }, viewerState, metrics.createPrivateView.wrap(new Callback<>() {
+        }, viewerState, assetIdEncoder, metrics.createPrivateView.wrap(new Callback<>() {
           @Override
           public void success(PrivateView view) {
             stream.onSetupComplete(new CoreStream(metrics, who, inventory, document, view));

@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtAsset;
@@ -21,7 +22,26 @@ public class DAssetTests {
   public void flow() {
     DAsset da = new DAsset();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
+    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);
+    da.show(NtAsset.NOTHING, writer);
+    da.hide(writer);
+    da.show(new NtAsset("12", "name", "type", 42, "md5", "sha"), writer);
+    da.show(new NtAsset("32", "name", "type", 42, "md5", "sha"), writer);
+
+    da.hide(writer);
+    String toTest = stream.toString();
+    System.err.println(toTest);
+    Assert.assertTrue(toTest.contains("\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}null{\"id\":\""));
+    Assert.assertTrue(toTest.contains("\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}{\"id\":\""));
+    Assert.assertTrue(toTest.contains("\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}null"));
+    Assert.assertEquals(32, da.__memory());
+  }
+
+  @Test
+  public void flowNoKey() {
+    DAsset da = new DAsset();
+    final var stream = new JsonStreamWriter();
+    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, null);
     da.show(NtAsset.NOTHING, writer);
     da.hide(writer);
     da.show(new NtAsset("12", "name", "type", 42, "md5", "sha"), writer);
@@ -29,7 +49,7 @@ public class DAssetTests {
 
     da.hide(writer);
     Assert.assertEquals(
-        "{\"id\":\"\",\"size\":\"0\",\"type\":\"\",\"md5\":\"\",\"sha384\":\"\"}null{\"id\":\"12\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}{\"id\":\"32\",\"size\":\"42\",\"type\":\"type\",\"md5\":\"md5\",\"sha384\":\"sha\"}null",
+        "nullnull",
         stream.toString());
     Assert.assertEquals(32, da.__memory());
   }

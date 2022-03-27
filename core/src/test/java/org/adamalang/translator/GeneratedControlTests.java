@@ -138,6 +138,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
@@ -416,11 +417,11 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
     gold.append("\n    LegacyBlock_3 __self = this;");
     gold.append("\n    DeltaLegacyBlock_3 __state = new DeltaLegacyBlock_3();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -435,7 +436,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -768,6 +769,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
@@ -1033,11 +1035,11 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
     gold.append("\n    LegacyForEach_4 __self = this;");
     gold.append("\n    DeltaLegacyForEach_4 __state = new DeltaLegacyForEach_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1052,7 +1054,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -1479,6 +1481,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
@@ -1822,11 +1825,11 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
     gold.append("\n    LegacyIf_5 __self = this;");
     gold.append("\n    DeltaLegacyIf_5 __state = new DeltaLegacyIf_5();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -1841,7 +1844,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -2173,6 +2176,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
@@ -2464,11 +2468,11 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
     gold.append("\n    LegacyLoops_6 __self = this;");
     gold.append("\n    DeltaLegacyLoops_6 __state = new DeltaLegacyLoops_6();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -2483,7 +2487,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -3085,6 +3089,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
@@ -3350,11 +3355,11 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
     gold.append("\n    Legacy_7 __self = this;");
     gold.append("\n    DeltaLegacy_7 __state = new DeltaLegacy_7();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -3369,7 +3374,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -3717,6 +3722,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
@@ -3974,11 +3980,11 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
     gold.append("\n    MaybeBool_8 __self = this;");
     gold.append("\n    DeltaMaybeBool_8 __state = new DeltaMaybeBool_8();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -3993,7 +3999,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -4208,6 +4214,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
@@ -4473,11 +4480,11 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
     gold.append("\n    MegaIfLegacy_9 __self = this;");
     gold.append("\n    DeltaMegaIfLegacy_9 __state = new DeltaMegaIfLegacy_9();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -4492,7 +4499,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");
@@ -4757,6 +4764,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.async.*;");
     gold.append("\nimport org.adamalang.runtime.contracts.*;");
     gold.append("\nimport org.adamalang.runtime.delta.*;");
+    gold.append("\nimport org.adamalang.runtime.delta.secure.*;");
     gold.append("\nimport org.adamalang.runtime.exceptions.*;");
     gold.append("\nimport org.adamalang.runtime.index.*;");
     gold.append("\nimport org.adamalang.runtime.json.*;");
@@ -5014,11 +5022,11 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n    return __interns;");
     gold.append("\n  }");
     gold.append("\n  @Override");
-    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective) {");
+    gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
     gold.append("\n    VariousFor_11 __self = this;");
     gold.append("\n    DeltaVariousFor_11 __state = new DeltaVariousFor_11();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
-    gold.append("\n    return new PrivateView(__who, ___perspective) {");
+    gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
     gold.append("\n      public long memory() {");
     gold.append("\n        return __state.__memory();");
@@ -5033,7 +5041,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n      @Override");
     gold.append("\n      public void update(JsonStreamWriter __writer) {");
-    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState));");
+    gold.append("\n        __state.show(__self, PrivateLazyDeltaWriter.bind(__who, __writer, __viewerState, __encoder));");
     gold.append("\n      }");
     gold.append("\n    };");
     gold.append("\n  }");

@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtClient;
@@ -21,7 +22,7 @@ public class DComplexTests {
   public void flow() {
     final var db = new DComplex();
     final var stream = new JsonStreamWriter();
-    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
+    final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);
     db.show(new NtComplex(1, 2), writer);
     db.show(new NtComplex(3, 4), writer);
     db.show(new NtComplex(3, 4), writer);

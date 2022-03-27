@@ -47,12 +47,12 @@ public class PhaseRun {
     outputFile.append("MEMORY:").append(doc.getMemoryBytes()).append("\n");
     doc.createPrivateView(NtClient.NO_ONE, wrap(str -> {
       outputFile.append("+ NO_ONE DELTA:").append(str).append("\n");
-    }), new JsonStreamReader("{}"), DumbDataService.makePrinterPrivateView("NO_ONE", outputFile));
+    }), new JsonStreamReader("{}"), null, DumbDataService.makePrinterPrivateView("NO_ONE", outputFile));
     doc.connect(NtClient.NO_ONE, DumbDataService.makePrinterInt("NO_ONE", outputFile));
     final var rando = new NtClient("rando", "random-place");
     doc.createPrivateView(rando, wrap(str -> {
       outputFile.append("+ RANDO DELTA:").append(str).append("\n");
-    }), new JsonStreamReader("{}"), DumbDataService.makePrinterPrivateView("RANDO", outputFile));
+    }), new JsonStreamReader("{}"), null, DumbDataService.makePrinterPrivateView("RANDO", outputFile));
     doc.connect(rando, DumbDataService.makePrinterInt("RANDO", outputFile));
     doc.invalidate(DumbDataService.makePrinterInt("RANDO", outputFile));
     outputFile.append("MEMORY:" + doc.getMemoryBytes() + "\n");

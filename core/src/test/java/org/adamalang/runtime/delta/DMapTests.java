@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.delta;
 
+import org.adamalang.runtime.delta.secure.TestKey;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.json.PrivateLazyDeltaWriter;
 import org.adamalang.runtime.natives.NtClient;
@@ -22,7 +23,7 @@ public class DMapTests {
     final var map = new DMap<Integer, DBoolean>();
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
+      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);
       final var delta = writer.planObject();
       final DMap<Integer, DBoolean>.Walk walk = map.begin();
       walk.next(42, DBoolean::new).show(true, delta.planField("" + 42));
@@ -34,7 +35,7 @@ public class DMapTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
+      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);
       final var delta = writer.planObject();
       delta.manifest();
       final DMap<Integer, DBoolean>.Walk walk = map.begin();
@@ -47,7 +48,7 @@ public class DMapTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
+      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);
       final var delta = writer.planObject();
       delta.manifest();
       final DMap<Integer, DBoolean>.Walk walk = map.begin();
@@ -59,7 +60,7 @@ public class DMapTests {
     }
     {
       final var stream = new JsonStreamWriter();
-      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null);
+      final var writer = PrivateLazyDeltaWriter.bind(NtClient.NO_ONE, stream, null, TestKey.ENCODER);
       map.hide(writer);
       map.hide(writer);
       Assert.assertEquals("null", stream.toString());

@@ -31,7 +31,7 @@ public class PrivateViewTests {
 
               @Override
               public void disconnect() {}
-            }) {
+            }, null) {
 
           @Override
           public long memory() {
@@ -68,7 +68,7 @@ public class PrivateViewTests {
 
               @Override
               public void disconnect() {}
-            }) {
+            }, null) {
 
           @Override
           public long memory() {
@@ -86,7 +86,7 @@ public class PrivateViewTests {
         };
 
     PrivateView pv2 =
-        new PrivateView(NtClient.NO_ONE, pv1.perspective) {
+        new PrivateView(NtClient.NO_ONE, pv1.perspective, null) {
 
           @Override
           public long memory() {

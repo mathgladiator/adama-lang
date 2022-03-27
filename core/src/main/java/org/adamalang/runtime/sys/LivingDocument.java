@@ -18,6 +18,7 @@ import org.adamalang.runtime.contracts.Perspective;
 import org.adamalang.runtime.contracts.RxParent;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.exceptions.*;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -147,7 +148,7 @@ public abstract class LivingDocument implements RxParent {
     for (Map.Entry<NtClient, ArrayList<PrivateView>> existing : __trackedViews.entrySet()) {
       for (PrivateView pv : existing.getValue()) {
         // create a new view within the usurping document
-        PrivateView usurper = usurpingDocument.__createView(existing.getKey(), pv.perspective);
+        PrivateView usurper = usurpingDocument.__createView(existing.getKey(), pv.perspective, pv.assetIdEncoder);
         // the usuper takes over the current view
         pv.usurp(usurper);
       }
@@ -155,8 +156,8 @@ public abstract class LivingDocument implements RxParent {
     __code_cost = usurpingDocument.__code_cost;
   }
 
-  public PrivateView __createView(final NtClient __who, final Perspective perspective) {
-    final var view = __createPrivateView(__who, perspective);
+  public PrivateView __createView(final NtClient __who, final Perspective perspective, AssetIdEncoder __encoder) {
+    final var view = __createPrivateView(__who, perspective, __encoder);
     var viewsForWho = __trackedViews.get(__who);
     if (viewsForWho == null) {
       viewsForWho = new ArrayList<>();
@@ -167,7 +168,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** code generated: create a private view for the given person */
-  public abstract PrivateView __createPrivateView(NtClient __who, Perspective __perspective);
+  public abstract PrivateView __createPrivateView(NtClient __who, Perspective __perspective, AssetIdEncoder __encoder);
 
   /** build broadcast for a viewer */
   public LivingDocumentChange.Broadcast __buildBroadcast(NtClient who, PrivateView pv) {

@@ -20,6 +20,7 @@ import org.adamalang.runtime.data.ComputeMethod;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.LocalDocumentChange;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.exceptions.PerformDocumentDeleteException;
 import org.adamalang.runtime.exceptions.PerformDocumentRewindException;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -510,8 +511,8 @@ public class DurableLivingDocument {
     return document.__isConnected(who);
   }
 
-  public void createPrivateView(final NtClient who, final Perspective perspective, JsonStreamReader viewerState, Callback<PrivateView> callback) {
-    PrivateView result = document.__createView(who, perspective);
+  public void createPrivateView(final NtClient who, final Perspective perspective, JsonStreamReader viewerState, AssetIdEncoder encoder, Callback<PrivateView> callback) {
+    PrivateView result = document.__createView(who, perspective, encoder);
     result.ingest(viewerState);
     invalidate(Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_ATTACH_PRIVATE_VIEW, (seq) -> result));
   }

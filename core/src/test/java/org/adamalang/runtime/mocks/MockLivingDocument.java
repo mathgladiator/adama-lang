@@ -12,6 +12,7 @@ package org.adamalang.runtime.mocks;
 import org.adamalang.runtime.async.AsyncTask;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
+import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.exceptions.AbortMessageException;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
@@ -60,7 +61,7 @@ public class MockLivingDocument extends LivingDocument {
   protected void __construct_intern(final NtClient who, final NtMessageBase message) {}
 
   @Override
-  public PrivateView __createPrivateView(final NtClient __who, final Perspective __perspective) {
+  public PrivateView __createPrivateView(final NtClient __who, final Perspective __perspective, AssetIdEncoder encoder) {
     return null;
   }
 
