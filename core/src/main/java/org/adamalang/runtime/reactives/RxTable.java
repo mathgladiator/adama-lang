@@ -252,8 +252,8 @@ public class RxTable<Ty extends RxRecordBase<Ty>> extends RxBase implements Iter
       return this;
     }
     final var prior = new AtomicReference<TreeSet<Ty>>(null);
-    filter.scopeByIndicies((column, value) -> {
-      final var specific = indices[column].of(value);
+    filter.scopeByIndicies((column, value, mode) -> {
+      final var specific = indices[column].of(value, mode);
       if (specific == null) { // no index available
         prior.set(new TreeSet<>());
         return;

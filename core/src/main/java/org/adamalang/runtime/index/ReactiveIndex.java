@@ -9,12 +9,10 @@
  */
 package org.adamalang.runtime.index;
 
+import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.reactives.RxRecordBase;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /** an index of a single column of data */
 public class ReactiveIndex<Ty extends RxRecordBase> {
@@ -47,8 +45,63 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
   }
 
   /** get the index */
-  public TreeSet<Ty> of(final int at) {
-    return index.get(at);
+  public TreeSet<Ty> of(final int at, IndexQuerySet.LookupMode mode) {
+    switch (mode) {
+      case LessThan: {
+        TreeSet<Ty> values = new TreeSet<>();
+        Iterator<Map.Entry<Integer, TreeSet<Ty>>> it = index.entrySet().iterator();
+        while (it.hasNext()) {
+          Map.Entry<Integer, TreeSet<Ty>> entry = it.next();
+          if (entry.getKey() < at) {
+            values.addAll(entry.getValue());
+          } else {
+            break;
+          }
+        }
+        return values;
+      }
+      case LessThanOrEqual: {
+        TreeSet<Ty> values = new TreeSet<>();
+        Iterator<Map.Entry<Integer, TreeSet<Ty>>> it = index.entrySet().iterator();
+        while (it.hasNext()) {
+          Map.Entry<Integer, TreeSet<Ty>> entry = it.next();
+          if (entry.getKey() <= at) {
+            values.addAll(entry.getValue());
+          } else {
+            break;
+          }
+        }
+        return values;
+      }
+      case GreaterThan: {
+        TreeSet<Ty> values = new TreeSet<>();
+        Iterator<Map.Entry<Integer, TreeSet<Ty>>> it = index.descendingMap().entrySet().iterator();
+        while (it.hasNext()) {
+          Map.Entry<Integer, TreeSet<Ty>> entry = it.next();
+          if (entry.getKey() > at) {
+            values.addAll(entry.getValue());
+          } else {
+            break;
+          }
+        }
+        return values;
+      }
+      case GreaterThanOrEqual: {
+        TreeSet<Ty> values = new TreeSet<>();
+        Iterator<Map.Entry<Integer, TreeSet<Ty>>> it = index.descendingMap().entrySet().iterator();
+        while (it.hasNext()) {
+          Map.Entry<Integer, TreeSet<Ty>> entry = it.next();
+          if (entry.getKey() >= at) {
+            values.addAll(entry.getValue());
+          } else {
+            break;
+          }
+        }
+        return values;
+      }
+      default:
+        return index.get(at);
+    }
   }
 
   /** remove the item from the index */

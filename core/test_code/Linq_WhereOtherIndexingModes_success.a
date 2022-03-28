@@ -1,0 +1,21 @@
+record X {
+  private int id;
+  public int z;
+
+  index z;
+}
+
+table<X> t;
+
+public formula t_less = (iterate t) where z < 50;
+public formula t_lesseq = (iterate t) where z <= 50;
+public formula t_eq = (iterate t) where z == 50;
+public formula t_greateq = (iterate t) where z >= 50;
+public formula t_great = (iterate t) where z > 50;
+
+@construct {
+  for (int zz = 0; zz < 100; zz++ ) {
+    t <- { z : zz };
+  }
+}
+

@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.index;
 
+import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.mocks.MockRecord;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,18 +31,18 @@ public class ReactiveIndexTests {
   public void flow() {
     final var unknowns = new TreeSet<MockRecord>();
     final var index = new ReactiveIndex<>(unknowns);
-    Assert.assertNull(index.of(42));
+    Assert.assertNull(index.of(42, IndexQuerySet.LookupMode.Equals));
     index.add(42, MockRecord.make(1));
-    Assert.assertEquals(1, index.of(42).size());
+    Assert.assertEquals(1, index.of(42, IndexQuerySet.LookupMode.Equals).size());
     index.add(42, MockRecord.make(12));
-    Assert.assertEquals(2, index.of(42).size());
+    Assert.assertEquals(2, index.of(42, IndexQuerySet.LookupMode.Equals).size());
     Assert.assertFalse(unknowns.contains(MockRecord.make(12)));
     Assert.assertFalse(unknowns.contains(MockRecord.make(1)));
     index.remove(42, MockRecord.make(12));
     Assert.assertTrue(unknowns.contains(MockRecord.make(12)));
-    Assert.assertEquals(1, index.of(42).size());
+    Assert.assertEquals(1, index.of(42, IndexQuerySet.LookupMode.Equals).size());
     index.remove(42, MockRecord.make(1));
-    Assert.assertNull(index.of(42));
+    Assert.assertNull(index.of(42, IndexQuerySet.LookupMode.Equals));
     Assert.assertTrue(unknowns.contains(MockRecord.make(1)));
   }
 

@@ -106,7 +106,7 @@ public class RxTableTests {
     Assert.assertEquals(4, table.getById(4).__id());
     Assert.assertNull(table.getById(500));
     Assert.assertEquals(3, table.size());
-    Assert.assertEquals(2, table.getIndex((short) 0).of(13).size());
+    Assert.assertEquals(2, table.getIndex((short) 0).of(13, IndexQuerySet.LookupMode.Equals).size());
   }
 
   @Test
@@ -148,7 +148,7 @@ public class RxTableTests {
     Assert.assertEquals("\"t\":{\"4\":null,\"5\":null,\"6\":null}", reverse.toString());
     Assert.assertEquals(4, table.getById(4).__id());
     Assert.assertNull(table.getById(500));
-    Assert.assertEquals(3, table.getIndex((short) 0).of(13).size());
+    Assert.assertEquals(3, table.getIndex((short) 0).of(13, IndexQuerySet.LookupMode.Equals).size());
     Assert.assertEquals(3, table.size());
   }
 
@@ -277,7 +277,7 @@ public class RxTableTests {
 
               @Override
               public void scopeByIndicies(final IndexQuerySet __set) {
-                __set.intersect(0, 10000);
+                __set.intersect(0, 10000, IndexQuerySet.LookupMode.Equals);
               }
 
               @Override
@@ -312,8 +312,8 @@ public class RxTableTests {
 
               @Override
               public void scopeByIndicies(final IndexQuerySet __set) {
-                __set.intersect(0, 13);
-                __set.intersect(0, 13);
+                __set.intersect(0, 13, IndexQuerySet.LookupMode.Equals);
+                __set.intersect(0, 13, IndexQuerySet.LookupMode.Equals);
               }
 
               @Override
@@ -348,8 +348,8 @@ public class RxTableTests {
 
               @Override
               public void scopeByIndicies(final IndexQuerySet __set) {
-                __set.intersect(0, 13);
-                __set.intersect(0, 12);
+                __set.intersect(0, 13, IndexQuerySet.LookupMode.Equals);
+                __set.intersect(0, 12, IndexQuerySet.LookupMode.Equals);
               }
 
               @Override
@@ -397,7 +397,7 @@ public class RxTableTests {
 
               @Override
               public void scopeByIndicies(final IndexQuerySet __set) {
-                __set.intersect(0, 13);
+                __set.intersect(0, 13, IndexQuerySet.LookupMode.Equals);
               }
 
               @Override
