@@ -93,7 +93,7 @@ public class LivingDocumentTests {
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
                 .get("t")));
     setup.document.send(
-        NtClient.NO_ONE,
+        ContextSupport.WRAP(NtClient.NO_ONE),
         null,
         "chan",
         "[{\"v\":1000},{\"v\":100000},{\"v\":1}]",
@@ -182,7 +182,7 @@ public class LivingDocumentTests {
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
                 .get("__blocked"));
     setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(A, null, "chan", "{\"v\":74}", new RealDocumentSetup.AssertInt(5));
+    setup.document.send(ContextSupport.WRAP(A), null, "chan", "{\"v\":74}", new RealDocumentSetup.AssertInt(5));
     Assert.assertTrue(
         (Boolean)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -202,7 +202,7 @@ public class LivingDocumentTests {
                 .get("__blocked"));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(
-        NtClient.NO_ONE, null, "chan", "{\"v\":74}", new RealDocumentSetup.AssertInt(5));
+        ContextSupport.WRAP(NtClient.NO_ONE), null, "chan", "{\"v\":74}", new RealDocumentSetup.AssertInt(5));
     Assert.assertFalse(
         (Boolean)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -218,7 +218,7 @@ public class LivingDocumentTests {
             "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }",
             "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"nope\":true,\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"message\":{\"v\":50}}},\"__message_id\":1}");
     setup.document.send(
-        NtClient.NO_ONE, null, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
+        ContextSupport.WRAP(NtClient.NO_ONE), null, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
     Assert.assertFalse(
         (Boolean)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -236,7 +236,7 @@ public class LivingDocumentTests {
               "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }");
       setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
       setup.document.send(
-          NtClient.NO_ONE, null, "chb", "{\"v\":50}", new RealDocumentSetup.AssertInt(5));
+          ContextSupport.WRAP(NtClient.NO_ONE), null, "chb", "{\"v\":50}", new RealDocumentSetup.AssertInt(5));
       persist = setup.document.json();
       setup.assertCompare();
       Assert.assertTrue(
@@ -253,7 +253,7 @@ public class LivingDocumentTests {
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
                 .get("__blocked"));
     setup.document.send(
-        NtClient.NO_ONE, null, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
+        ContextSupport.WRAP(NtClient.NO_ONE), null, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
     Assert.assertFalse(
         (Boolean)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -442,7 +442,7 @@ public class LivingDocumentTests {
             null,
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(4));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertInt(4));
     String x =
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
             .get("x")
@@ -460,7 +460,7 @@ public class LivingDocumentTests {
             null,
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(4));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertInt(4));
     String x =
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
             .get("x")
@@ -479,7 +479,7 @@ public class LivingDocumentTests {
     ((DumbDataService) setup.document.base.service).computesWork = false;
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(
-        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(23456));
+        ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertFailure(23456));
   }
 
   @Test
@@ -491,7 +491,7 @@ public class LivingDocumentTests {
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(
-        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(134195));
+        ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertFailure(134195));
     Assert.assertTrue(
         ((DumbDataService) setup.document.base.service).deleted.contains(new Key("space", "0")));
   }
@@ -506,7 +506,7 @@ public class LivingDocumentTests {
     ((DumbDataService) setup.document.base.service).deletesWork = false;
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(
-        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(1234567));
+        ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertFailure(1234567));
   }
 
   @Test
@@ -519,15 +519,14 @@ public class LivingDocumentTests {
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     ((DumbDataService) setup.document.base.service).dropPatches = true;
     for (int k = 0; k <= 128; k++) {
-      setup.document.send( NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertNoResponse());
+      setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertNoResponse());
     }
     for (int j = 0; j <= 127; j++) {
-      setup.document.send(
-          NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(123004));
+      setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertFailure(123004));
     }
     for (int j = 0; j < 128; j++) {
       setup.document.send(
-          NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(192639));
+          ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertFailure(192639));
     }
   }
 
@@ -540,7 +539,7 @@ public class LivingDocumentTests {
             null,
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(127152));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertFailure(127152));
   }
 
   @Test
@@ -549,7 +548,7 @@ public class LivingDocumentTests {
         new RealDocumentSetup(
             "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
     setup.assertCompare();
     String x =
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -557,8 +556,7 @@ public class LivingDocumentTests {
             .toString();
     Assert.assertEquals("142", x);
     try {
-      setup.document.send(
-          NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(5));
+      setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(5));
       Assert.fail();
     } catch (RuntimeException ece) {
       Assert.assertEquals(143407, ((ErrorCodeException) ece.getCause()).code);
@@ -576,7 +574,7 @@ public class LivingDocumentTests {
         new RealDocumentSetup(
             "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
     Assert.assertEquals(
         "142",
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -608,7 +606,7 @@ public class LivingDocumentTests {
         new RealDocumentSetup(
             "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
     try {
       setup.document.expire(-2000, new RealDocumentSetup.AssertInt(7));
       Assert.fail();
@@ -623,11 +621,11 @@ public class LivingDocumentTests {
         new RealDocumentSetup(
             "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
     setup.time.time += 250;
-    setup.document.send(NtClient.NO_ONE, "send2", "foo", "{}", new RealDocumentSetup.AssertInt(5));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send2", "foo", "{}", new RealDocumentSetup.AssertInt(5));
     setup.time.time += 250;
-    setup.document.send(NtClient.NO_ONE, "send3", "foo", "{}", new RealDocumentSetup.AssertInt(6));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send3", "foo", "{}", new RealDocumentSetup.AssertInt(6));
     Assert.assertEquals(
         "342",
         ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -729,9 +727,9 @@ public class LivingDocumentTests {
         new RealDocumentSetup(
             "@construct {} @connected(who) { return true; } message M {} channel<M> foo;");
     setup.document.send(
-        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertFailure(143373));
+        ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertFailure(143373));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(5));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertInt(5));
     setup.assertCompare();
   }
 
@@ -739,9 +737,9 @@ public class LivingDocumentTests {
   public void blind_send_with_policy() throws Exception {
     final var setup = new RealDocumentSetup("@static { send(who) { return true; } } @construct {} @connected(who) { return true; } message M {} channel<M> foo;");
     setup.document.send(
-        NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(3));
+        ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertInt(3));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(5));
-    setup.document.send(NtClient.NO_ONE, null, "foo", "{}", new RealDocumentSetup.AssertInt(7));
+    setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertInt(7));
     setup.assertCompare();
   }
 
@@ -841,6 +839,29 @@ public class LivingDocumentTests {
       setup.document.document().__transact(writer.toString(), setup.factory);
     } catch (final ErrorCodeException drre) {
       Assert.assertEquals(184332, drre.code);
+    }
+    setup.assertCompare();
+  }
+
+  @Test
+  public void send_requirements_must_have_context() throws Exception {
+    String prior;
+    {
+      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      setup.document.connect(A, new RealDocumentSetup.AssertInt(3));
+      prior = setup.document.json();
+    }
+    final var setup = new RealDocumentSetup("@construct {}", prior);
+    final var writer = setup.document.forge("send", A);
+    writer.writeObjectFieldIntro("channel");
+    writer.writeFastString("foo");
+    writer.writeObjectFieldIntro("message");
+    writer.writeFastString("{}");
+    writer.endObject();
+    try {
+      setup.document.document().__transact(writer.toString(), setup.factory);
+    } catch (final ErrorCodeException drre) {
+      Assert.assertEquals(127155, drre.code);
     }
     setup.assertCompare();
   }

@@ -33,7 +33,7 @@ public class ComplexHelper {
       servers[k] = new TestBed(20005 + k, code);
       CountDownLatch latchMade = new CountDownLatch(1);
       servers[k].coreService.create(
-          new CoreRequestContext(NtClient.NO_ONE, "origin", "ip"),
+          new CoreRequestContext(NtClient.NO_ONE, "origin", "ip", "key"),
           new Key("space", "key"),
           "{}",
           null,

@@ -467,7 +467,7 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\n  public static boolean __onCanInvent(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanSendWhileDisconnected(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -3626,7 +3626,7 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\n  public static boolean __onCanInvent(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanSendWhileDisconnected(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -4376,7 +4376,7 @@ public class GeneratedOperationsSubtractionTests extends GeneratedBase {
     gold.append("\n  public static boolean __onCanInvent(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanSendWhileDisconnected(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  @Override");

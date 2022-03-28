@@ -328,7 +328,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.StreamConnect payload) {
     monitorStreamback = nexus.metrics.server_stream.start();
-    CoreRequestContext context = new CoreRequestContext(new NtClient(payload.agent, payload.authority), payload.origin, payload.ip);
+    CoreRequestContext context = new CoreRequestContext(new NtClient(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
     nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, this);
   }
 
@@ -402,7 +402,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void handle(ClientMessage.CreateRequest payload) {
-    CoreRequestContext context = new CoreRequestContext(new NtClient(payload.agent, payload.authority), payload.origin, payload.ip);
+    CoreRequestContext context = new CoreRequestContext(new NtClient(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
     nexus.service.create(context, new Key(payload.space, payload.key), payload.arg, payload.entropy, nexus.metrics.server_create.wrap(new Callback<Void>() {
       @Override
       public void success(Void value) {

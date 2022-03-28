@@ -391,6 +391,13 @@ public class Parser {
   }
 
   public Consumer<TopLevelDocumentHandler> define_static(Token staticToken) throws AdamaLangException {
+    Token openContext = tokens.popIf((t) -> t.isSymbolWithTextEq("("));
+    Token contextName = null;
+    Token closeContext = null;
+    if (openContext != null) {
+      contextName = tokens.pop();
+      closeContext = consumeExpectedSymbol(")");
+    }
     var open = consumeExpectedSymbol("{");
     blackhole_commas(open);
     ArrayList<Definition> definitions = new ArrayList<>();
@@ -419,7 +426,7 @@ public class Parser {
         throw new ParseException("Parser was expecting either a Symbol=} or an Identifier to define a new enum label, but got end of stream instead.", tokens.getLastTokenIfAvailable());
       }
     }
-    DefineStatic staticDefn = new DefineStatic(staticToken, open, definitions, nextOrClose);
+    DefineStatic staticDefn = new DefineStatic(staticToken, openContext, contextName, closeContext, open, definitions, nextOrClose);
     return (handler) -> handler.add(staticDefn);
   }
 

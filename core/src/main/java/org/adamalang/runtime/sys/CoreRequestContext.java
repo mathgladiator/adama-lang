@@ -7,10 +7,12 @@ public class CoreRequestContext {
   public final NtClient who;
   public final String origin;
   public final String ip;
+  public final String key;
 
-  public CoreRequestContext(NtClient who, String origin, String ip) {
+  public CoreRequestContext(NtClient who, String origin, String ip, String key) {
     this.who = who;
     this.origin = origin;
     this.ip = ip;
+    this.key = key;
   }
 }

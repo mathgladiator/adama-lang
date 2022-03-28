@@ -117,6 +117,28 @@ public class DurableLivingDocument {
     return writer;
   }
 
+  public JsonStreamWriter forgeWithContext(final String command, final CoreRequestContext context) {
+    final var writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("command");
+    writer.writeFastString(command);
+    writer.writeObjectFieldIntro("timestamp");
+    writer.writeLong(base.time.nowMilliseconds());
+    if (context != null) {
+      if (context.who != null) {
+        writer.writeObjectFieldIntro("who");
+        writer.writeNtClient(context.who);
+      }
+      writer.writeObjectFieldIntro("key");
+      writer.writeString(context.key);
+      writer.writeObjectFieldIntro("origin");
+      writer.writeString(context.origin);
+      writer.writeObjectFieldIntro("ip");
+      writer.writeString(context.ip);
+    }
+    return writer;
+  }
+
   private String forgeInvalidate() {
     final var request = forge("invalidate", null);
     request.endObject();
@@ -543,8 +565,8 @@ public class DurableLivingDocument {
     ingest(who, request.toString(), base.metrics.document_disconnect.wrap(callback), true, false);
   }
 
-  public void send(final NtClient who, final String marker, final String channel, final String message, Callback<Integer> callback) {
-    final var writer = forge("send", who);
+  public void send(final CoreRequestContext context, final String marker, final String channel, final String message, Callback<Integer> callback) {
+    final var writer = forgeWithContext("send", context);
     writer.writeObjectFieldIntro("channel");
     writer.writeFastString(channel);
     if (marker != null) {
@@ -554,7 +576,7 @@ public class DurableLivingDocument {
     writer.writeObjectFieldIntro("message");
     writer.injectJson(message);
     writer.endObject();
-    ingest(who, writer.toString(), base.metrics.document_send.wrap(callback), false, false);
+    ingest(context.who, writer.toString(), base.metrics.document_send.wrap(callback), false, false);
   }
 
   public void apply(NtClient who, String patch, Callback<Integer> callback) {
@@ -566,6 +588,7 @@ public class DurableLivingDocument {
   }
 
   public boolean canAttach(NtClient who) {
+    // TODO: check policy first
     return document.__onCanAssetAttached(who);
   }
 

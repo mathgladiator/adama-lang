@@ -21,7 +21,7 @@ public class JsonConstruction {
             "@connected (who) { return true; } message M { int x; double y; string z; bool b; } int xx; double yy; string zz; bool bb; channel foo(M m) { xx = m.x; yy = m.y; zz = m.z; bb = m.b; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(
-        NtClient.NO_ONE,
+        ContextSupport.WRAP(NtClient.NO_ONE),
         "marker",
         "foo",
         "{\"x\":123,\"y\":3.14,\"z\":\"w00t\",\"b\":true}",

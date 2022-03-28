@@ -17,7 +17,6 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.PrivateView;
 import org.adamalang.runtime.natives.NtAsset;
-import org.adamalang.runtime.natives.NtClient;
 
 /**
  * Represents a stream for the consumer to interact with the document. This simplifies the
@@ -61,7 +60,7 @@ public class CoreStream {
       @Override
       public void execute() throws Exception {
         inventory.message();
-        document.send(context.who, marker, channel, message, callback);
+        document.send(context, marker, channel, message, callback);
       }
     });
   }

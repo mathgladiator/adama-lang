@@ -14,6 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.types.TyType;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyInternalReadonlyClass;
 import org.adamalang.translator.tree.types.natives.TyNativeGlobalObject;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.natives.TyNativeMaybe;
@@ -82,6 +83,9 @@ public class FieldLookup extends Expression {
           environment.document.createError(this, String.format("Global '%s' lacks '%s'", ((TyNativeGlobalObject) eType).globalName, fieldName), "GlobalLookup");
           return null;
         }
+      }
+      if (eType instanceof TyInternalReadonlyClass) {
+        return ((TyInternalReadonlyClass) eType).getLookupType(environment, fieldName);
       }
       if (eType instanceof TyNativeList) {
         final var elementType = environment.rules.ResolvePtr(((TyNativeList) eType).getEmbeddedType(environment), false);

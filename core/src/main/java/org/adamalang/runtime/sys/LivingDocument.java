@@ -661,12 +661,24 @@ public abstract class LivingDocument implements RxParent {
       String entropy = null;
       String marker = null;
       NtAsset asset = null;
+      String origin = null;
+      String ip = null;
+      String key = null;
       if (reader.startObject()) {
         while (reader.notEndOfObject()) {
           final var fieldName = reader.fieldName();
           switch (fieldName) {
             case "command":
               command = reader.readString();
+              break;
+            case "origin":
+              origin = reader.readString();
+              break;
+            case "ip":
+              ip = reader.readString();
+              break;
+            case "key":
+              key = reader.readString();
               break;
             case "marker":
               marker = reader.readString();
@@ -710,6 +722,7 @@ public abstract class LivingDocument implements RxParent {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_TIMESTAMP);
       }
       __time.set(timestamp);
+
       switch (command) {
         case "invalidate":
           if (__monitor != null) {
@@ -756,7 +769,11 @@ public abstract class LivingDocument implements RxParent {
           if (message == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE);
           }
-          return __transaction_send(requestJson, who, marker, channel, timestamp, message, factory);
+          if (key == null || origin == null || ip == null) {
+            throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT);
+          }
+          CoreRequestContext context = new CoreRequestContext(who, origin, ip, key);
+          return __transaction_send(context, requestJson, who, marker, channel, timestamp, message, factory);
         case "expire":
           if (limit == null) {
             throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_NO_LIMIT);
@@ -1162,7 +1179,7 @@ public abstract class LivingDocument implements RxParent {
   }
 
   /** transaction: a person is sending the document a message */
-  private LivingDocumentChange __transaction_send(final String request, final NtClient who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
+  private LivingDocumentChange __transaction_send(CoreRequestContext context, final String request, final NtClient who, final String marker, final String channel, final long timestamp, final Object message, final LivingDocumentFactory factory) throws ErrorCodeException {
     final var startedTime = System.nanoTime();
     var exception = true;
     if (__monitor != null) {
@@ -1170,7 +1187,7 @@ public abstract class LivingDocument implements RxParent {
     }
     try {
       // they must be connected
-      if (!__clients.containsKey(who) && !factory.canSendWhileDisconnected(who)) {
+      if (!__clients.containsKey(who) && !factory.canSendWhileDisconnected(context)) {
         throw new ErrorCodeException(ErrorCodes.LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED);
       }
 

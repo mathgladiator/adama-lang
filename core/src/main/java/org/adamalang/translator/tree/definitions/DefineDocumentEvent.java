@@ -9,11 +9,13 @@
  */
 package org.adamalang.translator.tree.definitions;
 
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.statements.Block;
 import org.adamalang.translator.tree.statements.ControlFlow;
 import org.adamalang.translator.tree.types.TypeBehavior;
+import org.adamalang.translator.tree.types.natives.TyInternalReadonlyClass;
 import org.adamalang.translator.tree.types.natives.TyNativeAsset;
 import org.adamalang.translator.tree.types.natives.TyNativeBoolean;
 import org.adamalang.translator.tree.types.natives.TyNativeClient;
@@ -30,6 +32,7 @@ public class DefineDocumentEvent extends Definition {
   public final Token eventToken;
   public final Token openParen;
   public final DocumentEvent which;
+  public String contextVariable;
 
   public DefineDocumentEvent(final Token eventToken, final DocumentEvent which, final Token openParen, final Token clientVarToken, final Token commaToken, final Token parameterNameToken, final Token closeParen, final Block code) {
     this.eventToken = eventToken;
@@ -40,7 +43,12 @@ public class DefineDocumentEvent extends Definition {
     this.parameterNameToken = parameterNameToken;
     this.closeParen = closeParen;
     this.code = code;
+    this.contextVariable = null;
     ingest(code);
+  }
+
+  public void setContextVariable(String contextVariable) {
+    this.contextVariable = contextVariable;
   }
 
   @Override
@@ -91,6 +99,9 @@ public class DefineDocumentEvent extends Definition {
     if (which == DocumentEvent.AskCreation || which == DocumentEvent.AskInvention || which == DocumentEvent.AskSendWhileDisconnected) {
       Environment next = environment.staticPolicy().scopeStatic();
       next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken));
+      if (contextVariable != null) {
+        next.define(contextVariable, new TyInternalReadonlyClass(CoreRequestContext.class), true, this);
+      }
       next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
       return next;
     }

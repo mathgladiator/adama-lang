@@ -1,0 +1,9 @@
+@static(context) {
+  create(who) {
+    return context.ip == "127.0.0.1" && context.origin == "internal://" || context.who == who;
+  }
+  invent(who) {
+    return who == context.who;
+  }
+  maximum_history = 1 + 1;
+}

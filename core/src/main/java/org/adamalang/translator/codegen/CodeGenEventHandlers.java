@@ -26,6 +26,7 @@ public class CodeGenEventHandlers {
     var askInventionCount = 0;
     var askSendWhileDisconnected = 0;
     for (final DefineDocumentEvent dce : environment.document.events) {
+      String contextName = dce.contextVariable != null ? dce.contextVariable : "__context";
       if (dce.which == DocumentEvent.ClientConnected) {
         sb.append("public boolean __onConnected__" + connectCount + "(NtClient " + dce.clientVarToken.text + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
@@ -35,15 +36,15 @@ public class CodeGenEventHandlers {
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         disconnectCount++;
       } else if (dce.which == DocumentEvent.AskCreation) {
-        sb.append("public static boolean __onCanCreate__" + askCreationCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext __context) ");
+        sb.append("public static boolean __onCanCreate__" + askCreationCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ") ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askCreationCount++;
       } else if (dce.which == DocumentEvent.AskInvention) {
-        sb.append("public static boolean __onCanInvent__" + askInventionCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext __context)").tabUp().writeNewline();
+        sb.append("public static boolean __onCanInvent__" + askInventionCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ")").tabUp().writeNewline();
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askInventionCount++;
       } else if (dce.which == DocumentEvent.AskSendWhileDisconnected) {
-        sb.append("public static boolean __onCanSendWhileDisconnected__" + askSendWhileDisconnected + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ")").tabUp().writeNewline();
+        sb.append("public static boolean __onCanSendWhileDisconnected__" + askSendWhileDisconnected + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ")").tabUp().writeNewline();
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askSendWhileDisconnected++;
       } else if (dce.which == DocumentEvent.AskAssetAttachment) {
@@ -138,12 +139,12 @@ public class CodeGenEventHandlers {
     sb.append("}").writeNewline();
 
     // inject the can send to the document when it doesn't exist
-    sb.append("public static boolean __onCanSendWhileDisconnected(NtClient __client) {").tabUp().writeNewline();
+    sb.append("public static boolean __onCanSendWhileDisconnected(CoreRequestContext __context) {").tabUp().writeNewline();
     if (askSendWhileDisconnected > 0) {
       sb.append("boolean __result = false;").writeNewline();
       sb.append("StaticState __static_state = new StaticState();").writeNewline();
       for (var k = 0; k < askSendWhileDisconnected; k++) {
-        sb.append("if (__onCanSendWhileDisconnected__" + k + "(__static_state, __client)) {").tabUp().writeNewline();
+        sb.append("if (__onCanSendWhileDisconnected__" + k + "(__static_state, __context.who, __context)) {").tabUp().writeNewline();
         sb.append("__result = true;").tabDown().writeNewline();
         sb.append("} else {").tabUp().writeNewline();
         sb.append("return false;").tabDown().writeNewline();

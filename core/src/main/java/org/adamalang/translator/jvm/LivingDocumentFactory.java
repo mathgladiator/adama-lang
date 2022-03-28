@@ -57,7 +57,7 @@ public class LivingDocumentFactory {
       constructor = clazz.getConstructor(DocumentMonitor.class);
       creationPolicyMethod = clazz.getMethod("__onCanCreate", CoreRequestContext.class);
       inventionPolicyMethod = clazz.getMethod("__onCanInvent", CoreRequestContext.class);
-      canSendWhileDisconnectPolicyMethod = clazz.getMethod("__onCanSendWhileDisconnected", NtClient.class);
+      canSendWhileDisconnectPolicyMethod = clazz.getMethod("__onCanSendWhileDisconnected", CoreRequestContext.class);
       HashMap<String, Object> config = (HashMap<String, Object>) (clazz.getMethod("__config").invoke(null));
       maximum_history = extractMaximumHistory(config);
       this.reflection = reflection;
@@ -82,9 +82,9 @@ public class LivingDocumentFactory {
     }
   }
 
-  public boolean canSendWhileDisconnected(NtClient who) throws ErrorCodeException {
+  public boolean canSendWhileDisconnected(CoreRequestContext context) throws ErrorCodeException {
     try {
-      return (Boolean) canSendWhileDisconnectPolicyMethod.invoke(null, who);
+      return (Boolean) canSendWhileDisconnectPolicyMethod.invoke(null, context);
     } catch (Exception ex) {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_SEND_WHILE_DISCONNECTED, ex, LOGGER);
     }

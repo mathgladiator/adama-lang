@@ -223,7 +223,7 @@ public class ServiceDeploymentTests {
                   "public class Foo { public Foo(DocumentMonitor dm) {} " +
                   "public static boolean __onCanCreate(CoreRequestContext who) { return false; } " +
                   "public static boolean __onCanInvent(CoreRequestContext who) { return false; } " +
-                  "public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; } " +
+                  "public static boolean __onCanSendWhileDisconnected(CoreRequestContext who) { return false; } " +
                   "public static HashMap<String, Object> __config() { return new HashMap<>(); }" +
                   "}",
               "{}"));
