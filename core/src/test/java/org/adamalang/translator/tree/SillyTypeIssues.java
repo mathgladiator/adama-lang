@@ -10,6 +10,8 @@
 package org.adamalang.translator.tree;
 
 import org.adamalang.runtime.json.JsonStreamWriter;
+import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.translator.env.CompilerOptions;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.env.EnvironmentState;
@@ -283,5 +285,37 @@ public class SillyTypeIssues {
     ra.makeCopyWithNewPosition(ra, TypeBehavior.ReadOnlyNativeValue);
     ra.getAdamaType();
     na.getAdamaType();
+  }
+
+  public static class X {
+    public String x;
+    public int z;
+    public NtClient w;
+  }
+
+  @Test
+  public void internalType() {
+    TyInternalReadonlyClass ity = new TyInternalReadonlyClass(X.class);
+    ity.makeCopyWithNewPosition(ity, null);
+    ity.getAdamaType();
+    ity.getJavaBoxType(null);
+    ity.getJavaConcreteType(null);
+    try {
+      ity.emit(null);
+    } catch (UnsupportedOperationException uoe) {
+    }
+    try {
+      ity.emit(null);
+    } catch (UnsupportedOperationException uoe) {
+    }
+    try {
+      ity.writeTypeReflectionJson(null);
+    } catch (UnsupportedOperationException uoe) {
+    }
+    Environment env = Environment.fresh(new Document(), new EnvironmentState(GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
+    ity.getLookupType(env, "x");
+    ity.getLookupType(env, "z");
+    ity.getLookupType(env, "w");
+    ity.getLookupType(env, "a");
   }
 }
