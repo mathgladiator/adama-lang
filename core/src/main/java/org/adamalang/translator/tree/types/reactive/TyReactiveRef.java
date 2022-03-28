@@ -32,7 +32,7 @@ public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(refToken);
   }
 
@@ -52,7 +52,7 @@ public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveRef(refToken).withPosition(position);
   }
 
@@ -66,6 +66,7 @@ public class TyReactiveRef extends TyType implements DetailRequiresResolveCall {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_ref");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("ref");
     writer.writeString(ref);
     writer.endObject();

@@ -35,7 +35,7 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     throw new UnsupportedOperationException();
   }
 
@@ -55,7 +55,7 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeGlobalObject(globalName, null, availableForStatic).withPosition(position);
   }
 
@@ -68,6 +68,7 @@ public class TyNativeGlobalObject extends TyType implements DetailTypeHasMethods
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("global");
+    writeAnnotations(writer);
     writer.endObject();
   }
 

@@ -35,7 +35,7 @@ public class TyNativeReactiveRecordPtr extends TyType implements //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     source.emit(yielder);
   }
 
@@ -55,7 +55,7 @@ public class TyNativeReactiveRecordPtr extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeReactiveRecordPtr(newBehavior, source).withPosition(position);
   }
 
@@ -69,6 +69,7 @@ public class TyNativeReactiveRecordPtr extends TyType implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_reactive_ptr");
+    writeAnnotations(writer);
     writer.endObject();
   }
 

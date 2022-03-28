@@ -44,7 +44,7 @@ public class TyReactiveTable extends TyType implements //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(tableToken);
     recordNameToken.emitBefore(yielder);
     yielder.accept(recordNameToken.item);
@@ -67,7 +67,7 @@ public class TyReactiveTable extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveTable(tableToken, recordNameToken).withPosition(position);
   }
 
@@ -81,6 +81,7 @@ public class TyReactiveTable extends TyType implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_table");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("record_name");
     writer.writeString(recordName);
     writer.endObject();
@@ -98,7 +99,7 @@ public class TyReactiveTable extends TyType implements //
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, recordNameToken.item).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, recordNameToken.item).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

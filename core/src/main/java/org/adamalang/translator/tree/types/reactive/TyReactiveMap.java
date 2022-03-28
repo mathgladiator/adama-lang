@@ -52,7 +52,7 @@ public class TyReactiveMap extends TyType implements //
   }
 
   @Override
-  public void emit(Consumer<Token> yielder) {
+  public void emitInternal(Consumer<Token> yielder) {
     yielder.accept(mapToken);
     yielder.accept(openThing);
     domainType.emit(yielder);
@@ -77,7 +77,7 @@ public class TyReactiveMap extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing).withPosition(position);
   }
 
@@ -96,6 +96,7 @@ public class TyReactiveMap extends TyType implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_map");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("domain");
     domainType.writeTypeReflectionJson(writer);
     writer.writeObjectFieldIntro("range");
@@ -116,7 +117,7 @@ public class TyReactiveMap extends TyType implements //
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

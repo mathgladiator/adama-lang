@@ -46,7 +46,7 @@ public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -59,7 +59,7 @@ public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeInteger(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -68,6 +68,7 @@ public class TyNativeInteger extends TySimpleNative implements IsNativeValue, //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("int");
     writer.endObject();

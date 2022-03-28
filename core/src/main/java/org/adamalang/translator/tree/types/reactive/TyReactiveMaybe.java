@@ -39,7 +39,7 @@ public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedT
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(maybeToken);
     tokenizedElementType.emitBefore(yielder);
     tokenizedElementType.item.emit(yielder);
@@ -68,7 +68,7 @@ public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedT
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveMaybe(maybeToken, tokenizedElementType).withPosition(position);
   }
 
@@ -83,6 +83,7 @@ public class TyReactiveMaybe extends TyType implements DetailContainsAnEmbeddedT
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_maybe");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     tokenizedElementType.item.writeTypeReflectionJson(writer);
     writer.endObject();

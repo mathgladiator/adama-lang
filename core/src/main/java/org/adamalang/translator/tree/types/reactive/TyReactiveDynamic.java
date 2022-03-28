@@ -32,7 +32,7 @@ public class TyReactiveDynamic extends TySimpleReactive implements IsOrderable {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveDynamic(token).withPosition(position);
   }
 
@@ -41,6 +41,7 @@ public class TyReactiveDynamic extends TySimpleReactive implements IsOrderable {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("dynamic");
     writer.endObject();

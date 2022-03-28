@@ -79,7 +79,7 @@ public class GlobalFactory {
                 newOverloads = new ArrayList<>();
                 byFirstParameterType.put(key, newOverloads);
               }
-              newOverloads.add(new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, fo.pure));
+              newOverloads.add(new FunctionOverloadInstance(fo.javaFunction, fo.returnType, affix, fo.pure, false));
             }
           }
         }
@@ -98,7 +98,7 @@ public class GlobalFactory {
       } else {
         try {
           final var fld = clazz.getField(entry.getKey());
-          overloads.add(new FunctionOverloadInstance(clazz.getSimpleName() + "." + entry.getKey(), TypeBridge.getAdamaType(fld.getType(), null), new ArrayList<>(), true));
+          overloads.add(new FunctionOverloadInstance(clazz.getSimpleName() + "." + entry.getKey(), TypeBridge.getAdamaType(fld.getType(), null), new ArrayList<>(), true, false));
           object.functions.put(entry.getKey(), new TyNativeFunctional(entry.getKey(), overloads, FunctionStyleJava.InjectName));
         } catch (final NoSuchFieldException nsfe) {
         }
@@ -136,7 +136,7 @@ public class GlobalFactory {
       }
       args.add(TypeBridge.getAdamaType(params[k], extractHiddenTypes(method.getParameterAnnotations()[k])));
     }
-    return new FunctionOverloadInstance(clazz.getSimpleName() + "." + method.getName(), TypeBridge.getAdamaType(method.getReturnType(), extractHiddenTypes(method.getAnnotations())), args, true);
+    return new FunctionOverloadInstance(clazz.getSimpleName() + "." + method.getName(), TypeBridge.getAdamaType(method.getReturnType(), extractHiddenTypes(method.getAnnotations())), args, true, false);
   }
 
   private static boolean isExtension(final Method method) {

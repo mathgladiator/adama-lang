@@ -37,7 +37,7 @@ public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrd
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveStateMachineRef(token).withPosition(position);
   }
 
@@ -46,6 +46,7 @@ public class TyReactiveStateMachineRef extends TySimpleReactive implements IsOrd
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("label");
     writer.endObject();

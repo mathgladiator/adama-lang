@@ -42,7 +42,7 @@ public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedTy
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -73,7 +73,7 @@ public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedTy
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeFuture(newBehavior, readonlyToken, futureToken, new TokenizedItem<>(resultType.makeCopyWithNewPosition(position, newBehavior))).withPosition(position);
   }
 
@@ -87,6 +87,7 @@ public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedTy
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_future");
+    writeAnnotations(writer);
     writer.endObject();
   }
 
@@ -95,7 +96,7 @@ public class TyNativeFuture extends TyType implements DetailContainsAnEmbeddedTy
     if ("await".equals(name)) {
       var returnType = environment.rules.Resolve(resultType, false);
       returnType = returnType.makeCopyWithNewPosition(this, TypeBehavior.ReadOnlyNativeValue);
-      return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", returnType, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("await", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("await", returnType, new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

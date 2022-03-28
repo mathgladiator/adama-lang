@@ -53,7 +53,7 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -80,7 +80,7 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeList(newBehavior, readonlyToken, listToken, new TokenizedItem<>(elementType.makeCopyWithNewPosition(position, newBehavior))).withPosition(position);
   }
 
@@ -94,6 +94,7 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_list");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     elementType.writeTypeReflectionJson(writer);
     writer.endObject();
@@ -132,10 +133,10 @@ public class TyNativeList extends TyType implements DetailContainsAnEmbeddedType
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, listToken).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, listToken).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("toArray".equals(name)) {
-      final var foi = new FunctionOverloadInstance("toArray", new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, tokenElementType.item, null).withPosition(this), new ArrayList<>(), true);
+      final var foi = new FunctionOverloadInstance("toArray", new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, tokenElementType.item, null).withPosition(this), new ArrayList<>(), true, false);
       TyType elementType = environment.rules.Resolve(tokenElementType.item, true);
       if (elementType != null) {
         foi.hiddenSuffixArgs.add("(Integer __n) -> (Object) (new " + elementType.getJavaConcreteType(environment) + "[__n])");

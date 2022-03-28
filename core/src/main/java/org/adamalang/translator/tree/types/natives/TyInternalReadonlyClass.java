@@ -20,7 +20,7 @@ public class TyInternalReadonlyClass extends TyType {
   }
 
   @Override
-  public void emit(Consumer<Token> yielder) {
+  public void emitInternal(Consumer<Token> yielder) {
     throw new UnsupportedOperationException("internal types can't be emitted");
   }
 
@@ -40,7 +40,7 @@ public class TyInternalReadonlyClass extends TyType {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(DocumentPosition position, TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(DocumentPosition position, TypeBehavior newBehavior) {
     return new TyInternalReadonlyClass(this.clazz).withPosition(position);
   }
 

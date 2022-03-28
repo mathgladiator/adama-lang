@@ -13,17 +13,27 @@ import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.translator.env.Environment;
 import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
+import org.adamalang.translator.tree.common.TokenizedItem;
 
 import java.util.function.Consumer;
 
 public abstract class TyType extends DocumentPosition {
   public final TypeBehavior behavior;
+  private TypeAnnotation annotation;
 
   public TyType(final TypeBehavior behavior) {
     this.behavior = behavior;
+    this.annotation = null;
   }
 
-  public abstract void emit(Consumer<Token> yielder);
+  public abstract void emitInternal(Consumer<Token> yielder);
+
+  public void emit(Consumer<Token> yielder) {
+    emitInternal(yielder);
+    if (annotation != null) {
+      annotation.emit(yielder);
+    }
+  }
 
   public abstract String getAdamaType();
 
@@ -31,9 +41,28 @@ public abstract class TyType extends DocumentPosition {
 
   public abstract String getJavaConcreteType(Environment environment);
 
-  public abstract TyType makeCopyWithNewPosition(DocumentPosition position, TypeBehavior newBehavior);
+  public abstract TyType makeCopyWithNewPositionInternal(DocumentPosition position, TypeBehavior newBehavior);
+
+  public TyType makeCopyWithNewPosition(DocumentPosition position, TypeBehavior newBehavior) {
+    TyType copy = makeCopyWithNewPositionInternal(position, newBehavior);
+    if (annotation != null) {
+      copy.annotation = annotation;
+    }
+    return copy;
+  }
 
   public abstract void typing(Environment environment);
+
+  public void writeAnnotations(JsonStreamWriter writer) {
+    if (annotation != null) {
+      writer.writeObjectFieldIntro("annotations");
+      writer.beginArray();
+      for (TokenizedItem<Token> token : annotation.annotations) {
+        writer.writeString(token.item.text);
+      }
+      writer.endArray();
+    }
+  }
 
   public abstract void writeTypeReflectionJson(JsonStreamWriter writer);
 
@@ -41,5 +70,9 @@ public abstract class TyType extends DocumentPosition {
     reset();
     ingest(position);
     return this;
+  }
+
+  public void annotate(TypeAnnotation annotation) {
+    this.annotation = annotation;
   }
 }

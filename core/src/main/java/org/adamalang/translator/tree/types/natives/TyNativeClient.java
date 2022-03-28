@@ -39,7 +39,7 @@ public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -52,7 +52,7 @@ public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeClient(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -61,6 +61,7 @@ public class TyNativeClient extends TySimpleNative implements DetailHasDeltaType
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("client");
     writer.endObject();

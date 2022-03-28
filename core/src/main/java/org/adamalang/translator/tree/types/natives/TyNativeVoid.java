@@ -24,7 +24,7 @@ public class TyNativeVoid extends TyType {
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
   }
 
   @Override
@@ -43,7 +43,7 @@ public class TyNativeVoid extends TyType {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return this;
   }
 
@@ -56,6 +56,7 @@ public class TyNativeVoid extends TyType {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_void");
+    writeAnnotations(writer);
     writer.endObject();
   }
 }

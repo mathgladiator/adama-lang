@@ -50,7 +50,7 @@ public class TyNativeComplex extends TySimpleNative implements //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -63,7 +63,7 @@ public class TyNativeComplex extends TySimpleNative implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeComplex(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -72,6 +72,7 @@ public class TyNativeComplex extends TySimpleNative implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("complex");
     writer.endObject();
@@ -90,9 +91,9 @@ public class TyNativeComplex extends TySimpleNative implements //
   @Override
   public TyNativeFunctional lookupMethod(String name, Environment environment) {
     if ("re".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("real", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("real", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this), new ArrayList<>(), false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("real", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("real", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this), new ArrayList<>(), false, false)), FunctionStyleJava.None);
     } else if ("im".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("imaginary", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("imaginary", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this), new ArrayList<>(), false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("imaginary", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("imaginary", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null).withPosition(this), new ArrayList<>(), false, false)), FunctionStyleJava.None);
     }
     return environment.state.globals.findExtension(this, name);
   }

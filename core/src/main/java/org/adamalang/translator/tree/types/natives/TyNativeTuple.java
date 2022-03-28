@@ -59,7 +59,7 @@ public class TyNativeTuple extends TyType implements //
   }
 
   @Override
-  public void emit(Consumer<Token> yielder) {
+  public void emitInternal(Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -94,7 +94,7 @@ public class TyNativeTuple extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(DocumentPosition position, TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(DocumentPosition position, TypeBehavior newBehavior) {
     TyNativeTuple tuple = new TyNativeTuple(this.behavior, readonlyToken, tupleToken);
     for (PrefixedType pt : types) {
       tuple.add(pt.token, pt.type);
@@ -113,6 +113,7 @@ public class TyNativeTuple extends TyType implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_tuple");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("types");
     writer.beginArray();
     for (PrefixedType pt : types) {

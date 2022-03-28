@@ -44,7 +44,7 @@ public class TyNativeStateMachineRef extends TySimpleNative implements //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -57,7 +57,7 @@ public class TyNativeStateMachineRef extends TySimpleNative implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeStateMachineRef(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -66,6 +66,7 @@ public class TyNativeStateMachineRef extends TySimpleNative implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("label");
     writer.endObject();

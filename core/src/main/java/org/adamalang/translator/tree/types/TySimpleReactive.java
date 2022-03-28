@@ -34,7 +34,7 @@ public abstract class TySimpleReactive extends TyType implements DetailComputeRe
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(token);
   }
 

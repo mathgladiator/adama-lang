@@ -118,7 +118,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(messageToken);
     yielder.accept(nameToken);
     storage.emit(yielder);
@@ -140,7 +140,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeMessage(newBehavior, messageToken, nameToken, storage).withPosition(position);
   }
 
@@ -154,6 +154,7 @@ public class TyNativeMessage extends TyType implements IsStructure, //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_message");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("name");
     writer.writeString(name);
     writer.writeObjectFieldIntro("anonymous");

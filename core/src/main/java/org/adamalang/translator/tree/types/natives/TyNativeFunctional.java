@@ -34,7 +34,7 @@ public class TyNativeFunctional extends TyType {
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     throw new UnsupportedOperationException();
   }
 
@@ -54,7 +54,7 @@ public class TyNativeFunctional extends TyType {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeFunctional(name, overloads, style).withPosition(position);
   }
 
@@ -75,6 +75,7 @@ public class TyNativeFunctional extends TyType {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_functional");
+    writeAnnotations(writer);
     writer.endObject();
   }
 

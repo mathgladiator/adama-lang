@@ -45,7 +45,7 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -81,7 +81,7 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeMaybe(newBehavior, readonlyToken, maybeToken, new TokenizedItem<>(tokenElementType.item.makeCopyWithNewPosition(position, newBehavior))).withPosition(position);
   }
 
@@ -96,6 +96,7 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_maybe");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     tokenElementType.item.writeTypeReflectionJson(writer);
     writer.endObject();
@@ -130,15 +131,15 @@ public class TyNativeMaybe extends TyType implements DetailContainsAnEmbeddedTyp
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("delete".equals(name)) {
-      return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", null, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", null, new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("has".equals(name)) {
-      return new TyNativeFunctional("has", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("has", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("has", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("has", new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, null), new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("getOrDefaultTo".equals(name)) {
       ArrayList<TyType> args = new ArrayList<>();
       args.add(tokenElementType.item);
-      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("getOrDefaultTo", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("getOrDefaultTo", tokenElementType.item, args, true, true)), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }

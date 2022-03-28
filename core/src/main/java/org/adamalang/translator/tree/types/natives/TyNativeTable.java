@@ -49,7 +49,7 @@ public class TyNativeTable extends TyType implements //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -75,7 +75,7 @@ public class TyNativeTable extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeTable(newBehavior, readonlyToken, tableToken, messageNameToken).withPosition(position);
   }
 
@@ -89,6 +89,7 @@ public class TyNativeTable extends TyType implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_table");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("record_name");
     writer.writeString(messageName);
     writer.endObject();
@@ -116,10 +117,10 @@ public class TyNativeTable extends TyType implements //
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, messageNameToken.item).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, messageNameToken.item).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     if ("delete".equals(name)) {
-      return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", null, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("delete", null, new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

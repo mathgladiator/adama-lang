@@ -41,7 +41,7 @@ public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveEnum(token, storage).withPosition(position);
   }
 
@@ -50,6 +50,7 @@ public class TyReactiveEnum extends TySimpleReactive implements IsOrderable, //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_enum");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString(name);
     writer.endObject();

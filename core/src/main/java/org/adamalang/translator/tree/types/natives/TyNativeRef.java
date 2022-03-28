@@ -37,7 +37,7 @@ public class TyNativeRef extends TyType implements //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -60,7 +60,7 @@ public class TyNativeRef extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeRef(newBehavior, readonlyToken, refToken).withPosition(position);
   }
 
@@ -74,6 +74,7 @@ public class TyNativeRef extends TyType implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_ref");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("ref");
     writer.writeString(ref);
     writer.endObject();

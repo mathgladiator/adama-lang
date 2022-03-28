@@ -31,7 +31,7 @@ public class CodeGenFunctionsTests {
             new EnvironmentState(
                 GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
     final var foi =
-        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false);
+        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false, false);
     CodeGenFunctions.writeArgsJava(sb, env, false, new ArrayList<>(), foi);
     Assert.assertEquals("", sb.toString());
   }
@@ -45,7 +45,7 @@ public class CodeGenFunctionsTests {
             new EnvironmentState(
                 GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
     final var foi =
-        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false);
+        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false, false);
     foi.hiddenSuffixArgs.add("X");
     CodeGenFunctions.writeArgsJava(sb, env, false, new ArrayList<>(), foi);
     Assert.assertEquals(", X", sb.toString());
@@ -60,7 +60,7 @@ public class CodeGenFunctionsTests {
             new EnvironmentState(
                 GlobalObjectPool.createPoolWithStdLib(), CompilerOptions.start().make()));
     final var foi =
-        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false);
+        new FunctionOverloadInstance("foo", new TyNativeVoid(), new ArrayList<>(), false, false);
     foi.hiddenSuffixArgs.add("X");
     CodeGenFunctions.writeArgsJava(sb, env, true, new ArrayList<>(), foi);
     Assert.assertEquals("X", sb.toString());

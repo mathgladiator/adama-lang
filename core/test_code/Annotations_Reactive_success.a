@@ -1,0 +1,16 @@
+public int(A, B) x0;
+public double(C, D) x1;
+
+record X {
+  public int(E) a;
+}
+
+table<X>(F,G,H) x;
+
+function foo(int(Y) x) -> int(X) {
+  return x * x;
+}
+
+function fooz(tuple<int,int>(Z) z) -> int(W) {
+  return z.first;
+}

@@ -54,7 +54,7 @@ public class TyNativeMap extends TyType implements //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(mapToken);
     yielder.accept(openThing);
     domainType.emit(yielder);
@@ -91,7 +91,7 @@ public class TyNativeMap extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeMap(newBehavior, mapToken, openThing, domainType, commaToken, rangeType, closeThing).withPosition(position);
   }
 
@@ -110,6 +110,7 @@ public class TyNativeMap extends TyType implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_map");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("domain");
     domainType.writeTypeReflectionJson(writer);
     writer.writeObjectFieldIntro("range");
@@ -137,11 +138,11 @@ public class TyNativeMap extends TyType implements //
     if ("insert".equals(name)) {
       final var args = new ArrayList<TyType>();
       args.add(this);
-      return new TyNativeFunctional("insert", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("insert", this, new ArrayList<>(args), false)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("insert", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("insert", this, new ArrayList<>(args), false, true)), FunctionStyleJava.ExpressionThenArgs);
     }
 
     if ("size".equals(name)) {
-      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("size", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, mapToken).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return null;
   }

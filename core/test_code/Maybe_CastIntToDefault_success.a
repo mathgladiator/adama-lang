@@ -1,0 +1,6 @@
+public double z;
+
+@construct {
+  maybe<double> d = 3.1;
+  z = d.getOrDefaultTo(2);
+}

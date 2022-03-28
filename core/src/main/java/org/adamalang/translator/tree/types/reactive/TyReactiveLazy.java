@@ -31,7 +31,7 @@ public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedTy
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     throw new UnsupportedOperationException();
   }
 
@@ -51,7 +51,7 @@ public class TyReactiveLazy extends TyType implements DetailContainsAnEmbeddedTy
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveLazy(computedType).withPosition(position);
   }
 

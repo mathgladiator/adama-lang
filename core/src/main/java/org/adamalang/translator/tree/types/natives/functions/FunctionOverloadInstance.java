@@ -26,12 +26,14 @@ public class FunctionOverloadInstance extends DocumentPosition {
   public final boolean pure;
   public final TyType returnType;
   public final ArrayList<TyType> types;
+  public final boolean castArgs;
 
-  public FunctionOverloadInstance(final String javaFunction, final TyType returnType, final ArrayList<TyType> types, final boolean pure) {
+  public FunctionOverloadInstance(final String javaFunction, final TyType returnType, final ArrayList<TyType> types, final boolean pure, final boolean castArgs) {
     this.javaFunction = javaFunction;
     this.returnType = returnType;
     this.types = types;
     this.pure = pure;
+    this.castArgs = castArgs;
     hiddenSuffixArgs = new ArrayList<>();
   }
 

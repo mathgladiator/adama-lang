@@ -129,7 +129,7 @@ public class DefineFunction extends Definition {
     for (final FunctionArg arg : args) {
       argTypes.add(arg.type);
     }
-    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure);
+    FunctionOverloadInstance foi = new FunctionOverloadInstance("__FUNC_" + uniqueFunctionId + "_" + name, returnType, argTypes, specialization == FunctionSpecialization.Pure, false);
     foi.ingest(this);
     return foi;
   }

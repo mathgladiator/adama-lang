@@ -45,7 +45,7 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -58,7 +58,7 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeString(newBehavior, readonlyToken, token).withPosition(position);
   }
 
@@ -67,6 +67,7 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("string");
     writer.endObject();
@@ -85,7 +86,7 @@ public class TyNativeString extends TySimpleNative implements IsNativeValue, Det
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("length".equals(name)) {
-      return new TyNativeFunctional("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.ExpressionThenArgs);
+      return new TyNativeFunctional("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("size", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.ExpressionThenArgs);
     }
     return environment.state.globals.findExtension(this, name);
   }

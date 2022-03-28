@@ -38,7 +38,7 @@ public class TyNativeChannel extends TyType implements DetailTypeHasMethods, Det
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     if (readonlyToken != null) {
       yielder.accept(readonlyToken);
     }
@@ -65,7 +65,7 @@ public class TyNativeChannel extends TyType implements DetailTypeHasMethods, Det
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeChannel(newBehavior, readonlyToken, channelToken, tokenizedType).withPosition(position);
   }
 
@@ -79,6 +79,7 @@ public class TyNativeChannel extends TyType implements DetailTypeHasMethods, Det
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("channel");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     tokenizedType.item.writeTypeReflectionJson(writer);
     writer.endObject();
@@ -98,7 +99,7 @@ public class TyNativeChannel extends TyType implements DetailTypeHasMethods, Det
       if ("fetch".equals(name)) {
         final var ft = new TyNativeFuture(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null, new TokenizedItem<>(resolvedChannelType.withPosition(this)));
         argTypes.add(ct.withPosition(this));
-        return new TyNativeFunctional("fetchArray", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("fetchArray", ft.withPosition(this), argTypes, false)), FunctionStyleJava.ExpressionThenNameWithArgs);
+        return new TyNativeFunctional("fetchArray", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("fetchArray", ft.withPosition(this), argTypes, false, false)), FunctionStyleJava.ExpressionThenNameWithArgs);
       }
       if ("choose".equals(name)) {
         final var maft = new TyNativeFuture(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null, new TokenizedItem<>(new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(resolvedChannelType)).withPosition(this)));
@@ -106,19 +107,19 @@ public class TyNativeChannel extends TyType implements DetailTypeHasMethods, Det
         argTypes.add(ct.withPosition(this));
         argTypes.add(resolvedChannelType.withPosition(this));
         argTypes.add(limit.withPosition(this));
-        return new TyNativeFunctional("choose", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("choose", maft.withPosition(this), argTypes, false)), FunctionStyleJava.ExpressionThenArgs);
+        return new TyNativeFunctional("choose", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("choose", maft.withPosition(this), argTypes, false, false)), FunctionStyleJava.ExpressionThenArgs);
       }
     } else {
       if ("fetch".equals(name)) {
         final var ft = new TyNativeFuture(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null, new TokenizedItem<>(resolvedChannelType.withPosition(this)));
         argTypes.add(ct.withPosition(this));
-        return new TyNativeFunctional("fetchItem", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("fetchItem", ft.withPosition(this), argTypes, false)), FunctionStyleJava.ExpressionThenNameWithArgs);
+        return new TyNativeFunctional("fetchItem", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("fetchItem", ft.withPosition(this), argTypes, false, false)), FunctionStyleJava.ExpressionThenNameWithArgs);
       }
       if ("decide".equals(name)) {
         final var mft = new TyNativeFuture(TypeBehavior.ReadOnlyNativeValue, readonlyToken, null, new TokenizedItem<>(new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(resolvedChannelType)).withPosition(this)));
         argTypes.add(ct.withPosition(this));
         argTypes.add(new TyNativeArray(TypeBehavior.ReadOnlyNativeValue, resolvedChannelType, Token.WRAP("[]")).withPosition(this));
-        return new TyNativeFunctional("decide", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("decide", mft.withPosition(this), argTypes, false)), FunctionStyleJava.ExpressionThenArgs);
+        return new TyNativeFunctional("decide", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("decide", mft.withPosition(this), argTypes, false, false)), FunctionStyleJava.ExpressionThenArgs);
       }
     }
     return null;

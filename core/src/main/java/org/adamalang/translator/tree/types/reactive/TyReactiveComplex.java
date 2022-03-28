@@ -31,7 +31,7 @@ public class TyReactiveComplex extends TySimpleReactive {
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveComplex(token).withPosition(position);
   }
 
@@ -40,6 +40,7 @@ public class TyReactiveComplex extends TySimpleReactive {
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("complex");
     writer.endObject();

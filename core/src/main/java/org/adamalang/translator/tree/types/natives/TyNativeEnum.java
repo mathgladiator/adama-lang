@@ -78,7 +78,7 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(enumToken);
     yielder.accept(nameToken);
     yielder.accept(openBrace);
@@ -92,7 +92,7 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeEnum(newBehavior, enumToken, nameToken, openBrace, storage, endBrace).withPosition(position);
   }
 
@@ -101,6 +101,7 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("enum");
     writer.writeString(name);
     writer.writeObjectFieldIntro("options");
@@ -121,13 +122,13 @@ public class TyNativeEnum extends TySimpleNative implements IsNativeValue, Detai
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("to_int".equals(name)) {
-      return new TyNativeFunctional("to_int", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("Utility.identity", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, enumToken).withPosition(this), new ArrayList<>(), true)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+      return new TyNativeFunctional("to_int", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("Utility.identity", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, enumToken).withPosition(this), new ArrayList<>(), true, false)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     if ("next".equals(name)) {
-      return new TyNativeFunctional("next", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCycleNext_" + this.name, this, new ArrayList<>(), true)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+      return new TyNativeFunctional("next", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCycleNext_" + this.name, this, new ArrayList<>(), true, false)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     if ("prev".equals(name)) {
-      return new TyNativeFunctional("prev", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCyclePrev_" + this.name, this, new ArrayList<>(), true)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
+      return new TyNativeFunctional("prev", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__EnumCyclePrev_" + this.name, this, new ArrayList<>(), true, false)), FunctionStyleJava.InjectNameThenExpressionAndArgs);
     }
     return storage.computeDispatcherType(name);
   }

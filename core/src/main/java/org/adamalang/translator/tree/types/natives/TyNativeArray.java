@@ -48,7 +48,7 @@ public class TyNativeArray extends TyType implements //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     elementType.emit(yielder);
     yielder.accept(arrayToken);
   }
@@ -69,7 +69,7 @@ public class TyNativeArray extends TyType implements //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyNativeArray(newBehavior, elementType.makeCopyWithNewPosition(position, newBehavior), arrayToken).withPosition(position);
   }
 
@@ -83,6 +83,7 @@ public class TyNativeArray extends TyType implements //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("native_array");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     elementType.writeTypeReflectionJson(writer);
     writer.endObject();
@@ -130,7 +131,7 @@ public class TyNativeArray extends TyType implements //
   @Override
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if ("size".equals(name)) {
-      return new TyNativeFunctionInternalFieldReplacement("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("length", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, arrayToken).withPosition(this), new ArrayList<>(), false)), FunctionStyleJava.None);
+      return new TyNativeFunctionInternalFieldReplacement("length", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("length", new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, arrayToken).withPosition(this), new ArrayList<>(), false, false)), FunctionStyleJava.None);
     }
     return environment.state.globals.findExtension(this, name);
   }

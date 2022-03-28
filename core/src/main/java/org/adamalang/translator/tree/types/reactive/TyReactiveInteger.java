@@ -34,7 +34,7 @@ public class TyReactiveInteger extends TySimpleReactive implements IsOrderable /
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveInteger(token).withPosition(position);
   }
 
@@ -43,6 +43,7 @@ public class TyReactiveInteger extends TySimpleReactive implements IsOrderable /
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_value");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("type");
     writer.writeString("int");
     writer.endObject();

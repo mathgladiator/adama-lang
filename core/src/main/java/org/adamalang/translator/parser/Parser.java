@@ -32,6 +32,7 @@ import org.adamalang.translator.tree.statements.testing.AssertTruth;
 import org.adamalang.translator.tree.statements.testing.Force;
 import org.adamalang.translator.tree.statements.testing.PumpMessage;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeAnnotation;
 import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
 import org.adamalang.translator.tree.types.reactive.*;
@@ -1067,15 +1068,33 @@ public class Parser {
     return subtype;
   }
 
+  private TyType enrich(TyType tyType) throws AdamaLangException {
+    Token openAnnotation = tokens.popIf((t) -> t.isSymbolWithTextEq("("));
+    if (openAnnotation != null) {
+      ArrayList<TokenizedItem<Token>> annotations = new ArrayList<>();
+      Token commaOrEnd = tokens.popIf((t) -> t.isSymbolWithTextEq(",", ")"));
+      while (commaOrEnd == null || commaOrEnd.isSymbolWithTextEq(",")) {
+        TokenizedItem<Token> annotation = new TokenizedItem<>(id());
+        if (commaOrEnd != null) {
+          annotation.before.add(commaOrEnd);
+        }
+        annotations.add(annotation);
+        commaOrEnd = tokens.popIf((t) -> t.isSymbolWithTextEq(",", ")"));
+      }
+      tyType.annotate(new TypeAnnotation(openAnnotation, annotations, commaOrEnd));
+    }
+    return tyType;
+  }
+
   public TyType native_type() throws AdamaLangException {
     final var baseType = native_type_base();
     if (baseType instanceof CanBeNativeArray) {
       final var arrayToken = tokens.popNextAdjSymbolPairIf(t -> t.isSymbolWithTextEq("[]"));
       if (arrayToken != null) {
-        return new TyNativeArray(baseType.behavior, baseType, arrayToken);
+        return enrich(new TyNativeArray(baseType.behavior, baseType, arrayToken));
       }
     }
-    return baseType;
+    return enrich(baseType);
   }
 
   public TyType native_type_base() throws AdamaLangException {
@@ -1261,7 +1280,11 @@ public class Parser {
     return new TyReactiveMap(mapToken, openThing, domainType, commaToken, rangeType, closeThing);
   }
 
-  public TyType reactive_type() throws AdamaLangException {
+  private TyType reactive_type() throws AdamaLangException {
+    return enrich(reactive_type_intern());
+  }
+
+  private TyType reactive_type_intern() throws AdamaLangException {
     final var token = tokens.pop();
     if (token == null) {
       throw new ParseException("Parser was expecting a reactive type, but got an end of stream instead.", tokens.getLastTokenIfAvailable());

@@ -133,7 +133,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
   }
 
   @Override
-  public void emit(final Consumer<Token> yielder) {
+  public void emitInternal(final Consumer<Token> yielder) {
     yielder.accept(recordToken);
     yielder.accept(nameToken);
     storage.emit(yielder);
@@ -155,7 +155,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
   }
 
   @Override
-  public TyType makeCopyWithNewPosition(final DocumentPosition position, final TypeBehavior newBehavior) {
+  public TyType makeCopyWithNewPositionInternal(final DocumentPosition position, final TypeBehavior newBehavior) {
     return new TyReactiveRecord(recordToken, nameToken, storage).withPosition(position);
   }
 
@@ -177,6 +177,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
     writer.beginObject();
     writer.writeObjectFieldIntro("nature");
     writer.writeString("reactive_record");
+    writeAnnotations(writer);
     writer.writeObjectFieldIntro("name");
     writer.writeString(name);
     writer.writeObjectFieldIntro("fields");
@@ -193,7 +194,7 @@ public class TyReactiveRecord extends TyType implements IsStructure, //
   public TyNativeFunctional lookupMethod(final String name, final Environment environment) {
     if (!environment.state.isPure()) {
       if ("delete".equals(name) && storage.specialization == StorageSpecialization.Record) {
-        return new TyNativeFunctionInternalFieldReplacement("__delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__delete", null, new ArrayList<>(), false)), FunctionStyleJava.ExpressionThenArgs);
+        return new TyNativeFunctionInternalFieldReplacement("__delete", FunctionOverloadInstance.WRAP(new FunctionOverloadInstance("__delete", null, new ArrayList<>(), false, false)), FunctionStyleJava.ExpressionThenArgs);
       }
       return storage.methodTypes.get(name);
     }
