@@ -130,4 +130,22 @@ public class Finder implements FinderService {
       throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_UPDATE);
     }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_UPDATE_EXCEPTION);
   }
+
+  @Override
+  public void delete(Key key, Callback<Void> callback) {
+    dataBase.transact((connection) -> {
+      String updateIndexSQL = new StringBuilder() //
+          .append("DELETE FROM `").append(dataBase.databaseName).append("`.`directory` ") //
+          .append(" WHERE `space`=? AND `key`=? AND `value`=? AND `type`=").append(Location.Machine.type).toString();
+      try (PreparedStatement statementDelete = connection.prepareStatement(updateIndexSQL)) {
+        statementDelete.setString(1, key.space);
+        statementDelete.setString(2, key.key);
+        statementDelete.setString(3, targetSelf);
+        if (statementDelete.executeUpdate() == 1) {
+          return null;
+        }
+      }
+      throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_DELETE);
+    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_DELETE_EXCEPTION);
+  }
 }

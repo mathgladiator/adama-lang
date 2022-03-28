@@ -134,6 +134,21 @@ public class FinderTests {
           machineB.update(KEY1, 1, 2, callback);
           callback.assertSuccess();
         }
+        {
+          SimpleMockCallback callback = new SimpleMockCallback();
+          machineB.takeover(KEY1, callback);
+          callback.assertSuccess();
+        }
+        {
+          SimpleMockCallback callback = new SimpleMockCallback();
+          machineA.delete(KEY1, callback);
+          callback.assertFailure(773247);
+        }
+        {
+          SimpleMockCallback callback = new SimpleMockCallback();
+          machineB.delete(KEY1, callback);
+          callback.assertSuccess();
+        }
       } finally {
         installer.uninstall();
       }

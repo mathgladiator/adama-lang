@@ -65,6 +65,9 @@ public interface FinderService {
   /** archive the key and give up control */
   public void archive(Key key, String archiveKey, Callback<Void> callback);
 
+  /** delete the key */
+  public void delete(Key key, Callback<Void> callback);
+
   /** update billing related properties about the key */
   public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback);
 }

@@ -36,7 +36,7 @@ public class CachedFinderProxy implements FinderService {
       callback.success(cached);
       return;
     }
-    finder.find(key, new Callback<Result>() {
+    finder.find(key, new Callback<>() {
       @Override
       public void success(Result value) {
         cache.put(key, value);
@@ -63,6 +63,23 @@ public class CachedFinderProxy implements FinderService {
   @Override
   public void archive(Key key, String archiveKey, Callback<Void> callback) {
     finder.archive(key, archiveKey, callback);
+  }
+
+  @Override
+  public void delete(Key key, Callback<Void> callback) {
+    finder.delete(key, new Callback<>() {
+      @Override
+      public void success(Void value) {
+        cache.remove(key);
+        callback.success(value);
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        cache.remove(key);
+        callback.failure(ex);
+      }
+    });
   }
 
   @Override

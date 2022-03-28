@@ -80,6 +80,11 @@ public class CaravanDataServiceTests {
         public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
 
         }
+
+        @Override
+        public void delete(Key key, Callback<Void> callback) {
+
+        }
       };
       this.service = new CaravanDataService(finder, store, executor);
       this.flusher = new Thread(new Runnable() {

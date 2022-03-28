@@ -55,6 +55,12 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
+  public void delete(Key key, Callback<Void> callback) {
+    map.remove(key);
+    callback.success(null);
+  }
+
+  @Override
   public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
     callback.success(null);
   }
