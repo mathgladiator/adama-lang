@@ -40,11 +40,11 @@ public class CodeGenEventHandlers {
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askCreationCount++;
       } else if (dce.which == DocumentEvent.AskInvention) {
-        sb.append("public static boolean __onCanInvent__" + askInventionCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ")").tabUp().writeNewline();
+        sb.append("public static boolean __onCanInvent__" + askInventionCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ")");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askInventionCount++;
       } else if (dce.which == DocumentEvent.AskSendWhileDisconnected) {
-        sb.append("public static boolean __onCanSendWhileDisconnected__" + askSendWhileDisconnected + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ")").tabUp().writeNewline();
+        sb.append("public static boolean __onCanSendWhileDisconnected__" + askSendWhileDisconnected + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ")");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askSendWhileDisconnected++;
       } else if (dce.which == DocumentEvent.AskAssetAttachment) {
