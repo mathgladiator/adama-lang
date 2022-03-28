@@ -13,12 +13,13 @@ import org.adamalang.runtime.reactives.RxRecordBase;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 /** an index of a single column of data */
 public class ReactiveIndex<Ty extends RxRecordBase> {
   /** a data structure which is precise; we know that the given item is in this bucket for SURE */
-  private final HashMap<Integer, TreeSet<Ty>> index;
+  private final TreeMap<Integer, TreeSet<Ty>> index;
   /**
    * as things change, we lose certainty of where items exist and have a grab-all bucket; this is an
    * optimization such that indexing happens between operations
@@ -26,7 +27,7 @@ public class ReactiveIndex<Ty extends RxRecordBase> {
   private final TreeSet<Ty> unknowns;
 
   public ReactiveIndex(final TreeSet<Ty> unknowns) {
-    this.index = new HashMap<>();
+    this.index = new TreeMap<>();
     this.unknowns = unknowns;
   }
 
