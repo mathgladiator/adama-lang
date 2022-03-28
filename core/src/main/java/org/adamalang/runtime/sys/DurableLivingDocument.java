@@ -70,7 +70,9 @@ public class DurableLivingDocument {
 
   public static void fresh(final Key key, final LivingDocumentFactory factory, final NtClient who, final String arg, final String entropy, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
     try {
-      DurableLivingDocument document = new DurableLivingDocument(key, factory.create(monitor), factory, base);
+      LivingDocument livingDocument = factory.create(monitor);
+      livingDocument.__setKey(key.key);
+      DurableLivingDocument document = new DurableLivingDocument(key, livingDocument, factory, base);
       document.construct(who, arg, entropy, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_PERSIST, (seq) -> document));
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_FRESH_DRIVE, ex, EXLOGGER));
@@ -124,6 +126,7 @@ public class DurableLivingDocument {
   public static void load(final Key key, final LivingDocumentFactory factory, final DocumentMonitor monitor, final DocumentThreadBase base, final Callback<DurableLivingDocument> callback) {
     try {
       LivingDocument doc = factory.create(monitor);
+      doc.__setKey(key.key);
       base.service.get(key, Callback.transform(callback, ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_READ, (data) -> {
         JsonStreamReader reader = new JsonStreamReader(data.patch);
         reader.ingestDedupe(doc.__get_intern_strings());
@@ -196,6 +199,7 @@ public class DurableLivingDocument {
 
   public void deploy(LivingDocumentFactory factory, Callback<Integer> callback) throws ErrorCodeException {
     LivingDocument newDocument = factory.create(document.__monitor);
+    newDocument.__setKey(key.key);
     JsonStreamWriter writer = new JsonStreamWriter();
     document.__dump(writer);
     newDocument.__insert(new JsonStreamReader(writer.toString()));

@@ -62,6 +62,7 @@ public abstract class LivingDocument implements RxParent {
   protected Random __random;
   protected ArrayList<Integer> __trace;
   private String __preemptedStateOnNextComputeBlocked = null;
+  private String __key;
 
   public LivingDocument(final DocumentMonitor __monitor) {
     this.__monitor = __monitor;
@@ -104,6 +105,20 @@ public abstract class LivingDocument implements RxParent {
         __monitor.assertFailureAt(startLine, startPosition, endLine, endLinePosition, __assertionTotal, __assertionFailures);
       }
     }
+  }
+
+  public void __setKey(String key) {
+    this.__key = key;
+  }
+
+  /** Document.key(); */
+  public String __getKey() {
+    return __key;
+  }
+
+  /** Document.seq() */
+  public int __getSeq() {
+    return __seq.get();
   }
 
   /** code generate: get strings that are part of the document */

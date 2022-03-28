@@ -1122,6 +1122,19 @@ public class LivingDocumentTests {
   }
 
   @Test
+  public void get_key_and_seq() throws Exception {
+    final var setup =
+        new RealDocumentSetup(
+            " public int lolseq = 0; public string lolkey; @connected(who) { lolseq = Document.seq(); return true; } @construct { lolkey = Document.key(); } ");
+    setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
+    final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
+    setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
+    Assert.assertEquals(1, deNO_ONE.datum.size());
+    Assert.assertEquals("{\"data\":{\"lolseq\":1,\"lolkey\":\"0\"},\"seq\":4}", deNO_ONE.datum.get(0));
+    setup.assertCompare();
+  }
+
+  @Test
   public void attach_no_asset() throws Exception {
     final var setup = new RealDocumentSetup("@construct {}");
     final var writer = setup.document.forge("attach", A);
