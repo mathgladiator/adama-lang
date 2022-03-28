@@ -9,6 +9,7 @@
  */
 package org.adamalang.runtime.stdlib;
 
+import org.adamalang.runtime.natives.NtMaybe;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,5 +27,11 @@ public class LibMathTests {
     Assert.assertTrue(LibMath.near(0.34, LibMath.roundTo(0.338198742, 2)));
     Assert.assertTrue(LibMath.near(0.3, LibMath.roundTo(0.338198742, 1)));
     Assert.assertTrue(LibMath.near(0.0, LibMath.roundTo(0.338198742, 0)));
+  }
+
+  @Test
+  public void equality() {
+    Assert.assertFalse(LibMath.equality(new NtMaybe<String>(), "X", (x, y) -> x.equals(y)));
+    Assert.assertTrue(LibMath.equality(new NtMaybe<String>("X"), "X", (x, y) -> x.equals(y)));
   }
 }
