@@ -370,7 +370,7 @@ public class RootHandlerImpl implements RootHandler {
   @Override
   public void handle(Session session, DocumentCreateRequest request, SimpleResponder responder) {
     try {
-      nexus.client.create("origin", request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
+      nexus.client.create(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, request.entropy, request.arg.toString(), new Callback<Void>() {
         @Override
         public void success(Void value) {
           responder.complete();
@@ -409,7 +409,7 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void bind() {
-        connection = nexus.client.connect("origin", request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", new SimpleEvents() {
+        connection = nexus.client.connect("ip", "origin", request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", new SimpleEvents() {
           @Override
           public void connected() {
           }
@@ -474,7 +474,7 @@ public class RootHandlerImpl implements RootHandler {
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder startResponder) {
     AtomicReference<Connection> connection = new AtomicReference<>(null);
     AtomicBoolean clean = new AtomicBoolean(false);
-    connection.set(nexus.client.connect("origin", request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", new SimpleEvents() {
+    connection.set(nexus.client.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", new SimpleEvents() {
       @Override
       public void connected() {
         connection.get().canAttach(new Callback<Boolean>() {

@@ -517,6 +517,7 @@ public class ClientCodec {
     o.authority = Helper.readString(buf);
     o.viewerState = Helper.readString(buf);
     o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
     return o;
   }
 
@@ -593,6 +594,7 @@ public class ClientCodec {
     o.agent = Helper.readString(buf);
     o.authority = Helper.readString(buf);
     o.origin = Helper.readString(buf);
+    o.ip = Helper.readString(buf);
     return o;
   }
 
@@ -775,6 +777,7 @@ public class ClientCodec {
     Helper.writeString(buf, o.authority);;
     Helper.writeString(buf, o.viewerState);;
     Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
   }
 
   public static void write(ByteBuf buf, MeteringDeleteBatch o) {
@@ -826,6 +829,7 @@ public class ClientCodec {
     Helper.writeString(buf, o.agent);;
     Helper.writeString(buf, o.authority);;
     Helper.writeString(buf, o.origin);;
+    Helper.writeString(buf, o.ip);;
   }
 
   public static void write(ByteBuf buf, PingRequest o) {

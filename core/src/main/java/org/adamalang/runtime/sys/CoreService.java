@@ -110,12 +110,12 @@ public class CoreService {
   }
 
   /** create a document */
-  public void create(NtClient who, Key key, String arg, String entropy, Callback<Void> callbackReal) {
-    createInternal(who, key, arg, entropy, metrics.serviceCreate.wrap(callbackReal));
+  public void create(CoreRequestContext context, Key key, String arg, String entropy, Callback<Void> callbackReal) {
+    createInternal(context, key, arg, entropy, metrics.serviceCreate.wrap(callbackReal));
   }
 
   /** internal: actually create with the given callback */
-  private void createInternal(NtClient who, Key key, String arg, String entropy, Callback<Void> callback) {
+  private void createInternal(CoreRequestContext context, Key key, String arg, String entropy, Callback<Void> callback) {
     // jump into thread caching which thread
     int threadId = key.hashCode() % bases.length;
     DocumentThreadBase base = bases[threadId];
@@ -131,7 +131,7 @@ public class CoreService {
         // since create will typically fail, we want to only retry the requests if there are concurrent calls
         ArrayList<Runnable> concurrentCreateCalls = base.mapCreationsInflightRetryBuffer.get(key);
         if (concurrentCreateCalls != null) {
-          concurrentCreateCalls.add(() -> create(who, key, arg, entropy, callback));
+          concurrentCreateCalls.add(() -> create(context, key, arg, entropy, callback));
           return;
         }
         base.mapCreationsInflightRetryBuffer.put(key, new ArrayList<>());
@@ -153,7 +153,7 @@ public class CoreService {
           @Override
           public void success(LivingDocumentFactory factory) {
             try {
-              if (!factory.canCreate(who)) {
+              if (!factory.canCreate(context)) {
                 callback.failure(new ErrorCodeException(ErrorCodes.SERVICE_DOCUMENT_REJECTED_CREATION));
                 executeConcurrent.run();
                 return;
@@ -164,7 +164,7 @@ public class CoreService {
               return;
             }
             // bring the document into existence
-            DurableLivingDocument.fresh(key, factory, who, arg, entropy, null, base, metrics.documentFresh.wrap(new Callback<>() {
+            DurableLivingDocument.fresh(key, factory, context.who, arg, entropy, null, base, metrics.documentFresh.wrap(new Callback<>() {
               @Override
               public void success(DurableLivingDocument document) {
                 // jump into the thread; note, the data service must ensure this will succeed once
@@ -196,18 +196,18 @@ public class CoreService {
   }
 
   /** connect the given person to the document hooking up a streamback */
-  public void connect(NtClient who, Key key, String viewerState, Streamback stream) {
+  public void connect(CoreRequestContext context, Key key, String viewerState, Streamback stream) {
     // TODO: populate the asset id encoder
-    connect(who, key, stream, viewerState, null, true);
+    connect(context, key, stream, viewerState, null, true);
   }
 
   /** internal: do the connect with retry when connect executes create */
-  private void connect(NtClient who, Key key, Streamback stream, String viewerState, AssetIdEncoder assetIdEncoder, boolean canRetry) {
+  private void connect(CoreRequestContext context, Key key, Streamback stream, String viewerState, AssetIdEncoder assetIdEncoder, boolean canRetry) {
     // TODO: instrument the stream
     load(key, new Callback<>() {
       @Override
       public void success(DurableLivingDocument document) {
-        connectDirectMustBeInDocumentBase(who, document, stream, new JsonStreamReader(viewerState), assetIdEncoder);
+        connectDirectMustBeInDocumentBase(context, document, stream, new JsonStreamReader(viewerState), assetIdEncoder);
       }
 
       @Override
@@ -217,20 +217,20 @@ public class CoreService {
             @Override
             public void success(LivingDocumentFactory factory) {
               try {
-                if (!factory.canInvent(who)) {
+                if (!factory.canInvent(context)) {
                   stream.failure(exOriginal);
                   return;
                 }
-                create(who, key, "{}", null, metrics.implicitCreate.wrap(new Callback<Void>() {
+                create(context, key, "{}", null, metrics.implicitCreate.wrap(new Callback<Void>() {
                   @Override
                   public void success(Void value) {
-                    connect(who, key, stream, viewerState, assetIdEncoder, canRetry);
+                    connect(context, key, stream, viewerState, assetIdEncoder, canRetry);
                   }
 
                   @Override
                   public void failure(ErrorCodeException exNew) {
                     if (exNew.code == ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE || exNew.code == ErrorCodes.LIVING_DOCUMENT_TRANSACTION_ALREADY_CONSTRUCTED || exNew.code == ErrorCodes.SERVICE_DOCUMENT_ALREADY_CREATED) {
-                      connect(who, key, stream, viewerState, assetIdEncoder, canRetry);
+                      connect(context, key, stream, viewerState, assetIdEncoder, canRetry);
                     } else {
                       metrics.failed_invention.run();
                       stream.failure(exNew);
@@ -345,12 +345,12 @@ public class CoreService {
   }
 
   /** internal: send connection to the document if not joined, then join */
-  private void connectDirectMustBeInDocumentBase(NtClient who, DurableLivingDocument document, Streamback stream, JsonStreamReader viewerState, AssetIdEncoder assetIdEncoder) {
+  private void connectDirectMustBeInDocumentBase(CoreRequestContext context, DurableLivingDocument document, Streamback stream, JsonStreamReader viewerState, AssetIdEncoder assetIdEncoder) {
     PredictiveInventory inventory = document.base.getOrCreateInventory(document.key.space);
     Callback<Integer> onConnected = new Callback<>() {
       @Override
       public void success(Integer dontCare) {
-        document.createPrivateView(who, new Perspective() {
+        document.createPrivateView(context.who, new Perspective() {
           @Override
           public void data(String data) {
             stream.next(data);
@@ -364,7 +364,7 @@ public class CoreService {
         }, viewerState, assetIdEncoder, metrics.createPrivateView.wrap(new Callback<>() {
           @Override
           public void success(PrivateView view) {
-            stream.onSetupComplete(new CoreStream(metrics, who, inventory, document, view));
+            stream.onSetupComplete(new CoreStream(context, metrics, inventory, document, view));
             stream.status(Streamback.StreamStatus.Connected);
           }
 
@@ -386,10 +386,10 @@ public class CoreService {
     };
 
     // are we already connected, then execute now
-    if (document.isConnected(who)) {
+    if (document.isConnected(context.who)) {
       onConnected.success(null);
     } else {
-      document.connect(who, onConnected);
+      document.connect(context.who, onConnected);
     }
   }
 

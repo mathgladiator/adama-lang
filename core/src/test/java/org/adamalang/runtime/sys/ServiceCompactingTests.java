@@ -13,6 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.InMemoryDataService;
@@ -48,10 +49,10 @@ public class ServiceCompactingTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(NtClient.NO_ONE, KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       for (int k = 0; k < 100; k++) {
         LatchCallback cb1 = new LatchCallback();
@@ -97,10 +98,10 @@ public class ServiceCompactingTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(NtClient.NO_ONE, KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       for (int k = 0; k < 100; k++) {
         LatchCallback cb1 = new LatchCallback();
@@ -158,10 +159,10 @@ public class ServiceCompactingTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(NtClient.NO_ONE, KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       for (int k = 0; k < 100; k++) {
         LatchCallback cb1 = new LatchCallback();

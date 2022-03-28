@@ -10,6 +10,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
@@ -35,12 +36,12 @@ public class ServiceBlogTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(NtClient.NO_ONE, KEY, "{}", "1", created);
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", "1", created);
       created.await_success();
 
       MockStreamback streamback = new MockStreamback();
       Runnable got = streamback.latchAt(4);
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
 
       {
@@ -75,12 +76,12 @@ public class ServiceBlogTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(NtClient.NO_ONE, KEY, "{}", "1", created);
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", "1", created);
       created.await_success();
 
       MockStreamback streamback = new MockStreamback();
       Runnable got = streamback.latchAt(4);
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
 
       {

@@ -15,12 +15,14 @@ import org.adamalang.net.TestBed;
 import org.adamalang.net.client.routing.RoutingEngine;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.junit.Assert;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class ComplexHelper {
+
 
   public static final String SIMPLE = "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; } @can_attach(who) { return true; } @attached(who, what) {} ";
   public static final String VIEW_MIRROR = "@static { create(who) { return true; } } @connected(who) { return true; } view int z; bubble<who, v> zz = 1000 + v.z; public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; } @can_attach(who) { return true; } @attached(who, what) {} ";
@@ -31,7 +33,7 @@ public class ComplexHelper {
       servers[k] = new TestBed(20005 + k, code);
       CountDownLatch latchMade = new CountDownLatch(1);
       servers[k].coreService.create(
-          NtClient.NO_ONE,
+          new CoreRequestContext(NtClient.NO_ONE, "origin", "ip"),
           new Key("space", "key"),
           "{}",
           null,

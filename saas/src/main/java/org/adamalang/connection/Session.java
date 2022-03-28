@@ -10,15 +10,18 @@
 package org.adamalang.connection;
 
 import org.adamalang.transforms.results.AuthenticatedUser;
+import org.adamalang.web.io.ConnectionContext;
 
 import java.util.HashMap;
 
 public class Session {
+  public final ConnectionContext context;
   public final long created;
   private long lastActivity;
   public HashMap<String, AuthenticatedUser> identityCache;
 
-  public Session() {
+  public Session(ConnectionContext context) {
+    this.context = context;
     this.created = System.currentTimeMillis();
     this.identityCache = new HashMap<>();
   }

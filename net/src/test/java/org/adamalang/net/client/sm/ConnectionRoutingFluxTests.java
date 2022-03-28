@@ -51,7 +51,7 @@ public class ConnectionRoutingFluxTests {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engineReal, finder, connectionExecutor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsProducedData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         connection.open();
         waitForFinderAsk.run();
         Runnable waitForFinderReady = finderExecutor.pauseOn("channel-client-ready");
@@ -100,7 +100,7 @@ public class ConnectionRoutingFluxTests {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engineReal, finder, connectionExecutor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsProducedData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         connection.open();
         waitForFinderAsk.run();
         Runnable waitForFinderReady = finderExecutor.pauseOn("channel-client-ready");
@@ -146,7 +146,7 @@ public class ConnectionRoutingFluxTests {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engineReal, finder, connectionExecutor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsProducedData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         connection.open();
         eventsProducedData.run();
         events.assertWrite(0, "CONNECTED");
@@ -186,7 +186,7 @@ public class ConnectionRoutingFluxTests {
         Runnable waitForFind = finderExecutor.pauseOn("finder-find/127.0.0.1:" + servers[0].port);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsProducedData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         connection.open();
         finder.sync(Helper.setOf());
 
@@ -255,7 +255,7 @@ public class ConnectionRoutingFluxTests {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engineReal, finder, connectionExecutor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsProducedData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         connection.open();
         waitForFinderAsk.run();
         connection.close();
@@ -304,7 +304,7 @@ public class ConnectionRoutingFluxTests {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engineReal, finder, connectionExecutor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsProducedData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         Runnable waitForConnection = connectionExecutor.pauseOn("connection-connected");
         connection.open();
         waitForConnection.run();
@@ -361,7 +361,7 @@ public class ConnectionRoutingFluxTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsProducedData = events.latchAt(3);
         Runnable reconnected = events.latchAt(4);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         Runnable waitForConnection = connectionExecutor.pauseOn("connection-connected");
         connection.open();
         waitForConnection.run();
@@ -448,7 +448,7 @@ public class ConnectionRoutingFluxTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable firstConnection = events.latchAt(2);
         Runnable secondConnection = events.latchAt(3);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         connection.open();
         firstConnection.run();
         engineReal.integrate("127.0.0.1:" + servers[1].port, Collections.singleton("space"));

@@ -210,7 +210,7 @@ public class InstanceClient implements AutoCloseable {
   }
 
   /** create a document */
-  public void create(String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callbackRaw) {
+  public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callbackRaw) {
     Callback<Void> callback = metrics.client_create_cb.wrap(callbackRaw);
     executor.execute(new NamedRunnable("execute-create") {
       @Override
@@ -244,6 +244,7 @@ public class InstanceClient implements AutoCloseable {
                 create.key = key;
                 create.entropy = entropy;
                 create.arg = arg;
+                create.ip = ip;
                 ClientCodec.write(toWrite, create);
                 stream.next(toWrite);
               }
@@ -368,8 +369,9 @@ public class InstanceClient implements AutoCloseable {
   }
 
   /** connect to a document */
-  public void connect(String origin, String agent, String authority, String space, String key, String viewerState, Events events) {
+  public void connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, Events events) {
     ClientMessage.StreamConnect connectMessage = new ClientMessage.StreamConnect();
+    connectMessage.ip = ip;
     connectMessage.origin = origin;
     connectMessage.agent = agent;
     connectMessage.authority = authority;

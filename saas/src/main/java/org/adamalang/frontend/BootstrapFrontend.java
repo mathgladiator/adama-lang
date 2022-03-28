@@ -40,7 +40,7 @@ public class BootstrapFrontend {
       public ServiceConnection establish(ConnectionContext context) {
         return new ServiceConnection() {
           final ConnectionNexus nexus =
-              new ConnectionNexus(new Session(),
+              new ConnectionNexus(new Session(context),
                   extern.accessLogger, //
                   extern.metrics, //
                   executors[randomExecutorIndex.nextInt(executors.length)], //

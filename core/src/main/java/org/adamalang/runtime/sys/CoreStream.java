@@ -25,15 +25,15 @@ import org.adamalang.runtime.natives.NtClient;
  */
 public class CoreStream {
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(CoreStream.class);
+  private final CoreRequestContext context;
   private final CoreMetrics metrics;
-  private final NtClient who;
   private final PredictiveInventory inventory;
   private final DurableLivingDocument document;
   private final PrivateView view;
 
-  public CoreStream(CoreMetrics metrics, NtClient who, PredictiveInventory inventory, DurableLivingDocument document, PrivateView view) {
+  public CoreStream(CoreRequestContext context, CoreMetrics metrics,PredictiveInventory inventory, DurableLivingDocument document, PrivateView view) {
+    this.context = context;
     this.metrics = metrics;
-    this.who = who;
     this.inventory = inventory;
     this.document = document;
     this.view = view;
@@ -61,7 +61,7 @@ public class CoreStream {
       @Override
       public void execute() throws Exception {
         inventory.message();
-        document.send(who, marker, channel, message, callback);
+        document.send(context.who, marker, channel, message, callback);
       }
     });
   }
@@ -72,7 +72,7 @@ public class CoreStream {
       public void execute() throws Exception {
         inventory.message();
         try {
-          callback.success(document.canAttach(who));
+          callback.success(document.canAttach(context.who));
         } catch (Exception ex) {
           callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.CORE_STREAM_CAN_ATTACH_UNKNOWN_EXCEPTION, ex, LOGGER));
         }
@@ -85,7 +85,7 @@ public class CoreStream {
       @Override
       public void execute() throws Exception {
         inventory.message();
-        document.attach(who, asset, callback);
+        document.attach(context.who, asset, callback);
       }
     });
   }
@@ -102,9 +102,9 @@ public class CoreStream {
         // disconnect this view
         view.kill();
         // clean up and keep things tidy
-        if (document.garbageCollectPrivateViewsFor(who) == 0) {
+        if (document.garbageCollectPrivateViewsFor(context.who) == 0) {
           // falling edge disconnects the person
-          document.disconnect(who, Callback.DONT_CARE_INTEGER);
+          document.disconnect(context.who, Callback.DONT_CARE_INTEGER);
         } else {
           document.invalidate(Callback.DONT_CARE_INTEGER);
         }

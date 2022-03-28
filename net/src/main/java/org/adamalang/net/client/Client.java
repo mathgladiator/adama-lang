@@ -180,13 +180,13 @@ public class Client {
     });
   }
 
-  public void create(String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
+  public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_create.start();
     engine.get(space, key, (target) -> {
       finder.find(target, new Callback<InstanceClient>() {
         @Override
         public void success(InstanceClient client) {
-          client.create(origin, agent, authority, space, key, entropy, arg, callback);
+          client.create(ip, origin, agent, authority, space, key, entropy, arg, callback);
         }
 
         @Override
@@ -197,9 +197,9 @@ public class Client {
     });
   }
 
-  public Connection connect(String origin, String agent, String authority, String space, String key, String viewerState, SimpleEvents events) {
+  public Connection connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, SimpleEvents events) {
     ConnectionBase base = new ConnectionBase(config, metrics, engine, finder, executors[rng.nextInt(executors.length)]);
-    Connection connection = new Connection(base, origin, agent, authority, space, key, viewerState, events);
+    Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, events);
     connection.open();
     return connection;
   }

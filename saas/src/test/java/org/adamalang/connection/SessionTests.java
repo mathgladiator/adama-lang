@@ -9,13 +9,14 @@
  */
 package org.adamalang.connection;
 
+import org.adamalang.web.io.ConnectionContext;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class SessionTests {
   @Test
   public void coverage() {
-    Session session = new Session();
+    Session session = new Session(new ConnectionContext("origin", "ip", "useragent"));
     session.activity();
     Assert.assertTrue(session.keepalive());
   }

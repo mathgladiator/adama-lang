@@ -45,7 +45,7 @@ public class ConnectionTrafficShift {
         Runnable eventsGotRollback = events.latchAt(4);
         Runnable eventFailed = events.latchAt(5);
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1",  "origin", "who", "dev", "space", "key", "{}", events);
         connection.open();
         eventsProducedData.run();
         events.assertWrite(0, "CONNECTED");

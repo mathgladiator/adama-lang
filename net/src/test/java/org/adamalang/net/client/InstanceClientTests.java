@@ -34,7 +34,7 @@ public class InstanceClientTests {
       try (InstanceClient client = bed.makeClient()) {
         {
           AssertCreateFailure failure = new AssertCreateFailure();
-          client.create("origin", "nope", "nope", "space", "1", null, "{}", failure);
+          client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", null, "{}", failure);
           Assert.assertFalse(client.ping(1250));
           failure.await(720955);
         }
@@ -42,7 +42,7 @@ public class InstanceClientTests {
         Assert.assertTrue(client.ping(7500));
         {
           AssertCreateSuccess success = new AssertCreateSuccess();
-          client.create("origin", "nope", "nope", "space", "2", "123", "{}", success);
+          client.create("127.0.0.1", "origin", "nope", "nope", "space", "2", "123", "{}", success);
           success.await();
         }
         bed.stopServer();
@@ -55,7 +55,7 @@ public class InstanceClientTests {
           bed.startServer();
           Assert.assertTrue(client.ping(2500));
           AssertCreateSuccess success = new AssertCreateSuccess();
-          client.create("origin", "nope", "nope", "space", "3", "123", "{}", success);
+          client.create("127.0.0.1", "origin", "nope", "nope", "space", "3", "123", "{}", success);
           success.await();
         }
       }
@@ -73,9 +73,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(5);
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
-        client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("origin", "nope", "test", "space", "1", "{}", events);
+        client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", events);
         Remote remote = events.getRemote();
         remote.update("{\"z\":100}");
         remote.send("foo", "marker", "{\"z\":\"100\"}", new Callback<Integer>() {
@@ -144,9 +144,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
-        client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("origin","nope", "test", "space", "1", "{}", events);
+        client.connect("127.0.0.1", "origin","nope", "test", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(disconnected.await(5000, TimeUnit.MILLISECONDS));
         events.assertWrite(0, "CONNECTED");
@@ -189,9 +189,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
-        client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("origin", "nope", "test", "space", "1", "{}", events);
+        client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(cantAttachLatch.await(2000, TimeUnit.MILLISECONDS));
         events.assertWrite(0, "CONNECTED");
@@ -241,9 +241,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(4);
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
-        client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("origin","nope", "nope", "space", "1", "{}", events);
+        client.connect("127.0.0.1", "origin","nope", "nope", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(canAttachLatch.await(2000, TimeUnit.MILLISECONDS));
         events.assertWrite(0, "CONNECTED");
@@ -299,9 +299,9 @@ public class InstanceClientTests {
       Runnable happy = events.latchAt(3);
       try (InstanceClient client = bed.makeClient()) {
         AssertCreateSuccess success = new AssertCreateSuccess();
-        client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
         success.await();
-        client.connect("origin", "nope", "test", "space", "1", "{}", events);
+        client.connect("127.0.0.1", "origin", "nope", "test", "space", "1", "{}", events);
         happy.run();
         Assert.assertTrue(cantAttachLatch.await(2000, TimeUnit.MILLISECONDS));
         Assert.assertEquals(769085, error.get());
@@ -322,11 +322,11 @@ public class InstanceClientTests {
         ArrayList<AssertCreateSuccess> delayed = new ArrayList<>();
         for (int k = 0; k < bed.clientConfig.getClientQueueSize(); k++) {
           AssertCreateSuccess success = new AssertCreateSuccess();
-          client.create("origin", "nope", "nope", "space", "1", "123", "{}", success);
+          client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", success);
           delayed.add(success);
         }
         AssertCreateFailure failure = new AssertCreateFailure();
-        client.create("origin", "nope", "nope", "space", "1", "123", "{}", failure);
+        client.create("127.0.0.1", "origin", "nope", "nope", "space", "1", "123", "{}", failure);
         failure.await(737336);
 
         LatchedVoidCallback scanCallback = new LatchedVoidCallback();
@@ -335,7 +335,7 @@ public class InstanceClientTests {
 
         MockEvents connectEvents = new MockEvents();
         Runnable waitError = connectEvents.latchAt(1);
-        client.connect("origin", "nope", "nope", "space", "1", "{}", connectEvents);
+        client.connect("127.0.0.1", "origin", "nope", "nope", "space", "1", "{}", connectEvents);
         waitError.run();
         connectEvents.assertWrite(0, "ERROR:702524");
 

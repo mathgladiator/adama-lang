@@ -41,7 +41,7 @@ public class ConnectionActionQueueTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 100; k++) {
           LatchedSeqCallback callback = new LatchedSeqCallback();
@@ -93,7 +93,7 @@ public class ConnectionActionQueueTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 100; k++) {
           LatchedSeqCallback callback = new LatchedSeqCallback();
@@ -134,7 +134,7 @@ public class ConnectionActionQueueTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 100; k++) {
           LatchedSeqCallback callback = new LatchedSeqCallback();
@@ -175,7 +175,7 @@ public class ConnectionActionQueueTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
         for (int k = 0; k < 100; k++) {
           connection.update("{\"z\":" + k + "}");
         }

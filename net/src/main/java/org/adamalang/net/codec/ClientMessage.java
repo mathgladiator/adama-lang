@@ -9,17 +9,12 @@
  */
 package org.adamalang.net.codec;
 
-import io.netty.buffer.ByteBuf;
 import org.adamalang.common.codec.FieldOrder;
 import org.adamalang.common.codec.Flow;
-import org.adamalang.common.codec.TypeCommon;
 import org.adamalang.common.codec.TypeId;
-import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.data.UpdateType;
 import org.adamalang.runtime.natives.NtClient;
-
-import java.security.PublicKey;
 
 /** messages from client to server */
 public class ClientMessage {
@@ -34,24 +29,20 @@ public class ClientMessage {
   public static class CreateRequest {
     @FieldOrder(1)
     public String space;
-
     @FieldOrder(2)
     public String key;
-
     @FieldOrder(3)
     public String arg;
-
     @FieldOrder(4)
     public String entropy;
-
     @FieldOrder(5)
     public String agent;
-
     @FieldOrder(6)
     public String authority;
-
     @FieldOrder(7)
     public String origin;
+    @FieldOrder(8)
+    public String ip;
   }
 
   @TypeId(6735)
@@ -98,6 +89,8 @@ public class ClientMessage {
     public String viewerState;
     @FieldOrder(6)
     public String origin;
+    @FieldOrder(7)
+    public String ip;
   }
 
   @TypeId(13345)

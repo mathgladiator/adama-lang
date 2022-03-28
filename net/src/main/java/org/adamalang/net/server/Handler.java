@@ -30,6 +30,7 @@ import org.adamalang.runtime.data.RemoteDocumentUpdate;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreStream;
 import org.adamalang.runtime.sys.metering.MeterReading;
 
@@ -327,7 +328,8 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.StreamConnect payload) {
     monitorStreamback = nexus.metrics.server_stream.start();
-    nexus.service.connect(new NtClient(payload.agent, payload.authority), new Key(payload.space, payload.key), payload.viewerState, this);
+    CoreRequestContext context = new CoreRequestContext(new NtClient(payload.agent, payload.authority), payload.origin, payload.ip);
+    nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, this);
   }
 
   @Override
@@ -400,7 +402,8 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
 
   @Override
   public void handle(ClientMessage.CreateRequest payload) {
-    nexus.service.create(new NtClient(payload.agent, payload.authority), new Key(payload.space, payload.key), payload.arg, payload.entropy, nexus.metrics.server_create.wrap(new Callback<Void>() {
+    CoreRequestContext context = new CoreRequestContext(new NtClient(payload.agent, payload.authority), payload.origin, payload.ip);
+    nexus.service.create(context, new Key(payload.space, payload.key), payload.arg, payload.entropy, nexus.metrics.server_create.wrap(new Callback<Void>() {
       @Override
       public void success(Void value) {
         ByteBuf buf = upstream.create(8);

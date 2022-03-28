@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.json.JsonStreamReader;
@@ -40,13 +41,13 @@ public class ServiceTemporalTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, TimeSource.REAL_TIME, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(NtClient.NO_ONE, KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -85,19 +86,19 @@ public class ServiceTemporalTests {
     try {
       Runnable latch = dataService.latchLogAt(9);
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(NtClient.NO_ONE, KEY, "{}", "1", created);
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", "1", created);
       created.await_success();
       Thread.sleep(100);
       {
         MockStreamback streamback = new MockStreamback();
-        service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+        service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
         streamback.await_began();
         streamback.get().disconnect();
       }
       Thread.sleep(100);
       {
         MockStreamback streamback = new MockStreamback();
-        service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+        service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
         streamback.await_began();
         streamback.get().disconnect();
       }

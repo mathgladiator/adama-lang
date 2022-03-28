@@ -32,6 +32,7 @@ public class Connection {
   // these can be put under a base
   private final ConnectionBase base;
   // these are critical to the request (i.e they are the request)
+  private final String ip;
   private final String origin;
   private final String agent;
   private final String authority;
@@ -58,8 +59,9 @@ public class Connection {
   // how long to wait on a failure to connect to a remote peer
   private int backoffConnectPeer;
 
-  public Connection(ConnectionBase base, String origin, String agent, String authority, String space, String key, String viewerState, SimpleEvents events) {
+  public Connection(ConnectionBase base, String ip, String origin, String agent, String authority, String space, String key, String viewerState, SimpleEvents events) {
     this.base = base;
+    this.ip = ip;
     this.origin = origin;
     this.agent = agent;
     this.authority = authority;
@@ -365,7 +367,7 @@ public class Connection {
 
   private void fireConnectRemote() {
     StreamMonitor.StreamMonitorInstance mInstance = base.metrics.client_open_document.start();
-    foundClient.connect(origin, agent, authority, key.space, key.key, viewerState, new Events() {
+    foundClient.connect(ip, origin, agent, authority, key.space, key.key, viewerState, new Events() {
       @Override
       public void connected(Remote remote) {
         mInstance.progress();

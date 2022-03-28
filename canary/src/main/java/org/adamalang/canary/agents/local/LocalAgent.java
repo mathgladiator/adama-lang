@@ -15,6 +15,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.contracts.Streamback;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtClient;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.CoreStream;
 
@@ -48,7 +49,7 @@ public class LocalAgent implements Streamback {
   }
 
   public void kickOff() {
-    service.connect(who, key, "{}", this);
+    service.connect(new CoreRequestContext(who, "origin", "127.0.0.1"), key, "{}", this);
   }
 
   @Override

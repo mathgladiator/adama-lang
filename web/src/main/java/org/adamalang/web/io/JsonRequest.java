@@ -16,7 +16,7 @@ import org.adamalang.common.ErrorCodeException;
 /** a thin wrapper for easy access to a JSON request */
 public class JsonRequest {
   private final ObjectNode node;
-  private final ConnectionContext context;
+  public final ConnectionContext context;
 
   public JsonRequest(ObjectNode node, ConnectionContext context) {
     this.node = node;

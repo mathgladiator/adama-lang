@@ -11,6 +11,7 @@ package org.adamalang.runtime.sys;
 
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.InMemoryDataService;
@@ -44,11 +45,11 @@ public class ServiceMultiboxTests {
         });
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ALICE, KEY, "{}", "1", created);
+      service.create(ContextSupport.WRAP(ALICE), KEY, "{}", "1", created);
       created.await_success();
       MockStreamback streamback1 = new MockStreamback();
       Runnable latch1 = streamback1.latchAt(6);
-      service.connect(ALICE, KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(ALICE), KEY, "{}", streamback1);
       streamback1.await_began();
       realDataService.skipAt(5);
       LatchCallback cb1 = new LatchCallback();
@@ -91,11 +92,11 @@ public class ServiceMultiboxTests {
         });
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(ALICE, KEY, "{}", "1", created);
+      service.create(ContextSupport.WRAP(ALICE), KEY, "{}", "1", created);
       created.await_success();
       MockStreamback streamback1 = new MockStreamback();
       Runnable latch1 = streamback1.latchAt(3);
-      service.connect(ALICE, KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(ALICE), KEY, "{}", streamback1);
       streamback1.await_began();
       realDataService.infiniteSkip();
       LatchCallback cb1 = new LatchCallback();
@@ -121,17 +122,17 @@ public class ServiceMultiboxTests {
     CoreService service2 = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service1.create(ALICE, KEY, "{}", "1", created);
+      service1.create(ContextSupport.WRAP(ALICE), KEY, "{}", "1", created);
       created.await_success();
 
       MockStreamback streamback1 = new MockStreamback();
       Runnable latch1 = streamback1.latchAt(11);
-      service1.connect(ALICE, KEY, "{}", streamback1);
+      service1.connect(ContextSupport.WRAP(ALICE), KEY, "{}", streamback1);
       streamback1.await_began();
 
       MockStreamback streamback2 = new MockStreamback();
       Runnable latch2 = streamback2.latchAt(10);
-      service2.connect(ALICE, KEY, "{}", streamback2);
+      service2.connect(ContextSupport.WRAP(ALICE), KEY, "{}", streamback2);
       streamback2.await_began();
 
       { // 2000

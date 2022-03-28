@@ -13,6 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
@@ -43,11 +44,11 @@ public class ServiceBadCodeTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(NtClient.NO_ONE, KEY, "{}", "1", created);
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", "1", created);
       created.await_success();
 
       MockStreamback streamback = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       CountDownLatch latch = new CountDownLatch(2);
       streamback.get().canAttach(new Callback<Boolean>() {

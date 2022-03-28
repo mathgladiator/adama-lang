@@ -10,6 +10,7 @@
 package org.adamalang.runtime.sys;
 
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.mocks.MockTime;
@@ -60,13 +61,13 @@ public class ServiceCleanupTests {
         });
     try {
       NullCallbackLatch created = new NullCallbackLatch();
-      service.create(NtClient.NO_ONE, KEY, "{}", null, created);
+      service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));

@@ -83,7 +83,7 @@ public class ClientTests {
         });
         Assert.assertTrue(latchGetDeployTargets.await(5000, TimeUnit.MILLISECONDS));
         CountDownLatch latchCreatedKey = new CountDownLatch(1);
-        client.create("origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
           public void success(Void value) {
             latchCreatedKey.countDown();
@@ -100,7 +100,7 @@ public class ClientTests {
         CountDownLatch latchGotConnected = new CountDownLatch(1);
         CountDownLatch latchGotData = new CountDownLatch(1);
         CountDownLatch latchGotDisconnect = new CountDownLatch(1);
-        Connection connection = client.connect("origin", "me", "dev", "space", "key1", "{}", new SimpleEvents() {
+        Connection connection = client.connect("127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", new SimpleEvents() {
           @Override
           public void connected() {
             latchGotConnected.countDown();
@@ -211,7 +211,7 @@ public class ClientTests {
       try {
         CountDownLatch latch1Failed = new CountDownLatch(1);
         client.notifyDeployment("127.0.0.1:" + bed.port, "space");
-        client.create("origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
           public void success(Void value) {
             System.err.println("Success");
@@ -287,7 +287,7 @@ public class ClientTests {
       try {
         waitForRouting(bed, client);
         CountDownLatch latchFailed = new CountDownLatch(1);
-        client.create("origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+        client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
           @Override
           public void success(Void value) {
 
@@ -383,7 +383,7 @@ public class ClientTests {
           failures.countDown();
         }
       });
-      client.connect("origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
+      client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
         @Override
         public void connected() {
 
@@ -406,7 +406,7 @@ public class ClientTests {
 
         }
       });
-      client.create("origin", "agent", "au", "space", "key", null, "{}", new Callback<Void>() {
+      client.create("127.0.0.1", "origin", "agent", "au", "space", "key", null, "{}", new Callback<Void>() {
         @Override
         public void success(Void value) {
 
@@ -469,7 +469,7 @@ public class ClientTests {
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
       waitForRouting(bed, client);
       CountDownLatch closures = new CountDownLatch(1);
-      client.connect("origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
+      client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
         @Override
         public void connected() {
           System.err.println("connected!");

@@ -13,6 +13,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.contracts.LivingDocumentFactoryFactory;
@@ -44,7 +45,7 @@ public class ServiceImplicitCreateTests {
       MockStreamback streamback = new MockStreamback();
       Runnable latchClient = streamback.latchAt(2);
       Runnable latchData = dataService.latchLogAt(4);
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
       streamback.await_began();
       latchData.run();
       latchClient.run();
@@ -75,8 +76,8 @@ public class ServiceImplicitCreateTests {
       Runnable onlyOneCreates = dataService.latchAt(2);
       Runnable latchData = realDataService.latchLogAt(4);
       dataService.pause();
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback2);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback2);
       onlyOneAsks.run();
       dataService.once();
       onlyOneCreates.run();
@@ -118,7 +119,7 @@ public class ServiceImplicitCreateTests {
     CoreService service = new CoreService(METRICS, proxyFactory, (bill) -> {}, dataService, time, 3);
     try {
       MockStreamback streamback1 = new MockStreamback();
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback1);
       streamback1.await_failure(-123);
     } finally {
       service.shutdown();
@@ -142,8 +143,8 @@ public class ServiceImplicitCreateTests {
       Runnable onlyOneAsks = dataService.latchAt(2);
       Runnable latchData = realDataService.latchLogAt(3);
       dataService.pause();
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback1);
-      service.connect(NtClient.NO_ONE, KEY, "{}", streamback2);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback2);
       bothAskingOnlyOne.run();
       dataService.once();
       onlyOneAsks.run();

@@ -74,7 +74,8 @@ public class ConnectionTests {
         AtomicInteger codeFound = new AtomicInteger(0);
         new Connection(
                 base,
-                "origin",
+            "127.0.0.1",
+            "origin",
                 "me",
                 "dev",
                 "space",
@@ -158,7 +159,7 @@ public class ConnectionTests {
           @Override
           public void success(InstanceClient client) {
             System.err.println("executing create");
-            client.create("origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
+            client.create("127.0.0.1", "origin", "me", "dev", "space", "key1", null, "{}", new Callback<Void>() {
               @Override
               public void success(Void value) {
                 System.err.println("create happy");
@@ -184,6 +185,7 @@ public class ConnectionTests {
         Connection connection =
             new Connection(
                 base,
+                "127.0.0.1",
                 "origin",
                 "me",
                 "dev",
@@ -266,6 +268,7 @@ public class ConnectionTests {
         Connection connection =
             new Connection(
                 base,
+                "127.0.0.1",
                 "origin",
                 "me",
                 "dev",

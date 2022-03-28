@@ -17,6 +17,7 @@ import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.json.JsonStreamWriter;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.ops.TestReportBuilder;
+import org.adamalang.runtime.sys.CoreRequestContext;
 import org.adamalang.runtime.sys.LivingDocument;
 
 import javax.tools.Diagnostic;
@@ -65,17 +66,17 @@ public class LivingDocumentFactory {
     }
   }
 
-  public boolean canInvent(NtClient who) throws ErrorCodeException {
+  public boolean canInvent(CoreRequestContext context) throws ErrorCodeException {
     try {
-      return (Boolean) inventionPolicyMethod.invoke(null, who);
+      return (Boolean) inventionPolicyMethod.invoke(null, context.who);
     } catch (Exception ex) {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_INVENT, ex, LOGGER);
     }
   }
 
-  public boolean canCreate(NtClient who) throws ErrorCodeException {
+  public boolean canCreate(CoreRequestContext context) throws ErrorCodeException {
     try {
-      return (Boolean) creationPolicyMethod.invoke(null, who);
+      return (Boolean) creationPolicyMethod.invoke(null, context.who);
     } catch (Exception ex) {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_CREATE, ex, LOGGER);
     }
