@@ -10,7 +10,6 @@
 package org.adamalang.net.server;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.util.concurrent.ScheduledFuture;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
@@ -160,7 +159,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.ProxySnapshot payload) {
     Key key = new Key(payload.space, payload.key);
-    nexus.service.dataService.compactAndSnapshot(key, payload.seq, payload.document, payload.history, respondViaInteger());
+    nexus.service.dataService.snapshot(key, payload.seq, payload.document, payload.history, respondViaInteger());
   }
 
   @Override
@@ -173,6 +172,12 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.ProxyCompute payload) {
     Key key = new Key(payload.space, payload.key);
     nexus.service.dataService.compute(key, ComputeMethod.fromType(payload.method), payload.seq, respondViaLocalDataChange());
+  }
+
+  @Override
+  public void handle(ClientMessage.ProxyClose payload) {
+    Key key = new Key(payload.space, payload.key);
+    nexus.service.dataService.close(key, respondViaVoid());
   }
 
   @Override

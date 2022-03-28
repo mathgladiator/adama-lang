@@ -154,8 +154,19 @@ public class MockInstantDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     callback.success(-1);
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    logByKey.remove(key);
+    callback.success(null);
+  }
+
+  @Override
+  public void archive(Key key, ArchiveWriter writer) {
+    writer.failed(-1);
   }
 
   private synchronized void println(String x) {

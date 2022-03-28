@@ -255,7 +255,7 @@ public class BlockingDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     dataBase.transact((connection) -> {
       // look up the index to get the id
       LookupResult lookup = lookup(connection, key);
@@ -319,6 +319,16 @@ public class BlockingDataService implements DataService {
       }
       return count.get();
     }, callback, ErrorCodes.COMPUTE_FAILURE);
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    callback.success(null);
+  }
+
+  @Override
+  public void archive(Key key, ArchiveWriter writer) {
+    writer.failed(-1);
   }
 
   public static class LookupResult {

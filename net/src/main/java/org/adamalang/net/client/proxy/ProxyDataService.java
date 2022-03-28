@@ -188,7 +188,7 @@ public class ProxyDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     execute((channel) -> {
       ByteBuf buf = channel.create(key.space.length() + key.key.length() + snapshot.length() + 64);
       ClientMessage.ProxySnapshot snap = new ClientMessage.ProxySnapshot();
@@ -199,5 +199,22 @@ public class ProxyDataService implements DataService {
       ClientCodec.write(buf, snap);
       channel.next(buf);
     }, wrapInt(callback));
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    execute((channel) -> {
+      ByteBuf buf = channel.create(key.space.length() + key.key.length() + 16);
+      ClientMessage.ProxyClose close = new ClientMessage.ProxyClose();
+      close.space = key.space;
+      close.key = key.key;
+      ClientCodec.write(buf, close);
+      channel.next(buf);
+    }, wrapVoid(callback));
+  }
+
+  @Override
+  public void archive(Key key, ArchiveWriter writer) {
+    writer.failed(-1);
   }
 }

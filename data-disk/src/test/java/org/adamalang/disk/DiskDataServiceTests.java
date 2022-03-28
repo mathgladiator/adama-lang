@@ -103,7 +103,7 @@ public class DiskDataServiceTests {
       cb_PatchFailsFNF.assertFailure(724019);
 
       SimpleIntCallback cb_CompactFailsFNF = new SimpleIntCallback();
-      setup.service.compactAndSnapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
+      setup.service.snapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
       cb_CompactFailsFNF.assertFailure(724019);
 
       SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
@@ -203,7 +203,7 @@ public class DiskDataServiceTests {
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{\"x\":10,\"y\":10}", 100, cb_CompactWorks);
+        setup.service.snapshot(KEY1, 1, "{\"x\":10,\"y\":10}", 100, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         setup.flush(KEY1);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
@@ -214,12 +214,12 @@ public class DiskDataServiceTests {
       }
       {
         SimpleIntCallback cbCompactFailsNegHistory = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{}", -1, cbCompactFailsNegHistory);
+        setup.service.snapshot(KEY1, 1, "{}", -1, cbCompactFailsNegHistory);
         cbCompactFailsNegHistory.assertFailure(734263);
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{\"x\":11,\"y\":11}",2, cb_CompactWorks);
+        setup.service.snapshot(KEY1, 1, "{\"x\":11,\"y\":11}",2, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(2);
         setup.flush(KEY1);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
@@ -230,7 +230,7 @@ public class DiskDataServiceTests {
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{\"x\":12,\"y\":12}", 1, cb_CompactWorks);
+        setup.service.snapshot(KEY1, 1, "{\"x\":12,\"y\":12}", 1, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(2);
         setup.flush(KEY1);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();

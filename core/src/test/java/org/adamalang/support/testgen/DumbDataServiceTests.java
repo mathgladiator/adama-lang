@@ -81,7 +81,7 @@ public class DumbDataServiceTests {
   @Test
   public void nocompact() {
     try {
-      new DumbDataService((up) -> {}).compactAndSnapshot(null, 1, "{}",-1, null);
+      new DumbDataService((up) -> {}).snapshot(null, 1, "{}",-1, null);
       Assert.fail();
     } catch (UnsupportedOperationException re) {
     }

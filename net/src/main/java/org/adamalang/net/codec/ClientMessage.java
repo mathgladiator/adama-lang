@@ -267,7 +267,7 @@ public class ClientMessage {
     public String key;
   }
 
-  @TypeId(9012)
+  @TypeId(9013)
   @Flow("Server")
   public static class ProxySnapshot {
     @FieldOrder(1)
@@ -280,5 +280,14 @@ public class ClientMessage {
     public int history;
     @FieldOrder(5)
     public String document;
+  }
+
+  @TypeId(9015)
+  @Flow("Server")
+  public static class ProxyClose {
+    @FieldOrder(1)
+    public String space;
+    @FieldOrder(2)
+    public String key;
   }
 }

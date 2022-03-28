@@ -138,11 +138,11 @@ public class FinalStorageProxy implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     goTo(key, new Callback<>() {
       @Override
       public void success(DataService service) {
-        service.compactAndSnapshot(key, seq, snapshot, history, callback);
+        service.snapshot(key, seq, snapshot, history, callback);
       }
 
       @Override
@@ -182,5 +182,15 @@ public class FinalStorageProxy implements DataService {
         callback.failure(ex);
       }
     });
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+
+  }
+
+  @Override
+  public void archive(Key key, ArchiveWriter writer) {
+
   }
 }

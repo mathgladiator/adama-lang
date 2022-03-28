@@ -40,7 +40,7 @@ public class CaravanDataService implements DataService {
   }
 
   /** execute with the translation service and jump into the executor */
-  private <T> void execute(String name, Key key, Callback<T> callback, BiConsumer<Long, LocalCache> action) {
+  private <T> void execute(String name, Key key, boolean load, Callback<T> callback, BiConsumer<Long, LocalCache> action) {
     finder.find(key, new Callback<FinderService.Result>() {
       @Override
       public void success(FinderService.Result result) {
@@ -48,7 +48,28 @@ public class CaravanDataService implements DataService {
         executor.execute(new NamedRunnable(name) {
           @Override
           public void execute() throws Exception {
-            action.accept(id, cache.get(id));
+            LocalCache cached = cache.get(id);
+            if (load && cached == null) {
+              load(id, new Callback<>() {
+                @Override
+                public void success(LocalCache cached) {
+                  executor.execute(new NamedRunnable(name, "load") {
+                    @Override
+                    public void execute() throws Exception {
+                      cache.put(id,cached);
+                      action.accept(id,cached);
+                    }
+                  });
+                }
+
+                @Override
+                public void failure(ErrorCodeException ex) {
+                  callback.failure(ex);
+                }
+              });
+            } else {
+              action.accept(id, cached);
+            }
           }
         });
       }
@@ -68,41 +89,46 @@ public class CaravanDataService implements DataService {
     return memory;
   }
 
-  public void close(Key key, Callback<Void> callback) {
-    execute("get", key, callback, (id, cached) -> {
-      if (cached != null) {
-        cache.remove(id);
+  private void load(long id, Callback<LocalCache> callback) {
+    LocalCache builder = new LocalCache() {
+      @Override
+      public void finished() {
+        LocalCache builder = this;
+        LocalDocumentChange result = builder.build();
+        if (result == null) {
+          callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
+          return;
+        }
+        executor.execute(new NamedRunnable("commit-cache") {
+          @Override
+          public void execute() throws Exception {
+            callback.success(builder);
+          }
+        });
       }
-      callback.success(null);
-    });
+    };
+    store.read(id, builder);
   }
 
   @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
-    execute("get", key, callback, (id, cached) -> {
+    execute("get", key, false, callback, (id, cached) -> {
       if (cached != null) {
         callback.success(cached.build());
         return;
       }
-      LocalCache builder = new LocalCache() {
+      load(id, new Callback<LocalCache>() {
         @Override
-        public void finished() {
-          LocalCache builder = this;
-          LocalDocumentChange result = builder.build();
-          if (result == null) {
-            callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
-            return;
-          }
-          executor.execute(new NamedRunnable("commit-cache") {
-            @Override
-            public void execute() throws Exception {
-              cache.put(id, builder);
-              callback.success(result);
-            }
-          });
+        public void success(LocalCache builder) {
+          cache.put(id, builder);
+          callback.success(builder.build());
         }
-      };
-      store.read(id, builder);
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
     });
   }
 
@@ -113,7 +139,7 @@ public class CaravanDataService implements DataService {
     ByteBuf buf = Unpooled.buffer();
     EventCodec.write(buf, change);
 
-    execute("initialize", key, callback, (id, cached) -> {
+    execute("initialize", key, false, callback, (id, cached) -> {
       if (cached != null || store.exists(id)) {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
         return;
@@ -151,11 +177,7 @@ public class CaravanDataService implements DataService {
     ByteBuf buf = Unpooled.buffer();
     EventCodec.write(buf, batch);
     byte[] write = convert(buf);
-    execute("patch", key, callback, (id, cached) -> {
-      if (cached == null) {
-        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_KEY_NOT_LOADED_PATCH));
-        return;
-      }
+    execute("patch", key, true, callback, (id, cached) -> {
       if (!cached.check(patches[0].seqBegin)) {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
         return;
@@ -177,11 +199,7 @@ public class CaravanDataService implements DataService {
 
   @Override
   public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
-    execute("compute", key, callback, (id, cached) -> {
-      if (cached == null) {
-        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_KEY_NOT_LOADED_COMPUTE));
-        return;
-      }
+    execute("compute", key, true, callback, (id, cached) -> {
       if (method == ComputeMethod.HeadPatch) {
         String result = cached.computeHeadPatch(seq);
         if (result != null) {
@@ -204,7 +222,7 @@ public class CaravanDataService implements DataService {
 
   @Override
   public void delete(Key key, Callback<Void> callback) {
-    execute("delete", key, callback, (id, cached) -> {
+    execute("delete", key, false, callback, (id, cached) -> {
       store.delete(id, () -> {});
       callback.success(null);
       cache.remove(id);
@@ -212,7 +230,7 @@ public class CaravanDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     if (history <= 0) {
       callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY));
       return;
@@ -225,11 +243,7 @@ public class CaravanDataService implements DataService {
     EventCodec.write(buf, snap);
     byte[] bytes = convert(buf);
 
-    execute("snapshot", key, callback, (id, cached) -> {
-      if (cached == null) {
-        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_KEY_NOT_LOADED_SNAPSHOT));
-        return;
-      }
+    execute("snapshot", key, true, callback, (id, cached) -> {
       Integer size = store.append(id, bytes, () -> {
         callback.success(0);// huh, this is interesting
       });
@@ -256,5 +270,20 @@ public class CaravanDataService implements DataService {
       }
     });
     return latch;
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    execute("close", key, false, callback, (id, cached) -> {
+      if (cached != null) {
+        cache.remove(id);
+      }
+      callback.success(null);
+    });
+  }
+
+  @Override
+  public void archive(Key key, ArchiveWriter writer) {
+    writer.failed(-1);
   }
 }

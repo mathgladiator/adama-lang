@@ -55,7 +55,17 @@ public class PrefixSplitDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
-    ds(key).compactAndSnapshot(key, seq, snapshot, history, callback);
+  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+    ds(key).snapshot(key, seq, snapshot, history, callback);
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    ds(key).close(key, callback);
+  }
+
+  @Override
+  public void archive(Key key, ArchiveWriter writer) {
+    ds(key).archive(key, writer);
   }
 }

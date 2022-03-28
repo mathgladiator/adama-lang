@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CaravanDataServiceTests {
   public static final Key KEY1 = new Key("space", "123");
+  public static final Key KEY2 = new Key("space", "1232");
   private static final RemoteDocumentUpdate UPDATE_1 =
       new RemoteDocumentUpdate(
           1, 1, NtClient.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
@@ -129,19 +130,19 @@ public class CaravanDataServiceTests {
 
       SimpleMockCallback cb_PatchFailsFNF = new SimpleMockCallback();
       setup.service.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_2 }, cb_PatchFailsFNF);
-      cb_PatchFailsFNF.assertFailure(707675);
+      cb_PatchFailsFNF.assertFailure(625676);
 
       SimpleIntCallback cb_CompactFailsFNF = new SimpleIntCallback();
-      setup.service.compactAndSnapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
-      cb_CompactFailsFNF.assertFailure(790623);
+      setup.service.snapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
+      cb_CompactFailsFNF.assertFailure(625676);
 
       SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
       setup.service.compute(KEY1, ComputeMethod.Rewind, 1, cb_ComputeFailsFNF_Rewind);
-      cb_ComputeFailsFNF_Rewind.assertFailure(790622);
+      cb_ComputeFailsFNF_Rewind.assertFailure(625676);
 
       SimpleDataCallback cb_ComputeFailsFNF_HeadPatch= new SimpleDataCallback();
       setup.service.compute(KEY1, ComputeMethod.HeadPatch, 1, cb_ComputeFailsFNF_HeadPatch);
-      cb_ComputeFailsFNF_HeadPatch.assertFailure(790622);
+      cb_ComputeFailsFNF_HeadPatch.assertFailure(625676);
 
       SimpleMockCallback cb_DeleteSuccessFNF = new SimpleMockCallback();
       setup.service.delete(KEY1, cb_DeleteSuccessFNF);
@@ -258,7 +259,7 @@ public class CaravanDataServiceTests {
 
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 4, "{\"x\":10,\"y\":10}", 100, cb_CompactWorks);
+        setup.service.snapshot(KEY1, 4, "{\"x\":10,\"y\":10}", 100, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
@@ -268,13 +269,13 @@ public class CaravanDataServiceTests {
       }
       {
         SimpleIntCallback cbCompactFailsNegHistory = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{}", -1, cbCompactFailsNegHistory);
+        setup.service.snapshot(KEY1, 1, "{}", -1, cbCompactFailsNegHistory);
         cbCompactFailsNegHistory.assertFailure(734263);
       }
 
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{\"x\":11,\"y\":11}",2, cb_CompactWorks);
+        setup.service.snapshot(KEY1, 1, "{\"x\":11,\"y\":11}",2, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
@@ -284,7 +285,7 @@ public class CaravanDataServiceTests {
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 5, "{\"x\":12,\"y\":12}", 1, cb_CompactWorks);
+        setup.service.snapshot(KEY1, 5, "{\"x\":12,\"y\":12}", 1, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
@@ -296,6 +297,7 @@ public class CaravanDataServiceTests {
       SimpleMockCallback cb_InitFailAlreadyExists = new SimpleMockCallback();
       setup.service.initialize(KEY1, UPDATE_1, cb_InitFailAlreadyExists);
       cb_InitFailAlreadyExists.assertFailure(667658);
+
       {
         SimpleMockCallback cb_DeleteWorks = new SimpleMockCallback();
         setup.service.delete(KEY1, cb_DeleteWorks);
@@ -306,6 +308,60 @@ public class CaravanDataServiceTests {
         setup.service.delete(KEY1, cb_DeleteWorks);
         cb_DeleteWorks.assertSuccess();
       }
+
+      SimpleMockCallback cb_Init2 = new SimpleMockCallback();
+      setup.service.initialize(KEY2, UPDATE_1, cb_Init2);
+      cb_Init2.assertSuccess();
+
+      {
+        SimpleMockCallback cb_Close2 = new SimpleMockCallback();
+        setup.service.close(KEY2, cb_Close2);
+        cb_Close2.assertSuccess();
+      }
+
+      SimpleMockCallback cb_PatchOne2 = new SimpleMockCallback();
+      setup.service.patch(KEY2, new RemoteDocumentUpdate[] { UPDATE_2 }, cb_PatchOne2);
+      cb_PatchOne2.assertSuccess();
+
+      {
+        SimpleMockCallback cb_Close2 = new SimpleMockCallback();
+        setup.service.close(KEY2, cb_Close2);
+        cb_Close2.assertSuccess();
+      }
+
+      SimpleMockCallback cb_PatchTwo2 = new SimpleMockCallback();
+      setup.service.patch(KEY2, new RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb_PatchTwo2);
+      cb_PatchTwo2.assertSuccess();
+      {
+        SimpleMockCallback cb_Close2 = new SimpleMockCallback();
+        setup.service.close(KEY2, cb_Close2);
+        cb_Close2.assertSuccess();
+      }
+
+      {
+        SimpleDataCallback cb_GetIsMergedResults = new SimpleDataCallback();
+        setup.service.get(KEY2, cb_GetIsMergedResults);
+        cb_GetIsMergedResults.assertSuccess();
+        Assert.assertEquals("{\"x\":4,\"y\":4}", cb_GetIsMergedResults.value);
+        Assert.assertEquals(4, cb_GetIsMergedResults.reads);
+      }
+      {
+        SimpleMockCallback cb_Close2 = new SimpleMockCallback();
+        setup.service.close(KEY2, cb_Close2);
+        cb_Close2.assertSuccess();
+      }
+
+      {
+        SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
+        setup.service.snapshot(KEY2, 4, "{\"x\":10,\"y\":10}", 1, cb_CompactWorks);
+        cb_CompactWorks.assertSuccess(0);
+        SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
+        setup.service.get(KEY2, cb_GetCompactedResults);
+        cb_GetCompactedResults.assertSuccess();
+        Assert.assertEquals("{\"x\":10,\"y\":10}", cb_GetCompactedResults.value);
+        Assert.assertEquals(1, cb_GetCompactedResults.reads);
+      }
+
     });
   }
 }

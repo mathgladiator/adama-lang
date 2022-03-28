@@ -29,7 +29,12 @@ public interface DataService {
   /** Delete the document given by the ID */
   void delete(Key key, Callback<Void> callback);
 
-  /** Compact the storage backing a key such that the given value is shown as the history */
-  void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback);
+  /** Snapshot the state of the document */
+  void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback);
 
+  /** close the storage */
+  void close(Key key, Callback<Void> callback);
+
+  /** archive the key */
+  void archive(Key key, ArchiveWriter writer);
 }

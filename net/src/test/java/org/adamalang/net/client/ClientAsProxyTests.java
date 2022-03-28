@@ -13,13 +13,10 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.contracts.MeteringStream;
-import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.mocks.SimpleDataCallback;
 import org.adamalang.net.client.mocks.SimpleIntCallback;
 import org.adamalang.net.client.mocks.SimpleMockCallback;
 import org.adamalang.net.client.proxy.ProxyDataService;
-import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.ComputeMethod;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
@@ -31,7 +28,6 @@ import org.junit.Test;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 public class ClientAsProxyTests {
   public static final Key KEY1 = new Key("space", "key1");
@@ -86,7 +82,7 @@ public class ClientAsProxyTests {
         cb_PatchFailsFNF.assertFailure(144944);
 
         SimpleIntCallback cb_CompactFailsFNF = new SimpleIntCallback();
-        proxy.compactAndSnapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
+        proxy.snapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
         cb_CompactFailsFNF.assertFailure(103060);
 
         SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
@@ -186,7 +182,7 @@ public class ClientAsProxyTests {
         cb_InitFailAlreadyExists.assertFailure(667658);
 
         SimpleIntCallback cb_Snapshot = new SimpleIntCallback();
-        proxy.compactAndSnapshot(KEY1, 3, "{}", 1, cb_Snapshot);
+        proxy.snapshot(KEY1, 3, "{}", 1, cb_Snapshot);
         cb_Snapshot.assertSuccess(3);
 
         {

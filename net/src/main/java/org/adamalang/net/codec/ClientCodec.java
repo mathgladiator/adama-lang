@@ -12,6 +12,7 @@ package org.adamalang.net.codec;
 import io.netty.buffer.ByteBuf;
 import org.adamalang.common.codec.Helper;
 import org.adamalang.common.net.ByteStream;
+import org.adamalang.net.codec.ClientMessage.ProxyClose;
 import org.adamalang.net.codec.ClientMessage.ProxySnapshot;
 import org.adamalang.net.codec.ClientMessage.ProxyDelete;
 import org.adamalang.net.codec.ClientMessage.ProxyCompute;
@@ -37,6 +38,8 @@ import org.adamalang.net.codec.ClientMessage.PingRequest;
 public class ClientCodec {
 
   public static abstract class StreamServer implements ByteStream {
+    public abstract void handle(ProxyClose payload);
+
     public abstract void handle(ProxySnapshot payload);
 
     public abstract void handle(ProxyDelete payload);
@@ -89,8 +92,11 @@ public class ClientCodec {
     @Override
     public void next(ByteBuf buf) {
       switch (buf.readIntLE()) {
-        case 9012:
-          handle(readBody_9012(buf, new ProxySnapshot()));
+        case 9015:
+          handle(readBody_9015(buf, new ProxyClose()));
+          return;
+        case 9013:
+          handle(readBody_9013(buf, new ProxySnapshot()));
           return;
         case 9011:
           handle(readBody_9011(buf, new ProxyDelete()));
@@ -154,6 +160,7 @@ public class ClientCodec {
   }
 
   public static interface HandlerServer {
+    public void handle(ProxyClose payload);
     public void handle(ProxySnapshot payload);
     public void handle(ProxyDelete payload);
     public void handle(ProxyCompute payload);
@@ -178,8 +185,11 @@ public class ClientCodec {
 
   public static void route(ByteBuf buf, HandlerServer handler) {
     switch (buf.readIntLE()) {
-      case 9012:
-        handler.handle(readBody_9012(buf, new ProxySnapshot()));
+      case 9015:
+        handler.handle(readBody_9015(buf, new ProxyClose()));
+        return;
+      case 9013:
+        handler.handle(readBody_9013(buf, new ProxySnapshot()));
         return;
       case 9011:
         handler.handle(readBody_9011(buf, new ProxyDelete()));
@@ -277,16 +287,31 @@ public class ClientCodec {
   }
 
 
-  public static ProxySnapshot read_ProxySnapshot(ByteBuf buf) {
+  public static ProxyClose read_ProxyClose(ByteBuf buf) {
     switch (buf.readIntLE()) {
-      case 9012:
-        return readBody_9012(buf, new ProxySnapshot());
+      case 9015:
+        return readBody_9015(buf, new ProxyClose());
     }
     return null;
   }
 
 
-  private static ProxySnapshot readBody_9012(ByteBuf buf, ProxySnapshot o) {
+  private static ProxyClose readBody_9015(ByteBuf buf, ProxyClose o) {
+    o.space = Helper.readString(buf);
+    o.key = Helper.readString(buf);
+    return o;
+  }
+
+  public static ProxySnapshot read_ProxySnapshot(ByteBuf buf) {
+    switch (buf.readIntLE()) {
+      case 9013:
+        return readBody_9013(buf, new ProxySnapshot());
+    }
+    return null;
+  }
+
+
+  private static ProxySnapshot readBody_9013(ByteBuf buf, ProxySnapshot o) {
     o.space = Helper.readString(buf);
     o.key = Helper.readString(buf);
     o.seq = buf.readIntLE();
@@ -611,12 +636,22 @@ public class ClientCodec {
     return o;
   }
 
+  public static void write(ByteBuf buf, ProxyClose o) {
+    if (o == null) {
+      buf.writeIntLE(0);
+      return;
+    }
+    buf.writeIntLE(9015);
+    Helper.writeString(buf, o.space);;
+    Helper.writeString(buf, o.key);;
+  }
+
   public static void write(ByteBuf buf, ProxySnapshot o) {
     if (o == null) {
       buf.writeIntLE(0);
       return;
     }
-    buf.writeIntLE(9012);
+    buf.writeIntLE(9013);
     Helper.writeString(buf, o.space);;
     Helper.writeString(buf, o.key);;
     buf.writeIntLE(o.seq);

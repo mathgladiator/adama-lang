@@ -176,7 +176,7 @@ public class DurableLivingDocument {
         JsonStreamWriter writer = new JsonStreamWriter();
         document.__dump(writer);
         int toCompactNow = size.get();
-        base.service.compactAndSnapshot(key, document.__seq.get(), writer.toString(), currentFactory.maximum_history, new Callback<>() {
+        base.service.snapshot(key, document.__seq.get(), writer.toString(), currentFactory.maximum_history, new Callback<>() {
           @Override
           public void success(Integer value) {
             base.executor.execute(new NamedRunnable("compact-complete") {

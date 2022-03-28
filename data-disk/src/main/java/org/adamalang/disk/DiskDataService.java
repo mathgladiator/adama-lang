@@ -159,7 +159,7 @@ public class DiskDataService implements DataService {
   }
 
   @Override // WRITE
-  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callbackRaw) {
+  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callbackRaw) {
     Callback<Integer> callback = this.base.metrics.disk_data_snapshot.wrap(callbackRaw);
     if (history <= 0) {
       callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY));
@@ -186,5 +186,15 @@ public class DiskDataService implements DataService {
         log.write(snap, new VoidToIntCallback(holding, callback));
       }
     });
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    callback.success(null);
+  }
+
+  @Override
+  public void archive(Key key, ArchiveWriter writer) {
+    writer.failed(-1);
   }
 }

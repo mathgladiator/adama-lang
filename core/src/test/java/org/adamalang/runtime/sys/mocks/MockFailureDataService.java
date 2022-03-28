@@ -43,7 +43,17 @@ public class MockFailureDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     callback.failure(new ErrorCodeException(912));
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    callback.failure(new ErrorCodeException(1231));
+  }
+
+  @Override
+  public void archive(Key key, ArchiveWriter writer) {
+    writer.failed(123);
   }
 }

@@ -83,7 +83,7 @@ public class SingleThreadDiskDataServiceTests {
       cb_PatchFailsFNF.assertFailure(794627);
 
       SimpleIntCallback cb_CompactFailsFNF = new SimpleIntCallback();
-      setup.service.compactAndSnapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
+      setup.service.snapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
       cb_CompactFailsFNF.assertFailure(784401);
 
       SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
@@ -167,7 +167,7 @@ public class SingleThreadDiskDataServiceTests {
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{}", 100, cb_CompactWorks);
+        setup.service.snapshot(KEY1, 1, "{}", 100, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
@@ -177,12 +177,12 @@ public class SingleThreadDiskDataServiceTests {
       }
       {
         SimpleIntCallback cbCompactFailsNegHistory = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{}", -1, cbCompactFailsNegHistory);
+        setup.service.snapshot(KEY1, 1, "{}", -1, cbCompactFailsNegHistory);
         cbCompactFailsNegHistory.assertFailure(777259);
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{}",2, cb_CompactWorks);
+        setup.service.snapshot(KEY1, 1, "{}",2, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(2);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
@@ -192,7 +192,7 @@ public class SingleThreadDiskDataServiceTests {
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.compactAndSnapshot(KEY1, 1, "{}", 1, cb_CompactWorks);
+        setup.service.snapshot(KEY1, 1, "{}", 1, cb_CompactWorks);
         cb_CompactWorks.assertSuccess(1);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);

@@ -164,7 +164,7 @@ public class InMemoryDataService implements DataService {
   }
 
   @Override
-  public void compactAndSnapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     executor.execute(() -> {
       InMemoryDocument document = datum.get(key);
       if (document != null) {
@@ -210,5 +210,18 @@ public class InMemoryDataService implements DataService {
       }
       return 0;
     }
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    executor.execute(() -> {
+      InMemoryDocument document = datum.remove(key);
+      callback.success(null);
+    });
+  }
+
+  @Override
+  public void archive(Key key, ArchiveWriter writer) {
+    writer.finish();
   }
 }
