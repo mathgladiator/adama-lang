@@ -55,8 +55,8 @@ public class LivingDocumentFactory {
       final var loader = new ByteArrayClassLoader(classBytes);
       final Class<?> clazz = Class.forName(className, true, loader);
       constructor = clazz.getConstructor(DocumentMonitor.class);
-      creationPolicyMethod = clazz.getMethod("__onCanCreate", NtClient.class);
-      inventionPolicyMethod = clazz.getMethod("__onCanInvent", NtClient.class);
+      creationPolicyMethod = clazz.getMethod("__onCanCreate", CoreRequestContext.class);
+      inventionPolicyMethod = clazz.getMethod("__onCanInvent", CoreRequestContext.class);
       canSendWhileDisconnectPolicyMethod = clazz.getMethod("__onCanSendWhileDisconnected", NtClient.class);
       HashMap<String, Object> config = (HashMap<String, Object>) (clazz.getMethod("__config").invoke(null));
       maximum_history = extractMaximumHistory(config);
@@ -68,7 +68,7 @@ public class LivingDocumentFactory {
 
   public boolean canInvent(CoreRequestContext context) throws ErrorCodeException {
     try {
-      return (Boolean) inventionPolicyMethod.invoke(null, context.who);
+      return (Boolean) inventionPolicyMethod.invoke(null, context);
     } catch (Exception ex) {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_INVENT, ex, LOGGER);
     }
@@ -76,7 +76,7 @@ public class LivingDocumentFactory {
 
   public boolean canCreate(CoreRequestContext context) throws ErrorCodeException {
     try {
-      return (Boolean) creationPolicyMethod.invoke(null, context.who);
+      return (Boolean) creationPolicyMethod.invoke(null, context);
     } catch (Exception ex) {
       throw ErrorCodeException.detectOrWrap(ErrorCodes.FACTORY_CANT_INVOKE_CAN_CREATE, ex, LOGGER);
     }

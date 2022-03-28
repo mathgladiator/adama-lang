@@ -219,10 +219,10 @@ public class ServiceDeploymentTests {
           new LivingDocumentFactory(
               "Foo",
               "import java.util.HashMap;\nimport org.adamalang.runtime.contracts.DocumentMonitor;" +
-                  "import org.adamalang.runtime.natives.*;\n" +
+                  "import org.adamalang.runtime.natives.*;import org.adamalang.runtime.sys.*;\n" +
                   "public class Foo { public Foo(DocumentMonitor dm) {} " +
-                  "public static boolean __onCanCreate(NtClient who) { return false; } " +
-                  "public static boolean __onCanInvent(NtClient who) { return false; } " +
+                  "public static boolean __onCanCreate(CoreRequestContext who) { return false; } " +
+                  "public static boolean __onCanInvent(CoreRequestContext who) { return false; } " +
                   "public static boolean __onCanSendWhileDisconnected(NtClient who) { return false; } " +
                   "public static HashMap<String, Object> __config() { return new HashMap<>(); }" +
                   "}",

@@ -495,10 +495,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanCreate(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanInvent(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");
@@ -1516,10 +1516,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanCreate(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanInvent(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");
@@ -2309,10 +2309,10 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanCreate(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanInvent(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");

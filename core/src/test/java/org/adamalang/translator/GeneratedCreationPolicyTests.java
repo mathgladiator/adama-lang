@@ -421,7 +421,7 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
-    gold.append("\n  public static boolean __onCanCreate__0(StaticState __static_state, NtClient who) {");
+    gold.append("\n  public static boolean __onCanCreate__0(StaticState __static_state, NtClient who, CoreRequestContext __context) {");
     gold.append("\n    return true;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -435,16 +435,16 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n  public boolean __onCanAssetAttached(NtClient __cvalue) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanCreate(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    boolean __result = false;");
     gold.append("\n    StaticState __static_state = new StaticState();");
-    gold.append("\n    if (__onCanCreate__0(__static_state, __client)) {");
+    gold.append("\n    if (__onCanCreate__0(__static_state, __context.who, __context)) {");
     gold.append("\n      __result = true;");
     gold.append("\n    } else {");
     gold.append("\n      return false;");
     gold.append("\n    }return __result;");
     gold.append("\n  }");
-    gold.append("\n  public static boolean __onCanInvent(NtClient __client) {");
+    gold.append("\n  public static boolean __onCanInvent(CoreRequestContext __context) {");
     gold.append("\n    return false;");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanSendWhileDisconnected(NtClient __client) {");

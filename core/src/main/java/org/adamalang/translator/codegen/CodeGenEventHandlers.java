@@ -35,11 +35,11 @@ public class CodeGenEventHandlers {
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         disconnectCount++;
       } else if (dce.which == DocumentEvent.AskCreation) {
-        sb.append("public static boolean __onCanCreate__" + askCreationCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ") ");
+        sb.append("public static boolean __onCanCreate__" + askCreationCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext __context) ");
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askCreationCount++;
       } else if (dce.which == DocumentEvent.AskInvention) {
-        sb.append("public static boolean __onCanInvent__" + askInventionCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ")").tabUp().writeNewline();
+        sb.append("public static boolean __onCanInvent__" + askInventionCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext __context)").tabUp().writeNewline();
         dce.code.writeJava(sb, dce.nextEnvironment(environment));
         askInventionCount++;
       } else if (dce.which == DocumentEvent.AskSendWhileDisconnected) {
@@ -100,12 +100,12 @@ public class CodeGenEventHandlers {
     sb.append("}").writeNewline();
 
     // inject the can create policy
-    sb.append("public static boolean __onCanCreate(NtClient __client) {").tabUp().writeNewline();
+    sb.append("public static boolean __onCanCreate(CoreRequestContext __context) {").tabUp().writeNewline();
     if (askCreationCount > 0) {
       sb.append("boolean __result = false;").writeNewline();
       sb.append("StaticState __static_state = new StaticState();").writeNewline();
       for (var k = 0; k < askCreationCount; k++) {
-        sb.append("if (__onCanCreate__" + k + "(__static_state, __client)) {").tabUp().writeNewline();
+        sb.append("if (__onCanCreate__" + k + "(__static_state, __context.who, __context)) {").tabUp().writeNewline();
         sb.append("__result = true;").tabDown().writeNewline();
         sb.append("} else {").tabUp().writeNewline();
         sb.append("return false;").tabDown().writeNewline();
@@ -119,12 +119,12 @@ public class CodeGenEventHandlers {
     sb.append("}").writeNewline();
 
     // inject the can invent a topic when the document doesn't exist
-    sb.append("public static boolean __onCanInvent(NtClient __client) {").tabUp().writeNewline();
+    sb.append("public static boolean __onCanInvent(CoreRequestContext __context) {").tabUp().writeNewline();
     if (askInventionCount > 0) {
       sb.append("boolean __result = false;").writeNewline();
       sb.append("StaticState __static_state = new StaticState();").writeNewline();
       for (var k = 0; k < askInventionCount; k++) {
-        sb.append("if (__onCanInvent__" + k + "(__static_state, __client)) {").tabUp().writeNewline();
+        sb.append("if (__onCanInvent__" + k + "(__static_state, __context.who, __context)) {").tabUp().writeNewline();
         sb.append("__result = true;").tabDown().writeNewline();
         sb.append("} else {").tabUp().writeNewline();
         sb.append("return false;").tabDown().writeNewline();
