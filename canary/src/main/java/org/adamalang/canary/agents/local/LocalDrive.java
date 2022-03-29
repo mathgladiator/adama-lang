@@ -93,6 +93,10 @@ public class LocalDrive {
         public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
 
         }
+
+        @Override
+        public void delete(Key key, Callback<Void> callback) {
+        }
       };
       CaravanDataService service = new CaravanDataService(finder, dls, executor);
       dataService = service;
