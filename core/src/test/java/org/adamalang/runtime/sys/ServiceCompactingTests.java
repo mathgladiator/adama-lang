@@ -52,7 +52,7 @@ public class ServiceCompactingTests {
       service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       for (int k = 0; k < 100; k++) {
         LatchCallback cb1 = new LatchCallback();
@@ -101,7 +101,7 @@ public class ServiceCompactingTests {
       service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       for (int k = 0; k < 100; k++) {
         LatchCallback cb1 = new LatchCallback();
@@ -162,7 +162,7 @@ public class ServiceCompactingTests {
       service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, created);
       created.await_success();
       MockStreamback streamback = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       for (int k = 0; k < 100; k++) {
         LatchCallback cb1 = new LatchCallback();

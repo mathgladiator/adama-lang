@@ -196,9 +196,9 @@ public class CoreService {
   }
 
   /** connect the given person to the document hooking up a streamback */
-  public void connect(CoreRequestContext context, Key key, String viewerState, Streamback stream) {
+  public void connect(CoreRequestContext context, Key key, String viewerState, AssetIdEncoder assetIdEncoder, Streamback stream) {
     // TODO: populate the asset id encoder
-    connect(context, key, stream, viewerState, null, true);
+    connect(context, key, stream, viewerState, assetIdEncoder, true);
   }
 
   /** internal: do the connect with retry when connect executes create */

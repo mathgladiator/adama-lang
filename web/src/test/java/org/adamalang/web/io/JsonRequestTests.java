@@ -16,7 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class JsonRequestTests {
-  public static final ConnectionContext CONTEXT = new ConnectionContext( "http://blah","1.1.1.1", "agent");
+  public static final ConnectionContext CONTEXT = new ConnectionContext( "http://blah","1.1.1.1", "agent", "assets");
 
   @Test
   public void noMethod() throws Exception {

@@ -79,8 +79,8 @@ public class ConnectionTests {
                 "me",
                 "dev",
                 "space",
-                "key1", "{}",
-                new SimpleEvents() {
+                "key1", "{}", null,
+            new SimpleEvents() {
                   @Override
                   public void connected() {
                     System.err.println("connected");
@@ -190,7 +190,7 @@ public class ConnectionTests {
                 "me",
                 "dev",
                 "space",
-                "key1", "{}",
+                "key1", "{}", null,
                 new SimpleEvents() {
                   @Override
                   public void connected() {
@@ -273,7 +273,7 @@ public class ConnectionTests {
                 "me",
                 "dev",
                 "space",
-                "key1", "{}",
+                "key1", "{}", null,
                 new MockSimpleEvents());
         connection.open();
         connection.close();

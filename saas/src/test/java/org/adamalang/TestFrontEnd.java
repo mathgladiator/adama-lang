@@ -150,7 +150,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
     this.nexus = new ExternNexus(frontendConfig, this, uploader, dataBase, dataBase, dataBase, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp);
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
-    this.context = new ConnectionContext("home", "ip", "agent");
+    this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);
     frontend.http();
     emailLatch = new ConcurrentHashMap<>();
@@ -200,7 +200,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
   public Iterator<String> execute(String requestJson) {
     System.err.println("EXECUTE:" + requestJson);
-    JsonRequest request = new JsonRequest(Json.parseJsonObject(requestJson), new ConnectionContext("ip", "origin", "agent"));
+    JsonRequest request = new JsonRequest(Json.parseJsonObject(requestJson), new ConnectionContext("ip", "origin", "agent", null));
     SyncIterator iterator = new SyncIterator();
     connection.execute(request, iterator);
     return iterator;

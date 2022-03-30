@@ -19,11 +19,13 @@ public class ConnectionContext {
   public final String origin;
   public final String remoteIp;
   public final String userAgent;
+  public final String assetKey;
 
-  public ConnectionContext(String origin, String remoteIp, String userAgent) {
+  public ConnectionContext(String origin, String remoteIp, String userAgent, String assetKey) {
     this.origin = origin != null ? origin : "";
     this.remoteIp = remoteIpFix(remoteIp);
     this.userAgent = userAgent != null ? userAgent : "";
+    this.assetKey = assetKey;
   }
 
   /** we don't care about the port and null values */

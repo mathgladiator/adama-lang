@@ -100,7 +100,7 @@ public class ClientTests {
         CountDownLatch latchGotConnected = new CountDownLatch(1);
         CountDownLatch latchGotData = new CountDownLatch(1);
         CountDownLatch latchGotDisconnect = new CountDownLatch(1);
-        Connection connection = client.connect("127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", new SimpleEvents() {
+        Connection connection = client.connect("127.0.0.1", "origin", "me", "dev", "space", "key1", "{}", null, new SimpleEvents() {
           @Override
           public void connected() {
             latchGotConnected.countDown();
@@ -383,7 +383,7 @@ public class ClientTests {
           failures.countDown();
         }
       });
-      client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
+      client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", null, new SimpleEvents() {
         @Override
         public void connected() {
 
@@ -469,7 +469,7 @@ public class ClientTests {
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
       waitForRouting(bed, client);
       CountDownLatch closures = new CountDownLatch(1);
-      client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", new SimpleEvents() {
+      client.connect("127.0.0.1", "origin", "agent", "auth", "space", "key", "{}", null, new SimpleEvents() {
         @Override
         public void connected() {
           System.err.println("connected!");

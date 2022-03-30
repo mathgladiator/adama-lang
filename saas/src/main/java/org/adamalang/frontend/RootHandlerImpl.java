@@ -33,6 +33,7 @@ import org.adamalang.mysql.frontend.data.SpaceListingItem;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.transforms.results.AuthenticatedUser;
 import org.slf4j.Logger;
@@ -58,7 +59,16 @@ public class RootHandlerImpl implements RootHandler {
   public RootHandlerImpl(ExternNexus nexus) throws Exception {
     this.nexus = nexus;
     this.rng = new Random();
+  }
 
+  @Override
+  public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder) {
+    String assetKey = session.getAssetKey();
+    if (assetKey == null) {
+      assetKey = SecureAssetUtil.makeAssetKeyHeader();
+      session.setAssetKey(assetKey);
+    }
+    responder.complete(assetKey);
   }
 
   @Override
@@ -409,7 +419,7 @@ public class RootHandlerImpl implements RootHandler {
 
       @Override
       public void bind() {
-        connection = nexus.client.connect("ip", "origin", request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", new SimpleEvents() {
+        connection = nexus.client.connect("ip", "origin", request.who.who.agent, request.who.who.authority, request.space, request.key, request.viewerState != null ? request.viewerState.toString() : "{}", session.getAssetKey(), new SimpleEvents() {
           @Override
           public void connected() {
           }
@@ -474,7 +484,7 @@ public class RootHandlerImpl implements RootHandler {
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder startResponder) {
     AtomicReference<Connection> connection = new AtomicReference<>(null);
     AtomicBoolean clean = new AtomicBoolean(false);
-    connection.set(nexus.client.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", new SimpleEvents() {
+    connection.set(nexus.client.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", session.getAssetKey(), new SimpleEvents() {
       @Override
       public void connected() {
         connection.get().canAttach(new Callback<Boolean>() {

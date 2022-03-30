@@ -49,7 +49,7 @@ public class LocalNetAgent implements SimpleEvents {
   }
 
   public void kickOff() {
-    connection = client.connect("127.0.0.1", "origin", who.agent, who.authority, key.space, key.key, "{}", this);
+    connection = client.connect("127.0.0.1", "origin", who.agent, who.authority, key.space, key.key, "{}", null, this);
   }
 
   @Override

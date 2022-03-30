@@ -272,6 +272,15 @@ export class Tree {
 }
 
 /**[BEGIN-EXPORTS]**/
+export interface AssetKeyPayload {
+  assetKey: string;
+}
+
+export interface AssetKeyResponder {
+  success(data: AssetKeyPayload): void;
+  failure(reason: number): void;
+}
+
 export interface AuthorityListingPayload {
   authority: string;
 }
@@ -949,6 +958,16 @@ export class Connection {
           request: { method: "connection/end", id: subId, "connection":parId}
         });
       }
+    });
+  }
+  ConfigureMakeOrGetAssetKey(responder: AssetKeyResponder) {
+    var self = this;
+    self.nextId++;
+    var id = self.nextId;
+    return self.__execute_rr({
+      id: id,
+      responder: responder,
+      request: {"method":"configure/make-or-get-asset-key", "id":id}
     });
   }
   AttachmentStart(identity: string, space: string, key: string, filename: string, contentType: string, responder: ProgressResponder) {

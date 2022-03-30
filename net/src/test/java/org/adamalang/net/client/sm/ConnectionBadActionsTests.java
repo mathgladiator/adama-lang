@@ -41,7 +41,7 @@ public class ConnectionBadActionsTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 5; k++) {
           LatchedSeqCallback callback = new LatchedSeqCallback();
@@ -89,7 +89,7 @@ public class ConnectionBadActionsTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, events);
         ArrayList<LatchedSeqCallback> callbacks = new ArrayList<>();
         for (int k = 0; k < 5; k++) {
           LatchedSeqCallback callback = new LatchedSeqCallback();
@@ -127,7 +127,7 @@ public class ConnectionBadActionsTests {
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable gotConnected = events.latchAt(1);
         Runnable gotData = events.latchAt(2);
-        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", events);
+        Connection connection = new Connection(base, "127.0.0.1", "origin", "who", "dev", "space", "key", "{}", null, events);
         LatchedSeqCallback callback = new LatchedSeqCallback();
         connection.send("foo", "marker", "{}", callback);
         finder.sync(Helper.setOf("127.0.0.1:" + servers[0].port));

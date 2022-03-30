@@ -37,6 +37,7 @@ public class Connection {
   private final String agent;
   private final String authority;
   private final Key key;
+  private final String assetKey;
   private final SimpleEvents events;
   // the buffer of actions to execute once we have a remote
   private final ItemQueue<Remote> queue;
@@ -59,7 +60,7 @@ public class Connection {
   // how long to wait on a failure to connect to a remote peer
   private int backoffConnectPeer;
 
-  public Connection(ConnectionBase base, String ip, String origin, String agent, String authority, String space, String key, String viewerState, SimpleEvents events) {
+  public Connection(ConnectionBase base, String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
     this.base = base;
     this.ip = ip;
     this.origin = origin;
@@ -67,6 +68,7 @@ public class Connection {
     this.authority = authority;
     this.key = new Key(space, key);
     this.viewerState = viewerState;
+    this.assetKey = assetKey;
     this.events = events;
     this.routingAlive = false;
     this.unsubscribeFromRouting = null;
@@ -367,7 +369,7 @@ public class Connection {
 
   private void fireConnectRemote() {
     StreamMonitor.StreamMonitorInstance mInstance = base.metrics.client_open_document.start();
-    foundClient.connect(ip, origin, agent, authority, key.space, key.key, viewerState, new Events() {
+    foundClient.connect(ip, origin, agent, authority, key.space, key.key, viewerState, assetKey, new Events() {
       @Override
       public void connected(Remote remote) {
         mInstance.progress();

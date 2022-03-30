@@ -11,7 +11,11 @@ package org.adamalang.web.service;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.CookieDecoder;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
@@ -28,9 +32,10 @@ import org.adamalang.web.io.JsonResponder;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Pattern;
 
 public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
-  private static final ConnectionContext DEFAULT_CONTEXT = new ConnectionContext("unknown", "unknown", "unknown");
+  private static final ConnectionContext DEFAULT_CONTEXT = new ConnectionContext("unknown", "unknown", "unknown", "assetKey");
   private static final ExceptionLogger LOGGER = ExceptionLogger.FOR(WebSocketHandler.class);
   private final WebConfig webConfig;
   private final WebMetrics metrics;
@@ -105,14 +110,25 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\"}"));
 
       HttpHeaders headers = ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
-      String origin = headers.get("Origin");
-      String ip = ctx.channel().remoteAddress().toString();
-      String xForwardedFor = headers.get("X-Forwarded-For");
+      String origin = headers.get("origin");
+      String ip = ctx.channel().remoteAddress().toString().replaceAll(Pattern.quote("/"), ""); // Describe a reason this introduces a slash
+      String xForwardedFor = headers.get("x-forwarded-for");
       if (xForwardedFor != null && !("".equals(xForwardedFor))) {
         ip = xForwardedFor;
       }
-      String userAgent = headers.get("User-Agent");
-      context = new ConnectionContext(origin, ip, userAgent);
+      String userAgent = headers.get(HttpHeaderNames.USER_AGENT);
+      String assetKey = headers.get(HttpHeaderNames.COOKIE);
+      if (assetKey != null) {
+        String assetKeyCopy = assetKey;
+        assetKey = null;
+        for (Cookie cookie : ServerCookieDecoder.STRICT.decode(assetKeyCopy)) {
+          if (cookie.name().equalsIgnoreCase("AAK")) {
+            assetKey = cookie.value();
+          }
+        }
+      }
+
+      context = new ConnectionContext(origin, ip, userAgent, assetKey);
 
       // establish the service
       connection = base.establish(context);

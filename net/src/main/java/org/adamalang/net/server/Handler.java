@@ -26,6 +26,7 @@ import org.adamalang.runtime.data.ComputeMethod;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.LocalDocumentChange;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtAsset;
 import org.adamalang.runtime.natives.NtClient;
@@ -334,7 +335,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   public void handle(ClientMessage.StreamConnect payload) {
     monitorStreamback = nexus.metrics.server_stream.start();
     CoreRequestContext context = new CoreRequestContext(new NtClient(payload.agent, payload.authority), payload.origin, payload.ip, payload.key);
-    nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, this);
+    nexus.service.connect(context, new Key(payload.space, payload.key), payload.viewerState, payload.assetKey != null ? new AssetIdEncoder(payload.assetKey) : null, this);
   }
 
   @Override

@@ -79,6 +79,11 @@ This is useful to validate an identity without executing anything
 ## Method: connection/end
 
 
+## Method: configure/make-or-get-asset-key
+Here, we ask if the connection if it has an asset key already.
+If not, then it will generate one and send it along.
+Otherwise, it will return the key bound to the connection.
+
 ## Method: attachment/start
 
 

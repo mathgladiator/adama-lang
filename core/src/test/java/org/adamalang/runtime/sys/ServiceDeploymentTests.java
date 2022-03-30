@@ -49,7 +49,7 @@ public class ServiceDeploymentTests {
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch = streamback.latchAt(5);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       {
         LatchCallback callback = new LatchCallback();
@@ -105,7 +105,7 @@ public class ServiceDeploymentTests {
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       {
         LatchCallback callback = new LatchCallback();
@@ -158,7 +158,7 @@ public class ServiceDeploymentTests {
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       {
         LatchCallback callback = new LatchCallback();
@@ -208,7 +208,7 @@ public class ServiceDeploymentTests {
       created.await_success();
       MockStreamback streamback = new MockStreamback();
       Runnable latch = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       {
         LatchCallback callback = new LatchCallback();

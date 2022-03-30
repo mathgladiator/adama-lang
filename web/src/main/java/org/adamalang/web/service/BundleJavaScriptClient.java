@@ -9,6 +9,8 @@
  */
 package org.adamalang.web.service;
 
+import org.adamalang.common.DefaultCopyright;
+
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,6 +19,7 @@ import java.util.Base64;
 public class BundleJavaScriptClient {
   public static void main(String[] args) throws Exception {
     StringBuilder sb = new StringBuilder();
+    sb.append(DefaultCopyright.COPYRIGHT_FILE_PREFIX);
     sb.append("package org.adamalang.web.service;\n\n");
     sb.append("import java.nio.charset.StandardCharsets;\n\n");
     sb.append("import java.util.Base64;\n\n");

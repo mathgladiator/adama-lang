@@ -19,11 +19,21 @@ public class Session {
   public final long created;
   private long lastActivity;
   public HashMap<String, AuthenticatedUser> identityCache;
+  private String assetKey;
 
   public Session(ConnectionContext context) {
     this.context = context;
     this.created = System.currentTimeMillis();
     this.identityCache = new HashMap<>();
+    this.assetKey = context.assetKey;
+  }
+
+  public synchronized String getAssetKey() {
+    return assetKey;
+  }
+
+  public synchronized void setAssetKey(String assetKey) {
+    this.assetKey = assetKey;
   }
 
   public synchronized void activity() {

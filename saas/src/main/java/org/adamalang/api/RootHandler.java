@@ -54,6 +54,8 @@ public interface RootHandler {
 
   public DocumentStreamHandler handle(Session session, ConnectionCreateRequest request, DataResponder responder);
 
+  public void handle(Session session, ConfigureMakeOrGetAssetKeyRequest request, AssetKeyResponder responder);
+
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder responder);
 
   public void disconnect();

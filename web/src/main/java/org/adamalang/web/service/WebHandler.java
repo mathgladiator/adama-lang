@@ -14,9 +14,14 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.CookieDecoder;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
+import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import org.adamalang.web.contracts.HttpHandler;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebConfig webConfig;
@@ -51,6 +56,8 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
     boolean isAdamaClient = "/libadama.js".equals(req.uri());
+    boolean isSetAssetKey = req.uri().startsWith("/set-asset-key");
+    boolean isAsset = req.uri().startsWith("/assets/");
     // send the default response for bad or health checks
     final HttpResponseStatus status;
     final byte[] content;
@@ -65,6 +72,39 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       status = HttpResponseStatus.OK;
       content = JavaScriptClient.ADAMA_JS_CLIENT_BYTES;
       contentType = "text/javascript; charset=UTF-8";
+    } else if (isSetAssetKey) {
+      metrics.webhandler_set_asset_key.run();
+      status = HttpResponseStatus.OK;
+      content = "OK".getBytes(StandardCharsets.UTF_8);
+      contentType = "text/text; charset=UTF-8";
+    } else if (isAsset) {
+      String assetKey = req.headers().get(HttpHeaderNames.COOKIE);
+      if (assetKey != null) {
+        String assetKeyCopy = assetKey;
+        assetKey = null;
+        for (Cookie cookie : ServerCookieDecoder.STRICT.decode(assetKeyCopy)) {
+          if ("AAK".equalsIgnoreCase(cookie.name())) {
+            assetKey = cookie.value();
+          }
+        }
+      }
+      if (assetKey != null) {
+        AssetRequest assetRequest = AssetRequest.parse(req.uri().substring("/assets/".length()), assetKey);
+        // TODO: parse the uri as (/assets/{space}/{...key...}/{id}
+        // TODO: decode id from asset key
+        // TODO: check to see if file is in cache, if so, then bump delete timer
+        // TODO: download file from S3 to cache
+        // DECIDE: download to file, then stream from file
+        //     OR: stream to a chunked encoding
+
+
+        return;
+      } else {
+        metrics.webhandler_assets_no_cookie.run();
+        status = HttpResponseStatus.BAD_REQUEST;
+        content = "<html><head><title>bad request</title></head><body>Asset cookie was not set.</body></html>".getBytes(StandardCharsets.UTF_8);
+        contentType = "text/html; charset=UTF-8";
+      }
     } else if (httpResult != null) {
       status = HttpResponseStatus.OK;
       content = httpResult.body;
@@ -77,6 +117,13 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), status, Unpooled.wrappedBuffer(content));
     HttpUtil.setContentLength(res, content.length);
     res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
+    if (isSetAssetKey) {
+      QueryStringDecoder qsd = new QueryStringDecoder(req.uri());
+      List<String> values = qsd.parameters().get("aak");
+      if (values.size() > 0) {
+        res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode("AAK", values.get(0)));
+      }
+    }
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
 

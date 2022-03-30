@@ -47,7 +47,7 @@ public class ServiceTemporalTests {
       Runnable latch1 = streamback.latchAt(2);
       Runnable latch2 = streamback.latchAt(3);
       Runnable latch3 = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
       latch1.run();
       Assert.assertEquals("STATUS:Connected", streamback.get(0));
@@ -91,14 +91,14 @@ public class ServiceTemporalTests {
       Thread.sleep(100);
       {
         MockStreamback streamback = new MockStreamback();
-        service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+        service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
         streamback.await_began();
         streamback.get().disconnect();
       }
       Thread.sleep(100);
       {
         MockStreamback streamback = new MockStreamback();
-        service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+        service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
         streamback.await_began();
         streamback.get().disconnect();
       }

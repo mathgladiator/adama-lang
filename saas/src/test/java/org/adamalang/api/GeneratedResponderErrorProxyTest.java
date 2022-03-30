@@ -37,19 +37,20 @@ public class GeneratedResponderErrorProxyTest {
         errorCount.addAndGet(ex.code);
       }
     };
-    new AuthorityListingResponder(responder).error(new ErrorCodeException(1));
-    new BillingUsageResponder(responder).error(new ErrorCodeException(2));
-    new ClaimResultResponder(responder).error(new ErrorCodeException(3));
-    new DataResponder(responder).error(new ErrorCodeException(4));
-    new InitiationResponder(responder).error(new ErrorCodeException(5));
-    new KeyListingResponder(responder).error(new ErrorCodeException(6));
-    new KeystoreResponder(responder).error(new ErrorCodeException(7));
-    new PlanResponder(responder).error(new ErrorCodeException(8));
-    new ProgressResponder(responder).error(new ErrorCodeException(9));
-    new ReflectionResponder(responder).error(new ErrorCodeException(10));
-    new SeqResponder(responder).error(new ErrorCodeException(11));
-    new SimpleResponder(responder).error(new ErrorCodeException(12));
-    new SpaceListingResponder(responder).error(new ErrorCodeException(13));
-    Assert.assertEquals(91, errorCount.get());
+    new AssetKeyResponder(responder).error(new ErrorCodeException(1));
+    new AuthorityListingResponder(responder).error(new ErrorCodeException(2));
+    new BillingUsageResponder(responder).error(new ErrorCodeException(3));
+    new ClaimResultResponder(responder).error(new ErrorCodeException(4));
+    new DataResponder(responder).error(new ErrorCodeException(5));
+    new InitiationResponder(responder).error(new ErrorCodeException(6));
+    new KeyListingResponder(responder).error(new ErrorCodeException(7));
+    new KeystoreResponder(responder).error(new ErrorCodeException(8));
+    new PlanResponder(responder).error(new ErrorCodeException(9));
+    new ProgressResponder(responder).error(new ErrorCodeException(10));
+    new ReflectionResponder(responder).error(new ErrorCodeException(11));
+    new SeqResponder(responder).error(new ErrorCodeException(12));
+    new SimpleResponder(responder).error(new ErrorCodeException(13));
+    new SpaceListingResponder(responder).error(new ErrorCodeException(14));
+    Assert.assertEquals(105, errorCount.get());
   }
 }

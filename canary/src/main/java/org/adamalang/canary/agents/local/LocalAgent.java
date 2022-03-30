@@ -49,7 +49,7 @@ public class LocalAgent implements Streamback {
   }
 
   public void kickOff() {
-    service.connect(new CoreRequestContext(who, "origin", "127.0.0.1", key.key), key, "{}", this);
+    service.connect(new CoreRequestContext(who, "origin", "127.0.0.1", key.key), key, "{}", null, this);
   }
 
   @Override

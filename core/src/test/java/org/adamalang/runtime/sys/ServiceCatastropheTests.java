@@ -49,7 +49,7 @@ public class ServiceCatastropheTests {
       dataService.unpause();
 
       MockStreamback streamback1 = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback1);
       streamback1.await_failure(999);
 
       dataService.pause();
@@ -57,7 +57,7 @@ public class ServiceCatastropheTests {
       dataService.unpause();
 
       MockStreamback streamback2 = new MockStreamback();
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback2);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback2);
       streamback2.await_began();
       latch.run();
       realDataService.assertLogAt(0, "INIT:space/key:1->{\"__constructed\":true,\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}");
@@ -88,7 +88,7 @@ public class ServiceCatastropheTests {
       created.await_success();
       MockStreamback streamback1 = new MockStreamback();
       Runnable latch1 = streamback1.latchAt(3);
-      service.connect(ContextSupport.WRAP(ALICE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(ALICE), KEY, "{}", null, streamback1);
       streamback1.await_began();
       dataService.pause();
       dataService.set(failureDataService);
@@ -106,7 +106,7 @@ public class ServiceCatastropheTests {
 
       MockStreamback streamback2 = new MockStreamback();
       Runnable latch2 = streamback2.latchAt(3);
-      service.connect(ContextSupport.WRAP(BOB), KEY, "{}", streamback2);
+      service.connect(ContextSupport.WRAP(BOB), KEY, "{}", null, streamback2);
       streamback2.await_began();
       latch2.run();
       Assert.assertEquals("STATUS:Connected", streamback2.get(0));
@@ -146,7 +146,7 @@ public class ServiceCatastropheTests {
       created.await_success();
       MockStreamback streamback1 = new MockStreamback();
       Runnable latch1 = streamback1.latchAt(3);
-      service.connect(ContextSupport.WRAP(ALICE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(ALICE), KEY, "{}", null, streamback1);
       streamback1.await_began();
       dataService.pause();
       dataService.set(failureDataService);
@@ -194,11 +194,11 @@ public class ServiceCatastropheTests {
       created.await_success();
       MockStreamback streamback1 = new MockStreamback();
       Runnable latch1 = streamback1.latchAt(3);
-      service.connect(ContextSupport.WRAP(ALICE), KEY, "{}", streamback1);
+      service.connect(ContextSupport.WRAP(ALICE), KEY, "{}", null, streamback1);
       streamback1.await_began();
       MockStreamback streamback2 = new MockStreamback();
       Runnable latch2 = streamback2.latchAt(3);
-      service.connect(ContextSupport.WRAP(BOB), KEY, "{}", streamback2);
+      service.connect(ContextSupport.WRAP(BOB), KEY, "{}", null, streamback2);
       streamback2.await_began();
       dataService.pause();
       dataService.set(failureDataService);
@@ -212,7 +212,7 @@ public class ServiceCatastropheTests {
       dataService.set(realDataService);
       dataService.unpause();
       MockStreamback streamback3 = new MockStreamback();
-      service.connect(ContextSupport.WRAP(BOB), KEY, "{}", streamback3);
+      service.connect(ContextSupport.WRAP(BOB), KEY, "{}", null, streamback3);
       streamback3.await_began();
       streamback3.get().disconnect();
       latch.run();

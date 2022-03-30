@@ -41,7 +41,7 @@ public class ServiceBlogTests {
 
       MockStreamback streamback = new MockStreamback();
       Runnable got = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
 
       {
@@ -81,7 +81,7 @@ public class ServiceBlogTests {
 
       MockStreamback streamback = new MockStreamback();
       Runnable got = streamback.latchAt(4);
-      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", streamback);
+      service.connect(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", null, streamback);
       streamback.await_began();
 
       {

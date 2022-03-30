@@ -91,6 +91,8 @@ public class ClientMessage {
     public String origin;
     @FieldOrder(7)
     public String ip;
+    @FieldOrder(8)
+    public String assetKey;
   }
 
   @TypeId(13345)

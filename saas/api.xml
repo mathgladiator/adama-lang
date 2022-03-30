@@ -96,6 +96,11 @@
         </documentation>
     </parameter-definition>
 
+    <parameter-definition name="asset-key" type="string" missing-error="475129">
+        <documentation>
+            'asset-key' is for securely accessing assets where URIs for assets are encrypted.
+        </documentation>
+    </parameter-definition>
 
     <parameter-definition name="email" type="string" missing-error="473103" logged="true">
         <documentation>
@@ -198,6 +203,12 @@
     <field-definition name="success" type="boolean">
         <documentation>
             'success' indicates if the operation or method was successful
+        </documentation>
+    </field-definition>
+
+    <field-definition name="asset-key" type="string">
+        <documentation>
+            'asset-key' is a key used to connect the dots from the connection to assets.
         </documentation>
     </field-definition>
 
@@ -333,6 +344,10 @@
             The hour of billing
         </documentation>
     </field-definition>
+
+    <responder name="asset-key">
+        <field name="asset-key"/>
+    </responder>
 
     <responder name="key-listing" stream="true">
         <field name="key"/>
@@ -477,7 +492,6 @@
         </documentation>
     </method>
 
-
     <method name="space/create" responder="simple">
         <parameter name="identity"/>
         <parameter name="space"/>
@@ -587,6 +601,14 @@
             error-find-by="474128" destroy="true">
         <parameter name="connection"/>
         <documentation>
+        </documentation>
+    </method>
+
+    <method name="configure/make-or-get-asset-key" responder="asset-key">
+        <documentation>
+            Here, we ask if the connection if it has an asset key already.
+            If not, then it will generate one and send it along.
+            Otherwise, it will return the key bound to the connection.
         </documentation>
     </method>
 
@@ -1080,7 +1102,6 @@
 442363
 410619
 407544
-475129
 -->
 
 </api>

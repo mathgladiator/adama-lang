@@ -269,6 +269,10 @@ public class GeneratedMissingParameterTest {
       Iterator<String> c51 = fe.execute(node.toString());
       Assert.assertEquals("ERROR:405505", c51.next());
       node.put("connection", 100L);
+      //ConfigureMakeOrGetAssetKey
+      node = Json.newJsonObject();
+      node.put("id", 51);
+      node.put("method", "configure/make-or-get-asset-key");
       //AttachmentStart
       node = Json.newJsonObject();
       node.put("id", 51);

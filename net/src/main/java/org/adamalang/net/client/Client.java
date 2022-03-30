@@ -197,9 +197,9 @@ public class Client {
     });
   }
 
-  public Connection connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, SimpleEvents events) {
+  public Connection connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
     ConnectionBase base = new ConnectionBase(config, metrics, engine, finder, executors[rng.nextInt(executors.length)]);
-    Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, events);
+    Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, assetKey, events);
     connection.open();
     return connection;
   }
