@@ -30,7 +30,7 @@ public class BillingUsageResponder {
     _obj.put("connections", connections);
     _obj.put("documents", documents);
     _obj.put("messages", messages);
-    _obj.put("storage-bytes", storageBytes);
+    _obj.put("storageBytes", storageBytes);
     responder.stream(_obj.toString());
   }
 

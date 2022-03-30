@@ -1,6 +1,6 @@
 import WebSocket from 'isomorphic-ws';
 
-export const Production = "wss://aws-us-east-2.adama-platform.com/s";
+export const Production = "aws-us-east-2.adama-platform.com";
 
 export class Tree {
   tree: object;
@@ -496,9 +496,14 @@ export class Connection {
   sessionId : string;
   sendId : number;
 
-  constructor(url: string) {
+  assets: boolean;
+  host: string;
+
+  constructor(host: string) {
     this.backoff = 1;
-    this.url = url;
+    this.host = host;
+    this.url = "wss://" + host + "/";
+    this.assets = true;
     this.connected = false;
     this.dead = false;
     this.maximum_backoff = 2500;
@@ -596,8 +601,10 @@ export class Connection {
         // tell the client that we are good!
         self.backoff = 1;
         self.connected = true;
+        self.assets = result.assets;
         self.sessionId = result.session_id;
         self.onstatuschange(true);
+        // re-up the cookie no matter what?
         self._reconnect();
         return;
       }

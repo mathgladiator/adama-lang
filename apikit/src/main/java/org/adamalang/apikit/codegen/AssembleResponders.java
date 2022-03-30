@@ -50,9 +50,9 @@ public class AssembleResponders {
         for (FieldDefinition fd : responder.fields) {
           String ext = "";
           if (fd.type == Type.JsonObject) {
-            java.append(ext + "    _obj.set(\"").append(fd.name).append("\", ").append(fd.camelName).append(");\n");
+            java.append(ext + "    _obj.set(\"").append(fd.camelName).append("\", ").append(fd.camelName).append(");\n");
           } else {
-            java.append(ext + "    _obj.put(\"").append(fd.name).append("\", ").append(fd.camelName).append(");\n");
+            java.append(ext + "    _obj.put(\"").append(fd.camelName).append("\", ").append(fd.camelName).append(");\n");
           }
         }
         if (terminal) {

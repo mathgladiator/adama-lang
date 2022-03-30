@@ -56,7 +56,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
     boolean isAdamaClient = "/libadama.js".equals(req.uri());
-    boolean isSetAssetKey = req.uri().startsWith("/set-asset-key");
+    boolean isSetAssetKey = req.uri().startsWith("/pak");
     boolean isAsset = req.uri().startsWith("/assets/");
     // send the default response for bad or health checks
     final HttpResponseStatus status;
@@ -121,7 +121,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
     if (isSetAssetKey) {
       QueryStringDecoder qsd = new QueryStringDecoder(req.uri());
-      List<String> values = qsd.parameters().get("aak");
+      List<String> values = qsd.parameters().get("sak");
       if (values.size() > 0) {
         res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode("AAK", values.get(0)));
       }

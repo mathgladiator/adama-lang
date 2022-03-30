@@ -102,7 +102,7 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
-            .get("/set-asset-key?aak=123")
+            .get("/pak?sak=123")
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("OK");

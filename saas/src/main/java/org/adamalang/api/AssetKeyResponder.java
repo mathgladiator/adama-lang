@@ -24,7 +24,7 @@ public class AssetKeyResponder {
 
   public void complete(String assetKey) {
     ObjectNode _obj = new JsonMapper().createObjectNode();
-    _obj.put("asset-key", assetKey);
+    _obj.put("assetKey", assetKey);
     responder.finish(_obj.toString());
   }
 

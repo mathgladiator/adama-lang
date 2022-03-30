@@ -28,7 +28,7 @@ public class SpaceListingResponder {
     _obj.put("role", role);
     _obj.put("created", created);
     _obj.put("enabled", enabled);
-    _obj.put("storage-bytes", storageBytes);
+    _obj.put("storageBytes", storageBytes);
     responder.stream(_obj.toString());
   }
 
