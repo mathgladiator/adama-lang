@@ -82,7 +82,7 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
           .server("localhost", webConfig.port)
-          .post("/p", "BODY")
+          .post("/body", "BODY")
           .execute(callback);
         callback.awaitFirst();
         callback.assertData("body:BODY");
@@ -102,7 +102,8 @@ public class WebHandlerTests {
         TestClientCallback callback = new TestClientCallback();
         TestClientRequestBuilder.start(group)
             .server("localhost", webConfig.port)
-            .get("/pak?sak=123")
+            .header("Origin", "FOO")
+            .get("/p123")
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("OK");
@@ -128,6 +129,7 @@ public class WebHandlerTests {
             .execute(callback);
         callback.awaitFailure();
       }
+
     } finally {
       runnable.shutdown();
       thread.join();

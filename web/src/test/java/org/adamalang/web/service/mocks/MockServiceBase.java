@@ -89,7 +89,7 @@ public class MockServiceBase implements ServiceBase {
 
       @Override
       public HttpResult handlePost(String uri, String body) {
-        if ("/p".equals(uri)){
+        if ("/body".equals(uri)){
           return new HttpHandler.HttpResult("text/html; charset=UTF-8", ("body:" + body).getBytes(StandardCharsets.UTF_8));
         }
         if ("/crash".equals(uri)) {

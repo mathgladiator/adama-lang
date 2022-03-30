@@ -502,7 +502,7 @@ export class Connection {
   constructor(host: string) {
     this.backoff = 1;
     this.host = host;
-    this.url = "wss://" + host + "/";
+    this.url = "wss://" + host + "/s";
     this.assets = true;
     this.connected = false;
     this.dead = false;
@@ -604,7 +604,20 @@ export class Connection {
         self.assets = result.assets;
         self.sessionId = result.session_id;
         self.onstatuschange(true);
-        // re-up the cookie no matter what?
+        self.ConfigureMakeOrGetAssetKey({
+          success: function(payload) {
+            try {
+              var xhttp = new XMLHttpRequest();
+              xhttp.open("GET", "https://" + self.host + "/p" + payload.assetKey, true);
+              xhttp.withCredentials = true;
+              xhttp.send();
+            } catch (ex) {
+              console.log(ex);
+            }
+          },
+          failure: function() {
+          }
+        })
         self._reconnect();
         return;
       }

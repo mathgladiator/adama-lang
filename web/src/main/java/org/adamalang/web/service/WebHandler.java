@@ -14,9 +14,10 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.codec.http.cookie.*;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.CookieDecoder;
-import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
+import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import org.adamalang.web.contracts.HttpHandler;
 
@@ -56,7 +57,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     }
     boolean isHealthCheck = webConfig.healthCheckPath.equals(req.uri());
     boolean isAdamaClient = "/libadama.js".equals(req.uri());
-    boolean isSetAssetKey = req.uri().startsWith("/pak");
+    boolean isSetAssetKey = req.uri().startsWith("/p");
     boolean isAsset = req.uri().startsWith("/assets/");
     // send the default response for bad or health checks
     final HttpResponseStatus status;
@@ -120,11 +121,18 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     HttpUtil.setContentLength(res, content.length);
     res.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType);
     if (isSetAssetKey) {
-      QueryStringDecoder qsd = new QueryStringDecoder(req.uri());
-      List<String> values = qsd.parameters().get("sak");
-      if (values.size() > 0) {
-        res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode("AAK", values.get(0)));
+      String value = req.uri().substring(2);
+      String origin = req.headers().get(HttpHeaderNames.ORIGIN);
+      if (origin != null) {
+        res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
+        res.headers().set(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
       }
+      DefaultCookie cookie = new DefaultCookie("SAK", value);
+      cookie.setSameSite(CookieHeaderNames.SameSite.None);
+      cookie.setMaxAge(60 * 60 * 24 * 7);
+      cookie.setHttpOnly(true);
+      cookie.setSecure(true);
+      res.headers().set(HttpHeaderNames.SET_COOKIE, ServerCookieEncoder.STRICT.encode(cookie));
     }
     sendWithKeepAlive(webConfig, ctx, req, res);
   }
