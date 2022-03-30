@@ -25,21 +25,12 @@ public class ConfigureMakeOrGetAssetKeyRequest {
   }
 
   public static void resolve(ConnectionNexus nexus, JsonRequest request, Callback<ConfigureMakeOrGetAssetKeyRequest> callback) {
-    try {
-      nexus.executor.execute(new NamedRunnable("configuremakeorgetassetkey-success") {
-        @Override
+    nexus.executor.execute(new NamedRunnable("configuremakeorgetassetkey-error") {
+      @Override
         public void execute() throws Exception {
-           callback.success(new ConfigureMakeOrGetAssetKeyRequest());
+          callback.success(new ConfigureMakeOrGetAssetKeyRequest());
         }
       });
-    } catch (ErrorCodeException ece) {
-      nexus.executor.execute(new NamedRunnable("configuremakeorgetassetkey-error") {
-        @Override
-        public void execute() throws Exception {
-          callback.failure(ece);
-        }
-      });
-    }
   }
 
   public void logInto(ObjectNode _node) {
