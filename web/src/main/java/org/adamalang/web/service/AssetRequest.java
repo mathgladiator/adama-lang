@@ -9,6 +9,9 @@
  */
 package org.adamalang.web.service;
 
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 
 public class AssetRequest {
@@ -30,5 +33,16 @@ public class AssetRequest {
     String encId = uri.substring(lastSlash + 4);
     String id = SecureAssetUtil.decryptFromBase64(SecureAssetUtil.secretKeyOf(assetKey), encId);
     return new AssetRequest(space, key, id);
+  }
+
+  public static String extractAssetKey(String cookieHeader) {
+    if (cookieHeader != null) {
+      for (Cookie cookie : ServerCookieDecoder.STRICT.decode(cookieHeader)) {
+        if ("sak".equalsIgnoreCase(cookie.name())) {
+          return cookie.value();
+        }
+      }
+    }
+    return null;
   }
 }

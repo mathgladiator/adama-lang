@@ -28,6 +28,8 @@ public class WebMetrics {
   public final Runnable webhandler_client_download;
   public final Runnable webhandler_set_asset_key;
   public final Runnable webhandler_assets_no_cookie;
+  public final Runnable webhandler_assets_invalid_uri;
+  public final Runnable webhandler_assets_start;
 
   public final Runnable websockets_start;
   public final Runnable websockets_end;
@@ -46,6 +48,8 @@ public class WebMetrics {
     this.webhandler_client_download = factory.counter("webhandler_client_download");
     this.webhandler_set_asset_key = factory.counter("webhandler_set_asset_key");
     this.webhandler_assets_no_cookie = factory.counter("webhandler_assets_no_cookie");
+    this.webhandler_assets_invalid_uri = factory.counter("webhandler_assets_invalid_uri");
+    this.webhandler_assets_start = factory.counter("webhandler_assets_start");
 
     this.webhandler_get = factory.counter("webhandler_get");
     this.webhandler_post = factory.counter("webhandler_post");

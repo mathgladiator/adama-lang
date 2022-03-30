@@ -106,8 +106,6 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   @Override
   public void userEventTriggered(final ChannelHandlerContext ctx, final Object evt) {
     if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete && !closed) {
-      // tell client all is ok
-      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\"}"));
 
       HttpHeaders headers = ((WebSocketServerProtocolHandler.HandshakeComplete) evt).requestHeaders();
       String origin = headers.get("origin");
@@ -117,16 +115,10 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
         ip = xForwardedFor;
       }
       String userAgent = headers.get(HttpHeaderNames.USER_AGENT);
-      String assetKey = headers.get(HttpHeaderNames.COOKIE);
-      if (assetKey != null) {
-        String assetKeyCopy = assetKey;
-        assetKey = null;
-        for (Cookie cookie : ServerCookieDecoder.STRICT.decode(assetKeyCopy)) {
-          if (cookie.name().equalsIgnoreCase("AAK")) {
-            assetKey = cookie.value();
-          }
-        }
-      }
+      String assetKey = AssetRequest.extractAssetKey(headers.get(HttpHeaderNames.COOKIE));
+
+      // tell client all is ok
+      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\",\"assets\":" + (assetKey != null ? "true" : "false") +"}"));
 
       context = new ConnectionContext(origin, ip, userAgent, assetKey);
 

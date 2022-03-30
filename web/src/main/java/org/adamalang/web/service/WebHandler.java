@@ -78,27 +78,29 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
       content = "OK".getBytes(StandardCharsets.UTF_8);
       contentType = "text/text; charset=UTF-8";
     } else if (isAsset) {
-      String assetKey = req.headers().get(HttpHeaderNames.COOKIE);
+      String assetKey = AssetRequest.extractAssetKey(req.headers().get(HttpHeaderNames.COOKIE));
       if (assetKey != null) {
-        String assetKeyCopy = assetKey;
-        assetKey = null;
-        for (Cookie cookie : ServerCookieDecoder.STRICT.decode(assetKeyCopy)) {
-          if ("AAK".equalsIgnoreCase(cookie.name())) {
-            assetKey = cookie.value();
-          }
+        /*
+        try {
+          // AssetRequest assetRequest = AssetRequest.parse(req.uri().substring("/assets/".length()), assetKey);
+        } catch (Exception ex) {
+          // TODO: return a 400,
+          metrics.webhandler_assets_invalid_uri.run();
+          status = HttpResponseStatus.BAD_REQUEST;
+          content = "<html><head><title>bad request</title></head><body>Asset cookie was not set.</body></html>".getBytes(StandardCharsets.UTF_8);
+          contentType = "text/html; charset=UTF-8";
         }
-      }
-      if (assetKey != null) {
-        AssetRequest assetRequest = AssetRequest.parse(req.uri().substring("/assets/".length()), assetKey);
-        // TODO: parse the uri as (/assets/{space}/{...key...}/{id}
+        */
         // TODO: decode id from asset key
         // TODO: check to see if file is in cache, if so, then bump delete timer
         // TODO: download file from S3 to cache
         // DECIDE: download to file, then stream from file
         //     OR: stream to a chunked encoding
 
-
-        return;
+        metrics.webhandler_assets_start.run();
+        status = HttpResponseStatus.OK;
+        content = "<html><head><title>got asset request</title></head><body>Asset cookie was set.</body></html>".getBytes(StandardCharsets.UTF_8);
+        contentType = "text/html; charset=UTF-8";
       } else {
         metrics.webhandler_assets_no_cookie.run();
         status = HttpResponseStatus.BAD_REQUEST;
