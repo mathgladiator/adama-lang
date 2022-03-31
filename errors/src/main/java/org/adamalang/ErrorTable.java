@@ -1,12 +1,3 @@
-/*
- * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
- *
- * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
- *
- * See http://www.adama-lang.org/ for more information.
- *
- * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
- */
 package org.adamalang;
 
 import java.util.HashMap;
@@ -60,6 +51,8 @@ public class ErrorTable {
     descriptions.put(160268, "no description of error (yet)");
     names.put(184332, "LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_MESSAGE");
     descriptions.put(184332, "no description of error (yet)");
+    names.put(127155, "LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NO_CONTEXT");
+    descriptions.put(127155, "no description of error (yet)");
     names.put(143373, "LIVING_DOCUMENT_TRANSACTION_CANT_SEND_NOT_CONNECTED");
     descriptions.put(143373, "no description of error (yet)");
     names.put(125966, "LIVING_DOCUMENT_TRANSACTION_CANT_ATTACH_NOT_CONNECTED");
@@ -82,6 +75,8 @@ public class ErrorTable {
     descriptions.put(193055, "no description of error (yet)");
     names.put(143407, "LIVING_DOCUMENT_TRANSACTION_MESSAGE_ALREADY_SENT");
     descriptions.put(143407, "no description of error (yet)");
+    names.put(127152, "LIVING_DOCUMENT_TRANSACTION_MESSAGE_DIRECT_ABORT");
+    descriptions.put(127152, "no description of error (yet)");
     names.put(122412, "LIVING_DOCUMENT_TRANSACTION_EXPIRE_LIMIT_MUST_BE_POSITIVE");
     descriptions.put(122412, "no description of error (yet)");
     names.put(131203, "LIVING_DOCUMENT_TRANSACTION_EXPIRE_DID_NOTHING");
@@ -163,11 +158,14 @@ public class ErrorTable {
     names.put(656396, "COMPUTE_UNKNOWN_METHOD");
     descriptions.put(656396, "no description of error (yet)");
     names.put(679948, "FRONTEND_SPACE_ALREADY_EXISTS");
-    descriptions.put(679948, "no description of error (yet)");
+    descriptions.put(679948, "The requested space already exists.");
+    userspace.add(679948);
     names.put(625678, "FRONTEND_SPACE_DOESNT_EXIST");
-    descriptions.put(625678, "no description of error (yet)");
+    descriptions.put(625678, "The request space does not exist.");
+    userspace.add(625678);
     names.put(609294, "FRONTEND_PLAN_DOESNT_EXIST");
-    descriptions.put(609294, "no description of error (yet)");
+    descriptions.put(609294, "The requested space does not exist, or the plan is not set");
+    userspace.add(609294);
     names.put(654341, "FRONTEND_INTERNAL_PLAN_DOESNT_EXIST");
     descriptions.put(654341, "no description of error (yet)");
     names.put(688141, "INVALID_ROLE");
@@ -376,13 +374,16 @@ public class ErrorTable {
     names.put(919601, "API_ASSET_FAILED_BIND");
     descriptions.put(919601, "no description of error (yet)");
     names.put(999472, "API_ASSET_CHUNK_BAD_DIGEST");
-    descriptions.put(999472, "no description of error (yet)");
+    descriptions.put(999472, "Corruption between client and server caused a chunk fail an integrity check");
     names.put(994352, "API_ASSET_CHUNK_UNKNOWN_EXCEPTION");
     descriptions.put(994352, "no description of error (yet)");
     names.put(966768, "API_ASSET_ATTACHMENT_NOT_ALLOWED");
-    descriptions.put(966768, "no description of error (yet)");
+    descriptions.put(966768, "The asset attachemnt will fail due to not being allowed");
+    userspace.add(966768);
     names.put(920719, "API_ASSET_ATTACHMENT_LOST_CONNECTION");
-    descriptions.put(920719, "no description of error (yet)");
+    descriptions.put(920719, "The asset attachment failed due to losing the connection to the document");
+    names.put(985219, "API_ASSET_ATTACHMENT_UNKNOWN_EXCEPTION");
+    descriptions.put(985219, "no description of error (yet)");
     names.put(903232, "API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION");
     descriptions.put(903232, "no description of error (yet)");
     names.put(900160, "API_LIST_DOCUMENTS_NO_PERMISSION");
@@ -532,11 +533,49 @@ public class ErrorTable {
     descriptions.put(792631, "no description of error (yet)");
     names.put(732208, "CARAVAN_DISK_COMPUTE_METHOD_NOT_FOUND");
     descriptions.put(732208, "no description of error (yet)");
-    names.put(734263, "CARAVAN_DISK_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY");
-    descriptions.put(734263, "no description of error (yet)");
-    names.put(791602, "CARAVAN_DISK_COMPUTE_REWIND_SEQ_NOT_FOUND");
+    names.put(707675, "CARAVAN_KEY_NOT_LOADED_PATCH");
+    descriptions.put(707675, "no description of error (yet)");
+    names.put(790622, "CARAVAN_KEY_NOT_LOADED_COMPUTE");
+    descriptions.put(790622, "no description of error (yet)");
+    names.put(790623, "CARAVAN_KEY_NOT_LOADED_SNAPSHOT");
+    descriptions.put(790623, "no description of error (yet)");
+    names.put(785491, "CARAVAN_COMPUTE_METHOD_NOT_FOUND");
+    descriptions.put(785491, "no description of error (yet)");
+    names.put(791602, "CARAVAN_COMPUTE_REWIND_SEQ_NOT_FOUND");
     descriptions.put(791602, "no description of error (yet)");
-    names.put(787507, "CARAVAN_DISK_COMPUTE_HEADPATCH_SEQ_NOT_FOUND");
+    names.put(787507, "CARAVAN_COMPUTE_HEADPATCH_SEQ_NOT_FOUND");
     descriptions.put(787507, "no description of error (yet)");
+    names.put(734263, "CARAVAN_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY");
+    descriptions.put(734263, "no description of error (yet)");
+    names.put(785490, "CARAVAN_OUT_OF_SPACE_SNAPSHOT");
+    descriptions.put(785490, "no description of error (yet)");
+    names.put(788560, "CARAVAN_OUT_OF_SPACE_PATCH");
+    descriptions.put(788560, "no description of error (yet)");
+    names.put(773242, "CARAVAN_OUT_OF_SPACE_INITIALIZE");
+    descriptions.put(773242, "no description of error (yet)");
+    names.put(786509, "FINDER_SERVICE_MYSQL_CANT_TAKEOVER");
+    descriptions.put(786509, "no description of error (yet)");
+    names.put(716879, "FINDER_SERVICE_MYSQL_TAKEOVER_EXCEPTION");
+    descriptions.put(716879, "no description of error (yet)");
+    names.put(735308, "FINDER_SERVICE_MYSQL_CANT_ARCHIVE");
+    descriptions.put(735308, "no description of error (yet)");
+    names.put(771139, "FINDER_SERVICE_MYSQL_ARCHIVE_EXCEPTION");
+    descriptions.put(771139, "no description of error (yet)");
+    names.put(707651, "FINDER_SERVICE_MYSQL_CANT_UPDATE");
+    descriptions.put(707651, "no description of error (yet)");
+    names.put(773247, "FINDER_SERVICE_MYSQL_CANT_DELETE");
+    descriptions.put(773247, "no description of error (yet)");
+    names.put(792643, "FINDER_SERVICE_MYSQL_UPDATE_EXCEPTION");
+    descriptions.put(792643, "no description of error (yet)");
+    names.put(785528, "FINDER_SERVICE_MYSQL_FIND_EXCEPTION");
+    descriptions.put(785528, "no description of error (yet)");
+    names.put(777331, "FINDER_SERVICE_MYSQL_DELETE_EXCEPTION");
+    descriptions.put(777331, "no description of error (yet)");
+    names.put(736347, "PROXY_TIMEOUT");
+    descriptions.put(736347, "no description of error (yet)");
+    names.put(799836, "PROXY_REJECTED");
+    descriptions.put(799836, "no description of error (yet)");
+    names.put(788607, "STORAGE_TIER_FAILED_TO_APPLY_GOTO");
+    descriptions.put(788607, "no description of error (yet)");
   }
 }

@@ -482,32 +482,13 @@ public class RootHandlerImpl implements RootHandler {
 
   @Override
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder startResponder) {
-    AtomicReference<Connection> connection = new AtomicReference<>(null);
     AtomicBoolean clean = new AtomicBoolean(false);
     AtomicBoolean killed = new AtomicBoolean(false);
+    AtomicReference<Connection> connection = new AtomicReference<>(null);
     Runnable kickOff = () -> {
       connection.set(nexus.client.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", session.getAssetKey(), new SimpleEvents() {
         @Override
         public void connected() {
-          connection.get().canAttach(new Callback<Boolean>() {
-            @Override
-            public void success(Boolean value) {
-              if (value) {
-                startResponder.next(65536);
-              } else {
-                if (!killed.get()) {
-                  killed.set(true);
-                  startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_NOT_ALLOWED));
-                }
-              }
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              killed.set(true);
-              startResponder.error(ex);
-            }
-          });
         }
 
         @Override
@@ -535,6 +516,26 @@ public class RootHandlerImpl implements RootHandler {
           }
         }
       }));
+
+      connection.get().canAttach(new Callback<Boolean>() {
+        @Override
+        public void success(Boolean value) {
+          if (value) {
+            startResponder.next(65536);
+          } else {
+            if (!killed.get()) {
+              killed.set(true);
+              startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_NOT_ALLOWED));
+            }
+          }
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          killed.set(true);
+          startResponder.error(ex);
+        }
+      });
     };
 
     return new AttachmentUploadHandler() {
@@ -548,7 +549,7 @@ public class RootHandlerImpl implements RootHandler {
       @Override
       public void bind() {
         try {
-          id = UUID.randomUUID().toString();
+          id = ProtectedUUID.generate();
           file = new File(nexus.attachmentRoot, id + ".upload");
           file.deleteOnExit();
           digestMD5 = MessageDigest.getInstance("MD5");
@@ -596,16 +597,20 @@ public class RootHandlerImpl implements RootHandler {
           nexus.uploader.upload(new Key(request.space, request.key), asset, file, new Callback<Void>() {
             @Override
             public void success(Void value) {
+              clean.set(true);
               connection.get().attach(id, asset.name, asset.contentType, asset.size, asset.md5, asset.sha384, new Callback<Integer>() {
                 @Override
                 public void success(Integer value) {
-                  clean.set(true);
                   disconnect(0L);
                   finishResponder.complete();
                 }
 
                 @Override
                 public void failure(ErrorCodeException ex) {
+                  if (!killed.get()) {
+                    killed.set(true);
+                    startResponder.error(ex);
+                  }
                   disconnect(0L);
                   finishResponder.error(ex);
                 }
@@ -614,12 +619,16 @@ public class RootHandlerImpl implements RootHandler {
 
             @Override
             public void failure(ErrorCodeException ex) {
+              if (!killed.get()) {
+                killed.set(true);
+                startResponder.error(ex);
+              }
               disconnect(0L);
               finishResponder.error(ex);
             }
           });
         } catch (Exception ex) {
-          finishResponder.error(ErrorCodeException.detectOrWrap(0, ex, LOGGER));
+          finishResponder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_ATTACHMENT_UNKNOWN_EXCEPTION, ex, LOGGER));
           disconnect(0);
         }
       }

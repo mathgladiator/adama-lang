@@ -178,7 +178,7 @@ public class Authority {
         ObjectNode request = Json.newJsonObject();
         request.put("method", "authority/list");
         request.put("identity", identity);
-        connection.stream(request, (item) -> {
+        connection.stream(request, (cId, item) -> {
           System.err.println(item.toPrettyString());
         });
       }

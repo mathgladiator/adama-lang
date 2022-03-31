@@ -24,6 +24,7 @@ import org.adamalang.extern.Email;
 import org.adamalang.extern.ExternNexus;
 import org.adamalang.extern.aws.AWSConfig;
 import org.adamalang.extern.aws.AWSMetrics;
+import org.adamalang.extern.aws.S3;
 import org.adamalang.extern.aws.SES;
 import org.adamalang.extern.prometheus.PrometheusDashboard;
 import org.adamalang.extern.prometheus.PrometheusMetricsFactory;
@@ -334,13 +335,8 @@ public class Service {
       targetPublisher.accept(targets);
     });
     AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-    // TODO: use S3 and update document core to account for attachment size for billing purposes
-    AssetUploader uploader = new AssetUploader() {
-      @Override
-      public void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback) {
-        callback.failure(new ErrorCodeException(-1));
-      }
-    };
+    AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
+    AssetUploader uploader = new S3(awsConfig, awsMetrics);
     ConcurrentCachedHttpHandler propigatedHandler = new ConcurrentCachedHttpHandler();
 
     OverlordClient overlordClient = new OverlordClient(identity, webConfig.port, propigatedHandler);
@@ -355,7 +351,7 @@ public class Service {
       }
     });
 
-    Email email = new SES(awsConfig, new AWSMetrics(prometheusMetricsFactory));
+    Email email = new SES(awsConfig, awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
     ExternNexus nexus = new ExternNexus(frontendConfig, email, uploader, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"), (item) -> {

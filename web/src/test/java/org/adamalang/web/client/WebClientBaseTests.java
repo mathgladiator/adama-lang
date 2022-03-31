@@ -206,7 +206,7 @@ public class WebClientBaseTests {
               connRef.set(connection);
               connection.execute(Json.parseJsonObject("{\"method\":\"cake\"}"), new WebJsonStream() {
                 @Override
-                public void data(ObjectNode node) {
+                public void data(int cId, ObjectNode node) {
                   throw new NullPointerException();
                 }
 

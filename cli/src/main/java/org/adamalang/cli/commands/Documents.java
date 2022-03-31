@@ -14,12 +14,21 @@ import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
+import org.adamalang.common.Hashing;
 import org.adamalang.common.Json;
+import org.adamalang.common.NamedRunnable;
+import org.adamalang.common.SimpleExecutor;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.util.Arrays;
+import java.util.Base64;
 
 public class Documents {
   public static void execute(Config config, String[] args) throws Exception {
@@ -78,7 +87,7 @@ public class Documents {
         request.put("identity", identity);
         request.put("space", space);
         request.put("key", key);
-        connection.stream(request, (response) -> {
+        connection.stream(request, (cId, response) -> {
           System.err.println(response.toPrettyString());
         });
       }
@@ -109,6 +118,7 @@ public class Documents {
   }
 
   private static void documentsAttach(Config config, String[] args) throws Exception {
+    SimpleExecutor executor = SimpleExecutor.create("offload");
     String identity = config.get_string("identity", null);
     String space = Util.extractOrCrash("--space", "-s", args);
     String key = Util.extractOrCrash("--key", "-k", args);
@@ -121,33 +131,6 @@ public class Documents {
         try (Connection connection = client.open()) {
           ObjectNode request = Json.newJsonObject();
 
-          /*
-
-      <method name="attachment/start" responder="progress" create="attachment-upload">
-          <parameter name="identity"/>
-          <parameter name="space"/>
-          <parameter name="key"/>
-          <parameter name="filename"/>
-          <parameter name="content-type"/>
-          <documentation>
-          </documentation>
-      </method>
-
-      <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201">
-          <parameter name="upload"/>
-          <parameter name="chunk-md5"/>
-          <parameter name="base64-bytes"/>
-          <documentation>
-          </documentation>
-      </method>
-
-      <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true">
-          <parameter name="upload"/>
-          <documentation>
-          </documentation>
-      </method>
-           */
-
           request.put("method", "attachment/start");
           request.put("identity", identity);
           request.put("space", space);
@@ -155,8 +138,37 @@ public class Documents {
           request.put("filename", filename);
           request.put("content-type", contentType);
           System.err.println(request.toPrettyString());
-          connection.stream(request, (update) -> {
-            System.err.println(update.toPrettyString());
+          connection.stream(request, (cId, ask) -> {
+            executor.execute(new NamedRunnable("name") {
+              @Override
+              public void execute() throws Exception {
+                int sz = ask.get("chunk_request_size").intValue();
+                byte[] chunk = new byte[sz];
+                try {
+                  int rd = input.read(chunk);
+                  if (rd > 0) {
+                    MessageDigest digest = Hashing.md5();
+                    digest.update(chunk, 0, rd);
+                    ObjectNode append = Json.newJsonObject();
+                    append.put("method", "attachment/append");
+                    append.put("upload", cId.intValue());
+                    append.put("chunk-md5", Hashing.finishAndEncode(digest));
+                    append.put("base64-bytes", Base64.getEncoder().encodeToString(Arrays.copyOfRange(chunk, 0, rd)));
+                    ObjectNode response = connection.execute(append);
+                    System.err.println(response);
+                  } else {
+                    ObjectNode append = Json.newJsonObject();
+                    append.put("method", "attachment/finish");
+                    append.put("upload", cId.intValue());
+                    ObjectNode response = connection.execute(append);
+                    System.err.println(response);
+                  }
+                } catch (Exception ioe) {
+
+                }
+                System.err.println(ask.toPrettyString());
+              }
+            });
           });
         }
       }
@@ -178,7 +190,7 @@ public class Documents {
           request.put("marker", marker);
         }
         request.put("limit", limit);
-        connection.stream(request, (item) -> {
+        connection.stream(request, (cId, item) -> {
           System.err.println(item.toPrettyString());
         });
       }

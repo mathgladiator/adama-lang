@@ -273,13 +273,17 @@ public class ErrorCodes {
   public static final int API_SEND_TIMEOUT = 984080;
   public static final int API_SEND_REJECTED = 916520;
 
+  @Description("Was unable to update the viewer state within the document")
   public static final int API_UPDATE_TIMEOUT = 997516;
+  @Description("The document was busy and unable to accept view state updates")
   public static final int API_UPDATE_REJECTED = 998539;
-
+  @Description("Was unable to ask the document whether an attachment could be made")
   public static final int API_CAN_ATTACH_TIMEOUT = 984111;
-  public static final int API_ATTACH_TIMEOUT = 916527;
-
+  @Description("The document was busy and unable to accept any attachment requests")
   public static final int API_CAN_ATTACH_REJECTED = 901163;
+  @Description("Was unable to attach to the document")
+  public static final int API_ATTACH_TIMEOUT = 916527;
+  @Description("The document was busy and unable to attach the data")
   public static final int API_ATTACH_REJECTED = 913447;
 
   public static final int INSTANCE_FINDER_TIMEOUT = 998434;
@@ -316,10 +320,19 @@ public class ErrorCodes {
 
   public static final int API_ASSET_UPLOAD_FAILED = 950322;
   public static final int API_ASSET_FAILED_BIND = 919601;
+
+  @Description("Corruption between client and server caused a chunk fail an integrity check")
   public static final int API_ASSET_CHUNK_BAD_DIGEST = 999472;
+
   public static final int API_ASSET_CHUNK_UNKNOWN_EXCEPTION = 994352;
+
+  @User
+  @Description("The asset attachemnt will fail due to not being allowed")
   public static final int API_ASSET_ATTACHMENT_NOT_ALLOWED = 966768;
+
+  @Description("The asset attachment failed due to losing the connection to the document")
   public static final int API_ASSET_ATTACHMENT_LOST_CONNECTION = 920719;
+  public static final int API_ASSET_ATTACHMENT_UNKNOWN_EXCEPTION = 985219;
 
   public static final int API_LIST_DOCUMENTS_UNKNOWN_EXCEPTION = 903232;
   public static final int API_LIST_DOCUMENTS_NO_PERMISSION = 900160;
@@ -341,7 +354,7 @@ public class ErrorCodes {
   public static final int AWS_EMAIL_SEND_FAILURE = 901232;
 
   /**
-   * 985219 901251
+   *  901251
    * 904348 904343 928915 925840 908435 904364 912544 928959 904383 966835 949427 978099 995505
    * 928944 903347 986319 993487 913615 947404 904399 903375 937164 984268 924877 991435 904392
    * 979145 904394 920777 929990 998599 979143 967879 903364 931015 982212 986308 950469 921794

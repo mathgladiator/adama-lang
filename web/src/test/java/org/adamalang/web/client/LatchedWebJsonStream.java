@@ -56,7 +56,7 @@ public class LatchedWebJsonStream implements WebJsonStream {
   }
 
   @Override
-  public void data(ObjectNode node) {
+  public void data(int cId, ObjectNode node) {
     write("DATA:" + node.toString());
   }
 

@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /** a very simple stream for the client to get a json stream from the web proxy */
 public interface WebJsonStream {
-  void data(ObjectNode node);
+  void data(int connection, ObjectNode node);
 
   void complete();
 

@@ -193,7 +193,7 @@ public class Space {
           request.put("marker", marker);
         }
         request.put("limit", limit);
-        connection.stream(request, (response) -> {
+        connection.stream(request, (cId, response) -> {
           System.err.println(response.toPrettyString());
         });
       }
@@ -212,7 +212,7 @@ public class Space {
         request.put("identity", identity);
         request.put("space", space);
         request.put("limit", limit);
-        connection.stream(request, (response) -> {
+        connection.stream(request, (cId, response) -> {
           System.err.println(response.toPrettyString());
         });
       }

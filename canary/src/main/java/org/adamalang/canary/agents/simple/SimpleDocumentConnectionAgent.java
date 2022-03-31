@@ -58,7 +58,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
         config.metrics.messages_sent.incrementAndGet();
         connection.execute(send, new WebJsonStream() {
           @Override
-          public void data(ObjectNode node) {
+          public void data(int cId, ObjectNode node) {
             config.metrics.record_send_latency((int) (System.currentTimeMillis() - sendStart));
             config.metrics.messages_acked.incrementAndGet();
           }
@@ -105,7 +105,7 @@ public class SimpleDocumentConnectionAgent extends NamedRunnable implements WebJ
   }
 
   @Override
-  public void data(ObjectNode node) {
+  public void data(int cId, ObjectNode node) {
     if (waitingForFirstData) {
       config.metrics.record_connect_latency((int) (System.currentTimeMillis() - kickoffStarted));
       waitingForFirstData = false;

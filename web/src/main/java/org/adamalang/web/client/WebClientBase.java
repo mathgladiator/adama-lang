@@ -113,7 +113,7 @@ public class WebClientBase {
               if (streamback != null) {
                 ObjectNode response = (ObjectNode) node.get("response");
                 if (!response.isEmpty()) {
-                  streamback.data(response);
+                  streamback.data(id, response);
                 }
                 if (done) {
                   streamback.complete();

@@ -40,7 +40,7 @@ public class S3 implements AssetUploader {
   @Override
   public void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.upload_file.start();
-    PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key(key.space + "/" + key.key + "/" + asset.id).build();
+    PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key(key.space + "/" + key.key + "/" + asset.id).contentType(asset.contentType).build();
     try {
       s3.putObject(request, RequestBody.fromFile(localFile));
       instance.success();
