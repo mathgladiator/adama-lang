@@ -18,6 +18,7 @@ import org.adamalang.extern.ExternNexus;
 import org.adamalang.transforms.Authenticator;
 import org.adamalang.transforms.SpacePolicyLocator;
 import org.adamalang.transforms.UserIdResolver;
+import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
@@ -69,6 +70,11 @@ public class BootstrapFrontend {
       @Override
       public HttpHandler http() {
         return httpHandler;
+      }
+
+      @Override
+      public AssetDownloader downloader() {
+        return extern.downloader;
       }
     };
   }

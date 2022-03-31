@@ -320,6 +320,7 @@ public class ErrorCodes {
 
   public static final int API_ASSET_UPLOAD_FAILED = 950322;
   public static final int API_ASSET_FAILED_BIND = 919601;
+  public static final int API_ASSET_DOWNLOAD_FAILED = 901251;
 
   @Description("Corruption between client and server caused a chunk fail an integrity check")
   public static final int API_ASSET_CHUNK_BAD_DIGEST = 999472;
@@ -354,7 +355,6 @@ public class ErrorCodes {
   public static final int AWS_EMAIL_SEND_FAILURE = 901232;
 
   /**
-   *  901251
    * 904348 904343 928915 925840 908435 904364 912544 928959 904383 966835 949427 978099 995505
    * 928944 903347 986319 993487 913615 947404 904399 903375 937164 984268 924877 991435 904392
    * 979145 904394 920777 929990 998599 979143 967879 903364 931015 982212 986308 950469 921794

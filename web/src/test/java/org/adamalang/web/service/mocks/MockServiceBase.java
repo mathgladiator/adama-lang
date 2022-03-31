@@ -10,12 +10,14 @@
 package org.adamalang.web.service.mocks;
 
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
 import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
+import org.adamalang.web.service.AssetRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -96,6 +98,36 @@ public class MockServiceBase implements ServiceBase {
           throw new NullPointerException();
         }
         return null;
+      }
+    };
+  }
+
+  @Override
+  public AssetDownloader downloader() {
+    return new AssetDownloader() {
+      @Override
+      public void request(AssetRequest request, AssetStream stream) {
+        if (request.key.equals("1")) {
+          stream.headers("text/plain");
+          byte[] chunk = "ChunkAndDone".getBytes(StandardCharsets.UTF_8);
+          stream.body(chunk, 0, chunk.length, true);
+          return;
+        }
+        if (request.key.equals("fail")) {
+          stream.headers("text/plain");
+          stream.failure(1234);
+          return;
+        }
+        if (request.key.equals("3")) {
+          stream.headers("text/plain");
+          byte[] chunk1 = "Chunk1".getBytes(StandardCharsets.UTF_8);
+          byte[] chunk2 = "Chunk2".getBytes(StandardCharsets.UTF_8);
+          byte[] chunk3 = "Chunk3".getBytes(StandardCharsets.UTF_8);
+          stream.body(chunk1, 0, chunk1.length, false);
+          stream.body(chunk2, 0, chunk2.length, false);
+          stream.body(chunk3, 0, chunk3.length, true);
+          return;
+        }
       }
     };
   }

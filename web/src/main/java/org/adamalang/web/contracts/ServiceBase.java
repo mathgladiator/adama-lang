@@ -45,6 +45,11 @@ public interface ServiceBase {
       public HttpHandler http() {
         return http;
       }
+
+      @Override
+      public AssetDownloader downloader() {
+        return null;
+      }
     };
   }
 
@@ -52,4 +57,6 @@ public interface ServiceBase {
   ServiceConnection establish(ConnectionContext context);
 
   HttpHandler http();
+
+  AssetDownloader downloader();
 }

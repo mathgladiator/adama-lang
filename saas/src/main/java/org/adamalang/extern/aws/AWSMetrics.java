@@ -14,10 +14,12 @@ import org.adamalang.common.metrics.RequestResponseMonitor;
 
 public class AWSMetrics {
   public final RequestResponseMonitor upload_file;
+  public final RequestResponseMonitor download_file;
   public final RequestResponseMonitor send_email;
 
   public AWSMetrics(MetricsFactory factory) {
     upload_file = factory.makeRequestResponseMonitor("aws_upload_file");
+    download_file = factory.makeRequestResponseMonitor("aws_download_file");
     send_email = factory.makeRequestResponseMonitor("aws_send_email");
   }
 }

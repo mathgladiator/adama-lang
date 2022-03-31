@@ -43,6 +43,7 @@ import org.adamalang.runtime.sys.CoreMetrics;
 import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
+import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
 import org.adamalang.web.contracts.ServiceConnection;
@@ -50,6 +51,7 @@ import org.adamalang.web.io.ConnectionContext;
 import org.adamalang.web.io.JsonLogger;
 import org.adamalang.web.io.JsonRequest;
 import org.adamalang.web.io.JsonResponder;
+import org.adamalang.web.service.AssetRequest;
 import org.junit.Assert;
 
 import java.io.File;
@@ -147,8 +149,14 @@ public class TestFrontEnd implements AutoCloseable, Email {
         }
       }
     };
+    AssetDownloader downloader = new AssetDownloader() {
+      @Override
+      public void request(AssetRequest request, AssetStream stream) {
+
+      }
+    };
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(Json.parseJsonObject("{\"threads\":2}")));
-    this.nexus = new ExternNexus(frontendConfig, this, uploader, dataBase, dataBase, dataBase, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp);
+    this.nexus = new ExternNexus(frontendConfig, this, uploader, downloader, dataBase, dataBase, dataBase, client, new NoOpMetricsFactory(), attachmentRoot, JsonLogger.NoOp);
     this.frontend = BootstrapFrontend.make(nexus, HttpHandler.NULL);
     this.context = new ConnectionContext("home", "ip", "agent", null);
     connection = this.frontend.establish(context);

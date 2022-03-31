@@ -63,8 +63,10 @@ import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
 import org.adamalang.runtime.data.ThreadedDataService;
+import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
+import org.adamalang.web.service.AssetRequest;
 import org.adamalang.web.service.ServiceRunnable;
 import org.adamalang.web.service.WebConfig;
 import org.adamalang.web.service.WebMetrics;
@@ -336,7 +338,7 @@ public class Service {
     });
     AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
     AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
-    AssetUploader uploader = new S3(awsConfig, awsMetrics);
+    S3 s3 = new S3(awsConfig, awsMetrics);
     ConcurrentCachedHttpHandler propigatedHandler = new ConcurrentCachedHttpHandler();
 
     OverlordClient overlordClient = new OverlordClient(identity, webConfig.port, propigatedHandler);
@@ -354,7 +356,7 @@ public class Service {
     Email email = new SES(awsConfig, awsMetrics);
     FrontendConfig frontendConfig = new FrontendConfig(new ConfigObject(config.get_or_create_child("saas")));
     Logger accessLog = LoggerFactory.getLogger("access");
-    ExternNexus nexus = new ExternNexus(frontendConfig, email, uploader, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
+    ExternNexus nexus = new ExternNexus(frontendConfig, email, s3, s3, dataBaseFront, dataBaseDeployments, dataBaseBackend, client, prometheusMetricsFactory, new File("inflight"), (item) -> {
       accessLog.debug(item.toString());
     });
     System.err.println("nexus constructed");

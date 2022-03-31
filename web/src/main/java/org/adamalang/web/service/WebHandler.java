@@ -19,20 +19,24 @@ import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.CookieDecoder;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
+import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebConfig webConfig;
   private final WebMetrics metrics;
   private final HttpHandler httpHandler;
+  private final AssetDownloader downloader;
 
-  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler) {
+  public WebHandler(WebConfig webConfig, WebMetrics metrics, HttpHandler httpHandler, AssetDownloader downloader) {
     this.webConfig = webConfig;
     this.metrics = metrics;
     this.httpHandler = httpHandler;
+    this.downloader = downloader;
   }
 
   @Override
@@ -81,27 +85,57 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     } else if (isAsset) {
       String assetKey = AssetRequest.extractAssetKey(req.headers().get(HttpHeaderNames.COOKIE));
       if (assetKey != null) {
-        /*
         try {
-          // AssetRequest assetRequest = AssetRequest.parse(req.uri().substring("/assets/".length()), assetKey);
-        } catch (Exception ex) {
-          // TODO: return a 400,
-          metrics.webhandler_assets_invalid_uri.run();
-          status = HttpResponseStatus.BAD_REQUEST;
-          content = "<html><head><title>bad request</title></head><body>Asset cookie was not set.</body></html>".getBytes(StandardCharsets.UTF_8);
+          String encryptedId = req.uri().substring("/assets/".length());
+          metrics.webhandler_assets_start.run();
+          AssetRequest assetRequest = AssetRequest.parse(encryptedId, assetKey);
+          downloader.request(assetRequest, new AssetDownloader.AssetStream() {
+            private boolean started = false;
+            private String contentType = null;
+
+            @Override
+            public void headers(String contentType) {
+              this.contentType = contentType;
+            }
+
+            @Override
+            public void body(byte[] chunk, int offset, int length, boolean last) {
+              if (!started && last) {
+                byte[] content = Arrays.copyOfRange(chunk, offset, length);
+                final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.OK, Unpooled.wrappedBuffer(content));
+                HttpUtil.setContentLength(res, content.length);
+                res.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
+                sendWithKeepAlive(webConfig, ctx, req, res);
+              } else {
+                if (started) {
+                  // APPEND A CHUNK
+                } else {
+                  started = true;
+                  // TO START A CHUNKED DOWNLOAD
+                }
+              }
+            }
+
+            @Override
+            public void failure(int code) {
+              if (started) {
+                // Just closed the connection
+
+              } else {
+                byte[] content = ("Download failure:" + code).getBytes(StandardCharsets.UTF_8);
+                final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.SERVICE_UNAVAILABLE, Unpooled.wrappedBuffer(content));
+                HttpUtil.setContentLength(res, content.length);
+                sendWithKeepAlive(webConfig, ctx, req, res);
+              }
+            }
+          });
+          return;
+        } catch (Exception err) {
+          metrics.webhandler_assets_failed_start.run();
+          status = HttpResponseStatus.OK;
+          content = ("<html><head><title>got asset request</title></head><body>Failure to initiate asset attachment.</body></html>").getBytes(StandardCharsets.UTF_8);
           contentType = "text/html; charset=UTF-8";
         }
-        */
-        // TODO: decode id from asset key
-        // TODO: check to see if file is in cache, if so, then bump delete timer
-        // TODO: download file from S3 to cache
-        // DECIDE: download to file, then stream from file
-        //     OR: stream to a chunked encoding
-
-        metrics.webhandler_assets_start.run();
-        status = HttpResponseStatus.OK;
-        content = "<html><head><title>got asset request</title></head><body>Asset cookie was set.</body></html>".getBytes(StandardCharsets.UTF_8);
-        contentType = "text/html; charset=UTF-8";
       } else {
         metrics.webhandler_assets_no_cookie.run();
         status = HttpResponseStatus.BAD_REQUEST;
