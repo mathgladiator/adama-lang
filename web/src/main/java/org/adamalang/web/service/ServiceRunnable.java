@@ -16,6 +16,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.util.concurrent.ScheduledFuture;
 import org.adamalang.web.contracts.ServiceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ public class ServiceRunnable implements Runnable {
       LOGGER.info("starting-web-proxy");
       try {
         try {
+          AtomicBoolean alive = new AtomicBoolean(true);
           SslContext context = null;
           File certificate = new File("cert.pem");
           File privateKey = new File("key.pem");
@@ -76,15 +78,19 @@ public class ServiceRunnable implements Runnable {
             final var ch = b.bind(webConfig.port).sync().channel();
             channelRegistered(ch);
             LOGGER.info("channel-registered");
-            bossGroup.scheduleAtFixedRate(() -> {
+            ScheduledFuture<?> future = bossGroup.scheduleAtFixedRate(() -> {
               workerGroup.schedule(() -> {
-                metrics.websockets_server_heartbeat.run();
-                heartbeat.run();
+                if (alive.get()) {
+                  metrics.websockets_server_heartbeat.run();
+                  heartbeat.run();
+                }
               },  (int) (10 + 15 * Math.random()), TimeUnit.MILLISECONDS);
             }, 50, 50, TimeUnit.MILLISECONDS);
             ch.closeFuture().sync();
             LOGGER.info("channel-close-future-syncd");
+            future.cancel(false);
           } finally {
+            alive.set(false);
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
           }

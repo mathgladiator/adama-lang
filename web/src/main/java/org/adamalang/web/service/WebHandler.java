@@ -9,6 +9,7 @@
  */
 package org.adamalang.web.service;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -108,10 +109,17 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                 sendWithKeepAlive(webConfig, ctx, req, res);
               } else {
                 if (started) {
-                  // APPEND A CHUNK
+                  if (last) {
+                    ctx.write(new DefaultLastHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
+                  } else {
+                    ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
+                  }
                 } else {
                   started = true;
-                  // TO START A CHUNKED DOWNLOAD
+                  DefaultHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+                  response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
+                  response.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
+                  ctx.writeAndFlush(response);
                 }
               }
             }
@@ -119,8 +127,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             @Override
             public void failure(int code) {
               if (started) {
-                // Just closed the connection
-
+                ctx.close();
               } else {
                 byte[] content = ("Download failure:" + code).getBytes(StandardCharsets.UTF_8);
                 final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.SERVICE_UNAVAILABLE, Unpooled.wrappedBuffer(content));

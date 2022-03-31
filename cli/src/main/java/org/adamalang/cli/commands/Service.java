@@ -361,9 +361,7 @@ public class Service {
     });
     System.err.println("nexus constructed");
     ServiceBase serviceBase = BootstrapFrontend.make(nexus, propigatedHandler);
-
     // TODO: have some sense of health checking in the web package
-    // TODO: should also have web heat flow to overlord
     AtomicReference<Runnable> heartbeat = new AtomicReference<>();
     CountDownLatch latchForHeartbeat = new CountDownLatch(1);
     engine.newApp("web", webConfig.port, (hb) -> {
