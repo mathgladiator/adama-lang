@@ -477,9 +477,6 @@ export class Connection {
   // the callbacks for the various inflight operations
   callbacks: Map<number, (result: object) => void>;
 
-  // the unique id for this connection
-  rpcid: number;
-
   // event: the status of connection has changed. true => connected & auth, false => not connected
   onstatuschange: (status: boolean) => void;
 
@@ -518,7 +515,6 @@ export class Connection {
     this.callbacks = new Map<number, (result: object) => void>();
     this.nextId = 0;
     this.onreconnect = new Map<number, object>();
-    this.rpcid = 1;
     this.sessionId = "";
     this.sendId = 0;
   }
@@ -661,10 +657,7 @@ export class Connection {
       callback({ failure: 600, reason: 9999 });
       return;
     }
-    var id = this.rpcid;
-    this.rpcid++;
-    request['id'] = id;
-    this.callbacks.set(id, callback);
+    this.callbacks.set(request.id, callback);
     this.socket.send(JSON.stringify(request));
   }
 
@@ -743,215 +736,214 @@ export class Connection {
   InitSetupAccount(email: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"init/setup-account", "id":id, "email": email}
+      request: {"method":"init/setup-account", "id":parId, "email": email}
     });
   }
   InitCompleteAccount(email: string, revoke: boolean, code: string, responder: InitiationResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"init/complete-account", "id":id, "email": email, "revoke": revoke, "code": code}
+      request: {"method":"init/complete-account", "id":parId, "email": email, "revoke": revoke, "code": code}
     });
   }
   AccountSetPassword(identity: string, password: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"account/set-password", "id":id, "identity": identity, "password": password}
+      request: {"method":"account/set-password", "id":parId, "identity": identity, "password": password}
     });
   }
   AccountLogin(email: string, password: string, responder: InitiationResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"account/login", "id":id, "email": email, "password": password}
+      request: {"method":"account/login", "id":parId, "email": email, "password": password}
     });
   }
   Probe(identity: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"probe", "id":id, "identity": identity}
+      request: {"method":"probe", "id":parId, "identity": identity}
     });
   }
   AuthorityCreate(identity: string, responder: ClaimResultResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"authority/create", "id":id, "identity": identity}
+      request: {"method":"authority/create", "id":parId, "identity": identity}
     });
   }
   AuthoritySet(identity: string, authority: string, keyStore: any, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"authority/set", "id":id, "identity": identity, "authority": authority, "key-store": keyStore}
+      request: {"method":"authority/set", "id":parId, "identity": identity, "authority": authority, "key-store": keyStore}
     });
   }
   AuthorityGet(identity: string, authority: string, responder: KeystoreResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"authority/get", "id":id, "identity": identity, "authority": authority}
+      request: {"method":"authority/get", "id":parId, "identity": identity, "authority": authority}
     });
   }
   AuthorityList(identity: string, responder: AuthorityListingResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_stream({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"authority/list", "id":id, "identity": identity}
+      request: {"method":"authority/list", "id":parId, "identity": identity}
     });
   }
   AuthorityDestroy(identity: string, authority: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"authority/destroy", "id":id, "identity": identity, "authority": authority}
+      request: {"method":"authority/destroy", "id":parId, "identity": identity, "authority": authority}
     });
   }
   SpaceCreate(identity: string, space: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"space/create", "id":id, "identity": identity, "space": space}
+      request: {"method":"space/create", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceUsage(identity: string, space: string, limit: number, responder: BillingUsageResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_stream({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"space/usage", "id":id, "identity": identity, "space": space, "limit": limit}
+      request: {"method":"space/usage", "id":parId, "identity": identity, "space": space, "limit": limit}
     });
   }
   SpaceGet(identity: string, space: string, responder: PlanResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"space/get", "id":id, "identity": identity, "space": space}
+      request: {"method":"space/get", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceSet(identity: string, space: string, plan: any, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"space/set", "id":id, "identity": identity, "space": space, "plan": plan}
+      request: {"method":"space/set", "id":parId, "identity": identity, "space": space, "plan": plan}
     });
   }
   SpaceDelete(identity: string, space: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"space/delete", "id":id, "identity": identity, "space": space}
+      request: {"method":"space/delete", "id":parId, "identity": identity, "space": space}
     });
   }
   SpaceSetRole(identity: string, space: string, email: string, role: string, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"space/set-role", "id":id, "identity": identity, "space": space, "email": email, "role": role}
+      request: {"method":"space/set-role", "id":parId, "identity": identity, "space": space, "email": email, "role": role}
     });
   }
   SpaceReflect(identity: string, space: string, key: string, responder: ReflectionResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"space/reflect", "id":id, "identity": identity, "space": space, "key": key}
+      request: {"method":"space/reflect", "id":parId, "identity": identity, "space": space, "key": key}
     });
   }
   SpaceList(identity: string, marker: string, limit: number, responder: SpaceListingResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_stream({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"space/list", "id":id, "identity": identity, "marker": marker, "limit": limit}
+      request: {"method":"space/list", "id":parId, "identity": identity, "marker": marker, "limit": limit}
     });
   }
   DocumentCreate(identity: string, space: string, key: string, entropy: string, arg: any, responder: SimpleResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"document/create", "id":id, "identity": identity, "space": space, "key": key, "entropy": entropy, "arg": arg}
+      request: {"method":"document/create", "id":parId, "identity": identity, "space": space, "key": key, "entropy": entropy, "arg": arg}
     });
   }
   DocumentList(identity: string, space: string, marker: string, limit: number, responder: KeyListingResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_stream({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"document/list", "id":id, "identity": identity, "space": space, "marker": marker, "limit": limit}
+      request: {"method":"document/list", "id":parId, "identity": identity, "space": space, "marker": marker, "limit": limit}
     });
   }
   ConnectionCreate(identity: string, space: string, key: string, viewerState: any, responder: DataResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_stream({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"connection/create", "id":id, "identity": identity, "space": space, "key": key, "viewer-state": viewerState},
+      request: {"method":"connection/create", "id":parId, "identity": identity, "space": space, "key": key, "viewer-state": viewerState},
       send: function(channel: string, message: any, subResponder: SeqResponder) {
         self.nextId++;
         var subId = self.nextId;
-        var parId = id;
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -961,7 +953,6 @@ export class Connection {
       update: function(viewerState: any, subResponder: SimpleResponder) {
         self.nextId++;
         var subId = self.nextId;
-        var parId = id;
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -971,7 +962,6 @@ export class Connection {
       end: function(subResponder: SimpleResponder) {
         self.nextId++;
         var subId = self.nextId;
-        var parId = id;
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -983,25 +973,24 @@ export class Connection {
   ConfigureMakeOrGetAssetKey(responder: AssetKeyResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_rr({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"configure/make-or-get-asset-key", "id":id}
+      request: {"method":"configure/make-or-get-asset-key", "id":parId}
     });
   }
   AttachmentStart(identity: string, space: string, key: string, filename: string, contentType: string, responder: ProgressResponder) {
     var self = this;
     self.nextId++;
-    var id = self.nextId;
+    var parId = self.nextId;
     return self.__execute_stream({
-      id: id,
+      id: parId,
       responder: responder,
-      request: {"method":"attachment/start", "id":id, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType},
+      request: {"method":"attachment/start", "id":parId, "identity": identity, "space": space, "key": key, "filename": filename, "content-type": contentType},
       append: function(chunkMd5: string, base64Bytes: string, subResponder: SimpleResponder) {
         self.nextId++;
         var subId = self.nextId;
-        var parId = id;
         self.__execute_rr({
           id: subId,
           responder: subResponder,
@@ -1011,7 +1000,6 @@ export class Connection {
       finish: function(subResponder: SimpleResponder) {
         self.nextId++;
         var subId = self.nextId;
-        var parId = id;
         self.__execute_rr({
           id: subId,
           responder: subResponder,

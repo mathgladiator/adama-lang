@@ -16,6 +16,11 @@ import org.adamalang.cli.remote.Connection;
 import org.adamalang.cli.remote.WebSocketClient;
 import org.adamalang.common.Json;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Files;
+
 public class Documents {
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
@@ -33,6 +38,9 @@ public class Documents {
         return;
       case "list":
         documentsList(config, next);
+        return;
+      case "attach":
+        documentsAttach(config, next);
         return;
       case "help":
         documentsHelp(next);
@@ -55,6 +63,8 @@ public class Documents {
     System.out.println(Util.prefix("SPACESUBCOMMAND:", Util.ANSI.Yellow));
     System.out.println("    " + Util.prefix("connect", Util.ANSI.Green) + "           Connect to a document");
     System.out.println("    " + Util.prefix("create", Util.ANSI.Green) + "            Create a document");
+    System.out.println("    " + Util.prefix("list", Util.ANSI.Green) + "              List documents");
+    System.out.println("    " + Util.prefix("attach", Util.ANSI.Green) + "            Attach an asset to a document");
   }
 
   private static void documentsConnect(Config config, String[] args) throws Exception {
@@ -94,6 +104,61 @@ public class Documents {
         }
         request.set("arg", argNode);
         System.err.println(connection.execute(request).toPrettyString());
+      }
+    }
+  }
+
+  private static void documentsAttach(Config config, String[] args) throws Exception {
+    String identity = config.get_string("identity", null);
+    String space = Util.extractOrCrash("--space", "-s", args);
+    String key = Util.extractOrCrash("--key", "-k", args);
+    String file = Util.extractOrCrash("--file", "-f", args);
+    String filename = Util.extractWithDefault("--name", "-n", file, args);
+    String contentTypeInfer = Files.probeContentType(new File(file).toPath());
+    String contentType = Util.extractWithDefault("--type", "-t", contentTypeInfer, args);
+    try (BufferedInputStream input = new BufferedInputStream(new FileInputStream(file))) {
+      try (WebSocketClient client = new WebSocketClient(config)) {
+        try (Connection connection = client.open()) {
+          ObjectNode request = Json.newJsonObject();
+
+          /*
+
+      <method name="attachment/start" responder="progress" create="attachment-upload">
+          <parameter name="identity"/>
+          <parameter name="space"/>
+          <parameter name="key"/>
+          <parameter name="filename"/>
+          <parameter name="content-type"/>
+          <documentation>
+          </documentation>
+      </method>
+
+      <method name="attachment/append" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="477201">
+          <parameter name="upload"/>
+          <parameter name="chunk-md5"/>
+          <parameter name="base64-bytes"/>
+          <documentation>
+          </documentation>
+      </method>
+
+      <method name="attachment/finish" responder="simple" handler="attachment-upload" find-by="upload" error-find-by="478227" destroy="true">
+          <parameter name="upload"/>
+          <documentation>
+          </documentation>
+      </method>
+           */
+
+          request.put("method", "attachment/start");
+          request.put("identity", identity);
+          request.put("space", space);
+          request.put("key", key);
+          request.put("filename", filename);
+          request.put("content-type", contentType);
+          System.err.println(request.toPrettyString());
+          connection.stream(request, (update) -> {
+            System.err.println(update.toPrettyString());
+          });
+        }
       }
     }
   }

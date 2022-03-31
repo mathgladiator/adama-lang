@@ -484,46 +484,58 @@ public class RootHandlerImpl implements RootHandler {
   public AttachmentUploadHandler handle(Session session, AttachmentStartRequest request, ProgressResponder startResponder) {
     AtomicReference<Connection> connection = new AtomicReference<>(null);
     AtomicBoolean clean = new AtomicBoolean(false);
-    connection.set(nexus.client.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", session.getAssetKey(), new SimpleEvents() {
-      @Override
-      public void connected() {
-        connection.get().canAttach(new Callback<Boolean>() {
-          @Override
-          public void success(Boolean value) {
-            if (value) {
-              startResponder.next(65536);
-            } else {
-              startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_NOT_ALLOWED));
+    AtomicBoolean killed = new AtomicBoolean(false);
+    Runnable kickOff = () -> {
+      connection.set(nexus.client.connect(session.context.remoteIp, session.context.origin, request.who.who.agent, request.who.who.authority, request.space, request.key, "{}", session.getAssetKey(), new SimpleEvents() {
+        @Override
+        public void connected() {
+          connection.get().canAttach(new Callback<Boolean>() {
+            @Override
+            public void success(Boolean value) {
+              if (value) {
+                startResponder.next(65536);
+              } else {
+                if (!killed.get()) {
+                  killed.set(true);
+                  startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_NOT_ALLOWED));
+                }
+              }
             }
-          }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            startResponder.error(ex);
-
-          }
-        });
-      }
-
-      @Override
-      public void delta(String data) {
-        // don't care for right now
-      }
-
-      @Override
-      public void error(int code) {
-        startResponder.error(new ErrorCodeException(code));
-      }
-
-      @Override
-      public void disconnected() {
-        if (!clean.get()) {
-          startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_LOST_CONNECTION));
-        } else {
-          startResponder.finish();
+            @Override
+            public void failure(ErrorCodeException ex) {
+              killed.set(true);
+              startResponder.error(ex);
+            }
+          });
         }
-      }
-    }));
+
+        @Override
+        public void delta(String data) {
+          // don't care for right now
+        }
+
+        @Override
+        public void error(int code) {
+          if (!killed.get()) {
+            killed.set(true);
+            startResponder.error(new ErrorCodeException(code));
+          }
+        }
+
+        @Override
+        public void disconnected() {
+          if (!clean.get()) {
+            if (!killed.get()) {
+              killed.set(true);
+              startResponder.error(new ErrorCodeException(ErrorCodes.API_ASSET_ATTACHMENT_LOST_CONNECTION));
+            }
+          } else {
+            startResponder.finish();
+          }
+        }
+      }));
+    };
 
     return new AttachmentUploadHandler() {
       String id;
@@ -543,6 +555,7 @@ public class RootHandlerImpl implements RootHandler {
           digestSHA384 = MessageDigest.getInstance("SHA-384");
           output = new FileOutputStream(file);
           size = 0;
+          kickOff.run();
         } catch (Exception ex) {
           startResponder.error(ErrorCodeException.detectOrWrap(ErrorCodes.API_ASSET_FAILED_BIND, ex, LOGGER));
         }

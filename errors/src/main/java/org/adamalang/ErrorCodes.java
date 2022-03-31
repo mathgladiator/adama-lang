@@ -98,9 +98,18 @@ public class ErrorCodes {
   public static final int COMPUTE_EMPTY_REWIND = 694287;
   public static final int COMPUTE_UNKNOWN_METHOD = 656396;
 
+  @User
+  @Description("The requested space already exists.")
   public static final int FRONTEND_SPACE_ALREADY_EXISTS = 679948;
+
+  @User
+  @Description("The request space does not exist.")
   public static final int FRONTEND_SPACE_DOESNT_EXIST = 625678;
+
+  @User
+  @Description("The requested space does not exist, or the plan is not set")
   public static final int FRONTEND_PLAN_DOESNT_EXIST = 609294;
+
   public static final int FRONTEND_INTERNAL_PLAN_DOESNT_EXIST = 654341;
   public static final int INVALID_ROLE = 688141;
   public static final int FRONTEND_AUTHORITY_ALREADY_EXISTS = 601088;

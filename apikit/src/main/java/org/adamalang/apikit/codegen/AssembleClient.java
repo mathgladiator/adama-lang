@@ -93,15 +93,15 @@ public class AssembleClient {
         ts.append("responder: ").append(method.responder.camelName).append("Responder) {\n");
         ts.append("    var self = this;\n");
         ts.append("    self.nextId++;\n");
-        ts.append("    var id = self.nextId;\n");
+        ts.append("    var parId = self.nextId;\n");
         if (method.responder.stream) {
           ts.append("    return self.__execute_stream({\n");
         } else {
           ts.append("    return self.__execute_rr({\n");
         }
-        ts.append("      id: id,\n");
+        ts.append("      id: parId,\n");
         ts.append("      responder: responder,\n");
-        ts.append("      request: {\"method\":\"").append(method.name).append("\", \"id\":id");
+        ts.append("      request: {\"method\":\"").append(method.name).append("\", \"id\":parId");
         for (ParameterDefinition parameter : method.parameters) {
           ts.append(", ").append("\"").append(parameter.name).append("\": ").append(parameter.camelName);
         }
@@ -132,7 +132,6 @@ public class AssembleClient {
             ts.append("subResponder: ").append(submethod.responder.camelName).append("Responder) {\n");
             ts.append("        self.nextId++;\n");
             ts.append("        var subId = self.nextId;\n");
-            ts.append("        var parId = id;\n");
             ts.append("        self.__execute_rr({\n");
             ts.append("          id: subId,\n");
             ts.append("          responder: subResponder,\n");
