@@ -95,7 +95,7 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
             private String contentType = null;
 
             @Override
-            public void headers(String contentType) {
+            public void headers(long length, String contentType) {
               this.contentType = contentType;
             }
 
@@ -108,18 +108,17 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                 res.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
                 sendWithKeepAlive(webConfig, ctx, req, res);
               } else {
-                if (started) {
-                  if (last) {
-                    ctx.write(new DefaultLastHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
-                  } else {
-                    ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
-                  }
-                } else {
-                  started = true;
-                  DefaultHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
+                if (!started) {
+                  DefaultHttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK);
                   response.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
                   response.headers().set(HttpHeaderNames.CONTENT_TYPE, this.contentType);
-                  ctx.writeAndFlush(response);
+                  ctx.write(response);
+                  started = true;
+                }
+
+                ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
+                if (last) {
+                  ctx.writeAndFlush(new DefaultLastHttpContent());
                 }
               }
             }

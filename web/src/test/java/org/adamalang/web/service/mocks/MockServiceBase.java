@@ -108,18 +108,18 @@ public class MockServiceBase implements ServiceBase {
       @Override
       public void request(AssetRequest request, AssetStream stream) {
         if (request.key.equals("1")) {
-          stream.headers("text/plain");
+          stream.headers(-1, "text/plain");
           byte[] chunk = "ChunkAndDone".getBytes(StandardCharsets.UTF_8);
           stream.body(chunk, 0, chunk.length, true);
           return;
         }
         if (request.key.equals("fail")) {
-          stream.headers("text/plain");
+          stream.headers(-1,"text/plain");
           stream.failure(1234);
           return;
         }
         if (request.key.equals("3")) {
-          stream.headers("text/plain");
+          stream.headers(-1, "text/plain");
           byte[] chunk1 = "Chunk1".getBytes(StandardCharsets.UTF_8);
           byte[] chunk2 = "Chunk2".getBytes(StandardCharsets.UTF_8);
           byte[] chunk3 = "Chunk3".getBytes(StandardCharsets.UTF_8);

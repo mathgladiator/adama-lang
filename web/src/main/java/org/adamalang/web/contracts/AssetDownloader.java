@@ -5,7 +5,7 @@ import org.adamalang.web.service.AssetRequest;
 public interface AssetDownloader {
 
   public static interface AssetStream {
-    public void headers(String contentType);
+    public void headers(long length, String contentType);
 
     public void body(byte[] chunk, int offset, int length, boolean last);
 

@@ -71,8 +71,8 @@ public class S3 implements AssetUploader, AssetDownloader {
       try {
         GetObjectRequest request = GetObjectRequest.builder().bucket(bucket).key(asset.space + "/" + asset.key + "/" + asset.id).build();
         ResponseInputStream<GetObjectResponse> response = s3.getObject(request);
-        stream.headers(response.response().contentType());
-        byte[] chunk = new byte[65536];
+        stream.headers(response.response().contentLength(), response.response().contentType());
+        byte[] chunk = new byte[64 * 1024];
         long left = response.response().contentLength();
         int rd;
         while ((rd = response.read(chunk, 0, (int) Math.min(chunk.length, left))) >= 0 && left > 0) {
