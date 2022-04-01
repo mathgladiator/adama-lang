@@ -33,9 +33,9 @@ public class ServiceRunnable implements Runnable {
   private final ServiceBase base;
   private final CountDownLatch ready;
   private final AtomicBoolean started;
+  private final Runnable heartbeat;
   private Channel channel;
   private boolean stopped;
-  private final Runnable heartbeat;
 
   public ServiceRunnable(final WebConfig webConfig, final WebMetrics metrics, ServiceBase base, Runnable heartbeat) {
     this.webConfig = webConfig;
@@ -84,7 +84,7 @@ public class ServiceRunnable implements Runnable {
                   metrics.websockets_server_heartbeat.run();
                   heartbeat.run();
                 }
-              },  (int) (10 + 15 * Math.random()), TimeUnit.MILLISECONDS);
+              }, (int) (10 + 15 * Math.random()), TimeUnit.MILLISECONDS);
             }, 50, 50, TimeUnit.MILLISECONDS);
             ch.closeFuture().sync();
             LOGGER.info("channel-close-future-syncd");

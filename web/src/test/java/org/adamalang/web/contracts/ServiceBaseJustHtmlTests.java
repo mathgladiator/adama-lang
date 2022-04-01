@@ -49,6 +49,7 @@ public class ServiceBaseJustHtmlTests {
     });
     base.establish(null).keepalive();
     base.establish(null).kill();
+    base.downloader();
     Assert.assertEquals("yay", new String(base.http().handleGet("x").body, StandardCharsets.UTF_8));
     Assert.assertEquals("post", new String(base.http().handlePost("x", null).body, StandardCharsets.UTF_8));
   }

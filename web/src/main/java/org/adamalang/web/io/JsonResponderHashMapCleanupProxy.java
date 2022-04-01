@@ -16,7 +16,6 @@ import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.StreamMonitor;
 
 import java.util.HashMap;
-import java.util.concurrent.Executor;
 
 /**
  * a JsonResponder wrapper which will remove the given key from a map on a terminal signal. Note:

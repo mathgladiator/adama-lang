@@ -15,8 +15,8 @@ import org.adamalang.common.ErrorCodeException;
 
 /** a thin wrapper for easy access to a JSON request */
 public class JsonRequest {
-  private final ObjectNode node;
   public final ConnectionContext context;
+  private final ObjectNode node;
 
   public JsonRequest(ObjectNode node, ConnectionContext context) {
     this.node = node;
@@ -25,11 +25,6 @@ public class JsonRequest {
 
   public int id() throws ErrorCodeException {
     return getInteger("id", true, ErrorCodes.USERLAND_REQUEST_NO_ID_PROPERTY);
-  }
-
-  public void dumpIntoLog(ObjectNode logItem) {
-    logItem.put("ip", context.remoteIp);
-    logItem.put("origin", context.origin);
   }
 
   public Integer getInteger(String field, boolean mustExist, int errorIfDoesnt) throws ErrorCodeException {
@@ -49,6 +44,11 @@ public class JsonRequest {
       }
     }
     return fieldNode.intValue();
+  }
+
+  public void dumpIntoLog(ObjectNode logItem) {
+    logItem.put("ip", context.remoteIp);
+    logItem.put("origin", context.origin);
   }
 
   public String method() throws ErrorCodeException {

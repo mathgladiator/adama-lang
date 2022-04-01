@@ -9,15 +9,12 @@
  */
 package org.adamalang.web.service;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
-import io.netty.handler.codec.http.cookie.*;
-import io.netty.handler.codec.http.cookie.Cookie;
-import io.netty.handler.codec.http.cookie.CookieDecoder;
+import io.netty.handler.codec.http.cookie.CookieHeaderNames;
 import io.netty.handler.codec.http.cookie.DefaultCookie;
 import io.netty.handler.codec.http.cookie.ServerCookieEncoder;
 import org.adamalang.web.contracts.AssetDownloader;
@@ -25,7 +22,6 @@ import org.adamalang.web.contracts.HttpHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.List;
 
 public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
   private final WebConfig webConfig;
@@ -115,7 +111,6 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
                   ctx.write(response);
                   started = true;
                 }
-
                 ctx.write(new DefaultHttpContent(Unpooled.wrappedBuffer(Arrays.copyOfRange(chunk, offset, length))));
                 if (last) {
                   ctx.writeAndFlush(new DefaultLastHttpContent());
@@ -128,9 +123,11 @@ public class WebHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
               if (started) {
                 ctx.close();
               } else {
-                byte[] content = ("Download failure:" + code).getBytes(StandardCharsets.UTF_8);
+                byte[] content = ("Download asset failure:" + code).getBytes(StandardCharsets.UTF_8);
                 final FullHttpResponse res = new DefaultFullHttpResponse(req.protocolVersion(), HttpResponseStatus.SERVICE_UNAVAILABLE, Unpooled.wrappedBuffer(content));
+                res.headers().set("x-adama", "" + code);
                 HttpUtil.setContentLength(res, content.length);
+                res.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
                 sendWithKeepAlive(webConfig, ctx, req, res);
               }
             }

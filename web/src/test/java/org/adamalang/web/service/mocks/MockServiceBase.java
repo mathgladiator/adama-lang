@@ -118,6 +118,14 @@ public class MockServiceBase implements ServiceBase {
           stream.failure(1234);
           return;
         }
+
+        if (request.key.equals("incomplete")) {
+          stream.headers(-1,"text/plain");
+          byte[] chunk = "Chunk".getBytes(StandardCharsets.UTF_8);
+          stream.body(chunk, 0, chunk.length, false);
+          stream.failure(1234);
+          return;
+        }
         if (request.key.equals("3")) {
           stream.headers(-1, "text/plain");
           byte[] chunk1 = "Chunk1".getBytes(StandardCharsets.UTF_8);

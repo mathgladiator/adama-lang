@@ -13,9 +13,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.cookie.Cookie;
-import io.netty.handler.codec.http.cookie.CookieDecoder;
-import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
@@ -97,13 +94,6 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
   }
 
   @Override
-  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-    super.exceptionCaught(ctx, cause);
-    metrics.websockets_uncaught_exception.run();
-    end(ctx);
-  }
-
-  @Override
   public void userEventTriggered(final ChannelHandlerContext ctx, final Object evt) {
     if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete && !closed) {
 
@@ -118,7 +108,7 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       String assetKey = AssetRequest.extractAssetKey(headers.get(HttpHeaderNames.COOKIE));
 
       // tell client all is ok
-      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\",\"assets\":" + (assetKey != null ? "true" : "false") +"}"));
+      ctx.writeAndFlush(new TextWebSocketFrame("{\"status\":\"connected\",\"assets\":" + (assetKey != null ? "true" : "false") + "}"));
 
       context = new ConnectionContext(origin, ip, userAgent, assetKey);
 
@@ -141,6 +131,13 @@ public class WebSocketHandler extends SimpleChannelInboundHandler<WebSocketFrame
       // schedule the heartbeat loop
       future = ctx.executor().scheduleAtFixedRate(heartbeatLoop, webConfig.heartbeatTimeMilliseconds, webConfig.heartbeatTimeMilliseconds, TimeUnit.MILLISECONDS);
     }
+  }
+
+  @Override
+  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    super.exceptionCaught(ctx, cause);
+    metrics.websockets_uncaught_exception.run();
+    end(ctx);
   }
 
   @Override

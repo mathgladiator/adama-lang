@@ -14,7 +14,6 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 
-import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 /**

@@ -11,11 +11,16 @@ package org.adamalang.web.service;
 
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.handler.codec.http.cookie.ClientCookieEncoder;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
+import org.adamalang.runtime.delta.secure.SecureAssetUtil;
 import org.adamalang.web.client.TestClientCallback;
 import org.adamalang.web.client.TestClientRequestBuilder;
 import org.adamalang.web.service.mocks.MockServiceBase;
 import org.junit.Test;
+
+import javax.crypto.SecretKey;
+import java.security.PrivateKey;
 
 public class WebHandlerTests {
   @Test
@@ -45,6 +50,79 @@ public class WebHandlerTests {
             .execute(callback);
         callback.awaitFirst();
         callback.assertData("<html><head><title>bad request</title></head><body>Greetings, this is primarily a websocket server, so your request made no sense. Sorry!</body></html>");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .get("/assets/space/key/id=123")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("<html><head><title>bad request</title></head><body>Asset cookie was not set.</body></html>");
+      }
+
+      {
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", SecureAssetUtil.makeAssetKeyHeader()))
+            .get("/assets/space/key/id=123")
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("<html><head><title>got asset request</title></head><body>Failure to initiate asset attachment.</body></html>");
+      }
+
+      {
+        String keyHeader = SecureAssetUtil.makeAssetKeyHeader();
+        SecretKey key = SecureAssetUtil.secretKeyOf(keyHeader);
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
+            .get("/assets/space/fail/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("Download asset failure:1234");
+      }
+
+      {
+        String keyHeader = SecureAssetUtil.makeAssetKeyHeader();
+        SecretKey key = SecureAssetUtil.secretKeyOf(keyHeader);
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
+            .get("/assets/space/incomplete/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("Chunk");
+      }
+
+      {
+        String keyHeader = SecureAssetUtil.makeAssetKeyHeader();
+        SecretKey key = SecureAssetUtil.secretKeyOf(keyHeader);
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
+            .get("/assets/space/1/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("ChunkAndDone");
+      }
+
+      {
+        String keyHeader = SecureAssetUtil.makeAssetKeyHeader();
+        SecretKey key = SecureAssetUtil.secretKeyOf(keyHeader);
+        TestClientCallback callback = new TestClientCallback();
+        TestClientRequestBuilder.start(group)
+            .server("localhost", webConfig.port)
+            .header("Cookie", ClientCookieEncoder.STRICT.encode("SAK", keyHeader))
+            .get("/assets/space/3/id=" + SecureAssetUtil.encryptToBase64(key, "1"))
+            .execute(callback);
+        callback.awaitFirst();
+        callback.assertData("Chunk1Chunk2Chunk3");
       }
 
       {

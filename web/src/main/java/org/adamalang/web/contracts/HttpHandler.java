@@ -22,7 +22,11 @@ public interface HttpHandler {
     }
   };
 
-  public static class HttpResult {
+  HttpResult handleGet(String uri);
+
+  HttpResult handlePost(String uri, String body);
+
+  class HttpResult {
     public final String contentType;
     public final byte[] body;
 
@@ -31,8 +35,4 @@ public interface HttpHandler {
       this.body = body;
     }
   }
-
-  HttpResult handleGet(String uri);
-
-  HttpResult handlePost(String uri, String body);
 }

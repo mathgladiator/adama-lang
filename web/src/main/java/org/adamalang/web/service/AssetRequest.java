@@ -9,7 +9,6 @@
  */
 package org.adamalang.web.service;
 
-import io.netty.handler.codec.http.HttpHeaderNames;
 import io.netty.handler.codec.http.cookie.Cookie;
 import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
 import org.adamalang.runtime.delta.secure.SecureAssetUtil;

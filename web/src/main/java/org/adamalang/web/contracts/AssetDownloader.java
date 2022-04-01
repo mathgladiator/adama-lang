@@ -4,15 +4,15 @@ import org.adamalang.web.service.AssetRequest;
 
 public interface AssetDownloader {
 
-  public static interface AssetStream {
-    public void headers(long length, String contentType);
+  void request(AssetRequest request, AssetStream stream);
 
-    public void body(byte[] chunk, int offset, int length, boolean last);
+  interface AssetStream {
+    void headers(long length, String contentType);
 
-    public void failure(int code);
+    void body(byte[] chunk, int offset, int length, boolean last);
+
+    void failure(int code);
   }
-
-  public void request(AssetRequest request, AssetStream stream);
 
 
 }

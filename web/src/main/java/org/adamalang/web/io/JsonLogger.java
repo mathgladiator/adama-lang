@@ -13,7 +13,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @FunctionalInterface
 public interface JsonLogger {
-  public void log(ObjectNode item);
+  JsonLogger NoOp = (item) -> {
+  };
 
-  public static final JsonLogger NoOp = (item) -> {};
+  void log(ObjectNode item);
 }
