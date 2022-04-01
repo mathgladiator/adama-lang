@@ -10,6 +10,7 @@
 package org.adamalang.translator.parser.token;
 
 import org.adamalang.translator.parser.exceptions.AdamaLangException;
+import org.adamalang.translator.tree.common.DocumentPosition;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,6 +32,10 @@ public class TokenEngine {
     stateMachine = new TokenReaderStateMachine(sourceName, this::witness);
     currentToken = null;
     nonsemanticForwardingTokens = null;
+  }
+
+  public DocumentPosition position() {
+    return stateMachine.position();
   }
 
   private void witness(final Token token) {

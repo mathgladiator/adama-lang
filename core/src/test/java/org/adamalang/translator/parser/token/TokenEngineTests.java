@@ -13,5 +13,8 @@ import org.junit.Test;
 
 public class TokenEngineTests {
   @Test
-  public void coverage() {}
+  public void coverage() {
+    String xml = "<X>";
+    new TokenEngine("demo", xml.codePoints().iterator()).position();
+  }
 }

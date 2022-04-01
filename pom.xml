@@ -33,6 +33,7 @@
         <module>net</module>
         <module>data-bald</module>
         <module>data-caravan</module>
+        <module>rxhtml</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
