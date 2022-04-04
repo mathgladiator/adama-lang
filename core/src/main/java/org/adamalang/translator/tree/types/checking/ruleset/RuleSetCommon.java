@@ -160,6 +160,16 @@ public class RuleSetCommon {
         return new TyNativeMaybe(TypeBehavior.ReadOnlyNativeValue, null, null, new TokenizedItem<>(maxType));
       }
     }
+    final var aList = RuleSetLists.IsNativeList(environment, resolveA, true);
+    final var bList = RuleSetLists.IsNativeList(environment, resolveB, true);
+    if (aList && bList) {
+      final var aChildType = RuleSetCommon.ExtractEmbeddedType(environment, resolveA, true);
+      final var bChildType = RuleSetCommon.ExtractEmbeddedType(environment, resolveB, true);
+      if (aChildType != null && bChildType != null && aChildType.getAdamaType().equals(bChildType.getAdamaType())) {
+        return resolveA;
+      }
+    }
+
     final var aArray = RuleSetArray.IsNativeArray(environment, resolveA, true);
     final var bArray = RuleSetArray.IsNativeArray(environment, resolveB, true);
     if (aArray && bArray) {

@@ -27,7 +27,7 @@ public class RuleSetLists {
     return false;
   }
 
-  private static boolean IsNativeList(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsNativeList(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     var tyType = tyTypeOriginal;
     if (tyType != null) {
       tyType = RuleSetCommon.Resolve(environment, tyType, silent);

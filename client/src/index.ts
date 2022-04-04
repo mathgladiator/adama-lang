@@ -21,7 +21,7 @@ export class Tree {
   // dispatch is the structural object mirroring the tree
   // callback is the function/object callback tree
   // insert_order is the order to fire events
-  __recAppendChange(dispatch: any, callback: any, insert_order: number) {
+  __recAppendChange(dispatch: any, callback: any, insert_order: number, auto_delete: boolean) {
     // the callback is an object
     if (typeof (callback) == 'object') {
       // we for each item in the callback
@@ -31,23 +31,38 @@ export class Tree {
           dispatch[key] = {};
         }
         // recurse into that key
-        this.__recAppendChange(dispatch[key], callback[key], insert_order);
+        this.__recAppendChange(dispatch[key], callback[key], insert_order, auto_delete);
       }
     } else if (typeof (callback) == 'function') {
       // we have a function, so let's associate it to the node
       if (!('@e' in dispatch)) {
         dispatch['@e'] = [];
       }
-      dispatch['@e'].push({ cb: callback, order: insert_order });
+      dispatch['@e'].push({ cb: callback, order: insert_order, auto_delete: auto_delete });
     }
   }
 
+  /** delete events that have auto_delete == true */
+  __autoDelete(dispatch: any) {
+    if ('@e' in dispatch) {
+      var list = dispatch['@e'];
+      var next = [];
+      for (var k = 0; k < list.length; k++) {
+        if (!list[k].auto_delete) {
+          next.push(list[k]);
+        }
+      }
+      dispatch['@e'] = next;
+    }
+  }
+
+  /** bind an event handler to the tree */
   onTreeChange(callback: any) {
-    this.__recAppendChange(this.dispatch, callback, this.dispatch_count);
+    this.__recAppendChange(this.dispatch, callback, this.dispatch_count, false);
     this.dispatch_count++;
   }
 
-  // the main function
+  /** supply a delta from Adama; manages data and decisions */
   mergeUpdate(diff: any) {
     if ('data' in diff) {
       // we merge the tree with the data within dispatch
@@ -59,16 +74,17 @@ export class Tree {
     this.__drain();
   }
 
+  /** phase 1.5: recursively delete the tree and fire off events */
   __recDeleteAndDispatch(tree: any, dispatch: any) {
     for (var key in tree) {
       let old = tree[key];
-
       if (Array.isArray(old)) {
-        // need to fire the DELETE
-      } else {
-        if (key in dispatch) {
-          this.__recDeleteAndDispatch(old, dispatch[key]);
+        let elementKey = "#" + key;
+        if (elementKey in tree && elementKey in dispatch) {
+          this.__recDeleteAndDispatch(tree[elementKey], dispatch[elementKey]);
         }
+      } else if (key in dispatch) {
+        this.__recDeleteAndDispatch(old, dispatch[key]);
       }
 
       let deleteChildKey = '-' + key;
@@ -78,28 +94,31 @@ export class Tree {
     }
   }
 
+  /** phase 1: */
   __recMergeAndDispatch(tree: any, dispatch: any, diff: any) {
     // the diff is an object, so let's walk its keys
     for (var key in diff) {
       var child = diff[key];
       if (child === null) {
-        let deleteChildKey = '-' + key;
         let old = tree[key];
+        // event: the value is being nuked (maybe value or privacy change)
+        let deleteChildKey = '-' + key;
         if (dispatch != null && deleteChildKey in dispatch) {
           this.__fire(dispatch[deleteChildKey], {key: key, before: old, value: null});
         }
+        // if the prior value is an array
         if (Array.isArray(old)) {
-          // also delete
+          // then we recursively delete the children
           let elementKey = "#" + key;
           if (elementKey in tree && elementKey in dispatch) {
             this.__recDeleteAndDispatch(tree[elementKey], dispatch[elementKey]);
           }
           delete tree["#" + key];
-        }
-        if (key in tree && key in dispatch) {
-          this.__recDeleteAndDispatch(tree[key], dispatch[key]);
+        } else if (key in dispatch) {
+          this.__recDeleteAndDispatch(old, dispatch[key]);
         }
         delete tree[key];
+        // fire off an event for the deletion of the thing
         if (dispatch != null && key in dispatch) {
           this.__fire(dispatch[key], { key: key, before: old, value: null});
         }
@@ -122,8 +141,10 @@ export class Tree {
         // now, we check to see if the prior state influences whether or not the diff is an array
         childIsArray = Array.isArray(tree[key]) || childIsArray;
         if (childIsArray) {
+          // recurse into the array form
           this.__recMergeAndDispatchArray(tree[key], (dispatch != null && key in dispatch) ? dispatch[key] : null, tree["#" + key], child);
         } else {
+          // simply recurse
           this.__recMergeAndDispatch(tree[key], (dispatch != null && key in dispatch) ? dispatch[key] : null, child);
         }
       } else {
@@ -139,29 +160,38 @@ export class Tree {
           this.__fire(dispatch[newChildKey], {key: key, value:tree[key]});
         }
       }
+
+      // fire that changes happened on this entire branch
       if (dispatch != null && '@e' in dispatch) {
         this.__fire(dispatch, {value: tree});
       }
     }
   }
+  /** phase 2: array merging */
   __recMergeAndDispatchArray(prior: any, dispatch: any, tree: any, diff: any) {
-
-    // TODO: new item... etc
-
     var ordering = null;
     var resize = null;
     for (var key in diff) {
       if (key == "@o") {
+        // detect an ordering change
         ordering = diff[key];
       } else if (key == "@s") {
+        // detect a resize change
         resize = diff[key];
       } else {
+        // compare objects
         if (diff[key] == null) {
+          // detect a delete of the object
           if (dispatch && '-' in dispatch) {
-            this.__fire(dispatch['-'], {key: key, before: tree[key], value:null});
+            if (key in dispatch) {
+              this.__fire(dispatch['-'], {key: key, before: tree[key], value:null, clean: true, clean_on: dispatch[key]});
+            } else {
+              this.__fire(dispatch['-'], {key: key, before: tree[key], value:null});
+            }
           }
           delete tree[key];
         } else {
+          // otherwise fire a change
           var fireNew = false;
           if (!(tree != null && key in tree)) {
             if (dispatch && '+' in dispatch) {
@@ -169,9 +199,15 @@ export class Tree {
             }
             tree[key] = {};
           }
-          this.__recMergeAndDispatch(tree[key], (dispatch != null && '#' in dispatch) ? dispatch['#'] : null, diff[key]);
+          tree[key].__key = "" + key;
+          this.__recMergeAndDispatch(tree[key], (dispatch != null && key in dispatch) ? dispatch[key] : null, diff[key]);
           if (fireNew) {
-            this.__fire(dispatch['+'], {key: key, before: null, value: tree[key]});
+            if (!(key in dispatch)) {
+              dispatch[key] = {};
+            }
+            this.__fire(dispatch['+'], {key: key, before: null, value: tree[key], append_result:true, append_to:dispatch[key]});
+          } else if (dispatch && '!' in dispatch) {
+            this.__fire(dispatch['!'], {key: key, value: tree[key]});
           }
         }
       }
@@ -190,42 +226,27 @@ export class Tree {
     if (ordering !== null) {
       var after = [];
       change.before = [];
-      var implicitDelete = dispatch ? '-' in dispatch : false;
+      var absorder = [];
       for (var k = 0; k < prior.length; k++) {
         change.before.push(prior[k]);
-        if (implicitDelete) {
-          prior[k].__kill = true;
-        }
       }
       for (var k = 0; k < ordering.length; k++) {
         var instr = ordering[k];
         var type_instr = typeof (instr);
         if (type_instr == "string" || type_instr == "number") {
           after.push(tree[instr]);
-          if (implicitDelete) {
-            tree[instr].__kill = false;
-          }
+          absorder.push("" + instr);
         } else {
           var start = instr[0];
           var end = instr[1];
           for (var j = start; j <= end; j++) {
-            if (implicitDelete) {
-              prior[j].__kill = false;
-            }
+            absorder.push(prior[j].__key);
             after.push(prior[j]);
           }
         }
       }
-      if (implicitDelete) {
-        for (key in tree) {
-          if (tree[key].__kill) {
-            if (key in dispatch) {
-              this.__recDeleteAndDispatch(tree[key], dispatch[key]);
-            }
-            this.__fire(dispatch['-'], {key: key, before: tree[key], value:null});
-          }
-          delete tree[key].__kill;
-        }
+      if (dispatch && '^' in dispatch) {
+        this.__fire(dispatch['^'], {new_order: absorder});
       }
       prior.length = after.length;
       for (var k = 0; k < after.length; k++) {
@@ -234,6 +255,7 @@ export class Tree {
     }
     this.__fire(dispatch, change);
   }
+  /** phase: fire events and place them in the queue */
   __fire(dispatch: any, change: any) {
     if (dispatch) {
       if ('@e' in dispatch) {
@@ -259,13 +281,28 @@ export class Tree {
       }
     }
   }
+  /** phase: final phase is draining the queue of events in the order applied by the user */
   __drain() {
     this.queue.sort(function (a: any, b: any) { return a.order - b.order; });
     for (var k = 0; k < this.queue.length; k++) {
-      var item = this.queue[k];
-      if (item.cb(item.change) === 'delete') {
-        item.dispatch_list[item.index] = null;
+      var item = this.queue[k]
+      var result = item.cb(item.change);
+      if (item.change.clean) {
+        this.__autoDelete(item.change.clean_on);
       }
+      if (result === 'delete') {
+        item.dispatch_list[item.index] = null;
+      } else if (typeof(result) === 'function' || typeof(result) === 'object' || Array.isArray(result)) {
+        if (item.change.append_result) {
+          if (Array.isArray(result)) {
+            for (var k = 0; k < result.length; k++) {
+              this.__recAppendChange(item.change.append_to, result[k], item.order, true);
+            }
+          } else {
+            this.__recAppendChange(item.change.append_to, result, item.order, true);
+          }
+        }
+      } // else if item.change
     }
     this.queue = [];
   }

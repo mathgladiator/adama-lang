@@ -5,14 +5,17 @@ import org.adamalang.translator.tree.common.TokenizedItem;
 
 public class Node implements Item {
 
-  public final TokenizedItem<Token> open;
+  private final TokenizedItem<Token> open;
   public final Attribute[] attributes;
   public final Item[] children;
-  public final TokenizedItem<Token> close;
-  public final boolean varies;
+  private final TokenizedItem<Token> close;
+  private final boolean varies;
+
+  public final String tag;
 
   public Node(TokenizedItem<Token> open, Attribute[] attributes, Item[] children, TokenizedItem<Token> close) {
     this.open = open;
+    this.tag = open.item.text;
     this.attributes = attributes;
     this.children = children;
     this.close = close;

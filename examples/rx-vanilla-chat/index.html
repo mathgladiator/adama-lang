@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <title>Adama Vanilla.JS Chat</title>
+  <script src="https://aws-us-east-2.adama-platform.com/libadama.js"></script>
+ </head>
+ <body>
+  <div id="status"></div>
+
+  <table border="0">
+   <tr>
+    <td colspan="2" id="setup">
+     <fieldset>
+      <legend>Inputs: Space, Key, and Identities</legend>
+      <label for="space">Space</label>
+      <input type="text" id="space" name="space" value="chat000" size="100"/>
+      <br /><br />
+      <label for="key">Key</label>
+      <input type="text" id="key" name="key" value="demo-chat" size="100"/>
+      <br /><br />
+      <label for="identity-user-1">User 1</label>
+      <input type="text" id="identity-user-1" name="identity-user-1" size="100" value="eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJ1c2VyMDAxIiwiaXNzIjoiWUlTUjNZTUpSSzNHMlo2MkFWWVdCWUNITjI5WFoyIn0.oKZOXHJUFPyxMT7j6X4WQRLy4VVeGGOvZgqMS2hsU6W1lALW-teOdoHAj2t5K3oHDBj6zH_3NFt6fR6fthfyzA"/>
+      <br /><br />
+      <label for="identity-user-2">User 2</label>
+      <input type="text" id="identity-user-2" name="identity-user-2" size="100" value="eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiJ1c2VyMDAyIiwiaXNzIjoiWUlTUjNZTUpSSzNHMlo2MkFWWVdCWUNITjI5WFoyIn0.uS2LyhmDh1gg35Zpa1yd-JKxxu4EjzggQlL9tc2zFxZYPD0SZykgtjvL0PeKH0X67ot84Xb6Hk9mmMpRqDyRMA"/>
+      <br /><br />
+      <button id="connect">Connect both users</button>
+     </fieldset>
+    </td>
+   </tr>
+   <tr>
+    <td>
+    <fieldset>
+     <legend>Chat Log (User 1)</legend>
+     <div id="chat-output-1"></div>
+     <label for="speak-user-1">User 1 Says What</label>
+     <input type="text" id="speak-user-1" size="25"/>
+     <br /><br />
+     <button id="send-1">Speak</button>
+     <button id="flip-1">Flip</button>
+     <button id="flux-1">Flux</button>
+    </fieldset>
+    </td>
+    <td>
+    <fieldset>
+     <legend>Chat Log (User 2)</legend>
+     <div id="chat-output-2"></div>
+     <label for="speak-user-2">User 2 Says What</label>
+     <input type="text" id="speak-user-2" size="25"/>
+     <br /><br />
+     <button id="send-2">Speak</button>
+     <button id="flip-2">Flip</button>
+     <button id="flux-2">Flux</button>
+    </fieldset>
+    </td>
+   </tr>
+  </table>
+ </body>
+ <script>
+  var connection = new Adama.Connection(Adama.Production);
+  connection.start();
+
+  document.getElementById("status").innerHTML = "Connecting to production...";
+  connection.wait_connected().then(function() {
+    document.getElementById("status").innerHTML = "Connected!!!";
+  });
+
+  function makeBoundTree(outputId) {
+   var parentNode = document.getElementById(outputId);
+
+    this.tree = new Adama.Tree();
+    this.tree.onTreeChange({chat: {
+      '+': function(change) {
+       var child = document.createElement("div");
+       child.id = parentNode.id + "_" + change.key;
+       var agent_node = document.createElement("span");
+       var what_node = document.createElement("span");
+       child.append(agent_node);
+       child.append(document.createTextNode("|"));
+       child.append(what_node);
+       agent_node.innerHTML = change.value.who.agent;
+       what_node.innerHTML = change.value.what;
+       parentNode.append(child);
+       return {
+        who: function (cw1) {
+         agent_node.innerHTML = cw1.value.agent;
+        },
+        what: function(cw2) {
+         what_node.innerHTML = cw2.value;
+        }
+       };
+      },
+      '-': function(change) {
+       var child = document.getElementById(parentNode.id + "_" + change.key);
+       child.parentElement.removeChild(child);
+      },
+      '^': function(change) {
+       for (var k = 0; k < change.new_order.length; k++) {
+         var key = change.new_order[k];
+         var child = document.getElementById(parentNode.id + "_" + key);
+         child.parentElement.append(child);
+       }
+      }
+    }});
+    return new Adama.TreePipeDataResponse(tree);
+  }
+
+  document.getElementById("connect").onclick = function() {
+    // fetch the input values
+    var space = document.getElementById('space').value;
+    var key = document.getElementById('key').value;
+    var identity1 = document.getElementById('identity-user-1').value;
+    var identity2 = document.getElementById('identity-user-2').value;
+
+    // create the connections to the document and bind them to the DOM
+    var connection1 = connection.ConnectionCreate(identity1, space, key, {}, makeBoundTree('chat-output-1'));
+    var connection2 = connection.ConnectionCreate(identity2, space, key, {}, makeBoundTree('chat-output-2'));
+
+    // hook up the buttons to send messages to the say channel per user
+    document.getElementById("send-1").onclick = function() {
+      connection1.send("say", {what:document.getElementById("speak-user-1").value}, new Adama.ConsoleLogSeqResponder("user-1"));
+    }
+    document.getElementById("send-2").onclick = function() {
+      connection2.send("say", {what:document.getElementById("speak-user-2").value}, new Adama.ConsoleLogSeqResponder("user-2"));
+    }
+    var responderFlip = {success:function() {}, failure: function() {}};
+    var order1 = false;
+    var order2 = false;
+   document.getElementById("flip-1").onclick = function() {
+    order1 = !order1;
+    connection1.update({ordering:order1}, responderFlip);
+   };
+   document.getElementById("flip-2").onclick = function() {
+    order2 = !order2;
+    connection2.update({ordering:order2}, responderFlip);
+   };
+   document.getElementById("flux-1").onclick = function() {
+    connection1.send("flux", {}, new Adama.ConsoleLogSeqResponder("user-1-flux"));
+   };
+   document.getElementById("flux-2").onclick = function() {
+    connection2.send("flux", {}, new Adama.ConsoleLogSeqResponder("user-2-flux"));
+   };
+
+    // remove the setup html
+    // document.getElementById("setup").innerHTML = "";
+  }
+
+
+
+ </script>
+</html>
