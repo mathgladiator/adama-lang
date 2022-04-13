@@ -73,20 +73,20 @@
       '+': function(change) {
        var child = document.createElement("div");
        child.id = parentNode.id + "_" + change.key;
-       var agent_node = document.createElement("span");
-       var what_node = document.createElement("span");
+       var agent_node = document.createTextNode("");
+       var what_node = document.createTextNode("");
        child.append(agent_node);
        child.append(document.createTextNode("|"));
        child.append(what_node);
-       agent_node.innerHTML = change.value.who.agent;
-       what_node.innerHTML = change.value.what;
+       agent_node.nodeValue = change.value.who.agent;
+       what_node.nodeValue = change.value.what;
        parentNode.append(child);
        return {
         who: function (cw1) {
-         agent_node.innerHTML = cw1.value.agent;
+         agent_node.nodeValue = cw1.value.agent;
         },
         what: function(cw2) {
-         what_node.innerHTML = cw2.value;
+         what_node.nodeValue = cw2.value;
         }
        };
       },
