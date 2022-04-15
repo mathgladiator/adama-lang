@@ -131,7 +131,7 @@ With the CRUD operations laid bare, we can analyze the buzzword bingo aspects in
 ## So, how does this help? What is Adama's value proposition?
 This is the big question. At core, Adama takes the trinity of the cloud: compute, storage, and networking and bundles them into one offering. The value proposition is thusly multi-faceted depending on various markets:
 * Jamstack developers are able to hook their application up directly to the Adama platform such that privacy, security, query, and transformation are provided out of the box.
-* Game developers can leverage Adama platform to act as a serverless platform for both a game lobby and a game server (The [history of Adama](/reference/history.html) starts with board games).
+* Game developers can leverage Adama platform to act as a serverless platform for both a game lobby and a game server (The [history of Adama](./history/it-began.md) starts with board games).
 * Any website can integrate Adama as a durable and reliable real-time service for chat, presence, web-rtc signalling, and more without managing servers.
 
 Beyond making development easier, business operations is further aided by having a tunable history of changes to the document available which makes auditing changes easy as well as having a universal rewind.
