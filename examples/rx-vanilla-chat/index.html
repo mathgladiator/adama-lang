@@ -64,44 +64,92 @@
   connection.wait_connected().then(function() {
     document.getElementById("status").innerHTML = "Connected!!!";
   });
+  var _templates = {};
+
+
+  _templates['demo'] = function(_tree, $) {
+   var _ = {};
+   var a = $.e('div');
+   var b = $.e('div');
+   var d = $.g();
+   _.chat = {
+    '+': function(c) {
+     var _ = {};
+     var e = $.e('div');
+     {
+      var f = $.t(c.value.who);
+      $.s(f,c.value.who.agent);
+      _.who = function(x) {
+       $.s(f,x.value.agent);
+      };
+      e.append(f);
+     }
+     e.append($.t(' | '));
+     {
+      var f = $.t(c.value.what);
+      $.s(f,c.value.what);
+      _.what = function(x) {
+       $.s(f,x.value);
+      };
+      e.append(f);
+     }
+     b.append(e);
+     e._k = c.key;
+     c.value['c_' + d] = e;
+     return _;
+    },
+    '-': function(c) {
+     $.n(c.before['c_' + d]);
+    },
+    '^': function(c) {
+     $.r(b, c);
+    }
+   }
+   a.append(b);
+   _tree.onTreeChange(_);
+   return a;
+  }
+
+
+  var framework = {
+   id: 0,
+   g: function() {
+    self.id ++;
+    return self.id;
+   },
+   e: function(tag) {
+    return document.createElement(tag);
+   },
+   t: function(tx) {
+    return document.createTextNode(tx);
+   },
+   s: function(tx, value) {
+    tx.nodeValue = value;
+   },
+   n: function (item) {
+    item.parentElement.removeChild(item);
+   },
+   r: function (parent, args) {
+     var childrenByKey = {};
+     var cc = parent.childNodes.length;
+     for (var k = 0; k < cc; k++) {
+      var c = parent.childNodes.item(k);
+      childrenByKey[c._k] = c;
+     }
+     var no = args.new_order;
+     for (var k = 0; k < no.length; k++) {
+      parent.append(childrenByKey[no[k]]);
+     }
+   }
+  };
+
 
   function makeBoundTree(outputId) {
    var parentNode = document.getElementById(outputId);
 
     this.tree = new Adama.Tree();
-    this.tree.onTreeChange({chat: {
-      '+': function(change) {
-       var child = document.createElement("div");
-       child.id = parentNode.id + "_" + change.key;
-       var agent_node = document.createTextNode("");
-       var what_node = document.createTextNode("");
-       child.append(agent_node);
-       child.append(document.createTextNode("|"));
-       child.append(what_node);
-       agent_node.nodeValue = change.value.who.agent;
-       what_node.nodeValue = change.value.what;
-       parentNode.append(child);
-       return {
-        who: function (cw1) {
-         agent_node.nodeValue = cw1.value.agent;
-        },
-        what: function(cw2) {
-         what_node.nodeValue = cw2.value;
-        }
-       };
-      },
-      '-': function(change) {
-       var child = document.getElementById(parentNode.id + "_" + change.key);
-       child.parentElement.removeChild(child);
-      },
-      '^': function(change) {
-       for (var k = 0; k < change.new_order.length; k++) {
-         var key = change.new_order[k];
-         var child = document.getElementById(parentNode.id + "_" + key);
-         child.parentElement.append(child);
-       }
-      }
-    }});
+    var child = _templates['demo'](tree, framework);
+    parentNode.append(child);
     return new Adama.TreePipeDataResponse(tree);
   }
 

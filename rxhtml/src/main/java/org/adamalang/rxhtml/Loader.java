@@ -12,4 +12,10 @@ public class Loader {
     DocumentBuilder builder = factory.newDocumentBuilder();
     return builder.parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)), "input.xml");
   }
+
+  public static Document load(File file) throws Exception {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    return builder.parse(file);
+  }
 }
