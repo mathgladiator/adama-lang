@@ -1,4 +1,4 @@
-package org.adamalang.rxhtml;
+package org.adamalang.rxhtml.codegen;
 
 import java.util.Iterator;
 import java.util.TreeSet;

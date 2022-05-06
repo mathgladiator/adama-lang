@@ -1,69 +1,33 @@
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.codegen.VariablePool;
+import org.adamalang.rxhtml.codegen.Writer;
 import org.w3c.dom.*;
 
 public class Template {
-  private final StringBuilder sb = new StringBuilder();
-  private int tabAt;
-  private String tabCache;
+  private final Writer writer;
   private final VariablePool pool;
 
   private Template() {
-    tabAt = 0;
-    tabCache = "";
+    writer = new Writer();
     pool = new VariablePool();
   }
 
-  private void rebuildTabCache() {
-    StringBuilder tabCacheBuilder = new StringBuilder();
-    for (int k = 0; k < tabAt; k++) {
-      tabCacheBuilder.append("  ");
-    }
-    tabCache = tabCacheBuilder.toString();
-  }
-
-  private Template tabUp() {
-    tabAt++;
-    rebuildTabCache();
-    return this;
-  }
-
-  private Template tabDown() {
-    tabAt--;
-    rebuildTabCache();
-    return this;
-  }
-
-  private Template tab() {
-    sb.append(tabCache);
-    return this;
-  }
-
-  private Template append(String s) {
-    sb.append(s);
-    return this;
-  }
-
-  private Template newline() {
-    sb.append("\n");
-    return this;
-  }
 
   private void writeRoot(Element element) {
     String rootVar = pool.ask();
-    append("_templates['").append(element.getAttribute("name")).append("'] = function(_tree, $) {").newline().tabUp();
-    tab().append("var _ = {};").newline();
-    tab().append("var ").append(rootVar).append(" = $.e('div');").newline();
+    writer.append("_templates['").append(element.getAttribute("name")).append("'] = function(_tree, $) {").newline().tabUp();
+    writer.tab().append("var _ = {};").newline();
+    writer.tab().append("var ").append(rootVar).append(" = $.e('div');").newline();
     writeChildren("_tree.tree", element, true, rootVar);
-    tab().append("_tree.onTreeChange(_);").newline();
-    tab().append("return ").append(rootVar).append(";").newline();
-    append("}").newline();
+    writer.tab().append("_tree.onTreeChange(_);").newline();
+    writer.tab().append("return ").append(rootVar).append(";").newline();
+    writer.append("}").newline();
   }
 
   private String writeElement(String current, Element element, String parentVariable, boolean returnVariable) {
     String eVar = pool.ask();
-    tab().append("var ").append(eVar).append(" = $.e('").append(element.getTagName()).append("');").newline();
-    // TODO: attributes
+    writer.tab().append("var ").append(eVar).append(" = $.e('").append(element.getTagName()).append("');").newline();
     NamedNodeMap attrs = element.getAttributes();
     for (int k = 0; k < attrs.getLength(); k++) {
       Node attrNode = attrs.item(k);
@@ -73,10 +37,10 @@ public class Template {
       // attr.getValue()
       // TODO: get the mapping of xml name to
       // TODO: LOOK FOR GUARDS, and then USE THEM; need a language
-      tab().append(eVar).append(".").append(attr.getName()).append(" = '").append(attr.getValue()).append("';").newline();
+      writer.tab().append(eVar).append(".").append(attr.getName()).append(" = '").append(attr.getValue()).append("';").newline();
     }
     writeChildren(current, element, element.getChildNodes().getLength() == 1, eVar);
-    tab().append(parentVariable).append(".append(").append(eVar).append(");").newline();
+    writer.tab().append(parentVariable).append(".append(").append(eVar).append(");").newline();
     if (returnVariable) {
       return eVar;
     } else {
@@ -87,38 +51,38 @@ public class Template {
 
   private void writeText(Text text, String parentVariable) {
     if (!text.getTextContent().trim().equalsIgnoreCase("")) {
-      tab().append(parentVariable).append(".append($.t('").append(text.getTextContent()).append("'));").newline();
+      writer.tab().append(parentVariable).append(".append($.t('").append(text.getTextContent()).append("'));").newline();
     }
   }
 
   private void writeIterate(String current, Element template, String name, String parentVariable) {
     String setVar = pool.ask();
     String gidVar = pool.ask();
-    tab().append("var ").append(gidVar).append(" = $.g();").newline();
-    tab().append("_.").append(name).append(" = {").tabUp().newline();
-    tab().append("'+': function(").append(setVar).append(") {").tabUp().newline();
-    tab().append("var _ = {};").newline();
+    writer.tab().append("var ").append(gidVar).append(" = $.g();").newline();
+    writer.tab().append("_.").append(name).append(" = {").tabUp().newline();
+    writer.tab().append("'+': function(").append(setVar).append(") {").tabUp().newline();
+    writer.tab().append("var _ = {};").newline();
     String appendElement = writeElement(setVar + ".value", template, parentVariable, true);
-    tab().append(appendElement).append("._k = ").append(setVar).append(".key;").newline();
-    tab().append(setVar).append(".value['").append(setVar).append("_' + ").append(gidVar).append("] = ").append(appendElement).append(";").newline();
+    writer.tab().append(appendElement).append("._k = ").append(setVar).append(".key;").newline();
+    writer.tab().append(setVar).append(".value['").append(setVar).append("_' + ").append(gidVar).append("] = ").append(appendElement).append(";").newline();
     pool.give(appendElement);
-    tab().append("return _;").newline();
-    tabDown().tab().append("},").newline();
-    tab().append("'-': function(").append(setVar).append(") {").tabUp().newline();
-    tab().append("$.n(").append(setVar).append(".before['").append(setVar).append("_' + ").append(gidVar).append("]);").newline();
-    tabDown().tab().append("},").newline();
-    tab().append("'^': function(").append(setVar).append(") {").tabUp().newline();
-    tab().append("$.r(").append(parentVariable).append(", ").append(setVar).append(");").newline();
-    tabDown().tab().append("}").newline();
-    tabDown().tab().append("}").newline();
+    writer.tab().append("return _;").newline();
+    writer.tabDown().tab().append("},").newline();
+    writer.tab().append("'-': function(").append(setVar).append(") {").tabUp().newline();
+    writer.tab().append("$.n(").append(setVar).append(".before['").append(setVar).append("_' + ").append(gidVar).append("]);").newline();
+    writer.tabDown().tab().append("},").newline();
+    writer.tab().append("'^': function(").append(setVar).append(") {").tabUp().newline();
+    writer.tab().append("$.r(").append(parentVariable).append(", ").append(setVar).append(");").newline();
+    writer.tabDown().tab().append("}").newline();
+    writer.tabDown().tab().append("}").newline();
     pool.give(setVar);
     pool.give(gidVar);
   };
 
   private void writeLookup(String current, String name, String transform, String parentVariable) {
     String eVar = pool.ask();
-    tab().append("{").tabUp().newline();
-    tab().append("var ").append(eVar).append(" = $.t(").append(current != null ? (current + "." + name) : "''").append(");").newline();
+    writer.tab().append("{").tabUp().newline();
+    writer.tab().append("var ").append(eVar).append(" = $.t(").append(current != null ? (current + "." + name) : "''").append(");").newline();
     String getValueNow = current + "." + name;
     String pullValue = "x.value";
     if ("ntclient.agent".equalsIgnoreCase(transform)) {
@@ -127,15 +91,15 @@ public class Template {
     }
     // MORE TRANSFORMS, MOARRR!!
     if (current != null) {
-      tab().append("$.s(").append(eVar).append(",").append(getValueNow).append(");").newline();
+      writer.tab().append("$.s(").append(eVar).append(",").append(getValueNow).append(");").newline();
     }
     // PULL from the current
-    tab().append("_.").append(name).append(" = function(x) {").newline().tabUp();
-    tab().append("$.s(").append(eVar).append(",").append(pullValue).append(");").newline().tabDown();
+    writer.tab().append("_.").append(name).append(" = function(x) {").newline().tabUp();
+    writer.tab().append("$.s(").append(eVar).append(",").append(pullValue).append(");").newline().tabDown();
     // ALL SORTS OF FORMATTING FUN
-    tab().append("};").newline();
-    tab().append(parentVariable).append(".append(").append(eVar).append(");").newline();
-    tabDown().tab().append("}").newline();
+    writer.tab().append("};").newline();
+    writer.tab().append(parentVariable).append(".append(").append(eVar).append(");").newline();
+    writer.tabDown().tab().append("}").newline();
     pool.give(eVar);
   }
 
@@ -162,13 +126,13 @@ public class Template {
             case "scope": {
               String into = child.getAttribute("into");
               String oldDelta = pool.ask();
-              tab().append("{").tabUp().newline();
-              tab().append("var ").append(oldDelta).append(" = _;").newline();
-              tab().append("_ = {};").newline();
+              writer.tab().append("{").tabUp().newline();
+              writer.tab().append("var ").append(oldDelta).append(" = _;").newline();
+              writer.tab().append("_ = {};").newline();
               writeChildren(current + "." + into, child, singleParent, parentVariable);
-              tab().append(oldDelta).append(".").append(into).append(" = _;").newline();
-              tab().append("_ = ").append(oldDelta).append(";").newline();
-              tabDown().tab().append("}").newline();
+              writer.tab().append(oldDelta).append(".").append(into).append(" = _;").newline();
+              writer.tab().append("_ = ").append(oldDelta).append(";").newline();
+              writer.tabDown().tab().append("}").newline();
               pool.give(oldDelta);
               break;
             }
@@ -199,7 +163,7 @@ public class Template {
 
   @Override
   public String toString() {
-    return sb.toString();
+    return writer.toString();
   }
 
   public static String convertTemplateToJavaScript(Element element) {
