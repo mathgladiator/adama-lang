@@ -1,5 +1,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
+import java.util.Set;
+
 /** Transform a node */
 public class Transform implements Node {
 
@@ -9,6 +11,11 @@ public class Transform implements Node {
   public Transform(Node base, String operation) {
     this.base = base;
     this.operation = operation;
+  }
+
+  @Override
+  public Set<String> variables() {
+    return base.variables();
   }
 
   @Override

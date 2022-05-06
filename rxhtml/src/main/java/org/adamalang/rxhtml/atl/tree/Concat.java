@@ -1,10 +1,22 @@
 package org.adamalang.rxhtml.atl.tree;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 public class Concat implements Node {
   public final Node[] children;
 
   public Concat(Node... children) {
     this.children = children;
+  }
+
+  @Override
+  public Set<String> variables() {
+    TreeSet<String> union = new TreeSet<>();
+    for (Node child : children) {
+      union.addAll(child.variables());
+    }
+    return union;
   }
 
   @Override

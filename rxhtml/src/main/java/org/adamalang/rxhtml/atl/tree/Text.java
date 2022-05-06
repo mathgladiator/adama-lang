@@ -1,11 +1,19 @@
 package org.adamalang.rxhtml.atl.tree;
 
+import java.util.Collections;
+import java.util.Set;
+
 /** Raw Text */
 public class Text implements Node {
   public final String text;
 
   public Text(String text) {
     this.text = text;
+  }
+
+  @Override
+  public Set<String> variables() {
+    return Collections.emptySet();
   }
 
   @Override
