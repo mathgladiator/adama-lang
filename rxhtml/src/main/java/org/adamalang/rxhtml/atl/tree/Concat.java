@@ -23,14 +23,23 @@ public class Concat implements Node {
   public String debug() {
     StringBuilder sb = new StringBuilder();
     sb.append("[");
-    if (children.length > 0) {
-      sb.append(children[0].debug());
-    }
+    sb.append(children[0].debug());
     for (int k = 1; k < children.length; k++) {
       sb.append(",");
       sb.append(children[k].debug());
     }
     sb.append("]");
+    return sb.toString();
+  }
+
+  @Override
+  public String js(String env) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(children[0].js(env));
+    for (int k = 1; k < children.length; k++) {
+      sb.append(" + ");
+      sb.append(children[k].js(env));
+    }
     return sb.toString();
   }
 }

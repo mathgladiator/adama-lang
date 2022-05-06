@@ -14,4 +14,9 @@ public class Empty implements Node {
   public String debug() {
     return "EMPTY";
   }
+
+  @Override
+  public String js(String env) {
+    return "\"\"";
+  }
 }

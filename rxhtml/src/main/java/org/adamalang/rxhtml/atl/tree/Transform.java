@@ -22,4 +22,10 @@ public class Transform implements Node {
   public String debug() {
     return "TRANSFORM(" + base.debug() + "," + operation + ")";
   }
+
+  @Override
+  public String js(String env) {
+    // TODO: big table
+    return operation + "(" + base.js(env) + ")";
+  }
 }

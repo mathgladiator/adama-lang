@@ -19,4 +19,9 @@ public class Negate implements Node {
   public String debug() {
     return "!(" + value.debug() + ")";
   }
+
+  @Override
+  public String js(String env) {
+    return "!(" + value.js(env) + ")";
+  }
 }

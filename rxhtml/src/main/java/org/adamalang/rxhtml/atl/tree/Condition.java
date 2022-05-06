@@ -28,4 +28,9 @@ public class Condition implements Node {
   public String debug() {
     return "(" + guard.debug() + ") ? (" + branchTrue.debug() + ") : (" + branchFalse.debug() + ")";
   }
+
+  @Override
+  public String js(String env) {
+    return "(" + guard.js(env) + ") ? (" + branchTrue.js(env) + ") : (" + branchFalse.js(env) + ")";
+  }
 }

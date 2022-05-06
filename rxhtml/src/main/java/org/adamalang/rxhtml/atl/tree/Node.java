@@ -10,4 +10,7 @@ public interface Node {
 
   /** turn the node into an easy to debug string */
   public String debug();
+
+  /** javascript expression to build the string */
+  public String js(String env);
 }

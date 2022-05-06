@@ -20,4 +20,9 @@ public class Lookup implements Node {
   public String debug() {
     return "LOOKUP[" + variable + "]";
   }
+
+  @Override
+  public String js(String env) {
+    return env + "." + variable;
+  }
 }

@@ -20,4 +20,9 @@ public class Text implements Node {
   public String debug() {
     return "TEXT(" + text + ")";
   }
+
+  @Override
+  public String js(String env) {
+    return "\"" + text + "\""; // BIG TODO: escaping
+  }
 }
