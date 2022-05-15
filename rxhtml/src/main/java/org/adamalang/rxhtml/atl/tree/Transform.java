@@ -3,12 +3,12 @@ package org.adamalang.rxhtml.atl.tree;
 import java.util.Set;
 
 /** Transform a node */
-public class Transform implements Node {
+public class Transform implements Tree {
 
-  public final Node base;
+  public final Tree base;
   public final String operation;
 
-  public Transform(Node base, String operation) {
+  public Transform(Tree base, String operation) {
     this.base = base;
     this.operation = operation;
   }

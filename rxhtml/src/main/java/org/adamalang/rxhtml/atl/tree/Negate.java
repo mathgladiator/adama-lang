@@ -3,10 +3,10 @@ package org.adamalang.rxhtml.atl.tree;
 import java.util.Set;
 
 /** Negate a node (i.e. not for boolean) */
-public class Negate implements Node {
-  private final Node value;
+public class Negate implements Tree {
+  private final Tree value;
 
-  public Negate(Node value) {
+  public Negate(Tree value) {
     this.value = value;
   }
 

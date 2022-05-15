@@ -8,17 +8,17 @@ import java.util.Iterator;
 public class Parser {
 
   // handle transforms
-  private static Node wrapTransforms(Node root, TokenStream.Token token) {
-    Node n = root;
+  private static Tree wrapTransforms(Tree root, TokenStream.Token token) {
+    Tree n = root;
     for (int k = 0; k < token.transforms.length; k++) {
       n = new Transform(n, token.transforms[k]);
     }
     return n;
   }
 
-  private static Node of(ArrayList<Node> children) {
+  private static Tree of(ArrayList<Tree> children) {
     if (children.size() > 1) {
-      return new Concat(children.toArray(new Node[children.size()]));
+      return new Concat(children.toArray(new Tree[children.size()]));
     } else if (children.size() == 1){
       return children.get(0);
     } else {
@@ -26,10 +26,10 @@ public class Parser {
     }
   }
 
-  private static Node condition(Iterator<TokenStream.Token> it, TokenStream.Token name) {
-    ArrayList<Node> childrenTrue = new ArrayList<>();
-    ArrayList<Node> childrenFalse = new ArrayList<>();
-    ArrayList<Node> active = childrenTrue;
+  private static Tree condition(Iterator<TokenStream.Token> it, TokenStream.Token name) {
+    ArrayList<Tree> childrenTrue = new ArrayList<>();
+    ArrayList<Tree> childrenFalse = new ArrayList<>();
+    ArrayList<Tree> active = childrenTrue;
     while (it.hasNext()) {
       TokenStream.Token token = it.next();
       if (token.type == TokenStream.Type.Condition && token.base.equals(name.base)) {
@@ -43,11 +43,11 @@ public class Parser {
         route(active, it, token);
       }
     }
-    Node guard_lookup = wrapTransforms(new Lookup(name.base), name);
+    Tree guard_lookup = wrapTransforms(new Lookup(name.base), name);
     return new Condition(name.mod == TokenStream.Modifier.Not ? new Negate(guard_lookup) : guard_lookup, of(childrenTrue), of(childrenFalse));
   }
 
-  private static void route(ArrayList<Node> children, Iterator<TokenStream.Token> it, TokenStream.Token token) {
+  private static void route(ArrayList<Tree> children, Iterator<TokenStream.Token> it, TokenStream.Token token) {
     switch (token.type) {
       case Text:
         children.add(new Text(token.base));
@@ -61,15 +61,15 @@ public class Parser {
     }
   }
 
-  private static Node parse(Iterator<TokenStream.Token> it) {
-    ArrayList<Node> children = new ArrayList<>();
+  private static Tree parse(Iterator<TokenStream.Token> it) {
+    ArrayList<Tree> children = new ArrayList<>();
     while (it.hasNext()) {
       route(children, it, it.next());
     }
     return of(children);
   }
 
-  public static Node parse(String text) {
+  public static Tree parse(String text) {
     return parse(TokenStream.tokenize(text).iterator());
   }
 }

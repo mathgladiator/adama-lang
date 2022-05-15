@@ -3,7 +3,7 @@ package org.adamalang.rxhtml.atl.tree;
 import java.util.Collections;
 import java.util.Set;
 
-public class Empty implements Node {
+public class Empty implements Tree {
 
   @Override
   public Set<String> variables() {

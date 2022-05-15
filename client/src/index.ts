@@ -22,8 +22,11 @@ export class Tree {
   // callback is the function/object callback tree
   // insert_order is the order to fire events
   __recAppendChange(dispatch: any, callback: any, insert_order: number, auto_delete: boolean) {
-    // the callback is an object
-    if (typeof (callback) == 'object') {
+    if (Array.isArray(callback)) { // callback is an array (expand)
+      for (var k = 0; k < callback.length; k++) {
+        this.__recAppendChange(dispatch, callback[k], insert_order, auto_delete);
+      }
+    } else if (typeof (callback) == 'object') { // the callback is an object (recurse)
       // we for each item in the callback
       for (var key in callback) {
         // make sure it exists
@@ -33,7 +36,7 @@ export class Tree {
         // recurse into that key
         this.__recAppendChange(dispatch[key], callback[key], insert_order, auto_delete);
       }
-    } else if (typeof (callback) == 'function') {
+    } else if (typeof (callback) == 'function') { // callback is a function (append)
       // we have a function, so let's associate it to the node
       if (!('@e' in dispatch)) {
         dispatch['@e'] = [];

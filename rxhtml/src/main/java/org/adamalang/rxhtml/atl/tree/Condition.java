@@ -4,12 +4,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /** an if/then/else node */
-public class Condition implements Node {
-  public final Node guard;
-  public Node branchTrue;
-  public Node branchFalse;
+public class Condition implements Tree {
+  public final Tree guard;
+  public Tree branchTrue;
+  public Tree branchFalse;
 
-  public Condition(Node guard, Node branchTrue, Node branchFalse) {
+  public Condition(Tree guard, Tree branchTrue, Tree branchFalse) {
     this.guard = guard;
     this.branchTrue = branchTrue;
     this.branchFalse = branchFalse;

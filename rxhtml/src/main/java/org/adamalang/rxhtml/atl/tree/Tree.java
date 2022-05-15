@@ -3,7 +3,7 @@ package org.adamalang.rxhtml.atl.tree;
 import java.util.Set;
 
 /** common interface for the tree nodes */
-public interface Node {
+public interface Tree {
 
   /** return a set of variables within the node */
   public Set<String> variables();

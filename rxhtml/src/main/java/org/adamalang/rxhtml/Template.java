@@ -1,8 +1,12 @@
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.atl.Parser;
+import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.codegen.VariablePool;
 import org.adamalang.rxhtml.codegen.Writer;
 import org.w3c.dom.*;
+
+import java.util.Set;
 
 public class Template {
   private final Writer writer;
@@ -32,12 +36,31 @@ public class Template {
     for (int k = 0; k < attrs.getLength(); k++) {
       Node attrNode = attrs.item(k);
       Attr attr = (Attr) attrNode;
-      // if attribute value is prefixed by a $, then do a lookup (yay)
-      // attr.getName()
-      // attr.getValue()
-      // TODO: get the mapping of xml name to
-      // TODO: LOOK FOR GUARDS, and then USE THEM; need a language
-      writer.tab().append(eVar).append(".").append(attr.getName()).append(" = '").append(attr.getValue()).append("';").newline();
+      if (attr.getValue() != null) {
+        Tree tree = Parser.parse(attr.getValue());
+        Set<String> vars = tree.variables();
+        if (vars.size() > 0) {
+          var oVar = pool.ask();
+          writer.tab().append("{").tabUp().newline();
+          writer.tab().append("var ").append(oVar).append(" = {};").newline();
+          // copy
+          for (String var : vars) {
+            writer.tab().append(oVar).append(".").append(var).append(" = ").append(current).append(".").append(var).append(";").newline();
+          }
+          writer.tab().append(oVar).append("._ = function() {").tabUp().newline();
+          writer.tab().append(eVar).append(".").append(attr.getName()).append(" = '").append(tree.js(oVar)).append("';").newline();
+          writer.tabDown().tab().append("}").newline();
+          // TODO: for each variable, subscribe to an update, then fire _()
+          // NOTE: handling multiple callbacks per field is a huge bug
+          writer.tab().append(oVar).append("._();").newline();
+          writer.tabDown().tab().append("}").newline();
+        } else {
+          // TODO: handle mapping of xml name to javascript name (or use function)
+          writer.tab().append(eVar).append(".").append(attr.getName()).append(" = '").append(attr.getValue()).append("';").newline();
+        }
+      } else {
+        // TODO: handle no-value
+      }
     }
     writeChildren(current, element, element.getChildNodes().getLength() == 1, eVar);
     writer.tab().append(parentVariable).append(".append(").append(eVar).append(");").newline();

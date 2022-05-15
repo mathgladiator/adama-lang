@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /** lookup a variable */
-public class Lookup implements Node {
+public class Lookup implements Tree {
   public final String variable;
 
   public Lookup(String variable) {

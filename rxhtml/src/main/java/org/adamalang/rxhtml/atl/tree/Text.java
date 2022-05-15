@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /** Raw Text */
-public class Text implements Node {
+public class Text implements Tree {
   public final String text;
 
   public Text(String text) {
