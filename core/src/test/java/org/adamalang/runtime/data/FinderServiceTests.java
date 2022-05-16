@@ -27,6 +27,6 @@ public class FinderServiceTests {
 
   @Test
   public void result_coverage() {
-    new FinderService.Result(1L, FinderService.Location.Fresh, "value");
+    new FinderService.Result(1L, FinderService.Location.Fresh, "region", "value");
   }
 }

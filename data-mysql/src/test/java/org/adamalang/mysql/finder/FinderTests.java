@@ -31,8 +31,8 @@ public class FinderTests {
       FinderInstaller installer = new FinderInstaller(dataBase);
       try {
         installer.install();
-        Finder machineA = new Finder(dataBase, "machineA:124");
-        Finder machineB = new Finder(dataBase, "machineB:523");
+        Finder machineA = new Finder(dataBase, "region", "machineA:124");
+        Finder machineB = new Finder(dataBase, "region", "machineB:523");
 
         {
           SimpleMockCallback callback = new SimpleMockCallback();

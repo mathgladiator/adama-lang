@@ -44,11 +44,13 @@ public interface FinderService {
   public static class Result {
     public final long id;
     public final Location location;
+    public final String region;
     public final String value;
 
-    public Result(long id, Location location, String value) {
+    public Result(long id, Location location, String region, String value) {
       this.id = id;
       this.location = location;
+      this.region = region;
       this.value = value;
     }
   }

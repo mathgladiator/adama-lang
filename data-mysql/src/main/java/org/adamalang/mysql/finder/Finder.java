@@ -21,10 +21,12 @@ import java.sql.ResultSet;
 
 public class Finder implements FinderService {
   private final DataBase dataBase;
+  private final String region;
   private final String targetSelf;
 
-  public Finder(DataBase dataBase, String targetSelf) {
+  public Finder(DataBase dataBase, String region, String targetSelf) {
     this.dataBase = dataBase;
+    this.region = region;
     this.targetSelf = targetSelf;
   }
 
@@ -33,7 +35,7 @@ public class Finder implements FinderService {
     dataBase.transact((connection) -> {
       String insertSQL = new StringBuilder() //
           .append("INSERT INTO `").append(dataBase.databaseName).append("`.`directory` (") //
-          .append("`space`, `key`, `type`, `value`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Fresh.type).append(", '', 0, 0)") //
+          .append("`space`, `key`, `type`, `region`, `value`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Fresh.type).append(", '', '', 0, 0)") //
           .toString();
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
         statementInsertIndex.setString(1, key.space);
@@ -48,7 +50,7 @@ public class Finder implements FinderService {
   public void find(Key key, Callback<Result> callback) {
     dataBase.transact((connection) -> {
       String selectSQL = new StringBuilder() //
-          .append("SELECT `id`, `type`, `value` FROM `").append(dataBase.databaseName) //
+          .append("SELECT `id`, `type`, `region`, `value` FROM `").append(dataBase.databaseName) //
           .append("`.`directory` WHERE `space`=? AND `key`=?") //
           .toString();
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(selectSQL)) {
@@ -58,10 +60,11 @@ public class Finder implements FinderService {
           if (rs.next()) {
             long id = rs.getLong(1);
             int type = rs.getInt(2);
-            String value = rs.getString(3);
+            String region = rs.getString(3);
+            String value = rs.getString(4);
             Location location = Location.fromType(type);
             if (location != null) {
-              return new Result(id, location, value);
+              return new Result(id, location, region, value);
             }
           }
         }
@@ -76,13 +79,15 @@ public class Finder implements FinderService {
       String updateIndexSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
           .append("SET `type`=").append(Location.Machine.type) //
+          .append(", `region`=?")
           .append(", `value`=?")
           .append(" WHERE `space`=? AND `key`=? AND (`value`=? OR `type`!=").append(Location.Machine.type).append(")").toString();
       try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
-        statementUpdate.setString(1, targetSelf);
-        statementUpdate.setString(2, key.space);
-        statementUpdate.setString(3, key.key);
-        statementUpdate.setString(4, targetSelf);
+        statementUpdate.setString(1, region);
+        statementUpdate.setString(2, targetSelf);
+        statementUpdate.setString(3, key.space);
+        statementUpdate.setString(4, key.key);
+        statementUpdate.setString(5, targetSelf);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
         }
@@ -97,6 +102,7 @@ public class Finder implements FinderService {
       String updateIndexSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
           .append("SET `type`=").append(Location.Archive.type) //
+          .append(", `region`=''")
           .append(", `value`=?")
           .append(" WHERE `space`=? AND `key`=? AND `value`=? AND `type`=").append(Location.Machine.type).toString();
       try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {

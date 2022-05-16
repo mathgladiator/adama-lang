@@ -64,7 +64,7 @@ public class CaravanDataServiceTests {
 
         @Override
         public void find(Key key, Callback<Result> callback) {
-          callback.success(new Result(Long.parseLong(key.key), null, null));
+          callback.success(new Result(Long.parseLong(key.key), null, "region", null));
         }
 
         @Override

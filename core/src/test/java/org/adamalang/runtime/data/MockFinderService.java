@@ -28,7 +28,7 @@ public class MockFinderService implements FinderService {
       callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
       return;
     }
-    map.put(key, new Result(1, Location.Fresh, ""));
+    map.put(key, new Result(1, Location.Fresh, "region",""));
     callback.success(null);
   }
 
@@ -44,13 +44,13 @@ public class MockFinderService implements FinderService {
 
   @Override
   public void takeover(Key key, Callback<Void> callback) {
-    map.put(key, new Result(1, Location.Machine, "ME"));
+    map.put(key, new Result(1, Location.Machine, "region","ME"));
     callback.success(null);
   }
 
   @Override
   public void archive(Key key, String archiveKey, Callback<Void> callback) {
-    map.put(key, new Result(1, Location.Archive, "Archive"));
+    map.put(key, new Result(1, Location.Archive, "region","Archive"));
     callback.success(null);
   }
 
