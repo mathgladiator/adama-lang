@@ -84,7 +84,7 @@ public class ServiceTemporalTests {
     CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, new MockTime(), 3);
     service.tune((base) -> base.setMillisecondsForCleanupCheck(5));
     try {
-      Runnable latch = dataService.latchLogAt(9);
+      Runnable latch = dataService.latchLogAt(10);
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(NtClient.NO_ONE), KEY, "{}", "1", created);
       created.await_success();
@@ -109,9 +109,10 @@ public class ServiceTemporalTests {
       dataService.assertLogAt(2, "PATCH:space/key:2-3->{\"__seq\":3,\"__connection_id\":1,\"x\":42,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":null,\"__entropy\":\"323091568684100223\"}");
       dataService.assertLogAt(3, "PATCH:space/key:4-4->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"-6153234687710755147\"}");
       dataService.assertLogAt(4, "PATCH:space/key:5-6->{\"__seq\":6,\"__clients\":{\"0\":null},\"__messages\":null,\"__entropy\":\"6497997367891420869\"}");
-      dataService.assertLogAt(5, "LOAD:space/key");
-      dataService.assertLogAt(6, "PATCH:space/key:7-8->{\"__seq\":8,\"__connection_id\":2,\"__clients\":{\"1\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":null,\"__entropy\":\"-5218234856268126500\"}");
-      dataService.assertLogAt(7, "PATCH:space/key:9-9->{\"__messages\":null,\"__seq\":9,\"__entropy\":\"-7509292263826677178\"}");
+      dataService.assertLogAt(5, "CLOSE:space/key");
+      dataService.assertLogAt(6, "LOAD:space/key");
+      dataService.assertLogAt(7, "PATCH:space/key:7-8->{\"__seq\":8,\"__connection_id\":2,\"__clients\":{\"1\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":null,\"__entropy\":\"-5218234856268126500\"}");
+      dataService.assertLogAt(8, "PATCH:space/key:9-9->{\"__messages\":null,\"__seq\":9,\"__entropy\":\"-7509292263826677178\"}");
     } finally {
       service.shutdown();
     }

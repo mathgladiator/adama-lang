@@ -82,7 +82,7 @@ public class ServiceCatastropheTests {
           base.setMillisecondsAfterLoadForReconciliation(250);
         });
     try {
-      Runnable latch = realDataService.latchLogAt(8);
+      Runnable latch = realDataService.latchLogAt(9);
       NullCallbackLatch created = new NullCallbackLatch();
       service.create(ContextSupport.WRAP(ALICE), KEY, "{}", "1", created);
       created.await_success();
@@ -117,10 +117,11 @@ public class ServiceCatastropheTests {
       realDataService.assertLogAt(1, "LOAD:space/key");
       realDataService.assertLogAt(2, "PATCH:space/key:2-3->{\"__seq\":3,\"__connection_id\":1,\"x\":1,\"__clients\":{\"0\":{\"agent\":\"alice\",\"authority\":\"test\"}},\"__messages\":null,\"__entropy\":\"323091568684100223\"}");
       realDataService.assertLogAt(3, "PATCH:space/key:4-4->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"-6153234687710755147\"}");
-      realDataService.assertLogAt(4, "LOAD:space/key");
-      realDataService.assertLogAt(5, "PATCH:space/key:5-6->{\"__seq\":6,\"__connection_id\":2,\"x\":2,\"__clients\":{\"1\":{\"agent\":\"bob\",\"authority\":\"test\"}},\"__messages\":null,\"__entropy\":\"6497997367891420869\"}");
-      realDataService.assertLogAt(6, "PATCH:space/key:7-7->{\"__messages\":null,\"__seq\":7,\"__entropy\":\"-5218234856268126500\"}");
-      realDataService.assertLogAt(7, "PATCH:space/key:8-9->{\"__seq\":9,\"x\":1,\"__clients\":{\"0\":null},\"__messages\":null,\"__entropy\":\"-7509292263826677178\"}");
+      realDataService.assertLogAt(4, "CLOSE:space/key");
+      realDataService.assertLogAt(5, "LOAD:space/key");
+      realDataService.assertLogAt(6, "PATCH:space/key:5-6->{\"__seq\":6,\"__connection_id\":2,\"x\":2,\"__clients\":{\"1\":{\"agent\":\"bob\",\"authority\":\"test\"}},\"__messages\":null,\"__entropy\":\"6497997367891420869\"}");
+      realDataService.assertLogAt(7, "PATCH:space/key:7-7->{\"__messages\":null,\"__seq\":7,\"__entropy\":\"-5218234856268126500\"}");
+      realDataService.assertLogAt(8, "PATCH:space/key:8-9->{\"__seq\":9,\"x\":1,\"__clients\":{\"0\":null},\"__messages\":null,\"__entropy\":\"-7509292263826677178\"}");
     } finally {
       service.shutdown();
     }

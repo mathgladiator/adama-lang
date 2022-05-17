@@ -160,7 +160,7 @@ public class MockInstantDataService implements DataService {
 
   @Override
   public void close(Key key, Callback<Void> callback) {
-    logByKey.remove(key);
+    println("CLOSE:" + key.space + "/" + key.key);
     callback.success(null);
   }
 

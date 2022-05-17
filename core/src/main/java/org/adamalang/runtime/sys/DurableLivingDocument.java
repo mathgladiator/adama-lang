@@ -264,6 +264,7 @@ public class DurableLivingDocument {
     base.metrics.document_catastrophic_failure.run();
     document.__nukeViews();
     base.map.remove(key);
+    base.service.close(key, Callback.DONT_CARE_VOID);
     base.metrics.inflight_documents.down();
     catastrophicFailureOccurred = true;
     while (pending.size() > 0) {
@@ -553,6 +554,7 @@ public class DurableLivingDocument {
       public void execute() throws Exception {
         if (document.__canRemoveFromMemory()) {
           base.map.remove(key);
+          base.service.close(key, Callback.DONT_CARE_VOID);
           base.metrics.inflight_documents.down();
         }
       }
