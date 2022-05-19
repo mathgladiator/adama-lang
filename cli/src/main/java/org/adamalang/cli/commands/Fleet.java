@@ -39,10 +39,6 @@ import java.util.HashSet;
 import java.util.Random;
 
 public class Fleet {
-  public Fleet() {
-    super();
-  }
-
   public static void execute(Config config, String[] args) throws Exception {
     if (args.length == 0) {
       fleetsHelp(args);
