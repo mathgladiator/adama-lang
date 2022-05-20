@@ -209,6 +209,9 @@ In Adama, division always results in a [maybe&lt;&gt;](maybe.md) due to a divisi
 | left type | right type | result type |
 | --- | --- | --- |
 | int | int | maybe<double> |
+| double | int | maybe<double> |
+| int | double | maybe<double> |
+| double | double | maybe<double> |
 
 ### Modulus: *expr* % *expr*
 

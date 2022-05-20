@@ -1,6 +1,7 @@
 # Document layout with types
 
 As Adama is [a data-centric programming language](https://en.wikipedia.org/wiki/Data-centric_programming_language), the first order of business is to organize your [data for state management](https://en.wikipedia.org/wiki/State_management). At the document level, state is laid out as a series of fields. For instance, the below Adama code outlines three fields:
+
 ```adama
 public string output;
 private double balance;
@@ -52,6 +53,7 @@ Adama has many built-in types, and the following tables outline which types are 
 | int | int is a signed [integer](https://en.wikipedia.org/wiki/Integer) number that uses 32-bits. This results in valid values between −2,147,483,648 and 2,147,483,647. | 0 | 42 |
 | long | long is a signed [integer](https://en.wikipedia.org/wiki/Integer) number that uses 64-bits. This results in valid values between -9,223,372,036,854,775,808 and +9,223,372,036,854,775,807.  | 0 | 42 |
 | double | double is a floating-point type which uses 64-bit IEEE754. This results in a range of 1.7E +/- 308 (15 digits). | 0.0 | 3.15 |
+| complex | complex is a tuple of two doubles under the [complex field of numbers](https://en.wikipedia.org/wiki/Complex_number) | 0 + 0 * @i | @i |
 | string | string is a [utf-8](https://en.wikipedia.org/wiki/UTF-8) encoded collection of code-points. | "" (empty string) | "Hello World" |
 | label | label is a pointer to a block of code which is used by [the state machine](./state-machine.md), | # (the no-state) | #hello |
 | client | client is a reference to a connected person, and the backing data establishes who they are. This is used for [acquiring data and decisions from people](./async.md), | @no_one | @no_one |

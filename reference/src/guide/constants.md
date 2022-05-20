@@ -1,6 +1,6 @@
 # Constants
 
-You want numbers? We got numbers. You want strings? We got strings. Constants are a fast way to place data into a document. For instance, the following code outlines some basic constants:
+You want numbers? We got numbers. You want strings? We got strings. You want complex numbers, we got complex numbers! Constants are a fast way to place data into a document. For instance, the following code outlines some basic constants:
 
 ```adama
 #we_got_constants {
@@ -9,6 +9,7 @@ You want numbers? We got numbers. You want strings? We got strings. Constants ar
   double z = 3.14;
   bool b = true;
   client c = @no_one;
+  complex cx = 1 + @i;
 }
 ```
 
@@ -27,6 +28,7 @@ There are a variety of ways to conjure up constants. The following table illustr
 | client | @no_one | @no_one |
 | maybe&lt;?&gt; | @maybe&lt;Type&gt; | @maybe&lt;int&gt; |
 | maybe(?) | @maybe(Expr) | @maybe(123) |
+| complex | @i | 1 + @i |
 
 ## String escaping
 
