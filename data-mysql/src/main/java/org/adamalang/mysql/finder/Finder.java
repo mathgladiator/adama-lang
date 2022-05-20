@@ -31,7 +31,7 @@ public class Finder implements FinderService {
     dataBase.transact((connection) -> {
       String insertSQL = new StringBuilder() //
           .append("INSERT INTO `").append(dataBase.databaseName).append("`.`directory` (") //
-          .append("`space`, `key`, `type`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Fresh.type).append(", '', '', '', 0, 0)") //
+          .append("`space`, `key`, `type`, `head_seq`, `active`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Fresh.type).append(", 0, FALSE, '', '', '', 0, 0)") //
           .toString();
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
         statementInsertIndex.setString(1, key.space);

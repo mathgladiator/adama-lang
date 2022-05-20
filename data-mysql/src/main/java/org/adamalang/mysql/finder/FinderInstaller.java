@@ -29,6 +29,8 @@ public class FinderInstaller {
         .append("  `key` VARCHAR(512) NOT NULL,") //
         .append("  `created` DATETIME DEFAULT CURRENT_TIMESTAMP,") //
         .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
+        .append("  `head_seq` INT(4) UNSIGNED NOT NULL,") //
+        .append("  `active` BOOLEAN NOT NULL,") //
         .append("  `type` INT(2) UNSIGNED NOT NULL,") //
         .append("  `region` VARCHAR(64) NOT NULL,") //
         .append("  `machine` VARCHAR(512) NOT NULL,") //
