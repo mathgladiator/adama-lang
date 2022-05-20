@@ -46,7 +46,6 @@ public class DurableListStore {
   // the directory containing the write-ahead log; since we use Files.move, we create temporary files to cut over
   private final File walRoot;
 
-
   // We use a netty buffer for writing data; TODO: use a different construction since we have minimal overhead
   private final ByteBuf buffer;
   private byte[] pageBuffer;
