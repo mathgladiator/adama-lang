@@ -15,7 +15,7 @@ public class TestClientConfig extends ClientConfig {
     this.clientQueueSize = 1024;
     this.clientQueueTimeoutMS = 500;
     this.connectionQueueSize = 8;
-    this.connectionQueueTimeoutMS = 500;
+    this.connectionQueueTimeoutMS = 2500;
     this.connectionMaximumBackoffConnectionFailuresMS = 750;
     this.connectionMaximumBackoffFindingClientFailuresMS = 750;
     this.sendRetryDelayMS = 50;

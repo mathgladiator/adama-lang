@@ -45,7 +45,7 @@ public class ConnectionRoutingFluxTests {
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
         finder.sync(Helper.setOf("127.0.0.1:" + servers[0].port));
         ComplexHelper.waitForRoutingToCatch(engineReal, "space", "key", "127.0.0.1:" + servers[0].port);
-        Runnable waitForFoundTargetNull = connectionExecutor.pauseOn("connection-found-target/null");
+        Runnable waitForFoundTargetNull = connectionExecutor.pauseOn("connection-found-local-machine/null");
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engineReal, finder, connectionExecutor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsProducedData = events.latchAt(2);
@@ -94,7 +94,7 @@ public class ConnectionRoutingFluxTests {
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
         finder.sync(Helper.setOf("127.0.0.1:" + servers[0].port, "127.0.0.1:" + servers[1].port));
         ComplexHelper.waitForRoutingToCatch(engineReal, "space", "key", "127.0.0.1:" + servers[0].port);
-        Runnable waitForFoundTargetNew = connectionExecutor.pauseOn("connection-found-target/127.0.0.1:" + servers[1].port);
+        Runnable waitForFoundTargetNew = connectionExecutor.pauseOn("connection-found-local-machine/127.0.0.1:" + servers[1].port);
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engineReal, finder, connectionExecutor);
         MockSimpleEvents events = new MockSimpleEvents();
         Runnable eventsProducedData = events.latchAt(2);
@@ -197,7 +197,7 @@ public class ConnectionRoutingFluxTests {
         Runnable waitForFindAgain = finderExecutor.pauseOn("finder-find/127.0.0.1:" + servers[1].port);
         finderExecutor.unpause();
         waitForRoutingUpdate.run();
-        Runnable waitForNullTarget = connectionExecutor.pauseOn("connection-found-target/null");
+        Runnable waitForNullTarget = connectionExecutor.pauseOn("connection-found-local-machine/null");
         connectionExecutor.unpause();
         waitForFindAgain.run();
         System.err.println("--waiting to find again");
@@ -307,7 +307,7 @@ public class ConnectionRoutingFluxTests {
         connection.open();
         waitForConnection.run();
         Runnable extracted = connectionExecutor.extract();
-        Runnable waitForFoundTargetNull = connectionExecutor.pauseOn("connection-found-target/null");
+        Runnable waitForFoundTargetNull = connectionExecutor.pauseOn("connection-found-local-machine/null");
         connectionExecutor.unpause();
         engineReal.integrate("127.0.0.1:20005", Collections.emptyList());
         waitForFoundTargetNull.run();
@@ -316,7 +316,7 @@ public class ConnectionRoutingFluxTests {
         connectionExecutor.flush();
         extracted.run();
         waitForDisconnect.run();
-        Runnable waitForFoundNewTarget = connectionExecutor.pauseOn("connection-found-target/127.0.0.1:" + servers[0].port);
+        Runnable waitForFoundNewTarget = connectionExecutor.pauseOn("connection-found-local-machine/127.0.0.1:" + servers[0].port);
         connectionExecutor.unpause();
         connectionExecutor.flush();
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
@@ -364,7 +364,7 @@ public class ConnectionRoutingFluxTests {
         connection.open();
         waitForConnection.run();
         Runnable extracted = connectionExecutor.extract();
-        Runnable waitForFoundTargetNull = connectionExecutor.pauseOn("connection-found-target/null");
+        Runnable waitForFoundTargetNull = connectionExecutor.pauseOn("connection-found-local-machine/null");
         connectionExecutor.unpause();
         engineReal.integrate("127.0.0.1:20005", Collections.emptyList());
         waitForFoundTargetNull.run();
@@ -374,7 +374,7 @@ public class ConnectionRoutingFluxTests {
         extracted.run();
         waitForDisconnect.run();
         extracted = connectionExecutor.extract();
-        Runnable waitForFoundNewTarget = connectionExecutor.pauseOn("connection-found-target/127.0.0.1:" + servers[0].port);
+        Runnable waitForFoundNewTarget = connectionExecutor.pauseOn("connection-found-local-machine/127.0.0.1:" + servers[0].port);
         connectionExecutor.unpause();
         connectionExecutor.flush();
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
@@ -392,7 +392,7 @@ public class ConnectionRoutingFluxTests {
         events.assertWrite(0, "CONNECTED");
         events.assertWrite(1, "DELTA:{\"data\":{\"x\":123},\"seq\":4}");
         events.assertWrite(2, "DELTA:{\"data\":{\"x\":123},\"seq\":9}");
-        Runnable killConnection = connectionExecutor.pauseOn("connection-found-target/null");
+        Runnable killConnection = connectionExecutor.pauseOn("connection-found-local-machine/null");
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.emptyList());
         killConnection.run();
         connectionExecutor.once();
@@ -402,7 +402,7 @@ public class ConnectionRoutingFluxTests {
         waitForDisconnect2.run();
         Runnable executeDisconnect = connectionExecutor.extract();
 
-        Runnable waitAgainForTarget = connectionExecutor.pauseOn("connection-found-target/127.0.0.1:" + servers[0].port);
+        Runnable waitAgainForTarget = connectionExecutor.pauseOn("connection-found-local-machine/127.0.0.1:" + servers[0].port);
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
         connectionExecutor.unpause();
         waitAgainForTarget.run();
@@ -457,26 +457,26 @@ public class ConnectionRoutingFluxTests {
         waitForDisconnect.run();
         Runnable executeDisconnect = connectionExecutor.extract();
         connectionExecutor.unpause();
-        Runnable waitAgainForTarget1 = connectionExecutor.pauseOn("connection-found-target/127.0.0.1:" + servers[0].port);
+        Runnable waitAgainForTarget1 = connectionExecutor.pauseOn("connection-found-local-machine/127.0.0.1:" + servers[0].port);
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
         waitAgainForTarget1.run();
-        Runnable waitAgainForTarget2 = connectionExecutor.pauseOn("connection-found-target/127.0.0.1:" + servers[1].port);
+        Runnable waitAgainForTarget2 = connectionExecutor.pauseOn("connection-found-local-machine/127.0.0.1:" + servers[1].port);
         connectionExecutor.unpause();
         engineReal.integrate("127.0.0.1:" + servers[1].port, Collections.singleton("space"));
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.emptyList());
         waitAgainForTarget2.run();
 
-        Runnable waitAgainForNullTarget = connectionExecutor.pauseOn("connection-found-target/null");
+        Runnable waitAgainForNullTarget = connectionExecutor.pauseOn("connection-found-local-machine/null");
         engineReal.integrate("127.0.0.1:" + servers[1].port, Collections.emptyList());
         waitAgainForNullTarget.run();
         connectionExecutor.unpause();
 
-        Runnable waitAgainForTarget3 = connectionExecutor.pauseOn("connection-found-target/127.0.0.1:" + servers[0].port);
+        Runnable waitAgainForTarget3 = connectionExecutor.pauseOn("connection-found-local-machine/127.0.0.1:" + servers[0].port);
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
         waitAgainForTarget3.run();
         connectionExecutor.unpause();
 
-        Runnable waitAgainForTarget4 = connectionExecutor.pauseOn("connection-found-target/null");
+        Runnable waitAgainForTarget4 = connectionExecutor.pauseOn("connection-found-local-machine/null");
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.emptyList());
         waitAgainForTarget4.run();
         connectionExecutor.unpause();
