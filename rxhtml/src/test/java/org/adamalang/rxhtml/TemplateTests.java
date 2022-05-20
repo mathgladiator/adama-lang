@@ -15,4 +15,24 @@ public class TemplateTests {
     }
     System.err.println(template.finish());
   }
+
+  @Test
+  public void single_var() {
+    Document document = Jsoup.parse("<template name=\"foo\"><lookup name=\"x\"/></template>");
+    Template template = new Template();
+    for (Element element : document.getElementsByTag("template")) {
+      template.writeRoot(element);
+    }
+    System.err.println(template.finish());
+  }
+
+  @Test
+  public void repeat_var() {
+    Document document = Jsoup.parse("<template name=\"foo\"><lookup name=\"x\"/><lookup name=\"x\"/><lookup name=\"x\"/></template>");
+    Template template = new Template();
+    for (Element element : document.getElementsByTag("template")) {
+      template.writeRoot(element);
+    }
+    System.err.println(template.finish());
+  }
 }

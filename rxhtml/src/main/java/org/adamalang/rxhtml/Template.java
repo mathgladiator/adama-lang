@@ -35,6 +35,21 @@ public class Template {
     writer.tabDown().tab().append("});").newline();
   }
 
+  private String convertXmlAttributeToJavaScriptField(String realKey) {
+    switch (realKey) {
+      case "class":
+        return "className";
+      case "aria-hidden":
+        return "ariaHidden";
+      case "fill-rule":
+        return "fillRule";
+      case "clip-rule":
+        return "clipRule";
+      case "for":
+        return "htmlFor";
+    }
+  }
+
   private String writeElement(String current, Element element, String parentVariable, boolean returnVariable, HashMap<String, Integer> subscriptionCounts) {
     String eVar = pool.ask();
     writer.tab().append("var ").append(eVar).append(" = $.e('").append(element.tagName()).append("');").newline();
@@ -44,23 +59,7 @@ public class Template {
         Set<String> vars = tree.variables();
         String realKey = attr.getKey();
         // TODO: expand mapping of attribute names
-        switch (realKey) {
-          case "class":
-            realKey = "className";
-            break;
-          case "aria-hidden":
-            realKey = "ariaHidden";
-            break;
-          case "fill-rule":
-            realKey = "fillRule";
-            break;
-          case "clip-rule":
-            realKey = "clipRule";
-            break;
-          case "for":
-            realKey = "htmlFor";
-            break;
-        }
+
         if (vars.size() > 0) {
           var oVar = pool.ask();
           writer.tab().append("{").tabUp().newline();
@@ -123,21 +122,20 @@ public class Template {
     pool.give(gidVar);
   };
 
+  private String wrapTransform(String expression, String transform) {
+    if (transform == null || "".equals(transform)) {
+      return expression;
+    }
+    if ("ntclient.agent".equalsIgnoreCase(transform)) {
+      return expression + ".agent";
+    }
+    return expression;
+  }
+
   private void writeLookup(String current, String name, String transform, String parentVariable, HashMap<String, Integer> subscriptionCounts) {
     String eVar = pool.ask();
     writer.tab().append("{").tabUp().newline();
-    writer.tab().append("var ").append(eVar).append(" = $.t(").append(current != null ? (current + "." + name) : "''").append(");").newline();
-    String getValueNow = current + "." + name;
-    String pullValue = "x.value";
-    if ("ntclient.agent".equalsIgnoreCase(transform)) {
-      getValueNow = getValueNow + ".agent";
-      pullValue = pullValue + ".agent";
-    }
-    // MORE TRANSFORMS, MOARRR!!
-    if (current != null) {
-      writer.tab().append("$.s(").append(eVar).append(",").append(getValueNow).append(");").newline();
-    }
-    // PULL from the current
+    writer.tab().append("var ").append(eVar).append(" = $.t(").append(wrapTransform(current != null ? (current + "." + name) : "''", transform)).append(");").newline();
     SubscribeMethod method = subscribeTest(name, subscriptionCounts);
     switch (method) {
       case Set:
@@ -151,9 +149,8 @@ public class Template {
         break;
     }
     writer.append("function(x) {").newline().tabUp();
-    writer.tab().append("$.s(").append(eVar).append(",").append(pullValue).append(");").newline().tabDown();
+    writer.tab().append("$.s(").append(eVar).append(",").append(wrapTransform("x.value", transform)).append(");").newline().tabDown();
     writer.tab().append("}");
-    // ALL SORTS OF FORMATTING FUN
     switch (method) {
       case Set:
         writer.append(";");
@@ -192,12 +189,7 @@ public class Template {
   }
 
   private Element getSingleChild(Element element) {
-    if (element.childNodeSize() != 1) {
-      throw new UnsupportedOperationException("z");
-    }
-    if (!(element.childNode(0) instanceof Element)) {
-      throw new UnsupportedOperationException();
-    }
+
     return element;
   }
 
@@ -226,9 +218,12 @@ public class Template {
           }
           case "iterate": {
             if (!singleParent) {
-              throw new UnsupportedOperationException("Yo");
+              throw new UnsupportedOperationException("<iterate> must have a single parent as the parent will be the container");
             }
-            writeIterate(null,  getSingleChild(child), child.attr("name"), parentVariable, new HashMap<>());
+            if (element.childNodeSize() != 1 || !(element.childNode(0) instanceof Element)) {
+              throw new UnsupportedOperationException("<iterate> must have a single children which will be repeated");
+            }
+            writeIterate(null,  child.child(0), child.attr("name"), parentVariable, new HashMap<>());
             break;
           }
           case "lookup": {
