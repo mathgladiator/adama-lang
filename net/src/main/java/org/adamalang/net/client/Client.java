@@ -12,14 +12,12 @@ package org.adamalang.net.client;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.ItemActionMonitor;
 import org.adamalang.common.net.NetBase;
-import org.adamalang.net.client.contracts.HeatMonitor;
-import org.adamalang.net.client.contracts.MeteringStream;
-import org.adamalang.net.client.contracts.SimpleEvents;
-import org.adamalang.net.client.contracts.SpaceTrackingEvents;
+import org.adamalang.net.client.contracts.*;
 import org.adamalang.net.client.proxy.ProxyDataService;
 import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.client.sm.ConnectionBase;
+import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 
 import java.util.*;
@@ -32,8 +30,8 @@ public class Client {
   private final NetBase base;
   private final ClientMetrics metrics;
   private final SimpleExecutor routingExecutor;
-  private final ReativeRoutingEngine engine;
-  private final InstanceClientFinder finder;
+  private final ReativeRoutingEngine reactiveRoutingEngine;
+  private final InstanceClientFinder instantClientFinder;
   private final SimpleExecutor[] executors;
   private final Random rng;
   private final ClientConfig config;
@@ -43,7 +41,7 @@ public class Client {
     this.config = config;
     this.metrics = metrics;
     this.routingExecutor = SimpleExecutor.create("routing");
-    this.engine = new ReativeRoutingEngine(metrics, routingExecutor, new SpaceTrackingEvents() {
+    this.reactiveRoutingEngine = new ReativeRoutingEngine(metrics, routingExecutor, new SpaceTrackingEvents() {
       @Override
       public void gainInterestInSpace(String space) {
       }
@@ -56,17 +54,17 @@ public class Client {
       public void lostInterestInSpace(String space) {
       }
     }, 250, 250);
-    this.finder = new InstanceClientFinder(base, config, metrics, monitor, SimpleExecutorFactory.DEFAULT, 4, engine, ExceptionLogger.FOR(Client.class));
+    this.instantClientFinder = new InstanceClientFinder(base, config, metrics, monitor, SimpleExecutorFactory.DEFAULT, 4, reactiveRoutingEngine, ExceptionLogger.FOR(Client.class));
     this.executors = SimpleExecutorFactory.DEFAULT.makeMany("connections", 2);
     this.rng = new Random();
   }
 
   public ReativeRoutingEngine routing() {
-    return engine;
+    return reactiveRoutingEngine;
   }
 
   public void getDeploymentTargets(String space, Consumer<String> stream) {
-    engine.list(space, targets -> finder.findCapacity(targets, (set) -> {
+    reactiveRoutingEngine.list(space, targets -> instantClientFinder.findCapacity(targets, (set) -> {
       for (String target : set) {
         stream.accept(target);
       }
@@ -74,7 +72,7 @@ public class Client {
   }
 
   public void getProxy(String target, Callback<ProxyDataService> callback) {
-    finder.find(target, new Callback<InstanceClient>() {
+    instantClientFinder.find(target, new Callback<InstanceClient>() {
       @Override
       public void success(InstanceClient value) {
         callback.success(value.getProxy());
@@ -93,7 +91,7 @@ public class Client {
       @Override
       public void execute() throws Exception {
         NamedRunnable self = this;
-        engine.list(space, (targets) -> {
+        reactiveRoutingEngine.list(space, (targets) -> {
           if (targets.size() == 0) {
             if (time.get() < timeout) {
               int step = (int) (125 + Math.random() * 125);
@@ -112,7 +110,7 @@ public class Client {
   }
 
   public void notifyDeployment(String target, String space) {
-    finder.find(target, new Callback<>() {
+    instantClientFinder.find(target, new Callback<>() {
       @Override
       public void success(InstanceClient value) {
         value.scanDeployments(space, new Callback<>() {
@@ -136,8 +134,8 @@ public class Client {
   }
 
   public void randomMeteringExchange(MeteringStream metering) {
-    engine.random(target -> {
-      finder.find(target, new Callback<>() {
+    reactiveRoutingEngine.random(target -> {
+      instantClientFinder.find(target, new Callback<>() {
         @Override
         public void success(InstanceClient value) {
           value.startMeteringExchange(metering);
@@ -152,54 +150,70 @@ public class Client {
   }
 
   public Consumer<Collection<String>> getTargetPublisher() {
-    return (targets) -> finder.sync(new TreeSet<>(targets));
+    return (targets) -> instantClientFinder.sync(new TreeSet<>(targets));
   }
 
   public void reflect(String space, String key, Callback<String> callback) {
-    engine.get(new Key(space, key), (target) -> {
-      finder.find(target, new Callback<InstanceClient>() {
-        @Override
-        public void success(InstanceClient client) {
-          client.reflect(space, key, new Callback<String>() {
-            @Override
-            public void success(String value) {
-              callback.success(value);
-            }
+    reactiveRoutingEngine.get(new Key(space, key), new RoutingSubscriber() {
+      @Override
+      public void onRegion(String region) {
+        // TODO: proxy to another region
+      }
 
-            @Override
-            public void failure(ErrorCodeException ex) {
-              callback.failure(ex);
-            }
-          });
-        }
+      @Override
+      public void onMachine(String machine) {
+        instantClientFinder.find(machine, new Callback<InstanceClient>() {
+          @Override
+          public void success(InstanceClient client) {
+            client.reflect(space, key, new Callback<String>() {
+              @Override
+              public void success(String value) {
+                callback.success(value);
+              }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          callback.failure(ex);
-        }
-      });
+              @Override
+              public void failure(ErrorCodeException ex) {
+                callback.failure(ex);
+              }
+            });
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+      }
     });
   }
 
   public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_create.start();
-    engine.get(new Key(space, key), (target) -> {
-      finder.find(target, new Callback<InstanceClient>() {
-        @Override
-        public void success(InstanceClient client) {
-          client.create(ip, origin, agent, authority, space, key, entropy, arg, callback);
-        }
+    reactiveRoutingEngine.get(new Key(space, key), new RoutingSubscriber() {
+      @Override
+      public void onRegion(String region) {
+        // TODO: error out as this implies the document already exists
+      }
 
-        @Override
-        public void failure(ErrorCodeException ex) {
-          callback.failure(ex);
-        }
-      });
+      @Override
+      public void onMachine(String machine) {
+        instantClientFinder.find(machine, new Callback<InstanceClient>() {
+          @Override
+          public void success(InstanceClient client) {
+            client.create(ip, origin, agent, authority, space, key, entropy, arg, callback);
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+      }
     });
   }
 
   public Connection connect(String ip, String origin, String agent, String authority, String space, String key, String viewerState, String assetKey, SimpleEvents events) {
-    ConnectionBase base = new ConnectionBase(config, metrics, engine, finder, executors[rng.nextInt(executors.length)]);
+    ConnectionBase base = new ConnectionBase(config, metrics, reactiveRoutingEngine, instantClientFinder, executors[rng.nextInt(executors.length)]);
     Connection connection = new Connection(base, ip, origin, agent, authority, space, key, viewerState, assetKey, events);
     connection.open();
     return connection;
@@ -213,7 +227,7 @@ public class Client {
     for (CountDownLatch latch : latches) {
       AwaitHelper.block(latch, 500);
     }
-    AwaitHelper.block(finder.shutdown(), 1000);
+    AwaitHelper.block(instantClientFinder.shutdown(), 1000);
     AwaitHelper.block(routingExecutor.shutdown(), 1000);
   }
 }

@@ -12,6 +12,7 @@ package org.adamalang.net.client.sm;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.net.TestBed;
+import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtClient;
@@ -61,12 +62,19 @@ public class ComplexHelper {
       if (timeout < 0) {
         throw new RuntimeException("timed out");
       }
-      engine.get(new Key(space, key), (actual) -> {
-        if (target == null && actual == null) {
-          latch.countDown();
+      engine.get(new Key(space, key), new RoutingSubscriber() {
+        @Override
+        public void onRegion(String region) {
         }
-        if (target != null && target.equals(actual)) {
-          latch.countDown();
+
+        @Override
+        public void onMachine(String machine) {
+          if (target == null && machine == null) {
+            latch.countDown();
+          }
+          if (target != null && target.equals(machine)) {
+            latch.countDown();
+          }
         }
       });
     } while (!latch.await(50, TimeUnit.MILLISECONDS));

@@ -4,6 +4,7 @@ import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
+import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.routing.Router;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
@@ -21,14 +22,14 @@ public class FinderServiceRouter implements Router {
   }
 
   @Override
-  public void get(Key key, Consumer<String> callback) {
+  public void get(Key key, RoutingSubscriber callback) {
     // find the key once, or assign capacity to it
     finder.find(key, new Callback<>() {
       @Override
       public void success(FinderService.Result finderResult) {
         if (finderResult.location == FinderService.Location.Machine) {
           // TODO: What about region?
-          callback.accept(finderResult.value);
+          callback.onMachine(finderResult.value);
         } else {
           // TODO: capacity plan, and find a new host
         }
@@ -47,7 +48,7 @@ public class FinderServiceRouter implements Router {
   }
 
   @Override
-  public void subscribe(Key key, Consumer<String> subscriber, Consumer<Runnable> onCancel) {
+  public void subscribe(Key key, RoutingSubscriber subscriber, Consumer<Runnable> onCancel) {
     get(key, subscriber);
   }
 }

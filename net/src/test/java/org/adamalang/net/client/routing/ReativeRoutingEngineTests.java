@@ -13,6 +13,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
@@ -40,22 +41,27 @@ public class ReativeRoutingEngineTests {
     CountDownLatch becameW = new CountDownLatch(1);
     CountDownLatch becameWAgain = new CountDownLatch(2);
 
-    engine.subscribe(
-        new Key("space", "key"),
-        (target) -> {
-          System.err.println(target);
-          if ("z".equals(target)) {
+    engine.subscribe(new Key("space", "key"), new RoutingSubscriber() {
+        @Override
+        public void onRegion(String region) {
+
+        }
+
+        @Override
+        public void onMachine(String machine) {
+          System.err.println(machine);
+          if ("z".equals(machine)) {
             becameZ.countDown();
           }
-          if ("w".equals(target)) {
+          if ("w".equals(machine)) {
             becameW.countDown();
             becameWAgain.countDown();
           }
-        },
-        (cancel) -> {
-          cancelRunnable.set(cancel);
-          latchGotCancel.countDown();
-        });
+        }
+      }, (cancel) -> {
+        cancelRunnable.set(cancel);
+        latchGotCancel.countDown();
+      });
     Assert.assertTrue(latchGotCancel.await(10000, TimeUnit.MILLISECONDS));
     // NOTE: this list was built to be adversarial, so each one will trigger an immediate change
     // without the broadcast delay
@@ -118,9 +124,14 @@ public class ReativeRoutingEngineTests {
       {
         CountDownLatch latch = new CountDownLatch(1);
         AtomicBoolean success = new AtomicBoolean(false);
-        engine.get(new Key("space", "key"), new Consumer<String>() {
+        engine.get(new Key("space", "key"), new RoutingSubscriber() {
           @Override
-          public void accept(String s) {
+          public void onRegion(String region) {
+
+          }
+
+          @Override
+          public void onMachine(String machine) {
             // given the irregularity of the broadcast, can't assert much... hrmm
             success.set(true);
             latch.countDown();

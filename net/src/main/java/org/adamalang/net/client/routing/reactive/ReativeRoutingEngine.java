@@ -12,6 +12,7 @@ package org.adamalang.net.client.routing.reactive;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
 import org.adamalang.net.client.routing.Router;
@@ -57,11 +58,11 @@ public class ReativeRoutingEngine implements RoutingTarget, Router {
   }
 
   @Override
-  public void get(Key key, Consumer<String> callback) {
+  public void get(Key key, RoutingSubscriber callback) {
     executor.execute(new NamedRunnable("get", key.space, key.key) {
       @Override
       public void execute() throws Exception {
-        callback.accept(table.get(key.space, key.key));
+        callback.onMachine(table.get(key.space, key.key));
       }
     });
   }
@@ -101,11 +102,11 @@ public class ReativeRoutingEngine implements RoutingTarget, Router {
   }
 
   @Override
-  public void subscribe(Key key, Consumer<String> subscriber, Consumer<Runnable> onCancel) {
+  public void subscribe(Key key, RoutingSubscriber subscriber, Consumer<Runnable> onCancel) {
     executor.execute(new NamedRunnable("routing-subscribe", key.space, key.key) {
       @Override
       public void execute() throws Exception {
-        Runnable cancel = table.subscribe(key, subscriber);
+        Runnable cancel = table.subscribe(key, (machine) -> subscriber.onMachine(machine));
         onCancel.accept(() -> executor.execute(new NamedRunnable("routing-unsubscribe") {
           @Override
           public void execute() throws Exception {

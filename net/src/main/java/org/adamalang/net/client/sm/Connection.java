@@ -21,6 +21,7 @@ import org.adamalang.common.queue.ItemQueue;
 import org.adamalang.net.client.InstanceClient;
 import org.adamalang.net.client.contracts.Events;
 import org.adamalang.net.client.contracts.Remote;
+import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.runtime.data.Key;
 
@@ -90,23 +91,36 @@ public class Connection {
           base.metrics.client_state_machines_alive.up();
           routingAlive = true;
           events.connected();
-          base.router.subscribe(key, (newTarget) -> {
-            base.executor.execute(new NamedRunnable("connection-found-target", newTarget) {
-              @Override
-              public void execute() throws Exception {
-                if (newTarget == null) {
-                  if (target != null) {
-                    target = null;
-                    handle_onKillRoutingTarget();
-                  }
-                } else {
-                  if (!newTarget.equals(target)) {
-                    target = newTarget;
-                    handle_onNewRoutingTarget();
+          base.router.subscribe(key, new RoutingSubscriber() {
+            @Override
+            public void onRegion(String region) {
+              base.executor.execute(new NamedRunnable("connection-found-new-region", region) {
+                @Override
+                public void execute() throws Exception {
+                  // handle_onRoutingExternalRegion(region);
+                }
+              });
+            }
+
+            @Override
+            public void onMachine(String newTarget) {
+              base.executor.execute(new NamedRunnable("connection-found-local-machine", newTarget) {
+                @Override
+                public void execute() throws Exception {
+                  if (newTarget == null) {
+                    if (target != null) {
+                      target = null;
+                      handle_onKillRoutingTarget();
+                    }
+                  } else {
+                    if (!newTarget.equals(target)) {
+                      target = newTarget;
+                      handle_onNewRoutingTarget();
+                    }
                   }
                 }
-              }
-            });
+              });
+            }
           }, (cancel) -> {
             base.executor.execute(new NamedRunnable("connection-provide-cancel-routing") {
               @Override

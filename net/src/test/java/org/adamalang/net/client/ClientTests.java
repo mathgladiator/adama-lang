@@ -14,6 +14,7 @@ import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
 import org.adamalang.net.client.contracts.MeteringStream;
+import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.mocks.MockMeteringFlow;
@@ -311,16 +312,19 @@ public class ClientTests {
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + bed.port));
     CountDownLatch latchFound = new CountDownLatch(1);
     for (int k = 0; k < 10; k++) {
-      client.routing().get(
-          new Key("space", "key"),
-          new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-              if (s != null) {
-                latchFound.countDown();
-              }
-            }
-          });
+      client.routing().get(new Key("space", "key"), new RoutingSubscriber() {
+        @Override
+        public void onRegion(String region) {
+
+        }
+
+        @Override
+        public void onMachine(String machine) {
+          if (machine != null) {
+            latchFound.countDown();
+          }
+        }
+      });
       if (latchFound.await(1500, TimeUnit.MILLISECONDS)) {
         break;
       }
