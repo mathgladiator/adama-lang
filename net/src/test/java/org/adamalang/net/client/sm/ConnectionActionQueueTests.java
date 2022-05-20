@@ -46,7 +46,6 @@ public class ConnectionActionQueueTests {
         for (int k = 0; k < 100; k++) {
           LatchedSeqCallback callback = new LatchedSeqCallback();
           callbacks.add(callback);
-          final int copy = k;
           connection.canAttach(new Callback<Boolean>() {
             @Override
             public void success(Boolean value) {
