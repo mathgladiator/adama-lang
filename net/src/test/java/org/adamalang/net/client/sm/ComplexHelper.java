@@ -61,7 +61,7 @@ public class ComplexHelper {
       if (timeout < 0) {
         throw new RuntimeException("timed out");
       }
-      engine.get(space, key, (actual) -> {
+      engine.get(new Key(space, key), (actual) -> {
         if (target == null && actual == null) {
           latch.countDown();
         }

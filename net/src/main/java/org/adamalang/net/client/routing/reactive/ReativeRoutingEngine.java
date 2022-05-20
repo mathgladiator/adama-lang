@@ -56,11 +56,12 @@ public class ReativeRoutingEngine implements RoutingTarget, Router {
     });
   }
 
-  public void get(String space, String key, Consumer<String> callback) {
-    executor.execute(new NamedRunnable("get", space, key) {
+  @Override
+  public void get(Key key, Consumer<String> callback) {
+    executor.execute(new NamedRunnable("get", key.space, key.key) {
       @Override
       public void execute() throws Exception {
-        callback.accept(table.get(space, key));
+        callback.accept(table.get(key.space, key.key));
       }
     });
   }

@@ -20,6 +20,7 @@ import org.adamalang.net.client.proxy.ProxyDataService;
 import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.client.sm.ConnectionBase;
+import org.adamalang.runtime.data.Key;
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -155,7 +156,7 @@ public class Client {
   }
 
   public void reflect(String space, String key, Callback<String> callback) {
-    engine.get(space, key, (target) -> {
+    engine.get(new Key(space, key), (target) -> {
       finder.find(target, new Callback<InstanceClient>() {
         @Override
         public void success(InstanceClient client) {
@@ -182,7 +183,7 @@ public class Client {
 
   public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
     ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_create.start();
-    engine.get(space, key, (target) -> {
+    engine.get(new Key(space, key), (target) -> {
       finder.find(target, new Callback<InstanceClient>() {
         @Override
         public void success(InstanceClient client) {

@@ -90,7 +90,7 @@ public class Connection {
           base.metrics.client_state_machines_alive.up();
           routingAlive = true;
           events.connected();
-          base.engine.subscribe(key, (newTarget) -> {
+          base.router.subscribe(key, (newTarget) -> {
             base.executor.execute(new NamedRunnable("connection-found-target", newTarget) {
               @Override
               public void execute() throws Exception {

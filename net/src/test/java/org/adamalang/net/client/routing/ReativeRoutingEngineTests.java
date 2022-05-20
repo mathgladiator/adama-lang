@@ -118,7 +118,7 @@ public class ReativeRoutingEngineTests {
       {
         CountDownLatch latch = new CountDownLatch(1);
         AtomicBoolean success = new AtomicBoolean(false);
-        engine.get("space", "key", new Consumer<String>() {
+        engine.get(new Key("space", "key"), new Consumer<String>() {
           @Override
           public void accept(String s) {
             // given the irregularity of the broadcast, can't assert much... hrmm

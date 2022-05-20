@@ -17,6 +17,7 @@ import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.mocks.MockMeteringFlow;
+import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.sys.PredictiveInventory;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.junit.Assert;
@@ -311,8 +312,7 @@ public class ClientTests {
     CountDownLatch latchFound = new CountDownLatch(1);
     for (int k = 0; k < 10; k++) {
       client.routing().get(
-          "space",
-          "key",
+          new Key("space", "key"),
           new Consumer<String>() {
             @Override
             public void accept(String s) {
