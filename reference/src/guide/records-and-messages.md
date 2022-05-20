@@ -46,6 +46,7 @@ The types that are allowed in records is limited to:
 * ```int```
 * ```long```
 * ```double```
+* ```complex```
 * ```string```
 * ```label```
 * maybe&lt;t&gt; for any type in this list (except maybe and maybe)

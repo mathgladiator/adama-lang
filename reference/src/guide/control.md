@@ -47,8 +47,46 @@ int x;
 
 **while** statements are a straightforward way to iterate while a condition is true.
 
+```adama
+int x = 10;
+int y = 0;
+while (x > 0) {
+  x --;
+  y += x;
+}
+```
+
 ### do-while
+
+**do-while** statements are a way to run code at least once.
+
+```adama
+int x = 10;
+int y = 0;
+do {
+  x--;
+  y += x;
+} while (x > 0);
+```
 
 ### for
 
+**for** statements are a common shorthand for while loops to initialize and step.
+
+```adama
+int y = 0;
+for(int x = 10; x > 0; x--) {
+  y += x;
+}
+```
+
 ### foreach
+
+**foreach** statements are a shorthand for iterating over arrays
+
+```adama
+int y;
+foreach (x in [1,2,3,4,5,6,7,8,9,10]) {
+  y += x;
+}
+```

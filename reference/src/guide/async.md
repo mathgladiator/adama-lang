@@ -2,7 +2,7 @@
 
 ## Handling messages directly
 
-When [users connect](static-policies-document-events.md), the only way they can interact with the document is to send messages to the document. This requires a message like:
+When [users connect](static-policies-document-events.md), the primary way they can interact with the document is to send messages to the document. This requires a message like:
 
 ```adama
 public string output = "Hello World";
@@ -20,7 +20,7 @@ channel change_output(client sender, ChangeOutput change) {
 }
 ```
 
-This enables users to send messages via the change_output channel which will execute the associated code. In this example, 'change_output' is the name of the channel which clients will annotate their message with to execute the associated code. Nothing stops you from introducing multiple channels with the same type.
+This enables users to send messages via the change_output channel which will execute the associated code. In this example, 'change_output' is the name of the channel which clients will annotate their message with to execute the associated code. Nothing stops you from introducing multiple channels with the same message type.
 
 ```adama
 channel change_output(client sender, ChangeOutput change) {
