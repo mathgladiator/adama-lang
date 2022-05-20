@@ -22,8 +22,6 @@ public class BackendDataServiceInstaller {
   }
 
   public void install() throws Exception {
-    String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
-
     String createIndexTableSQL = new StringBuilder() //
         .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`index` (") //
         .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
@@ -62,7 +60,6 @@ public class BackendDataServiceInstaller {
 
     Connection connection = dataBase.pool.getConnection();
     try {
-      DataBase.execute(connection, createDatabaseSQL);
       DataBase.execute(connection, createIndexTableSQL);
       DataBase.execute(connection, createDeltasTableSQL);
     } finally {
@@ -75,7 +72,6 @@ public class BackendDataServiceInstaller {
     try {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`deltas`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`index`;").toString());
-      DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
       connection.close();
     }

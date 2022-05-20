@@ -21,8 +21,6 @@ public class DeployedInstaller {
   }
 
   public void install() throws Exception {
-    String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
-
     String createDeployedTableSQL = new StringBuilder() //
         .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`deployed` (") //
         .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
@@ -36,7 +34,6 @@ public class DeployedInstaller {
         .toString();
     Connection connection = dataBase.pool.getConnection();
     try {
-      DataBase.execute(connection, createDatabaseSQL);
       DataBase.execute(connection, createDeployedTableSQL);
     } finally {
       connection.close();
@@ -47,7 +44,6 @@ public class DeployedInstaller {
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`deployed`;").toString());
-      DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
       connection.close();
     }

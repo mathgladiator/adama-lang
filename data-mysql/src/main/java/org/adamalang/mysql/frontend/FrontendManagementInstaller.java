@@ -21,8 +21,6 @@ public class FrontendManagementInstaller {
   }
 
   public void install() throws Exception {
-    String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
-
     String createEmailsTableSQL = new StringBuilder() //
         .append("CREATE TABLE IF NOT EXISTS `" + dataBase.databaseName + "`.`emails` (") //
         .append("  `id` INT(4) UNSIGNED NOT NULL AUTO_INCREMENT,") //
@@ -141,7 +139,6 @@ public class FrontendManagementInstaller {
 
     Connection connection = dataBase.pool.getConnection();
     try {
-      DataBase.execute(connection, createDatabaseSQL);
       DataBase.execute(connection, createInitiationsTableSQL);
       DataBase.execute(connection, createEmailsTableSQL);
       DataBase.execute(connection, createAccessKeysTableSQL);
@@ -166,7 +163,6 @@ public class FrontendManagementInstaller {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`authorities`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`metering`;").toString());
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`bills`;").toString());
-      DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
       connection.close();
     }

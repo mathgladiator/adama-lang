@@ -22,8 +22,6 @@ public class FinderInstaller {
   }
 
   public void install() throws Exception {
-    String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + dataBase.databaseName + "`";
-
     String createDirectoryTableSQL = new StringBuilder() //
         .append("CREATE TABLE IF NOT EXISTS `").append(dataBase.databaseName).append("`.`directory` (") //
         .append("  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,") //
@@ -45,7 +43,6 @@ public class FinderInstaller {
 
     Connection connection = dataBase.pool.getConnection();
     try {
-      DataBase.execute(connection, createDatabaseSQL);
       DataBase.execute(connection, createDirectoryTableSQL);
     } finally {
       connection.close();
@@ -56,7 +53,6 @@ public class FinderInstaller {
     Connection connection = dataBase.pool.getConnection();
     try {
       DataBase.execute(connection, new StringBuilder("DROP TABLE IF EXISTS `").append(dataBase.databaseName).append("`.`directory`;").toString());
-      DataBase.execute(connection, new StringBuilder("DROP DATABASE IF EXISTS `").append(dataBase.databaseName).append("`;").toString());
     } finally {
       connection.close();
     }

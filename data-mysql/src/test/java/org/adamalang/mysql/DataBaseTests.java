@@ -22,13 +22,16 @@ public class DataBaseTests {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
     try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       Connection connection = dataBase.pool.getConnection();
+      boolean ex = false;
       try {
         DataBase.execute(connection, "INSERT");
-      } catch (SQLException ex) {
-        Assert.assertTrue(ex.getMessage().contains("You have an error in your SQL syntax"));
+        Assert.fail();
+      } catch (SQLException sqlex) {
+        ex = true;
       } finally {
         connection.close();
       }
+      Assert.assertTrue(ex);
     }
   }
 }
