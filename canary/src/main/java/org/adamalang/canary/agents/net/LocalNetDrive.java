@@ -14,9 +14,6 @@ import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.ServerHandle;
-import org.adamalang.disk.*;
-import org.adamalang.disk.demo.DiskMetrics;
-import org.adamalang.disk.demo.SingleThreadDiskDataService;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
@@ -65,19 +62,8 @@ public class LocalNetDrive {
         DeploymentPlan plan = new DeploymentPlan(planNode.toString(), logger);
         deploymentFactoryBase.deploy(config.space, plan);
         final DataService dataService;
-        if (config.data.equals("disk")) {
-          dataService = new SingleThreadDiskDataService(new File("./canary_data"), new DiskMetrics(new NoOpMetricsFactory()));
-        } else if (config.data.equals("wal")) {
-          File storageDirectory = new File("./canary_wal");
-          storageDirectory.mkdirs();
-          DiskBase diskBase = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), walExecutor, storageDirectory);
-          Startup.transfer(diskBase);
-          diskBase.start();
-          WriteAheadLog log = new WriteAheadLog(diskBase, 32768, 50000, 32 * 1024 * 1024);
-          dataService = new DiskDataService(diskBase, log);
-        } else {
-          dataService = new InMemoryDataService(Executors.newSingleThreadExecutor(), TimeSource.REAL_TIME);
-        }
+
+        dataService = new InMemoryDataService(Executors.newSingleThreadExecutor(), TimeSource.REAL_TIME);
         MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
         CoreMetrics coreMetrics = new CoreMetrics(new NoOpMetricsFactory());
         CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), dataService, TimeSource.REAL_TIME, config.coreThreads);

@@ -15,9 +15,6 @@ import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.disk.*;
-import org.adamalang.disk.demo.DiskMetrics;
-import org.adamalang.disk.demo.SingleThreadDiskDataService;
 import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.InMemoryDataService;
@@ -52,18 +49,7 @@ public class LocalDrive {
     DeploymentPlan plan = new DeploymentPlan(planNode.toString(), logger);
     deploymentFactoryBase.deploy(config.space, plan);
     final DataService dataService;
-    if (config.data.equals("disk")) {
-      dataService = new SingleThreadDiskDataService(new File("./canary_data"), new DiskMetrics(new NoOpMetricsFactory()));
-    } else if (config.data.equals("wal")) {
-      SimpleExecutor walExecutor = SimpleExecutor.create("wal");
-      File storageDirectory = new File("./canary_wal");
-      storageDirectory.mkdirs();
-      DiskBase diskBase = new DiskBase(new DiskDataMetrics(new NoOpMetricsFactory()), walExecutor, storageDirectory);
-      Startup.transfer(diskBase);
-      diskBase.start();
-      WriteAheadLog log = new WriteAheadLog(diskBase, 32768, 50000, 32 * 1024 * 1024);
-      dataService = new DiskDataService(diskBase, log);
-    } else if (config.data.equals("caravan")) {
+    if (config.data.equals("caravan")) {
       SimpleExecutor executor = SimpleExecutor.create("wal");
       File storageDirectory = new File("./canary_caravan");
       storageDirectory.mkdirs();
@@ -76,7 +62,7 @@ public class LocalDrive {
 
         @Override
         public void find(Key key, Callback<Result> callback) {
-          callback.success(new Result(key.hashCode(), null, null));
+          callback.success(new Result(key.hashCode(), null, "region", null));
         }
 
         @Override
