@@ -48,6 +48,7 @@ public class Template {
       case "for":
         return "htmlFor";
     }
+    return realKey;
   }
 
   private String writeElement(String current, Element element, String parentVariable, boolean returnVariable, HashMap<String, Integer> subscriptionCounts) {
