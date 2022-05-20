@@ -81,7 +81,7 @@ public class CachedFinderProxyTests {
 
       }
     });
-    proxy.takeover(KEY, new Callback<Void>() {
+    proxy.set(KEY, "region", "machine", new Callback<Void>() {
       @Override
       public void success(Void value) {
         v.incrementAndGet();
@@ -92,7 +92,7 @@ public class CachedFinderProxyTests {
 
       }
     });
-    proxy.archive(KEY, "KEY", new Callback<Void>() {
+    proxy.archive(KEY, "KEY", "machine", new Callback<Void>() {
       @Override
       public void success(Void value) {
         v.incrementAndGet();
@@ -114,7 +114,18 @@ public class CachedFinderProxyTests {
 
       }
     });
+    proxy.delete(KEY, "machine", new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        v.incrementAndGet();
+      }
 
-    Assert.assertEquals(9, v.get());
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+
+    Assert.assertEquals(10, v.get());
   }
 }

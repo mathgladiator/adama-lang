@@ -68,12 +68,12 @@ public class CaravanDataServiceTests {
         }
 
         @Override
-        public void takeover(Key key, Callback<Void> callback) {
+        public void set(Key key, String region, String machine, Callback<Void> callback) {
 
         }
 
         @Override
-        public void archive(Key key, String archiveKey, Callback<Void> callback) {
+        public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
 
         }
 
@@ -83,7 +83,7 @@ public class CaravanDataServiceTests {
         }
 
         @Override
-        public void delete(Key key, Callback<Void> callback) {
+        public void delete(Key key, String machineOn, Callback<Void> callback) {
 
         }
       };

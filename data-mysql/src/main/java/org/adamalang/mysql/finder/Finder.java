@@ -21,13 +21,9 @@ import java.sql.ResultSet;
 
 public class Finder implements FinderService {
   private final DataBase dataBase;
-  private final String region;
-  private final String targetSelf;
 
-  public Finder(DataBase dataBase, String region, String targetSelf) {
+  public Finder(DataBase dataBase) {
     this.dataBase = dataBase;
-    this.region = region;
-    this.targetSelf = targetSelf;
   }
 
   @Override
@@ -74,7 +70,7 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void takeover(Key key, Callback<Void> callback) {
+  public void set(Key key, String region, String machine, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String updateIndexSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
@@ -84,10 +80,10 @@ public class Finder implements FinderService {
           .append(" WHERE `space`=? AND `key`=? AND (`value`=? OR `type`!=").append(Location.Machine.type).append(")").toString();
       try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
         statementUpdate.setString(1, region);
-        statementUpdate.setString(2, targetSelf);
+        statementUpdate.setString(2, machine);
         statementUpdate.setString(3, key.space);
         statementUpdate.setString(4, key.key);
-        statementUpdate.setString(5, targetSelf);
+        statementUpdate.setString(5, machine);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
         }
@@ -97,7 +93,7 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void archive(Key key, String archiveKey, Callback<Void> callback) {
+  public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String updateIndexSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
@@ -109,7 +105,7 @@ public class Finder implements FinderService {
         statementUpdate.setString(1, archiveKey);
         statementUpdate.setString(2, key.space);
         statementUpdate.setString(3, key.key);
-        statementUpdate.setString(4, targetSelf);
+        statementUpdate.setString(4, machineOn);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
         }
@@ -138,7 +134,7 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
+  public void delete(Key key, String machineOn, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String updateIndexSQL = new StringBuilder() //
           .append("DELETE FROM `").append(dataBase.databaseName).append("`.`directory` ") //
@@ -146,7 +142,7 @@ public class Finder implements FinderService {
       try (PreparedStatement statementDelete = connection.prepareStatement(updateIndexSQL)) {
         statementDelete.setString(1, key.space);
         statementDelete.setString(2, key.key);
-        statementDelete.setString(3, targetSelf);
+        statementDelete.setString(3, machineOn);
         if (statementDelete.executeUpdate() == 1) {
           return null;
         }

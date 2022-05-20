@@ -62,13 +62,13 @@ public interface FinderService {
   public void find(Key key, Callback<Result> callback);
 
   /** take over for the key */
-  public void takeover(Key key, Callback<Void> callback);
+  public void set(Key key, String region, String machine, Callback<Void> callback);
 
   /** archive the key and give up control */
-  public void archive(Key key, String archiveKey, Callback<Void> callback);
+  public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback);
 
   /** delete the key */
-  public void delete(Key key, Callback<Void> callback);
+  public void delete(Key key, String machineOn, Callback<Void> callback);
 
   /** update billing related properties about the key */
   public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback);

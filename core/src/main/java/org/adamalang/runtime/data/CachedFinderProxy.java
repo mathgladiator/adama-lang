@@ -56,18 +56,18 @@ public class CachedFinderProxy implements FinderService {
   }
 
   @Override
-  public void takeover(Key key, Callback<Void> callback) {
-    finder.takeover(key, callback);
+  public void set(Key key, String region, String machine, Callback<Void> callback) {
+    finder.set(key, region, machine, callback);
   }
 
   @Override
-  public void archive(Key key, String archiveKey, Callback<Void> callback) {
-    finder.archive(key, archiveKey, callback);
+  public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
+    finder.archive(key, archiveKey, machineOn, callback);
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
-    finder.delete(key, new Callback<>() {
+  public void delete(Key key, String machineOn, Callback<Void> callback) {
+    finder.delete(key, machineOn, new Callback<>() {
       @Override
       public void success(Void value) {
         cache.remove(key);

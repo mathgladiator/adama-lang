@@ -43,19 +43,19 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void takeover(Key key, Callback<Void> callback) {
-    map.put(key, new Result(1, Location.Machine, "region","ME"));
+  public void set(Key key, String region, String machine, Callback<Void> callback) {
+    map.put(key, new Result(1, Location.Machine, region, machine));
     callback.success(null);
   }
 
   @Override
-  public void archive(Key key, String archiveKey, Callback<Void> callback) {
+  public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
     map.put(key, new Result(1, Location.Archive, "region","Archive"));
     callback.success(null);
   }
 
   @Override
-  public void delete(Key key, Callback<Void> callback) {
+  public void delete(Key key, String machineOn, Callback<Void> callback) {
     map.remove(key);
     callback.success(null);
   }
