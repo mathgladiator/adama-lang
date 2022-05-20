@@ -66,6 +66,11 @@ public class CachedFinderProxy implements FinderService {
   }
 
   @Override
+  public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
+    finder.backup(key, archiveKey, machineOn, callback);
+  }
+
+  @Override
   public void delete(Key key, String machineOn, Callback<Void> callback) {
     finder.delete(key, machineOn, new Callback<>() {
       @Override

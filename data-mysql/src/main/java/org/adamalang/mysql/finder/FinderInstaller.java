@@ -33,7 +33,8 @@ public class FinderInstaller {
         .append("  `updated` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,") //
         .append("  `type` INT(2) UNSIGNED NOT NULL,") //
         .append("  `region` VARCHAR(64) NOT NULL,") //
-        .append("  `value` VARCHAR(512) NOT NULL,") //
+        .append("  `machine` VARCHAR(512) NOT NULL,") //
+        .append("  `archive` VARCHAR(512) NOT NULL,") //
         .append("  `delta_bytes` BIGINT UNSIGNED NOT NULL,") //
         .append("  `asset_bytes` BIGINT UNSIGNED NOT NULL,") //
         .append("  PRIMARY KEY (`id`),") //

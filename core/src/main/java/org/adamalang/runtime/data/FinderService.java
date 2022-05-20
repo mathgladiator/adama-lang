@@ -67,6 +67,9 @@ public interface FinderService {
   /** archive the key and give up control */
   public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback);
 
+  /** set a backup copy while still active on machine */
+  public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback);
+
   /** delete the key */
   public void delete(Key key, String machineOn, Callback<Void> callback);
 

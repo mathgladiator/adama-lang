@@ -103,6 +103,17 @@ public class CachedFinderProxyTests {
 
       }
     });
+    proxy.backup(KEY, "BACKUP", "machine", new Callback<>() {
+      @Override
+      public void success(Void value) {
+        v.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
     proxy.update(KEY, 1, 2, new Callback<Void>() {
       @Override
       public void success(Void value) {
@@ -126,6 +137,6 @@ public class CachedFinderProxyTests {
       }
     });
 
-    Assert.assertEquals(10, v.get());
+    Assert.assertEquals(11, v.get());
   }
 }

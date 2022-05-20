@@ -74,7 +74,10 @@ public class CaravanDataServiceTests {
 
         @Override
         public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
+        }
 
+        @Override
+        public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
         }
 
         @Override

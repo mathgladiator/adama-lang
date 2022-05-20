@@ -31,7 +31,7 @@ public class Finder implements FinderService {
     dataBase.transact((connection) -> {
       String insertSQL = new StringBuilder() //
           .append("INSERT INTO `").append(dataBase.databaseName).append("`.`directory` (") //
-          .append("`space`, `key`, `type`, `region`, `value`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Fresh.type).append(", '', '', 0, 0)") //
+          .append("`space`, `key`, `type`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Fresh.type).append(", '', '', '', 0, 0)") //
           .toString();
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
         statementInsertIndex.setString(1, key.space);
@@ -46,7 +46,7 @@ public class Finder implements FinderService {
   public void find(Key key, Callback<Result> callback) {
     dataBase.transact((connection) -> {
       String selectSQL = new StringBuilder() //
-          .append("SELECT `id`, `type`, `region`, `value` FROM `").append(dataBase.databaseName) //
+          .append("SELECT `id`, `type`, `region`, `machine`, `archive` FROM `").append(dataBase.databaseName) //
           .append("`.`directory` WHERE `space`=? AND `key`=?") //
           .toString();
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(selectSQL)) {
@@ -57,10 +57,11 @@ public class Finder implements FinderService {
             long id = rs.getLong(1);
             int type = rs.getInt(2);
             String region = rs.getString(3);
-            String value = rs.getString(4);
+            String machineValue = rs.getString(4);
+            String archiveValue = rs.getString(5);
             Location location = Location.fromType(type);
             if (location != null) {
-              return new Result(id, location, region, value);
+              return new Result(id, location, region, location == Location.Machine ? machineValue : archiveValue);
             }
           }
         }
@@ -76,8 +77,8 @@ public class Finder implements FinderService {
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
           .append("SET `type`=").append(Location.Machine.type) //
           .append(", `region`=?")
-          .append(", `value`=?")
-          .append(" WHERE `space`=? AND `key`=? AND (`value`=? OR `type`!=").append(Location.Machine.type).append(")").toString();
+          .append(", `machine`=?")
+          .append(" WHERE `space`=? AND `key`=? AND (`machine`=? OR `type`!=").append(Location.Machine.type).append(")").toString();
       try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
         statementUpdate.setString(1, region);
         statementUpdate.setString(2, machine);
@@ -93,14 +94,34 @@ public class Finder implements FinderService {
   }
 
   @Override
+  public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
+    dataBase.transact((connection) -> {
+      String updateIndexSQL = new StringBuilder() //
+          .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
+          .append("SET `archive`=?")
+          .append(" WHERE `space`=? AND `key`=? AND `machine`=? AND `type`=").append(Location.Machine.type).toString();
+      try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
+        statementUpdate.setString(1, archiveKey);
+        statementUpdate.setString(2, key.space);
+        statementUpdate.setString(3, key.key);
+        statementUpdate.setString(4, machineOn);
+        if (statementUpdate.executeUpdate() == 1) {
+          return null;
+        }
+      }
+      throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_BACKUP);
+    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_BACKUP_EXCEPTION);
+  }
+
+  @Override
   public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String updateIndexSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
           .append("SET `type`=").append(Location.Archive.type) //
           .append(", `region`=''")
-          .append(", `value`=?")
-          .append(" WHERE `space`=? AND `key`=? AND `value`=? AND `type`=").append(Location.Machine.type).toString();
+          .append(", `archive`=?")
+          .append(" WHERE `space`=? AND `key`=? AND `machine`=? AND `type`=").append(Location.Machine.type).toString();
       try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
         statementUpdate.setString(1, archiveKey);
         statementUpdate.setString(2, key.space);
@@ -138,7 +159,7 @@ public class Finder implements FinderService {
     dataBase.transact((connection) -> {
       String updateIndexSQL = new StringBuilder() //
           .append("DELETE FROM `").append(dataBase.databaseName).append("`.`directory` ") //
-          .append(" WHERE `space`=? AND `key`=? AND `value`=? AND `type`=").append(Location.Machine.type).toString();
+          .append(" WHERE `space`=? AND `key`=? AND `machine`=? AND `type`=").append(Location.Machine.type).toString();
       try (PreparedStatement statementDelete = connection.prepareStatement(updateIndexSQL)) {
         statementDelete.setString(1, key.space);
         statementDelete.setString(2, key.key);

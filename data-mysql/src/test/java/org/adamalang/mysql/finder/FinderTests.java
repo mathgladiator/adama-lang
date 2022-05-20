@@ -119,6 +119,16 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
+          machine.backup(KEY1,  "new-achive-key-old", "machineB:523", callback);
+          callback.assertSuccess();
+        }
+        {
+          SimpleFinderCallback cb = new SimpleFinderCallback();
+          machine.find(KEY1, cb);
+          cb.assertSuccess(FinderService.Location.Machine, "machineB:523");
+        }
+        {
+          SimpleMockCallback callback = new SimpleMockCallback();
           machine.archive(KEY1, "new-achive-key", "machineB:523", callback);
           callback.assertSuccess();
         }
