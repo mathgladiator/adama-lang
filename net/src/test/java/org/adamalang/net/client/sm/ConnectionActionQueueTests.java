@@ -17,7 +17,7 @@ import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
 import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.routing.MockSpaceTrackingEvents;
-import org.adamalang.net.client.routing.RoutingEngine;
+import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.net.mocks.LatchedSeqCallback;
 import org.adamalang.net.mocks.MockSimpleEvents;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class ConnectionActionQueueTests {
     try {
       ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
-      RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
@@ -86,7 +86,7 @@ public class ConnectionActionQueueTests {
     try {
       ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
-      RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
@@ -127,7 +127,7 @@ public class ConnectionActionQueueTests {
     try {
       ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
-      RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);
@@ -168,7 +168,7 @@ public class ConnectionActionQueueTests {
     try {
       ClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.VIEW_MIRROR);
-      RoutingEngine engine = new RoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, SimpleExecutorFactory.DEFAULT, 2, engine, logger);
       try {
         ConnectionBase base = new ConnectionBase(clientConfig, metrics, engine, finder, executor);

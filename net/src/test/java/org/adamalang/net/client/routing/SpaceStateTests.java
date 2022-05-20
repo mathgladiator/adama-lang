@@ -9,6 +9,7 @@
  */
 package org.adamalang.net.client.routing;
 
+import org.adamalang.net.client.routing.reactive.SpaceState;
 import org.junit.Assert;
 import org.junit.Test;
 

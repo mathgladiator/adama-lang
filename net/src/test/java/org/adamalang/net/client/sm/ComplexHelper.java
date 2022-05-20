@@ -12,7 +12,7 @@ package org.adamalang.net.client.sm;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.routing.RoutingEngine;
+import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.sys.CoreRequestContext;
@@ -53,7 +53,7 @@ public class ComplexHelper {
     }
   }
 
-  public static void waitForRoutingToCatch(RoutingEngine engine, String space, String key, String target) throws Exception {
+  public static void waitForRoutingToCatch(ReativeRoutingEngine engine, String space, String key, String target) throws Exception {
     CountDownLatch latch = new CountDownLatch(1);
     int timeout = 10000;
     do {

@@ -13,6 +13,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;
@@ -25,13 +26,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-public class RoutingEngineTests {
+public class ReativeRoutingEngineTests {
   @Test
   public void flow() throws Exception {
     ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
     MockSpaceTrackingEvents events = new MockSpaceTrackingEvents();
     SimpleExecutor derp = SimpleExecutor.create("derp");
-    RoutingEngine engine = new RoutingEngine(metrics, derp, events, 50, 25);
+    ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, derp, events, 50, 25);
 
     AtomicReference<Runnable> cancelRunnable = new AtomicReference<>();
     CountDownLatch latchGotCancel = new CountDownLatch(1);

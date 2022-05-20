@@ -9,17 +9,15 @@
  */
 package org.adamalang.net.client.sm;
 
-import org.adamalang.ErrorCodes;
 import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.net.TestBed;
-import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.InstanceClientFinder;
 import org.adamalang.net.client.TestClientConfig;
 import org.adamalang.net.client.routing.MockSpaceTrackingEvents;
-import org.adamalang.net.client.routing.RoutingEngine;
+import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.net.mocks.MockSimpleEvents;
 import org.adamalang.net.mocks.SelectiveExecutorFactory;
 import org.junit.Test;
@@ -39,8 +37,8 @@ public class ConnectionRoutingFluxTests {
       TestClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       // we use the direct engine to control the connection... directly
-      RoutingEngine engineReal = new RoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
-      RoutingEngine engineFaux = new RoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineReal = new ReativeRoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineFaux = new ReativeRoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, finderExecutor, 2, engineFaux, logger);
       try {
         Runnable waitForFinderAsk = finderExecutor.pauseOn("finder-find/127.0.0.1:" + servers[0].port);
@@ -88,8 +86,8 @@ public class ConnectionRoutingFluxTests {
       TestClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       // we use the direct engine to control the connection... directly
-      RoutingEngine engineReal = new RoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
-      RoutingEngine engineFaux = new RoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineReal = new ReativeRoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineFaux = new ReativeRoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, finderExecutor, 2, engineFaux, logger);
       try {
         Runnable waitForFinderAsk = finderExecutor.pauseOn("finder-find/127.0.0.1:" + servers[0].port);
@@ -136,8 +134,8 @@ public class ConnectionRoutingFluxTests {
       TestClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       // we use the direct engine to control the connection... directly
-      RoutingEngine engineReal = new RoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
-      RoutingEngine engineFaux = new RoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineReal = new ReativeRoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineFaux = new ReativeRoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, finderExecutor, 2, engineFaux, logger);
       try {
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
@@ -175,8 +173,8 @@ public class ConnectionRoutingFluxTests {
       TestClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       // we use the direct engine to control the connection... directly
-      RoutingEngine engineReal = new RoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
-      RoutingEngine engineFaux = new RoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineReal = new ReativeRoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineFaux = new ReativeRoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, finderExecutor, 2, engineFaux, logger);
       try {
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
@@ -244,8 +242,8 @@ public class ConnectionRoutingFluxTests {
       TestClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       // we use the direct engine to control the connection... directly
-      RoutingEngine engineReal = new RoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
-      RoutingEngine engineFaux = new RoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineReal = new ReativeRoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineFaux = new ReativeRoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, finderExecutor, 2, engineFaux, logger);
       try {
         Runnable waitForFinderAsk = finderExecutor.pauseOn("finder-find/127.0.0.1:" + servers[0].port);
@@ -294,8 +292,8 @@ public class ConnectionRoutingFluxTests {
       TestClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       // we use the direct engine to control the connection... directly
-      RoutingEngine engineReal = new RoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
-      RoutingEngine engineFaux = new RoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineReal = new ReativeRoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineFaux = new ReativeRoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, finderExecutor, 2, engineFaux, logger);
       try {
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
@@ -350,8 +348,8 @@ public class ConnectionRoutingFluxTests {
       TestClientConfig clientConfig = new TestClientConfig();
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       // we use the direct engine to control the connection... directly
-      RoutingEngine engineReal = new RoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
-      RoutingEngine engineFaux = new RoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineReal = new ReativeRoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineFaux = new ReativeRoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, finderExecutor, 2, engineFaux, logger);
       try {
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));
@@ -437,8 +435,8 @@ public class ConnectionRoutingFluxTests {
       ComplexHelper.spinUpCapacity(servers, true, ComplexHelper.SIMPLE);
       TestClientConfig clientConfig = new TestClientConfig();
       // we use the direct engine to control the connection... directly
-      RoutingEngine engineReal = new RoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
-      RoutingEngine engineFaux = new RoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineReal = new ReativeRoutingEngine(metrics, routingExecutor, new MockSpaceTrackingEvents(), 5, 5);
+      ReativeRoutingEngine engineFaux = new ReativeRoutingEngine(metrics, SimpleExecutor.NOW, new MockSpaceTrackingEvents(), 5, 5);
       InstanceClientFinder finder = new InstanceClientFinder(servers[0].base, clientConfig, metrics, null, finderExecutor, 2, engineFaux, logger);
       try {
         engineReal.integrate("127.0.0.1:" + servers[0].port, Collections.singleton("space"));

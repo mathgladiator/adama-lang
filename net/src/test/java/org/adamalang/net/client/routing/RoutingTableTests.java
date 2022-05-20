@@ -9,6 +9,7 @@
  */
 package org.adamalang.net.client.routing;
 
+import org.adamalang.net.client.routing.reactive.RoutingTable;
 import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
 import org.junit.Test;

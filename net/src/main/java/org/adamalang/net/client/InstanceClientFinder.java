@@ -13,7 +13,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.contracts.HeatMonitor;
-import org.adamalang.net.client.routing.RoutingEngine;
+import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -28,7 +28,7 @@ public class InstanceClientFinder {
   private final NetBase base;
   private final ClientMetrics metrics;
   private final HeatMonitor monitor;
-  private final RoutingEngine engine;
+  private final ReativeRoutingEngine engine;
   private final ConcurrentHashMap<String, InstanceClient> clients;
   private final SimpleExecutor[] clientExecutors;
   private final SimpleExecutor mapExecutor;
@@ -36,7 +36,7 @@ public class InstanceClientFinder {
   private final Random rng;
   private final ClientConfig config;
 
-  public InstanceClientFinder(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, SimpleExecutorFactory threadFactory, int nThreads, RoutingEngine engine, ExceptionLogger logger) {
+  public InstanceClientFinder(NetBase base, ClientConfig config, ClientMetrics metrics, HeatMonitor monitor, SimpleExecutorFactory threadFactory, int nThreads, ReativeRoutingEngine engine, ExceptionLogger logger) {
     this.base = base;
     this.config = config;
     this.metrics = metrics;

@@ -11,10 +11,9 @@ package org.adamalang.net.client;
 
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.common.queue.ItemAction;
 import org.adamalang.net.TestBed;
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
-import org.adamalang.net.client.routing.RoutingEngine;
+import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,8 +44,8 @@ public class InstanceClientFinderTests {
         targets.add("127.0.0.1:" + (20001 + k));
       }
       CountDownLatch primed = new CountDownLatch(1);
-      RoutingEngine engine =
-          new RoutingEngine(
+      ReativeRoutingEngine engine =
+          new ReativeRoutingEngine(
               metrics,
               routingExecutor,
               new SpaceTrackingEvents() {

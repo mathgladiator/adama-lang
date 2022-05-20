@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.net.client.routing;
+package org.adamalang.net.client.routing.reactive;
 
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
 import org.adamalang.runtime.data.Key;

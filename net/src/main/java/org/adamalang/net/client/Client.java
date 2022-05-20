@@ -17,7 +17,7 @@ import org.adamalang.net.client.contracts.MeteringStream;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
 import org.adamalang.net.client.proxy.ProxyDataService;
-import org.adamalang.net.client.routing.RoutingEngine;
+import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.net.client.sm.Connection;
 import org.adamalang.net.client.sm.ConnectionBase;
 
@@ -31,7 +31,7 @@ public class Client {
   private final NetBase base;
   private final ClientMetrics metrics;
   private final SimpleExecutor routingExecutor;
-  private final RoutingEngine engine;
+  private final ReativeRoutingEngine engine;
   private final InstanceClientFinder finder;
   private final SimpleExecutor[] executors;
   private final Random rng;
@@ -42,7 +42,7 @@ public class Client {
     this.config = config;
     this.metrics = metrics;
     this.routingExecutor = SimpleExecutor.create("routing");
-    this.engine = new RoutingEngine(metrics, routingExecutor, new SpaceTrackingEvents() {
+    this.engine = new ReativeRoutingEngine(metrics, routingExecutor, new SpaceTrackingEvents() {
       @Override
       public void gainInterestInSpace(String space) {
       }
@@ -60,7 +60,7 @@ public class Client {
     this.rng = new Random();
   }
 
-  public RoutingEngine routing() {
+  public ReativeRoutingEngine routing() {
     return engine;
   }
 

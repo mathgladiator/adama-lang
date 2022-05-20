@@ -7,20 +7,21 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.net.client.routing;
+package org.adamalang.net.client.routing.reactive;
 
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.contracts.RoutingTarget;
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
+import org.adamalang.net.client.routing.Router;
 import org.adamalang.runtime.data.Key;
 
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 
-public class RoutingEngine implements RoutingTarget {
+public class ReativeRoutingEngine implements RoutingTarget, Router {
   private final ClientMetrics metrics;
   private final SimpleExecutor executor;
   private final RoutingTable table;
@@ -28,7 +29,7 @@ public class RoutingEngine implements RoutingTarget {
   private final int broadcastDelayJitter;
   private boolean broadcastInflight;
 
-  public RoutingEngine(ClientMetrics metrics, SimpleExecutor executor, SpaceTrackingEvents events, int broadcastDelayOffset, int broadcastDelayJitter) {
+  public ReativeRoutingEngine(ClientMetrics metrics, SimpleExecutor executor, SpaceTrackingEvents events, int broadcastDelayOffset, int broadcastDelayJitter) {
     this.metrics = metrics;
     this.executor = executor;
     this.table = new RoutingTable(events);
@@ -98,6 +99,7 @@ public class RoutingEngine implements RoutingTarget {
     });
   }
 
+  @Override
   public void subscribe(Key key, Consumer<String> subscriber, Consumer<Runnable> onCancel) {
     executor.execute(new NamedRunnable("routing-subscribe", key.space, key.key) {
       @Override

@@ -11,12 +11,11 @@ package org.adamalang.net.client.sm;
 
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.common.queue.ItemAction;
 import org.adamalang.net.TestBed;
 import org.adamalang.net.client.*;
 import org.adamalang.net.client.contracts.SimpleEvents;
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
-import org.adamalang.net.client.routing.RoutingEngine;
+import org.adamalang.net.client.routing.reactive.ReativeRoutingEngine;
 import org.adamalang.net.mocks.MockSimpleEvents;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,8 +40,8 @@ public class ConnectionTests {
       try {
         ExceptionLogger logger = (t, c) -> {};
         CountDownLatch primed = new CountDownLatch(1);
-        RoutingEngine engine =
-            new RoutingEngine(
+        ReativeRoutingEngine engine =
+            new ReativeRoutingEngine(
                 metrics,
                 routingExecutor,
                 new SpaceTrackingEvents() {
@@ -125,8 +124,8 @@ public class ConnectionTests {
       try {
         ExceptionLogger logger = (t, c) -> {};
         CountDownLatch primed = new CountDownLatch(1);
-        RoutingEngine engine =
-            new RoutingEngine(
+        ReativeRoutingEngine engine =
+            new ReativeRoutingEngine(
                 metrics,
                 routingExecutor,
                 new SpaceTrackingEvents() {
@@ -238,8 +237,8 @@ public class ConnectionTests {
         ClientConfig clientConfig = new TestClientConfig();
         ExceptionLogger logger = (t, c) -> {};
         CountDownLatch primed = new CountDownLatch(1);
-        RoutingEngine engine =
-            new RoutingEngine(
+        ReativeRoutingEngine engine =
+            new ReativeRoutingEngine(
                 metrics,
                 routingExecutor,
                 new SpaceTrackingEvents() {
