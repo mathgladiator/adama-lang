@@ -2,8 +2,11 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 
+/** a data service which backup data */
 public interface ArchivingDataService extends DataService {
-  public void restore(Key key, Callback<Void> callback);
+  /** restore a file (must be idempotent) */
+  public void restore(Key key, String archiveKey, Callback<Void> callback);
 
-  public void backup(Key key, Callback<Void> callback);
+  /** backup a document, returning an archiveKey */
+  public void backup(Key key, Callback<String> callback);
 }
