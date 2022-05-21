@@ -54,12 +54,7 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.bind(KEY1, "region", "machineA:124", callback);
-          callback.assertFailure(786509);
-        }
-        {
-          SimpleMockCallback callback = new SimpleMockCallback();
-          machine.create(KEY1, "region", "machineB:523", callback);
+          machine.bind(KEY1, "region", "machineB:523", callback);
           callback.assertSuccess();
         }
         {
@@ -85,7 +80,7 @@ public class FinderTests {
         {
           SimpleMockCallback callback = new SimpleMockCallback();
           machine.bind(KEY1, "region", "machineA:124", callback);
-          callback.assertFailure(786509);
+          callback.assertFailure(667658);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();

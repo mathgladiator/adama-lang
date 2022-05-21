@@ -23,16 +23,6 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void create(Key key, String region, String machine, Callback<Void> callback) {
-    if (map.containsKey(key)) {
-      callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
-      return;
-    }
-    map.put(key, new Result(1, Location.Machine, region, machine, ""));
-    callback.success(null);
-  }
-
-  @Override
   public void find(Key key, Callback<Result> callback) {
     Result result = map.get(key);
     if (result != null) {

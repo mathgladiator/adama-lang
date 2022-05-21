@@ -56,11 +56,6 @@ public class LocalDrive {
       DurableListStore dls = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(storageDirectory, "STORE"), storageDirectory, 1800 * 1024 * 1024, 32768, 1024 * 1024 * 1024);
       FinderService finder = new FinderService() {
         @Override
-        public void create(Key key, String region, String machine, Callback<Void> callback) {
-
-        }
-
-        @Override
         public void find(Key key, Callback<Result> callback) {
           callback.success(new Result(key.hashCode(), null, "region", null, null));
         }

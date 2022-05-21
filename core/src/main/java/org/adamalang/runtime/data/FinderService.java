@@ -54,9 +54,6 @@ public interface FinderService {
     }
   }
 
-  /** create a key; fails if key already exists */
-  public void create(Key key, String region, String machine, Callback<Void> callback);
-
   /** find the location of a key */
   public void find(Key key, Callback<Result> callback);
 

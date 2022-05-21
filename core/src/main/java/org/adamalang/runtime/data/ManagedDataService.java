@@ -44,10 +44,10 @@ public class ManagedDataService implements DataService {
 
   @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
-    finder.create(key, region, target, new Callback<Void>() {
+    finder.bind(key, region, target, new Callback<Void>() {
       @Override
       public void success(Void value) {
-        executor.execute(new NamedRunnable("mds-initialize") {
+        executor.execute(new NamedRunnable("mds-bound") {
           @Override
           public void execute() throws Exception {
             data.initialize(key, patch, callback);
@@ -68,8 +68,45 @@ public class ManagedDataService implements DataService {
 
   }
 
-  public void executeOnReady(Key key, boolean mutate, Runnable runnable) {
+  public void executeOnReady(Key key, boolean mutate, Runnable runnable, Callback<?> callback) {
+    executor.execute(new NamedRunnable("mds-on-ready") {
+      @Override
+      public void execute() throws Exception {
+        DocumentStateMachine sm = documents.get(key);
+        if (sm == null) {
+          finder.find(key, new Callback<>() {
+            @Override
+            public void success(FinderService.Result found) {
+              executor.execute(new NamedRunnable("mds-found") {
+                @Override
+                public void execute() throws Exception {
+                  DocumentStateMachine sm = documents.get(key);
+                  if (sm == null) {
+                    switch (found.location) {
+                      case Archive:
+                        break;
+                      case Machine:
+                        break;
+                    }
+                    sm = new DocumentStateMachine(DocumentState.Ready);
 
+                  } else {
+
+                  }
+                }
+              });
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              callback.failure(ex);
+            }
+          });
+        } else {
+
+        }
+      }
+    });
     /**
      *     executor.execute(new NamedRunnable("mds-get") {
      *       @Override
@@ -125,21 +162,21 @@ public class ManagedDataService implements DataService {
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     executeOnReady(key, false, () -> {
       data.get(key, callback);
-    });
+    }, callback);
   }
 
   @Override
   public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
     executeOnReady(key, true, () -> {
       data.patch(key, patches, callback);
-    });
+    }, callback);
   }
 
   @Override
   public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
     executeOnReady(key, false, () -> {
       data.compute(key, method, seq, callback);
-    });
+    }, callback);
   }
 
   @Override
@@ -152,6 +189,6 @@ public class ManagedDataService implements DataService {
   public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
     executeOnReady(key, true, () -> {
       data.snapshot(key, seq, snapshot, history, callback);
-    });
+    }, callback);
   }
 }

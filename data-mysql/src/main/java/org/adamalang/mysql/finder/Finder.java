@@ -27,24 +27,6 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void create(Key key, String region, String machine, Callback<Void> callback) {
-    dataBase.transact((connection) -> {
-      String insertSQL = new StringBuilder() //
-          .append("INSERT INTO `").append(dataBase.databaseName).append("`.`directory` (") //
-          .append("`space`, `key`, `type`, `head_seq`, `active`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Machine.type).append(", 0, FALSE, ?, ?, '', 0, 0)") //
-          .toString();
-      try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
-        statementInsertIndex.setString(1, key.space);
-        statementInsertIndex.setString(2, key.key);
-        statementInsertIndex.setString(3, region);
-        statementInsertIndex.setString(4, machine);
-        statementInsertIndex.execute();
-        return null;
-      }
-    }, callback, ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
-  }
-
-  @Override
   public void find(Key key, Callback<Result> callback) {
     dataBase.transact((connection) -> {
       String selectSQL = new StringBuilder() //
@@ -91,8 +73,19 @@ public class Finder implements FinderService {
           return null;
         }
       }
-      throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_TAKEOVER);
-    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_TAKEOVER_EXCEPTION);
+      String insertSQL = new StringBuilder() //
+          .append("INSERT INTO `").append(dataBase.databaseName).append("`.`directory` (") //
+          .append("`space`, `key`, `type`, `head_seq`, `active`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Machine.type).append(", 0, FALSE, ?, ?, '', 0, 0)") //
+          .toString();
+      try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
+        statementInsertIndex.setString(1, key.space);
+        statementInsertIndex.setString(2, key.key);
+        statementInsertIndex.setString(3, region);
+        statementInsertIndex.setString(4, machine);
+        statementInsertIndex.execute();
+        return null;
+      }
+    }, callback, ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE);
   }
 
   @Override
