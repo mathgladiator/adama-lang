@@ -23,12 +23,12 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void create(Key key, Callback<Void> callback) {
+  public void create(Key key, String region, String machine, Callback<Void> callback) {
     if (map.containsKey(key)) {
       callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_INITIALIZE_FAILURE));
       return;
     }
-    map.put(key, new Result(1, Location.Fresh, "region",""));
+    map.put(key, new Result(1, Location.Machine, region, machine, ""));
     callback.success(null);
   }
 
@@ -43,14 +43,13 @@ public class MockFinderService implements FinderService {
   }
 
   @Override
-  public void set(Key key, String region, String machine, Callback<Void> callback) {
-    map.put(key, new Result(1, Location.Machine, region, machine));
+  public void bind(Key key, String region, String machine, Callback<Void> callback) {
+    map.put(key, new Result(1, Location.Machine, region, machine, ""));
     callback.success(null);
   }
 
   @Override
-  public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
-    map.put(key, new Result(1, Location.Archive, "region","Archive"));
+  public void free(Key key, String machineOn, Callback<Void> callback) {
     callback.success(null);
   }
 

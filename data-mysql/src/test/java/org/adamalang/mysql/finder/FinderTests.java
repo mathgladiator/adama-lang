@@ -32,11 +32,6 @@ public class FinderTests {
       try {
         installer.install();
         Finder machine = new Finder(dataBase);
-        /*
-        Finder machineA = new Finder(dataBase, "region", "machineA:124");
-        Finder machineB = new Finder(dataBase, "region", "machineB:523");
-        */
-
         {
           SimpleMockCallback callback = new SimpleMockCallback();
           machine.update(KEY1, 1, 2, callback);
@@ -59,63 +54,63 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.set(KEY1, "region", "machineA:124", callback);
+          machine.bind(KEY1, "region", "machineA:124", callback);
           callback.assertFailure(786509);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.create(KEY1, callback);
+          machine.create(KEY1, "region", "machineB:523", callback);
           callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Fresh, "");
-        }
-        {
-          SimpleFinderCallback cb = new SimpleFinderCallback();
-          machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Fresh, "");
+          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.set(KEY1, "region", "machineB:523", callback);
+          machine.bind(KEY1, "region", "machineB:523", callback);
           callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523");
+          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "");
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523");
+          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.set(KEY1, "region", "machineA:124", callback);
+          machine.bind(KEY1, "region", "machineA:124", callback);
           callback.assertFailure(786509);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.set(KEY1, "region", "machineB:523", callback);
+          machine.bind(KEY1, "region", "machineB:523", callback);
           callback.assertSuccess();
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.archive(KEY1, "new-achive-key", "machineA:124", callback);
-          callback.assertFailure(735308);
+          machine.backup(KEY1, "new-achive-key", "machineA:124", callback);
+          callback.assertFailure(722034);
+        }
+        {
+          SimpleMockCallback callback = new SimpleMockCallback();
+          machine.backup(KEY1, "new-achive-key", "machineB:523", callback);
+          callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523");
+          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key");
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523");
+          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
@@ -125,22 +120,27 @@ public class FinderTests {
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523");
+          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key-old");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.archive(KEY1, "new-achive-key", "machineB:523", callback);
+          machine.backup(KEY1, "new-achive-key", "machineB:523", callback);
           callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Archive, "new-achive-key");
+          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key");
+        }
+        {
+          SimpleMockCallback callback = new SimpleMockCallback();
+          machine.free(KEY1,  "machineB:523", callback);
+          callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Archive, "new-achive-key");
+          cb.assertSuccess(FinderService.Location.Archive, "", "new-achive-key");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
@@ -149,7 +149,7 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.set(KEY1, "region", "targetNew", callback);
+          machine.bind(KEY1, "region", "targetNew", callback);
           callback.assertSuccess();
         }
         {

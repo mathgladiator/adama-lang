@@ -58,22 +58,23 @@ public class CaravanDataServiceTests {
       this.store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(root, "STORE"), root, 1024 * 1024, 64 * 1024, 1024 * 1024 * 32);
       this.finder = new FinderService() {
         @Override
-        public void create(Key key, Callback<Void> callback) {
+        public void create(Key key, String region, String machine, Callback<Void> callback) {
 
         }
 
         @Override
         public void find(Key key, Callback<Result> callback) {
-          callback.success(new Result(Long.parseLong(key.key), null, "region", null));
+          callback.success(new Result(Long.parseLong(key.key), null, "region", null, null));
         }
 
         @Override
-        public void set(Key key, String region, String machine, Callback<Void> callback) {
+        public void bind(Key key, String region, String machine, Callback<Void> callback) {
 
         }
 
         @Override
-        public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
+        public void free(Key key, String machineOn, Callback<Void> callback) {
+
         }
 
         @Override

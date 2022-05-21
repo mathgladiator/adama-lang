@@ -43,11 +43,12 @@ public class SimpleFinderCallback implements Callback<FinderService.Result> {
     reason = ex.code;
   }
 
-  public void assertSuccess(FinderService.Location location, String target) {
+  public void assertSuccess(FinderService.Location location, String machine, String archiveKey) {
     Assert.assertEquals(1, count);
     Assert.assertTrue(success);
     Assert.assertEquals(location, value.location);
-    Assert.assertEquals(target, value.value);
+    Assert.assertEquals(machine, value.machine);
+    Assert.assertEquals(archiveKey, value.archiveKey);
   }
 
   public void assertFailure(int code) {

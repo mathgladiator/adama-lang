@@ -219,9 +219,4 @@ public class InMemoryDataService implements DataService {
       callback.success(null);
     });
   }
-
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    writer.finish();
-  }
 }

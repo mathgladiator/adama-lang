@@ -27,15 +27,17 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void create(Key key, Callback<Void> callback) {
+  public void create(Key key, String region, String machine, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String insertSQL = new StringBuilder() //
           .append("INSERT INTO `").append(dataBase.databaseName).append("`.`directory` (") //
-          .append("`space`, `key`, `type`, `head_seq`, `active`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Fresh.type).append(", 0, FALSE, '', '', '', 0, 0)") //
+          .append("`space`, `key`, `type`, `head_seq`, `active`, `region`, `machine`, `archive`, `delta_bytes`, `asset_bytes`) VALUES (?, ?, ").append(Location.Machine.type).append(", 0, FALSE, ?, ?, '', 0, 0)") //
           .toString();
       try (PreparedStatement statementInsertIndex = connection.prepareStatement(insertSQL)) {
         statementInsertIndex.setString(1, key.space);
         statementInsertIndex.setString(2, key.key);
+        statementInsertIndex.setString(3, region);
+        statementInsertIndex.setString(4, machine);
         statementInsertIndex.execute();
         return null;
       }
@@ -61,7 +63,7 @@ public class Finder implements FinderService {
             String archiveValue = rs.getString(5);
             Location location = Location.fromType(type);
             if (location != null) {
-              return new Result(id, location, region, location == Location.Machine ? machineValue : archiveValue);
+              return new Result(id, location, region, machineValue, archiveValue);
             }
           }
         }
@@ -71,7 +73,7 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void set(Key key, String region, String machine, Callback<Void> callback) {
+  public void bind(Key key, String region, String machine, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String updateIndexSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
@@ -96,11 +98,11 @@ public class Finder implements FinderService {
   @Override
   public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
     dataBase.transact((connection) -> {
-      String updateIndexSQL = new StringBuilder() //
+      String backupSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
           .append("SET `archive`=?")
           .append(" WHERE `space`=? AND `key`=? AND `machine`=? AND `type`=").append(Location.Machine.type).toString();
-      try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
+      try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {
         statementUpdate.setString(1, archiveKey);
         statementUpdate.setString(2, key.space);
         statementUpdate.setString(3, key.key);
@@ -114,19 +116,18 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
+  public void free(Key key, String machineOn, Callback<Void> callback) {
     dataBase.transact((connection) -> {
-      String updateIndexSQL = new StringBuilder() //
+      String freeSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
           .append("SET `type`=").append(Location.Archive.type) //
           .append(", `region`=''")
-          .append(", `archive`=?")
+          .append(", `machine`=''")
           .append(" WHERE `space`=? AND `key`=? AND `machine`=? AND `type`=").append(Location.Machine.type).toString();
-      try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
-        statementUpdate.setString(1, archiveKey);
-        statementUpdate.setString(2, key.space);
-        statementUpdate.setString(3, key.key);
-        statementUpdate.setString(4, machineOn);
+      try (PreparedStatement statementUpdate = connection.prepareStatement(freeSQL)) {
+        statementUpdate.setString(1, key.space);
+        statementUpdate.setString(2, key.key);
+        statementUpdate.setString(3, machineOn);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
         }
@@ -138,12 +139,12 @@ public class Finder implements FinderService {
   @Override
   public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
     dataBase.transact((connection) -> {
-      String updateIndexSQL = new StringBuilder() //
+      String updateSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
           .append("SET `delta_bytes`=").append(deltaSize) //
           .append(", `asset_bytes`=").append(assetSize)
           .append(" WHERE `space`=? AND `key`=?").toString();
-      try (PreparedStatement statementUpdate = connection.prepareStatement(updateIndexSQL)) {
+      try (PreparedStatement statementUpdate = connection.prepareStatement(updateSQL)) {
         statementUpdate.setString(1, key.space);
         statementUpdate.setString(2, key.key);
         if (statementUpdate.executeUpdate() == 1) {
@@ -157,10 +158,10 @@ public class Finder implements FinderService {
   @Override
   public void delete(Key key, String machineOn, Callback<Void> callback) {
     dataBase.transact((connection) -> {
-      String updateIndexSQL = new StringBuilder() //
+      String deleteSQL = new StringBuilder() //
           .append("DELETE FROM `").append(dataBase.databaseName).append("`.`directory` ") //
           .append(" WHERE `space`=? AND `key`=? AND `machine`=? AND `type`=").append(Location.Machine.type).toString();
-      try (PreparedStatement statementDelete = connection.prepareStatement(updateIndexSQL)) {
+      try (PreparedStatement statementDelete = connection.prepareStatement(deleteSQL)) {
         statementDelete.setString(1, key.space);
         statementDelete.setString(2, key.key);
         statementDelete.setString(3, machineOn);

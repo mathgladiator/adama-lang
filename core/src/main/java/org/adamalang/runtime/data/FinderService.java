@@ -16,9 +16,6 @@ public interface FinderService {
 
   /** where a document may be */
   public static enum Location {
-    // freshly created
-    Fresh(1),
-
     // a single machine
     Machine(2),
 
@@ -45,27 +42,29 @@ public interface FinderService {
     public final long id;
     public final Location location;
     public final String region;
-    public final String value;
+    public final String machine;
+    public final String archiveKey;
 
-    public Result(long id, Location location, String region, String value) {
+    public Result(long id, Location location, String region, String machine, String archiveKey) {
       this.id = id;
       this.location = location;
       this.region = region;
-      this.value = value;
+      this.machine = machine;
+      this.archiveKey = archiveKey;
     }
   }
 
   /** create a key; fails if key already exists */
-  public void create(Key key, Callback<Void> callback);
+  public void create(Key key, String region, String machine, Callback<Void> callback);
 
   /** find the location of a key */
   public void find(Key key, Callback<Result> callback);
 
   /** take over for the key */
-  public void set(Key key, String region, String machine, Callback<Void> callback);
+  public void bind(Key key, String region, String machine, Callback<Void> callback);
 
-  /** archive the key and give up control */
-  public void archive(Key key, String archiveKey, String machineOn, Callback<Void> callback);
+  /** release the machine for the given key */
+  public void free(Key key, String machineOn, Callback<Void> callback);
 
   /** set a backup copy while still active on machine */
   public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback);

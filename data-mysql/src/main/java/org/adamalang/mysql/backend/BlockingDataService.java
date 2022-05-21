@@ -326,11 +326,6 @@ public class BlockingDataService implements DataService {
     callback.success(null);
   }
 
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    writer.failed(-1);
-  }
-
   public static class LookupResult {
     public final int id;
     public final int head_seq;

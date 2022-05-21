@@ -34,7 +34,4 @@ public interface DataService {
 
   /** close the storage */
   void close(Key key, Callback<Void> callback);
-
-  /** archive the key */
-  void archive(Key key, ArchiveWriter writer);
 }

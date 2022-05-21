@@ -63,9 +63,4 @@ public class PrefixSplitDataService implements DataService {
   public void close(Key key, Callback<Void> callback) {
     ds(key).close(key, callback);
   }
-
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    ds(key).archive(key, writer);
-  }
 }

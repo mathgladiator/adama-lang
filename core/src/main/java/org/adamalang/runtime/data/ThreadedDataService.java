@@ -88,8 +88,4 @@ public class ThreadedDataService implements DataService {
     at(key, (service) -> service.close(key, callback));
   }
 
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    at(key, (service) -> archive(key, writer));
-  }
 }

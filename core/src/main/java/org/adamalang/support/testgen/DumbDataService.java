@@ -125,11 +125,6 @@ public class DumbDataService implements DataService {
     callback.success(null);
   }
 
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    writer.failed(-1);
-  }
-
   public static class DumbDurableLivingDocumentAcquire implements Callback<DurableLivingDocument> {
     private DurableLivingDocument value;
 

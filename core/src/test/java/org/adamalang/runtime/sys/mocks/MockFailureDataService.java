@@ -51,9 +51,4 @@ public class MockFailureDataService implements DataService {
   public void close(Key key, Callback<Void> callback) {
     callback.failure(new ErrorCodeException(1231));
   }
-
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    writer.failed(123);
-  }
 }

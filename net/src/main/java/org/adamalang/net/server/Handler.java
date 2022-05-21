@@ -98,7 +98,6 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     completed();
   }
 
-
   public Callback<Integer> respondViaInteger() {
     return new Callback<Integer>() {
       @Override

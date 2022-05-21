@@ -164,11 +164,6 @@ public class MockInstantDataService implements DataService {
     callback.success(null);
   }
 
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    writer.failed(-1);
-  }
-
   private synchronized void println(String x) {
     System.out.println(x);
     log.add(x);

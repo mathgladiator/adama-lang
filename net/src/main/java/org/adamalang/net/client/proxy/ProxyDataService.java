@@ -212,9 +212,4 @@ public class ProxyDataService implements DataService {
       channel.next(buf);
     }, wrapVoid(callback));
   }
-
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    writer.failed(-1);
-  }
 }

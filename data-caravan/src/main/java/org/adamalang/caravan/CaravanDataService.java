@@ -281,9 +281,4 @@ public class CaravanDataService implements DataService {
       callback.success(null);
     });
   }
-
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    writer.failed(-1);
-  }
 }

@@ -120,11 +120,6 @@ public class MockDelayDataService implements DataService {
     enqueue(() -> parent.close(key, callback));
   }
 
-  @Override
-  public void archive(Key key, ArchiveWriter writer) {
-    enqueue(() -> parent.archive(key, writer));
-  }
-
   public synchronized Runnable latchAt(int count) {
     CountDownLatch latch = new CountDownLatch(count);
     latches.add(latch);
