@@ -24,10 +24,12 @@ public class FinderServiceRouter implements Router {
 
   private final SimpleExecutor executor;
   private final FinderService finder;
+  private final String region;
 
-  public FinderServiceRouter(FinderService finder) {
+  public FinderServiceRouter(FinderService finder, String region) {
     this.executor = SimpleExecutor.create("simple-router");
     this.finder = finder;
+    this.region = region;
   }
 
   @Override
@@ -37,8 +39,11 @@ public class FinderServiceRouter implements Router {
       @Override
       public void success(FinderService.Result finderResult) {
         if (finderResult.location == FinderService.Location.Machine) {
-          // TODO: What about region?
-          callback.onMachine(finderResult.value);
+          if (finderResult.region.equals(region)) {
+            callback.onMachine(finderResult.machine);
+          } else {
+            callback.onRegion(finderResult.region);
+          }
         } else {
           // TODO: capacity plan, and find a new host
         }
