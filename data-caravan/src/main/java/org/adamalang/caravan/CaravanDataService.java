@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
 
-public class CaravanDataService implements DataService {
+public class CaravanDataService implements ArchivingDataService {
   private final FinderService finder;
   private final DurableListStore store;
   private final SimpleExecutor executor;
@@ -37,6 +37,26 @@ public class CaravanDataService implements DataService {
     this.store = store;
     this.executor = executor;
     this.cache = new HashMap();
+  }
+
+  @Override
+  public void backup(Key key, Callback<String> callback) {
+    // Step 1: Create the archive key
+    // Step 2: Create the local file . TEMP
+    execute("backup", key, false, callback, (id, cached) -> {
+      // Step 3: Download the cache into the local
+      // Step 4: Upload the cache to the cloud
+    });
+  }
+
+  @Override
+  public void restore(Key key, String archiveKey, Callback<Void> callback) {
+    // Step 1: Download to the local filesystem
+    // Step 2: Load the writes into memory (what to do about really big ones, ignore for now?)
+    execute("restore", key, false, callback, (id, cached) -> {
+      // Step 3(a): If there is already data available, then load it and merge
+      // Step 3(b): If the is no data for the key, then load it
+    });
   }
 
   /** execute with the translation service and jump into the executor */
