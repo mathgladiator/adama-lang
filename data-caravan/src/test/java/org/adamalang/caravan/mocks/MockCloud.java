@@ -7,20 +7,25 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.caravan.contracts;
+package org.adamalang.caravan.mocks;
 
+import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.common.Callback;
 
 import java.io.File;
 
-/** restore/backup from the cloud */
-public interface Cloud {
-  /** the path for where cloud files are stored */
-  public File path();
+public class MockCloud implements Cloud {
+  @Override
+  public File path() {
+    return null;
+  }
 
-  /** restore the archive key from the cloud to a local file */
-  public void restore(String archiveKey, Callback<File> callback);
+  @Override
+  public void restore(String archiveKey, Callback<File> callback) {
 
-  /** backup the given file and send to the cloud */
-  public void backup(File archiveFile, Callback<Void> callback);
+  }
+
+  @Override
+  public void backup(File archiveFile, Callback<Void> callback) {
+  }
 }

@@ -11,6 +11,7 @@ package org.adamalang.canary.agents.local;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.adamalang.caravan.CaravanDataService;
+import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
 import org.adamalang.common.*;
@@ -84,7 +85,23 @@ public class LocalDrive {
         public void delete(Key key, String machineOn, Callback<Void> callback) {
         }
       };
-      CaravanDataService service = new CaravanDataService(finder, dls, executor);
+      Cloud cloud = new Cloud() {
+        @Override
+        public File path() {
+          return null;
+        }
+
+        @Override
+        public void restore(String archiveKey, Callback<File> callback) {
+
+        }
+
+        @Override
+        public void backup(File archiveFile, Callback<Void> callback) {
+
+        }
+      };
+      CaravanDataService service = new CaravanDataService(cloud, finder, dls, executor);
       dataService = service;
       Thread flusher = new Thread(new Runnable() {
         @Override

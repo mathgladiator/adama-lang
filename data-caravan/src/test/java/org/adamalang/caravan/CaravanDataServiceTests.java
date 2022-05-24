@@ -11,10 +11,7 @@ package org.adamalang.caravan;
 
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
-import org.adamalang.caravan.mocks.BadConsumer;
-import org.adamalang.caravan.mocks.SimpleDataCallback;
-import org.adamalang.caravan.mocks.SimpleIntCallback;
-import org.adamalang.caravan.mocks.SimpleMockCallback;
+import org.adamalang.caravan.mocks.*;
 import org.adamalang.common.Callback;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -49,6 +46,7 @@ public class CaravanDataServiceTests {
     private final File root;
     private final CaravanDataService service;
     private final Thread flusher;
+    private final MockCloud cloud;
 
     public Setup() throws Exception {
       this.executor = SimpleExecutor.create("executor");
@@ -86,7 +84,8 @@ public class CaravanDataServiceTests {
 
         }
       };
-      this.service = new CaravanDataService(finder, store, executor);
+      this.cloud = new MockCloud();
+      this.service = new CaravanDataService(cloud, finder, store, executor);
       this.flusher = new Thread(new Runnable() {
         @Override
         public void run() {

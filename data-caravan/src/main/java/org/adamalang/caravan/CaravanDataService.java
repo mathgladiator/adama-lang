@@ -13,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.adamalang.ErrorCodes;
 import org.adamalang.caravan.contracts.ByteArrayStream;
+import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.events.EventCodec;
 import org.adamalang.caravan.events.Events;
@@ -32,12 +33,14 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CaravanDataService implements ArchivingDataService {
+  private final Cloud cloud;
   private final FinderService finder;
   private final DurableListStore store;
   private final SimpleExecutor executor;
   private final HashMap<Long, LocalCache> cache;
 
-  public CaravanDataService(FinderService finder, DurableListStore store, SimpleExecutor executor) {
+  public CaravanDataService(Cloud cloud, FinderService finder, DurableListStore store, SimpleExecutor executor) {
+    this.cloud = cloud;
     this.finder = finder;
     this.store = store;
     this.executor = executor;
@@ -47,89 +50,103 @@ public class CaravanDataService implements ArchivingDataService {
   @Override
   public void backup(Key key, Callback<String> callback) {
     String archiveKey = ProtectedUUID.generate() + "-" + System.currentTimeMillis();
-    File archiveDirectory = new File("archives");
-      execute("backup", key, false, callback, (id, cached) -> {
-        if (cached == null) {
-          callback.failure(new ErrorCodeException(-1));
-          return;
-        }
-        try {
-          File tempOutput = new File(archiveDirectory, archiveKey + ".temp");
-          File finalOutput = new File(archiveDirectory, archiveKey + ".archive");
-          DataOutputStream output = new DataOutputStream(new FileOutputStream(tempOutput));
-          store.read(id, new ByteArrayStream() {
-            @Override
-            public void next(int appendIndex, byte[] value) throws Exception {
-              output.writeBoolean(true);
-              output.writeInt(value.length);
-              output.write(value);
-            }
+    execute("backup", key, true, callback, (id, cached) -> {
+      File tempOutput = new File(cloud.path(), archiveKey + ".temp");
+      File finalOutput = new File(cloud.path(), archiveKey + ".archive");
+      try {
+        DataOutputStream output = new DataOutputStream(new FileOutputStream(tempOutput));
+        store.read(id, new ByteArrayStream() {
+          @Override
+          public void next(int appendIndex, byte[] value) throws Exception {
+            output.writeBoolean(true);
+            output.writeInt(value.length);
+            output.write(value);
+          }
 
-            @Override
-            public void finished() throws Exception {
-              output.writeBoolean(false);
-            }
-          });
-          output.flush();
-          output.close();
-          Files.move(tempOutput.toPath(), finalOutput.toPath(), StandardCopyOption.ATOMIC_MOVE);
-        } catch (Exception ioex) {
-          callback.failure(new ErrorCodeException(-1, ioex));
-          return;
+          @Override
+          public void finished() throws Exception {
+            output.writeBoolean(false);
+          }
+        });
+        output.flush();
+        output.close();
+        Files.move(tempOutput.toPath(), finalOutput.toPath(), StandardCopyOption.ATOMIC_MOVE);
+      } catch (Exception ioex) {
+        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_BACKUP_EXCEPTION, ioex));
+        return;
+      }
+      cloud.backup(finalOutput, new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          callback.success(archiveKey);
         }
-        // TODO: write to the 'cloud'
-        callback.success(archiveKey);
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
       });
+    });
+  }
+
+  private void mergeRestore(long id, LocalCache cached, ArrayList<byte[]> writes, Callback<Void> callback) {
+    // TODO: merge the data into
 
   }
 
   @Override
   public void restore(Key key, String archiveKey, Callback<Void> callback) {
-    File archiveFile = new File(archiveKey + ".archive");
+    cloud.restore(archiveKey, new Callback<File>() {
+      @Override
+      public void success(File archiveFile) {
 
-    // TODO: Step 1: Download to the local filesystem from the cloud if it doesn't exist
-
-    // load the writes from the backup
-    ArrayList<byte[]> writes = new ArrayList<>();
-    try {
-      try (DataInputStream input = new DataInputStream(new FileInputStream(archiveFile))) {
-        while(input.readBoolean()) {
-          byte[] bytes = new byte[input.readInt()];
-          input.readFully(bytes);
-          writes.add(bytes);
-        }
-      }
-    } catch (Exception ex) {
-      callback.failure(new ErrorCodeException(-1, ex));
-      return;
-    }
-
-    execute("restore", key, false, callback, (id, cached) -> {
-      if (cached == null) {
-        cached = new LocalCache() {
-          @Override
-          public void finished() {
-            LocalCache builder = this;
-
-            // Step (4) merge the data into the file
-            executor.execute(new NamedRunnable("restore-write-map") {
-              @Override
-              public void execute() throws Exception {
-                cache.put(id, builder);
-                callback.success(null);
-              }
-            });
-          }
-        };
-        // Step 3(a): attempt to read data from disk
+        // load the writes from the backup
+        ArrayList<byte[]> writes = new ArrayList<>();
         try {
-          store.read(id, cached);
+          try (DataInputStream input = new DataInputStream(new FileInputStream(archiveFile))) {
+            while(input.readBoolean()) {
+              byte[] bytes = new byte[input.readInt()];
+              input.readFully(bytes);
+              writes.add(bytes);
+            }
+          }
         } catch (Exception ex) {
-          callback.failure(new ErrorCodeException(-1, ex));
+          callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_RESTORE_EXCEPTION, ex));
           return;
         }
-      } else {
-        // merge the data into
+
+        execute("restore", key, false, callback, (id, cached) -> {
+          if (cached == null) {
+            cached = new LocalCache() {
+              @Override
+              public void finished() {
+                LocalCache builder = this;
+                // Step (4) merge the data into the file
+                executor.execute(new NamedRunnable("restore-write-map") {
+                  @Override
+                  public void execute() throws Exception {
+                    cache.put(id, builder);
+                    mergeRestore(id, builder, writes, callback);
+                  }
+                });
+              }
+            };
+            // Step 3(a): attempt to read data from disk
+            try {
+              store.read(id, cached);
+            } catch (Exception ex) {
+              callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_RESTORE_CANT_READ, ex));
+              return;
+            }
+          } else {
+            mergeRestore(id, cached, writes, callback);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
       }
     });
   }
