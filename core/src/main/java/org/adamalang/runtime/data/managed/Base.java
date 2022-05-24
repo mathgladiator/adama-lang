@@ -26,14 +26,16 @@ public class Base {
   public final String target;
   public final HashMap<Key, Machine> documents;
   public final SimpleExecutor executor;
+  public final int archiveTimeMilliseconds;
 
-  public Base(FinderService finder, ArchivingDataService data, String region, String target, SimpleExecutor executor) {
+  public Base(FinderService finder, ArchivingDataService data, String region, String target, SimpleExecutor executor, int archiveTimeMilliseconds) {
     this.finder = finder;
     this.data = data;
     this.region = region;
     this.target = target;
     this.documents = new HashMap<>();
     this.executor = executor;
+    this.archiveTimeMilliseconds = archiveTimeMilliseconds;
   }
 
   /** jump into a state machine for a given key */

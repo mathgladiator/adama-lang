@@ -112,7 +112,7 @@ public class Machine {
         public void execute() throws Exception {
           archiveWhileInExecutor();
         }
-      }, 5 * 60 * 1000); // MAGIC
+      }, base.archiveTimeMilliseconds);
     }
   }
 

@@ -11,15 +11,14 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
-import org.adamalang.common.SimpleExecutor;
 import org.adamalang.runtime.data.managed.Action;
 import org.adamalang.runtime.data.managed.Base;
 
 public class ManagedDataService implements DataService {
   private final Base base;
 
-  public ManagedDataService(FinderService finder, ArchivingDataService data, String region, String target) {
-    this.base = new Base(finder, data, region, target, SimpleExecutor.create("managed-data-service"));
+  public ManagedDataService(Base base) {
+    this.base = base;
   }
 
   @Override

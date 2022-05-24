@@ -48,6 +48,10 @@ public class MockFinderService implements FinderService {
     }
   }
 
+  public void bindLocal(Key key) {
+    bind(key, "test-region", "test-machine", Callback.DONT_CARE_VOID);
+  }
+
   @Override
   public void free(Key key, String machineOn, Callback<Void> callback) {
     Result result = map.get(key);

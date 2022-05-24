@@ -48,8 +48,9 @@ public class BaseTests {
 
   public static void flow(ThrowConsumer<Base> body, ArchivingDataService data) throws Exception {
     MockFinderService mockFinder = new MockFinderService();
+    mockFinder.bindLocal(new Key("space", "key"));
     SimpleExecutor bexecutor = SimpleExecutor.create("executor");
-    Base base = new Base(mockFinder, data, "test-region", "test-machine", bexecutor);
+    Base base = new Base(mockFinder, data, "test-region", "test-machine", bexecutor, 1000);
     try {
       body.run(base);
     } finally {
