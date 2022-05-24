@@ -225,7 +225,7 @@ public class DurableListStore {
   }
 
   /** read the given object by scanning all appends */
-  public void read(long id, ByteArrayStream streamback) {
+  public void read(long id, ByteArrayStream streamback) throws Exception {
     Iterator<Region> it = index.get(id);
     int at = 0;
     while (it.hasNext()) {
