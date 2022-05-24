@@ -7,13 +7,13 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.runtime.data.managed;
+package org.adamalang.runtime.data;
 
 import org.junit.Test;
 
-public class StateTests {
+public class ManagedDataServiceTests {
   @Test
-  public void coverage() {
-    State.Finding.toString();
+  public void test() {
+
   }
 }

@@ -9,5 +9,51 @@
  */
 package org.adamalang.runtime.data.managed;
 
+import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.TimeSource;
+import org.adamalang.runtime.data.*;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 public class BaseTests {
+  @FunctionalInterface
+  public static interface ThrowConsumer<T> {
+    public void run(T item) throws Exception;
+  }
+
+  @Test
+  public void coverage() throws Exception {
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    try {
+      MockArchiveDataSource data = new MockArchiveDataSource(new InMemoryDataService(executor, TimeSource.REAL_TIME));
+      flow((base) -> {
+        CountDownLatch latch = new CountDownLatch(2);
+        base.on(new Key("space", "key"), (machine) -> {
+          latch.countDown();
+        });
+        base.on(new Key("space", "key"), (machine) -> {
+          latch.countDown();
+        });
+        Assert.assertTrue(latch.await(10000, TimeUnit.MILLISECONDS));
+      }, data);
+    } finally {
+      executor.shutdown();
+    }
+  }
+
+  public static void flow(ThrowConsumer<Base> body, ArchivingDataService data) throws Exception {
+    MockFinderService mockFinder = new MockFinderService();
+    SimpleExecutor bexecutor = SimpleExecutor.create("executor");
+    Base base = new Base(mockFinder, data, "test-region", "test-machine", bexecutor);
+    try {
+      body.run(base);
+    } finally {
+      bexecutor.shutdown().await(1000, TimeUnit.MILLISECONDS);
+    }
+  }
 }

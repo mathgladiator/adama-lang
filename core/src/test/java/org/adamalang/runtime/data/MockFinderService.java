@@ -34,18 +34,51 @@ public class MockFinderService implements FinderService {
 
   @Override
   public void bind(Key key, String region, String machine, Callback<Void> callback) {
-    map.put(key, new Result(1, Location.Machine, region, machine, ""));
-    callback.success(null);
+    Result result = map.get(key);
+    if (result != null) {
+      if (machine.equals(result.machine) && result.location == Location.Machine) {
+        callback.success(null);
+      } else {
+        callback.failure(new ErrorCodeException(-1));
+        return;
+      }
+    } else {
+      map.put(key, new Result(1, Location.Machine, region, machine, ""));
+      callback.success(null);
+    }
   }
 
   @Override
   public void free(Key key, String machineOn, Callback<Void> callback) {
-    callback.success(null);
+    Result result = map.get(key);
+    if (result != null) {
+      if (machineOn.equals(result.machine) && result.location == Location.Machine) {
+        map.put(key, new Result(1, Location.Archive, "", "", result.archiveKey));
+        callback.success(null);
+      } else {
+        callback.failure(new ErrorCodeException(-2));
+        return;
+      }
+    } else {
+      callback.failure(new ErrorCodeException(-3));
+    }
+
   }
 
   @Override
   public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
-    callback.success(null);
+    Result result = map.get(key);
+    if (result != null) {
+      if (machineOn.equals(result.machine) && result.location == Location.Machine) {
+        map.put(key, new Result(1, result.location, result.region, result.machine, archiveKey));
+        callback.success(null);
+      } else {
+        callback.failure(new ErrorCodeException(-4));
+        return;
+      }
+    } else {
+      callback.failure(new ErrorCodeException(-5));
+    }
   }
 
   @Override
