@@ -98,9 +98,17 @@ public class CaravanDataService implements ArchivingDataService {
       return;
     }
     if (store.append(id, filtered, () -> {
-      callback.success(null);
+      executor.execute(new NamedRunnable("restore-write-map") {
+        @Override
+        public void execute() throws Exception {
+          for (byte[] write : filtered) {
+            EventCodec.route(Unpooled.wrappedBuffer(write), cached);
+          }
+          callback.success(null);
+        }
+      });
     }) == null) {
-      callback.failure(new ErrorCodeException(-1111));
+      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_MERGE_RESTORE_OUT_OF_SPACE));
     }
   }
 
@@ -136,14 +144,9 @@ public class CaravanDataService implements ArchivingDataService {
                 LocalCache builder = this;
                 mergeRestore(id, builder, writes, new Callback<Void>() {
                   @Override
-                  public void success(Void value) {
-                    executor.execute(new NamedRunnable("restore-write-map") {
-                      @Override
-                      public void execute() throws Exception {
-                        cache.put(id, builder);
-                        callback.success(null);
-                      }
-                    });
+                  public void success(Void value) { // note; this callback runs in the executor
+                    cache.put(id, builder);
+                    callback.success(null);
                   }
 
                   @Override
@@ -212,8 +215,6 @@ public class CaravanDataService implements ArchivingDataService {
       }
     });
   }
-
-
 
   private void load(long id, Callback<LocalCache> callback) {
     try {

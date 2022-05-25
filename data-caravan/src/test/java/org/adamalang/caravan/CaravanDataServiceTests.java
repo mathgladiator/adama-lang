@@ -307,6 +307,7 @@ public class CaravanDataServiceTests {
       SimpleMockCallback cb_PatchTwo2 = new SimpleMockCallback();
       setup.service.patch(KEY2, new RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb_PatchTwo2);
       cb_PatchTwo2.assertSuccess();
+
       {
         SimpleMockCallback cb_Close2 = new SimpleMockCallback();
         setup.service.close(KEY2, cb_Close2);
@@ -326,6 +327,48 @@ public class CaravanDataServiceTests {
         cb_Close2.assertSuccess();
       }
 
+      final String archiveKey;
+      {
+        SimpleStringCallback cb_Backup = new SimpleStringCallback();
+        setup.service.backup(KEY2, cb_Backup);
+        cb_Backup.assertSuccess();
+        archiveKey = cb_Backup.value;
+      }
+
+      {
+        SimpleMockCallback cb_Restore = new SimpleMockCallback();
+        setup.service.restore(KEY2, archiveKey, cb_Restore);
+        cb_Restore.assertSuccess();
+      }
+
+      {
+        SimpleDataCallback cb_GetIsMergedResults = new SimpleDataCallback();
+        setup.service.get(KEY2, cb_GetIsMergedResults);
+        cb_GetIsMergedResults.assertSuccess();
+        Assert.assertEquals("{\"x\":4,\"y\":4}", cb_GetIsMergedResults.value);
+        Assert.assertEquals(4, cb_GetIsMergedResults.reads);
+      }
+
+      {
+        SimpleMockCallback cb_Delete = new SimpleMockCallback();
+        setup.service.delete(KEY2, cb_Delete);
+        cb_Delete.assertSuccess();
+      }
+
+      {
+        SimpleMockCallback cb_Restore = new SimpleMockCallback();
+        setup.service.restore(KEY2, archiveKey, cb_Restore);
+        cb_Restore.assertSuccess();
+      }
+
+      {
+        SimpleDataCallback cb_GetIsMergedResults = new SimpleDataCallback();
+        setup.service.get(KEY2, cb_GetIsMergedResults);
+        cb_GetIsMergedResults.assertSuccess();
+        Assert.assertEquals("{\"x\":4,\"y\":4}", cb_GetIsMergedResults.value);
+        Assert.assertEquals(4, cb_GetIsMergedResults.reads);
+      }
+
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
         setup.service.snapshot(KEY2, 4, "{\"x\":10,\"y\":10}", 1, cb_CompactWorks);
@@ -336,7 +379,6 @@ public class CaravanDataServiceTests {
         Assert.assertEquals("{\"x\":10,\"y\":10}", cb_GetCompactedResults.value);
         Assert.assertEquals(1, cb_GetCompactedResults.reads);
       }
-
     });
   }
 }
