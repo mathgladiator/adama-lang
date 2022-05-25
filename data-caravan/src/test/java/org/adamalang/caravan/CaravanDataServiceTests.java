@@ -362,6 +362,18 @@ public class CaravanDataServiceTests {
       }
 
       {
+        SimpleMockCallback cb_RestoreFailedInCloud = new SimpleMockCallback();
+        setup.service.restore(KEY2, archiveKey + ".notfound", cb_RestoreFailedInCloud);
+        cb_RestoreFailedInCloud.assertFailure(-102);
+      }
+
+      {
+        SimpleMockCallback cb_RestoreFailed2 = new SimpleMockCallback();
+        setup.service.restore(KEY2, "notfound", cb_RestoreFailed2);
+        cb_RestoreFailed2.assertFailure(739471);
+      }
+
+      {
         SimpleDataCallback cb_GetIsMergedResults = new SimpleDataCallback();
         setup.service.get(KEY2, cb_GetIsMergedResults);
         cb_GetIsMergedResults.assertSuccess();

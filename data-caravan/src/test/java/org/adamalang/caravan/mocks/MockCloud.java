@@ -46,6 +46,10 @@ public class MockCloud implements Cloud {
 
   @Override
   public void restore(String archiveKey, Callback<File> callback) {
+    if (archiveKey.equals("notfound")) {
+      callback.success(new File(path, "nope"));
+      return;
+    }
     File found = map.get(archiveKey + ".archive");
     if (found == null) {
       callback.failure(new ErrorCodeException(-102));
