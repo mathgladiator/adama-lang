@@ -43,6 +43,11 @@ public class SplitHeat implements Heap {
   }
 
   @Override
+  public long available() {
+    return left.available() + right.available();
+  }
+
+  @Override
   public void free(Region region) {
     if (region.position < rightOffset) {
       left.free(region);

@@ -18,6 +18,7 @@ import org.adamalang.runtime.json.JsonAlgebra;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerEvent {
   public int currentAppendIndex;
@@ -77,6 +78,39 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
     while (undos.size() > payload.history) {
       undos.removeLast();
     }
+  }
+
+  public ArrayList<byte[]> filter(ArrayList<byte[]> writes) {
+    ArrayList<byte[]> reduced = new ArrayList<>();
+    AtomicInteger checkSeq = new AtomicInteger(seq);
+    for (byte[] write : writes) {
+      EventCodec.route(Unpooled.wrappedBuffer(write), new EventCodec.HandlerEvent() {
+        @Override
+        public void handle(Events.Snapshot payload) {
+          if (checkSeq.get() < payload.seq || checkSeq.get() == 0) {
+            reduced.add(write);
+            checkSeq.set(payload.seq);
+          }
+        }
+
+        @Override
+        public void handle(Events.Batch payload) {
+          if (checkSeq.get() + 1 == payload.changes[0].seq_begin || checkSeq.get() == 0) {
+            reduced.add(write);
+            checkSeq.set(payload.changes[payload.changes.length - 1].seq_end);
+          }
+        }
+
+        @Override
+        public void handle(Events.Change payload) {
+          if (checkSeq.get() + 1 == payload.seq_begin || checkSeq.get() == 0) {
+            reduced.add(write);
+            checkSeq.set(payload.seq_end);
+          }
+        }
+      });
+    }
+    return reduced;
   }
 
   @Override

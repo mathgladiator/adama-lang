@@ -7,20 +7,13 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.caravan.index;
+package org.adamalang.caravan.contracts;
 
-import io.netty.buffer.ByteBuf;
+import org.adamalang.common.Callback;
+import org.adamalang.runtime.data.Key;
 
-/** a very simple doubly-linked heap */
-public interface Heap {
-  /** how many bytes are available to allocate */
-  long available();
-
-  Region ask(int size);
-
-  void free(Region region);
-
-  void snapshot(ByteBuf buf);
-
-  void load(ByteBuf buf);
+/** convert a key into a long id */
+public interface KeyToIdService {
+  /** We do this to compact the key into an id that is global */
+  public void translate(Key key, Callback<Long> callback);
 }

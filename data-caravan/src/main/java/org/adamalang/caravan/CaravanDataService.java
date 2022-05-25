@@ -14,7 +14,9 @@ import io.netty.buffer.Unpooled;
 import org.adamalang.ErrorCodes;
 import org.adamalang.caravan.contracts.ByteArrayStream;
 import org.adamalang.caravan.contracts.Cloud;
+import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.caravan.data.DurableListStore;
+import org.adamalang.caravan.events.ByteArrayHelper;
 import org.adamalang.caravan.events.EventCodec;
 import org.adamalang.caravan.events.Events;
 import org.adamalang.caravan.events.LocalCache;
@@ -34,14 +36,14 @@ import java.util.function.Consumer;
 
 public class CaravanDataService implements ArchivingDataService {
   private final Cloud cloud;
-  private final FinderService finder;
+  private final KeyToIdService keyToIdService;
   private final DurableListStore store;
   private final SimpleExecutor executor;
   private final HashMap<Long, LocalCache> cache;
 
-  public CaravanDataService(Cloud cloud, FinderService finder, DurableListStore store, SimpleExecutor executor) {
+  public CaravanDataService(Cloud cloud, KeyToIdService keyToIdService, DurableListStore store, SimpleExecutor executor) {
     this.cloud = cloud;
-    this.finder = finder;
+    this.keyToIdService = keyToIdService;
     this.store = store;
     this.executor = executor;
     this.cache = new HashMap();
@@ -90,16 +92,24 @@ public class CaravanDataService implements ArchivingDataService {
   }
 
   private void mergeRestore(long id, LocalCache cached, ArrayList<byte[]> writes, Callback<Void> callback) {
-    // TODO: merge the data into
-
+    ArrayList<byte[]> filtered = cached.filter(writes);
+    if (filtered.size() == 0) {
+      callback.success(null);
+      return;
+    }
+    if (store.append(id, filtered, () -> {
+      callback.success(null);
+    }) == null) {
+      callback.failure(new ErrorCodeException(-1111));
+    }
   }
 
   @Override
   public void restore(Key key, String archiveKey, Callback<Void> callback) {
+    // ask the cloud to ensure the archive key has been downloaded
     cloud.restore(archiveKey, new Callback<File>() {
       @Override
       public void success(File archiveFile) {
-
         // load the writes from the backup
         ArrayList<byte[]> writes = new ArrayList<>();
         try {
@@ -115,25 +125,36 @@ public class CaravanDataService implements ArchivingDataService {
           return;
         }
 
+        // jump into the exector for the cache
         execute("restore", key, false, callback, (id, cached) -> {
           if (cached == null) {
-            cached = new LocalCache() {
+            // the cache does not exist, so let's attempt to create it create it
+            LocalCache newBuilderToCache = new LocalCache() {
               @Override
-              public void finished() {
+              public void finished() { // Note: runs in the thread calling execute since store.read is sync
+                // aftering reading into the cache, let's merge what we have restored
                 LocalCache builder = this;
-                // Step (4) merge the data into the file
-                executor.execute(new NamedRunnable("restore-write-map") {
+                mergeRestore(id, builder, writes, new Callback<Void>() {
                   @Override
-                  public void execute() throws Exception {
-                    cache.put(id, builder);
-                    mergeRestore(id, builder, writes, callback);
+                  public void success(Void value) {
+                    executor.execute(new NamedRunnable("restore-write-map") {
+                      @Override
+                      public void execute() throws Exception {
+                        cache.put(id, builder);
+                        callback.success(null);
+                      }
+                    });
+                  }
+
+                  @Override
+                  public void failure(ErrorCodeException ex) {
+                    callback.failure(ex);
                   }
                 });
               }
             };
-            // Step 3(a): attempt to read data from disk
             try {
-              store.read(id, cached);
+              store.read(id, newBuilderToCache);
             } catch (Exception ex) {
               callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_RESTORE_CANT_READ, ex));
               return;
@@ -153,10 +174,9 @@ public class CaravanDataService implements ArchivingDataService {
 
   /** execute with the translation service and jump into the executor */
   private <T> void execute(String name, Key key, boolean load, Callback<T> callback, BiConsumer<Long, LocalCache> action) {
-    finder.find(key, new Callback<FinderService.Result>() {
+    keyToIdService.translate(key, new Callback<Long>() {
       @Override
-      public void success(FinderService.Result result) {
-        long id = result.id;
+      public void success(Long id) {
         executor.execute(new NamedRunnable(name) {
           @Override
           public void execute() throws Exception {
@@ -168,8 +188,8 @@ public class CaravanDataService implements ArchivingDataService {
                   executor.execute(new NamedRunnable(name, "load") {
                     @Override
                     public void execute() throws Exception {
-                      cache.put(id,cached);
-                      action.accept(id,cached);
+                      cache.put(id, cached);
+                      action.accept(id, cached);
                     }
                   });
                 }
@@ -193,13 +213,7 @@ public class CaravanDataService implements ArchivingDataService {
     });
   }
 
-  private static byte[] convert(ByteBuf buf) {
-    byte[] memory = new byte[buf.writerIndex()];
-    while (buf.isReadable()) {
-      buf.readBytes(memory, buf.readerIndex(), memory.length - buf.readerIndex());
-    }
-    return memory;
-  }
+
 
   private void load(long id, Callback<LocalCache> callback) {
     try {
@@ -268,7 +282,7 @@ public class CaravanDataService implements ArchivingDataService {
       };
       builder.handle(change);
       builder.bump();
-      if (store.append(id, convert(buf), () -> {
+      if (store.append(id, ByteArrayHelper.convert(buf), () -> {
         executor.execute(new NamedRunnable("commit-cache") {
           @Override
           public void execute() throws Exception {
@@ -292,7 +306,7 @@ public class CaravanDataService implements ArchivingDataService {
     }
     ByteBuf buf = Unpooled.buffer();
     EventCodec.write(buf, batch);
-    byte[] write = convert(buf);
+    byte[] write = ByteArrayHelper.convert(buf);
     execute("patch", key, true, callback, (id, cached) -> {
       if (!cached.check(patches[0].seqBegin)) {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
@@ -357,7 +371,7 @@ public class CaravanDataService implements ArchivingDataService {
     snap.history = history;
     ByteBuf buf = Unpooled.buffer();
     EventCodec.write(buf, snap);
-    byte[] bytes = convert(buf);
+    byte[] bytes = ByteArrayHelper.convert(buf);
 
     execute("snapshot", key, true, callback, (id, cached) -> {
       Integer size = store.append(id, bytes, () -> {

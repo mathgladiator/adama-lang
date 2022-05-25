@@ -35,9 +35,12 @@ public class IndexedHeapTests {
   public void flow() throws Exception {
     IndexedHeap heap = new IndexedHeap(1024);
     assetEqualsAfterSnapshot("[0,1024)", heap);
+    Assert.assertEquals(1024, heap.available());
     Region a1 = heap.ask(7);
+    Assert.assertEquals(1017, heap.available());
     assetEqualsAfterSnapshot("[7,1024)", heap);
     Region a2 = heap.ask(76);
+    Assert.assertEquals(941, heap.available());
     assetEqualsAfterSnapshot("[83,1024)", heap);
     Region a3 = heap.ask(2);
     assetEqualsAfterSnapshot("[85,1024)", heap);

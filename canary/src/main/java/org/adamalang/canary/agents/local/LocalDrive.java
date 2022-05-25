@@ -14,6 +14,7 @@ import org.adamalang.caravan.CaravanDataService;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
+import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.data.DataService;
@@ -101,7 +102,7 @@ public class LocalDrive {
 
         }
       };
-      CaravanDataService service = new CaravanDataService(cloud, finder, dls, executor);
+      CaravanDataService service = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), dls, executor);
       dataService = service;
       Thread flusher = new Thread(new Runnable() {
         @Override

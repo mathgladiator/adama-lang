@@ -40,4 +40,9 @@ public class MockByteArrayStream implements ByteArrayStream {
     Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
     Assert.assertEquals(expected, sb.toString());
   }
+
+  public void assertLength(int size) throws Exception {
+    Assert.assertTrue(latch.await(1000, TimeUnit.MILLISECONDS));
+    Assert.assertEquals(size, sb.toString().length());
+  }
 }

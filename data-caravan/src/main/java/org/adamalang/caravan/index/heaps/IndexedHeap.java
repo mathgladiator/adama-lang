@@ -64,6 +64,15 @@ public class IndexedHeap implements Heap {
   }
 
   @Override
+  public long available() {
+    long avail = 0;
+    for (FreeSpace free : left.values()) {
+      avail += free.size;
+    }
+    return avail;
+  }
+
+  @Override
   public Region ask(int size) {
     Map.Entry<Long, TreeMap<Long, FreeSpace>> bucket = sized.ceilingEntry((long) size);
     if (bucket == null) {

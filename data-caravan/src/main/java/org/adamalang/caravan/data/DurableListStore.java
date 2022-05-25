@@ -158,6 +158,11 @@ public class DurableListStore {
     }
   }
 
+  /** how many bytes are available to allocate */
+  public long available() {
+    return heap.available();
+  }
+
   /** internal: prepare a new write-ahead file */
   private File prepare() throws IOException {
     File newWalFile = new File(walRoot, "WAL.NEW-" + System.currentTimeMillis());
@@ -206,6 +211,43 @@ public class DurableListStore {
   }
 
   /** append a byte array to the given id */
+  public Integer append(long id, ArrayList<byte[]> batch, Runnable notification) {
+    // allocate the items in the batch
+    ArrayList<Region> wheres = new ArrayList<>();
+    for (byte[] bytes : batch) {
+      Region where = heap.ask(bytes.length);
+      if (where == null) {
+        // we failed to allocate one, so we free everything and return a null
+        for (Region prior : wheres) {
+          heap.free(prior);
+        }
+        return null;
+      } else {
+        wheres.add(where);
+      }
+    }
+
+    // track the final notification
+    this.notifications.add(notification);
+
+    // walk the regions allocated and the bytes
+    Iterator<Region> whereIt = wheres.iterator();
+    Iterator<byte[]> bytesIt = batch.iterator();
+    int lastSize = -1;
+    while (whereIt.hasNext()) {
+      Region where = whereIt.next();
+      byte[] bytes = bytesIt.next();
+      memory.slice().position((int) where.position).put(bytes);
+      lastSize = index.append(id, where);
+      new Append(id, where.position, bytes).write(buffer);
+    }
+
+    if (buffer.writerIndex() > flushCutOffBytes) {
+      flush(false);
+    }
+    return lastSize;
+  }
+
   public Integer append(long id, byte[] bytes, Runnable notification) {
     Region where = heap.ask(bytes.length);
     if (where == null) {

@@ -9,6 +9,7 @@
  */
 package org.adamalang.caravan;
 
+import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.caravan.data.DurableListStore;
 import org.adamalang.caravan.data.DurableListStoreMetrics;
 import org.adamalang.caravan.mocks.*;
@@ -40,7 +41,7 @@ public class CaravanDataServiceTests {
           4, 4, null, "REQUEST", "{\"x\":4}", "{\"x\":3,\"z\":42}", true, 0, 100, UpdateType.AddUserData);
 
   private static class Setup {
-    private final FinderService finder;
+    private final KeyToIdService keyToIdService;
     private final DurableListStore store;
     private final SimpleExecutor executor;
     private final File root;
@@ -54,38 +55,14 @@ public class CaravanDataServiceTests {
       root.delete();
       root.mkdirs();
       this.store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(root, "STORE"), root, 1024 * 1024, 64 * 1024, 1024 * 1024 * 32);
-      this.finder = new FinderService() {
+      this.keyToIdService = new KeyToIdService() {
         @Override
-        public void find(Key key, Callback<Result> callback) {
-          callback.success(new Result(Long.parseLong(key.key), null, "region", null, null));
-        }
-
-        @Override
-        public void bind(Key key, String region, String machine, Callback<Void> callback) {
-
-        }
-
-        @Override
-        public void free(Key key, String machineOn, Callback<Void> callback) {
-
-        }
-
-        @Override
-        public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
-        }
-
-        @Override
-        public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
-
-        }
-
-        @Override
-        public void delete(Key key, String machineOn, Callback<Void> callback) {
-
+        public void translate(Key key, Callback<Long> callback) {
+          callback.success(Long.parseLong(key.key));
         }
       };
       this.cloud = new MockCloud();
-      this.service = new CaravanDataService(cloud, finder, store, executor);
+      this.service = new CaravanDataService(cloud, keyToIdService, store, executor);
       this.flusher = new Thread(new Runnable() {
         @Override
         public void run() {

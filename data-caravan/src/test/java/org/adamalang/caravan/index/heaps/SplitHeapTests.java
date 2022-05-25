@@ -33,10 +33,13 @@ public class SplitHeapTests {
   @Test
   public void flow() throws Exception {
     SplitHeat heap = make();
+    Assert.assertEquals(1152, heap.available());
     assetEqualsAfterSnapshot("Split{left=[0,128),+offset128:right=[0,1024)}", heap);
     Region a1 = heap.ask(7);
+    Assert.assertEquals(1152 - 7, heap.available());
     assetEqualsAfterSnapshot("Split{left=[7,128),+offset128:right=[0,1024)}", heap);
     Region a2 = heap.ask(76);
+    Assert.assertEquals(1152 - 7 - 76, heap.available());
     assetEqualsAfterSnapshot("Split{left=[7,128),+offset128:right=[76,1024)}", heap);
     Region a3 = heap.ask(2);
     assetEqualsAfterSnapshot("Split{left=[9,128),+offset128:right=[76,1024)}", heap);
