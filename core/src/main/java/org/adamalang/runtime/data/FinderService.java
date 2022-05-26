@@ -14,8 +14,26 @@ import org.adamalang.common.Callback;
 /** an interface to describe how to find a specific document by key */
 public interface FinderService {
 
+  /** find the location of a key */
+  void find(Key key, Callback<Result> callback);
+
+  /** take over for the key */
+  void bind(Key key, String region, String machine, Callback<Void> callback);
+
+  /** release the machine for the given key */
+  void free(Key key, String machineOn, Callback<Void> callback);
+
+  /** set a backup copy while still active on machine */
+  void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback);
+
+  /** delete the key */
+  void delete(Key key, String machineOn, Callback<Void> callback);
+
+  /** update billing related properties about the key */
+  void update(Key key, long deltaSize, long assetSize, Callback<Void> callback);
+
   /** where a document may be */
-  public static enum Location {
+  enum Location {
     // a single machine
     Machine(2),
 
@@ -24,7 +42,7 @@ public interface FinderService {
 
     public final int type;
 
-    private Location(int type) {
+    Location(int type) {
       this.type = type;
     }
 
@@ -38,7 +56,7 @@ public interface FinderService {
     }
   }
 
-  public static class Result {
+  class Result {
     public final long id;
     public final Location location;
     public final String region;
@@ -53,22 +71,4 @@ public interface FinderService {
       this.archiveKey = archiveKey;
     }
   }
-
-  /** find the location of a key */
-  public void find(Key key, Callback<Result> callback);
-
-  /** take over for the key */
-  public void bind(Key key, String region, String machine, Callback<Void> callback);
-
-  /** release the machine for the given key */
-  public void free(Key key, String machineOn, Callback<Void> callback);
-
-  /** set a backup copy while still active on machine */
-  public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback);
-
-  /** delete the key */
-  public void delete(Key key, String machineOn, Callback<Void> callback);
-
-  /** update billing related properties about the key */
-  public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback);
 }

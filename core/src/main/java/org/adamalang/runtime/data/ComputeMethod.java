@@ -23,7 +23,7 @@ public enum ComputeMethod {
   }
 
   public static ComputeMethod fromType(int type) {
-    for (ComputeMethod method: ComputeMethod.values()) {
+    for (ComputeMethod method : ComputeMethod.values()) {
       if (method.type == type) {
         return method;
       }

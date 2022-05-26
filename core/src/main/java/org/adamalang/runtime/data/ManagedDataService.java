@@ -22,6 +22,16 @@ public class ManagedDataService implements DataService {
   }
 
   @Override
+  public void get(Key key, Callback<LocalDocumentChange> callback) {
+    base.on(key, (machine) -> {
+      machine.open();
+      machine.read(new Action(() -> {
+        base.data.get(key, callback);
+      }, callback));
+    });
+  }
+
+  @Override
   public void initialize(Key key, RemoteDocumentUpdate patch, Callback<Void> callback) {
     base.finder.bind(key, base.region, base.target, new Callback<Void>() {
       @Override
@@ -38,23 +48,6 @@ public class ManagedDataService implements DataService {
       public void failure(ErrorCodeException ex) {
         callback.failure(ex);
       }
-    });
-  }
-
-  @Override
-  public void get(Key key, Callback<LocalDocumentChange> callback) {
-    base.on(key, (machine) -> {
-      machine.open();
-      machine.read(new Action(() -> {
-        base.data.get(key, callback);
-      }, callback));
-    });
-  }
-
-  @Override
-  public void close(Key key, Callback<Void> callback) {
-    base.on(key, (machine) -> {
-      machine.close();
     });
   }
 
@@ -103,6 +96,13 @@ public class ManagedDataService implements DataService {
       machine.write(new Action(() -> {
         base.data.snapshot(key, seq, snapshot, history, callback);
       }, callback));
+    });
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    base.on(key, (machine) -> {
+      machine.close();
     });
   }
 }

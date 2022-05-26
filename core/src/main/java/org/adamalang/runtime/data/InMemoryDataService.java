@@ -175,6 +175,14 @@ public class InMemoryDataService implements DataService {
     });
   }
 
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    executor.execute(() -> {
+      InMemoryDocument document = datum.remove(key);
+      callback.success(null);
+    });
+  }
+
   private static class InMemoryDocument {
     private final ArrayList<RemoteDocumentUpdate> updates;
     private boolean active;
@@ -210,13 +218,5 @@ public class InMemoryDataService implements DataService {
       }
       return 0;
     }
-  }
-
-  @Override
-  public void close(Key key, Callback<Void> callback) {
-    executor.execute(() -> {
-      InMemoryDocument document = datum.remove(key);
-      callback.success(null);
-    });
   }
 }
