@@ -190,7 +190,6 @@ public class CaravanDataServiceTests {
         Assert.assertEquals(4, cb_GetIsMergedResults.reads);
       }
 
-
       {
         SimpleDataCallback cb_Patch = new SimpleDataCallback();
         setup.service.compute(KEY1, ComputeMethod.HeadPatch, 2, cb_Patch);
