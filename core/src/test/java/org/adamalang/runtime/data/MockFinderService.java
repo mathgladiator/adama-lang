@@ -34,6 +34,10 @@ public class MockFinderService implements FinderService {
 
   @Override
   public void bind(Key key, String region, String machine, Callback<Void> callback) {
+    if (key.key.contains("cant-bind")) {
+      callback.failure(new ErrorCodeException(-1234));
+      return;
+    }
     Result result = map.get(key);
     if (result != null) {
       if (machine.equals(result.machine) && result.location == Location.Machine) {

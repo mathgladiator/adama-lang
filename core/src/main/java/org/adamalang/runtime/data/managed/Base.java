@@ -46,6 +46,7 @@ public class Base {
         Machine machine = documents.get(key);
         if (machine == null) {
           machine = new Machine(key, Base.this);
+          documents.put(key, machine);
         }
         action.accept(machine);
       }

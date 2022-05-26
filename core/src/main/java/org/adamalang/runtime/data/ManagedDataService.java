@@ -11,6 +11,7 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.data.managed.Action;
 import org.adamalang.runtime.data.managed.Base;
 
@@ -69,22 +70,40 @@ public class ManagedDataService implements DataService {
     });
   }
 
+  private void deleteLocal(Key key, Callback<Void> callback) {
+    base.on(key, (machine) -> {
+      machine.write(new Action(() -> {
+        base.data.delete(key, new Callback<Void>() {
+          @Override
+          public void success(Void value) {
+            base.executor.execute(new NamedRunnable("managed-delete") {
+              @Override
+              public void execute() throws Exception {
+                machine.close();;
+                base.documents.remove(key);
+              }
+            });
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
+          }
+        });
+      }, callback));
+    });
+  }
+
   @Override
   public void delete(Key key, Callback<Void> callback) {
     base.finder.delete(key, base.target, new Callback<Void>() {
       @Override
       public void success(Void value) {
-        base.on(key, (machine) -> {
-          machine.write(new Action(() -> {
-            base.data.delete(key, callback);
-          }, callback));
-        });
+        deleteLocal(key, callback);
       }
 
       @Override
       public void failure(ErrorCodeException ex) {
-        // worse case situation: we deleted in the finder, lost the id, and then leaked data on the disk
-        // TODO: write a delete queue to disk, so we can rectify the situation in failure modes
         callback.failure(ex);
       }
     });
@@ -102,7 +121,9 @@ public class ManagedDataService implements DataService {
   @Override
   public void close(Key key, Callback<Void> callback) {
     base.on(key, (machine) -> {
+      // I mean, ok, but how does shit leave the base?
       machine.close();
+      callback.success(null);
     });
   }
 }

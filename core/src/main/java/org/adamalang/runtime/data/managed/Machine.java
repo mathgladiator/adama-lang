@@ -65,6 +65,26 @@ public class Machine {
         writesInFlight = 0;
         if (pendingWrites > 0) {
           scheduleArchiveWhileInExecutor();
+        } else if (closed) {
+          base.finder.free(key, base.target, new Callback<Void>() {
+            @Override
+            public void success(Void value) {
+              base.executor.execute(new NamedRunnable("machine-archive-freed") {
+                @Override
+                public void execute() throws Exception {
+                  base.documents.remove(key);
+                  base.data.delete(key, Callback.DONT_CARE_VOID);
+                }
+              });
+            }
+
+            @Override
+            public void failure(ErrorCodeException ex) {
+              // the finder may fail yet account for this, so we are leaking. In which case, what do we do?
+              // traffic will route to a new host, so that kind of sucks
+              // TODO: think about it
+            }
+          });
         }
       }
     });
@@ -120,6 +140,13 @@ public class Machine {
     base.executor.execute(new NamedRunnable("machine-found-machine") {
       @Override
       public void execute() throws Exception {
+        if (closed) {
+          state = State.Unknown;
+          base.documents.remove(key);
+          base.data.close(key, Callback.DONT_CARE_VOID);
+          failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_CLOSED_BEFORE_FOUND));
+          return;
+        }
         if (foundMachine.equals(base.target)) {
           state = State.OnMachine;
           ArrayList<Action> toact = actions;
@@ -143,6 +170,7 @@ public class Machine {
       public void execute() throws Exception {
         state = State.Unknown;
         failQueueWhileInExecutor(ex);
+        base.documents.remove(key);
       }
     });
   }
@@ -246,5 +274,9 @@ public class Machine {
 
   public void close() {
     closed = true;
+    if (state == State.OnMachine && pendingWrites == 0) {
+      base.data.close(key, Callback.DONT_CARE_VOID);
+      base.documents.remove(key);
+    }
   }
 }

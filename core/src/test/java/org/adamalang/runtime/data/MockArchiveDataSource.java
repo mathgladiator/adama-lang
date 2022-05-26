@@ -11,40 +11,134 @@ package org.adamalang.runtime.data;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.natives.NtClient;
+import org.junit.Assert;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class MockArchiveDataSource implements ArchivingDataService {
   private final DataService data;
-
-  private ArrayList<String> events;
+  private final HashMap<String, String> archive;
+  private final ArrayList<String> log;
+  private final ArrayList<CountDownLatch> latches;
+  private final ArrayList<Runnable> backups;
+  private final ArrayList<Runnable> restores;
 
   public MockArchiveDataSource(DataService data) {
     this.data = data;
-    this.events = new ArrayList<>();
+    this.log = new ArrayList<>();
+    this.latches = new ArrayList<>();
+    this.archive = new HashMap<>();
+    this.backups = new ArrayList<>();
+    this.restores = new ArrayList<>();
+  }
+
+  private synchronized void println(String x) {
+    System.out.println(x);
+    log.add(x);
+    Iterator<CountDownLatch> it = latches.iterator();
+    while (it.hasNext()) {
+      CountDownLatch latch = it.next();
+      latch.countDown();
+      if (latch.getCount() == 0) {
+        it.remove();
+      }
+    }
+  }
+
+  public synchronized void assertLogAt(int k, String expected) {
+    Assert.assertEquals(expected, log.get(k));
+  }
+
+  public synchronized void assertLogAtStartsWith(int k, String prefix) {
+    Assert.assertTrue(log.get(k).startsWith(prefix));
+  }
+
+  public synchronized String getLogAt(int k) {
+    return log.get(k);
+  }
+
+  public synchronized Runnable latchLogAt(int count) {
+    CountDownLatch latch = new CountDownLatch(count);
+    latches.add(latch);
+    return () -> {
+      try {
+        Assert.assertTrue(latch.await(2000, TimeUnit.MILLISECONDS));
+      } catch (InterruptedException ie) {
+        Assert.fail();
+      }
+    };
+  }
+
+  public void driveBackup() {
+    final Runnable backup;
+    synchronized (this) {
+      Assert.assertEquals(1, backups.size());
+      backup = backups.remove(0);
+    }
+    backup.run();
+  }
+
+  public void driveRestore() {
+    final Runnable restore;
+    synchronized (this) {
+      Assert.assertEquals(1, restores.size());
+      restore = restores.remove(0);
+    }
+    restore.run();
   }
 
   @Override
   public synchronized void restore(Key key, String archiveKey, Callback<Void> callback) {
-    if (key.key.equals("fail-restore")) {
-      this.events.add("RESTORE[FAILURE]:" + key.space + "/" + key.key + "+" + archiveKey);
-      callback.failure(new ErrorCodeException(-100));
-      return;
-    }
-    this.events.add("RESTORE:" + key.space + "/" + key.key + "+" + archiveKey);
-    callback.success(null);
+    println("RESTORE-INIT:" + key.space + "/" + key.key);
+    restores.add(() -> {
+      println("RESTORE-EXEC:" + key.space + "/" + key.key);
+      if (key.key.contains("fail-restore")) {
+        callback.failure(new ErrorCodeException(-2000));
+        return;
+      }
+      String value;
+      synchronized (archive) {
+        value = archive.get(archiveKey);
+      }
+      if (value == null) {
+        callback.failure(new ErrorCodeException(-3000));
+        return;
+      }
+      // TODO: sort out a better way to restore an arbitrary data source for testing
+      data.initialize(key, new RemoteDocumentUpdate(1, 1, NtClient.NO_ONE, "restore", value, "{}", false, 1, 0, UpdateType.Internal), callback);
+    });
   }
 
   @Override
   public synchronized void backup(Key key, Callback<String> callback) {
-    if (key.key.equals("fail-backup")) {
-      this.events.add("BACKUP[FAILURE]:" + key.space + "/" + key.key);
-      callback.failure(new ErrorCodeException(-200));
-      return;
-    }
-    this.events.add("BACKUP:" + key.space + "/" + key.key);
-    String archiveKey = "ARCHIVE_KEY_" + events.size();
-    callback.success(archiveKey);
+    println("BACKUP:" + key.space + "/" + key.key);
+    backups.add(() -> {
+      println("BACKUP-EXEC:" + key.space + "/" + key.key);
+      String archiveKey = key.key + "_" + System.currentTimeMillis();
+      if (key.key.contains("fail-backup")) {
+        callback.failure(new ErrorCodeException(-1000));
+        return;
+      }
+      data.get(key, new Callback<LocalDocumentChange>() {
+        @Override
+        public void success(LocalDocumentChange value) {
+          synchronized (archiveKey) {
+            archive.put(archiveKey, value.patch);
+          }
+          callback.success(archiveKey);
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
+    });
   }
 
   @Override
