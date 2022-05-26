@@ -447,6 +447,7 @@ public class ServerCodec {
   private static ProxyLocalDataChange readBody_9006(ByteBuf buf, ProxyLocalDataChange o) {
     o.patch = Helper.readString(buf);
     o.reads = buf.readIntLE();
+    o.seq = buf.readIntLE();
     return o;
   }
 
@@ -668,6 +669,7 @@ public class ServerCodec {
     buf.writeIntLE(9006);
     Helper.writeString(buf, o.patch);;
     buf.writeIntLE(o.reads);
+    buf.writeIntLE(o.seq);
   }
 
   public static void write(ByteBuf buf, ProxyIntResponse o) {

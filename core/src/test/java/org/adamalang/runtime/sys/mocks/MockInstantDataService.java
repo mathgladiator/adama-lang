@@ -70,7 +70,7 @@ public class MockInstantDataService implements DataService {
     }
     JsonStreamWriter writer = new JsonStreamWriter();
     writer.writeTree(obj);
-    callback.success(new LocalDocumentChange(writer.toString(), 1));
+    callback.success(new LocalDocumentChange(writer.toString(), 1, log.get(log.size() - 1).seqEnd));
   }
 
   private boolean correctFailureCodeForFailure = true;
@@ -138,10 +138,10 @@ public class MockInstantDataService implements DataService {
       } else {
         skipTrack += 10000;
         callback.success(
-            new LocalDocumentChange("{\"x\":" + skipTrack * 7 + ",\"__seq\":" + skipTrack + "}", 1));
+            new LocalDocumentChange("{\"x\":" + skipTrack * 7 + ",\"__seq\":" + skipTrack + "}", 1, 100));
       }
     } else if (method == ComputeMethod.Rewind) {
-      callback.success(new LocalDocumentChange("{\"x\":1000}", 1));
+      callback.success(new LocalDocumentChange("{\"x\":1000}", 1, 200));
     } else {
       callback.failure(new ErrorCodeException(5));
     }

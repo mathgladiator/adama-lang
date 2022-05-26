@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class MockArchiveDataSource implements ArchivingDataService {
   private final DataService data;
   private final HashMap<String, String> archive;
+  private final HashMap<String, Integer> archiveSeq;
   private final ArrayList<String> log;
   private final ArrayList<CountDownLatch> latches;
   private final ArrayList<Runnable> backups;
@@ -35,6 +36,7 @@ public class MockArchiveDataSource implements ArchivingDataService {
     this.archive = new HashMap<>();
     this.backups = new ArrayList<>();
     this.restores = new ArrayList<>();
+    this.archiveSeq = new HashMap<>();
   }
 
   private synchronized void println(String x) {
@@ -109,8 +111,9 @@ public class MockArchiveDataSource implements ArchivingDataService {
         callback.failure(new ErrorCodeException(-3000));
         return;
       }
-      // TODO: sort out a better way to restore an arbitrary data source for testing
-      data.initialize(key, new RemoteDocumentUpdate(1, 1, NtClient.NO_ONE, "restore", value, "{}", false, 1, 0, UpdateType.Internal), callback);
+      int seq = archiveSeq.get(archiveKey);
+      // TODO: sort out a better way to restore an arbitrary data source for testing? This may be good enough with the seq hack
+      data.initialize(key, new RemoteDocumentUpdate(seq, seq, NtClient.NO_ONE, "restore", value, "{}", false, 1, 0, UpdateType.Internal), callback);
     });
   }
 
@@ -129,6 +132,7 @@ public class MockArchiveDataSource implements ArchivingDataService {
         public void success(LocalDocumentChange value) {
           synchronized (archiveKey) {
             archive.put(archiveKey, value.patch);
+            archiveSeq.put(archiveKey, value.seq);
           }
           callback.success(archiveKey);
         }

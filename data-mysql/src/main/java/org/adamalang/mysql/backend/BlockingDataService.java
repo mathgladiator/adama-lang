@@ -50,7 +50,7 @@ public class BlockingDataService implements DataService {
         reads.incrementAndGet();
         merge.next(rs.getString(1));
       }, walkRedoSQL);
-      return new LocalDocumentChange(merge.finish(), reads.get());
+      return new LocalDocumentChange(merge.finish(), reads.get(), -1);
     }, callback, ErrorCodes.GET_FAILURE);
   }
 
@@ -209,7 +209,7 @@ public class BlockingDataService implements DataService {
         if (redo.empty()) {
           throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_PATCH);
         }
-        return new LocalDocumentChange(redo.finish(), reads.get());
+        return new LocalDocumentChange(redo.finish(), reads.get(), -1);
       }
 
       if (method == ComputeMethod.Rewind) {
@@ -227,7 +227,7 @@ public class BlockingDataService implements DataService {
         if (undo.empty()) {
           throw new ErrorCodeException(ErrorCodes.COMPUTE_EMPTY_REWIND);
         }
-        return new LocalDocumentChange(undo.finish(), reads.get());
+        return new LocalDocumentChange(undo.finish(), reads.get(), -1);
       }
 
       throw new ErrorCodeException(ErrorCodes.COMPUTE_UNKNOWN_METHOD);

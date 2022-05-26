@@ -52,7 +52,7 @@ public class InMemoryDataService implements DataService {
         merge.next(update.redo);
         reads++;
       }
-      callback.success(new LocalDocumentChange(merge.finish(), reads));
+      callback.success(new LocalDocumentChange(merge.finish(), reads, document.seq));
     });
   }
 
@@ -120,7 +120,7 @@ public class InMemoryDataService implements DataService {
           callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_PATCH_NOTHING_TODO));
           return;
         }
-        callback.success(new LocalDocumentChange(redo.finish(), reads));
+        callback.success(new LocalDocumentChange(redo.finish(), reads, document.seq));
         return;
       }
       if (method == ComputeMethod.Rewind) {
@@ -142,7 +142,7 @@ public class InMemoryDataService implements DataService {
           callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPUTE_REWIND_NOTHING_TODO));
           return;
         }
-        callback.success(new LocalDocumentChange(undo.finish(), reads));
+        callback.success(new LocalDocumentChange(undo.finish(), reads, document.seq));
         return;
       }
 

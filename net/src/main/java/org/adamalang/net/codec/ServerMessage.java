@@ -130,15 +130,19 @@ public class ServerMessage {
     @FieldOrder(2)
     public int reads;
 
-    public ProxyLocalDataChange copyFrom(LocalDocumentChange change) {
+    @FieldOrder(3)
+    public int seq;
+
+    public static ProxyLocalDataChange copyFrom(LocalDocumentChange change) {
       ProxyLocalDataChange proxy = new ProxyLocalDataChange();
       proxy.patch = change.patch;
       proxy.reads = change.reads;
+      proxy.seq = change.seq;
       return proxy;
     }
 
     public LocalDocumentChange toLocalDocumentChange() {
-      return new LocalDocumentChange(patch, reads);
+      return new LocalDocumentChange(patch, reads, seq);
     }
   }
 }

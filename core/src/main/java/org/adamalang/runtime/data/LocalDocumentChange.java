@@ -13,9 +13,11 @@ package org.adamalang.runtime.data;
 public class LocalDocumentChange {
   public final String patch;
   public final int reads;
+  public final int seq;
 
-  public LocalDocumentChange(String patch, int reads) {
+  public LocalDocumentChange(String patch, int reads, int seq) {
     this.patch = patch;
     this.reads = reads;
+    this.seq = seq;
   }
 }

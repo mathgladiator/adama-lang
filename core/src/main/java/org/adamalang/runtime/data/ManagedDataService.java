@@ -121,7 +121,6 @@ public class ManagedDataService implements DataService {
   @Override
   public void close(Key key, Callback<Void> callback) {
     base.on(key, (machine) -> {
-      // I mean, ok, but how does shit leave the base?
       machine.close();
       callback.success(null);
     });

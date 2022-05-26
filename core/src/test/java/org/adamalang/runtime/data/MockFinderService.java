@@ -40,7 +40,10 @@ public class MockFinderService implements FinderService {
     }
     Result result = map.get(key);
     if (result != null) {
-      if (machine.equals(result.machine) && result.location == Location.Machine) {
+      if (result.location == Location.Archive) {
+        map.put(key, new Result(1, Location.Machine, region, machine, result.archiveKey));
+        callback.success(null);
+      } else if (machine.equals(result.machine) && result.location == Location.Machine) {
         callback.success(null);
       } else {
         callback.failure(new ErrorCodeException(-1));

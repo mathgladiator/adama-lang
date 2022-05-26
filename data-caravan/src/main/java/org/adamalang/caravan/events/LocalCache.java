@@ -182,6 +182,6 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
     if (merger.empty()) {
       return null;
     }
-    return new LocalDocumentChange(merger.finish(), count);
+    return new LocalDocumentChange(merger.finish(), count, seq);
   }
 }

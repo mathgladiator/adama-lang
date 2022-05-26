@@ -139,9 +139,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
     return new Callback<LocalDocumentChange>() {
       @Override
       public void success(LocalDocumentChange value) {
-        ServerMessage.ProxyLocalDataChange response = new ServerMessage.ProxyLocalDataChange();
-        response.reads = value.reads;
-        response.patch = value.patch;
+        ServerMessage.ProxyLocalDataChange response = ServerMessage.ProxyLocalDataChange.copyFrom(value);
         ByteBuf buf = upstream.create(8);
         ServerCodec.write(buf, response);
         upstream.next(buf);

@@ -70,7 +70,7 @@ public class DumbDataService implements DataService {
   @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     if (data != null) {
-      callback.success(new LocalDocumentChange(data, 1));
+      callback.success(new LocalDocumentChange(data, 1, 1));
     } else {
       callback.failure(new ErrorCodeException(0, new UnsupportedOperationException()));
     }
@@ -98,7 +98,7 @@ public class DumbDataService implements DataService {
   public void compute(Key key, ComputeMethod method, int seq, Callback<LocalDocumentChange> callback) {
     if (computesWork) {
       if (method == ComputeMethod.Rewind) {
-        callback.success(new LocalDocumentChange("{\"x\":1000}", 1));
+        callback.success(new LocalDocumentChange("{\"x\":1000}", 1, 1));
       }
     } else {
       callback.failure(new ErrorCodeException(23456));

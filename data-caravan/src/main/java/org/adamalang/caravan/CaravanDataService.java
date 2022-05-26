@@ -334,14 +334,14 @@ public class CaravanDataService implements ArchivingDataService {
       if (method == ComputeMethod.HeadPatch) {
         String result = cached.computeHeadPatch(seq);
         if (result != null) {
-          callback.success(new LocalDocumentChange(result, 1));
+          callback.success(new LocalDocumentChange(result, 1, cached.seq()));
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_COMPUTE_HEADPATCH_SEQ_NOT_FOUND));
         }
       } else if (method == ComputeMethod.Rewind) {
         String result = cached.computeRewind(seq);
         if (result != null) {
-          callback.success(new LocalDocumentChange(result, 1));
+          callback.success(new LocalDocumentChange(result, 1, cached.seq()));
         } else {
           callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_COMPUTE_REWIND_SEQ_NOT_FOUND));
         }

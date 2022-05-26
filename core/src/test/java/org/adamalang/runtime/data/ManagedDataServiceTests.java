@@ -67,6 +67,10 @@ public class ManagedDataServiceTests {
       Runnable secondArchive = setup.archive.latchLogAt(3);
       Runnable secondArchiveExec = setup.archive.latchLogAt(4);
       Runnable waitForDelete = setup.data.latchLogAt(7);
+      Runnable firstRestore = setup.archive.latchLogAt(5);
+      Runnable thirdBackup = setup.archive.latchLogAt(7);
+      Runnable thirdBackupComplete = setup.archive.latchLogAt(8);
+
       {
         SimpleVoidCallback cb_Init = new SimpleVoidCallback();
         setup.managed.initialize(new Key("space", "cant-bind"), UPDATE_1, cb_Init);
@@ -152,18 +156,24 @@ public class ManagedDataServiceTests {
       setup.data.assertLogAt(5, "LOAD:space/123");
       setup.data.assertLogAt(6, "DELETE:space/123");
 
-
       {
         SimpleDataCallback cb_Get = new SimpleDataCallback();
         setup.managed.get(KEY1, cb_Get);
+        firstRestore.run();
+        setup.archive.driveRestore();
         cb_Get.assertSuccess();
         Assert.assertEquals("{\"x\":2,\"y\":4}", cb_Get.value);
       }
 
+      {
+        SimpleVoidCallback cb_Patch = new SimpleVoidCallback();
+        setup.managed.patch(KEY1, new RemoteDocumentUpdate[] { UPDATE_3, UPDATE_4 }, cb_Patch);
+        cb_Patch.assertSuccess();
+      }
 
-      //      setup.archive.assertLogAt(3, "");
-
-
+      thirdBackup.run();
+      setup.archive.driveBackup();
+      thirdBackupComplete.run();
     }
   }
 }
