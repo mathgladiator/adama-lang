@@ -309,6 +309,7 @@ public class Document implements TopLevelDocumentHandler {
     typeCheckOrder.add((env) -> avs.typing(env));
   }
 
+  @Override
   public void add(DefineRPC rpc) {
     TyNativeMessage nativeMessageType = rpc.genTyNativeMessage();
     DefineHandler handler = rpc.genHandler();
@@ -321,6 +322,13 @@ public class Document implements TopLevelDocumentHandler {
         nativeMessageType.typing(env);
         handler.typing(env);
       }
+    });
+  }
+
+  @Override
+  public void add(DefineWebGet dwg) {
+    typeCheckOrder.add((env) -> {
+      dwg.typing(env);
     });
   }
 

@@ -1,0 +1,11 @@
+@web get xyz {
+
+}
+
+@web get xyz / path0 {
+
+}
+
+@web get xyz/$id : string/$val : double {
+
+}

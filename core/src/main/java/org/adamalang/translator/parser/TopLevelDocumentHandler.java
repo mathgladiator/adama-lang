@@ -50,4 +50,6 @@ public interface TopLevelDocumentHandler {
   void add(DefineRPC rpc);
 
   void add(DefineStatic ds);
+
+  void add(DefineWebGet dwg);
 }

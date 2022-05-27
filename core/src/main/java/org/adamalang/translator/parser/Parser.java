@@ -431,6 +431,56 @@ public class Parser {
     return (handler) -> handler.add(staticDefn);
   }
 
+  public WebUri uri() throws AdamaLangException {
+    WebUri uri = new WebUri(id());
+    Token hasMore;
+    while ((hasMore = tokens.popIf((t) -> t.isSymbolWithTextEq("/"))) != null) {
+      Token isParameter = tokens.popIf((t) -> t.isSymbolWithTextEq("$"));
+      Token uriMore = id();
+      if (isParameter != null) {
+        Token colon = consumeExpectedSymbol(":");
+        TyType type = native_type_base();
+        uri.extend(hasMore, isParameter, uriMore, colon, type);
+      } else {
+        uri.extend(hasMore, null, uriMore, null, null);
+      }
+    }
+    return uri;
+  }
+
+  public Consumer<TopLevelDocumentHandler> define_web(Token webToken) throws AdamaLangException {
+    Token getOrPutToken = tokens.popIf((t) -> t.isIdentifier("get", "put"));
+    if (getOrPutToken == null) {
+      throw new ParseException("Parser was get or put after @web to indicate a read (i.e. get) or write (i.e. put) request", tokens.getLastTokenIfAvailable());
+    }
+
+    WebUri uri = uri();
+
+    if ("put".equals(getOrPutToken.text)) {
+      final var openParen = consumeExpectedSymbol("(");
+      final var messageTypeName = id();
+      final var messageVariableName = id();
+      final var close = consumeExpectedSymbol(")");
+      final var body = block();
+
+      // In terms of deduplication, it may be worth considering what it will take to add a __getMessageId() on a message.
+      // This may be some kind of annotation on a type within a message field, or an explicit call out.
+
+      // @web post URI / childPath / $var : int (messageType messageVar) {
+      // }
+
+      // Helper method around DefineRPC and that stack, except it has a more dynamic dispatch
+      return null;
+    } else { // GET
+
+      // @web get URI / childPath / $var {
+      // }
+      final var body = block();
+      DefineWebGet dwg = new DefineWebGet(webToken, getOrPutToken, uri, body);
+      return (doc) -> doc.add(dwg);
+    }
+  }
+
   public Consumer<TopLevelDocumentHandler> define() throws AdamaLangException {
     // define a state machine transition
     var op = tokens.popIf(Token::isLabel);
@@ -438,7 +488,7 @@ public class Parser {
       final var dst = new DefineStateTransition(op, block());
       return doc -> doc.add(dst);
     }
-    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach"));
+    op = tokens.popIf(t -> t.isKeyword("enum", "@construct", "@connected", "@disconnected", "@attached", "@static", "@can_attach", "@web"));
     if (op == null) {
       op = tokens.popIf(t -> t.isIdentifier("record", "message", "channel", "rpc", "function", "procedure", "test", "import", "view", "policy", "bubble", "dispatch"));
     }
@@ -474,6 +524,8 @@ public class Parser {
           return define_document_event(op, DocumentEvent.AskAssetAttachment);
         case "@static":
           return define_static(op);
+        case "@web":
+          return define_web(op);
         case "view": {
           final var ntype = native_type();
           final var name = id();
