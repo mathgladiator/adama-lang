@@ -102,6 +102,14 @@ public class ManagedDataService implements DataService {
 
       @Override
       public void failure(ErrorCodeException ex) {
+        /* There are two core failure modes.
+
+           (I) It failed and the mapping is still valid. In this case, failing the request is appropriate and the user is free to retry.
+
+           (II) It actually was deleted and the network failed to return. In this case, we have a problem of leaking data.
+
+           This is OK if and only IF the finder and local storage communicate via ids which is the case for caravan.
+        */
         callback.failure(ex);
       }
     });
