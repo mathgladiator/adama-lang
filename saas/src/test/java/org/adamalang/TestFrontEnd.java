@@ -31,6 +31,7 @@ import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
@@ -135,7 +136,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     ClientConfig clientConfig = new ClientConfig();
-    Client client = new Client(netBase, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
+    Client client = new Client(netBase, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
     this.attachmentRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
     AssetUploader uploader = new AssetUploader() {

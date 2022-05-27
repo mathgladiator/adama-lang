@@ -17,6 +17,7 @@ import org.adamalang.common.net.ServerHandle;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
@@ -81,7 +82,8 @@ public class LocalNetDrive {
       ClientConfig clientConfig = new ClientConfig();
       if (config.role.equals("both") || config.role.equals("client")) {
         LocalNetAgent[] agents = new LocalNetAgent[config.agents];
-        Client client = new Client(netBase, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
+        ClientMetrics metrics = new ClientMetrics(new NoOpMetricsFactory());
+        Client client = new Client(netBase, clientConfig, metrics, ClientRouter.REACTIVE(metrics), null);
         client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + config.port));
         for (int k = 0; k < agents.length; k++) {
           agents[k] = new LocalNetAgent(client, config, k, scheduler);

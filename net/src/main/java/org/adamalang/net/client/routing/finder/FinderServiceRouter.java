@@ -51,11 +51,11 @@ public class FinderServiceRouter implements Router {
   private void retryFailure(ErrorCodeException ex, Key key, RoutingSubscriber callback) {
     if (ex.code == ErrorCodes.UNIVERSAL_LOOKUP_FAILED) {
       pickHost(key, callback);
+      return;
     }
     executor.schedule(new NamedRunnable("simple-find-router-retry") {
       @Override
       public void execute() throws Exception {
-        System.err.println("find-failure");
         get(key, callback);
       }
     }, reportFindFailureGetRetryBackoff());

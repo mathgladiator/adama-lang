@@ -17,6 +17,7 @@ import org.adamalang.net.client.mocks.SimpleDataCallback;
 import org.adamalang.net.client.mocks.SimpleIntCallback;
 import org.adamalang.net.client.mocks.SimpleMockCallback;
 import org.adamalang.net.client.proxy.ProxyDataService;
+import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.runtime.data.ComputeMethod;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.RemoteDocumentUpdate;
@@ -53,7 +54,7 @@ public class ClientAsProxyTests {
                  "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
-      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), null);
+      Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
       try {
         ClientTests.waitForRouting(bed, client);
         AtomicReference<ProxyDataService> proxyRef = new AtomicReference<>();

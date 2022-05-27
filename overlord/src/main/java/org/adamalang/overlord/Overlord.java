@@ -13,12 +13,14 @@ import org.adamalang.common.MachineIdentity;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.jvm.MachineHeat;
 import org.adamalang.common.metrics.MetricsFactory;
+import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.gossip.Engine;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.overlord.grpc.OverlordServer;
 import org.adamalang.overlord.heat.HeatTable;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
@@ -55,7 +57,8 @@ public class Overlord {
     // build a full mesh from overlord to all clients
     String adamaRole = "adama";
     ClientConfig clientConfig = new ClientConfig();
-    Client client = new Client(netBase, clientConfig, new ClientMetrics(metricsFactory), (target, cpu, memory) -> {
+    // TODO: need new client picker, or not... hrmm
+    Client client = new Client(netBase, clientConfig, new ClientMetrics(metricsFactory), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), (target, cpu, memory) -> {
       heatTable.onSample(target, adamaRole, cpu, memory);
     });
     engine.subscribe(adamaRole, client.getTargetPublisher());

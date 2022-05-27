@@ -39,6 +39,7 @@ import org.adamalang.mysql.deployments.data.Deployment;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
+import org.adamalang.net.client.routing.ClientRouter;
 import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
@@ -299,7 +300,9 @@ public class Service {
     System.err.println("standing up http on:" + webConfig.port);
     NetBase netBase = new NetBase(identity, 1, 2);
     ClientConfig clientConfig = new ClientConfig();
-    Client client = new Client(netBase, clientConfig, new ClientMetrics(prometheusMetricsFactory), null);
+    ClientMetrics metrics = new ClientMetrics(prometheusMetricsFactory);
+    // TODO: use new FINDER for client router, requires the finder service and blah-blah-blah
+    Client client = new Client(netBase, clientConfig, metrics, ClientRouter.REACTIVE(metrics), null);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
 
     engine.subscribe("adama", (targets) -> {
