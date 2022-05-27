@@ -480,8 +480,7 @@ public class ErrorCodes {
   public static final int CARAVAN_CANT_RESTORE_CANT_READ = 733327;
   public static final int CARAVAN_CANT_MERGE_RESTORE_OUT_OF_SPACE = 720012;
 
-  public static final int FINDER_SERVICE_MYSQL_CANT_ARCHIVE = 735308;
-  public static final int FINDER_SERVICE_MYSQL_ARCHIVE_EXCEPTION = 771139;
+  public static final int FINDER_SERVICE_MYSQL_FREE_EXCEPTION = 771139;
   public static final int FINDER_SERVICE_MYSQL_CANT_UPDATE = 707651;
   public static final int FINDER_SERVICE_MYSQL_CANT_DELETE = 773247;
   public static final int FINDER_SERVICE_MYSQL_UPDATE_EXCEPTION = 792643;

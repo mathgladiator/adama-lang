@@ -56,5 +56,10 @@ public class BaseTests {
     } finally {
       bexecutor.shutdown().await(1000, TimeUnit.MILLISECONDS);
     }
+    while (base.reportFreeFailureGetRetryBackoff() < 2000) {
+    }
+    for (int k = 0; k < 1000; k++) {
+      base.reportFreeSuccess();
+    }
   }
 }

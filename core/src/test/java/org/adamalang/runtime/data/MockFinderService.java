@@ -12,8 +12,11 @@ package org.adamalang.runtime.data;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.junit.Assert;
 
 import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class MockFinderService implements FinderService {
   private final HashMap<Key, Result> map;
@@ -22,13 +25,42 @@ public class MockFinderService implements FinderService {
     this.map = new HashMap<>();
   }
 
+  private Runnable slowFind;
+  private CountDownLatch slowFindLatch;
+
+  public Runnable latchOnSlowFind() {
+    slowFindLatch = new CountDownLatch(1);
+    return () -> {
+      try {
+        Assert.assertTrue(slowFindLatch.await(10000, TimeUnit.MILLISECONDS));
+        slowFind.run();
+        slowFindLatch = null;
+      } catch (Exception ex) {
+        throw new RuntimeException(ex);
+      }
+    };
+  }
+
   @Override
   public void find(Key key, Callback<Result> callback) {
+    if (key.key.contains("cant-find")) {
+      callback.failure(new ErrorCodeException(-999));
+      return;
+    }
     Result result = map.get(key);
-    if (result != null) {
-      callback.success(result);
+    Runnable action = () -> {
+      if (result != null) {
+        callback.success(result);
+      } else {
+        callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
+      }
+    };
+
+    if (key.key.contains("slow-find") && slowFindLatch != null) {
+      slowFind = action;
+      slowFindLatch.countDown();
     } else {
-      callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_LOOKUP_FAILED));
+      action.run();
     }
   }
 
@@ -59,8 +91,24 @@ public class MockFinderService implements FinderService {
     bind(key, "test-region", "test-machine", Callback.DONT_CARE_VOID);
   }
 
+  public void bindArchive(Key key, String archiveKey) {
+    map.put(key, new Result(1, Location.Archive, "", "", archiveKey));
+  }
+
+  public void bindOtherMachine(Key key) {
+    map.put(key, new Result(1, Location.Machine, "test-region", "other-machine", ""));
+  }
+
   @Override
   public void free(Key key, String machineOn, Callback<Void> callback) {
+    if (key.key.equals("retry-key")) {
+      if (!failedRetryKeyInFree) {
+        failedRetryKeyInFree = true;
+        callback.failure(new ErrorCodeException(-6969));
+        return;
+      }
+    }
+
     Result result = map.get(key);
     if (result != null) {
       if (machineOn.equals(result.machine) && result.location == Location.Machine) {
@@ -73,11 +121,19 @@ public class MockFinderService implements FinderService {
     } else {
       callback.failure(new ErrorCodeException(-3));
     }
-
   }
+  private boolean failedRetryKeyInBackup = false;
+  private boolean failedRetryKeyInFree = false;
 
   @Override
   public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
+    if (key.key.equals("retry-key")) {
+      if (!failedRetryKeyInBackup) {
+        failedRetryKeyInBackup = true;
+        callback.failure(new ErrorCodeException(-6969));
+        return;
+      }
+    }
     Result result = map.get(key);
     if (result != null) {
       if (machineOn.equals(result.machine) && result.location == Location.Machine) {

@@ -23,7 +23,13 @@ import java.util.concurrent.TimeUnit;
 
 public class ManagedDataServiceTests {
   public static final Key KEY1 = new Key("space", "123");
-  public static final Key KEY2 = new Key("space", "1232");
+  public static final Key KEY_CANT_FIND = new Key("space", "cant-find");
+  public static final Key KEY_FAIL_RESTORE = new Key("space", "fail-restore");
+  public static final Key KEY_CANT_BIND = new Key("space", "cant-bind");
+  public static final Key KEY_SLOW_FIND = new Key("space", "slow-find");
+  public static final Key KEY_OFFBOX = new Key("space", "offbox");
+  public static final Key KEY_RETRY_KEY = new Key("space", "retry-key");
+
   private static final RemoteDocumentUpdate UPDATE_1 =
       new RemoteDocumentUpdate(
           1, 1, NtClient.NO_ONE, "REQUEST", "{\"x\":1,\"y\":4}", "{\"x\":0,\"y\":0}", false, 0, 100, UpdateType.AddUserData);
@@ -50,7 +56,7 @@ public class ManagedDataServiceTests {
       this.executor = SimpleExecutor.create("setup");
       this.data = new MockInstantDataService();
       this.archive = new MockArchiveDataSource(data);
-      this.base = new Base(new MockFinderService(), archive, "region", "target", executor, 250);
+      this.base = new Base(finder, archive, "test-region", "test-machine", executor, 250);
       this.managed = new ManagedDataService(base);
     }
 
@@ -70,6 +76,14 @@ public class ManagedDataServiceTests {
       Runnable firstRestore = setup.archive.latchLogAt(5);
       Runnable thirdBackup = setup.archive.latchLogAt(7);
       Runnable thirdBackupComplete = setup.archive.latchLogAt(8);
+      Runnable waitForClose = setup.data.latchLogAt(13);
+      Runnable cantRestoreGotBackuped = setup.archive.latchLogAt(9);
+      Runnable waitForDeleteOfRestoreFailure = setup.data.latchLogAt(16);
+      Runnable cantRestoreFailure = setup.archive.latchLogAt(11);
+      Runnable restoreWorks = setup.archive.latchLogAt(13);
+      Runnable retryBackup = setup.archive.latchLogAt(15);
+      Runnable retryBackupAgain = setup.archive.latchLogAt(17);
+      Runnable waitForRetryDelete = setup.data.latchLogAt(21);
 
       {
         SimpleVoidCallback cb_Init = new SimpleVoidCallback();
@@ -174,6 +188,130 @@ public class ManagedDataServiceTests {
       thirdBackup.run();
       setup.archive.driveBackup();
       thirdBackupComplete.run();
+
+      {
+        SimpleVoidCallback cb_Close = new SimpleVoidCallback();
+        setup.managed.close(KEY1, cb_Close);
+        cb_Close.assertSuccess();
+      }
+
+      {
+        SimpleVoidCallback cb_Init = new SimpleVoidCallback();
+        setup.managed.initialize(KEY_CANT_FIND, UPDATE_1, cb_Init);
+        cb_Init.assertFailure(-999);
+      }
+
+      {
+        SimpleVoidCallback cb_Init = new SimpleVoidCallback();
+        setup.managed.initialize(KEY_CANT_FIND, UPDATE_1, cb_Init);
+        cb_Init.assertFailure(-999);
+      }
+
+      waitForClose.run();
+      setup.data.assertLogAt(7, "INIT:space/123:2->{\"x\":2,\"y\":4}");
+      setup.data.assertLogAt(8, "LOAD:space/123");
+      setup.data.assertLogAt(9, "PATCH:space/123:3-3->{\"x\":3}");
+      setup.data.assertLogAt(10, "PATCH:space/123:4-4->{\"x\":4}");
+      setup.data.assertLogAt(11, "LOAD:space/123");
+      setup.data.assertLogAt(12, "DELETE:space/123");
+
+      {
+        SimpleVoidCallback cb_Init = new SimpleVoidCallback();
+        setup.managed.initialize(KEY_FAIL_RESTORE, UPDATE_1, cb_Init);
+        cb_Init.assertSuccess();
+        cantRestoreGotBackuped.run();
+        SimpleVoidCallback cb_Close = new SimpleVoidCallback();
+        setup.managed.close(KEY_FAIL_RESTORE, cb_Close);
+        cb_Close.assertSuccess();
+        setup.archive.driveBackup();
+      }
+
+      setup.archive.assertLogAt(4, "RESTORE-INIT:space/123");
+      setup.archive.assertLogAt(5, "RESTORE-EXEC:space/123");
+      setup.archive.assertLogAt(6, "BACKUP:space/123");
+      setup.archive.assertLogAt(7, "BACKUP-EXEC:space/123");
+      setup.archive.assertLogAt(8, "BACKUP:space/fail-restore");
+      setup.archive.assertLogAt(9, "BACKUP-EXEC:space/fail-restore");
+
+      waitForDeleteOfRestoreFailure.run();
+      setup.data.assertLogAt(13, "INIT:space/fail-restore:1->{\"x\":1,\"y\":4}");
+      setup.data.assertLogAt(14, "LOAD:space/fail-restore");
+      setup.data.assertLogAt(15, "DELETE:space/fail-restore");
+
+      {
+        SimpleDataCallback cb_Get = new SimpleDataCallback();
+        setup.managed.get(KEY_FAIL_RESTORE, cb_Get);
+        cantRestoreFailure.run();
+        setup.archive.driveRestore();
+        cb_Get.assertFailure(-2000);
+      }
+
+      setup.archive.assertLogAt(10, "RESTORE-INIT:space/fail-restore");
+      setup.archive.assertLogAt(11, "RESTORE-EXEC:space/fail-restore");
+
+      {
+        setup.finder.bindLocal(KEY_SLOW_FIND);
+        Runnable gotSlow = setup.finder.latchOnSlowFind();
+        SimpleDataCallback cb_Get = new SimpleDataCallback();
+        setup.managed.get(KEY_SLOW_FIND, cb_Get);
+        SimpleVoidCallback cb_Close = new SimpleVoidCallback();
+        setup.managed.close(KEY_SLOW_FIND, cb_Close);
+        cb_Close.assertSuccess();
+        gotSlow.run();
+        cb_Get.assertFailure(791691);
+      }
+
+      {
+        SimpleVoidCallback cb_Init = new SimpleVoidCallback();
+        setup.managed.initialize(KEY_CANT_BIND, UPDATE_1, cb_Init);
+        cb_Init.assertFailure(-1234);
+      }
+
+      {
+        setup.archive.forceArchive("myArchive", "{}", 1);
+        setup.finder.bindArchive(KEY_CANT_BIND, "myArchive");
+        SimpleDataCallback cb_Get = new SimpleDataCallback();
+        setup.managed.get(KEY_CANT_BIND, cb_Get);
+        restoreWorks.run();
+        setup.archive.driveRestore();
+        cb_Get.assertFailure(-1234);
+      }
+
+      {
+        setup.finder.bindOtherMachine(KEY_OFFBOX);
+        SimpleDataCallback cb_Get = new SimpleDataCallback();
+        setup.managed.get(KEY_OFFBOX, cb_Get);
+        cb_Get.assertFailure(735344);
+      }
+
+      setup.archive.assertLogAt(12, "RESTORE-INIT:space/cant-bind");
+      setup.archive.assertLogAt(13, "RESTORE-EXEC:space/cant-bind");
+
+      {
+        SimpleVoidCallback cb_Init = new SimpleVoidCallback();
+        setup.managed.initialize(KEY_RETRY_KEY, UPDATE_1, cb_Init);
+        cb_Init.assertSuccess();
+        retryBackup.run();
+        setup.archive.driveBackup();
+        retryBackupAgain.run();
+        setup.archive.driveBackup();
+        SimpleVoidCallback cb_Close = new SimpleVoidCallback();
+        setup.managed.close(KEY_RETRY_KEY, cb_Close);
+        cb_Close.assertSuccess();
+      }
+
+      waitForRetryDelete.run();
+
+      setup.archive.assertLogAt(14, "BACKUP:space/retry-key");
+      setup.archive.assertLogAt(15, "BACKUP-EXEC:space/retry-key");
+      setup.archive.assertLogAt(16, "BACKUP:space/retry-key");
+      setup.archive.assertLogAt(17, "BACKUP-EXEC:space/retry-key");
+
+      setup.data.assertLogAt(16, "INIT:space/cant-bind:1->{}");
+      setup.data.assertLogAt(17, "INIT:space/retry-key:1->{\"x\":1,\"y\":4}");
+      setup.data.assertLogAt(18, "LOAD:space/retry-key");
+      setup.data.assertLogAt(19, "LOAD:space/retry-key");
+      setup.data.assertLogAt(20, "DELETE:space/retry-key");
     }
   }
 }

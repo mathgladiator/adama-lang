@@ -52,7 +52,6 @@ public class MachineTests {
 
     BaseTests.flow((base) -> {
       base.on(KEY, (machine) -> {
-        machine.open();
         machine.write(new Action(() -> archive.initialize(KEY, update(1, "{\"x\":1}", "{\"x\":0}"), Callback.DONT_CARE_VOID), Callback.DONT_CARE_VOID));
         machine.write(new Action(() -> archive.patch(KEY, new RemoteDocumentUpdate[] { update(2, "{\"x\":2}", "{\"x\":1}") }, Callback.DONT_CARE_VOID), Callback.DONT_CARE_VOID));
         machine.read(new Action(() -> archive.get(KEY, got), got));

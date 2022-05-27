@@ -56,6 +56,32 @@ public class Machine {
     }
   }
 
+  private void executeClosed() {
+    base.finder.free(key, base.target, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        base.reportFreeSuccess();
+        base.executor.execute(new NamedRunnable("machine-archive-freed") {
+          @Override
+          public void execute() throws Exception {
+            base.documents.remove(key);
+            base.data.delete(key, Callback.DONT_CARE_VOID);
+          }
+        });
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        base.executor.schedule(new NamedRunnable("machine-free-retry") {
+          @Override
+          public void execute() throws Exception {
+            executeClosed();
+          }
+        }, base.reportFreeFailureGetRetryBackoff()); // TODO: retry policy
+      }
+    });
+  }
+
   private void archive_Success() {
     base.executor.execute(new NamedRunnable("machine-archive-success") {
       @Override
@@ -66,25 +92,7 @@ public class Machine {
         if (pendingWrites > 0) {
           scheduleArchiveWhileInExecutor();
         } else if (closed) {
-          base.finder.free(key, base.target, new Callback<Void>() {
-            @Override
-            public void success(Void value) {
-              base.executor.execute(new NamedRunnable("machine-archive-freed") {
-                @Override
-                public void execute() throws Exception {
-                  base.documents.remove(key);
-                  base.data.delete(key, Callback.DONT_CARE_VOID);
-                }
-              });
-            }
-
-            @Override
-            public void failure(ErrorCodeException ex) {
-              // the finder may fail yet account for this, so we are leaking. In which case, what do we do?
-              // traffic will route to a new host, so that kind of sucks
-              // TODO: think about it
-            }
-          });
+          executeClosed();
         }
       }
     });
@@ -143,7 +151,6 @@ public class Machine {
         if (closed) {
           state = State.Unknown;
           base.documents.remove(key);
-          base.data.close(key, Callback.DONT_CARE_VOID);
           failQueueWhileInExecutor(new ErrorCodeException(ErrorCodes.MANAGED_STORAGE_CLOSED_BEFORE_FOUND));
           return;
         }
@@ -191,7 +198,6 @@ public class Machine {
 
               @Override
               public void failure(ErrorCodeException ex) {
-                /* note; this requires that restoration be idempotent as the index may fail to bind and multiple restorations may occur */
                 restore_Failed(ex);
               }
             });
@@ -223,15 +229,12 @@ public class Machine {
         base.executor.execute(new NamedRunnable("machine-find-failure") {
           @Override
           public void execute() throws Exception {
+            base.documents.remove(key);
             failQueueWhileInExecutor(ex);
           }
         });
       }
     });
-  }
-
-  public void open() {
-    closed = false;
   }
 
   public void write(Action action) {
@@ -275,8 +278,7 @@ public class Machine {
   public void close() {
     closed = true;
     if (state == State.OnMachine && pendingWrites == 0) {
-      base.data.close(key, Callback.DONT_CARE_VOID);
-      base.documents.remove(key);
+      executeClosed();
     }
   }
 }

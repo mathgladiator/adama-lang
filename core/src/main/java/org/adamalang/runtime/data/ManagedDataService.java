@@ -25,7 +25,6 @@ public class ManagedDataService implements DataService {
   @Override
   public void get(Key key, Callback<LocalDocumentChange> callback) {
     base.on(key, (machine) -> {
-      machine.open();
       machine.read(new Action(() -> {
         base.data.get(key, callback);
       }, callback));
@@ -38,7 +37,6 @@ public class ManagedDataService implements DataService {
       @Override
       public void success(Void value) {
         base.on(key, (machine) -> {
-          machine.open();
           machine.write(new Action(() -> {
             base.data.initialize(key, patch, callback);
           }, callback));

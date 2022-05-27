@@ -16,6 +16,7 @@ import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /** shared state between the machine and the managed data service */
@@ -27,6 +28,7 @@ public class Base {
   public final HashMap<Key, Machine> documents;
   public final SimpleExecutor executor;
   public final int archiveTimeMilliseconds;
+  private AtomicInteger findFailureBackoff;
 
   public Base(FinderService finder, ArchivingDataService data, String region, String target, SimpleExecutor executor, int archiveTimeMilliseconds) {
     this.finder = finder;
@@ -36,6 +38,7 @@ public class Base {
     this.documents = new HashMap<>();
     this.executor = executor;
     this.archiveTimeMilliseconds = archiveTimeMilliseconds;
+    this.findFailureBackoff = new AtomicInteger(1);
   }
 
   /** jump into a state machine for a given key */
@@ -52,4 +55,15 @@ public class Base {
       }
     });
   }
+
+  public void reportFreeSuccess() {
+    this.findFailureBackoff.set(Math.max(1, (int) (findFailureBackoff.get() * Math.random())));
+  }
+
+  public int reportFreeFailureGetRetryBackoff() {
+    int prior = findFailureBackoff.get();
+    this.findFailureBackoff.set(Math.min(5000, (int) (prior * (1.0 + Math.random()))) + 1);
+    return prior;
+  }
+
 }

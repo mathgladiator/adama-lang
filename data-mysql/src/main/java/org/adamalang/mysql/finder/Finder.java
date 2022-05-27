@@ -121,12 +121,10 @@ public class Finder implements FinderService {
         statementUpdate.setString(1, key.space);
         statementUpdate.setString(2, key.key);
         statementUpdate.setString(3, machineOn);
-        if (statementUpdate.executeUpdate() == 1) {
-          return null;
-        }
+        statementUpdate.executeUpdate();
       }
-      throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_ARCHIVE);
-    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_ARCHIVE_EXCEPTION);
+      return null;
+    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_FREE_EXCEPTION);
   }
 
   @Override

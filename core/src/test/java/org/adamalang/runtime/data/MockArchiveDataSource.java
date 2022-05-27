@@ -52,6 +52,11 @@ public class MockArchiveDataSource implements ArchivingDataService {
     }
   }
 
+  public void forceArchive(String archiveKey, String payload, int seq) {
+    this.archive.put(archiveKey, payload);
+    this.archiveSeq.put(archiveKey, seq);
+  }
+
   public synchronized void assertLogAt(int k, String expected) {
     Assert.assertEquals(expected, log.get(k));
   }
@@ -63,6 +68,8 @@ public class MockArchiveDataSource implements ArchivingDataService {
   public synchronized String getLogAt(int k) {
     return log.get(k);
   }
+
+  private boolean failedRetryKey = false;
 
   public synchronized Runnable latchLogAt(int count) {
     CountDownLatch latch = new CountDownLatch(count);
@@ -96,7 +103,6 @@ public class MockArchiveDataSource implements ArchivingDataService {
 
   @Override
   public synchronized void restore(Key key, String archiveKey, Callback<Void> callback) {
-    println("RESTORE-INIT:" + key.space + "/" + key.key);
     restores.add(() -> {
       println("RESTORE-EXEC:" + key.space + "/" + key.key);
       if (key.key.contains("fail-restore")) {
@@ -115,11 +121,18 @@ public class MockArchiveDataSource implements ArchivingDataService {
       // TODO: sort out a better way to restore an arbitrary data source for testing? This may be good enough with the seq hack
       data.initialize(key, new RemoteDocumentUpdate(seq, seq, NtClient.NO_ONE, "restore", value, "{}", false, 1, 0, UpdateType.Internal), callback);
     });
+    println("RESTORE-INIT:" + key.space + "/" + key.key);
   }
 
   @Override
   public synchronized void backup(Key key, Callback<String> callback) {
-    println("BACKUP:" + key.space + "/" + key.key);
+    if (key.key.equals("retry-key")) {
+      if (!failedRetryKey) {
+        failedRetryKey = true;
+        callback.failure(new ErrorCodeException(-6969));
+        return;
+      }
+    }
     backups.add(() -> {
       println("BACKUP-EXEC:" + key.space + "/" + key.key);
       String archiveKey = key.key + "_" + System.currentTimeMillis();
@@ -143,6 +156,7 @@ public class MockArchiveDataSource implements ArchivingDataService {
         }
       });
     });
+    println("BACKUP:" + key.space + "/" + key.key);
   }
 
   @Override
