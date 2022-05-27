@@ -65,17 +65,7 @@ public class FinderServiceRouter implements Router {
     picker.pickHost(key, new Callback<>() {
       @Override
       public void success(String newMachine) {
-        finder.bind(key, region, newMachine, new Callback<>() {
-          @Override
-          public void success(Void value) {
-            callback.onMachine(newMachine);
-          }
-
-          @Override
-          public void failure(ErrorCodeException ex) {
-            retryFailure(ex, key, callback);
-          }
-        });
+        callback.onMachine(newMachine);
       }
 
       @Override

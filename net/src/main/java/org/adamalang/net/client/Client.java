@@ -9,8 +9,10 @@
  */
 package org.adamalang.net.client;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.ItemActionMonitor;
+import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.net.client.contracts.*;
 import org.adamalang.net.client.proxy.ProxyDataService;
@@ -148,10 +150,10 @@ public class Client {
 
       @Override
       public void onMachine(String machine) {
-        clientFinder.find(machine, new Callback<InstanceClient>() {
+        clientFinder.find(machine, new Callback<>() {
           @Override
           public void success(InstanceClient client) {
-            client.reflect(space, key, new Callback<String>() {
+            client.reflect(space, key, new Callback<>() {
               @Override
               public void success(String value) {
                 callback.success(value);
@@ -174,16 +176,18 @@ public class Client {
   }
 
   public void create(String ip, String origin, String agent, String authority, String space, String key, String entropy, String arg, Callback<Void> callback) {
-    ItemActionMonitor.ItemActionMonitorInstance mInstance = metrics.client_create.start();
+    RequestResponseMonitor.RequestResponseMonitorInstance mInstance = metrics.client_create_found_machine.start();
     router.routerForDocuments.get(new Key(space, key), new RoutingSubscriber() {
       @Override
       public void onRegion(String region) {
-        // TODO: error out as this implies the document already exists
+        mInstance.failure(ErrorCodes.ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE);
+        callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE));
       }
 
       @Override
       public void onMachine(String machine) {
-        clientFinder.find(machine, new Callback<InstanceClient>() {
+        mInstance.success();
+        clientFinder.find(machine,  new Callback<InstanceClient>() {
           @Override
           public void success(InstanceClient client) {
             client.create(ip, origin, agent, authority, space, key, entropy, arg, callback);

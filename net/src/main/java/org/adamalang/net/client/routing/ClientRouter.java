@@ -85,6 +85,7 @@ public class ClientRouter {
           @Override
           public void onMachine(String machine) {
             if (machine == null) {
+              // TODO: this shouldn't be random, but it should hash the machine with a key, so this needs some love
               engine.random((randomMachine) -> {
                 if (randomMachine != null) {
                   // TODO: deploy to it
