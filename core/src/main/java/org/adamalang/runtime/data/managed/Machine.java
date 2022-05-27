@@ -144,7 +144,7 @@ public class Machine {
     }
   }
 
-  private void find_FoundMachine(String foundMachine) {
+  private void find_FoundMachine(String foundMachine, boolean postRestore) {
     base.executor.execute(new NamedRunnable("machine-found-machine") {
       @Override
       public void execute() throws Exception {
@@ -156,6 +156,10 @@ public class Machine {
         }
         if (foundMachine.equals(base.target)) {
           state = State.OnMachine;
+          // since we found it on the machine, we _may_ have local changes
+          if (!postRestore) {
+            pendingWrites++;
+          }
           ArrayList<Action> toact = actions;
           actions = null;
           for (Action action : toact) {
@@ -193,7 +197,7 @@ public class Machine {
             base.finder.bind(key, base.region, base.target, new Callback<Void>() {
               @Override
               public void success(Void value) {
-                find_FoundMachine(base.target);
+                find_FoundMachine(base.target, true);
               }
 
               @Override
@@ -218,7 +222,7 @@ public class Machine {
       @Override
       public void success(FinderService.Result found) {
         if (found.location == FinderService.Location.Machine) {
-          find_FoundMachine(found.machine);
+          find_FoundMachine(found.machine, false);
         } else {
           find_Restore(found.archiveKey);
         }

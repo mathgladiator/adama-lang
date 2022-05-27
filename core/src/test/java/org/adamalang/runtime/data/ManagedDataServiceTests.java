@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ManagedDataServiceTests {
   public static final Key KEY1 = new Key("space", "123");
+  public static final Key KEY2 = new Key("space", "456");
   public static final Key KEY_CANT_FIND = new Key("space", "cant-find");
   public static final Key KEY_CANT_DELETE = new Key("space", "cant-delete");
   public static final Key KEY_FAIL_RESTORE = new Key("space", "fail-restore");
@@ -87,6 +88,8 @@ public class ManagedDataServiceTests {
       Runnable retryBackupAgain = setup.archive.latchLogAt(17);
       Runnable waitForRetryDelete = setup.data.latchLogAt(21);
       Runnable restoreAgain = setup.archive.latchLogAt(19);
+      Runnable backupLoadedContent = setup.archive.latchLogAt(21);
+      Runnable backupFinished = setup.archive.latchLogAt(22);
 
       {
         SimpleVoidCallback cb_Init = new SimpleVoidCallback();
@@ -331,6 +334,8 @@ public class ManagedDataServiceTests {
         Assert.assertEquals("{\"x\":4,\"y\":4}", cb_Get.value);
       }
 
+      setup.archive.assertLogAt(18, "RESTORE-INIT:space/123");
+
       {
         SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
         setup.managed.delete(KEY1, cb_Delete);
@@ -348,6 +353,27 @@ public class ManagedDataServiceTests {
         setup.managed.delete(KEY_CANT_DELETE_LOCAL, cb_Delete);
         cb_Delete.assertFailure(-42);
       }
+
+      {
+        SimpleVoidCallback cb_Init = new SimpleVoidCallback();
+        setup.data.initialize(KEY2, UPDATE_1, cb_Init);
+        cb_Init.assertSuccess();
+        setup.finder.bindLocal(KEY2);
+      }
+
+      {
+        SimpleDataCallback cb_Get = new SimpleDataCallback();
+        setup.managed.get(KEY2, cb_Get);
+        cb_Get.assertSuccess();
+        Assert.assertEquals("{\"x\":1,\"y\":4}", cb_Get.value);
+        backupLoadedContent.run();
+        setup.archive.driveBackup();
+        backupFinished.run();
+      }
+
+      setup.archive.assertLogAt(19, "RESTORE-EXEC:space/123");
+      setup.archive.assertLogAt(20, "BACKUP:space/456");
+      setup.archive.assertLogAt(21, "BACKUP-EXEC:space/456");
     }
   }
 }
