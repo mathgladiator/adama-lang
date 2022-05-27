@@ -149,6 +149,10 @@ public class MockInstantDataService implements DataService {
 
   @Override
   public void delete(Key key, Callback<Void> callback) {
+    if ("cant-delete-delete".equals(key.key)) {
+      callback.failure(new ErrorCodeException(-42));
+      return;
+    }
     println("DELETE:" + key.space + "/" + key.key);
     logByKey.remove(key);
     callback.success(null);

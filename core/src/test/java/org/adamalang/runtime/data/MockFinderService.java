@@ -150,6 +150,10 @@ public class MockFinderService implements FinderService {
 
   @Override
   public void delete(Key key, String machineOn, Callback<Void> callback) {
+    if ("cant-delete".equals(key.key)) {
+      callback.failure(new ErrorCodeException(-123456));
+      return;
+    }
     map.remove(key);
     callback.success(null);
   }

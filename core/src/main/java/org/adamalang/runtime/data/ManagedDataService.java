@@ -70,25 +70,24 @@ public class ManagedDataService implements DataService {
 
   private void deleteLocal(Key key, Callback<Void> callback) {
     base.on(key, (machine) -> {
-      machine.write(new Action(() -> {
-        base.data.delete(key, new Callback<Void>() {
-          @Override
-          public void success(Void value) {
-            base.executor.execute(new NamedRunnable("managed-delete") {
-              @Override
-              public void execute() throws Exception {
-                machine.close();;
-                base.documents.remove(key);
-              }
-            });
-          }
+      base.data.delete(key, new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          base.executor.execute(new NamedRunnable("managed-delete") {
+            @Override
+            public void execute() throws Exception {
+              machine.close();;
+              base.documents.remove(key);
+              callback.success(null);
+            }
+          });
+        }
 
-          @Override
-          public void failure(ErrorCodeException ex) {
-            callback.failure(ex);
-          }
-        });
-      }, callback));
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
     });
   }
 

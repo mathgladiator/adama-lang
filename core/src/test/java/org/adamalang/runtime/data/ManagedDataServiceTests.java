@@ -24,11 +24,13 @@ import java.util.concurrent.TimeUnit;
 public class ManagedDataServiceTests {
   public static final Key KEY1 = new Key("space", "123");
   public static final Key KEY_CANT_FIND = new Key("space", "cant-find");
+  public static final Key KEY_CANT_DELETE = new Key("space", "cant-delete");
   public static final Key KEY_FAIL_RESTORE = new Key("space", "fail-restore");
   public static final Key KEY_CANT_BIND = new Key("space", "cant-bind");
   public static final Key KEY_SLOW_FIND = new Key("space", "slow-find");
   public static final Key KEY_OFFBOX = new Key("space", "offbox");
   public static final Key KEY_RETRY_KEY = new Key("space", "retry-key");
+  public static final Key KEY_CANT_DELETE_LOCAL = new Key("space", "cant-delete-delete");
 
   private static final RemoteDocumentUpdate UPDATE_1 =
       new RemoteDocumentUpdate(
@@ -84,10 +86,11 @@ public class ManagedDataServiceTests {
       Runnable retryBackup = setup.archive.latchLogAt(15);
       Runnable retryBackupAgain = setup.archive.latchLogAt(17);
       Runnable waitForRetryDelete = setup.data.latchLogAt(21);
+      Runnable restoreAgain = setup.archive.latchLogAt(19);
 
       {
         SimpleVoidCallback cb_Init = new SimpleVoidCallback();
-        setup.managed.initialize(new Key("space", "cant-bind"), UPDATE_1, cb_Init);
+        setup.managed.initialize(KEY_CANT_BIND, UPDATE_1, cb_Init);
         cb_Init.assertFailure(-1234);
       }
       Runnable waitInit = setup.data.latchLogAt(1);
@@ -312,6 +315,39 @@ public class ManagedDataServiceTests {
       setup.data.assertLogAt(18, "LOAD:space/retry-key");
       setup.data.assertLogAt(19, "LOAD:space/retry-key");
       setup.data.assertLogAt(20, "DELETE:space/retry-key");
+
+      {
+        SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
+        setup.managed.delete(KEY_CANT_DELETE, cb_Delete);
+        cb_Delete.assertFailure(-123456);
+      }
+
+      {
+        SimpleDataCallback cb_Get = new SimpleDataCallback();
+        setup.managed.get(KEY1, cb_Get);
+        restoreAgain.run();
+        setup.archive.driveRestore();
+        cb_Get.assertSuccess();
+        Assert.assertEquals("{\"x\":4,\"y\":4}", cb_Get.value);
+      }
+
+      {
+        SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
+        setup.managed.delete(KEY1, cb_Delete);
+        cb_Delete.assertSuccess();
+      }
+
+      {
+        SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
+        setup.managed.delete(KEY1, cb_Delete);
+        cb_Delete.assertSuccess();
+      }
+
+      {
+        SimpleVoidCallback cb_Delete = new SimpleVoidCallback();
+        setup.managed.delete(KEY_CANT_DELETE_LOCAL, cb_Delete);
+        cb_Delete.assertFailure(-42);
+      }
     }
   }
 }
