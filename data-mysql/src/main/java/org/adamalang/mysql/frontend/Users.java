@@ -47,6 +47,20 @@ public class Users {
     }
   }
 
+  public static int countUsers(DataBase dataBase) throws Exception {
+    try (Connection connection = dataBase.pool.getConnection()) {
+      String sql = new StringBuilder("SELECT COUNT(`id`) FROM `").append(dataBase.databaseName).append("`.`emails`").toString();
+      try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (ResultSet rs = statement.executeQuery()) {
+          if (rs.next()) {
+            return rs.getInt(1);
+          }
+        }
+      }
+      throw new ErrorCodeException(ErrorCodes.USER_FAILED_TO_COUNT);
+    }
+  }
+
   public static void setPasswordHash(DataBase dataBase, int userId, String pwHash) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
       String sql = new StringBuilder().append("UPDATE `").append(dataBase.databaseName).append("`.`emails` SET `password` = ? WHERE `id`=").append(userId).toString();

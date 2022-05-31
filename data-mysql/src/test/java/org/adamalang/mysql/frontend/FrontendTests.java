@@ -26,14 +26,24 @@ import java.util.List;
 public class FrontendTests {
 
   @Test
+  public void health() throws Exception {
+    DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
+    try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
+      Assert.assertTrue(Health.pingDataBase(dataBase));
+    }
+  }
+
+  @Test
   public void users() throws Exception {
     DataBaseConfig dataBaseConfig = DataBaseConfigTests.getLocalIntegrationConfig();
     try (DataBase dataBase = new DataBase(dataBaseConfig, new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))) {
       FrontendManagementInstaller installer = new FrontendManagementInstaller(dataBase);
       try {
         installer.install();
+        Assert.assertEquals(0, Users.countUsers(dataBase));
         Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
         Assert.assertEquals(1, Users.getOrCreateUserId(dataBase, "x@x.com"));
+        Assert.assertEquals(1, Users.countUsers(dataBase));
         Users.validateUser(dataBase, 1);
         Users.validateUser(dataBase, 1);
         Users.addKey(dataBase, 1, "key", System.currentTimeMillis() + 1000 * 60);
@@ -61,6 +71,8 @@ public class FrontendTests {
         } catch (ErrorCodeException ece) {
           Assert.assertEquals(605208, ece.code);
         }
+        Assert.assertEquals(2, Users.getOrCreateUserId(dataBase, "xz@x.com"));
+        Assert.assertEquals(2, Users.countUsers(dataBase));
       } finally {
         installer.uninstall();
       }

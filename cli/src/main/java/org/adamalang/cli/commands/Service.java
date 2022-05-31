@@ -36,6 +36,7 @@ import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
+import org.adamalang.mysql.frontend.Health;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
 import org.adamalang.net.client.ClientMetrics;
@@ -74,8 +75,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -161,6 +161,15 @@ public class Service {
     DeploymentFactoryBase deploymentFactoryBase = new DeploymentFactoryBase();
     DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
     DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(prometheusMetricsFactory, "deployed"));
+    ScheduledExecutorService databasePings = Executors.newSingleThreadScheduledExecutor();
+    databasePings.scheduleAtFixedRate(() -> {
+      try {
+        Health.pingDataBase(dataBaseDeployments);
+        Health.pingDataBase(dataBaseBackend);
+      } catch (Exception ex) {
+        LOGGER.error("health-check-failure-database", ex);
+      }
+    }, 30000, 30000, TimeUnit.MILLISECONDS);
     BackendMetrics backendMetrics = new BackendMetrics(prometheusMetricsFactory);
     ThreadedDataService dbDataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(backendMetrics, dataBaseBackend));
     PrefixSplitDataService carveMemoryOff = new PrefixSplitDataService(dbDataService, "mem_", new ThreadedDataService(dataThreads, () -> new InMemoryDataService((r) -> r.run(), TimeSource.REAL_TIME)));
@@ -235,6 +244,7 @@ public class Service {
         // This will send to all connections an empty list which will remove from the routing table. At this point, we should wait all connections migrate away
 
         // TODO: for each connection, remove from routing table, stop
+        databasePings.shutdown();
         handle.kill();
         netBase.shutdown();
       }
@@ -291,6 +301,17 @@ public class Service {
     DataBase dataBaseFront = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(prometheusMetricsFactory, "frontend"));
     DataBase dataBaseDeployments = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(prometheusMetricsFactory, "deployed"));
     DataBase dataBaseBackend = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(prometheusMetricsFactory, "backend"));
+    ScheduledExecutorService databasePings = Executors.newSingleThreadScheduledExecutor();
+    databasePings.scheduleAtFixedRate(() -> {
+      try {
+        Health.pingDataBase(dataBaseFront);
+        Health.pingDataBase(dataBaseDeployments);
+        Health.pingDataBase(dataBaseBackend);
+      } catch (Exception ex) {
+        LOGGER.error("health-check-failure-database", ex);
+      }
+    }, 30000, 30000, TimeUnit.MILLISECONDS);
+
     System.err.println("using databases: " + dataBaseFront.databaseName + ", " + dataBaseDeployments.databaseName + ", and " + dataBaseBackend.databaseName);
     System.err.println("identity: " + identity.ip);
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.Node);
@@ -362,6 +383,7 @@ public class Service {
       public void run() {
         System.err.println("shutting down frontend");
         runnable.shutdown();
+        databasePings.shutdown();
       }
     }));
     System.err.println("running frontend");

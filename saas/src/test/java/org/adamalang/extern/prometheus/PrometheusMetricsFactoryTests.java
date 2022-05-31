@@ -24,6 +24,7 @@ public class PrometheusMetricsFactoryTests {
       pmf.counter("c").run();
       Inflight inf = pmf.inflight("inf");
       inf.up();
+      inf.set(1234);
       inf.down();
       CallbackMonitor cbm = pmf.makeCallbackMonitor("cbm");
       CallbackMonitor.CallbackMonitorInstance cbm_i1 = cbm.start();

@@ -98,6 +98,10 @@ public class NoOpMetricsFactory implements MetricsFactory {
       public void down() {
 
       }
+
+      @Override
+      public void set(int value) {
+      }
     };
   }
 

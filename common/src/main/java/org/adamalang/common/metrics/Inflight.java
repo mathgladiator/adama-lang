@@ -16,4 +16,7 @@ public interface Inflight {
 
   /** bump the resource down */
   void down();
+
+  /** set the value directly */
+  void set(int value);
 }

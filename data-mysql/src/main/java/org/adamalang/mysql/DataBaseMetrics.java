@@ -9,6 +9,7 @@
  */
 package org.adamalang.mysql;
 
+import org.adamalang.common.metrics.Inflight;
 import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 

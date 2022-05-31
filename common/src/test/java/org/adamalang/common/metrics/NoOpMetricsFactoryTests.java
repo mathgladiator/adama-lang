@@ -49,6 +49,7 @@ public class NoOpMetricsFactoryTests {
     factory.counter("z").run();
     factory.inflight("z").down();
     factory.inflight("z").up();
+    factory.inflight("z").set(1);
     factory.makeItemActionMonitor("item").start().executed();
     factory.makeItemActionMonitor("item").start().rejected();
     factory.makeItemActionMonitor("item").start().timeout();

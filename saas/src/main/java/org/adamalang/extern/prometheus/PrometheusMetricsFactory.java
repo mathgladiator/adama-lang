@@ -242,6 +242,11 @@ public class PrometheusMetricsFactory implements MetricsFactory {
       public void down() {
         inflight.dec();
       }
+
+      @Override
+      public void set(int value) {
+        inflight.set(value);
+      }
     };
   }
 
