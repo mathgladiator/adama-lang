@@ -16,11 +16,18 @@ public interface Heap {
   /** how many bytes are available to allocate */
   long available();
 
+  /** how many total bytes can this heap allocate */
+  long max();
+
+  /** ask the heap for a region of memory of the given size */
   Region ask(int size);
 
+  /** free the given region */
   void free(Region region);
 
+  /** take a snapshot of heap to the given byte buffer */
   void snapshot(ByteBuf buf);
 
+  /** load the heap state from the given byte buffer */
   void load(ByteBuf buf);
 }

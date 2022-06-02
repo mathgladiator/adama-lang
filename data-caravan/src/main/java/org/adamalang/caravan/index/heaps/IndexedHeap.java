@@ -73,6 +73,11 @@ public class IndexedHeap implements Heap {
   }
 
   @Override
+  public long max() {
+    return maximumSize;
+  }
+
+  @Override
   public Region ask(int size) {
     Map.Entry<Long, TreeMap<Long, FreeSpace>> bucket = sized.ceilingEntry((long) size);
     if (bucket == null) {

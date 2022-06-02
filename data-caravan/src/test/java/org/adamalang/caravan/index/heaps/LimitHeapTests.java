@@ -1,40 +1,27 @@
-/*
- * This file is subject to the terms and conditions outlined in the file 'LICENSE' (hint: it's MIT); this file is located in the root directory near the README.md which you should also read.
- *
- * This file is part of the 'Adama' project which is a programming language and document store for board games; however, it can be so much more.
- *
- * See http://www.adama-lang.org/ for more information.
- *
- * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
- */
 package org.adamalang.caravan.index.heaps;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Region;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class IndexedHeapTests {
+public class LimitHeapTests {
 
-  private void assetEqualsAfterSnapshot(String expected, IndexedHeap heap) {
+  private void assetEqualsAfterSnapshot(String expected, LimitHeap heap) {
     Assert.assertEquals(expected, heap.toString());
     ByteBuf buf = Unpooled.buffer();
     heap.snapshot(buf);
-    IndexedHeap heap2 = new IndexedHeap(heap.maximumSize);
+    LimitHeap heap2 = new LimitHeap(new IndexedHeap(1024), 2048);
     heap2.load(buf);
     Assert.assertEquals(expected, heap2.toString());
   }
 
   @Test
-  public void full() {
-  }
-
-  @Test
-  public void flow() throws Exception {
-    IndexedHeap heap = new IndexedHeap(1024);
+  public void passthru_index() {
+    LimitHeap heap = new LimitHeap(new IndexedHeap(1024), 2048);
     Assert.assertEquals(1024, heap.max());
+    Assert.assertNull(heap.ask(50000));
     assetEqualsAfterSnapshot("[0,1024)", heap);
     Assert.assertEquals(1024, heap.available());
     Region a1 = heap.ask(7);

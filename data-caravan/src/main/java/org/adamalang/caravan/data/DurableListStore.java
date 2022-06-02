@@ -20,7 +20,8 @@ import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Index;
 import org.adamalang.caravan.index.Region;
 import org.adamalang.caravan.index.heaps.IndexedHeap;
-import org.adamalang.caravan.index.heaps.SplitHeat;
+import org.adamalang.caravan.index.heaps.LimitHeap;
+import org.adamalang.caravan.index.heaps.SequenceHeap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +78,7 @@ public class DurableListStore {
   public DurableListStore(DurableListStoreMetrics metrics, File storeFile, File walRoot, long size, int flushCutOffBytes, long maxLogSize) throws IOException {
     this.metrics = metrics;
     this.index = new Index();
-    this.heap = new SplitHeat(new IndexedHeap(size / 4), 8196, size / 4, new IndexedHeap((size * 3) / 4));
+    this.heap = new SequenceHeap(new LimitHeap(new IndexedHeap(size / 4), 8196), new IndexedHeap((size * 3) / 4));
 
     this.storage = new RandomAccessFile(storeFile, "rw");
     storage.setLength(size);
