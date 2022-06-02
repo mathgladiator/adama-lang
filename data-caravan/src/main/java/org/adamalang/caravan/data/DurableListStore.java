@@ -26,8 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -40,9 +38,8 @@ public class DurableListStore {
   private final Index index;
   private final Heap heap;
 
-  // the actual file
-  private final RandomAccessFile storage;
-  private final MappedByteBuffer memory;
+  // storage used for reading/writing
+  private final Storage storage;
 
   // the directory containing the write-ahead log; since we use Files.move, we create temporary files to cut over
   private final File walRoot;
@@ -79,12 +76,8 @@ public class DurableListStore {
     this.metrics = metrics;
     this.index = new Index();
     this.heap = new SequenceHeap(new LimitHeap(new IndexedHeap(size / 4), 8196), new IndexedHeap((size * 3) / 4));
-
-    this.storage = new RandomAccessFile(storeFile, "rw");
-    storage.setLength(size);
-    this.memory = storage.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, size);
+    this.storage = new MemoryMappedFileStorage(storeFile, size);
     this.notifications = new ArrayList<>();
-
     // build the buffer
     this.walRoot = walRoot;
     this.buffer = Unpooled.buffer(flushCutOffBytes * 5 / 4);
@@ -132,7 +125,7 @@ public class DurableListStore {
                   throw new IOException("heap corruption!");
                 }
                 index.append(append.id, region);
-                memory.slice().position((int) region.position).put(append.bytes);
+                storage.write(region, append.bytes);
               }
               break;
             case 0x66: // delete
@@ -178,7 +171,7 @@ public class DurableListStore {
 
   /** internal: force everything to flush, prepare a new file, the move the new file in place, and open it */
   private void cutOver() throws IOException {
-    memory.force();
+    storage.flush();
     output.close();
     File newFile = prepare();
     Files.move(newFile.toPath(), new File(walRoot, "WAL").toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
@@ -238,7 +231,7 @@ public class DurableListStore {
     while (whereIt.hasNext()) {
       Region where = whereIt.next();
       byte[] bytes = bytesIt.next();
-      memory.slice().position((int) where.position).put(bytes);
+      storage.write(where, bytes);
       lastSize = index.append(id, where);
       new Append(id, where.position, bytes).write(buffer);
     }
@@ -256,8 +249,7 @@ public class DurableListStore {
       return null;
     }
     this.notifications.add(notification);
-    // Java 13+ has a better API; worth considering...
-    memory.slice().position((int) where.position).put(bytes);
+    storage.write(where, bytes);
     int size = index.append(id, where);
     new Append(id, where.position, bytes).write(buffer);
     if (buffer.writerIndex() > flushCutOffBytes) {
@@ -273,8 +265,7 @@ public class DurableListStore {
     int at = 0;
     while (it.hasNext()) {
       Region region = it.next();
-      byte[] mem = new byte[region.size];
-      memory.slice().position((int) region.position).get(mem);
+      byte[] mem = storage.read(region);
       streamback.next(at, mem);
       at++;
     }
@@ -352,7 +343,7 @@ public class DurableListStore {
     output.writeInt(0);
     output.flush();
     output.close();
-    memory.force();
+    storage.flush();
     storage.close();
   }
 }
