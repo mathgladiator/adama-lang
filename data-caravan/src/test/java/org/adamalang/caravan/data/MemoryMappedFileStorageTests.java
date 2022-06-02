@@ -28,5 +28,6 @@ public class MemoryMappedFileStorageTests {
     Assert.assertEquals("Hi", new String(read, StandardCharsets.UTF_8));
     storage.flush();
     storage.close();
+    fileToUse.delete();
   }
 }
