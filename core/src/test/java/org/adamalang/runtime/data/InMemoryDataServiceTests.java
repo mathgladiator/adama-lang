@@ -318,6 +318,17 @@ public class InMemoryDataServiceTests {
         success.incrementAndGet();
       }
     });
-    Assert.assertEquals(1008, success.get());
+    ds.close(key, new Callback<Void>() {
+      @Override
+      public void success(Void value) {
+        success.incrementAndGet();
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+
+      }
+    });
+    Assert.assertEquals(1009, success.get());
   }
 }
