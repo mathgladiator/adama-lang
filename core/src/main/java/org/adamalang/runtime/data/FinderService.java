@@ -24,13 +24,10 @@ public interface FinderService {
   void free(Key key, String machineOn, Callback<Void> callback);
 
   /** set a backup copy while still active on machine */
-  void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback);
+  void backup(Key key, String archiveKey, long deltaSize, long assetSize, String machineOn, Callback<Void> callback);
 
   /** delete the key */
   void delete(Key key, String machineOn, Callback<Void> callback);
-
-  /** update billing related properties about the key */
-  void update(Key key, long deltaSize, long assetSize, Callback<Void> callback);
 
   /** where a document may be */
   enum Location {

@@ -89,17 +89,21 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
+  public void backup(Key key, String archiveKey, long deltaSize, long assetSize, String machineOn, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String backupSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
           .append("SET `archive`=?")
+          .append(", `delta_bytes`=").append(deltaSize) //
+          .append(", `asset_bytes`=").append(assetSize)
           .append(" WHERE `space`=? AND `key`=? AND `machine`=? AND `type`=").append(Location.Machine.type).toString();
       try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {
         statementUpdate.setString(1, archiveKey);
-        statementUpdate.setString(2, key.space);
-        statementUpdate.setString(3, key.key);
-        statementUpdate.setString(4, machineOn);
+        statementUpdate.setLong(2, deltaSize);
+        statementUpdate.setLong(3, assetSize);
+        statementUpdate.setString(4, key.space);
+        statementUpdate.setString(5, key.key);
+        statementUpdate.setString(6, machineOn);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
         }
@@ -125,25 +129,6 @@ public class Finder implements FinderService {
       }
       return null;
     }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_FREE_EXCEPTION);
-  }
-
-  @Override
-  public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
-    dataBase.transact((connection) -> {
-      String updateSQL = new StringBuilder() //
-          .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
-          .append("SET `delta_bytes`=").append(deltaSize) //
-          .append(", `asset_bytes`=").append(assetSize)
-          .append(" WHERE `space`=? AND `key`=?").toString();
-      try (PreparedStatement statementUpdate = connection.prepareStatement(updateSQL)) {
-        statementUpdate.setString(1, key.space);
-        statementUpdate.setString(2, key.key);
-        if (statementUpdate.executeUpdate() == 1) {
-          return null;
-        }
-      }
-      throw new ErrorCodeException(ErrorCodes.FINDER_SERVICE_MYSQL_CANT_UPDATE);
-    }, callback, ErrorCodes.FINDER_SERVICE_MYSQL_UPDATE_EXCEPTION);
   }
 
   @Override

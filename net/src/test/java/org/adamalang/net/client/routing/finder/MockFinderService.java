@@ -140,7 +140,7 @@ public class MockFinderService implements FinderService {
   private boolean failedRetryKeyInFree = false;
 
   @Override
-  public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
+  public void backup(Key key, String archiveKey, long deltaSize, long assetSize, String machineOn, Callback<Void> callback) {
     if (key.key.equals("retry-key")) {
       if (!failedRetryKeyInBackup) {
         failedRetryKeyInBackup = true;
@@ -169,11 +169,6 @@ public class MockFinderService implements FinderService {
       return;
     }
     map.remove(key);
-    callback.success(null);
-  }
-
-  @Override
-  public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
     callback.success(null);
   }
 }

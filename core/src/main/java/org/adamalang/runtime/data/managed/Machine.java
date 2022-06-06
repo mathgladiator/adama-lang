@@ -112,7 +112,8 @@ public class Machine {
     base.data.backup(key, new Callback<String>() {
       @Override
       public void success(String newArchiveKey) {
-        base.finder.backup(key, newArchiveKey, base.target, new Callback<Void>() {
+        // TODO: use the real delta and asset size
+        base.finder.backup(key, newArchiveKey, 0, 0, base.target, new Callback<Void>() {
           @Override
           public void success(Void value) {
             archive_Success();

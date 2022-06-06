@@ -33,11 +33,6 @@ public class FinderTests {
         installer.install();
         Finder machine = new Finder(dataBase);
         {
-          SimpleMockCallback callback = new SimpleMockCallback();
-          machine.update(KEY1, 1, 2, callback);
-          callback.assertFailure(707651);
-        }
-        {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
           cb.assertFailure(625676);
@@ -89,12 +84,12 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, "new-achive-key", "machineA:124", callback);
+          machine.backup(KEY1, "new-achive-key", 1, 4, "machineA:124", callback);
           callback.assertFailure(722034);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, "new-achive-key", "machineB:523", callback);
+          machine.backup(KEY1, "new-achive-key", 1, 4, "machineB:523", callback);
           callback.assertSuccess();
         }
         {
@@ -109,7 +104,7 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1,  "new-achive-key-old", "machineB:523", callback);
+          machine.backup(KEY1,  "new-achive-key-old", 1, 4, "machineB:523", callback);
           callback.assertSuccess();
         }
         {
@@ -119,7 +114,7 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, "new-achive-key", "machineB:523", callback);
+          machine.backup(KEY1, "new-achive-key", 1, 4, "machineB:523", callback);
           callback.assertSuccess();
         }
         {
@@ -136,11 +131,6 @@ public class FinderTests {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
           cb.assertSuccess(FinderService.Location.Archive, "", "new-achive-key");
-        }
-        {
-          SimpleMockCallback callback = new SimpleMockCallback();
-          machine.update(KEY1, 1, 2, callback);
-          callback.assertSuccess();
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
