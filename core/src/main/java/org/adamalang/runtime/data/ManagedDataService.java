@@ -15,6 +15,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.data.managed.Action;
 import org.adamalang.runtime.data.managed.Base;
 
+/** a managed data source will convert and archiving data source into a dataservice such that the local state is managed by a finder. This lets data be uploaded/downloaded as needed. */
 public class ManagedDataService implements DataService {
   private final Base base;
 
@@ -68,29 +69,6 @@ public class ManagedDataService implements DataService {
     });
   }
 
-  private void deleteLocal(Key key, Callback<Void> callback) {
-    base.on(key, (machine) -> {
-      base.data.delete(key, new Callback<Void>() {
-        @Override
-        public void success(Void value) {
-          base.executor.execute(new NamedRunnable("managed-delete") {
-            @Override
-            public void execute() throws Exception {
-              machine.close();;
-              base.documents.remove(key);
-              callback.success(null);
-            }
-          });
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          callback.failure(ex);
-        }
-      });
-    });
-  }
-
   @Override
   public void delete(Key key, Callback<Void> callback) {
     base.finder.delete(key, base.target, new Callback<Void>() {
@@ -111,6 +89,29 @@ public class ManagedDataService implements DataService {
         */
         callback.failure(ex);
       }
+    });
+  }
+
+  private void deleteLocal(Key key, Callback<Void> callback) {
+    base.on(key, (machine) -> {
+      base.data.delete(key, new Callback<Void>() {
+        @Override
+        public void success(Void value) {
+          base.executor.execute(new NamedRunnable("managed-delete") {
+            @Override
+            public void execute() throws Exception {
+              machine.close();
+              base.documents.remove(key);
+              callback.success(null);
+            }
+          });
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
     });
   }
 

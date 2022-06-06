@@ -47,7 +47,7 @@ public class CaravanDataService implements ArchivingDataService {
   }
 
   @Override
-  public void backup(Key key, Callback<String> callback) {
+  public void backup(Key key, Callback<BackupResult> callback) {
     String archiveKey = ProtectedUUID.generate() + "-" + System.currentTimeMillis();
     execute("backup", key, true, callback, (id, cached) -> {
       File tempOutput = new File(cloud.path(), archiveKey + ".temp");
@@ -76,8 +76,9 @@ public class CaravanDataService implements ArchivingDataService {
       }
       cloud.backup(finalOutput, new Callback<Void>() {
         @Override
+        // TODO: use real asset and delta bytes
         public void success(Void value) {
-          callback.success(archiveKey);
+          callback.success(new BackupResult(archiveKey, 0, 0));
         }
 
         @Override

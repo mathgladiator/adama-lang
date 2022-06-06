@@ -13,6 +13,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
+import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 
@@ -109,11 +110,10 @@ public class Machine {
   }
 
   private void archiveWhileInExecutor() {
-    base.data.backup(key, new Callback<String>() {
+    base.data.backup(key, new Callback<>() {
       @Override
-      public void success(String newArchiveKey) {
-        // TODO: use the real delta and asset size
-        base.finder.backup(key, newArchiveKey, 0, 0, base.target, new Callback<Void>() {
+      public void success(BackupResult result) {
+        base.finder.backup(key, result.archiveKey, result.deltaBytes, result.assetBytes, base.target, new Callback<Void>() {
           @Override
           public void success(Void value) {
             archive_Success();

@@ -28,7 +28,7 @@ public class Base {
   public final HashMap<Key, Machine> documents;
   public final SimpleExecutor executor;
   public final int archiveTimeMilliseconds;
-  private AtomicInteger freeFailureBackoff;
+  private final AtomicInteger freeFailureBackoff;
 
   public Base(FinderService finder, ArchivingDataService data, String region, String target, SimpleExecutor executor, int archiveTimeMilliseconds) {
     this.finder = finder;

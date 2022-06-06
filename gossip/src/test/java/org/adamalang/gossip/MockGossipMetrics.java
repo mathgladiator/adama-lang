@@ -95,6 +95,10 @@ public class MockGossipMetrics implements GossipMetrics {
       public void down() {
 
       }
+
+      @Override
+      public void set(int value) {
+      }
     };
   }
 }

@@ -125,7 +125,7 @@ public class MockArchiveDataSource implements ArchivingDataService {
   }
 
   @Override
-  public synchronized void backup(Key key, Callback<String> callback) {
+  public synchronized void backup(Key key, Callback<BackupResult> callback) {
     if (key.key.equals("retry-key")) {
       if (!failedRetryKey) {
         failedRetryKey = true;
@@ -147,7 +147,7 @@ public class MockArchiveDataSource implements ArchivingDataService {
             archive.put(archiveKey, value.patch);
             archiveSeq.put(archiveKey, value.seq);
           }
-          callback.success(archiveKey);
+          callback.success(new BackupResult(archiveKey, 1, 2));
         }
 
         @Override

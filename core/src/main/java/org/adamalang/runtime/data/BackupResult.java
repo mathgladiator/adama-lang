@@ -9,13 +9,15 @@
  */
 package org.adamalang.runtime.data;
 
-import org.adamalang.common.Callback;
+/** the tuple of data which comes from backing up data */
+public class BackupResult {
+  public final String archiveKey;
+  public final long deltaBytes;
+  public final long assetBytes;
 
-/** a data service which backup data */
-public interface ArchivingDataService extends DataService {
-  /** restore a file (must be idempotent) */
-  void restore(Key key, String archiveKey, Callback<Void> callback);
-
-  /** backup a document, returning an archiveKey */
-  void backup(Key key, Callback<BackupResult> callback);
+  public BackupResult(String archiveKey, long deltaBytes, long assetBytes) {
+    this.archiveKey = archiveKey;
+    this.deltaBytes = deltaBytes;
+    this.assetBytes = assetBytes;
+  }
 }

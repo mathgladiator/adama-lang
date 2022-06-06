@@ -328,10 +328,10 @@ public class CaravanDataServiceTests {
 
       final String archiveKey;
       {
-        SimpleStringCallback cb_Backup = new SimpleStringCallback();
+        SimpleBackupCallback cb_Backup = new SimpleBackupCallback();
         setup.service.backup(KEY2, cb_Backup);
         cb_Backup.assertSuccess();
-        archiveKey = cb_Backup.value;
+        archiveKey = cb_Backup.value.archiveKey;
       }
 
       {

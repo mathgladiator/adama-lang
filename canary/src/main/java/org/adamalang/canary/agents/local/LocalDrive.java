@@ -73,12 +73,7 @@ public class LocalDrive {
         }
 
         @Override
-        public void backup(Key key, String archiveKey, String machineOn, Callback<Void> callback) {
-
-        }
-
-        @Override
-        public void update(Key key, long deltaSize, long assetSize, Callback<Void> callback) {
+        public void backup(Key key, String archiveKey, long deltaBytes, long assetBytes, String machineOn, Callback<Void> callback) {
 
         }
 
