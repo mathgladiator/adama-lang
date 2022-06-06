@@ -165,8 +165,8 @@ public class MockInstantDataService implements DataService {
 
   @Override
   public void close(Key key, Callback<Void> callback) {
-    println("CLOSE:" + key.space + "/" + key.key);
     callback.success(null);
+    println("CLOSE:" + key.space + "/" + key.key);
   }
 
   private synchronized void println(String x) {

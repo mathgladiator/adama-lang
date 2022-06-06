@@ -47,6 +47,7 @@ public class DurableLivingDocument {
   private Integer requiresInvalidateMilliseconds;
   private boolean inflightPatch;
   private boolean catastrophicFailureOccurred;
+  private boolean loadShedOccurred;
   private long lastExpire;
   private int outstandingExecutionsWhichRequireDrain;
   private boolean inflightCompact;
@@ -260,16 +261,26 @@ public class DurableLivingDocument {
     }
   }
 
+  private void issueCloseWhileInExecutor(int errorCode) {
+    document.__nukeViews();
+    while (pending.size() > 0) {
+      pending.removeFirst().callback.failure(new ErrorCodeException(errorCode));
+    }
+    base.service.close(key, Callback.DONT_CARE_VOID);
+    base.map.remove(key);
+    base.metrics.inflight_documents.down();
+  }
+
+  public void shedWhileInExecutor() {
+    base.metrics.document_load_shed.run();
+    loadShedOccurred = true;
+    issueCloseWhileInExecutor(ErrorCodes.DOCUMENT_SHEDDING_LOAD);
+  }
+
   private void catastrophicFailureWhileInExecutor() {
     base.metrics.document_catastrophic_failure.run();
-    document.__nukeViews();
-    base.map.remove(key);
-    base.service.close(key, Callback.DONT_CARE_VOID);
-    base.metrics.inflight_documents.down();
     catastrophicFailureOccurred = true;
-    while (pending.size() > 0) {
-      pending.removeFirst().callback.failure(new ErrorCodeException(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
-    }
+    issueCloseWhileInExecutor(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION);
   }
 
   private IngestRequest isolate(IngestRequest requestToFocus, IngestRequest[] all) {
@@ -480,6 +491,10 @@ public class DurableLivingDocument {
     IngestRequest request = new IngestRequest(who, requestJson, callback, cleanupTest);
     if (catastrophicFailureOccurred) {
       request.callback.failure(new ErrorCodeException(ErrorCodes.CATASTROPHIC_DOCUMENT_FAILURE_EXCEPTION));
+      return;
+    }
+    if (loadShedOccurred) {
+      request.callback.failure(new ErrorCodeException(ErrorCodes.DOCUMENT_SHEDDING_LOAD));
       return;
     }
     if (inflightPatch) {

@@ -24,15 +24,12 @@ import org.adamalang.common.*;
 import org.adamalang.runtime.data.*;
 
 import java.io.*;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class CaravanDataService implements ArchivingDataService {
   private final Cloud cloud;

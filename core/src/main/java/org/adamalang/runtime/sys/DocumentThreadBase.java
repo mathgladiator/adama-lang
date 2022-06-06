@@ -18,6 +18,7 @@ import org.adamalang.runtime.data.Key;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * This defines the state required within a thread to run a document. As Documents run in isolated
@@ -81,6 +82,19 @@ public class DocumentThreadBase {
           result.put(entry.getKey(), entry.getValue().sample());
         }
         callback.accept(result);
+      }
+    });
+  }
+
+  public void shed(Function<Key, Boolean> condition) {
+    executor.execute(new NamedRunnable("shed") {
+      @Override
+      public void execute() throws Exception {
+        for (Map.Entry<Key, DurableLivingDocument> entry : map.entrySet()) {
+          if (condition.apply(entry.getKey())) {
+            entry.getValue().shedWhileInExecutor();
+          }
+        }
       }
     });
   }

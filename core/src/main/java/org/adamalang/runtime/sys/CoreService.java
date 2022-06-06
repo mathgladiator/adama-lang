@@ -34,6 +34,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /** The core service enables consumers to manage an in-process Adama */
 public class CoreService {
@@ -73,6 +74,12 @@ public class CoreService {
         });
       }
     }.run();
+  }
+
+  public void shed(Function<Key, Boolean> condition) {
+    for (int k = 0; k < bases.length; k++) {
+      bases[k].shed(condition);
+    }
   }
 
   public void shutdown() throws InterruptedException {
@@ -197,7 +204,6 @@ public class CoreService {
 
   /** connect the given person to the document hooking up a streamback */
   public void connect(CoreRequestContext context, Key key, String viewerState, AssetIdEncoder assetIdEncoder, Streamback stream) {
-    // TODO: populate the asset id encoder
     connect(context, key, stream, viewerState, assetIdEncoder, true);
   }
 
@@ -280,9 +286,6 @@ public class CoreService {
           base.mapInsertsInflight.put(key, callbacks);
 
           Consumer<ErrorCodeException> failure = (ex) -> {
-            // TODO: if universal lookup error, then that will create a storm. Instead,
-            // signal a failure to the first once and then delay the others by various
-            // random times. Maybe just spread these errors out over a random time
             base.executor.execute(new NamedRunnable("document-load-failure") {
               @Override
               public void execute() throws Exception {
