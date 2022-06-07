@@ -35,7 +35,7 @@ public class BackendOperations {
 
   public static ArrayList<DocumentIndex> list(DataBase dataBase, String space, String marker, int limit) throws Exception {
     try (Connection connection = dataBase.pool.getConnection()) {
-      String sql = new StringBuilder("SELECT `key`, `created`, `updated`, `head_seq`, `invalidate` FROM `").append(dataBase.databaseName) //
+      String sql = new StringBuilder("SELECT `key`, `created`, `updated`, `head_seq` FROM `").append(dataBase.databaseName) //
           .append("`.`index` WHERE `space`=? AND `key`>? LIMIT ").append(Math.max(Math.min(limit, 1000), 1)).toString();
       try (PreparedStatement statement = connection.prepareStatement(sql)) {
         statement.setString(1, space);
@@ -43,7 +43,7 @@ public class BackendOperations {
         try (ResultSet rs = statement.executeQuery()) {
           ArrayList<DocumentIndex> keys = new ArrayList<>();
           while (rs.next()) {
-            keys.add(new DocumentIndex(rs.getString(1), rs.getDate(2).toString(), rs.getDate(3).toString(), rs.getInt(4), rs.getBoolean(5)));
+            keys.add(new DocumentIndex(rs.getString(1), rs.getDate(2).toString(), rs.getDate(3).toString(), rs.getInt(4)));
           }
           return keys;
         }
