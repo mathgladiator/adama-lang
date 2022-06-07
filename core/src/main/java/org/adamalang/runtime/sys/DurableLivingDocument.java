@@ -41,6 +41,7 @@ public class DurableLivingDocument {
   public final DocumentThreadBase base;
   public final Key key;
   private final ArrayDeque<IngestRequest> pending;
+  private final AtomicInteger size;
   private LivingDocumentFactory currentFactory;
   private LivingDocument document;
   private Integer requiresInvalidateMilliseconds;
@@ -50,7 +51,6 @@ public class DurableLivingDocument {
   private long lastExpire;
   private int outstandingExecutionsWhichRequireDrain;
   private boolean inflightCompact;
-  private final AtomicInteger size;
   private int trackingSeq;
 
   private DurableLivingDocument(final Key key, final LivingDocument document, final LivingDocumentFactory currentFactory, final DocumentThreadBase base) {
@@ -117,28 +117,6 @@ public class DurableLivingDocument {
     return writer;
   }
 
-  public JsonStreamWriter forgeWithContext(final String command, final CoreRequestContext context) {
-    final var writer = new JsonStreamWriter();
-    writer.beginObject();
-    writer.writeObjectFieldIntro("command");
-    writer.writeFastString(command);
-    writer.writeObjectFieldIntro("timestamp");
-    writer.writeLong(base.time.nowMilliseconds());
-    if (context != null) {
-      if (context.who != null) {
-        writer.writeObjectFieldIntro("who");
-        writer.writeNtClient(context.who);
-      }
-      writer.writeObjectFieldIntro("key");
-      writer.writeString(context.key);
-      writer.writeObjectFieldIntro("origin");
-      writer.writeString(context.origin);
-      writer.writeObjectFieldIntro("ip");
-      writer.writeString(context.ip);
-    }
-    return writer;
-  }
-
   private String forgeInvalidate() {
     final var request = forge("invalidate", null);
     request.endObject();
@@ -162,6 +140,28 @@ public class DurableLivingDocument {
     } catch (Throwable ex) {
       callback.failure(ErrorCodeException.detectOrWrap(ErrorCodes.DURABLE_LIVING_DOCUMENT_STAGE_LOAD_DRIVE, ex, EXLOGGER));
     }
+  }
+
+  public JsonStreamWriter forgeWithContext(final String command, final CoreRequestContext context) {
+    final var writer = new JsonStreamWriter();
+    writer.beginObject();
+    writer.writeObjectFieldIntro("command");
+    writer.writeFastString(command);
+    writer.writeObjectFieldIntro("timestamp");
+    writer.writeLong(base.time.nowMilliseconds());
+    if (context != null) {
+      if (context.who != null) {
+        writer.writeObjectFieldIntro("who");
+        writer.writeNtClient(context.who);
+      }
+      writer.writeObjectFieldIntro("key");
+      writer.writeString(context.key);
+      writer.writeObjectFieldIntro("origin");
+      writer.writeString(context.origin);
+      writer.writeObjectFieldIntro("ip");
+      writer.writeString(context.ip);
+    }
+    return writer;
   }
 
   private void queueCompact() {
@@ -271,6 +271,12 @@ public class DurableLivingDocument {
     }
   }
 
+  public void shedWhileInExecutor() {
+    base.metrics.document_load_shed.run();
+    loadShedOccurred = true;
+    issueCloseWhileInExecutor(ErrorCodes.DOCUMENT_SHEDDING_LOAD);
+  }
+
   private void issueCloseWhileInExecutor(int errorCode) {
     document.__nukeViews();
     while (pending.size() > 0) {
@@ -279,12 +285,6 @@ public class DurableLivingDocument {
     base.service.close(key, Callback.DONT_CARE_VOID);
     base.map.remove(key);
     base.metrics.inflight_documents.down();
-  }
-
-  public void shedWhileInExecutor() {
-    base.metrics.document_load_shed.run();
-    loadShedOccurred = true;
-    issueCloseWhileInExecutor(ErrorCodes.DOCUMENT_SHEDDING_LOAD);
   }
 
   private void catastrophicFailureWhileInExecutor() {

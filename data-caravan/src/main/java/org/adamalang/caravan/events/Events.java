@@ -19,6 +19,11 @@ import java.io.File;
 import java.nio.file.Files;
 
 public interface Events {
+  static void main(String[] args) throws Exception {
+    String codec = CodecCodeGen.assembleCodec("org.adamalang.caravan.events", "EventCodec", Events.class.getDeclaredClasses());
+    Files.writeString(new File("./data-caravan/src/main/java/org/adamalang/caravan/events/EventCodec.java").toPath(), codec);
+  }
+
   @TypeId(0x10)
   @Flow("Event")
   class Change {
@@ -77,10 +82,5 @@ public interface Events {
     public String document;
     @FieldOrder(4)
     public long assetBytes;
-  }
-
-  public static void main(String[] args) throws Exception {
-    String codec = CodecCodeGen.assembleCodec("org.adamalang.caravan.events", "EventCodec", Events.class.getDeclaredClasses());
-    Files.writeString(new File("./data-caravan/src/main/java/org/adamalang/caravan/events/EventCodec.java").toPath(), codec);
   }
 }

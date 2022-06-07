@@ -10,7 +10,7 @@
 package org.adamalang.caravan.events;
 
 /** useful for parsing some byte[] and extracting the seq and assets bytes */
-public class RestoreWalker implements EventCodec.HandlerEvent  {
+public class RestoreWalker implements EventCodec.HandlerEvent {
   public int seq;
   public long assetBytes;
 

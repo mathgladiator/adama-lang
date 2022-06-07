@@ -17,17 +17,17 @@ import java.io.IOException;
 public interface Storage {
 
   /** how much is allocated */
-  public long size();
+  long size();
 
   /** write some bytes to the given region */
-  public void write(Region region, byte[] mem);
+  void write(Region region, byte[] mem);
 
   /** read a byte array from the given region */
-  public byte[] read(Region region);
+  byte[] read(Region region);
 
   /** flush all writes to disk */
-  public void flush() throws IOException;
+  void flush() throws IOException;
 
   /** close the storage */
-  public void close() throws IOException;
+  void close() throws IOException;
 }

@@ -12,7 +12,10 @@ package org.adamalang.runtime.index;
 import org.adamalang.runtime.contracts.IndexQuerySet;
 import org.adamalang.runtime.reactives.RxRecordBase;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /** an index of a single column of data */
 public class ReactiveIndex<Ty extends RxRecordBase> {

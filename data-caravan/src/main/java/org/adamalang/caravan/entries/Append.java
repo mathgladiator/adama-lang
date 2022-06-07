@@ -27,16 +27,6 @@ public class Append implements WALEntry<Append> {
     this.assetBytes = assetBytes;
   }
 
-  public void write(ByteBuf buf) {
-    buf.writeByte(0x42);
-    buf.writeLongLE(id);
-    buf.writeLongLE(position);
-    buf.writeIntLE(bytes.length);
-    buf.writeBytes(bytes);
-    buf.writeIntLE(seq);
-    buf.writeLongLE(assetBytes);
-  }
-
   public static Append readAfterTypeId(ByteBuf buf) {
     long id = buf.readLongLE();
     long position = buf.readLongLE();
@@ -46,5 +36,15 @@ public class Append implements WALEntry<Append> {
     int seq = buf.readIntLE();
     long assetBytes = buf.readLongLE();
     return new Append(id, position, bytes, seq, assetBytes);
+  }
+
+  public void write(ByteBuf buf) {
+    buf.writeByte(0x42);
+    buf.writeLongLE(id);
+    buf.writeLongLE(position);
+    buf.writeIntLE(bytes.length);
+    buf.writeBytes(bytes);
+    buf.writeIntLE(seq);
+    buf.writeLongLE(assetBytes);
   }
 }

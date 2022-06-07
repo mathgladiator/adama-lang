@@ -21,22 +21,12 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerEvent {
-  public int currentAppendIndex;
-  private int itemsInRemote;
-  private class SeqString {
-    private final int seq;
-    private final String data;
-
-    public SeqString(int seq, String data) {
-      this.seq = seq;
-      this.data = data;
-    }
-  }
   private final ArrayList<SeqString> redos;
   private final ArrayDeque<SeqString> undos;
-  private int seq;
+  public int currentAppendIndex;
   public SeqString document;
-
+  private int itemsInRemote;
+  private int seq;
   public LocalCache() {
     this.document = null;
     this.redos = new ArrayList<>();
@@ -80,6 +70,20 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
     }
   }
 
+  @Override
+  public void handle(Events.Batch payload) {
+    for (Events.Change change : payload.changes) {
+      handle(change);
+    }
+  }
+
+  @Override
+  public void handle(Events.Change change) {
+    redos.add(new SeqString(change.seq_end, change.redo));
+    undos.addFirst(new SeqString(change.seq_begin, change.undo));
+    seq = change.seq_end;
+  }
+
   public ArrayList<byte[]> filter(ArrayList<byte[]> writes) {
     ArrayList<byte[]> reduced = new ArrayList<>();
     AtomicInteger checkSeq = new AtomicInteger(seq);
@@ -111,20 +115,6 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
       });
     }
     return reduced;
-  }
-
-  @Override
-  public void handle(Events.Batch payload) {
-    for (Events.Change change : payload.changes) {
-      handle(change);
-    }
-  }
-
-  @Override
-  public void handle(Events.Change change) {
-    redos.add(new SeqString(change.seq_end, change.redo));
-    undos.addFirst(new SeqString(change.seq_begin, change.undo));
-    seq = change.seq_end;
   }
 
   public boolean check(int newSeq) {
@@ -183,5 +173,15 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
       return null;
     }
     return new LocalDocumentChange(merger.finish(), count, seq);
+  }
+
+  private class SeqString {
+    private final int seq;
+    private final String data;
+
+    public SeqString(int seq, String data) {
+      this.seq = seq;
+      this.data = data;
+    }
   }
 }

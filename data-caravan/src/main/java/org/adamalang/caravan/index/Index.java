@@ -75,7 +75,7 @@ public class Index {
       buf.writeBoolean(true);
       buf.writeLongLE(entry.getKey());
       buf.writeIntLE(entry.getValue().size());
-      for (AnnotatedRegion region: entry.getValue()) {
+      for (AnnotatedRegion region : entry.getValue()) {
         buf.writeLongLE(region.position);
         buf.writeIntLE(region.size);
         buf.writeIntLE(region.seq);

@@ -15,5 +15,5 @@ import org.adamalang.runtime.data.Key;
 /** convert a key into a long id */
 public interface KeyToIdService {
   /** We do this to compact the key into an id that is global */
-  public void translate(Key key, Callback<Long> callback);
+  void translate(Key key, Callback<Long> callback);
 }
