@@ -50,7 +50,7 @@ public abstract class LocalCache implements ByteArrayStream, EventCodec.HandlerE
   }
 
   @Override
-  public void next(int appendIndex, byte[] value) throws Exception {
+  public void next(int appendIndex, byte[] value, int seq, long assetBytes) throws Exception {
     this.currentAppendIndex = appendIndex;
     EventCodec.route(Unpooled.wrappedBuffer(value), this);
     this.itemsInRemote++;

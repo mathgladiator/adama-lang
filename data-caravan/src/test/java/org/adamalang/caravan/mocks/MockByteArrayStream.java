@@ -26,8 +26,8 @@ public class MockByteArrayStream implements ByteArrayStream {
   }
 
   @Override
-  public void next(int appendIndex, byte[] value) {
-    sb.append("[").append(appendIndex).append("=").append(new String(value, StandardCharsets.UTF_8)).append("]");
+  public void next(int appendIndex, byte[] value, int seq, long assetBytes) {
+    sb.append("[").append(appendIndex).append("=").append(new String(value, StandardCharsets.UTF_8)).append("/").append(seq).append(assetBytes > 0 ? ":" + assetBytes : "").append("]");
   }
 
   @Override

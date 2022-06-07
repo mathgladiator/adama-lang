@@ -57,7 +57,7 @@ public class CaravanDataService implements ArchivingDataService {
         DataOutputStream output = new DataOutputStream(new FileOutputStream(tempOutput));
         store.read(id, new ByteArrayStream() {
           @Override
-          public void next(int appendIndex, byte[] value) throws Exception {
+          public void next(int appendIndex, byte[] value, int seq, long assetBytes) throws Exception {
             deltaBytes.addAndGet(value.length);
             output.writeBoolean(true);
             output.writeInt(value.length);

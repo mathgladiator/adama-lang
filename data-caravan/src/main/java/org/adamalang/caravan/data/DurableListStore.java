@@ -16,6 +16,8 @@ import org.adamalang.caravan.entries.Append;
 import org.adamalang.caravan.entries.Delete;
 import org.adamalang.caravan.entries.OrganizationSnapshot;
 import org.adamalang.caravan.entries.Trim;
+import org.adamalang.caravan.events.EventCodec;
+import org.adamalang.caravan.events.RestoreWalker;
 import org.adamalang.caravan.index.AnnotatedRegion;
 import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Index;
@@ -229,14 +231,14 @@ public class DurableListStore {
     Iterator<Region> whereIt = wheres.iterator();
     Iterator<byte[]> bytesIt = batch.iterator();
     int lastSize = -1;
-    boolean writenOnce = false;
     while (whereIt.hasNext()) {
       Region where = whereIt.next();
       byte[] bytes = bytesIt.next();
+      RestoreWalker walker = new RestoreWalker();
+      EventCodec.route(Unpooled.wrappedBuffer(bytes), walker);
       storage.write(where, bytes);
-      lastSize = index.append(id, new AnnotatedRegion(where.position, where.size, seq, writenOnce ? 0 : assetBytes));
+      lastSize = index.append(id, new AnnotatedRegion(where.position, where.size, walker.seq, walker.assetBytes));
       new Append(id, where.position, bytes, seq, assetBytes).write(buffer);
-      writenOnce = true;
     }
 
     if (buffer.writerIndex() > flushCutOffBytes) {
@@ -267,9 +269,9 @@ public class DurableListStore {
     Iterator<AnnotatedRegion> it = index.get(id);
     int at = 0;
     while (it.hasNext()) {
-      Region region = it.next();
+      AnnotatedRegion region = it.next();
       byte[] mem = storage.read(region);
-      streamback.next(at, mem);
+      streamback.next(at, mem, region.seq, region.assetBytes);
       at++;
     }
     streamback.finished();

@@ -13,7 +13,7 @@ package org.adamalang.caravan.contracts;
 public interface ByteArrayStream {
 
   // a new append was discovered
-  void next(int appendIndex, byte[] value) throws Exception;
+  void next(int appendIndex, byte[] value, int seq, long assetBytes) throws Exception;
 
   // no more appends were found
   void finished() throws Exception;
