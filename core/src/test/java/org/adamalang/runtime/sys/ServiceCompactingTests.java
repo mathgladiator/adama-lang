@@ -15,6 +15,7 @@ import org.adamalang.common.TimeSource;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.runtime.ContextSupport;
 import org.adamalang.runtime.LivingDocumentTests;
+import org.adamalang.runtime.data.DocumentSnapshot;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.InMemoryDataService;
 import org.adamalang.runtime.data.LocalDocumentChange;
@@ -148,9 +149,9 @@ public class ServiceCompactingTests {
     AtomicBoolean compactOn = new AtomicBoolean(false);
     InMemoryDataService dataService = new InMemoryDataService(executor, TimeSource.REAL_TIME) {
       @Override
-      public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+      public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
         if (compactOn.get()) {
-          super.snapshot(key, seq, snapshot, history, callback);
+          super.snapshot(key, snapshot, callback);
           return;
         }
         callback.failure(new ErrorCodeException(-1));

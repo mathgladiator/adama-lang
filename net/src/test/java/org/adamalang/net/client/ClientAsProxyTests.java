@@ -18,10 +18,7 @@ import org.adamalang.net.client.mocks.SimpleIntCallback;
 import org.adamalang.net.client.mocks.SimpleMockCallback;
 import org.adamalang.net.client.proxy.ProxyDataService;
 import org.adamalang.net.client.routing.ClientRouter;
-import org.adamalang.runtime.data.ComputeMethod;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.data.RemoteDocumentUpdate;
-import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
@@ -83,7 +80,7 @@ public class ClientAsProxyTests {
         cb_PatchFailsFNF.assertFailure(144944);
 
         SimpleIntCallback cb_CompactFailsFNF = new SimpleIntCallback();
-        proxy.snapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
+        proxy.snapshot(KEY1, new DocumentSnapshot(1, "{}", 1), cb_CompactFailsFNF);
         cb_CompactFailsFNF.assertFailure(103060);
 
         SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
@@ -183,7 +180,7 @@ public class ClientAsProxyTests {
         cb_InitFailAlreadyExists.assertFailure(667658);
 
         SimpleIntCallback cb_Snapshot = new SimpleIntCallback();
-        proxy.snapshot(KEY1, 3, "{}", 1, cb_Snapshot);
+        proxy.snapshot(KEY1, new DocumentSnapshot(3, "{}", 1), cb_Snapshot);
         cb_Snapshot.assertSuccess(3);
 
         {

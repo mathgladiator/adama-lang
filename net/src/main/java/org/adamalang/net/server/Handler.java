@@ -22,10 +22,7 @@ import org.adamalang.net.codec.ClientMessage;
 import org.adamalang.net.codec.ServerCodec;
 import org.adamalang.net.codec.ServerMessage;
 import org.adamalang.runtime.contracts.Streamback;
-import org.adamalang.runtime.data.ComputeMethod;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.data.LocalDocumentChange;
-import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.json.JsonStreamReader;
 import org.adamalang.runtime.natives.NtAsset;
@@ -157,7 +154,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.ProxySnapshot payload) {
     Key key = new Key(payload.space, payload.key);
-    nexus.service.dataService.snapshot(key, payload.seq, payload.document, payload.history, respondViaInteger());
+    nexus.service.dataService.snapshot(key, new DocumentSnapshot(payload.seq, payload.document, payload.history), respondViaInteger());
   }
 
   @Override

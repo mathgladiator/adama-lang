@@ -30,7 +30,7 @@ public interface DataService {
   void delete(Key key, Callback<Void> callback);
 
   /** Snapshot the state of the document */
-  void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback);
+  void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback);
 
   /** close the storage */
   void close(Key key, Callback<Void> callback);

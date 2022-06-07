@@ -12,6 +12,7 @@ package org.adamalang.support.testgen;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.runtime.data.ComputeMethod;
+import org.adamalang.runtime.data.DocumentSnapshot;
 import org.adamalang.runtime.data.Key;
 import org.adamalang.runtime.data.LocalDocumentChange;
 import org.adamalang.runtime.json.PrivateView;
@@ -81,7 +82,7 @@ public class DumbDataServiceTests {
   @Test
   public void nocompact() {
     try {
-      new DumbDataService((up) -> {}).snapshot(null, 1, "{}",-1, null);
+      new DumbDataService((up) -> {}).snapshot(null, new DocumentSnapshot(1, "{}",-1), null);
       Assert.fail();
     } catch (UnsupportedOperationException re) {
     }

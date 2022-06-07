@@ -164,11 +164,11 @@ public class InMemoryDataService implements DataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
     executor.execute(() -> {
       InMemoryDocument document = datum.get(key);
       if (document != null) {
-        callback.success(document.compact(history));
+        callback.success(document.compact(snapshot.history));
       } else {
         callback.failure(new ErrorCodeException(ErrorCodes.INMEMORY_DATA_COMPACT_CANT_FIND_DOCUMENT));
       }

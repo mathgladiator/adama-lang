@@ -255,14 +255,14 @@ public class BlockingDataService implements DataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
     dataBase.transact((connection) -> {
       // look up the index to get the id
       LookupResult lookup = lookup(connection, key);
 
       String walkSql = new StringBuilder("SELECT `id`, `redo`, `undo`, `seq_end`, `seq_begin`, `request` FROM `") //
           .append(dataBase.databaseName).append("`.`deltas` WHERE `parent`=").append(lookup.id) //
-          .append(" ORDER BY `seq_end` DESC LIMIT ").append((history + 1) * 3 + 1000).append(" OFFSET ").append(history).toString();
+          .append(" ORDER BY `seq_end` DESC LIMIT ").append((snapshot.history + 1) * 3 + 1000).append(" OFFSET ").append(snapshot.history).toString();
 
       AutoMorphicAccumulator<String> redoMorph = JsonAlgebra.mergeAccumulator();
       AutoMorphicAccumulator<String> undoMorph = JsonAlgebra.mergeAccumulator();

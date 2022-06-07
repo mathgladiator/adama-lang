@@ -16,10 +16,7 @@ import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.runtime.contracts.DocumentMonitor;
 import org.adamalang.runtime.contracts.Perspective;
-import org.adamalang.runtime.data.ComputeMethod;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.data.LocalDocumentChange;
-import org.adamalang.runtime.data.RemoteDocumentUpdate;
+import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.delta.secure.AssetIdEncoder;
 import org.adamalang.runtime.exceptions.PerformDocumentDeleteException;
 import org.adamalang.runtime.exceptions.PerformDocumentRewindException;
@@ -177,7 +174,7 @@ public class DurableLivingDocument {
         JsonStreamWriter writer = new JsonStreamWriter();
         document.__dump(writer);
         int toCompactNow = size.get();
-        base.service.snapshot(key, document.__seq.get(), writer.toString(), currentFactory.maximum_history, new Callback<>() {
+        base.service.snapshot(key, new DocumentSnapshot(document.__seq.get(), writer.toString(), currentFactory.maximum_history), new Callback<>() {
           @Override
           public void success(Integer value) {
             base.executor.execute(new NamedRunnable("compact-complete") {

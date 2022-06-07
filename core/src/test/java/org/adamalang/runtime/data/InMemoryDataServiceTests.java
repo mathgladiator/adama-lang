@@ -256,7 +256,7 @@ public class InMemoryDataServiceTests {
 
       }
     });
-    ds.snapshot(key, 1, "{}", 100, new Callback<Integer>() {
+    ds.snapshot(key, new DocumentSnapshot(1, "{}", 100), new Callback<Integer>() {
       @Override
       public void success(Integer value) {
         Assert.assertEquals(900, (int) value);
@@ -294,7 +294,7 @@ public class InMemoryDataServiceTests {
 
       }
     });
-    ds.snapshot(key, 1, "{}", 1000, new Callback<Integer>() {
+    ds.snapshot(key, new DocumentSnapshot(1, "{}", 1000), new Callback<Integer>() {
       @Override
       public void success(Integer value) {
         Assert.assertEquals(0, (int) value);
@@ -307,7 +307,7 @@ public class InMemoryDataServiceTests {
       }
     });
 
-    ds.snapshot(new Key("spaaaaaace", "keeeey"), 1, "{}", 1000, new Callback<Integer>() {
+    ds.snapshot(new Key("spaaaaaace", "keeeey"), new DocumentSnapshot(1, "{}", 1000), new Callback<Integer>() {
       @Override
       public void success(Integer value) {
       }

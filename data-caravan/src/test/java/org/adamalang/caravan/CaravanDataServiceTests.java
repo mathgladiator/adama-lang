@@ -108,7 +108,7 @@ public class CaravanDataServiceTests {
       cb_PatchFailsFNF.assertFailure(625676);
 
       SimpleIntCallback cb_CompactFailsFNF = new SimpleIntCallback();
-      setup.service.snapshot(KEY1, 1, "{}", 1, cb_CompactFailsFNF);
+      setup.service.snapshot(KEY1, new DocumentSnapshot(1, "{}", 1), cb_CompactFailsFNF);
       cb_CompactFailsFNF.assertFailure(625676);
 
       SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
@@ -233,7 +233,7 @@ public class CaravanDataServiceTests {
 
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.snapshot(KEY1, 4, "{\"x\":10,\"y\":10}", 100, cb_CompactWorks);
+        setup.service.snapshot(KEY1, new DocumentSnapshot(4, "{\"x\":10,\"y\":10}", 100), cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
@@ -243,13 +243,13 @@ public class CaravanDataServiceTests {
       }
       {
         SimpleIntCallback cbCompactFailsNegHistory = new SimpleIntCallback();
-        setup.service.snapshot(KEY1, 1, "{}", -1, cbCompactFailsNegHistory);
+        setup.service.snapshot(KEY1, new DocumentSnapshot(1, "{}", -1), cbCompactFailsNegHistory);
         cbCompactFailsNegHistory.assertFailure(734263);
       }
 
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.snapshot(KEY1, 1, "{\"x\":11,\"y\":11}",2, cb_CompactWorks);
+        setup.service.snapshot(KEY1, new DocumentSnapshot(1, "{\"x\":11,\"y\":11}", 2), cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
@@ -259,7 +259,7 @@ public class CaravanDataServiceTests {
       }
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.snapshot(KEY1, 5, "{\"x\":12,\"y\":12}", 1, cb_CompactWorks);
+        setup.service.snapshot(KEY1, new DocumentSnapshot(5, "{\"x\":12,\"y\":12}", 1), cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY1, cb_GetCompactedResults);
@@ -382,7 +382,7 @@ public class CaravanDataServiceTests {
 
       {
         SimpleIntCallback cb_CompactWorks = new SimpleIntCallback();
-        setup.service.snapshot(KEY2, 4, "{\"x\":10,\"y\":10}", 1, cb_CompactWorks);
+        setup.service.snapshot(KEY2, new DocumentSnapshot(4, "{\"x\":10,\"y\":10}", 1), cb_CompactWorks);
         cb_CompactWorks.assertSuccess(0);
         SimpleDataCallback cb_GetCompactedResults = new SimpleDataCallback();
         setup.service.get(KEY2, cb_GetCompactedResults);

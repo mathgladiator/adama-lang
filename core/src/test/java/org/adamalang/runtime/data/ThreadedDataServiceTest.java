@@ -89,7 +89,7 @@ public class ThreadedDataServiceTest {
           public void failure(ErrorCodeException ex) {}
         });
     CountDownLatch latchCompacted = new CountDownLatch(1);
-    ds.snapshot(key, 1, "{}",100, new Callback<Integer>() {
+    ds.snapshot(key, new DocumentSnapshot(1, "{}", 100), new Callback<Integer>() {
       @Override
       public void success(Integer value) {
         latchCompacted.countDown();

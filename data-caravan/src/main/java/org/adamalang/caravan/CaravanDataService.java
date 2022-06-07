@@ -364,15 +364,15 @@ public class CaravanDataService implements ArchivingDataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
-    if (history <= 0) {
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
+    if (snapshot.history <= 0) {
       callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_UNABLE_TO_COMPACT_NON_POSITIVE_HISTORY));
       return;
     }
     Events.Snapshot snap = new Events.Snapshot();
-    snap.seq = seq;
-    snap.document = snapshot;
-    snap.history = history;
+    snap.seq = snapshot.seq;
+    snap.document = snapshot.json;
+    snap.history = snapshot.history;
     ByteBuf buf = Unpooled.buffer();
     EventCodec.write(buf, snap);
     byte[] bytes = ByteArrayHelper.convert(buf);
@@ -386,7 +386,7 @@ public class CaravanDataService implements ArchivingDataService {
       } else {
         cached.handle(snap);
         cached.bump();
-        int toTrim = Math.min(size - 1, cached.reset()) - history;
+        int toTrim = Math.min(size - 1, cached.reset()) - snapshot.history;
         if (toTrim > 0) {
           store.trim(id, toTrim, () -> {});
         }

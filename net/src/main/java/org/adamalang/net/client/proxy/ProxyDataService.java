@@ -188,14 +188,15 @@ public class ProxyDataService implements DataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
     execute((channel) -> {
-      ByteBuf buf = channel.create(key.space.length() + key.key.length() + snapshot.length() + 64);
+      ByteBuf buf = channel.create(key.space.length() + key.key.length() + snapshot.json.length() + 64);
       ClientMessage.ProxySnapshot snap = new ClientMessage.ProxySnapshot();
       snap.space = key.space;
       snap.key = key.key;
-      snap.seq = seq;
-      snap.document = snapshot;
+      snap.seq = snapshot.seq;
+      snap.document = snapshot.json;
+      snap.history = snapshot.history;
       ClientCodec.write(buf, snap);
       channel.next(buf);
     }, wrapInt(callback));

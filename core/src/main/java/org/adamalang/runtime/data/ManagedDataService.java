@@ -116,10 +116,10 @@ public class ManagedDataService implements DataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
     base.on(key, (machine) -> {
       machine.write(new Action(() -> {
-        base.data.snapshot(key, seq, snapshot, history, callback);
+        base.data.snapshot(key, snapshot, callback);
       }, callback));
     });
   }

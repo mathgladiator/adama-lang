@@ -55,8 +55,8 @@ public class PrefixSplitDataService implements DataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
-    ds(key).snapshot(key, seq, snapshot, history, callback);
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
+    ds(key).snapshot(key, snapshot, callback);
   }
 
   @Override

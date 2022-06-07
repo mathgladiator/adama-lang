@@ -17,10 +17,7 @@ import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.mocks.SimpleDataCallback;
 import org.adamalang.mysql.mocks.SimpleIntCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
-import org.adamalang.runtime.data.ComputeMethod;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.data.RemoteDocumentUpdate;
-import org.adamalang.runtime.data.UpdateType;
+import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.natives.NtClient;
 import org.junit.Assert;
 import org.junit.Test;
@@ -181,7 +178,7 @@ public class BlockingDataServiceTests {
         }
 
         SimpleIntCallback cb5 = new SimpleIntCallback();
-        service.snapshot(KEY_2, 1, "{}", 10000, cb5);
+        service.snapshot(KEY_2, new DocumentSnapshot(1, "{}", 10000), cb5);
         cb5.assertSuccess(0);
 
         {
@@ -198,7 +195,7 @@ public class BlockingDataServiceTests {
         }
 
         SimpleIntCallback cb6 = new SimpleIntCallback();
-        service.snapshot(KEY_2, 1, "{}", 2, cb6);
+        service.snapshot(KEY_2, new DocumentSnapshot(1, "{}", 2), cb6);
         cb6.assertSuccess(1);
 
         {
@@ -215,7 +212,7 @@ public class BlockingDataServiceTests {
         }
 
         SimpleIntCallback cb7 = new SimpleIntCallback();
-        service.snapshot(KEY_2, 1,"{}", 0, cb7);
+        service.snapshot(KEY_2, new DocumentSnapshot(1, "{}", 0), cb7);
         cb7.assertSuccess(2);
 
         {

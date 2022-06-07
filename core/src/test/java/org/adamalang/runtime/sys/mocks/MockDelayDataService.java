@@ -111,8 +111,8 @@ public class MockDelayDataService implements DataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
-    enqueue(() -> parent.snapshot(key, seq, snapshot, history, callback));
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
+    enqueue(() -> parent.snapshot(key, snapshot, callback));
   }
 
   @Override

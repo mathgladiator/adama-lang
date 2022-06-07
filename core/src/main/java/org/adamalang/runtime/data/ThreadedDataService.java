@@ -79,8 +79,8 @@ public class ThreadedDataService implements DataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
-    at(key, (service) -> service.snapshot(key, seq, snapshot, history, callback));
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
+    at(key, (service) -> service.snapshot(key, snapshot, callback));
   }
 
   @Override

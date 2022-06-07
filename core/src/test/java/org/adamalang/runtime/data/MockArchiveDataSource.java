@@ -185,8 +185,8 @@ public class MockArchiveDataSource implements ArchivingDataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
-    data.snapshot(key, seq, snapshot, history, callback);
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
+    data.snapshot(key, snapshot, callback);
   }
 
   @Override

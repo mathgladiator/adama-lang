@@ -116,7 +116,7 @@ public class DumbDataService implements DataService {
   }
 
   @Override
-  public void snapshot(Key key, int seq, String snapshot, int history, Callback<Integer> callback) {
+  public void snapshot(Key key, DocumentSnapshot snapshot, Callback<Integer> callback) {
     throw new UnsupportedOperationException();
   }
 
