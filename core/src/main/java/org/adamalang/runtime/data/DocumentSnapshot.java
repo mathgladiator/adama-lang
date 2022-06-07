@@ -14,10 +14,12 @@ public class DocumentSnapshot {
   public final int seq;
   public final String json;
   public final int history;
+  public final long assetBytes;
 
-  public DocumentSnapshot(int seq, String json, int history) {
+  public DocumentSnapshot(int seq, String json, int history, long assetBytes) {
     this.seq = seq;
     this.json = json;
     this.history = history;
+    this.assetBytes = assetBytes;
   }
 }

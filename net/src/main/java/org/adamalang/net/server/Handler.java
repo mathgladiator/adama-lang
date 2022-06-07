@@ -154,7 +154,7 @@ public class Handler implements ByteStream, ClientCodec.HandlerServer, Streambac
   @Override
   public void handle(ClientMessage.ProxySnapshot payload) {
     Key key = new Key(payload.space, payload.key);
-    nexus.service.dataService.snapshot(key, new DocumentSnapshot(payload.seq, payload.document, payload.history), respondViaInteger());
+    nexus.service.dataService.snapshot(key, new DocumentSnapshot(payload.seq, payload.document, payload.history, payload.assetBytes), respondViaInteger());
   }
 
   @Override

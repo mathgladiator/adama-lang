@@ -282,6 +282,8 @@ public class ClientMessage {
     public int history;
     @FieldOrder(5)
     public String document;
+    @FieldOrder(6)
+    public long assetBytes;
   }
 
   @TypeId(9015)

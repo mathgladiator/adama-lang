@@ -115,7 +115,7 @@ public class PrefixSplitDataServiceTests {
           public void failure(ErrorCodeException ex) {}
         });
     CountDownLatch latchCompacted = new CountDownLatch(1);
-    ds.snapshot(key, new DocumentSnapshot(1, "{}",100), new Callback<Integer>() {
+    ds.snapshot(key, new DocumentSnapshot(1, "{}",100, 1234L), new Callback<Integer>() {
       @Override
       public void success(Integer value) {
         latchCompacted.countDown();

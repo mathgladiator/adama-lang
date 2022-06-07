@@ -80,7 +80,7 @@ public class ClientAsProxyTests {
         cb_PatchFailsFNF.assertFailure(144944);
 
         SimpleIntCallback cb_CompactFailsFNF = new SimpleIntCallback();
-        proxy.snapshot(KEY1, new DocumentSnapshot(1, "{}", 1), cb_CompactFailsFNF);
+        proxy.snapshot(KEY1, new DocumentSnapshot(1, "{}", 1, 1234L), cb_CompactFailsFNF);
         cb_CompactFailsFNF.assertFailure(103060);
 
         SimpleDataCallback cb_ComputeFailsFNF_Rewind = new SimpleDataCallback();
@@ -180,7 +180,7 @@ public class ClientAsProxyTests {
         cb_InitFailAlreadyExists.assertFailure(667658);
 
         SimpleIntCallback cb_Snapshot = new SimpleIntCallback();
-        proxy.snapshot(KEY1, new DocumentSnapshot(3, "{}", 1), cb_Snapshot);
+        proxy.snapshot(KEY1, new DocumentSnapshot(3, "{}", 1, 1234L), cb_Snapshot);
         cb_Snapshot.assertSuccess(3);
 
         {

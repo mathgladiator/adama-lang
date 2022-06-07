@@ -178,7 +178,7 @@ public class BlockingDataServiceTests {
         }
 
         SimpleIntCallback cb5 = new SimpleIntCallback();
-        service.snapshot(KEY_2, new DocumentSnapshot(1, "{}", 10000), cb5);
+        service.snapshot(KEY_2, new DocumentSnapshot(1, "{}", 10000, 1234L), cb5);
         cb5.assertSuccess(0);
 
         {
@@ -195,7 +195,7 @@ public class BlockingDataServiceTests {
         }
 
         SimpleIntCallback cb6 = new SimpleIntCallback();
-        service.snapshot(KEY_2, new DocumentSnapshot(1, "{}", 2), cb6);
+        service.snapshot(KEY_2, new DocumentSnapshot(1, "{}", 2, 1234L), cb6);
         cb6.assertSuccess(1);
 
         {
@@ -212,7 +212,7 @@ public class BlockingDataServiceTests {
         }
 
         SimpleIntCallback cb7 = new SimpleIntCallback();
-        service.snapshot(KEY_2, new DocumentSnapshot(1, "{}", 0), cb7);
+        service.snapshot(KEY_2, new DocumentSnapshot(1, "{}", 0, 1234L), cb7);
         cb7.assertSuccess(2);
 
         {

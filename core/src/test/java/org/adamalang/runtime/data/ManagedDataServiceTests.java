@@ -133,7 +133,7 @@ public class ManagedDataServiceTests {
       }
       {
         SimpleIntCallback cb_Snapshot = new SimpleIntCallback();
-        setup.managed.snapshot(KEY1, new DocumentSnapshot(2, "{\"x\":1234}", 1), cb_Snapshot);
+        setup.managed.snapshot(KEY1, new DocumentSnapshot(2, "{\"x\":1234}", 1, 1234L), cb_Snapshot);
         cb_Snapshot.assertSuccess(-1);
       }
       {
