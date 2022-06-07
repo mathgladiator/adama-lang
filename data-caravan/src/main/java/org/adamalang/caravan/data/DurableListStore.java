@@ -63,7 +63,7 @@ public class DurableListStore {
   /**
    * Construct the durable list store!
    * @param metrics useful insights into the store
-   * @param storeFile the file used to store the data
+   * @param storeFile the directory used to store the data
    * @param walRoot the directory containing the write ahead log
    * @param size - the size of the file to use
    * @param flushCutOffBytes - the number of bytes until we force a flush
@@ -73,8 +73,10 @@ public class DurableListStore {
   public DurableListStore(DurableListStoreMetrics metrics, File storeFile, File walRoot, long size, int flushCutOffBytes, long maxLogSize) throws IOException {
     this.metrics = metrics;
     this.index = new Index();
-    this.heap = new SequenceHeap(new LimitHeap(new IndexedHeap(size / 4), 8196), new IndexedHeap((size * 3) / 4));
-    this.storage = new MemoryMappedFileStorage(storeFile, size);
+    DurableListStoreSizing sizing = new DurableListStoreSizing(size, storeFile);
+    this.heap = sizing.heap;
+    this.storage = sizing.storage;
+
     this.notifications = new ArrayList<>();
     // build the buffer
     this.walRoot = walRoot;

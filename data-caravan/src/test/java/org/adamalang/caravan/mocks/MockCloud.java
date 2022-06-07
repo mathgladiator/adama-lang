@@ -22,7 +22,7 @@ public class MockCloud implements Cloud {
 
   public MockCloud() {
     try {
-      path = new File(File.createTempFile("abc", "def").getParentFile(), "_ADAMA_TEMP_" + System.currentTimeMillis());
+      path = new File(File.createTempFile("adama_abc", "def").getParentFile(), "_ADAMA_TEMP_" + System.currentTimeMillis());
       path.mkdir();
       map = new HashMap<>();
       Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
