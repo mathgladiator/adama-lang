@@ -16,14 +16,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class SecureAssetUtil {
-  public static KeyGenerator getKeyGenerator(String algorithm) {
-    try {
-      return KeyGenerator.getInstance(algorithm);
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
-    }
-  }
-
   public static String encryptToBase64(SecretKey key, String id) {
     try {
       Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -71,5 +63,13 @@ public class SecureAssetUtil {
     keygen.init(192);
     SecretKey key = keygen.generateKey();
     return Base64.getEncoder().encodeToString(key.getEncoded());
+  }
+
+  public static KeyGenerator getKeyGenerator(String algorithm) {
+    try {
+      return KeyGenerator.getInstance(algorithm);
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
   }
 }

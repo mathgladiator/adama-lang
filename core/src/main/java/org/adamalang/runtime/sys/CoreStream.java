@@ -30,7 +30,7 @@ public class CoreStream {
   private final DurableLivingDocument document;
   private final PrivateView view;
 
-  public CoreStream(CoreRequestContext context, CoreMetrics metrics,PredictiveInventory inventory, DurableLivingDocument document, PrivateView view) {
+  public CoreStream(CoreRequestContext context, CoreMetrics metrics, PredictiveInventory inventory, DurableLivingDocument document, PrivateView view) {
     this.context = context;
     this.metrics = metrics;
     this.inventory = inventory;

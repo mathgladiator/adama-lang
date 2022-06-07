@@ -857,12 +857,14 @@ public class LibArithmetic {
       }
       return false;
     }
+
     public static boolean o(boolean x, NtMaybe<Boolean> y) {
       if (y.has()) {
         return x && y.get();
       }
       return false;
     }
+
     public static boolean o(NtMaybe<Boolean> x, NtMaybe<Boolean> y) {
       if (x.has() && y.has()) {
         return x.get() && y.get();
@@ -878,12 +880,14 @@ public class LibArithmetic {
       }
       return y;
     }
+
     public static boolean o(boolean x, NtMaybe<Boolean> y) {
       if (y.has()) {
         return x || y.get();
       }
       return x;
     }
+
     public static boolean o(NtMaybe<Boolean> x, NtMaybe<Boolean> y) {
       if (x.has() && y.has()) {
         return x.get() || y.get();
@@ -904,12 +908,14 @@ public class LibArithmetic {
       }
       return LibMath.xor(false, y);
     }
+
     public static boolean o(boolean x, NtMaybe<Boolean> y) {
       if (y.has()) {
         return LibMath.xor(x, y.get());
       }
       return LibMath.xor(x, false);
     }
+
     public static boolean o(NtMaybe<Boolean> x, NtMaybe<Boolean> y) {
       if (x.has() && y.has()) {
         LibMath.xor(x.get(), y.get());

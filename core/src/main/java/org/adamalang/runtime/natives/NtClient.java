@@ -31,7 +31,7 @@ public class NtClient implements Comparable<NtClient> {
   public boolean equals(final Object o) {
     if (o instanceof NtClient) {
       NtClient other = (NtClient) o;
-      return other == this ? true : (other.cachedHash == cachedHash ? compareTo((NtClient) o) == 0 : false);
+      return other == this || (other.cachedHash == cachedHash && compareTo((NtClient) o) == 0);
     }
     return false;
   }

@@ -23,15 +23,15 @@ public class OrganizationSnapshot implements WALEntry {
     this.index = index;
   }
 
+  public static void populateAfterTypeId(ByteBuf buf, Heap heap, Index index) {
+    heap.load(buf);
+    index.load(buf);
+  }
+
   @Override
   public void write(ByteBuf buf) {
     buf.writeByte(0x55);
     heap.snapshot(buf);
     index.snapshot(buf);
-  }
-
-  public static void populateAfterTypeId(ByteBuf buf, Heap heap, Index index) {
-    heap.load(buf);
-    index.load(buf);
   }
 }

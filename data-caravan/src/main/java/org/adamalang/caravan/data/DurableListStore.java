@@ -49,24 +49,19 @@ public class DurableListStore {
 
   // We use a netty buffer for writing data; TODO: use a different construction since we have minimal overhead
   private final ByteBuf buffer;
+  // how many bytes until we introduce a flush
+  private final int flushCutOffBytes;
+  // how big will we allow the log file to get
+  private final long maxLogSize;
+  // notifications when the requested action was committed
+  private final ArrayList<Runnable> notifications;
   private byte[] pageBuffer;
-
   // the write ahead log stream
   private DataOutputStream output;
   private long bytesWrittenToLog;
 
-  // how many bytes until we introduce a flush
-  private final int flushCutOffBytes;
-
-  // how big will we allow the log file to get
-  private final long maxLogSize;
-
-  // notifications when the requested action was committed
-  private final ArrayList<Runnable> notifications;
-
   /**
    * Construct the durable list store!
-   *
    * @param metrics useful insights into the store
    * @param storeFile the file used to store the data
    * @param walRoot the directory containing the write ahead log
@@ -102,12 +97,6 @@ public class DurableListStore {
     openLogForWriting();
   }
 
-  /** internal: open the log for writing */
-  private void openLogForWriting() throws IOException {
-    this.output = new DataOutputStream(new FileOutputStream(new File(walRoot, "WAL"), true));
-    this.bytesWrittenToLog = 0;
-  }
-
   /** internal: load and commit the data from the write-ahead log */
   private void load(File walFile) throws IOException {
     DataInputStream input = new DataInputStream(new FileInputStream(walFile));
@@ -121,16 +110,16 @@ public class DurableListStore {
           byte code = buf.readByte();
           switch (code) {
             case 0x42: // append
-              {
-                Append append = Append.readAfterTypeId(buf);
-                Region region = heap.ask(append.bytes.length);
-                if (region.position != append.position) {
-                  throw new IOException("heap corruption!");
-                }
-                index.append(append.id, new AnnotatedRegion(region.position, region.size, append.seq, append.assetBytes));
-                storage.write(region, append.bytes);
+            {
+              Append append = Append.readAfterTypeId(buf);
+              Region region = heap.ask(append.bytes.length);
+              if (region.position != append.position) {
+                throw new IOException("heap corruption!");
               }
-              break;
+              index.append(append.id, new AnnotatedRegion(region.position, region.size, append.seq, append.assetBytes));
+              storage.write(region, append.bytes);
+            }
+            break;
             case 0x66: // delete
               for (Region region : index.delete(Delete.readAfterTypeId(buf).id)) {
                 heap.free(region);
@@ -155,11 +144,6 @@ public class DurableListStore {
     }
   }
 
-  /** how many bytes are available to allocate */
-  public long available() {
-    return heap.available();
-  }
-
   /** internal: prepare a new write-ahead file */
   private File prepare() throws IOException {
     File newWalFile = new File(walRoot, "WAL.NEW-" + System.currentTimeMillis());
@@ -172,13 +156,10 @@ public class DurableListStore {
     return newWalFile;
   }
 
-  /** internal: force everything to flush, prepare a new file, the move the new file in place, and open it */
-  private void cutOver() throws IOException {
-    storage.flush();
-    output.close();
-    File newFile = prepare();
-    Files.move(newFile.toPath(), new File(walRoot, "WAL").toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-    openLogForWriting();
+  /** internal: open the log for writing */
+  private void openLogForWriting() throws IOException {
+    this.output = new DataOutputStream(new FileOutputStream(new File(walRoot, "WAL"), true));
+    this.bytesWrittenToLog = 0;
   }
 
   /** internal: write a page to the log */
@@ -205,6 +186,11 @@ public class DurableListStore {
       }
     }
     return true;
+  }
+
+  /** how many bytes are available to allocate */
+  public long available() {
+    return heap.available();
   }
 
   /** append a byte array to the given id */
@@ -245,6 +231,42 @@ public class DurableListStore {
       flush(false);
     }
     return lastSize;
+  }
+
+  /** flush to disk */
+  public void flush(boolean forceCutOver) {
+    try {
+      metrics.flush.run();
+      if (writePage(output, buffer)) {
+        output.flush();
+      }
+      buffer.resetReaderIndex();
+      buffer.resetWriterIndex();
+
+      if (bytesWrittenToLog >= maxLogSize || forceCutOver) {
+        cutOver();
+      }
+
+      // feels excessive, is it better to copy OR re-init? Could we trust the client to simply _not_ be re-entrant?
+      ArrayList<Runnable> notificationClone = new ArrayList<>(notifications);
+      notifications.clear();
+
+      for (Runnable notification : notificationClone) {
+        notification.run();
+      }
+    } catch (IOException ex) {
+      LOGGER.error("critical-exception:", ex);
+      System.exit(100);
+    }
+  }
+
+  /** internal: force everything to flush, prepare a new file, the move the new file in place, and open it */
+  private void cutOver() throws IOException {
+    storage.flush();
+    output.close();
+    File newFile = prepare();
+    Files.move(newFile.toPath(), new File(walRoot, "WAL").toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+    openLogForWriting();
   }
 
   public Integer append(long id, byte[] bytes, int seq, long assetBytes, Runnable notification) {
@@ -315,33 +337,6 @@ public class DurableListStore {
   /** does the given id exist within the system */
   public boolean exists(long id) {
     return index.exists(id);
-  }
-
-  /** flush to disk */
-  public void flush(boolean forceCutOver) {
-    try {
-      metrics.flush.run();
-      if (writePage(output, buffer)) {
-        output.flush();
-      }
-      buffer.resetReaderIndex();
-      buffer.resetWriterIndex();
-
-      if (bytesWrittenToLog >= maxLogSize || forceCutOver) {
-        cutOver();
-      }
-
-      // feels excessive, is it better to copy OR re-init? Could we trust the client to simply _not_ be re-entrant?
-      ArrayList<Runnable> notificationClone = new ArrayList<>(notifications);
-      notifications.clear();
-
-      for (Runnable notification : notificationClone) {
-        notification.run();
-      }
-    } catch (IOException ex) {
-      LOGGER.error("critical-exception:", ex);
-      System.exit(100);
-    }
   }
 
   public void shutdown() throws IOException {

@@ -15,5 +15,5 @@ import io.netty.buffer.ByteBuf;
 public interface WALEntry<T> {
 
   /** write a single buffer */
-  public void write(ByteBuf buf);
+  void write(ByteBuf buf);
 }

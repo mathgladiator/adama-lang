@@ -19,12 +19,12 @@ public class Delete implements WALEntry<Delete> {
     this.id = id;
   }
 
+  public static Delete readAfterTypeId(ByteBuf buf) {
+    return new Delete(buf.readLongLE());
+  }
+
   public void write(ByteBuf buf) {
     buf.writeByte(0x66);
     buf.writeLongLE(id);
-  }
-
-  public static Delete readAfterTypeId(ByteBuf buf) {
-    return new Delete(buf.readLongLE());
   }
 }

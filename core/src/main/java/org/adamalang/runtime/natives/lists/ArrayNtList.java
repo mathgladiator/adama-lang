@@ -125,11 +125,6 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
   }
 
   @Override
-  public Iterator<Ty> iterator() {
-    return list.iterator();
-  }
-
-  @Override
   @SuppressWarnings("unchecked")
   public Ty[] toArray(final Function<Integer, Object> arrayMaker) {
     return list.toArray((Ty[]) arrayMaker.apply(list.size()));
@@ -153,5 +148,10 @@ public class ArrayNtList<Ty> implements NtList<Ty> {
       }
     }
     return new ArrayNtList<>(next);
+  }
+
+  @Override
+  public Iterator<Ty> iterator() {
+    return list.iterator();
   }
 }

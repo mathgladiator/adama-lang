@@ -10,7 +10,6 @@
 package org.adamalang.caravan.data;
 
 import org.adamalang.caravan.index.Region;
-import org.adamalang.caravan.index.heaps.SequenceHeap;
 
 import java.io.IOException;
 

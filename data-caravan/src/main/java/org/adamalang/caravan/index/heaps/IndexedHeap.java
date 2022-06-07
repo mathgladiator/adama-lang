@@ -22,35 +22,6 @@ public class IndexedHeap implements Heap {
   private final HashMap<Long, FreeSpace> right;
   private final TreeMap<Long, TreeMap<Long, FreeSpace>> sized;
 
-  /** a mapping of free space */
-  private class FreeSpace implements Comparable<FreeSpace> {
-    private long start;
-    private long size;
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-      FreeSpace freeSpace = (FreeSpace) o;
-      return start == freeSpace.start && size == freeSpace.size;// && Objects.equals(prior, freeSpace.prior) && Objects.equals(next, freeSpace.next);
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(start, size);
-    }
-
-    @Override
-    public String toString() {
-      return "[" + start + "," + (start + size) + ")";
-    }
-
-    @Override
-    public int compareTo(FreeSpace o) {
-      return Long.compare(start, o.start);
-    }
-  }
-
   /** construct the heap as empty with the given maximum size available */
   public IndexedHeap(long maximumSize) {
     this.maximumSize = maximumSize;
@@ -61,6 +32,17 @@ public class IndexedHeap implements Heap {
     head.start = 0;
     head.size = maximumSize;
     add(head);
+  }
+
+  private void add(FreeSpace space) {
+    left.put(space.start, space);
+    right.put(space.start + space.size, space);
+    TreeMap<Long, FreeSpace> bucket = sized.get(space.size);
+    if (bucket == null) {
+      bucket = new TreeMap<>();
+      sized.put(space.size, bucket);
+    }
+    bucket.put(space.start, space);
   }
 
   @Override
@@ -92,27 +74,6 @@ public class IndexedHeap implements Heap {
     space.size -= size;
     add(space);
     return region;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    TreeSet<FreeSpace> items = new TreeSet<>(left.values());
-    for (FreeSpace current : items) {
-      sb.append(current.toString());
-    }
-    return sb.toString();
-  }
-
-  private void add(FreeSpace space) {
-    left.put(space.start, space);
-    right.put(space.start + space.size, space);
-    TreeMap<Long, FreeSpace> bucket = sized.get(space.size);
-    if (bucket == null) {
-      bucket = new TreeMap<>();
-      sized.put(space.size, bucket);
-    }
-    bucket.put(space.start, space);
   }
 
   private void remove(FreeSpace space) {
@@ -179,6 +140,45 @@ public class IndexedHeap implements Heap {
       current.start = buf.readLongLE();
       current.size = buf.readLongLE();
       add(current);
+    }
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    TreeSet<FreeSpace> items = new TreeSet<>(left.values());
+    for (FreeSpace current : items) {
+      sb.append(current.toString());
+    }
+    return sb.toString();
+  }
+
+  /** a mapping of free space */
+  private class FreeSpace implements Comparable<FreeSpace> {
+    private long start;
+    private long size;
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(start, size);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+      FreeSpace freeSpace = (FreeSpace) o;
+      return start == freeSpace.start && size == freeSpace.size;// && Objects.equals(prior, freeSpace.prior) && Objects.equals(next, freeSpace.next);
+    }
+
+    @Override
+    public String toString() {
+      return "[" + start + "," + (start + size) + ")";
+    }
+
+    @Override
+    public int compareTo(FreeSpace o) {
+      return Long.compare(start, o.start);
     }
   }
 }

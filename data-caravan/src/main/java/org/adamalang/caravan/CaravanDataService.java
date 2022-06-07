@@ -45,78 +45,6 @@ public class CaravanDataService implements ArchivingDataService {
   }
 
   @Override
-  public void backup(Key key, Callback<BackupResult> callback) {
-    String archiveKey = ProtectedUUID.generate() + "-" + System.currentTimeMillis();
-    execute("backup", key, true, callback, (id, cached) -> {
-      int seq = cached.seq();
-      AtomicLong deltaBytes = new AtomicLong(0); // TODO: need just a RefLong
-      File tempOutput = new File(cloud.path(), archiveKey + ".temp");
-      File finalOutput = new File(cloud.path(), archiveKey + ".archive");
-      try {
-        // TODO: have some kind of accumlator and we need to think about metadata for asset bytes
-        DataOutputStream output = new DataOutputStream(new FileOutputStream(tempOutput));
-        store.read(id, new ByteArrayStream() {
-          @Override
-          public void next(int appendIndex, byte[] value, int seq, long assetBytes) throws Exception {
-            deltaBytes.addAndGet(value.length);
-            output.writeBoolean(true);
-            output.writeInt(value.length);
-            output.write(value);
-          }
-
-          @Override
-          public void finished() throws Exception {
-            output.writeBoolean(false);
-          }
-        });
-        output.flush();
-        output.close();
-        Files.move(tempOutput.toPath(), finalOutput.toPath(), StandardCopyOption.ATOMIC_MOVE);
-      } catch (Exception ioex) {
-        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_BACKUP_EXCEPTION, ioex));
-        return;
-      }
-      cloud.backup(finalOutput, new Callback<Void>() {
-        @Override
-        // TODO: compute real asset bytes
-        public void success(Void value) {
-          callback.success(new BackupResult(archiveKey, seq, deltaBytes.get(), 0));
-        }
-
-        @Override
-        public void failure(ErrorCodeException ex) {
-          callback.failure(ex);
-        }
-      });
-    });
-  }
-
-  private void mergeRestore(long id, LocalCache cached, ArrayList<byte[]> writes, Callback<Void> callback) {
-    ArrayList<byte[]> filtered = cached.filter(writes);
-    if (filtered.size() == 0) {
-      callback.success(null);
-      return;
-    }
-    RestoreWalker walker = new RestoreWalker();
-    for (byte[] toAppend : filtered) {
-      EventCodec.route(Unpooled.wrappedBuffer(toAppend), walker);
-    }
-    if (store.append(id, filtered, walker.seq, walker.assetBytes, () -> {
-      executor.execute(new NamedRunnable("restore-write-map") {
-        @Override
-        public void execute() throws Exception {
-          for (byte[] write : filtered) {
-            EventCodec.route(Unpooled.wrappedBuffer(write), cached);
-          }
-          callback.success(null);
-        }
-      });
-    }) == null) {
-      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_MERGE_RESTORE_OUT_OF_SPACE));
-    }
-  }
-
-  @Override
   public void restore(Key key, String archiveKey, Callback<Void> callback) {
     // ask the cloud to ensure the archive key has been downloaded
     cloud.restore(archiveKey, new Callback<File>() {
@@ -126,7 +54,7 @@ public class CaravanDataService implements ArchivingDataService {
         ArrayList<byte[]> writes = new ArrayList<>();
         try {
           try (DataInputStream input = new DataInputStream(new FileInputStream(archiveFile))) {
-            while(input.readBoolean()) {
+            while (input.readBoolean()) {
               byte[] bytes = new byte[input.readInt()];
               input.readFully(bytes);
               writes.add(bytes);
@@ -176,6 +104,53 @@ public class CaravanDataService implements ArchivingDataService {
       public void failure(ErrorCodeException ex) {
         callback.failure(ex);
       }
+    });
+  }
+
+  @Override
+  public void backup(Key key, Callback<BackupResult> callback) {
+    String archiveKey = ProtectedUUID.generate() + "-" + System.currentTimeMillis();
+    execute("backup", key, true, callback, (id, cached) -> {
+      int seq = cached.seq();
+      AtomicLong deltaBytes = new AtomicLong(0); // TODO: need just a RefLong
+      File tempOutput = new File(cloud.path(), archiveKey + ".temp");
+      File finalOutput = new File(cloud.path(), archiveKey + ".archive");
+      try {
+        // TODO: have some kind of accumlator and we need to think about metadata for asset bytes
+        DataOutputStream output = new DataOutputStream(new FileOutputStream(tempOutput));
+        store.read(id, new ByteArrayStream() {
+          @Override
+          public void next(int appendIndex, byte[] value, int seq, long assetBytes) throws Exception {
+            deltaBytes.addAndGet(value.length);
+            output.writeBoolean(true);
+            output.writeInt(value.length);
+            output.write(value);
+          }
+
+          @Override
+          public void finished() throws Exception {
+            output.writeBoolean(false);
+          }
+        });
+        output.flush();
+        output.close();
+        Files.move(tempOutput.toPath(), finalOutput.toPath(), StandardCopyOption.ATOMIC_MOVE);
+      } catch (Exception ioex) {
+        callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_BACKUP_EXCEPTION, ioex));
+        return;
+      }
+      cloud.backup(finalOutput, new Callback<Void>() {
+        @Override
+        // TODO: compute real asset bytes
+        public void success(Void value) {
+          callback.success(new BackupResult(archiveKey, seq, deltaBytes.get(), 0));
+        }
+
+        @Override
+        public void failure(ErrorCodeException ex) {
+          callback.failure(ex);
+        }
+      });
     });
   }
 
@@ -242,6 +217,31 @@ public class CaravanDataService implements ArchivingDataService {
       store.read(id, builder);
     } catch (Exception ex) {
       callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_LOAD_FAILURE_EXCEPTION));
+    }
+  }
+
+  private void mergeRestore(long id, LocalCache cached, ArrayList<byte[]> writes, Callback<Void> callback) {
+    ArrayList<byte[]> filtered = cached.filter(writes);
+    if (filtered.size() == 0) {
+      callback.success(null);
+      return;
+    }
+    RestoreWalker walker = new RestoreWalker();
+    for (byte[] toAppend : filtered) {
+      EventCodec.route(Unpooled.wrappedBuffer(toAppend), walker);
+    }
+    if (store.append(id, filtered, walker.seq, walker.assetBytes, () -> {
+      executor.execute(new NamedRunnable("restore-write-map") {
+        @Override
+        public void execute() throws Exception {
+          for (byte[] write : filtered) {
+            EventCodec.route(Unpooled.wrappedBuffer(write), cached);
+          }
+          callback.success(null);
+        }
+      });
+    }) == null) {
+      callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_MERGE_RESTORE_OUT_OF_SPACE));
     }
   }
 
@@ -361,7 +361,8 @@ public class CaravanDataService implements ArchivingDataService {
   @Override
   public void delete(Key key, Callback<Void> callback) {
     execute("delete", key, false, callback, (id, cached) -> {
-      store.delete(id, () -> {});
+      store.delete(id, () -> {
+      });
       callback.success(null);
       cache.remove(id);
     });
@@ -393,9 +394,20 @@ public class CaravanDataService implements ArchivingDataService {
         cached.bump();
         int toTrim = Math.min(size - 1, cached.reset()) - snapshot.history;
         if (toTrim > 0) {
-          store.trim(id, toTrim, () -> {});
+          store.trim(id, toTrim, () -> {
+          });
         }
       }
+    });
+  }
+
+  @Override
+  public void close(Key key, Callback<Void> callback) {
+    execute("close", key, false, callback, (id, cached) -> {
+      if (cached != null) {
+        cache.remove(id);
+      }
+      callback.success(null);
     });
   }
 
@@ -409,15 +421,5 @@ public class CaravanDataService implements ArchivingDataService {
       }
     });
     return latch;
-  }
-
-  @Override
-  public void close(Key key, Callback<Void> callback) {
-    execute("close", key, false, callback, (id, cached) -> {
-      if (cached != null) {
-        cache.remove(id);
-      }
-      callback.success(null);
-    });
   }
 }

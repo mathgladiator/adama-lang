@@ -16,11 +16,11 @@ import java.io.File;
 /** restore/backup from the cloud */
 public interface Cloud {
   /** the path for where cloud files are stored */
-  public File path();
+  File path();
 
   /** restore the archive key from the cloud to a local file */
-  public void restore(String archiveKey, Callback<File> callback);
+  void restore(String archiveKey, Callback<File> callback);
 
   /** backup the given file and send to the cloud */
-  public void backup(File archiveFile, Callback<Void> callback);
+  void backup(File archiveFile, Callback<Void> callback);
 }
