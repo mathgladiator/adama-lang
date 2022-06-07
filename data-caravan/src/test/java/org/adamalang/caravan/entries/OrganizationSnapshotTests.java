@@ -11,13 +11,22 @@ package org.adamalang.caravan.entries;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import org.adamalang.caravan.index.AnnotatedRegion;
 import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Index;
+import org.adamalang.caravan.index.Region;
 import org.adamalang.caravan.index.heaps.IndexedHeap;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class OrganizationSnapshotTests {
+
+  private AnnotatedRegion wrap(Region r) {
+    return new AnnotatedRegion(r.position, r.size, 0, 0L);
+  }
+
   @Test
   public void snapshot() {
     ByteBuf buf = Unpooled.buffer();
@@ -26,11 +35,11 @@ public class OrganizationSnapshotTests {
     {
       Heap heap = new IndexedHeap(1024);
       Index index = new Index();
-      index.append(1, heap.ask(42));
-      index.append(2, heap.ask(100));
-      index.append(2, heap.ask(100));
-      index.append(2, heap.ask(100));
-      index.append(3, heap.ask(50));
+      index.append(1, wrap(heap.ask(42)));
+      index.append(2, wrap(heap.ask(100)));
+      index.append(2, wrap(heap.ask(100)));
+      index.append(2, wrap(heap.ask(100)));
+      index.append(3, wrap(heap.ask(50)));
       givenHeap = heap.toString();
       givenIndex = index.toString();
       OrganizationSnapshot snapshot = new OrganizationSnapshot(heap, index);

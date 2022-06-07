@@ -317,6 +317,7 @@ public class ClientCodec {
     o.seq = buf.readIntLE();
     o.history = buf.readIntLE();
     o.document = Helper.readString(buf);
+    o.assetBytes = buf.readLongLE();
     return o;
   }
 
@@ -658,6 +659,7 @@ public class ClientCodec {
     buf.writeIntLE(o.seq);
     buf.writeIntLE(o.history);
     Helper.writeString(buf, o.document);;
+    buf.writeLongLE(o.assetBytes);
   }
 
   public static void write(ByteBuf buf, ProxyDelete o) {

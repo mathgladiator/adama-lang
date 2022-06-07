@@ -15,15 +15,15 @@ import java.util.*;
 
 /** maps longs to lists of regions */
 public class Index {
-  private final HashMap<Long, ArrayList<Region>> index;
+  private final HashMap<Long, ArrayList<AnnotatedRegion>> index;
 
   public Index() {
     this.index = new HashMap<>();
   }
 
   /** append a region to an id */
-  public int append(long id, Region region) {
-    ArrayList<Region> regions = index.get(id);
+  public int append(long id, AnnotatedRegion region) {
+    ArrayList<AnnotatedRegion> regions = index.get(id);
     if (regions == null) {
       regions = new ArrayList<>();
       index.put(id, regions);
@@ -33,8 +33,8 @@ public class Index {
   }
 
   /** return the regions bound to an object */
-  public Iterator<Region> get(long id) {
-    List<Region> regions = index.get(id);
+  public Iterator<AnnotatedRegion> get(long id) {
+    List<AnnotatedRegion> regions = index.get(id);
     if (regions == null) {
       regions = Collections.emptyList();
     }
@@ -47,19 +47,19 @@ public class Index {
   }
 
   /** delete an object by id; return the regions allocated to it */
-  public ArrayList<Region> delete(long id) {
+  public ArrayList<AnnotatedRegion> delete(long id) {
     return index.remove(id);
   }
 
   /** trim the head of an object (by id) the given count; returned the returned regions */
-  public ArrayList<Region> trim(long id, int count) {
-    ArrayList<Region> regions = index.get(id);
+  public ArrayList<AnnotatedRegion> trim(long id, int count) {
+    ArrayList<AnnotatedRegion> regions = index.get(id);
     if (regions != null) {
-      ArrayList<Region> trimmed = new ArrayList<>();
-      Iterator<Region> it = regions.iterator();
+      ArrayList<AnnotatedRegion> trimmed = new ArrayList<>();
+      Iterator<AnnotatedRegion> it = regions.iterator();
       int k = 0;
       while (k < count && it.hasNext()) {
-        Region region = it.next();
+        AnnotatedRegion region = it.next();
         trimmed.add(region);
         it.remove();
         k++;
@@ -71,13 +71,15 @@ public class Index {
 
   /** take a snapshot of the index */
   public void snapshot(ByteBuf buf) {
-    for (Map.Entry<Long, ArrayList<Region>> entry : index.entrySet()) {
+    for (Map.Entry<Long, ArrayList<AnnotatedRegion>> entry : index.entrySet()) {
       buf.writeBoolean(true);
       buf.writeLongLE(entry.getKey());
       buf.writeIntLE(entry.getValue().size());
-      for (Region region: entry.getValue()) {
+      for (AnnotatedRegion region: entry.getValue()) {
         buf.writeLongLE(region.position);
         buf.writeIntLE(region.size);
+        buf.writeIntLE(region.seq);
+        buf.writeLongLE(region.assetBytes);
       }
     }
     buf.writeBoolean(false);
@@ -89,11 +91,13 @@ public class Index {
     while (buf.readBoolean()) {
       long id = buf.readLongLE();
       int count = buf.readIntLE();
-      ArrayList<Region> regions = new ArrayList<>(count);
+      ArrayList<AnnotatedRegion> regions = new ArrayList<>(count);
       for (int k = 0; k < count; k++) {
         long start = buf.readLongLE();
         int size = buf.readIntLE();
-        Region region = new Region(start, size);
+        int seq = buf.readIntLE();
+        long assetBytes = buf.readLongLE();
+        AnnotatedRegion region = new AnnotatedRegion(start, size, seq, assetBytes);
         regions.add(region);
       }
       index.put(id, regions);
@@ -103,9 +107,9 @@ public class Index {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    for (Map.Entry<Long, ArrayList<Region>> entry : index.entrySet()) {
+    for (Map.Entry<Long, ArrayList<AnnotatedRegion>> entry : index.entrySet()) {
       sb.append(entry.getKey()).append("=");
-      for (Region region : entry.getValue()) {
+      for (AnnotatedRegion region : entry.getValue()) {
         sb.append(region.toString());
       }
       sb.append(";");

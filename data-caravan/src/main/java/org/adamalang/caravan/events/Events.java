@@ -75,6 +75,8 @@ public interface Events {
     public int history;
     @FieldOrder(3)
     public String document;
+    @FieldOrder(4)
+    public long assetBytes;
   }
 
   public static void main(String[] args) throws Exception {

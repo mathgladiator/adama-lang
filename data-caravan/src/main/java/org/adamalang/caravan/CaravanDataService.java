@@ -16,10 +16,7 @@ import org.adamalang.caravan.contracts.ByteArrayStream;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.caravan.contracts.KeyToIdService;
 import org.adamalang.caravan.data.DurableListStore;
-import org.adamalang.caravan.events.ByteArrayHelper;
-import org.adamalang.caravan.events.EventCodec;
-import org.adamalang.caravan.events.Events;
-import org.adamalang.caravan.events.LocalCache;
+import org.adamalang.caravan.events.*;
 import org.adamalang.common.*;
 import org.adamalang.runtime.data.*;
 
@@ -100,7 +97,11 @@ public class CaravanDataService implements ArchivingDataService {
       callback.success(null);
       return;
     }
-    if (store.append(id, filtered, () -> {
+    RestoreWalker walker = new RestoreWalker();
+    for (byte[] toAppend : filtered) {
+      EventCodec.route(Unpooled.wrappedBuffer(toAppend), walker);
+    }
+    if (store.append(id, filtered, walker.seq, walker.assetBytes, () -> {
       executor.execute(new NamedRunnable("restore-write-map") {
         @Override
         public void execute() throws Exception {
@@ -286,7 +287,7 @@ public class CaravanDataService implements ArchivingDataService {
       };
       builder.handle(change);
       builder.bump();
-      if (store.append(id, ByteArrayHelper.convert(buf), () -> {
+      if (store.append(id, ByteArrayHelper.convert(buf), patch.seqEnd, 0L, () -> {
         executor.execute(new NamedRunnable("commit-cache") {
           @Override
           public void execute() throws Exception {
@@ -304,10 +305,13 @@ public class CaravanDataService implements ArchivingDataService {
   public void patch(Key key, RemoteDocumentUpdate[] patches, Callback<Void> callback) {
     Events.Batch batch = new Events.Batch();
     batch.changes = new Events.Change[patches.length];
+    long assetBytesSum = 0;
     for (int k = 0; k < patches.length; k++) {
       batch.changes[k] = new Events.Change();
       batch.changes[k].copyFrom(patches[k]);
+      assetBytesSum += patches[k].assetBytes;
     }
+    final long assetBytes = assetBytesSum;
     ByteBuf buf = Unpooled.buffer();
     EventCodec.write(buf, batch);
     byte[] write = ByteArrayHelper.convert(buf);
@@ -316,7 +320,7 @@ public class CaravanDataService implements ArchivingDataService {
         callback.failure(new ErrorCodeException(ErrorCodes.UNIVERSAL_PATCH_FAILURE_HEAD_SEQ_OFF));
         return;
       }
-      if (store.append(id, write, () -> {
+      if (store.append(id, write, patches[patches.length - 1].seqEnd, assetBytes, () -> {
         executor.execute(new NamedRunnable("patch-commit") {
           @Override
           public void execute() throws Exception {
@@ -373,12 +377,13 @@ public class CaravanDataService implements ArchivingDataService {
     snap.seq = snapshot.seq;
     snap.document = snapshot.json;
     snap.history = snapshot.history;
+    snap.assetBytes = snapshot.assetBytes;
     ByteBuf buf = Unpooled.buffer();
     EventCodec.write(buf, snap);
     byte[] bytes = ByteArrayHelper.convert(buf);
 
     execute("snapshot", key, true, callback, (id, cached) -> {
-      Integer size = store.append(id, bytes, () -> {
+      Integer size = store.append(id, bytes, snapshot.seq, snapshot.assetBytes, () -> {
         callback.success(0);// huh, this is interesting
       });
       if (size == null) {

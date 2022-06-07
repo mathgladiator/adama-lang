@@ -16,6 +16,7 @@ import org.adamalang.caravan.entries.Append;
 import org.adamalang.caravan.entries.Delete;
 import org.adamalang.caravan.entries.OrganizationSnapshot;
 import org.adamalang.caravan.entries.Trim;
+import org.adamalang.caravan.index.AnnotatedRegion;
 import org.adamalang.caravan.index.Heap;
 import org.adamalang.caravan.index.Index;
 import org.adamalang.caravan.index.Region;
@@ -124,7 +125,7 @@ public class DurableListStore {
                 if (region.position != append.position) {
                   throw new IOException("heap corruption!");
                 }
-                index.append(append.id, region);
+                index.append(append.id, new AnnotatedRegion(region.position, region.size, append.seq, append.assetBytes));
                 storage.write(region, append.bytes);
               }
               break;
@@ -205,7 +206,7 @@ public class DurableListStore {
   }
 
   /** append a byte array to the given id */
-  public Integer append(long id, ArrayList<byte[]> batch, Runnable notification) {
+  public Integer append(long id, ArrayList<byte[]> batch, int seq, long assetBytes, Runnable notification) {
     // allocate the items in the batch
     ArrayList<Region> wheres = new ArrayList<>();
     for (byte[] bytes : batch) {
@@ -228,12 +229,14 @@ public class DurableListStore {
     Iterator<Region> whereIt = wheres.iterator();
     Iterator<byte[]> bytesIt = batch.iterator();
     int lastSize = -1;
+    boolean writenOnce = false;
     while (whereIt.hasNext()) {
       Region where = whereIt.next();
       byte[] bytes = bytesIt.next();
       storage.write(where, bytes);
-      lastSize = index.append(id, where);
-      new Append(id, where.position, bytes).write(buffer);
+      lastSize = index.append(id, new AnnotatedRegion(where.position, where.size, seq, writenOnce ? 0 : assetBytes));
+      new Append(id, where.position, bytes, seq, assetBytes).write(buffer);
+      writenOnce = true;
     }
 
     if (buffer.writerIndex() > flushCutOffBytes) {
@@ -242,7 +245,7 @@ public class DurableListStore {
     return lastSize;
   }
 
-  public Integer append(long id, byte[] bytes, Runnable notification) {
+  public Integer append(long id, byte[] bytes, int seq, long assetBytes, Runnable notification) {
     Region where = heap.ask(bytes.length);
     if (where == null) {
       // we are out of space
@@ -250,8 +253,8 @@ public class DurableListStore {
     }
     this.notifications.add(notification);
     storage.write(where, bytes);
-    int size = index.append(id, where);
-    new Append(id, where.position, bytes).write(buffer);
+    int size = index.append(id, new AnnotatedRegion(where.position, where.size, seq, assetBytes));
+    new Append(id, where.position, bytes, seq, assetBytes).write(buffer);
     if (buffer.writerIndex() > flushCutOffBytes) {
       // the buffer is full, so flush it
       flush(false);
@@ -261,7 +264,7 @@ public class DurableListStore {
 
   /** read the given object by scanning all appends */
   public void read(long id, ByteArrayStream streamback) throws Exception {
-    Iterator<Region> it = index.get(id);
+    Iterator<AnnotatedRegion> it = index.get(id);
     int at = 0;
     while (it.hasNext()) {
       Region region = it.next();
@@ -274,7 +277,7 @@ public class DurableListStore {
 
   /** remove the $count appends from the head of the object */
   public boolean trim(long id, int count, Runnable notification) {
-    ArrayList<Region> regions = index.trim(id, count);
+    ArrayList<AnnotatedRegion> regions = index.trim(id, count);
     if (regions != null && regions.size() > 0) {
       this.notifications.add(notification);
       new Trim(id, regions.size()).write(buffer);
@@ -291,7 +294,7 @@ public class DurableListStore {
 
   /** delete the given object by id */
   public boolean delete(long id, Runnable notification) {
-    ArrayList<Region> regions = index.delete(id);
+    ArrayList<AnnotatedRegion> regions = index.delete(id);
     if (regions != null) {
       for (Region region : regions) {
         heap.free(region);

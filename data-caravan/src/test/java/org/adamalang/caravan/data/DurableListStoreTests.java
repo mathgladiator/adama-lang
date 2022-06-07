@@ -31,10 +31,10 @@ public class DurableListStoreTests {
       AtomicInteger count = new AtomicInteger(0);
       Runnable event = () -> { count.incrementAndGet(); };
       Assert.assertFalse(store.exists(42));
-      store.append(42, "XYZ".getBytes(StandardCharsets.UTF_8), event);
+      store.append(42, "XYZ".getBytes(StandardCharsets.UTF_8), 0, 42L, event);
       Assert.assertTrue(store.exists(42));
       for (int k = 0 ; k < 100; k++) {
-        store.append(1, ("K:" + k).getBytes(StandardCharsets.UTF_8), event);
+        store.append(1, ("K:" + k).getBytes(StandardCharsets.UTF_8), k + 1, 100L, event);
       }
       {
         MockByteArrayStream stream = new MockByteArrayStream();
@@ -61,7 +61,7 @@ public class DurableListStoreTests {
       store.flush(false);
       Assert.assertEquals(104, count.get()); // 1 PUT, 100 PUT, 1 DELETE, 1 TRIM, 1 DELETE
       for (int k = 0; k < 1000; k++) {
-        store.append(k, ("K:" + k).getBytes(StandardCharsets.UTF_8), event);
+        store.append(k, ("K:" + k).getBytes(StandardCharsets.UTF_8), k, 1024, event);
       }
       for (int k = 0; k < 1000; k++) {
         Assert.assertTrue(store.delete(k, event));
@@ -71,15 +71,15 @@ public class DurableListStoreTests {
       Assert.assertEquals(2104, count.get()); // + 1000 PUT, 1000 DELETE
       Assert.assertEquals(65536, store.available());
       int fill = 0;
-      while (store.append(1, ("01234567890123456789012345678901234567890123456789Junk@" + fill).getBytes(StandardCharsets.UTF_8), event) != null) {
+      while (store.append(1, ("01234567890123456789012345678901234567890123456789Junk@" + fill).getBytes(StandardCharsets.UTF_8), 0, 0, event) != null) {
         fill++;
       }
-      Assert.assertFalse(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), event) != null);
+      Assert.assertFalse(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), 0, 1024, event) != null);
       Assert.assertEquals(3233, count.get());
       store.delete(1, event);
       store.flush(false);
       Assert.assertEquals(3234, count.get());
-      Assert.assertTrue(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), event) != null);
+      Assert.assertTrue(store.append(100, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX".getBytes(StandardCharsets.UTF_8), 1, 128, event) != null);
       store.flush(false);
       Assert.assertEquals(3235, count.get());
       store.shutdown();
@@ -110,7 +110,7 @@ public class DurableListStoreTests {
         batch1.add(("K:" + k).getBytes(StandardCharsets.UTF_8));
       }
       Assert.assertEquals(65536, store.available());
-      store.append(42, batch1, event);
+      store.append(42, batch1, 10, 1024, event);
       Assert.assertEquals(65143, store.available());
       store.flush(false);
       {
@@ -124,7 +124,7 @@ public class DurableListStoreTests {
         for (int k = 0; k < 7 * 1024; k++) {
           batch2.add(("K:" + k).getBytes(StandardCharsets.UTF_8));
         }
-        Assert.assertEquals(7169, (int) store.append(100, batch2, event));
+        Assert.assertEquals(7169, (int) store.append(100, batch2, 10, 1024, event));
         {
           MockByteArrayStream stream = new MockByteArrayStream();
           store.read(100, stream);
@@ -137,7 +137,7 @@ public class DurableListStoreTests {
         for (int k = 0; k < 7 * 1024; k++) {
           batch3.add(("K:" + k).getBytes(StandardCharsets.UTF_8));
         }
-        Assert.assertNull(store.append(100, batch3, event));
+        Assert.assertNull(store.append(100, batch3, 10, 1024, event));
       }
       Assert.assertEquals(23242, store.available());
       Assert.assertTrue(store.trim(100, 10000, () -> {}));
@@ -164,11 +164,11 @@ public class DurableListStoreTests {
         DurableListStore store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), new File(testRoot, "storage"), testRoot, 64 * 1024, 1024 * 1024, 32 * 1024 * 1024);
         AtomicInteger count = new AtomicInteger(0);
         Runnable event = () -> { count.incrementAndGet(); };
-        store.append(42, "XYZ".getBytes(StandardCharsets.UTF_8), event);
+        store.append(42, "XYZ".getBytes(StandardCharsets.UTF_8), 10, 1024, event);
         for (int k = 0 ; k < 100; k++) {
-          store.append(1, ("K:" + k).getBytes(StandardCharsets.UTF_8), event);
-          store.append(2, ("K:" + k).getBytes(StandardCharsets.UTF_8), event);
-          store.append(3, ("K:" + k).getBytes(StandardCharsets.UTF_8), event);
+          store.append(1, ("K:" + k).getBytes(StandardCharsets.UTF_8), 10, 1024, event);
+          store.append(2, ("K:" + k).getBytes(StandardCharsets.UTF_8), 10, 1024, event);
+          store.append(3, ("K:" + k).getBytes(StandardCharsets.UTF_8), 10, 1024, event);
         }
 
         store.trim(2, 90, event);

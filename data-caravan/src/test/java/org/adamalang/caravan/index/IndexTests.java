@@ -15,6 +15,8 @@ import org.adamalang.caravan.index.heaps.IndexedHeap;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class IndexTests {
   public void assertEquals(String expected, Index index) {
     Assert.assertEquals(expected, index.toString());
@@ -25,39 +27,44 @@ public class IndexTests {
     Assert.assertEquals(expected, index2.toString());
   }
 
+  private AnnotatedRegion wrap(Region r, AtomicInteger tracker) {
+    return new AnnotatedRegion(r.position, r.size, tracker.getAndIncrement(), 0L);
+  }
+
   @Test
   public void flow() {
     Index index = new Index();
     assertEquals("", index);
     Heap heap = new IndexedHeap(1024);
+    AtomicInteger tracker = new AtomicInteger(0);
 
-    index.append(1L, heap.ask(100));
-    index.append(1L, heap.ask(100));
-    assertEquals("1=[0,100)[100,200);", index);
-    index.append(2L, heap.ask(100));
-    index.append(2L, heap.ask(100));
-    assertEquals("1=[0,100)[100,200);2=[200,300)[300,400);", index);
-    index.append(3L, heap.ask(100));
-    index.append(3L, heap.ask(100));
-    assertEquals("1=[0,100)[100,200);2=[200,300)[300,400);3=[400,500)[500,600);", index);
+    index.append(1L, wrap(heap.ask(100), tracker));
+    index.append(1L, wrap(heap.ask(100), tracker));
+    assertEquals("1=[0,100=0][100,200=1];", index);
+    index.append(2L, wrap(heap.ask(100), tracker));
+    index.append(2L, wrap(heap.ask(100), tracker));
+    assertEquals("1=[0,100=0][100,200=1];2=[200,300=2][300,400=3];", index);
+    index.append(3L, wrap(heap.ask(100), tracker));
+    index.append(3L, wrap(heap.ask(100), tracker));
+    assertEquals("1=[0,100=0][100,200=1];2=[200,300=2][300,400=3];3=[400,500=4][500,600=5];", index);
 
-    index.append(4L, heap.ask(1));
-    index.append(4L, heap.ask(2));
-    index.append(4L, heap.ask(3));
-    index.append(4L, heap.ask(4));
-    assertEquals("1=[0,100)[100,200);2=[200,300)[300,400);3=[400,500)[500,600);4=[600,601)[601,603)[603,606)[606,610);", index);
+    index.append(4L, wrap(heap.ask(1), tracker));
+    index.append(4L, wrap(heap.ask(2), tracker));
+    index.append(4L, wrap(heap.ask(3), tracker));
+    index.append(4L, wrap(heap.ask(4), tracker));
+    assertEquals("1=[0,100=0][100,200=1];2=[200,300=2][300,400=3];3=[400,500=4][500,600=5];4=[600,601=6][601,603=7][603,606=8][606,610=9];", index);
 
     for (Region region : index.trim(4L, 3)) {
       heap.free(region);
     }
-    assertEquals("1=[0,100)[100,200);2=[200,300)[300,400);3=[400,500)[500,600);4=[606,610);", index);
+    assertEquals("1=[0,100=0][100,200=1];2=[200,300=2][300,400=3];3=[400,500=4][500,600=5];4=[606,610=9];", index);
 
     Assert.assertTrue(index.exists(3));
     for (Region region : index.delete(3)) {
       heap.free(region);
     }
     Assert.assertFalse(index.exists(3));
-    assertEquals("1=[0,100)[100,200);2=[200,300)[300,400);4=[606,610);", index);
+    assertEquals("1=[0,100=0][100,200=1];2=[200,300=2][300,400=3];4=[606,610=9];", index);
 
     for (Region region : index.delete(4)) {
       heap.free(region);
