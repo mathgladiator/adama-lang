@@ -17,10 +17,7 @@ import org.adamalang.caravan.data.DurableListStoreMetrics;
 import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.common.*;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
-import org.adamalang.runtime.data.DataService;
-import org.adamalang.runtime.data.FinderService;
-import org.adamalang.runtime.data.InMemoryDataService;
-import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.*;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.sys.CoreMetrics;
@@ -73,7 +70,7 @@ public class LocalDrive {
         }
 
         @Override
-        public void backup(Key key, String archiveKey, long deltaBytes, long assetBytes, String machineOn, Callback<Void> callback) {
+        public void backup(Key key, BackupResult result, String machineOn, Callback<Void> callback) {
 
         }
 

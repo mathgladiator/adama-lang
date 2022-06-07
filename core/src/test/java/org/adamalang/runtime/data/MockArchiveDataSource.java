@@ -147,7 +147,7 @@ public class MockArchiveDataSource implements ArchivingDataService {
             archive.put(archiveKey, value.patch);
             archiveSeq.put(archiveKey, value.seq);
           }
-          callback.success(new BackupResult(archiveKey, 1, 2));
+          callback.success(new BackupResult(archiveKey, 0, 1L, 2L));
         }
 
         @Override

@@ -113,7 +113,7 @@ public class Machine {
     base.data.backup(key, new Callback<>() {
       @Override
       public void success(BackupResult result) {
-        base.finder.backup(key, result.archiveKey, result.deltaBytes, result.assetBytes, base.target, new Callback<Void>() {
+        base.finder.backup(key, result, base.target, new Callback<Void>() {
           @Override
           public void success(Void value) {
             archive_Success();

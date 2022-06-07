@@ -11,6 +11,7 @@ package org.adamalang.caravan.events;
 
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
@@ -46,7 +47,7 @@ public class FinderServiceToKeyToIdServiceTests {
       }
 
       @Override
-      public void backup(Key key, String archiveKey, long deltaSize, long assetSize, String machineOn, Callback<Void> callback) {
+      public void backup(Key key, BackupResult result, String machineOn, Callback<Void> callback) {
 
       }
 

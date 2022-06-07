@@ -12,6 +12,7 @@ package org.adamalang.net.client.routing.finder;
 import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 import org.junit.Assert;
@@ -140,7 +141,7 @@ public class MockFinderService implements FinderService {
   private boolean failedRetryKeyInFree = false;
 
   @Override
-  public void backup(Key key, String archiveKey, long deltaSize, long assetSize, String machineOn, Callback<Void> callback) {
+  public void backup(Key key, BackupResult backupResult, String machineOn, Callback<Void> callback) {
     if (key.key.equals("retry-key")) {
       if (!failedRetryKeyInBackup) {
         failedRetryKeyInBackup = true;
@@ -151,7 +152,7 @@ public class MockFinderService implements FinderService {
     Result result = map.get(key);
     if (result != null) {
       if (machineOn.equals(result.machine) && result.location == Location.Machine) {
-        map.put(key, new Result(1, result.location, result.region, result.machine, archiveKey));
+        map.put(key, new Result(1, result.location, result.region, result.machine, backupResult.archiveKey));
         callback.success(null);
       } else {
         callback.failure(new ErrorCodeException(-4));

@@ -16,6 +16,7 @@ import org.adamalang.mysql.DataBaseConfigTests;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.mocks.SimpleFinderCallback;
 import org.adamalang.mysql.mocks.SimpleMockCallback;
+import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 import org.junit.Test;
@@ -82,14 +83,16 @@ public class FinderTests {
           machine.bind(KEY1, "region", "machineB:523", callback);
           callback.assertSuccess();
         }
+        BackupResult result1 = new BackupResult("new-achive-key", 0, 1, 4);
+        BackupResult result2 = new BackupResult("new-achive-key-old", 0, 1, 4);
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, "new-achive-key", 1, 4, "machineA:124", callback);
+          machine.backup(KEY1, result1, "machineA:124", callback);
           callback.assertFailure(722034);
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, "new-achive-key", 1, 4, "machineB:523", callback);
+          machine.backup(KEY1, result1, "machineB:523", callback);
           callback.assertSuccess();
         }
         {
@@ -104,7 +107,7 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1,  "new-achive-key-old", 1, 4, "machineB:523", callback);
+          machine.backup(KEY1,  result2, "machineB:523", callback);
           callback.assertSuccess();
         }
         {
@@ -114,13 +117,13 @@ public class FinderTests {
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
-          machine.backup(KEY1, "new-achive-key", 1, 4, "machineB:523", callback);
+          machine.backup(KEY1, result2, "machineB:523", callback);
           callback.assertSuccess();
         }
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key");
+          cb.assertSuccess(FinderService.Location.Machine, "machineB:523", "new-achive-key-old");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();
@@ -130,7 +133,7 @@ public class FinderTests {
         {
           SimpleFinderCallback cb = new SimpleFinderCallback();
           machine.find(KEY1, cb);
-          cb.assertSuccess(FinderService.Location.Archive, "", "new-achive-key");
+          cb.assertSuccess(FinderService.Location.Archive, "", "new-achive-key-old");
         }
         {
           SimpleMockCallback callback = new SimpleMockCallback();

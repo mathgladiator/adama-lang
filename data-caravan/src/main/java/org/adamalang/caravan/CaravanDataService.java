@@ -29,6 +29,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
 public class CaravanDataService implements ArchivingDataService {
@@ -50,13 +51,17 @@ public class CaravanDataService implements ArchivingDataService {
   public void backup(Key key, Callback<BackupResult> callback) {
     String archiveKey = ProtectedUUID.generate() + "-" + System.currentTimeMillis();
     execute("backup", key, true, callback, (id, cached) -> {
+      int seq = cached.seq();
+      AtomicLong deltaBytes = new AtomicLong(0); // TODO: need just a RefLong
       File tempOutput = new File(cloud.path(), archiveKey + ".temp");
       File finalOutput = new File(cloud.path(), archiveKey + ".archive");
       try {
+        // TODO: have some kind of accumlator and we need to think about metadata for asset bytes
         DataOutputStream output = new DataOutputStream(new FileOutputStream(tempOutput));
         store.read(id, new ByteArrayStream() {
           @Override
           public void next(int appendIndex, byte[] value) throws Exception {
+            deltaBytes.addAndGet(value.length);
             output.writeBoolean(true);
             output.writeInt(value.length);
             output.write(value);
@@ -76,9 +81,9 @@ public class CaravanDataService implements ArchivingDataService {
       }
       cloud.backup(finalOutput, new Callback<Void>() {
         @Override
-        // TODO: use real asset and delta bytes
+        // TODO: compute real asset bytes
         public void success(Void value) {
-          callback.success(new BackupResult(archiveKey, 0, 0));
+          callback.success(new BackupResult(archiveKey, seq, deltaBytes.get(), 0));
         }
 
         @Override

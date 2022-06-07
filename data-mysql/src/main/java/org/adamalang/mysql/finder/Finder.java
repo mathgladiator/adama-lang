@@ -13,6 +13,7 @@ import org.adamalang.ErrorCodes;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
 import org.adamalang.mysql.DataBase;
+import org.adamalang.runtime.data.BackupResult;
 import org.adamalang.runtime.data.FinderService;
 import org.adamalang.runtime.data.Key;
 
@@ -89,21 +90,20 @@ public class Finder implements FinderService {
   }
 
   @Override
-  public void backup(Key key, String archiveKey, long deltaSize, long assetSize, String machineOn, Callback<Void> callback) {
+  public void backup(Key key, BackupResult result, String machineOn, Callback<Void> callback) {
     dataBase.transact((connection) -> {
       String backupSQL = new StringBuilder() //
           .append("UPDATE `").append(dataBase.databaseName).append("`.`directory` ") //
           .append("SET `archive`=?")
-          .append(", `delta_bytes`=").append(deltaSize) //
-          .append(", `asset_bytes`=").append(assetSize)
+          .append(", `head_seq`=").append(result.seq) //
+          .append(", `delta_bytes`=").append(result.deltaBytes) //
+          .append(", `asset_bytes`=").append(result.assetBytes)
           .append(" WHERE `space`=? AND `key`=? AND `machine`=? AND `type`=").append(Location.Machine.type).toString();
       try (PreparedStatement statementUpdate = connection.prepareStatement(backupSQL)) {
-        statementUpdate.setString(1, archiveKey);
-        statementUpdate.setLong(2, deltaSize);
-        statementUpdate.setLong(3, assetSize);
-        statementUpdate.setString(4, key.space);
-        statementUpdate.setString(5, key.key);
-        statementUpdate.setString(6, machineOn);
+        statementUpdate.setString(1, result.archiveKey);
+        statementUpdate.setString(2, key.space);
+        statementUpdate.setString(3, key.key);
+        statementUpdate.setString(4, machineOn);
         if (statementUpdate.executeUpdate() == 1) {
           return null;
         }

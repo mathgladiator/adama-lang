@@ -12,11 +12,13 @@ package org.adamalang.runtime.data;
 /** the tuple of data which comes from backing up data */
 public class BackupResult {
   public final String archiveKey;
+  public final int seq;
   public final long deltaBytes;
   public final long assetBytes;
 
-  public BackupResult(String archiveKey, long deltaBytes, long assetBytes) {
+  public BackupResult(String archiveKey, int seq, long deltaBytes, long assetBytes) {
     this.archiveKey = archiveKey;
+    this.seq = seq;
     this.deltaBytes = deltaBytes;
     this.assetBytes = assetBytes;
   }
