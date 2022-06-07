@@ -197,7 +197,7 @@ public class ProxyDataService implements DataService {
       snap.seq = snapshot.seq;
       snap.document = snapshot.json;
       snap.history = snapshot.history;
-      snap.assetBytes = snap.assetBytes;
+      snap.assetBytes = snapshot.assetBytes;
       ClientCodec.write(buf, snap);
       channel.next(buf);
     }, wrapInt(callback));

@@ -180,7 +180,7 @@ public class ClientAsProxyTests {
         cb_InitFailAlreadyExists.assertFailure(667658);
 
         SimpleIntCallback cb_Snapshot = new SimpleIntCallback();
-        proxy.snapshot(KEY1, new DocumentSnapshot(3, "{}", 1, 1234L), cb_Snapshot);
+        proxy.snapshot(KEY1, new DocumentSnapshot(3, "{}", 0, 1234L), cb_Snapshot);
         cb_Snapshot.assertSuccess(3);
 
         {
