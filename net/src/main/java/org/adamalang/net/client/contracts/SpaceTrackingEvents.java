@@ -21,4 +21,18 @@ public interface SpaceTrackingEvents {
 
   /** we lost interest in a space */
   void lostInterestInSpace(String space);
+
+  public static final SpaceTrackingEvents NoOp = new SpaceTrackingEvents() {
+    @Override
+    public void gainInterestInSpace(String space) {
+    }
+
+    @Override
+    public void shareTargetsFor(String space, Set<String> targets) {
+    }
+
+    @Override
+    public void lostInterestInSpace(String space) {
+    }
+  };
 }

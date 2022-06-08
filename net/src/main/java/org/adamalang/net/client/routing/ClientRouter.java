@@ -38,37 +38,13 @@ public class ClientRouter {
 
   public static ClientRouter REACTIVE(ClientMetrics metrics) {
     SimpleExecutor executor = SimpleExecutor.create("routing-executor");
-    ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, new SpaceTrackingEvents() {
-      @Override
-      public void gainInterestInSpace(String space) {
-      }
-
-      @Override
-      public void shareTargetsFor(String space, Set<String> targets) {
-      }
-
-      @Override
-      public void lostInterestInSpace(String space) {
-      }
-    }, 250, 250);
+    ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, SpaceTrackingEvents.NoOp, 250, 250);
     return new ClientRouter(executor, engine, engine);
   }
 
   public static ClientRouter FINDER(ClientMetrics metrics, FinderService finder, String region) {
     SimpleExecutor executor = SimpleExecutor.create("routing-executor");
-    ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, new SpaceTrackingEvents() {
-      @Override
-      public void gainInterestInSpace(String space) {
-      }
-
-      @Override
-      public void shareTargetsFor(String space, Set<String> targets) {
-      }
-
-      @Override
-      public void lostInterestInSpace(String space) {
-      }
-    }, 250, 250);
+    ReativeRoutingEngine engine = new ReativeRoutingEngine(metrics, executor, SpaceTrackingEvents.NoOp, 250, 250);
     MachinePicker picker = new MachinePicker() {
       @Override
       public void pickHost(Key key, Callback<String> callback) {

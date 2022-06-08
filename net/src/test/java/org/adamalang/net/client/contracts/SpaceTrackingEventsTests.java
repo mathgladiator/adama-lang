@@ -9,17 +9,15 @@
  */
 package org.adamalang.net.client.contracts;
 
-import org.adamalang.common.ErrorCodeException;
+import org.junit.Test;
 
-/** what happens when you subscribe to a key */
-public interface RoutingSubscriber {
+import java.util.Collections;
 
-  /** routing found the document in another region */
-  public void onRegion(String region);
-
-  /** routing found the document within the current region on a specific machine */
-  public void onMachine(String machine);
-
-  /** a failure in finding a machine */
-  public void failure(ErrorCodeException ex);
+public class SpaceTrackingEventsTests {
+  @Test
+  public void coverage() {
+    SpaceTrackingEvents.NoOp.gainInterestInSpace("space");
+    SpaceTrackingEvents.NoOp.lostInterestInSpace("space");
+    SpaceTrackingEvents.NoOp.shareTargetsFor("space", Collections.singleton("target"));
+  }
 }
