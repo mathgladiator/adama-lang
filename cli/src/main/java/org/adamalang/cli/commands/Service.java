@@ -36,6 +36,7 @@ import org.adamalang.mysql.backend.BackendMetrics;
 import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
+import org.adamalang.mysql.finder.Finder;
 import org.adamalang.mysql.frontend.Health;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
@@ -294,6 +295,7 @@ public class Service {
     MachineHeat.install();
     System.err.println("starting frontend");
     String identityFileName = config.get_string("identity_filename", "me.identity");
+    String region = config.get_string("region", null);
     int gossipPort = config.get_int("gossip_frontend_port", 8004);
     int monitoringPort = config.get_int("monitoring_frontend_port", 8005);
     MachineIdentity identity = MachineIdentity.fromFile(identityFileName);
@@ -322,8 +324,13 @@ public class Service {
     NetBase netBase = new NetBase(identity, 1, 2);
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics metrics = new ClientMetrics(prometheusMetricsFactory);
+    ClientRouter router = ClientRouter.REACTIVE(metrics);
     // TODO: use new FINDER for client router, requires the finder service and blah-blah-blah
-    Client client = new Client(netBase, clientConfig, metrics, ClientRouter.REACTIVE(metrics), null);
+    /*
+    Finder finder = new Finder(dataBaseFront);
+    ClientRouter.FINDER(metrics, finder, region);
+    */
+    Client client = new Client(netBase, clientConfig, metrics, router, null);
     Consumer<Collection<String>> targetPublisher = client.getTargetPublisher();
 
     engine.subscribe("adama", (targets) -> {

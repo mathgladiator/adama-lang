@@ -429,15 +429,14 @@ public class ErrorCodes {
   public static final int DISK_COMPUTE_HEADPATCH_NOTHING_TO_DO = 725039;
   public static final int DISK_COMPUTE_HEADPATCH_IOEXCEPTION = 773164;
 
-  public static final int DISK_COMPUTE_REWIND_NOTHING_TO_DO = 783395;
-  public static final int DISK_COMPUTE_REWIND_IOEXCEPTION = 724012;
-  public static final int DISK_COMPUTE_INVALID_METHOD = 705583;
-
   public static final int NET_FAILED_INITIATION = 753699;
   public static final int NET_DISCONNECT = 773155;
   public static final int NET_SHUTTING_DOWN = 788515;
   public static final int NET_CONNECT_FAILED_UNKNOWN = 798756;
   public static final int NET_CONNECT_FAILED_TO_CONNECT = 724001;
+  public static final int NET_FINDER_GAVE_UP = 705583;
+  public static final int NET_FINDER_ROUTER_REGION_NOT_EXPECTED = 724012;
+  public static final int NET_FINDER_ROUTER_NULL_MACHINE = 783395;
 
   public static final int ADAMA_NET_PING_TIMEOUT = 773152;
   public static final int ADAMA_NET_PING_REJECTED = 786466;

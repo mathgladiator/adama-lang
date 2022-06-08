@@ -53,12 +53,17 @@ public class FinderServiceRouter implements Router {
       pickHost(key, callback);
       return;
     }
+    int backoff = reportFindFailureGetRetryBackoff();
+    if (backoff > 7500) {
+      callback.failure(new ErrorCodeException(ErrorCodes.NET_FINDER_GAVE_UP));
+      return;
+    }
     executor.schedule(new NamedRunnable("simple-find-router-retry") {
       @Override
       public void execute() throws Exception {
         get(key, callback);
       }
-    }, reportFindFailureGetRetryBackoff());
+    }, backoff);
   }
 
   private void pickHost(Key key, RoutingSubscriber callback) {

@@ -9,6 +9,7 @@
  */
 package org.adamalang.net.client.routing;
 
+import org.adamalang.ErrorCodes;
 import org.adamalang.common.*;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.contracts.RoutingSubscriber;
@@ -48,11 +49,11 @@ public class ClientRouter {
     MachinePicker picker = new MachinePicker() {
       @Override
       public void pickHost(Key key, Callback<String> callback) {
-        MachinePicker self = this;
         engine.get(key, new RoutingSubscriber() {
           @Override
           public void onRegion(String region) {
             // impossible for now
+            callback.failure(new ErrorCodeException(ErrorCodes.NET_FINDER_ROUTER_REGION_NOT_EXPECTED));
           }
 
           @Override
@@ -63,7 +64,7 @@ public class ClientRouter {
           @Override
           public void onMachine(String machine) {
             if (machine == null) {
-              failure(new ErrorCodeException(-1));
+              callback.failure(new ErrorCodeException(ErrorCodes.NET_FINDER_ROUTER_NULL_MACHINE));
             } else {
               callback.success(machine);
             }
