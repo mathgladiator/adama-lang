@@ -9,10 +9,7 @@
  */
 package org.adamalang.net.client.routing;
 
-import org.adamalang.common.AwaitHelper;
-import org.adamalang.common.Callback;
-import org.adamalang.common.NamedRunnable;
-import org.adamalang.common.SimpleExecutor;
+import org.adamalang.common.*;
 import org.adamalang.net.client.ClientMetrics;
 import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.net.client.contracts.SpaceTrackingEvents;
@@ -79,27 +76,18 @@ public class ClientRouter {
         engine.get(key, new RoutingSubscriber() {
           @Override
           public void onRegion(String region) {
-            // impossible
+            // impossible for now
+          }
+
+          @Override
+          public void failure(ErrorCodeException ex) {
+            callback.failure(ex);
           }
 
           @Override
           public void onMachine(String machine) {
             if (machine == null) {
-              // TODO: this shouldn't be random, but it should hash the machine with a key, so this needs some love
-              engine.random((randomMachine) -> {
-                if (randomMachine != null) {
-                  // TODO: deploy to it
-                  // DEPLOY(space, randomMachine);
-                } else {
-                  executor.schedule(new NamedRunnable("failed-random-machine") {
-                    @Override
-                    public void execute() throws Exception {
-                      self.pickHost(key, callback);
-                    }
-                  }, 1000 /* real back-off */);
-                }
-              });
-              // find new host and deploy space
+              failure(new ErrorCodeException(-1));
             } else {
               callback.success(machine);
             }

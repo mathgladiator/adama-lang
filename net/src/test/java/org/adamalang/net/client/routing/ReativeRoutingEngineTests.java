@@ -9,6 +9,7 @@
  */
 package org.adamalang.net.client.routing;
 
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
@@ -46,7 +47,9 @@ public class ReativeRoutingEngineTests {
         public void onRegion(String region) {
 
         }
-
+        @Override
+        public void failure(ErrorCodeException ex) {
+        }
         @Override
         public void onMachine(String machine) {
           System.err.println(machine);
@@ -129,7 +132,9 @@ public class ReativeRoutingEngineTests {
           public void onRegion(String region) {
 
           }
-
+          @Override
+          public void failure(ErrorCodeException ex) {
+          }
           @Override
           public void onMachine(String machine) {
             // given the irregularity of the broadcast, can't assert much... hrmm

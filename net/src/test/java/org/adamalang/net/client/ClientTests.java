@@ -316,7 +316,10 @@ public class ClientTests {
       client.routing().get(new Key("space", "key"), new RoutingSubscriber() {
         @Override
         public void onRegion(String region) {
+        }
 
+        @Override
+        public void failure(ErrorCodeException ex) {
         }
 
         @Override

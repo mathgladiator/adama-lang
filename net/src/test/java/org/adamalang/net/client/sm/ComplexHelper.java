@@ -66,7 +66,9 @@ public class ComplexHelper {
         @Override
         public void onRegion(String region) {
         }
-
+        @Override
+        public void failure(ErrorCodeException ex) {
+        }
         @Override
         public void onMachine(String machine) {
           if (target == null && machine == null) {

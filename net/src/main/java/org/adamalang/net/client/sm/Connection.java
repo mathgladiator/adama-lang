@@ -101,7 +101,15 @@ public class Connection {
                 }
               });
             }
-
+            @Override
+            public void failure(ErrorCodeException ex) {
+              base.executor.execute(new NamedRunnable("connection-lost-routing") {
+                @Override
+                public void execute() throws Exception {
+                  handle_onError(ex.code);
+                }
+              });
+            }
             @Override
             public void onMachine(String newTarget) {
               base.executor.execute(new NamedRunnable("connection-found-local-machine", newTarget) {

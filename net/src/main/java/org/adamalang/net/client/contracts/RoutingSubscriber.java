@@ -9,6 +9,9 @@
  */
 package org.adamalang.net.client.contracts;
 
+import org.adamalang.common.Callback;
+import org.adamalang.common.ErrorCodeException;
+
 /** what happens when you subscribe to a key */
 public interface RoutingSubscriber {
 
@@ -17,4 +20,6 @@ public interface RoutingSubscriber {
 
   /** routing found the document within the current region on a specific machine */
   public void onMachine(String machine);
+
+  public void failure(ErrorCodeException ex);
 }

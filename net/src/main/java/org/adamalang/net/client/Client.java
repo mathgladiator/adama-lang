@@ -149,6 +149,11 @@ public class Client {
       }
 
       @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
+      }
+
+      @Override
       public void onMachine(String machine) {
         clientFinder.find(machine, new Callback<>() {
           @Override
@@ -182,6 +187,11 @@ public class Client {
       public void onRegion(String region) {
         mInstance.failure(ErrorCodes.ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE);
         callback.failure(new ErrorCodeException(ErrorCodes.ADAMA_NET_CREATE_FOUND_REGION_RATHER_THAN_MACHINE));
+      }
+
+      @Override
+      public void failure(ErrorCodeException ex) {
+        callback.failure(ex);
       }
 
       @Override

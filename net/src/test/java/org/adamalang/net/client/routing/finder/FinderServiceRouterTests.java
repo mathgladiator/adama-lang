@@ -9,6 +9,7 @@
  */
 package org.adamalang.net.client.routing.finder;
 
+import org.adamalang.common.ErrorCodeException;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.net.client.contracts.RoutingSubscriber;
 import org.adamalang.runtime.data.Key;
@@ -32,9 +33,10 @@ public class FinderServiceRouterTests {
       router.subscribe(new Key("space", "retry-key"), new RoutingSubscriber() {
         @Override
         public void onRegion(String region) {
-
         }
-
+        @Override
+        public void failure(ErrorCodeException ex) {
+        }
         @Override
         public void onMachine(String machine) {
           latch.countDown();
@@ -61,7 +63,9 @@ public class FinderServiceRouterTests {
         public void onRegion(String region) {
           latch.countDown();
         }
-
+        @Override
+        public void failure(ErrorCodeException ex) {
+        }
         @Override
         public void onMachine(String machine) {
         }
