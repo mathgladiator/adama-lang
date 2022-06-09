@@ -19,6 +19,7 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.backend.BackendDataServiceInstaller;
 import org.adamalang.mysql.deployments.DeployedInstaller;
+import org.adamalang.mysql.finder.FinderInstaller;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 
 public class Database {
@@ -38,11 +39,17 @@ public class Database {
         new FrontendManagementInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
         new DeployedInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "deployed"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
         new BackendDataServiceInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "backend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
+        new FinderInstaller(new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "finder"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"))).install();
         return;
       }
       case "install-frontend": {
         DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "frontend"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
         new FrontendManagementInstaller(dataBase).install();
+        return;
+      }
+      case "install-finder": {
+        DataBase dataBase = new DataBase(new DataBaseConfig(new ConfigObject(config.read()), "finder"), new DataBaseMetrics(new NoOpMetricsFactory(), "noop"));
+        new FinderInstaller(dataBase).install();
         return;
       }
       case "install-deployed": {
@@ -76,6 +83,7 @@ public class Database {
     System.out.println("    " + Util.prefix("install-frontend", Util.ANSI.Green) + "  Install the tables for usage by the front end WebSocket");
     System.out.println("    " + Util.prefix("install-backend", Util.ANSI.Green) + "   Install the tables for usage by the gRPC compute/storage Adama tier");
     System.out.println("    " + Util.prefix("install-deployed", Util.ANSI.Green) + "  Install the tables for usage where code is pulled by host");
+    System.out.println("    " + Util.prefix("install-finder", Util.ANSI.Green) + "    Install the tables for directory table");
   }
 
   public static void databaseConfigure(Config config) throws Exception {

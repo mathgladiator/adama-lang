@@ -91,7 +91,7 @@ public class CapacityManager {
           }
           targets++;
         }
-        if (targets < 3) {
+        if (targets < 2) {
           metrics.capacity_monitor_found_weak_space.run();
           sb.append(" [WEAK]");
           client.getDeploymentTargets(space, (target) -> {
@@ -105,7 +105,6 @@ public class CapacityManager {
             }
           });
         }
-        // TODO: figure out how to manage heat to expand/retract capacity
         tableLogger.row(space, "summary", sb.toString(), new Date().toString());
         handler.put("/capacity-manager", tableLogger.toHtml("Capacity Manager"));
       } catch (Exception ex) {
