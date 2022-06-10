@@ -19,7 +19,8 @@ public class AWSConfig implements AwsCredentialsProvider, AwsCredentials {
   public final String fromEmailAddressForInit;
   public final String replyToEmailAddressForInit;
   public final String region;
-  public final String bucketForAssets;
+  public final String bucket;
+  public final String archivePath;
 
   public AWSConfig(ConfigObject config) throws Exception {
     this.accessKeyId = config.strOfButCrash("access_key", "AWS Access Key not found");
@@ -27,7 +28,8 @@ public class AWSConfig implements AwsCredentialsProvider, AwsCredentials {
     this.region = config.strOfButCrash("region", "AWS Region");
     this.fromEmailAddressForInit = config.strOfButCrash("init_from_email", "No sender email address set for init");
     this.replyToEmailAddressForInit = config.strOfButCrash("init_reply_email", "No reply email address set for init");
-    this.bucketForAssets = config.strOfButCrash("bucket", "No bucket for assets");
+    this.bucket = config.strOfButCrash("bucket", "No bucket for assets");
+    this.archivePath = config.strOfButCrash("archive", "No archive path for backups/restore");
   }
 
   @Override

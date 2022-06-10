@@ -50,7 +50,7 @@ public class MockCloud implements Cloud {
       callback.success(new File(path, "nope"));
       return;
     }
-    File found = map.get(archiveKey + ".archive");
+    File found = map.get(archiveKey);
     if (found == null) {
       callback.failure(new ErrorCodeException(-102));
     } else {

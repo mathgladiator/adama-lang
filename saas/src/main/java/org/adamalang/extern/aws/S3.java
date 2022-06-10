@@ -10,8 +10,10 @@
 package org.adamalang.extern.aws;
 
 import org.adamalang.ErrorCodes;
+import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.common.ExceptionLogger;
 import org.adamalang.common.NamedThreadFactory;
 import org.adamalang.common.metrics.RequestResponseMonitor;
 import org.adamalang.extern.AssetUploader;
@@ -33,24 +35,30 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class S3 implements AssetUploader, AssetDownloader {
+public class S3 implements AssetUploader, AssetDownloader, Cloud {
   private ExecutorService executors;
   private static final Logger LOGGER = LoggerFactory.getLogger(S3.class);
   private final S3Client s3;
   private final AWSMetrics metrics;
   private final String bucket;
+  private final File archive;
 
   public S3(AWSConfig config, AWSMetrics metrics) {
     executors = Executors.newCachedThreadPool(new NamedThreadFactory("s3"));
     this.s3 = S3Client.builder().region(Region.of(config.region)).credentialsProvider(config).build();
     this.metrics = metrics;
-    this.bucket = config.bucketForAssets;
+    this.bucket = config.bucket;
+    this.archive = new File(config.archivePath);
+    archive.mkdirs();
+    if (!archive.exists() || !archive.isDirectory()) {
+      throw new RuntimeException("archive '" + config.archivePath + "' is no a valid directory");
+    }
   }
 
   @Override
   public void upload(Key key, NtAsset asset, File localFile, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.upload_file.start();
-    PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key(key.space + "/" + key.key + "/" + asset.id).contentType(asset.contentType).build();
+    PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key("assets/" + key.space + "/" + key.key + "/" + asset.id).contentType(asset.contentType).build();
     executors.execute(() -> {
       try {
         s3.putObject(request, RequestBody.fromFile(localFile));
@@ -69,7 +77,7 @@ public class S3 implements AssetUploader, AssetDownloader {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.download_file.start();
     executors.execute(() -> {
       try {
-        GetObjectRequest request = GetObjectRequest.builder().bucket(bucket).key(asset.space + "/" + asset.key + "/" + asset.id).build();
+        GetObjectRequest request = GetObjectRequest.builder().bucket(bucket).key("assets/" + asset.space + "/" + asset.key + "/" + asset.id).build();
         ResponseInputStream<GetObjectResponse> response = s3.getObject(request);
         stream.headers(response.response().contentLength(), response.response().contentType());
         byte[] chunk = new byte[64 * 1024];
@@ -86,6 +94,45 @@ public class S3 implements AssetUploader, AssetDownloader {
         stream.failure(ErrorCodes.API_ASSET_DOWNLOAD_FAILED);
       }
     });
+  }
 
+  @Override
+  public File path() {
+    return archive;
+  }
+
+  @Override
+  public void restore(String archiveKey, Callback<File> callback) {
+    RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.restore_document.start();
+    GetObjectRequest request = GetObjectRequest.builder().bucket(bucket).key("backups/" + archiveKey).build();
+    executors.execute(() -> {
+      try {
+        File file = new File(path(), archiveKey);
+        s3.getObject(request, file.toPath());
+        instance.success();
+        callback.success(file);
+      } catch (Exception ex) {
+        LOGGER.error("failed-restore-file", ex);
+        instance.failure(ErrorCodes.API_CLOUD_RESTORE_FAILED);
+        callback.failure(new ErrorCodeException(ErrorCodes.API_CLOUD_RESTORE_FAILED, ex));
+      }
+    });
+  }
+
+  @Override
+  public void backup(File archiveFile, Callback<Void> callback) {
+    RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.backup_document.start();
+    PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key("backups/" + archiveFile.getName()).build();
+    executors.execute(() -> {
+      try {
+        s3.putObject(request, archiveFile.toPath());
+        instance.success();
+        callback.success(null);
+      } catch (Exception ex) {
+        LOGGER.error("failed-backup-file", ex);
+        instance.failure(ErrorCodes.API_CLOUD_BACKUP_FAILED);
+        callback.failure(new ErrorCodeException(ErrorCodes.API_CLOUD_BACKUP_FAILED, ex));
+      }
+    });
   }
 }

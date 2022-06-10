@@ -32,6 +32,7 @@ public class DumbS3AndSESCoverageTest {
     aws.put("init_reply_email", "x@x.com");
     aws.put("bucket", "bucket");
     aws.put("region", "us-west-2");
+    aws.put("archive", "archive");
     AWSConfig config = new AWSConfig(new ConfigObject(aws));
     SES ses = new SES(config, new AWSMetrics(new NoOpMetricsFactory()));
     Assert.assertFalse(ses.sendCode("x@x.com", "123"));
@@ -47,5 +48,6 @@ public class DumbS3AndSESCoverageTest {
         Assert.assertEquals(950322, ex.code);
       }
     });
+    new File("archive").deleteOnExit();
   }
 }

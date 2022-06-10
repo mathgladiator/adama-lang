@@ -115,7 +115,7 @@ public class CaravanDataService implements ArchivingDataService {
       AtomicLong deltaBytesSum = new AtomicLong(0);
       AtomicLong assetBytesSum = new AtomicLong(0);
       File tempOutput = new File(cloud.path(), archiveKey + ".temp");
-      File finalOutput = new File(cloud.path(), archiveKey + ".archive");
+      File finalOutput = new File(cloud.path(), archiveKey);
       try {
         DataOutputStream output = new DataOutputStream(new FileOutputStream(tempOutput));
         store.read(id, new ByteArrayStream() {
