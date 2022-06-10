@@ -204,7 +204,7 @@ public class Service {
     PrefixSplitDataService carveMemoryOff = new PrefixSplitDataService(dbDataService, "mem_", new ThreadedDataService(dataThreads, () -> new InMemoryDataService((r) -> r.run(), TimeSource.REAL_TIME)));
 
     DataService caravanService = caravan(identity, config, prometheusMetricsFactory, dataBaseBackend);
-    PrefixSplitDataService carvaCaravanOff = new PrefixSplitDataService(carveMemoryOff, "carvan_", caravanService);
+    PrefixSplitDataService carvaCaravanOff = new PrefixSplitDataService(carveMemoryOff, "caravan_", caravanService);
 
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
