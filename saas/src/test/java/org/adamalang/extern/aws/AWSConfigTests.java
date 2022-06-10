@@ -25,6 +25,7 @@ public class AWSConfigTests {
     aws.put("init_reply_email", "x@x.com");
     aws.put("bucket", "bucket");
     aws.put("region", "region");
+    aws.put("archive", "archive");
     AWSConfig config = new AWSConfig(new ConfigObject(aws));
     Assert.assertEquals("secret", config.secretAccessKey());
     Assert.assertEquals("key", config.accessKeyId());

@@ -10,10 +10,15 @@
 package org.adamalang.cli.commands;
 
 import org.adamalang.api.ApiMetrics;
+import org.adamalang.caravan.CaravanDataService;
+import org.adamalang.caravan.data.DurableListStore;
+import org.adamalang.caravan.data.DurableListStoreMetrics;
+import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.cli.Config;
 import org.adamalang.cli.Util;
 import org.adamalang.common.*;
 import org.adamalang.common.jvm.MachineHeat;
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.ServerHandle;
 import org.adamalang.extern.Email;
@@ -50,9 +55,8 @@ import org.adamalang.overlord.OverlordMetrics;
 import org.adamalang.overlord.grpc.OverlordClient;
 import org.adamalang.overlord.html.ConcurrentCachedHttpHandler;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
-import org.adamalang.runtime.data.InMemoryDataService;
-import org.adamalang.runtime.data.Key;
-import org.adamalang.runtime.data.PrefixSplitDataService;
+import org.adamalang.runtime.data.*;
+import org.adamalang.runtime.data.managed.Base;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.natives.NtAsset;
@@ -61,7 +65,6 @@ import org.adamalang.runtime.sys.CoreService;
 import org.adamalang.runtime.sys.metering.DiskMeteringBatchMaker;
 import org.adamalang.runtime.sys.metering.MeterReading;
 import org.adamalang.runtime.sys.metering.MeteringPubSub;
-import org.adamalang.runtime.data.ThreadedDataService;
 import org.adamalang.web.contracts.AssetDownloader;
 import org.adamalang.web.contracts.HttpHandler;
 import org.adamalang.web.contracts.ServiceBase;
@@ -146,6 +149,30 @@ public class Service {
     }
   }
 
+  private static DataService caravan(MachineIdentity identity, Config config, MetricsFactory metricsFactory, DataBase dataBase) throws Exception {
+    String caravanRoot = config.get_string("caravan_root", "caravan");
+    String region = config.get_string("region", null);
+    int port = config.get_int("adama_port", 8001);
+    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+    AWSMetrics awsMetrics = new AWSMetrics(metricsFactory);
+    S3 s3 = new S3(awsConfig, awsMetrics);
+    SimpleExecutor caravanExecutor = SimpleExecutor.create("caravan");
+    SimpleExecutor managedExecutor = SimpleExecutor.create("managed-base");
+    File caravanPath = new File(caravanRoot);
+    caravanPath.mkdir();
+    File walRoot = new File(caravanPath, "wal");
+    File dataRoot = new File(caravanPath, "data");
+    walRoot.mkdir();
+    dataRoot.mkdir();
+    File storePath = new File(dataRoot, "store");
+    DurableListStore store = new DurableListStore(new DurableListStoreMetrics(metricsFactory), storePath, walRoot, 4L * 1024 * 1024 * 1024, 16 * 1024 * 1024, 64 * 1024 * 1024);
+    Finder finder = new Finder(dataBase);
+    CaravanDataService caravanDataService = new CaravanDataService(s3, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
+    Base managedBase = new Base(finder, caravanDataService, region, identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
+    ManagedDataService dataService = new ManagedDataService(managedBase);
+    return dataService;
+  }
+
   public static void serviceBackend(Config config) throws Exception {
     MachineHeat.install();
     int port = config.get_int("adama_port", 8001);
@@ -171,13 +198,17 @@ public class Service {
         LOGGER.error("health-check-failure-database", ex);
       }
     }, 30000, 30000, TimeUnit.MILLISECONDS);
+
     BackendMetrics backendMetrics = new BackendMetrics(prometheusMetricsFactory);
     ThreadedDataService dbDataService = new ThreadedDataService(dataThreads, () -> new BlockingDataService(backendMetrics, dataBaseBackend));
     PrefixSplitDataService carveMemoryOff = new PrefixSplitDataService(dbDataService, "mem_", new ThreadedDataService(dataThreads, () -> new InMemoryDataService((r) -> r.run(), TimeSource.REAL_TIME)));
 
+    DataService caravanService = caravan(identity, config, prometheusMetricsFactory, dataBaseBackend);
+    PrefixSplitDataService carvaCaravanOff = new PrefixSplitDataService(carveMemoryOff, "carvan_", caravanService);
+
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
-    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), carveMemoryOff, TimeSource.REAL_TIME, coreThreads);
+    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), carvaCaravanOff, TimeSource.REAL_TIME, coreThreads);
 
     engine.newApp("adama", port, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
@@ -325,6 +356,12 @@ public class Service {
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics metrics = new ClientMetrics(prometheusMetricsFactory);
     ClientRouter router = ClientRouter.REACTIVE(metrics);
+    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
+    AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
+    S3 s3 = new S3(awsConfig, awsMetrics);
+
+
+
     // TODO: use new FINDER for client router, requires the finder service and blah-blah-blah
     /*
     Finder finder = new Finder(dataBaseFront);
@@ -346,9 +383,6 @@ public class Service {
       System.err.println("adama targets:" + notice);
       targetPublisher.accept(targets);
     });
-    AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
-    AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
-    S3 s3 = new S3(awsConfig, awsMetrics);
     ConcurrentCachedHttpHandler propigatedHandler = new ConcurrentCachedHttpHandler();
 
     OverlordClient overlordClient = new OverlordClient(identity, webConfig.port, propigatedHandler);

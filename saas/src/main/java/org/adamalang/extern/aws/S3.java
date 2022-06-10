@@ -49,7 +49,9 @@ public class S3 implements AssetUploader, AssetDownloader, Cloud {
     this.metrics = metrics;
     this.bucket = config.bucket;
     this.archive = new File(config.archivePath);
-    archive.mkdirs();
+    if (!archive.exists()) {
+      archive.mkdirs();
+    }
     if (!archive.exists() || !archive.isDirectory()) {
       throw new RuntimeException("archive '" + config.archivePath + "' is no a valid directory");
     }
