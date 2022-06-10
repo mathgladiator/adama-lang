@@ -60,6 +60,10 @@ public class CaravanDataServiceTests {
         public void translate(Key key, Callback<Long> callback) {
           callback.success(Long.parseLong(key.key));
         }
+
+        @Override
+        public void forget(Key key) {
+        }
       };
       this.cloud = new MockCloud();
       this.service = new CaravanDataService(cloud, keyToIdService, store, executor);

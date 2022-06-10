@@ -48,6 +48,7 @@ public class FinderServiceToKeyToIdService implements KeyToIdService {
     });
   }
 
+  @Override
   public void forget(Key key) {
     cache.remove(key);
   }

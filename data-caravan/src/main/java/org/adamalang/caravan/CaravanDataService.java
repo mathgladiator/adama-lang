@@ -407,6 +407,7 @@ public class CaravanDataService implements ArchivingDataService {
       if (cached != null) {
         cache.remove(id);
       }
+      keyToIdService.forget(key);
       callback.success(null);
     });
   }
