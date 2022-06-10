@@ -250,11 +250,13 @@ public class DurableListStore {
       }
 
       // feels excessive, is it better to copy OR re-init? Could we trust the client to simply _not_ be re-entrant?
-      ArrayList<Runnable> notificationClone = new ArrayList<>(notifications);
-      notifications.clear();
+      if (notifications.size() > 0) {
+        ArrayList<Runnable> notificationClone = new ArrayList<>(notifications);
+        notifications.clear();
 
-      for (Runnable notification : notificationClone) {
-        notification.run();
+        for (Runnable notification : notificationClone) {
+          notification.run();
+        }
       }
     } catch (IOException ex) {
       LOGGER.error("critical-exception:", ex);

@@ -80,6 +80,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -170,6 +171,27 @@ public class Service {
     CaravanDataService caravanDataService = new CaravanDataService(s3, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
     Base managedBase = new Base(finder, caravanDataService, region, identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
     ManagedDataService dataService = new ManagedDataService(managedBase);
+    AtomicBoolean alive = new AtomicBoolean(true);
+    Thread flusher = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while (alive.get()) {
+          try {
+            Thread.sleep(0, 800000);
+            caravanDataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
+          } catch (InterruptedException ie) {
+            return;
+          }
+        }
+      }
+    });
+    flusher.start();
+    Runtime.getRuntime().addShutdownHook(new Thread(ExceptionRunnable.TO_RUNTIME(new ExceptionRunnable() {
+      @Override
+      public void run() throws Exception {
+        alive.set(false);
+      }
+    })));
     return dataService;
   }
 
@@ -204,11 +226,11 @@ public class Service {
     PrefixSplitDataService carveMemoryOff = new PrefixSplitDataService(dbDataService, "mem_", new ThreadedDataService(dataThreads, () -> new InMemoryDataService((r) -> r.run(), TimeSource.REAL_TIME)));
 
     DataService caravanService = caravan(identity, config, prometheusMetricsFactory, dataBaseBackend);
-    PrefixSplitDataService carvaCaravanOff = new PrefixSplitDataService(carveMemoryOff, "caravan_", caravanService);
+    PrefixSplitDataService carvanCaravanOff = new PrefixSplitDataService(carveMemoryOff, "caravan_", caravanService);
 
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     CoreMetrics coreMetrics = new CoreMetrics(prometheusMetricsFactory);
-    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), carvaCaravanOff, TimeSource.REAL_TIME, coreThreads);
+    CoreService service = new CoreService(coreMetrics, deploymentFactoryBase, meteringPubSub.publisher(), carvanCaravanOff, TimeSource.REAL_TIME, coreThreads);
 
     engine.newApp("adama", port, (hb) -> {
       meteringPubSub.subscribe((bills) -> {
@@ -265,7 +287,6 @@ public class Service {
     scanForDeployments.accept("*");
     NetBase netBase = new NetBase(identity, 1, 2);
     ServerNexus nexus = new ServerNexus(netBase, identity, service, new ServerMetrics(prometheusMetricsFactory), deploymentFactoryBase, scanForDeployments, meteringPubSub, billingBatchMaker, port, 4);
-
     ServerHandle handle = netBase.serve(port, (upstream) -> new Handler(nexus, upstream));
     Thread serverThread = new Thread(() -> handle.waitForEnd());
     serverThread.start();
@@ -281,6 +302,7 @@ public class Service {
         netBase.shutdown();
       }
     })));
+    System.err.println("backend running");
   }
 
   public static void serviceOverlord(Config config) throws Exception {
@@ -300,6 +322,8 @@ public class Service {
 
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(config.get_str_list("bootstrap")), gossipPort, monitoringPort, new GossipMetricsImpl(prometheusMetricsFactory), EngineRole.SuperNode);
     engine.start();
+
+    System.err.println("running overlord web");
 
     HttpHandler handler = Overlord.execute(identity, engine, overlordPort, prometheusMetricsFactory, targetsPath, dataBaseDeployments, dataBaseFront, dataBaseBackend, scanPath);
 
@@ -456,6 +480,7 @@ public class Service {
     new DataBaseMetrics(metricsFactory, "backend");
     new DataBaseMetrics(metricsFactory, "deployed");
     metricsFactory.page("disk", "Disk");
+    new DurableListStoreMetrics(metricsFactory);
     metricsFactory.finish(new File("./prometheus/consoles"));
   }
 }

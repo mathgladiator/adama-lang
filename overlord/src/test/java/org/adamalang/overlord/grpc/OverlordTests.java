@@ -74,7 +74,7 @@ public class OverlordTests {
   }
 
   public static String prefixForLocalhost() {
-    for (String search : new String[] {"./", "../", "./grpc/"}) {
+    for (String search : new String[] {"./", "../", "./overlord/"}) {
       String candidate = search + "localhost.identity";
       File file = new File(candidate);
       if (file.exists()) {

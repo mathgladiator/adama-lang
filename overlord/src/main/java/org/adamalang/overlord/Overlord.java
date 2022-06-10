@@ -58,7 +58,7 @@ public class Overlord {
     String adamaRole = "adama";
     ClientConfig clientConfig = new ClientConfig();
     // TODO: need new client picker, or not... hrmm
-    Client client = new Client(netBase, clientConfig, new ClientMetrics(metricsFactory), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), (target, cpu, memory) -> {
+    Client client = new Client(netBase, clientConfig, new ClientMetrics(metricsFactory), ClientRouter.REACTIVE(new ClientMetrics(metricsFactory)), (target, cpu, memory) -> {
       heatTable.onSample(target, adamaRole, cpu, memory);
     });
     engine.subscribe(adamaRole, client.getTargetPublisher());
