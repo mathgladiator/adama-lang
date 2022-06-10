@@ -355,13 +355,12 @@ public class Service {
     NetBase netBase = new NetBase(identity, 1, 2);
     ClientConfig clientConfig = new ClientConfig();
     ClientMetrics metrics = new ClientMetrics(prometheusMetricsFactory);
-    ClientRouter router = ClientRouter.REACTIVE(metrics);
     AWSConfig awsConfig = new AWSConfig(new ConfigObject(config.get_or_create_child("aws")));
     AWSMetrics awsMetrics = new AWSMetrics(prometheusMetricsFactory);
     S3 s3 = new S3(awsConfig, awsMetrics);
 
 
-
+    ClientRouter router = ClientRouter.REACTIVE(metrics);
     // TODO: use new FINDER for client router, requires the finder service and blah-blah-blah
     /*
     Finder finder = new Finder(dataBaseFront);
