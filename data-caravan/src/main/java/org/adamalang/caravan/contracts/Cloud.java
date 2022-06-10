@@ -10,6 +10,7 @@
 package org.adamalang.caravan.contracts;
 
 import org.adamalang.common.Callback;
+import org.adamalang.runtime.data.Key;
 
 import java.io.File;
 
@@ -19,8 +20,8 @@ public interface Cloud {
   File path();
 
   /** restore the archive key from the cloud to a local file */
-  void restore(String archiveKey, Callback<File> callback);
+  void restore(Key key, String archiveKey, Callback<File> callback);
 
   /** backup the given file and send to the cloud */
-  void backup(File archiveFile, Callback<Void> callback);
+  void backup(Key key, File archiveFile, Callback<Void> callback);
 }

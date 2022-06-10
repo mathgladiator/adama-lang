@@ -12,6 +12,7 @@ package org.adamalang.caravan.mocks;
 import org.adamalang.caravan.contracts.Cloud;
 import org.adamalang.common.Callback;
 import org.adamalang.common.ErrorCodeException;
+import org.adamalang.runtime.data.Key;
 
 import java.io.File;
 import java.util.HashMap;
@@ -45,7 +46,7 @@ public class MockCloud implements Cloud {
   }
 
   @Override
-  public void restore(String archiveKey, Callback<File> callback) {
+  public void restore(Key key, String archiveKey, Callback<File> callback) {
     if (archiveKey.equals("notfound")) {
       callback.success(new File(path, "nope"));
       return;
@@ -59,7 +60,7 @@ public class MockCloud implements Cloud {
   }
 
   @Override
-  public void backup(File archiveFile, Callback<Void> callback) {
+  public void backup(Key key, File archiveFile, Callback<Void> callback) {
     map.put(archiveFile.getName(), archiveFile);
     callback.success(null);
   }

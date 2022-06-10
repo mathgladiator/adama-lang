@@ -104,13 +104,15 @@ public class S3 implements AssetUploader, AssetDownloader, Cloud {
   }
 
   @Override
-  public void restore(String archiveKey, Callback<File> callback) {
+  public void restore(Key key, String archiveKey, Callback<File> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.restore_document.start();
-    GetObjectRequest request = GetObjectRequest.builder().bucket(bucket).key("backups/" + archiveKey).build();
     executors.execute(() -> {
       try {
         File file = new File(path(), archiveKey);
-        s3.getObject(request, file.toPath());
+        if (!file.exists()) {
+          GetObjectRequest request = GetObjectRequest.builder().bucket(bucket).key("backups/" + key.space + "/" + key.key + "/#" + archiveKey).build();
+          s3.getObject(request, file.toPath());
+        }
         instance.success();
         callback.success(file);
       } catch (Exception ex) {
@@ -122,9 +124,9 @@ public class S3 implements AssetUploader, AssetDownloader, Cloud {
   }
 
   @Override
-  public void backup(File archiveFile, Callback<Void> callback) {
+  public void backup(Key key, File archiveFile, Callback<Void> callback) {
     RequestResponseMonitor.RequestResponseMonitorInstance instance = metrics.backup_document.start();
-    PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key("backups/" + archiveFile.getName()).build();
+    PutObjectRequest request = PutObjectRequest.builder().bucket(bucket).key("backups/" + key.space + "/" + key.key + "/#" + archiveFile.getName()).build();
     executors.execute(() -> {
       try {
         s3.putObject(request, archiveFile.toPath());

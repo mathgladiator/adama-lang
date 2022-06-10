@@ -47,7 +47,7 @@ public class CaravanDataService implements ArchivingDataService {
   @Override
   public void restore(Key key, String archiveKey, Callback<Void> callback) {
     // ask the cloud to ensure the archive key has been downloaded
-    cloud.restore(archiveKey, new Callback<File>() {
+    cloud.restore(key, archiveKey, new Callback<File>() {
       @Override
       public void success(File archiveFile) {
         // load the writes from the backup
@@ -140,7 +140,7 @@ public class CaravanDataService implements ArchivingDataService {
         callback.failure(new ErrorCodeException(ErrorCodes.CARAVAN_CANT_BACKUP_EXCEPTION, ioex));
         return;
       }
-      cloud.backup(finalOutput, new Callback<Void>() {
+      cloud.backup(key, finalOutput, new Callback<Void>() {
         @Override
         public void success(Void value) {
           callback.success(new BackupResult(archiveKey, seq, deltaBytesSum.get(), assetBytesSum.get()));

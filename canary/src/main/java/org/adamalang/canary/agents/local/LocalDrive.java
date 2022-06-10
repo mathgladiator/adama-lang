@@ -85,12 +85,12 @@ public class LocalDrive {
         }
 
         @Override
-        public void restore(String archiveKey, Callback<File> callback) {
+        public void restore(Key key, String archiveKey, Callback<File> callback) {
 
         }
 
         @Override
-        public void backup(File archiveFile, Callback<Void> callback) {
+        public void backup(Key key, File archiveFile, Callback<Void> callback) {
 
         }
       };
