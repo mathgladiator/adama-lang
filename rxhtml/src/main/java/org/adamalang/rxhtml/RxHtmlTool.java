@@ -16,6 +16,7 @@ import org.jsoup.nodes.Element;
 import java.io.File;
 import java.util.ArrayList;
 
+/** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
   public static String convertFilesToTemplateForest(ArrayList<File> files) throws Exception {
     Template template = new Template();

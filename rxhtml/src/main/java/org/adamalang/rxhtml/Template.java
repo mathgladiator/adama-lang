@@ -68,6 +68,7 @@ public class Template {
         Tree tree = Parser.parse(attr.getValue());
         Set<String> vars = tree.variables();
         String realKey = attr.getKey();
+        realKey = convertXmlAttributeToJavaScriptField(realKey);
         // TODO: expand mapping of attribute names
 
         if (vars.size() > 0) {
@@ -130,7 +131,7 @@ public class Template {
     writer.tabDown().tab().append("}").newline();
     pool.give(setVar);
     pool.give(gidVar);
-  };
+  }
 
   private String wrapTransform(String expression, String transform) {
     if (transform == null || "".equals(transform)) {
@@ -196,11 +197,6 @@ public class Template {
       subscriptionCounts.put(name, prior + 1);
       return SubscribeMethod.Push;
     }
-  }
-
-  private Element getSingleChild(Element element) {
-
-    return element;
   }
 
   private void writeChildren(String current, Element element, boolean singleParent, String parentVariable, HashMap<String, Integer> subscriptionCounts) {

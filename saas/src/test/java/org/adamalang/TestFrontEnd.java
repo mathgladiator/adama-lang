@@ -27,6 +27,7 @@ import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.DeployedInstaller;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
+import org.adamalang.mysql.finder.FinderInstaller;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.net.client.Client;
 import org.adamalang.net.client.ClientConfig;
@@ -76,6 +77,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public final FrontendManagementInstaller installerFront;
   public final BackendDataServiceInstaller installerBack;
   public final DeployedInstaller installDeploy;
+  public final FinderInstaller installFinder;
   public final File attachmentRoot;
   public final SimpleExecutor clientExecutor;
   public final DeploymentFactoryBase deploymentFactoryBase;
@@ -94,7 +96,12 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.installerBack.install();
     this.installDeploy = new DeployedInstaller(dataBase);
     this.installDeploy.install();
+    this.installFinder = new FinderInstaller(dataBase);
+    this.installFinder.install();
+
     BlockingDataService ds = new BlockingDataService(new BackendMetrics(new NoOpMetricsFactory()), dataBase);
+
+
     deploymentFactoryBase = new DeploymentFactoryBase();
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
     coreService =
@@ -176,6 +183,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     installerFront.uninstall();
     installerBack.uninstall();
     installDeploy.uninstall();
+    installFinder.uninstall();
     connection.kill();
     nexus.close();
     clientExecutor.shutdown();
@@ -194,6 +202,7 @@ public class TestFrontEnd implements AutoCloseable, Email {
     }
     return true;
   }
+
 
   public Runnable latchOnEmail(String email) {
     CountDownLatch latch = new CountDownLatch(1);
