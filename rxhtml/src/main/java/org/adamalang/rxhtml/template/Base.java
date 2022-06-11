@@ -98,6 +98,7 @@ public class Base {
             Scope.write(childEnv);
             break;
           case "iterate":
+            env.assertSoloParent();
             Iterate.write(childEnv.current(null).element(env.soloChild()).name(child.attr("name")).resetSubscriptionCounts());
             break;
           case "lookup":
