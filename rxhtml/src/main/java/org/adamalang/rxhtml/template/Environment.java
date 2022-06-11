@@ -51,29 +51,36 @@ public class Environment {
     return element.child(0);
   }
 
+  private static boolean inferSingleParent(Element element) {
+    if (element == null) {
+      return false;
+    }
+    return element.children().size() == 1;
+  }
+
   public Environment parentVariable(String parentVariable) {
-    return new Environment(writer, pool, current, name, element, element.children().size() == 1, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
   }
 
   public Environment current(String current) {
-    return new Environment(writer, pool, current, name, element, element.children().size() == 1, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
   }
 
   public Environment name(String name) {
-    return new Environment(writer, pool, current, name, element, element.children().size() == 1, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
   }
 
   public Environment element(Element element) {
-    return new Environment(writer, pool, current, name, element, element.children().size() == 1, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(writer, pool, current, name, element, inferSingleParent(element), parentVariable, returnVariable, subscriptionCounts);
   }
 
   public Environment returnVariable(boolean returnVariable) {
-    return new Environment(writer, pool, current, name, element, element.children().size() == 1, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
   }
 
   public Environment resetSubscriptionCounts() {
     HashMap<String, Integer> subscriptionCounts = new HashMap<>();
-    return new Environment(writer, pool, current, name, element, element.children().size() == 1, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
   }
 
   public static Environment fresh() {
