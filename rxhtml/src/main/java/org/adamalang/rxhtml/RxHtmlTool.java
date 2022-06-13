@@ -9,6 +9,8 @@
  */
 package org.adamalang.rxhtml;
 
+import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.template.Root;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,13 +21,13 @@ import java.util.ArrayList;
 /** the rxhtml tool for converting rxhtml into javascript templates */
 public class RxHtmlTool {
   public static String convertFilesToTemplateForest(ArrayList<File> files) throws Exception {
-    Template template = new Template();
+    Environment env = Environment.fresh();
     for (File file : files) {
       Document document = Jsoup.parse(file, "UTF-8");
       for (Element element : document.getElementsByTag("template")) {
-        template.writeRoot(element);
+        Root.write(env.element(element));
       }
     }
-    return template.finish();
+    return Root.finish(env);
   }
 }

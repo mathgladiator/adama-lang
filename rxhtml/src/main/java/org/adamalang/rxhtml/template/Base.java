@@ -11,9 +11,7 @@ package org.adamalang.rxhtml.template;
 
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
-import org.adamalang.rxhtml.template.elements.Iterate;
-import org.adamalang.rxhtml.template.elements.Lookup;
-import org.adamalang.rxhtml.template.elements.Scope;
+import org.adamalang.rxhtml.template.elements.*;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Node;
@@ -70,8 +68,14 @@ public class Base {
         // TODO: handle no-value
       }
     }
-    children(env.parentVariable(eVar));
-    env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
+    Environment next = env.parentVariable(eVar);
+    if (env.element.tagName().equals("form")) {
+      next = next.formVariable(eVar);
+    }
+    children(next);
+    if (env.parentVariable != null) {
+      env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
+    }
     if (env.returnVariable) {
       return eVar;
     } else {
@@ -98,11 +102,19 @@ public class Base {
             Scope.write(childEnv);
             break;
           case "iterate":
-            env.assertSoloParent();
-            Iterate.write(childEnv.current(null).element(env.soloChild()).name(child.attr("name")).resetSubscriptionCounts());
+            Iterate.write(childEnv);
+            break;
+          case "message":
+            Message.write(childEnv);
+            break;
+          case "execute":
+            Execute.write(childEnv);
+            break;
+          case "input":
+            Input.write(childEnv);
             break;
           case "lookup":
-            Lookup.writeLookup(childEnv.name(child.attr("name")));
+            Lookup.write(childEnv);
             break;
           default:
             Base.write(childEnv);

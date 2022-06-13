@@ -9,14 +9,11 @@
  */
 package org.adamalang.rxhtml.template.elements;
 
-import org.adamalang.rxhtml.Template;
 import org.adamalang.rxhtml.template.Environment;
 
 import java.util.HashMap;
 
 public class Lookup {
-
-
   private static enum SubscribeMethod {
     Set,
     TurnIntoArray,
@@ -47,21 +44,23 @@ public class Lookup {
     return expression;
   }
 
-  public static void writeLookup(Environment env) {
+  public static void write(Environment env) {
+    env.assertHasParent();
+    String name = env.element.attr("name");
     String eVar = env.pool.ask();
     String transform = env.element.attr("transform");
     env.writer.tab().append("{").tabUp().newline();
-    env.writer.tab().append("var ").append(eVar).append(" = $.t(").append(wrapTransform(env.current != null ? (env.current + "." + env.name) : "''", transform)).append(");").newline();
-    SubscribeMethod method = subscribeTest(env.name, env.subscriptionCounts);
+    env.writer.tab().append("var ").append(eVar).append(" = $.t(").append(wrapTransform(env.current != null ? (env.current + "." + name) : "''", transform)).append(");").newline();
+    SubscribeMethod method = subscribeTest(name, env.subscriptionCounts);
     switch (method) {
       case Set:
-        env.writer.tab().append("_.").append(env.name).append(" = ");
+        env.writer.tab().append("_.").append(name).append(" = ");
         break;
       case TurnIntoArray:
-        env.writer.tab().append("_.").append(env.name).append(" = [_.").append(env.name).append(",");
+        env.writer.tab().append("_.").append(name).append(" = [_.").append(name).append(",");
         break;
       case Push:
-        env.writer.tab().append("_.").append(env.name).append(".push(");
+        env.writer.tab().append("_.").append(name).append(".push(");
         break;
     }
     env.writer.append("function(x) {").newline().tabUp();

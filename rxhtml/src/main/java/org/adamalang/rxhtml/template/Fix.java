@@ -7,7 +7,16 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.rxhtml.template.elements;
+package org.adamalang.rxhtml.template;
 
-public class SwitchTests {
+public class Fix {
+  public static String ident(String ident) {
+    if (ident != null) {
+      ident = ident.trim();
+      if (ident.length() == 0) {
+        ident = null;
+      }
+    }
+    return ident;
+  }
 }

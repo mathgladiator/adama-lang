@@ -9,5 +9,13 @@
  */
 package org.adamalang.rxhtml.template.elements;
 
-public class IterateTests {
+import org.adamalang.rxhtml.template.Base;
+import org.adamalang.rxhtml.template.Environment;
+
+public class Execute {
+  public static void write(Environment env) {
+    env.element.tagName("button");
+    env.element.attr("type", "submit");
+    Base.write(env);
+  }
 }

@@ -9,5 +9,16 @@
  */
 package org.adamalang.rxhtml.template.elements;
 
+import org.adamalang.rxhtml.template.Base;
+import org.adamalang.rxhtml.template.Environment;
+import org.jsoup.nodes.Element;
+
 public class Switch {
+  public static void write(Environment env) {
+    env.parent.assertSoloParent();
+    for (int k = 0; k < env.element.childrenSize(); k++) {
+      Element child = env.element.child(k);
+      String var = Base.write(env.element(child).parentVariable(null).returnVariable(true));
+    }
+  }
 }

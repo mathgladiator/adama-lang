@@ -16,31 +16,39 @@ import org.jsoup.nodes.Element;
 import java.util.HashMap;
 
 public class Environment {
+  public final Environment parent;
   public final Writer writer;
   public final VariablePool pool;
   public final String current;
-  public final String name;
   public final Element element;
   public final boolean singleParent;
   public final String parentVariable;
   public final boolean returnVariable;
   public final HashMap<String, Integer> subscriptionCounts;
+  public final String formVariable;
 
-  private Environment(Writer writer, VariablePool pool, String current, String name, Element element, boolean singleParent, String parentVariable, boolean returnVariable, HashMap<String, Integer> subscriptionCounts) {
+  private Environment(Environment parent, Writer writer, VariablePool pool, String current, Element element, boolean singleParent, String parentVariable, boolean returnVariable, HashMap<String, Integer> subscriptionCounts, String formVariable) {
+    this.parent = parent;
     this.writer = writer;
     this.pool = pool;
     this.current = current;
-    this.name = name;
     this.element = element;
     this.singleParent = singleParent;
     this.parentVariable = parentVariable;
     this.returnVariable = returnVariable;
     this.subscriptionCounts = subscriptionCounts;
+    this.formVariable = formVariable;
   }
 
   public void assertSoloParent() {
     if (!singleParent) {
       throw new UnsupportedOperationException("<" + element.tagName() + "> was expecting a single parent");
+    }
+  }
+
+  public void assertHasParent() {
+    if (parentVariable == null) {
+      throw new UnsupportedOperationException("<" + element.tagName() + "> must have a valid parent");
     }
   }
 
@@ -59,31 +67,33 @@ public class Environment {
   }
 
   public Environment parentVariable(String parentVariable) {
-    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
   }
 
   public Environment current(String current) {
-    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
-  }
-
-  public Environment name(String name) {
-    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
   }
 
   public Environment element(Element element) {
-    return new Environment(writer, pool, current, name, element, inferSingleParent(element), parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(this, writer, pool, current, element, inferSingleParent(element), parentVariable, returnVariable, subscriptionCounts, formVariable);
   }
 
   public Environment returnVariable(boolean returnVariable) {
-    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
   }
 
   public Environment resetSubscriptionCounts() {
     HashMap<String, Integer> subscriptionCounts = new HashMap<>();
-    return new Environment(writer, pool, current, name, element, singleParent, parentVariable, returnVariable, subscriptionCounts);
+    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
+  }
+
+  public Environment formVariable(String formVariable) {
+    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
   }
 
   public static Environment fresh() {
-    return new Environment(new Writer(), new VariablePool(), null, null, null, false, null, false, new HashMap<>());
+    Writer writer = new Writer();
+    writer.append(" function install($) {").tabUp().newline();
+    return new Environment(null, writer, new VariablePool(), null, null, false, null, false, new HashMap<>(), null);
   }
 }

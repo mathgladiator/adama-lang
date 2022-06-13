@@ -15,13 +15,16 @@ import org.adamalang.rxhtml.template.Environment;
 public class Iterate {
 
   public static void write(Environment env) {
+    env.parent.assertSoloParent();
+    env.assertHasParent();
+    String name = env.element.attr("name");
     String setVar = env.pool.ask();
     String gidVar = env.pool.ask();
     env.writer.tab().append("var ").append(gidVar).append(" = $.g();").newline();
-    env.writer.tab().append("_.").append(env.name).append(" = {").tabUp().newline();
+    env.writer.tab().append("_.").append(name).append(" = {").tabUp().newline();
     env.writer.tab().append("'+': function(").append(setVar).append(") {").tabUp().newline();
     env.writer.tab().append("var _ = {};").newline();
-    String appendElement = Base.write(env.current(setVar + ".value").element(env.element).returnVariable(true));
+    String appendElement = Base.write(env.current(setVar + ".value").element(env.soloChild()).returnVariable(true).resetSubscriptionCounts());
     env.writer.tab().append(appendElement).append("._k = ").append(setVar).append(".key;").newline();
     env.writer.tab().append(setVar).append(".value['").append(setVar).append("_' + ").append(gidVar).append("] = ").append(appendElement).append(";").newline();
     env.pool.give(appendElement);
