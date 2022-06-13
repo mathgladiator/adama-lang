@@ -40,6 +40,12 @@ public class Environment {
     this.formVariable = formVariable;
   }
 
+  public static Environment fresh() {
+    Writer writer = new Writer();
+    writer.append(" function install($) {").tabUp().newline();
+    return new Environment(null, writer, new VariablePool(), null, null, false, null, false, new HashMap<>(), null);
+  }
+
   public void assertSoloParent() {
     if (!singleParent) {
       throw new UnsupportedOperationException("<" + element.tagName() + "> was expecting a single parent");
@@ -59,13 +65,6 @@ public class Environment {
     return element.child(0);
   }
 
-  private static boolean inferSingleParent(Element element) {
-    if (element == null) {
-      return false;
-    }
-    return element.children().size() == 1;
-  }
-
   public Environment parentVariable(String parentVariable) {
     return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
   }
@@ -76,6 +75,13 @@ public class Environment {
 
   public Environment element(Element element) {
     return new Environment(this, writer, pool, current, element, inferSingleParent(element), parentVariable, returnVariable, subscriptionCounts, formVariable);
+  }
+
+  private static boolean inferSingleParent(Element element) {
+    if (element == null) {
+      return false;
+    }
+    return element.children().size() == 1;
   }
 
   public Environment returnVariable(boolean returnVariable) {
@@ -89,11 +95,5 @@ public class Environment {
 
   public Environment formVariable(String formVariable) {
     return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
-  }
-
-  public static Environment fresh() {
-    Writer writer = new Writer();
-    writer.append(" function install($) {").tabUp().newline();
-    return new Environment(null, writer, new VariablePool(), null, null, false, null, false, new HashMap<>(), null);
   }
 }

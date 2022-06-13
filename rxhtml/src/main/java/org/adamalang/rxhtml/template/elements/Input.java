@@ -28,8 +28,8 @@ public class Input {
         } else {
           env.writer.tab().append("_$.push((function(x) { x['").append(name).append("'] = this.checked; }).bind(").append(inputVar).append("));").newline();
         }
-     } else if ("radio".equals(type)) {
-          env.writer.tab().append("_$.push((function(x) { if (this.checked) { x['").append(name).append("'] = this.value; }; }).bind(").append(inputVar).append("));").newline();
+      } else if ("radio".equals(type)) {
+        env.writer.tab().append("_$.push((function(x) { if (this.checked) { x['").append(name).append("'] = this.value; }; }).bind(").append(inputVar).append("));").newline();
       } else {
         env.writer.tab().append("_$.push((function(x) { x['").append(name).append("'] = this.value; }).bind(").append(inputVar).append("));").newline();
       }

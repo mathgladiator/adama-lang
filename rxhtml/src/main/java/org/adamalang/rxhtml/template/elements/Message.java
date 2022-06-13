@@ -13,8 +13,6 @@ import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.Environment;
 import org.adamalang.rxhtml.template.Fix;
 
-import java.util.HashMap;
-
 public class Message {
   public static void write(Environment env) {
     if (env.formVariable != null) {
@@ -38,17 +36,13 @@ public class Message {
     env.writer.tab().append("{").tabUp().newline();
     env.writer.tab().append("_$ = [];").newline();
     String formVar = Base.write(env.returnVariable(true));
-    env.writer.tab().append("$.z(").append(formVar).append(",_$);").newline();
-    env.writer.tabDown().tab().append("}").newline();
-    env.pool.give(formVar);
-
-
     if (local != null) {
-
+      env.writer.tab().append("$.z('").append(local).append("',").append(formVar).append(",_$);").newline();
     }
     if (channel != null) {
 
     }
-
+    env.writer.tabDown().tab().append("}").newline();
+    env.pool.give(formVar);
   }
 }

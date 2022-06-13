@@ -14,36 +14,6 @@ import org.adamalang.rxhtml.template.Environment;
 import java.util.HashMap;
 
 public class Lookup {
-  private static enum SubscribeMethod {
-    Set,
-    TurnIntoArray,
-    Push
-  }
-
-  private static SubscribeMethod subscribeTest(String name, HashMap<String, Integer> subscriptionCounts) {
-    Integer prior = subscriptionCounts.get(name);
-    if (prior == null) {
-      subscriptionCounts.put(name, 1);
-      return SubscribeMethod.Set;
-    } else if (prior == 1) {
-      subscriptionCounts.put(name, 2);
-      return SubscribeMethod.TurnIntoArray;
-    } else {
-      subscriptionCounts.put(name, prior + 1);
-      return SubscribeMethod.Push;
-    }
-  }
-
-  private static String wrapTransform(String expression, String transform) {
-    if (transform == null || "".equals(transform)) {
-      return expression;
-    }
-    if ("ntclient.agent".equalsIgnoreCase(transform)) {
-      return expression + ".agent";
-    }
-    return expression;
-  }
-
   public static void write(Environment env) {
     env.assertHasParent();
     String name = env.element.attr("name");
@@ -81,5 +51,33 @@ public class Lookup {
     env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
     env.writer.tabDown().tab().append("}").newline();
     env.pool.give(eVar);
+  }
+
+  private static String wrapTransform(String expression, String transform) {
+    if (transform == null || "".equals(transform)) {
+      return expression;
+    }
+    if ("ntclient.agent".equalsIgnoreCase(transform)) {
+      return expression + ".agent";
+    }
+    return expression;
+  }
+
+  private static SubscribeMethod subscribeTest(String name, HashMap<String, Integer> subscriptionCounts) {
+    Integer prior = subscriptionCounts.get(name);
+    if (prior == null) {
+      subscriptionCounts.put(name, 1);
+      return SubscribeMethod.Set;
+    } else if (prior == 1) {
+      subscriptionCounts.put(name, 2);
+      return SubscribeMethod.TurnIntoArray;
+    } else {
+      subscriptionCounts.put(name, prior + 1);
+      return SubscribeMethod.Push;
+    }
+  }
+
+  private enum SubscribeMethod {
+    Set, TurnIntoArray, Push
   }
 }
