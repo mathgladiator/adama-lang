@@ -24,7 +24,7 @@ public class SimpleTests {
     Document document = Jsoup.parse(html);
     Environment env = Environment.fresh();
     for (Element element : document.getElementsByTag("template")) {
-      Root.write(env.element(element));
+      Root.template(env.element(element));
     }
     return Root.finish(env);
   }
