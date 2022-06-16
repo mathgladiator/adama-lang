@@ -41,10 +41,11 @@ public class Base {
     String eVar = env.pool.ask();
     env.writer.tab().append("var ").append(eVar).append(" = $.e('").append(env.element.tagName()).append("');").newline();
     for (Attribute attr : env.element.attributes().asList()) {
-      if (attr.getValue() != null) {
+      String realKey = convertXmlAttributeToJavaScriptField(attr.getKey());
+
+      if (attr.hasDeclaredValue()) {
         Tree tree = Parser.parse(attr.getValue());
         Set<String> vars = tree.variables();
-        String realKey = convertXmlAttributeToJavaScriptField(attr.getKey());
 
         if (vars.size() > 0) {
           var oVar = env.pool.ask();
@@ -65,7 +66,7 @@ public class Base {
           env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(attr.getValue()).append("';").newline();
         }
       } else {
-        // TODO: handle no-value
+        env.writer.tab().append(eVar).append(".").append(realKey).append(" = true;").newline();
       }
     }
     Environment next = env.parentVariable(eVar);
@@ -98,8 +99,21 @@ public class Base {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
         Environment childEnv = env.element(child).returnVariable(false);
         switch (child.tagName()) {
+          case "template":
+          case "page":
+            // these handled at a higher level
+            break;
+          case "authenticate":
+            Authenticate.write(childEnv);
+            break;
+          case "forgot-password":
+            ForgotPassword.write(childEnv);
+            break;
           case "scope":
             Scope.write(childEnv);
+            break;
+          case "test":
+            Test.write(childEnv);
             break;
           case "iterate":
             Iterate.write(childEnv);
@@ -115,6 +129,9 @@ public class Base {
             break;
           case "lookup":
             Lookup.write(childEnv);
+            break;
+          case "use":
+            Use.write(childEnv);
             break;
           default:
             Base.write(childEnv);

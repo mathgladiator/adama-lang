@@ -25,7 +25,10 @@ public class RxHtmlTool {
     for (File file : files) {
       Document document = Jsoup.parse(file, "UTF-8");
       for (Element element : document.getElementsByTag("template")) {
-        Root.write(env.element(element));
+        Root.template(env.element(element));
+      }
+      for (Element element : document.getElementsByTag("page")) {
+        Root.page(env.element(element));
       }
     }
     return Root.finish(env);

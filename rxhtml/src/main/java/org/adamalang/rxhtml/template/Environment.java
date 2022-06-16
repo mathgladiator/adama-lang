@@ -27,6 +27,19 @@ public class Environment {
   public final HashMap<String, Integer> subscriptionCounts;
   public final String formVariable;
 
+  public final class StringStackNode {
+    public final StringStackNode parent;
+    public final String value;
+
+    private StringStackNode(StringStackNode parent, String value) {
+      this.parent = parent;
+      this.value = value;
+    }
+  }
+
+  // StringStackNode tree;
+  // StringStackNode delta;
+
   private Environment(Environment parent, Writer writer, VariablePool pool, String current, Element element, boolean singleParent, String parentVariable, boolean returnVariable, HashMap<String, Integer> subscriptionCounts, String formVariable) {
     this.parent = parent;
     this.writer = writer;

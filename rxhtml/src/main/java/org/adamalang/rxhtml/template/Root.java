@@ -10,7 +10,7 @@
 package org.adamalang.rxhtml.template;
 
 public class Root {
-  public static void write(Environment env) {
+  public static void template(Environment env) {
     String rootVar = env.pool.ask();
     env.writer.tab().append("$.register('").append(env.element.attr("name")).append("', function(_tree) {").newline().tabUp();
     env.writer.tab().append("var _ = {};").newline();
@@ -19,6 +19,10 @@ public class Root {
     env.writer.tab().append("_tree.onTreeChange(_);").newline();
     env.writer.tab().append("return ").append(rootVar).append(";").newline();
     env.writer.tabDown().tab().append("});").newline();
+  }
+
+  public static void page(Environment env) {
+    //..
   }
 
   public static String finish(Environment env) {

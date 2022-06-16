@@ -30,6 +30,12 @@ public class SimpleTests {
   }
 
   @Test
+  public void emptyvalue() {
+    String result = drive("<template name=\"foo\">how<input checked /></template>");
+    System.err.println(result);
+  }
+
+  @Test
   public void basic() {
     String result = drive("<template name=\"foo\">how<b class=\"foo bar\">d</b>y<img src=\"imgurl\"/></template>");
     System.err.println(result);

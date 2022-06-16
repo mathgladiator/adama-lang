@@ -7,9 +7,11 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.rxhtml.template;
+package org.adamalang.rxhtml.template.elements;
 
-import org.junit.Test;
+import org.adamalang.rxhtml.template.Environment;
 
-public class BaseTests {
+public class Test {
+  public static void write(Environment env) {
+  }
 }
