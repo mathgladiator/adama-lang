@@ -39,11 +39,15 @@ public class Base {
 
   public static String write(Environment env, boolean returnVariable) {
     if (env.element.attributesSize() == 0 && env.element.childNodeSize() == 0 && !returnVariable) {
-      env.writer.tab().append(env.parentVariable).append(".append(").append("$.e('").append(env.element.tagName()).append("'));").newline();
+      env.writer.tab().append(env.parentVariable).append(".append(").append("$.E('").append(env.element.tagName()).append("'));").newline();
       return null;
     } else {
       String eVar = env.pool.ask();
-      env.writer.tab().append("var ").append(eVar).append(" = $.e('").append(env.element.tagName()).append("');").newline();
+      boolean hasCase = env.element.hasAttr("case") && env.caseVar != null;
+      if (hasCase) {
+        env.writer.tab().append("if (").append(env.caseVar).append(" == '").append(env.element.attr("case")).append("') {").tabUp().newline();
+      }
+      env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("');").newline();
       for (Attribute attr : env.element.attributes().asList()) {
         String realKey = convertXmlAttributeToJavaScriptField(attr.getKey());
         if (attr.hasDeclaredValue()) {
@@ -80,6 +84,9 @@ public class Base {
       children(next);
       if (env.parentVariable != null) {
         env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
+      }
+      if (hasCase) {
+        env.writer.tabDown().tab().append("}").newline();
       }
       if (returnVariable) {
         return eVar;

@@ -25,8 +25,9 @@ public class Environment {
   public final String parentVariable;
   public final String formVariable;
   public final String stateVar;
+  public final String caseVar;
 
-  private Environment(Environment parent, Writer writer, VariablePool pool, Element element, boolean singleParent, String parentVariable, String formVariable, String stateVar) {
+  private Environment(Environment parent, Writer writer, VariablePool pool, Element element, boolean singleParent, String parentVariable, String formVariable, String stateVar, String caseVar) {
     this.parent = parent;
     this.writer = writer;
     this.pool = pool;
@@ -35,12 +36,13 @@ public class Environment {
     this.parentVariable = parentVariable;
     this.formVariable = formVariable;
     this.stateVar = stateVar;
+    this.caseVar = caseVar;
   }
 
   public static Environment fresh() {
     Writer writer = new Writer();
     writer.append(" function install($) {").tabUp().newline();
-    return new Environment(null, writer, new VariablePool(), null, false, null, null, null);
+    return new Environment(null, writer, new VariablePool(), null, false, null, null, null, null);
   }
 
   public void assertSoloParent() {
@@ -77,11 +79,11 @@ public class Environment {
   }
 
   public Environment parentVariable(String parentVariable) {
-    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar);
+    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar);
   }
 
   public Environment element(Element element) {
-    return new Environment(this, writer, pool, element, inferSingleParent(element), parentVariable, formVariable, stateVar);
+    return new Environment(this, writer, pool, element, inferSingleParent(element), parentVariable, formVariable, stateVar, caseVar);
   }
 
   private static boolean inferSingleParent(Element element) {
@@ -92,10 +94,12 @@ public class Environment {
   }
 
   public Environment formVariable(String formVariable) {
-    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar);
+    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar);
   }
-
   public Environment stateVar(String stateVar) {
-    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar);
+    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar);
+  }
+  public Environment caseVar(String caseVar) {
+    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar);
   }
 }

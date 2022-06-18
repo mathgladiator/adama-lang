@@ -15,10 +15,20 @@ import org.jsoup.nodes.Element;
 
 public class Switch {
   public static void write(Environment env) {
+    env.assertHasParent();
     env.parent.assertSoloParent();
-    for (int k = 0; k < env.element.childrenSize(); k++) {
-      Element child = env.element.child(k);
-      String var = Base.write(env.element(child).parentVariable(null), true);
-    }
+
+    String path = env.element.attr("path");
+    String stateVarToUse = env.stateVar;
+
+    // TODO: parse the path to get a state variable
+    String childStateVar = env.pool.ask();
+    String caseVar = env.pool.ask();
+    env.writer.tab().append("$.W(").append(env.parentVariable).append(", ").append(stateVarToUse);
+    env.writer.append(", '").append(path).append("', function(").append(childStateVar).append(", ").append(caseVar).append(") {").tabUp().newline();
+    Base.children(env.stateVar(childStateVar).caseVar(caseVar));
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(caseVar);
+    env.pool.give(childStateVar);
   }
 }
