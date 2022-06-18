@@ -20,7 +20,7 @@ public class Input {
     if (type == null) {
       type = "text";
     }
-    String inputVar = Base.write(env.returnVariable(true));
+    String inputVar = Base.write(env, true);
     if (env.formVariable != null) {
       if ("checkbox".equals(type)) {
         if (env.element.hasAttr("value")) {

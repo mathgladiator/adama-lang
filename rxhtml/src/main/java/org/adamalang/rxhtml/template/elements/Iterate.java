@@ -13,10 +13,20 @@ import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.Environment;
 
 public class Iterate {
-
   public static void write(Environment env) {
-    env.parent.assertSoloParent();
     env.assertHasParent();
+    env.parent.assertSoloParent();
+    String path = env.element.attr("path");
+    String stateVarToUse = env.stateVar;
+    // TODO: parse the path to get a state variable
+    String childStateVar = env.pool.ask();
+    env.writer.tab().append("$.I(").append(env.parentVariable).append(", ").append(stateVarToUse).append(", '").append(path).append("', function(").append(childStateVar).append(") {").tabUp().newline();
+    String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(env.soloChild()), true);
+    env.writer.tab().append("return ").append(childDomVar).append(";").newline();
+    env.pool.give(childDomVar);
+    env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(childStateVar);
+    /*
     String name = env.element.attr("name");
     String setVar = env.pool.ask();
     String gidVar = env.pool.ask();
@@ -39,5 +49,6 @@ public class Iterate {
     env.writer.tabDown().tab().append("}").newline();
     env.pool.give(setVar);
     env.pool.give(gidVar);
+    */
   }
 }

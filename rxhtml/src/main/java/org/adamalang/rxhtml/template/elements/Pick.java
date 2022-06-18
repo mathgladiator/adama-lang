@@ -9,9 +9,19 @@
  */
 package org.adamalang.rxhtml.template.elements;
 
+import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.Environment;
 
 public class Pick {
   public static void write(Environment env) {
+    String sVar = env.pool.ask();
+    String name = env.element.attr("name");
+    env.writer.tab().append("{").tabUp().newline();
+    env.writer.tab().append("var ").append(sVar).append(" = $.P('").append(name).append("');").newline();
+    // TODO: figure out how to handle a reactive name
+    Base.children(env.stateVar(sVar));
+    env.writer.tab().append(sVar).append(".bind();").newline();
+    env.pool.give(sVar);
+    env.writer.tabDown().tab().append("}").newline();
   }
 }

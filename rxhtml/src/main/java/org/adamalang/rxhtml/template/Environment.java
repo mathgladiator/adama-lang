@@ -11,52 +11,36 @@ package org.adamalang.rxhtml.template;
 
 import org.adamalang.rxhtml.codegen.VariablePool;
 import org.adamalang.rxhtml.codegen.Writer;
+import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Element;
-
-import java.util.HashMap;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 
 public class Environment {
   public final Environment parent;
   public final Writer writer;
   public final VariablePool pool;
-  public final String current;
   public final Element element;
   public final boolean singleParent;
   public final String parentVariable;
-  public final boolean returnVariable;
-  public final HashMap<String, Integer> subscriptionCounts;
   public final String formVariable;
+  public final String stateVar;
 
-  public final class StringStackNode {
-    public final StringStackNode parent;
-    public final String value;
-
-    private StringStackNode(StringStackNode parent, String value) {
-      this.parent = parent;
-      this.value = value;
-    }
-  }
-
-  // StringStackNode tree;
-  // StringStackNode delta;
-
-  private Environment(Environment parent, Writer writer, VariablePool pool, String current, Element element, boolean singleParent, String parentVariable, boolean returnVariable, HashMap<String, Integer> subscriptionCounts, String formVariable) {
+  private Environment(Environment parent, Writer writer, VariablePool pool, Element element, boolean singleParent, String parentVariable, String formVariable, String stateVar) {
     this.parent = parent;
     this.writer = writer;
     this.pool = pool;
-    this.current = current;
     this.element = element;
     this.singleParent = singleParent;
     this.parentVariable = parentVariable;
-    this.returnVariable = returnVariable;
-    this.subscriptionCounts = subscriptionCounts;
     this.formVariable = formVariable;
+    this.stateVar = stateVar;
   }
 
   public static Environment fresh() {
     Writer writer = new Writer();
     writer.append(" function install($) {").tabUp().newline();
-    return new Environment(null, writer, new VariablePool(), null, null, false, null, false, new HashMap<>(), null);
+    return new Environment(null, writer, new VariablePool(), null, false, null, null, null);
   }
 
   public void assertSoloParent() {
@@ -72,22 +56,32 @@ public class Environment {
   }
 
   public Element soloChild() {
-    if (element.childNodeSize() != 1 || !(element.childNode(0) instanceof org.jsoup.nodes.Element)) {
-      throw new UnsupportedOperationException("<" + element.tagName() + "> was expecting a single child");
+    Element result = null;
+    for (int k = 0; k < element.childNodeSize(); k++) {
+      Node node = element.childNode(k);
+      if (node instanceof TextNode) {
+        TextNode text = (TextNode) node;
+        if (!text.text().trim().equalsIgnoreCase("")) {
+          throw new UnsupportedOperationException("<" + element.tagName() + "> was expecting a single child element (non-ws text elements not allowed)");
+        }
+      } else if (node instanceof Comment) {
+        // ignore comments
+      } else if (node instanceof Element) {
+        if (result != null) {
+          throw new UnsupportedOperationException("<" + element.tagName() + "> was expecting a single child element");
+        }
+        result = (Element) node;
+      }
     }
-    return element.child(0);
+    return result;
   }
 
   public Environment parentVariable(String parentVariable) {
-    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
-  }
-
-  public Environment current(String current) {
-    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
+    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar);
   }
 
   public Environment element(Element element) {
-    return new Environment(this, writer, pool, current, element, inferSingleParent(element), parentVariable, returnVariable, subscriptionCounts, formVariable);
+    return new Environment(this, writer, pool, element, inferSingleParent(element), parentVariable, formVariable, stateVar);
   }
 
   private static boolean inferSingleParent(Element element) {
@@ -97,16 +91,11 @@ public class Environment {
     return element.children().size() == 1;
   }
 
-  public Environment returnVariable(boolean returnVariable) {
-    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
-  }
-
-  public Environment resetSubscriptionCounts() {
-    HashMap<String, Integer> subscriptionCounts = new HashMap<>();
-    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
-  }
-
   public Environment formVariable(String formVariable) {
-    return new Environment(this, writer, pool, current, element, singleParent, parentVariable, returnVariable, subscriptionCounts, formVariable);
+    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar);
+  }
+
+  public Environment stateVar(String stateVar) {
+    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar);
   }
 }

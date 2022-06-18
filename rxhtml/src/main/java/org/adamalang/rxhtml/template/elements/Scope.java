@@ -13,17 +13,11 @@ import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.Environment;
 
 public class Scope {
-
   public static void write(Environment env) {
-    String into = env.element.attr("into");
-    String oldDelta = env.pool.ask();
-    env.writer.tab().append("{").tabUp().newline();
-    env.writer.tab().append("var ").append(oldDelta).append(" = _;").newline();
-    env.writer.tab().append("_ = {};").newline();
-    Base.children(env.current(env.current + "." + into).resetSubscriptionCounts());
-    env.writer.tab().append(oldDelta).append(".").append(into).append(" = _;").newline();
-    env.writer.tab().append("_ = ").append(oldDelta).append(";").newline();
-    env.writer.tabDown().tab().append("}").newline();
-    env.pool.give(oldDelta);
+    String path = env.element.attr("path");
+    String newStateVar = env.pool.ask();
+    // TODO: manipulate the state and evalute the path
+    env.writer.tab().append("var ").append(newStateVar).append(" = $.S(").append(env.stateVar).append(", '").append(path).append("');").newline();
+    Base.children(env.stateVar(newStateVar));
   }
 }

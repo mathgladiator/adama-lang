@@ -35,7 +35,7 @@ public class Message {
     env.element.tagName("form");
     env.writer.tab().append("{").tabUp().newline();
     env.writer.tab().append("_$ = [];").newline();
-    String formVar = Base.write(env.returnVariable(true));
+    String formVar = Base.write(env, true);
     if (local != null) {
       env.writer.tab().append("$.z('").append(local).append("',").append(formVar).append(",_$);").newline();
     }

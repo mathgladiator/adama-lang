@@ -37,51 +37,56 @@ public class Base {
     return realKey;
   }
 
-  public static String write(Environment env) {
-    String eVar = env.pool.ask();
-    env.writer.tab().append("var ").append(eVar).append(" = $.e('").append(env.element.tagName()).append("');").newline();
-    for (Attribute attr : env.element.attributes().asList()) {
-      String realKey = convertXmlAttributeToJavaScriptField(attr.getKey());
-
-      if (attr.hasDeclaredValue()) {
-        Tree tree = Parser.parse(attr.getValue());
-        Set<String> vars = tree.variables();
-
-        if (vars.size() > 0) {
-          var oVar = env.pool.ask();
-          env.writer.tab().append("{").tabUp().newline();
-          env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
-          // copy
-          for (String var : vars) {
-            env.writer.tab().append(oVar).append(".").append(var).append(" = ").append(env.current).append(".").append(var).append(";").newline();
-          }
-          env.writer.tab().append(oVar).append("._ = function() {").tabUp().newline();
-          env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(tree.js(oVar)).append("';").newline();
-          env.writer.tabDown().tab().append("}").newline();
-          // TODO: for each variable, subscribe to an update, then fire _()
-          // NOTE: handling multiple callbacks per field is a huge bug
-          env.writer.tab().append(oVar).append("._();").newline();
-          env.writer.tabDown().tab().append("}").newline();
-        } else {
-          env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(attr.getValue()).append("';").newline();
-        }
-      } else {
-        env.writer.tab().append(eVar).append(".").append(realKey).append(" = true;").newline();
-      }
-    }
-    Environment next = env.parentVariable(eVar);
-    if (env.element.tagName().equals("form")) {
-      next = next.formVariable(eVar);
-    }
-    children(next);
-    if (env.parentVariable != null) {
-      env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
-    }
-    if (env.returnVariable) {
-      return eVar;
-    } else {
-      env.pool.give(eVar);
+  public static String write(Environment env, boolean returnVariable) {
+    if (env.element.attributesSize() == 0 && env.element.childNodeSize() == 0 && !returnVariable) {
+      env.writer.tab().append(env.parentVariable).append(".append(").append("$.e('").append(env.element.tagName()).append("'));").newline();
       return null;
+    } else {
+      String eVar = env.pool.ask();
+      env.writer.tab().append("var ").append(eVar).append(" = $.e('").append(env.element.tagName()).append("');").newline();
+      for (Attribute attr : env.element.attributes().asList()) {
+        String realKey = convertXmlAttributeToJavaScriptField(attr.getKey());
+        if (attr.hasDeclaredValue()) {
+          Tree tree = Parser.parse(attr.getValue());
+          Set<String> vars = tree.variables();
+          if (vars.size() > 0) {
+            /*
+            var oVar = env.pool.ask();
+            env.writer.tab().append("{").tabUp().newline();
+            env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
+            // copy
+            for (String var : vars) {
+              env.writer.tab().append(oVar).append(".").append(var).append(" = ").append(env.current).append(".").append(var).append(";").newline();
+            }
+            env.writer.tab().append(oVar).append("._ = function() {").tabUp().newline();
+            env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(tree.js(oVar)).append("';").newline();
+            env.writer.tabDown().tab().append("}").newline();
+            // TODO: for each variable, subscribe to an update, then fire _()
+            // NOTE: handling multiple callbacks per field is a huge bug
+            env.writer.tab().append(oVar).append("._();").newline();
+            env.writer.tabDown().tab().append("}").newline();
+            */
+          } else {
+            env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(attr.getValue()).append("';").newline();
+          }
+        } else {
+          env.writer.tab().append(eVar).append(".").append(realKey).append(" = true;").newline();
+        }
+      }
+      Environment next = env.parentVariable(eVar);
+      if (env.element.tagName().equals("form")) {
+        next = next.formVariable(eVar);
+      }
+      children(next);
+      if (env.parentVariable != null) {
+        env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
+      }
+      if (returnVariable) {
+        return eVar;
+      } else {
+        env.pool.give(eVar);
+        return null;
+      }
     }
   }
 
@@ -97,29 +102,17 @@ public class Base {
         // ignore comments
       } else if (node instanceof org.jsoup.nodes.Element) {
         org.jsoup.nodes.Element child = (org.jsoup.nodes.Element) node;
-        Environment childEnv = env.element(child).returnVariable(false);
+        Environment childEnv = env.element(child);
         switch (child.tagName()) {
           case "template":
           case "page":
             // these handled at a higher level
             break;
-          case "authenticate":
-            Authenticate.write(childEnv);
+          case "connection":
+            Connection.write(childEnv);
             break;
-          case "forgot-password":
-            ForgotPassword.write(childEnv);
-            break;
-          case "scope":
-            Scope.write(childEnv);
-            break;
-          case "test":
-            Test.write(childEnv);
-            break;
-          case "iterate":
-            Iterate.write(childEnv);
-            break;
-          case "message":
-            Message.write(childEnv);
+          case "decide":
+            Decide.write(childEnv);
             break;
           case "execute":
             Execute.write(childEnv);
@@ -127,14 +120,32 @@ public class Base {
           case "input":
             Input.write(childEnv);
             break;
+          case "iterate":
+            Iterate.write(childEnv);
+            break;
           case "lookup":
             Lookup.write(childEnv);
+            break;
+          case "message":
+            Message.write(childEnv);
+            break;
+          case "pick":
+            Pick.write(childEnv);
+            break;
+          case "scope":
+            Scope.write(childEnv);
+            break;
+          case "switch":
+            Switch.write(childEnv);
+            break;
+          case "test":
+            Test.write(childEnv);
             break;
           case "use":
             Use.write(childEnv);
             break;
           default:
-            Base.write(childEnv);
+            Base.write(childEnv, false);
             break;
         }
       } else {

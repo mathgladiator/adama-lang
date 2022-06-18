@@ -18,7 +18,7 @@ public class Switch {
     env.parent.assertSoloParent();
     for (int k = 0; k < env.element.childrenSize(); k++) {
       Element child = env.element.child(k);
-      String var = Base.write(env.element(child).parentVariable(null).returnVariable(true));
+      String var = Base.write(env.element(child).parentVariable(null), true);
     }
   }
 }

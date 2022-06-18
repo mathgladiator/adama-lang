@@ -16,6 +16,6 @@ public class Execute {
   public static void write(Environment env) {
     env.element.tagName("button");
     env.element.attr("type", "submit");
-    Base.write(env);
+    Base.write(env, false);
   }
 }

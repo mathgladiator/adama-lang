@@ -9,9 +9,22 @@
  */
 package org.adamalang.rxhtml.template.elements;
 
+import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.Environment;
 
 public class Test {
   public static void write(Environment env) {
+    env.assertHasParent();
+    String elementVar = Base.write(env.element(env.soloChild()).parentVariable(null), true);
+    String path = env.element.attr("path");
+    boolean invert = env.element.hasAttr("invert");
+    String stateVarToUse = env.stateVar;
+    // TODO: parse the path to get a state variable
+    env.writer.tab().append("$.T(") //
+        .append(env.parentVariable) //
+        .append(", ").append(elementVar) //
+        .append(", ").append(stateVarToUse) //
+        .append(", '").append(path).append("'") //
+        .append(", ").append(invert ? "true" : "false").append(");").newline();
   }
 }

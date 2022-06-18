@@ -13,5 +13,8 @@ import org.adamalang.rxhtml.template.Environment;
 
 public class Use {
   public static void write(Environment env) {
+    env.assertHasParent();
+    String name = env.element.attr("name");
+    env.writer.tab().append("$.U(").append(env.parentVariable).append(", ").append(env.stateVar).append(", '").append(name).append("');").newline();
   }
 }
