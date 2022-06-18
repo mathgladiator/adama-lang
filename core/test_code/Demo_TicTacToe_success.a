@@ -1,0 +1,112 @@
+@static {
+  create(who) { return true; }
+  invent(who) { return true; }
+}
+
+enum SquareState { Open, X, O }
+
+client playerX;
+client playerO;
+public client current;
+public int wins_X;
+public int wins_O;
+public int stalemates;
+
+bubble<who> your_role = playerX == who ? "X" : (playerO == who ? "O" : "Observer");
+bubble<who> your_turn = current == who;
+bubble<who> your_wins = playerX == who ? wins_X : (playerO == who ? wins_O : 0);
+
+record Square {
+  public int id;
+  public int x;
+  public int y;
+  public SquareState state;
+}
+
+table<Square> _squares;
+
+public formula board = iterate _squares;
+
+@construct {
+  for (int y = 0; y < 3; y++) {
+    for (int x = 0; x < 3; x++) {
+      _squares <- { x:x, y:y, state: SquareState::Open };
+    }
+  }
+  wins_X = 0;
+  wins_O = 0;
+  stalemates = 0;
+}
+
+@connected (who) {
+  if (playerX == @no_one) {
+    playerX = who;
+    if (playerO != @no_one) {
+      transition #initiate;
+    }
+  } else if (playerO == @no_one) {
+    playerO = who;
+    if (playerX != @no_one) {
+      transition #initiate;
+    }
+  }
+  return true;
+}
+
+message Play {
+  int id;
+}
+
+channel<Play> play;
+
+#initiate {
+  current = playerX;
+  transition #turn;
+}
+
+procedure current_wins() {
+  if (playerX == current) {
+    wins_X++;
+  } else {
+    wins_O++;
+  }
+  transition #end;
+}
+
+#turn {
+  // find the open spaces
+  list<Square> open = iterate _squares where state == SquareState::Open;
+  if (open.size() == 0) {
+    stalemates++;
+    transition #end;
+    return;
+  }
+  // ask the current play to choose an open space
+  if (play.decide(current, @convert<Play>(open)).await() as pick) {
+    // assign the open space to the player
+    let placed = playerX == current ? SquareState::X : SquareState::O;;
+    (iterate _squares where id == pick.id).state = placed;
+    for (int k = 0; k < 3; k++) {
+      if ( (iterate _squares where x == k && state == placed).size() == 3) {
+       current_wins();
+       return;
+      }
+      if ( (iterate _squares where y == k && state == placed).size() == 3) {
+       current_wins();
+       return;
+      }
+    }
+    if ( (iterate _squares where y == x && state == placed).size() == 3 || (iterate _squares where y == 2 - x && state == placed).size() == 3 ) {
+     current_wins();
+     return;
+    }
+    // change players
+    current = playerX == current ? playerO : playerX;
+    transition #turn;
+  }
+}
+
+#end {
+  (iterate _squares).state = SquareState::Open;
+  transition #turn;
+}
