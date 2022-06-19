@@ -7,7 +7,7 @@
  *
  * (c) 2020 - 2022 by Jeffrey M. Barber (http://jeffrey.io)
  */
-package org.adamalang.rxhtml.template.elements;
+package org.adamalang.rxhtml.template.elements.defunct;
 
 import org.adamalang.rxhtml.template.Base;
 import org.adamalang.rxhtml.template.Environment;

@@ -12,6 +12,7 @@ package org.adamalang.rxhtml.template;
 import org.adamalang.rxhtml.atl.Parser;
 import org.adamalang.rxhtml.atl.tree.Tree;
 import org.adamalang.rxhtml.template.elements.*;
+import org.adamalang.rxhtml.template.elements.defunct.Switch;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Node;
@@ -20,36 +21,30 @@ import org.jsoup.nodes.TextNode;
 import java.util.Set;
 
 public class Base {
-  private static String convertXmlAttributeToJavaScriptField(String realKey) {
-    // TODO: expand mapping of attribute names
-    switch (realKey) {
-      case "class":
-        return "className";
-      case "aria-hidden":
-        return "ariaHidden";
-      case "fill-rule":
-        return "fillRule";
-      case "clip-rule":
-        return "clipRule";
-      case "for":
-        return "htmlFor";
-    }
-    return realKey;
-  }
-
   public static String write(Environment env, boolean returnVariable) {
+    String xmlns = env.element.hasAttr("xmlns") ? env.element.attr("xmlns") : null;
+    if (env.element.tagName().equals("svg")) {
+      xmlns = "http://www.w3.org/2000/svg";
+    }
+    if (xmlns == null) {
+      xmlns = env.xmlns;
+    }
+
     if (env.element.attributesSize() == 0 && env.element.childNodeSize() == 0 && !returnVariable) {
-      env.writer.tab().append(env.parentVariable).append(".append(").append("$.E('").append(env.element.tagName()).append("'));").newline();
+      env.writer.tab().append(env.parentVariable).append(".append(").append("$.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append("));").newline();
       return null;
     } else {
       String eVar = env.pool.ask();
-      boolean hasCase = env.element.hasAttr("case") && env.caseVar != null;
+      boolean hasCase = env.element.hasAttr("rx:case") && env.caseVar != null;
       if (hasCase) {
-        env.writer.tab().append("if (").append(env.caseVar).append(" == '").append(env.element.attr("case")).append("') {").tabUp().newline();
+        env.writer.tab().append("if (").append(env.caseVar).append(" == '").append(env.element.attr("rx:case")).append("') {").tabUp().newline();
       }
-      env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("');").newline();
+      env.writer.tab().append("var ").append(eVar).append(" = $.E('").append(env.element.tagName()).append("'").append(xmlns != null ? ", '" + xmlns + "'" : "").append(");").newline();
       for (Attribute attr : env.element.attributes().asList()) {
-        String realKey = convertXmlAttributeToJavaScriptField(attr.getKey());
+        // String realKey = convertXmlAttributeToJavaScriptField(attr.getKey());
+        if (attr.getKey().equals("xmlns") || attr.getKey().startsWith("rx:")) {
+          continue;
+        }
         if (attr.hasDeclaredValue()) {
           Tree tree = Parser.parse(attr.getValue());
           Set<String> vars = tree.variables();
@@ -71,19 +66,27 @@ public class Base {
             env.writer.tabDown().tab().append("}").newline();
             */
           } else {
-            env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(attr.getValue()).append("';").newline();
+            env.writer.tab().append(eVar).append(".setAttribute('").append(attr.getKey()).append("', '").append(attr.getValue()).append("');").newline();
+            // env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(attr.getValue()).append("';").newline();
           }
         } else {
-          env.writer.tab().append(eVar).append(".").append(realKey).append(" = true;").newline();
+          env.writer.tab().append(eVar).append(".setAttribute('").append(attr.getKey()).append("', true);").newline();
+          // env.writer.tab().append(eVar).append(".").append(realKey).append(" = true;").newline();
         }
       }
+
+
+
       Environment next = env.parentVariable(eVar);
+      if (xmlns != null) {
+        next = next.xmlns(xmlns);
+      }
       if (env.element.tagName().equals("form")) {
         next = next.formVariable(eVar);
       }
 
-      if (env.element.hasAttr("iterate")) {
-        String path = env.element.attr("iterate");
+      if (env.element.hasAttr("rx:iterate")) {
+        String path = env.element.attr("rx:iterate");
         String stateVarToUse = env.stateVar;
         // TODO: parse the path to get a state variable
         String childStateVar = env.pool.ask();
@@ -93,17 +96,37 @@ public class Base {
         env.pool.give(childDomVar);
         env.writer.tabDown().tab().append("});").newline();
         env.pool.give(childStateVar);
+      } else if (env.element.hasAttr("rx:scope")) {
+        // TODO: think deeper about this in terms of if the object exists or doesn't; how do we hide something if it isn't present (as this forces creation a bit)
+        String path = env.element.attr("rx:scope");
+        // TODO: manipulate the state and evalute the path
+        String newStateVar = env.pool.ask();
+        env.writer.tab().append("var ").append(newStateVar).append(" = $.S(").append(env.stateVar).append(", '").append(path).append("');").newline();
+        Base.children(env.stateVar(newStateVar));
+      } else if (env.element.hasAttr("rx:switch")) {
+        String path = env.element.attr("rx:switch");
+        String stateVarToUse = env.stateVar;
+        // TODO: parse the path to get a state variable
+        String childStateVar = env.pool.ask();
+        String caseVar = env.pool.ask();
+        env.writer.tab().append("$.W(").append(eVar).append(", ").append(stateVarToUse);
+        env.writer.append(", '").append(path).append("', function(").append(childStateVar).append(", ").append(caseVar).append(") {").tabUp().newline();
+        Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(eVar));
+        env.writer.tabDown().tab().append("});").newline();
+        env.pool.give(caseVar);
+        env.pool.give(childStateVar);
       } else {
         children(next);
       }
 
-      /*
-          env.assertHasParent();
-    env.parent.assertSoloParent();
-    String path = env.element.attr("path");
-       */
-
       if (env.parentVariable != null) {
+        if (env.element.hasAttr("rx:if")) {
+          // is this like a switch, or is this something else?
+        } else if (env.element.hasAttr("rx:ifnot")) {
+
+        } else {
+          // default
+        }
         env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
       }
       if (hasCase) {
@@ -148,9 +171,10 @@ public class Base {
           case "input":
             Input.write(childEnv);
             break;
+          /*
           case "iterate":
             Iterate.write(childEnv);
-            break;
+            break; */
           case "lookup":
             Lookup.write(childEnv);
             break;
@@ -160,12 +184,16 @@ public class Base {
           case "pick":
             Pick.write(childEnv);
             break;
+            /*
           case "scope":
             Scope.write(childEnv);
             break;
+            */
+            /*
           case "switch":
             Switch.write(childEnv);
             break;
+            */
           case "test":
             Test.write(childEnv);
             break;
