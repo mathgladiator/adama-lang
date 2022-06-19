@@ -62,7 +62,7 @@ public class Base {
               String path = ve.getValue();
               String stateVarToUse = env.stateVar;
               // TODO: scope state variable
-              String objVar = ve.getKey();
+              String objVar = path;
               env.writer.tab().append("$.Y(").append(stateVarToUse).append(",").append(oVar).append(",'").append(objVar).append("',").append(computeFoo).append(");").newline();
             }
             env.pool.give(oVar);
