@@ -81,7 +81,28 @@ public class Base {
       if (env.element.tagName().equals("form")) {
         next = next.formVariable(eVar);
       }
-      children(next);
+
+      if (env.element.hasAttr("iterate")) {
+        String path = env.element.attr("iterate");
+        String stateVarToUse = env.stateVar;
+        // TODO: parse the path to get a state variable
+        String childStateVar = env.pool.ask();
+        env.writer.tab().append("$.I(").append(eVar).append(", ").append(stateVarToUse).append(", '").append(path).append("', function(").append(childStateVar).append(") {").tabUp().newline();
+        String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(env.soloChild()), true);
+        env.writer.tab().append("return ").append(childDomVar).append(";").newline();
+        env.pool.give(childDomVar);
+        env.writer.tabDown().tab().append("});").newline();
+        env.pool.give(childStateVar);
+      } else {
+        children(next);
+      }
+
+      /*
+          env.assertHasParent();
+    env.parent.assertSoloParent();
+    String path = env.element.attr("path");
+       */
+
       if (env.parentVariable != null) {
         env.writer.tab().append(env.parentVariable).append(".append(").append(eVar).append(");").newline();
       }

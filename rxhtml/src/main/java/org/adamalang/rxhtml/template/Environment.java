@@ -78,10 +78,6 @@ public class Environment {
     return result;
   }
 
-  public Environment parentVariable(String parentVariable) {
-    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar);
-  }
-
   public Environment element(Element element) {
     return new Environment(this, writer, pool, element, inferSingleParent(element), parentVariable, formVariable, stateVar, caseVar);
   }
@@ -93,6 +89,9 @@ public class Environment {
     return element.children().size() == 1;
   }
 
+  public Environment parentVariable(String parentVariable) {
+    return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar);
+  }
   public Environment formVariable(String formVariable) {
     return new Environment(this, writer, pool, element, singleParent, parentVariable, formVariable, stateVar, caseVar);
   }
