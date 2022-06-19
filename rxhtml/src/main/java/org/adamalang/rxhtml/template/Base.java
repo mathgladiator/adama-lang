@@ -18,6 +18,7 @@ import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
+import java.util.Map;
 import java.util.Set;
 
 public class Base {
@@ -47,24 +48,27 @@ public class Base {
         }
         if (attr.hasDeclaredValue()) {
           Tree tree = Parser.parse(attr.getValue());
-          Set<String> vars = tree.variables();
+          Map<String, String> vars = tree.variables();
           if (vars.size() > 0) {
-            /*
             var oVar = env.pool.ask();
+            var computeFoo = env.pool.ask();
             env.writer.tab().append("{").tabUp().newline();
             env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
-            // copy
-            for (String var : vars) {
-              env.writer.tab().append(oVar).append(".").append(var).append(" = ").append(env.current).append(".").append(var).append(";").newline();
+            env.writer.tab().append(oVar).append(".__dom = ").append(eVar).append(";").newline();
+            env.writer.tab().append("var ").append(computeFoo).append(" = (function() {").tabUp().newline();
+            env.writer.tab().append("this.__dom.setAttribute('").append(attr.getKey()).append("', ").append(tree.js("this")).append(");").newline();
+            env.writer.tabDown().tab().append("}).bind(").append(oVar).append(");").newline();
+            for (Map.Entry<String, String> ve : vars.entrySet()) {
+              String path = ve.getValue();
+              String stateVarToUse = env.stateVar;
+              // TODO: scope state variable
+              String objVar = ve.getKey();
+              env.writer.tab().append("$.Y(").append(stateVarToUse).append(",").append(oVar).append(",'").append(objVar).append("',").append(computeFoo).append(");").newline();
             }
-            env.writer.tab().append(oVar).append("._ = function() {").tabUp().newline();
-            env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(tree.js(oVar)).append("';").newline();
+            env.pool.give(oVar);
+            env.pool.give(computeFoo);
+            env.writer.tab().append(computeFoo).append("();").newline();
             env.writer.tabDown().tab().append("}").newline();
-            // TODO: for each variable, subscribe to an update, then fire _()
-            // NOTE: handling multiple callbacks per field is a huge bug
-            env.writer.tab().append(oVar).append("._();").newline();
-            env.writer.tabDown().tab().append("}").newline();
-            */
           } else {
             env.writer.tab().append(eVar).append(".setAttribute('").append(attr.getKey()).append("', '").append(attr.getValue()).append("');").newline();
             // env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(attr.getValue()).append("';").newline();

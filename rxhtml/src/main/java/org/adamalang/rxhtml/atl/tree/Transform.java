@@ -9,6 +9,7 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import java.util.Map;
 import java.util.Set;
 
 /** Transform a node */
@@ -23,7 +24,7 @@ public class Transform implements Tree {
   }
 
   @Override
-  public Set<String> variables() {
+  public Map<String, String> variables() {
     return base.variables();
   }
 

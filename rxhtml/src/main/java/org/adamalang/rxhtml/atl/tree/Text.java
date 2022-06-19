@@ -10,6 +10,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 /** Raw Text */
@@ -21,8 +22,8 @@ public class Text implements Tree {
   }
 
   @Override
-  public Set<String> variables() {
-    return Collections.emptySet();
+  public Map<String, String>  variables() {
+    return Collections.emptyMap();
   }
 
   @Override

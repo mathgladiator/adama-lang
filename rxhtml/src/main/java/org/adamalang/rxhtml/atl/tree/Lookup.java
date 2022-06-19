@@ -10,6 +10,7 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 /** lookup a variable */
@@ -21,8 +22,8 @@ public class Lookup implements Tree {
   }
 
   @Override
-  public Set<String> variables() {
-    return Collections.singleton(variable);
+  public Map<String, String> variables() {
+    return Collections.singletonMap(variable, variable);
   }
 
   @Override
@@ -32,6 +33,6 @@ public class Lookup implements Tree {
 
   @Override
   public String js(String env) {
-    return env + "." + variable;
+    return env + "['" + variable + "']";
   }
 }

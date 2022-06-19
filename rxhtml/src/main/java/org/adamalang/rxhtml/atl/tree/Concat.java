@@ -9,7 +9,9 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class Concat implements Tree {
@@ -20,10 +22,10 @@ public class Concat implements Tree {
   }
 
   @Override
-  public Set<String> variables() {
-    TreeSet<String> union = new TreeSet<>();
+  public Map<String, String> variables() {
+    TreeMap<String, String> union = new TreeMap<>();
     for (Tree child : children) {
-      union.addAll(child.variables());
+      union.putAll(child.variables());
     }
     return union;
   }

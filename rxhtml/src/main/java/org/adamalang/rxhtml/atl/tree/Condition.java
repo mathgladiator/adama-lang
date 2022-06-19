@@ -9,7 +9,9 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 /** an if/then/else node */
@@ -25,11 +27,11 @@ public class Condition implements Tree {
   }
 
   @Override
-  public Set<String> variables() {
-    TreeSet<String> union = new TreeSet<>();
-    union.addAll(guard.variables());
-    union.addAll(branchTrue.variables());
-    union.addAll(branchFalse.variables());
+  public Map<String, String> variables() {
+    TreeMap<String, String> union = new TreeMap<>();
+    union.putAll(guard.variables());
+    union.putAll(branchTrue.variables());
+    union.putAll(branchFalse.variables());
     return union;
   }
 

@@ -30,7 +30,7 @@ public class Iterate {
     String name = env.element.attr("name");
     String setVar = env.pool.ask();
     String gidVar = env.pool.ask();
-    env.writer.tab().append("var ").append(gidVar).append(" = $.g();").newline();
+    env.writer.tab().append("var ").append(gidVar).append(" = $.DEFUNCT();").newline();
     env.writer.tab().append("_.").append(name).append(" = {").tabUp().newline();
     env.writer.tab().append("'+': function(").append(setVar).append(") {").tabUp().newline();
     env.writer.tab().append("var _ = {};").newline();
@@ -41,10 +41,10 @@ public class Iterate {
     env.writer.tab().append("return _;").newline();
     env.writer.tabDown().tab().append("},").newline();
     env.writer.tab().append("'-': function(").append(setVar).append(") {").tabUp().newline();
-    env.writer.tab().append("$.n(").append(setVar).append(".before['").append(setVar).append("_' + ").append(gidVar).append("]);").newline();
+    env.writer.tab().append("$.DEFUNCT(").append(setVar).append(".before['").append(setVar).append("_' + ").append(gidVar).append("]);").newline();
     env.writer.tabDown().tab().append("},").newline();
     env.writer.tab().append("'^': function(").append(setVar).append(") {").tabUp().newline();
-    env.writer.tab().append("$.r(").append(env.parentVariable).append(", ").append(setVar).append(");").newline();
+    env.writer.tab().append("$.DEFUNCT(").append(env.parentVariable).append(", ").append(setVar).append(");").newline();
     env.writer.tabDown().tab().append("}").newline();
     env.writer.tabDown().tab().append("}").newline();
     env.pool.give(setVar);

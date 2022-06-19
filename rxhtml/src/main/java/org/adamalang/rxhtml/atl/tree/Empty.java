@@ -10,13 +10,14 @@
 package org.adamalang.rxhtml.atl.tree;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 public class Empty implements Tree {
 
   @Override
-  public Set<String> variables() {
-    return Collections.emptySet();
+  public Map<String, String> variables() {
+    return Collections.emptyMap();
   }
 
   @Override

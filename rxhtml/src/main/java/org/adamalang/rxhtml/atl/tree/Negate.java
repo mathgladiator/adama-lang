@@ -9,6 +9,7 @@
  */
 package org.adamalang.rxhtml.atl.tree;
 
+import java.util.Map;
 import java.util.Set;
 
 /** Negate a node (i.e. not for boolean) */
@@ -20,7 +21,7 @@ public class Negate implements Tree {
   }
 
   @Override
-  public Set<String> variables() {
+  public Map<String, String> variables() {
     return value.variables();
   }
 
