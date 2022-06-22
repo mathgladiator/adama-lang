@@ -6,4 +6,5 @@
     return who == context.who;
   }
   maximum_history = 1 + 1;
+  delete_on_close = false;
 }

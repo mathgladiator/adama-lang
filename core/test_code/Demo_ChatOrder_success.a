@@ -4,6 +4,7 @@
   create(who) { return true; }
   invent(who) { return true; }
   maximum_history = 100;
+  delete_on_close = false;
 }
 
 // let anyone into the document

@@ -429,6 +429,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  public static HashMap<String, Object> __config() {");
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    __map.put(\"maximum_history\", 1 + 1);");
+    gold.append("\n    __map.put(\"delete_on_close\", false);");
     gold.append("\n    return __map;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -918,6 +919,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  public static HashMap<String, Object> __config() {");
     gold.append("\n    HashMap<String, Object> __map = new HashMap<>();");
     gold.append("\n    __map.put(\"maximum_history\", 1 + 1);");
+    gold.append("\n    __map.put(\"delete_on_close\", true);");
     gold.append("\n    return __map;");
     gold.append("\n  }");
     gold.append("\n  @Override");

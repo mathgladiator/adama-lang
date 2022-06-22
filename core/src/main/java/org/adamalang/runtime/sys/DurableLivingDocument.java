@@ -277,14 +277,22 @@ public class DurableLivingDocument {
     issueCloseWhileInExecutor(ErrorCodes.DOCUMENT_SHEDDING_LOAD);
   }
 
+  private void internalCloseExecutor() {
+    base.map.remove(key);
+    base.metrics.inflight_documents.down();
+    if (getCurrentFactory().delete_on_close) {
+      base.service.delete(key, Callback.DONT_CARE_VOID);
+    } else {
+      base.service.close(key, Callback.DONT_CARE_VOID);
+    }
+  }
+
   private void issueCloseWhileInExecutor(int errorCode) {
     document.__nukeViews();
     while (pending.size() > 0) {
       pending.removeFirst().callback.failure(new ErrorCodeException(errorCode));
     }
-    base.service.close(key, Callback.DONT_CARE_VOID);
-    base.map.remove(key);
-    base.metrics.inflight_documents.down();
+    internalCloseExecutor();
   }
 
   private void catastrophicFailureWhileInExecutor() {
@@ -578,9 +586,7 @@ public class DurableLivingDocument {
       @Override
       public void execute() throws Exception {
         if (document.__canRemoveFromMemory()) {
-          base.map.remove(key);
-          base.service.close(key, Callback.DONT_CARE_VOID);
-          base.metrics.inflight_documents.down();
+          internalCloseExecutor();
         }
       }
     }, base.getMillisecondsForCleanupCheck());

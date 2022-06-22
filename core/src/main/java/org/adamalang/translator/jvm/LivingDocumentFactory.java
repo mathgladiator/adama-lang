@@ -37,6 +37,7 @@ public class LivingDocumentFactory {
   private final Method inventionPolicyMethod;
   private final Method canSendWhileDisconnectPolicyMethod;
   public final int maximum_history;
+  public final boolean delete_on_close;
 
   public LivingDocumentFactory(final String className, final String javaSource, String reflection) throws ErrorCodeException {
     final var compiler = ToolProvider.getSystemJavaCompiler();
@@ -60,6 +61,7 @@ public class LivingDocumentFactory {
       canSendWhileDisconnectPolicyMethod = clazz.getMethod("__onCanSendWhileDisconnected", CoreRequestContext.class);
       HashMap<String, Object> config = (HashMap<String, Object>) (clazz.getMethod("__config").invoke(null));
       maximum_history = extractMaximumHistory(config);
+      delete_on_close = extractDeleteOnClose(config);
       this.reflection = reflection;
     } catch (final Exception ex) {
       throw new ErrorCodeException(ErrorCodes.FACTORY_CANT_BIND_JAVA_CODE, ex);
@@ -96,6 +98,15 @@ public class LivingDocumentFactory {
       return ((Integer) value).intValue();
     } else {
       return 10000;
+    }
+  }
+
+  private static boolean extractDeleteOnClose(HashMap<String, Object> config) {
+    Object value = config.get("delete_on_close");
+    if (value != null && value instanceof Boolean) {
+      return ((Boolean) value).booleanValue();
+    } else {
+      return false;
     }
   }
 

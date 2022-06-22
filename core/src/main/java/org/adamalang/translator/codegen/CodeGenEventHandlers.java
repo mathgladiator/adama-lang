@@ -19,11 +19,15 @@ import java.util.HashMap;
 /** responsible for writing event handlers */
 public class CodeGenEventHandlers {
   private static void writeBody(DefineDocumentEvent dce, StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("{");
-    sb.tabUp().writeNewline();
-    sb.append("NtClient ").append(dce.clientVarToken.text).append(" = __who;").writeNewline();
-    dce.code.specialWriteJava(sb, environment, false, true);
-    sb.append("}").writeNewline();
+    if (dce.clientVarToken != null) {
+      sb.append("{");
+      sb.tabUp().writeNewline();
+      sb.append("NtClient ").append(dce.clientVarToken.text).append(" = __who;").writeNewline();
+      dce.code.specialWriteJava(sb, environment, false, true);
+      sb.append("}").writeNewline();
+    } else {
+      dce.code.writeJava(sb, environment);
+    }
   }
 
   private static class EventShred {
