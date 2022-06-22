@@ -10,12 +10,10 @@
 package org.adamalang.translator.codegen;
 
 import org.adamalang.translator.env.Environment;
-import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineDocumentEvent;
 import org.adamalang.translator.tree.definitions.DocumentEvent;
 
-import javax.print.Doc;
 import java.util.HashMap;
 
 /** responsible for writing event handlers */
@@ -130,7 +128,7 @@ public class CodeGenEventHandlers {
       shredder.put(event, new EventShred(event));
     }
     for (final DefineDocumentEvent dce : environment.document.events) {
-      shredder.get(dce.which).consider(dce, sb, environment.scopeAsDocumentPolicy());
+      shredder.get(dce.which).consider(dce, sb, environment.scopeAsPolicy());
     }
     for (DocumentEvent event : DocumentEvent.values()) {
       shredder.get(event).finish(sb);

@@ -407,7 +407,7 @@ public class Parser {
 
     var nextOrClose = tokens.pop();
     while (!nextOrClose.isSymbolWithTextEq("}")) {
-      if (!nextOrClose.isIdentifier("create", "invent", "send", "maximum_history")) {
+      if (!nextOrClose.isIdentifier("create", "invent", "send", "maximum_history", "delete_on_close")) {
         throw new ParseException("Parser was expecting a static definition. Candidates are create, invent, send", tokens.getLastTokenIfAvailable());
       }
       switch (nextOrClose.text) {
@@ -421,6 +421,7 @@ public class Parser {
           definitions.add(define_document_event_raw(nextOrClose, DocumentEvent.AskSendWhileDisconnected));
           break;
         case "maximum_history":
+        case "delete_on_close":
           definitions.add(define_config(nextOrClose));
           break;
       }
@@ -561,12 +562,16 @@ public class Parser {
   }
 
   public DefineDocumentEvent define_document_event_raw(final Token eventToken, final DocumentEvent which) throws AdamaLangException {
-    final var openParen = consumeExpectedSymbol("(");
-    final var name = id();
-    final var commaToken = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
-    final var parameterNameToken = commaToken != null ? id() : null;
-    final var closeParen = consumeExpectedSymbol(")");
-    return new DefineDocumentEvent(eventToken, which, openParen, name, commaToken, parameterNameToken, closeParen, block());
+    final var openParen = tokens.popIf(t -> t.isSymbolWithTextEq("("));
+    if (openParen != null) {
+      final var name = id();
+      final var commaToken = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
+      final var parameterNameToken = commaToken != null ? id() : null;
+      final var closeParen = consumeExpectedSymbol(")");
+      return new DefineDocumentEvent(eventToken, which, openParen, name, commaToken, parameterNameToken, closeParen, block());
+    } else {
+      return new DefineDocumentEvent(eventToken, which, null, null, null, null, null, block());
+    }
   }
 
   public Consumer<TopLevelDocumentHandler> define_document_event(final Token eventToken, final DocumentEvent which) throws AdamaLangException {
@@ -813,11 +818,14 @@ public class Parser {
 
   public DefineCustomPolicy define_policy_trailer(final Token definePolicy) throws AdamaLangException {
     final var id = id();
-    final var openParen = consumeExpectedSymbol("(");
-    final var clientVar = id();
-    final var endParen = consumeExpectedSymbol(")");
-    final var code = block();
-    return new DefineCustomPolicy(definePolicy, id, openParen, clientVar, endParen, code);
+    final var openParen = tokens.popIf(t -> t.isSymbolWithTextEq("("));
+    if (openParen != null) {
+      final var clientVar = id();
+      final var endParen = consumeExpectedSymbol(")");
+      return new DefineCustomPolicy(definePolicy, id, openParen, clientVar, endParen, block());
+    } else {
+      return new DefineCustomPolicy(definePolicy, id, null, null, null, block());
+    }
   }
 
   public Consumer<TopLevelDocumentHandler> define_procedure_trailer(final Token procedureToken) throws AdamaLangException {

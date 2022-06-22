@@ -44,6 +44,13 @@ public class DocumentConfig extends Definition {
   @Override
   public void typing(Environment environment) {
     Environment next = environment.scopeWithComputeContext(ComputeContext.Computation);
-    next.rules.IsInteger(value.typing(next, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)), false);
+    switch (name.text) {
+      case "maximum_history":
+        next.rules.IsInteger(value.typing(next, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)), false);
+        return;
+      case "delete_on_close":
+        next.rules.IsBoolean(value.typing(next, new TyNativeInteger(TypeBehavior.ReadOnlyNativeValue, null, null)), false);
+        return;
+    }
   }
 }

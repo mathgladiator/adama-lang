@@ -54,13 +54,15 @@ public class DefineDocumentEvent extends Definition {
   @Override
   public void emit(final Consumer<Token> yielder) {
     yielder.accept(eventToken);
-    yielder.accept(openParen);
-    yielder.accept(clientVarToken);
-    if (commaToken != null) {
-      yielder.accept(commaToken);
-      yielder.accept(parameterNameToken);
+    if (openParen != null) {
+      yielder.accept(openParen);
+      yielder.accept(clientVarToken);
+      if (commaToken != null) {
+        yielder.accept(commaToken);
+        yielder.accept(parameterNameToken);
+      }
+      yielder.accept(closeParen);
     }
-    yielder.accept(closeParen);
     code.emit(yielder);
   }
 
@@ -98,11 +100,13 @@ public class DefineDocumentEvent extends Definition {
   public Environment nextEnvironment(final Environment environment) {
     if (which == DocumentEvent.AskCreation || which == DocumentEvent.AskInvention || which == DocumentEvent.AskSendWhileDisconnected) {
       Environment next = environment.staticPolicy().scopeStatic();
-      next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken));
+      next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, eventToken));
       if (contextVariable != null) {
         next.define(contextVariable, new TyInternalReadonlyClass(CoreRequestContext.class), true, this);
       }
-      next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
+      if (clientVarToken != null) {
+        next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
+      }
       return next;
     }
     boolean readonly = which == DocumentEvent.AskAssetAttachment;
@@ -113,7 +117,9 @@ public class DefineDocumentEvent extends Definition {
     if (which == DocumentEvent.AssetAttachment && commaToken != null) {
       next.define(parameterNameToken.text, new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
     }
-    next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
+    if (clientVarToken != null) {
+      next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
+    }
     return next;
   }
 }

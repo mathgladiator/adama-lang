@@ -21935,11 +21935,15 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n        /* ok */");
     gold.append("\n      }");
     gold.append("\n    }");
-    gold.append("\n    public boolean __POLICY_p1(NtClient c){");
+    gold.append("\n    public boolean __POLICY_p1(NtClient __who){");
+    gold.append("\n      NtClient c = __who;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(0);");
     gold.append("\n      return true;");
     gold.append("\n    }");
-    gold.append("\n    public boolean __POLICY_p2(NtClient c){");
+    gold.append("\n    public boolean __POLICY_p2(NtClient __who){");
+    gold.append("\n      NtClient c = __who;");
+    gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(1);");
     gold.append("\n      return true;");
     gold.append("\n    }");

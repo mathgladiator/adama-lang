@@ -4,8 +4,8 @@
 
 private client owner = @no_one;
 
-policy saneG(who) {
-  return who == @no_one;
+policy saneG {
+  return @who == @no_one;
 }
 
 record X {

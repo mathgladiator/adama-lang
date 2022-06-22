@@ -360,7 +360,9 @@ public class GeneratedDocumentTests extends GeneratedBase {
     gold.append("\npublic class GlobalPolicy_8 extends LivingDocument {");
     gold.append("\n  private final RxTable<RTxR> r;");
     gold.append("\n  private final RxInt32 z2;");
-    gold.append("\n  public boolean __POLICY_foo(NtClient who){");
+    gold.append("\n  public boolean __POLICY_foo(NtClient __who){");
+    gold.append("\n    NtClient who = __who;");
+    gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    return true;");
     gold.append("\n  }");

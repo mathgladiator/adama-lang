@@ -339,12 +339,18 @@ public class CodeGenRecords {
       policyRoot.define(fieldName, fieldType, true, fieldType);
     }
     for (final Map.Entry<String, DefineCustomPolicy> customPolicyEntry : storage.policies.entrySet()) {
-      final var policyExec = policyRoot.scopeAsNoCost().scopeWithComputeContext(ComputeContext.Computation).setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, customPolicyEntry.getValue().name).withPosition(customPolicyEntry.getValue()));
-      policyExec.define(customPolicyEntry.getValue().clientVar.text, customPolicyEntry.getValue().clientType, true, customPolicyEntry.getValue().clientType);
-      sb.append("public boolean __POLICY_").append(customPolicyEntry.getKey()).append("(NtClient ").append(customPolicyEntry.getValue().clientVar.text).append(")");
+      final var policyExec = customPolicyEntry.getValue().scope(policyRoot, customPolicyEntry.getValue());
+      sb.append("public boolean __POLICY_").append(customPolicyEntry.getKey()).append("(NtClient __who)");
       customPolicyEntry.getValue().code.typing(policyExec);
-      customPolicyEntry.getValue().code.writeJava(sb, policyExec);
-      sb.writeNewline();
+      if (customPolicyEntry.getValue().clientVar != null) {
+        sb.append("{").tabUp().writeNewline();
+        sb.append("NtClient ").append(customPolicyEntry.getValue().clientVar.text).append(" = __who;").writeNewline();
+        customPolicyEntry.getValue().code.specialWriteJava(sb, policyExec, false, true);
+        sb.append("}").writeNewline();
+      } else {
+        customPolicyEntry.getValue().code.writeJava(sb, policyExec);
+        sb.writeNewline();
+      }
     }
     for (final Map.Entry<String, BubbleDefinition> bubbleDefinitionEntry : storage.bubbles.entrySet()) {
       bubbleDefinitionEntry.getValue().writeSetup(sb, environment);

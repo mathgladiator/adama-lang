@@ -25,7 +25,7 @@ public class EnvironmentState {
   private boolean reactiveExpression;
   private boolean readonly;
   private boolean testing;
-  private boolean isDocumentPolicy;
+  private boolean isPolicy;
 
   private EnvironmentState(final EnvironmentState prior) {
     autoId = prior.autoId;
@@ -40,7 +40,7 @@ public class EnvironmentState {
     readonly = prior.readonly;
     reactiveExpression = prior.reactiveExpression;
     isStatic = prior.isStatic;
-    isDocumentPolicy = prior.isDocumentPolicy;
+    isPolicy = prior.isPolicy;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -56,7 +56,7 @@ public class EnvironmentState {
     reactiveExpression = false;
     computationContext = ComputeContext.Unknown;
     isStatic = false;
-    isDocumentPolicy = false;
+    isPolicy = false;
   }
 
   public boolean hasNoCost() {
@@ -67,8 +67,8 @@ public class EnvironmentState {
     return isStatic;
   }
 
-  public boolean isDocumentPolicy() {
-    return isDocumentPolicy;
+  public boolean isPolicy() {
+    return isPolicy;
   }
 
   public boolean isContextComputation() {
@@ -126,9 +126,9 @@ public class EnvironmentState {
     return next;
   }
 
-  public EnvironmentState scopeDocumentPolicy() {
+  public EnvironmentState scopePolicy() {
     final var next = new EnvironmentState(this);
-    next.isDocumentPolicy = true;
+    next.isPolicy = true;
     return next;
   }
 

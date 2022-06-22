@@ -176,8 +176,8 @@ public class Environment {
   }
 
   /** create a new environment which is for document policies */
-  public Environment scopeAsDocumentPolicy() {
-    return new Environment(document, state.scopeDocumentPolicy(), this);
+  public Environment scopeAsPolicy() {
+    return new Environment(document, state.scopePolicy(), this);
   }
 
   /** create a new environment which is for unit tests */
