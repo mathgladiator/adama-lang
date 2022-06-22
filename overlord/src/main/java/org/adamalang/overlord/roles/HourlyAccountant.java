@@ -13,6 +13,7 @@ import org.adamalang.common.NamedRunnable;
 import org.adamalang.common.SimpleExecutor;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.backend.BackendOperations;
+import org.adamalang.mysql.finder.FinderOperations;
 import org.adamalang.mysql.frontend.Billing;
 import org.adamalang.mysql.frontend.Metering;
 import org.adamalang.mysql.frontend.Spaces;
@@ -115,7 +116,7 @@ public class HourlyAccountant {
       // 2 penny per GB/mo is
       ResourcesPerPenny rates = new ResourcesPerPenny(1000 * 1000, 1000, 50, 1000 * 1000, 200, 386547056640L);
       // add storage to the summary
-      HashMap<String, Long> inventory = BackendOperations.inventoryStorage(dataBaseBackend);
+      HashMap<String, Long> inventory = FinderOperations.inventoryStorage(dataBaseBackend);
       HashMap<String, Long> unbilled = Spaces.collectUnbilledStorage(dataBaseFront);
       Billing.mergeStorageIntoSummaries(summaries, inventory, unbilled);
       long pennies = Billing.transcribeSummariesAndUpdateBalances(dataBaseFront, forHour, summaries, rates);
