@@ -483,7 +483,6 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n    return true;");
     gold.append("\n  }");
     gold.append("\n  public void __onAssetAttached__0(NtClient __who, NtAsset file) {");
-    gold.append("\n    NtClient who = __who;");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(1);");
     gold.append("\n    latest.set(file);");

@@ -65,7 +65,7 @@ public class EndToEnd_AttachTests {
               "@static { create { return true; } }" +
                   "@connected { return true; }" +
                   "@can_attach { return true; }" +
-                  "@attached(who, what) { }" +
+                  "@attached(what) { }" +
                   "public int x = 1;" +
                   "message M { int z; }" +
                   "channel foo(M m) { x += m.z; }"
@@ -117,7 +117,7 @@ public class EndToEnd_AttachTests {
               "@static { create { return true; } }" +
                   "@connected { return true; }" +
                   "@can_attach { return true; }" +
-                  "@attached(who, what) { }" +
+                  "@attached(what) { }" +
                   "public int x = 1;" +
                   "message M { int z; }" +
                   "channel foo(M m) { x += m.z; }"

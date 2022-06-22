@@ -1128,7 +1128,7 @@ public class LivingDocumentTests {
   public void attach_default() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            " public int x = 0; public asset f; @connected(who) { x++; return true; } @construct {} @attached (who, a) { x++; f = a; }");
+            " public int x = 0; public asset f; @connected(who) { x++; return true; } @construct {} @attached (a) { x++; f = a; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     final var deNO_ONE = new RealDocumentSetup.ArrayPerspective();
     setup.document.createPrivateView(NtClient.NO_ONE, deNO_ONE, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());

@@ -207,7 +207,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10006,
-            "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; } @can_attach { return true; } @attached (who, what) { x++; } ")) {
+            "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; } @can_attach { return true; } @attached (what) { x++; } ")) {
       bed.startServer();
       CountDownLatch canAttachLatch = new CountDownLatch(1);
       MockEvents events =

@@ -562,6 +562,12 @@ public class Parser {
   }
 
   public DefineDocumentEvent define_document_event_raw(final Token eventToken, final DocumentEvent which) throws AdamaLangException {
+    if (which.hasParameter) {
+      final var openParen = consumeExpectedSymbol("(");
+      final var parameterNameToken = id();
+      final var closeParen = consumeExpectedSymbol(")");
+      return new DefineDocumentEvent(eventToken, which, openParen, null, null, parameterNameToken, closeParen, block());
+    }
     final var openParen = tokens.popIf(t -> t.isSymbolWithTextEq("("));
     if (openParen != null) {
       final var name = id();

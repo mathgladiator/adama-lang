@@ -12,6 +12,6 @@ public formula my_valid = latest.valid();
   return true;
 }
 
-@attached (who, file) {
+@attached (file) {
   latest = file;
 }

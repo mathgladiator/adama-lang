@@ -56,10 +56,14 @@ public class DefineDocumentEvent extends Definition {
     yielder.accept(eventToken);
     if (openParen != null) {
       yielder.accept(openParen);
-      yielder.accept(clientVarToken);
-      if (commaToken != null) {
-        yielder.accept(commaToken);
+      if (which == DocumentEvent.AssetAttachment && clientVarToken == null) {
         yielder.accept(parameterNameToken);
+      } else {
+        yielder.accept(clientVarToken);
+        if (commaToken != null) {
+          yielder.accept(commaToken);
+          yielder.accept(parameterNameToken);
+        }
       }
       yielder.accept(closeParen);
     }
@@ -71,7 +75,7 @@ public class DefineDocumentEvent extends Definition {
     switch (which) {
       case AssetAttachment: {
         if (parameterNameToken == null) {
-          environment.document.createError(this, String.format("The @attached requires two parameters @attached(who, what)"), "DocumentEvents");
+          environment.document.createError(this, String.format("The @attached a parameter (i.a. @attached(asset) {...})"), "DocumentEvents");
         }
       }
     }
@@ -114,8 +118,8 @@ public class DefineDocumentEvent extends Definition {
     if (which == DocumentEvent.ClientConnected || which == DocumentEvent.AskAssetAttachment) {
       next.setReturnType(new TyNativeBoolean(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this));
     }
-    if (which == DocumentEvent.AssetAttachment && commaToken != null) {
-      next.define(parameterNameToken.text, new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
+    if (which == DocumentEvent.AssetAttachment && parameterNameToken != null) {
+      next.define(parameterNameToken.text, new TyNativeAsset(TypeBehavior.ReadOnlyNativeValue, null, parameterNameToken).withPosition(this), true, this);
     }
     if (clientVarToken != null) {
       next.define(clientVarToken.text, new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, clientVarToken).withPosition(this), true, this);
