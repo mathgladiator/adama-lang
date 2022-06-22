@@ -22,6 +22,7 @@ import org.adamalang.extern.ExternNexus;
 import org.adamalang.mysql.backend.BackendOperations;
 import org.adamalang.mysql.backend.data.DocumentIndex;
 import org.adamalang.mysql.deployments.Deployments;
+import org.adamalang.mysql.finder.FinderOperations;
 import org.adamalang.mysql.frontend.Authorities;
 import org.adamalang.mysql.frontend.Billing;
 import org.adamalang.mysql.frontend.Spaces;
@@ -315,6 +316,10 @@ public class RootHandlerImpl implements RootHandler {
           responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
           return;
         }
+        if (FinderOperations.list(nexus.dataBaseBackend, request.space, null, 1).size() > 0) {
+          responder.error(new ErrorCodeException(ErrorCodes.API_SPACE_DELETE_NOT_EMPTY));
+          return;
+        }
         Spaces.changePrimaryOwner(nexus.dataBaseBackend, request.policy.id, request.policy.owner, 0);
         // remove all machines handling this
         Deployments.undeployAll(nexus.dataBaseDeployments, request.space);
@@ -401,6 +406,9 @@ public class RootHandlerImpl implements RootHandler {
     try {
       if (request.policy.canUserSeeKeyListing(request.who)) {
         for (DocumentIndex item : BackendOperations.list(nexus.dataBaseBackend, request.space, request.marker, request.limit != null ? request.limit : 100)) {
+          responder.next(item.key, item.created, item.updated, item.seq);
+        }
+        for (DocumentIndex item : FinderOperations.list(nexus.dataBaseBackend, request.space, request.marker, request.limit != null ? request.limit : 100)) {
           responder.next(item.key, item.created, item.updated, item.seq);
         }
         responder.finish();

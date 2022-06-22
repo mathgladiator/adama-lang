@@ -9,7 +9,13 @@
  */
 package org.adamalang;
 
+import org.adamalang.caravan.CaravanDataService;
+import org.adamalang.caravan.contracts.Cloud;
+import org.adamalang.caravan.data.DurableListStore;
+import org.adamalang.caravan.data.DurableListStoreMetrics;
+import org.adamalang.caravan.events.FinderServiceToKeyToIdService;
 import org.adamalang.common.*;
+import org.adamalang.common.metrics.MetricsFactory;
 import org.adamalang.common.metrics.NoOpMetricsFactory;
 import org.adamalang.common.net.NetBase;
 import org.adamalang.common.net.ServerHandle;
@@ -22,11 +28,10 @@ import org.adamalang.mysql.DataBaseConfig;
 import org.adamalang.mysql.DataBase;
 import org.adamalang.mysql.DataBaseMetrics;
 import org.adamalang.mysql.backend.BackendDataServiceInstaller;
-import org.adamalang.mysql.backend.BackendMetrics;
-import org.adamalang.mysql.backend.BlockingDataService;
 import org.adamalang.mysql.deployments.DeployedInstaller;
 import org.adamalang.mysql.deployments.Deployments;
 import org.adamalang.mysql.deployments.data.Deployment;
+import org.adamalang.mysql.finder.Finder;
 import org.adamalang.mysql.finder.FinderInstaller;
 import org.adamalang.mysql.frontend.FrontendManagementInstaller;
 import org.adamalang.net.client.Client;
@@ -37,7 +42,10 @@ import org.adamalang.net.server.Handler;
 import org.adamalang.net.server.ServerMetrics;
 import org.adamalang.net.server.ServerNexus;
 import org.adamalang.runtime.contracts.DeploymentMonitor;
+import org.adamalang.runtime.data.DataService;
 import org.adamalang.runtime.data.Key;
+import org.adamalang.runtime.data.ManagedDataService;
+import org.adamalang.runtime.data.managed.Base;
 import org.adamalang.runtime.deploy.DeploymentFactoryBase;
 import org.adamalang.runtime.deploy.DeploymentPlan;
 import org.adamalang.runtime.natives.NtAsset;
@@ -65,6 +73,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestFrontEnd implements AutoCloseable, Email {
 
@@ -84,7 +93,11 @@ public class TestFrontEnd implements AutoCloseable, Email {
   public final CoreService coreService;
   public final NetBase netBase;
   public final ServerHandle serverHandle;
+  public final AtomicBoolean alive;
+  public final DurableListStore store;
+  private final CountDownLatch threadDeath;
 
+  public final File caravanPath;
   public TestFrontEnd() throws Exception {
     int port = 10000;
     codesSentToEmail = new ConcurrentHashMap<>();
@@ -98,9 +111,58 @@ public class TestFrontEnd implements AutoCloseable, Email {
     this.installDeploy.install();
     this.installFinder = new FinderInstaller(dataBase);
     this.installFinder.install();
+    this.alive = new AtomicBoolean(true);
+    MachineIdentity identity = MachineIdentity.fromFile("localhost.identity");
 
-    BlockingDataService ds = new BlockingDataService(new BackendMetrics(new NoOpMetricsFactory()), dataBase);
+    this.caravanPath = File.createTempFile("ADAMATEST_", "caravan");
+    caravanPath.delete();
+    caravanPath.mkdirs();
+    SimpleExecutor caravanExecutor = SimpleExecutor.create("caravan");
+    SimpleExecutor managedExecutor = SimpleExecutor.create("managed-base");
+    caravanPath.mkdir();
+    File walRoot = new File(caravanPath, "wal");
+    File dataRoot = new File(caravanPath, "data");
+    walRoot.mkdir();
+    dataRoot.mkdir();
+    File cloudPath = new File(caravanPath, "archive");
+    File storePath = new File(dataRoot, "store");
+    this.store = new DurableListStore(new DurableListStoreMetrics(new NoOpMetricsFactory()), storePath, walRoot, 64 * 1024 * 1024, 64 * 1024, 1024 * 1024);
+    Finder finder = new Finder(dataBase);
+    Cloud cloud = new Cloud() {
+      @Override
+      public File path() {
+        return cloudPath;
+      }
 
+      @Override
+      public void restore(Key key, String archiveKey, Callback<File> callback) {
+        callback.failure(new ErrorCodeException(-42));
+      }
+
+      @Override
+      public void backup(Key key, File archiveFile, Callback<Void> callback) {
+        callback.success(null);
+      }
+    };
+    CaravanDataService caravanDataService = new CaravanDataService(cloud, new FinderServiceToKeyToIdService(finder), store, caravanExecutor);
+    Base managedBase = new Base(finder, caravanDataService, "test-region", identity.ip + ":" + port, managedExecutor, 5 * 60 * 1000);
+    ManagedDataService dataService = new ManagedDataService(managedBase);
+    threadDeath = new CountDownLatch(1);
+    Thread flusher = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while (alive.get()) {
+          try {
+            Thread.sleep(0, 800000);
+            caravanDataService.flush(false).await(1000, TimeUnit.MILLISECONDS);
+          } catch (InterruptedException ie) {
+            return;
+          }
+        }
+        threadDeath.countDown();
+      }
+    });
+    flusher.start();
 
     deploymentFactoryBase = new DeploymentFactoryBase();
     MeteringPubSub meteringPubSub = new MeteringPubSub(TimeSource.REAL_TIME, deploymentFactoryBase);
@@ -109,12 +171,9 @@ public class TestFrontEnd implements AutoCloseable, Email {
             new CoreMetrics(new NoOpMetricsFactory()),
             deploymentFactoryBase, //
             meteringPubSub.publisher(), //
-            ds, //
+            dataService, //
             TimeSource.REAL_TIME,
             1);
-
-    // TODO: setup a backend server
-    MachineIdentity identity = MachineIdentity.fromFile("localhost.identity");
 
     this.netBase = new NetBase(identity, 1, 2);
     this.clientExecutor = SimpleExecutor.create("disk");
@@ -143,7 +202,9 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
     serverHandle = netBase.serve(port, (upstream -> new Handler(backendNexus, upstream)));
     ClientConfig clientConfig = new ClientConfig();
-    Client client = new Client(netBase, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
+    ClientMetrics clientMetrics =  new ClientMetrics(new NoOpMetricsFactory());
+    ClientRouter router = ClientRouter.FINDER(clientMetrics, finder, "test-region");
+    Client client = new Client(netBase, clientConfig, clientMetrics, router, null);
     client.getTargetPublisher().accept(Collections.singletonList("127.0.0.1:" + port));
     this.attachmentRoot = new File(File.createTempFile("ADAMATEST_", "x23").getParentFile(), "inflight." + System.currentTimeMillis());
     AssetUploader uploader = new AssetUploader() {
@@ -180,6 +241,8 @@ public class TestFrontEnd implements AutoCloseable, Email {
 
   @Override
   public void close() throws Exception {
+    alive.set(false);
+    threadDeath.await(5000, TimeUnit.MILLISECONDS);
     installerFront.uninstall();
     installerBack.uninstall();
     installDeploy.uninstall();
