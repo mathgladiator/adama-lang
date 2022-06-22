@@ -37,7 +37,7 @@ public class InstanceClientFinderTests {
         servers[k] =
             new TestBed(
                 20001 + k,
-                "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
+                "@connected { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }");
       }
       for (int k = 0; k < servers.length; k++) {
         servers[k].startServer();

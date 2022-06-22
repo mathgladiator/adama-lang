@@ -17,7 +17,7 @@ import org.junit.Test;
 public class ServerTests {
   @Test
   public void ping() throws Exception {
-    try (TestBed bed = new TestBed( 20000, "@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
+    try (TestBed bed = new TestBed( 20000, "@connected { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
       try (InstanceClient ic = bed.makeClient()) {
         Assert.assertFalse(ic.ping(2500));
         bed.startServer();

@@ -102,14 +102,14 @@ public class EndToEnd_SpaceInfoTests {
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/get\",\"space\":\"myspace\"}");
       Assert.assertEquals("FINISH:{\"plan\":{}}", c14.next());
       Iterator<String> c15  =
-          fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/set\",\"space\":\"myspace\",\"plan\":"+planFor("@static { create(who) { return true; } } ")+ "}");
+          fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/set\",\"space\":\"myspace\",\"plan\":"+planFor("@static { create { return true; } } ")+ "}");
       Assert.assertEquals("FINISH:{}", c15.next());
       Iterator<String> c16  =
-          fe.execute("{\"id\":7,\"identity\":\"" + userIdentity + "\",\"method\":\"space/set\",\"space\":\"myspace\",\"plan\":"+planFor("@static { create(who) { return true; } } ")+ "}");
+          fe.execute("{\"id\":7,\"identity\":\"" + userIdentity + "\",\"method\":\"space/set\",\"space\":\"myspace\",\"plan\":"+planFor("@static { create { return true; } } ")+ "}");
       Assert.assertEquals("ERROR:901127", c16.next());
       Iterator<String> c17  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/get\",\"space\":\"myspace\"}");
-      Assert.assertEquals("FINISH:{\"plan\":{\"versions\":{\"x\":\"@static { create(who) { return true; } } \"},\"default\":\"x\"}}", c17.next());
+      Assert.assertEquals("FINISH:{\"plan\":{\"versions\":{\"x\":\"@static { create { return true; } } \"},\"default\":\"x\"}}", c17.next());
       Iterator<String> c18  =
           fe.execute("{\"id\":7,\"identity\":\"" + alice + "\",\"method\":\"space/reflect\",\"space\":\"myspace\",\"key\":\"k\"}");
       Assert.assertEquals("FINISH:{\"reflection\":{\"types\":{\"#root\":{\"nature\":\"reactive_record\",\"name\":\"Root\",\"fields\":{}},\"__ViewerType\":{\"nature\":\"native_message\",\"name\":\"__ViewerType\",\"anonymous\":true,\"fields\":{}}},\"channels\":{},\"constructors\":[],\"labels\":[]}}", c18.next());

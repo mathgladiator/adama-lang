@@ -37,7 +37,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12500,
-                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
@@ -165,7 +165,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12501,
-                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
@@ -208,7 +208,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12502,
-                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
       try {
@@ -283,7 +283,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12503,
-                 "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create { return false; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
@@ -340,7 +340,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12504,
-                 "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create { return false; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").failEverything().start();
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
@@ -436,7 +436,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12505,
-                 "@static { create(who) { return false; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create { return false; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").start();
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);
@@ -471,7 +471,7 @@ public class ClientTests {
     try (TestBed bed =
              new TestBed(
                  12506,
-                 "@static { create(who) { return false; } invent(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create { return false; } invent { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.naughty().inventory("space").closeStream().start();
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);

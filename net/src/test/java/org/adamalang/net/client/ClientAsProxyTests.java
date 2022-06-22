@@ -48,7 +48,7 @@ public class ClientAsProxyTests {
     try (TestBed bed =
              new TestBed(
                  12500,
-                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
+                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; transition #p in 0.25; } #p { x++; } ")) {
       bed.startServer();
       ClientConfig clientConfig = new TestClientConfig();
       Client client = new Client(bed.base, clientConfig, new ClientMetrics(new NoOpMetricsFactory()), ClientRouter.REACTIVE(new ClientMetrics(new NoOpMetricsFactory())), null);

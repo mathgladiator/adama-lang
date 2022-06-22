@@ -34,7 +34,7 @@ public class ConnectionTests {
     try (TestBed server =
         new TestBed(
             30000,
-            "@connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+            "@connected { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       server.startServer();
       SimpleExecutor routingExecutor = SimpleExecutor.create("routing");
       try {
@@ -118,7 +118,7 @@ public class ConnectionTests {
     try (TestBed server =
              new TestBed(
                  30001,
-                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       server.startServer();
       SimpleExecutor routingExecutor = SimpleExecutor.create("routing");
       try {
@@ -230,7 +230,7 @@ public class ConnectionTests {
     try (TestBed server =
              new TestBed(
                  30001,
-                 "@static { create(who) { return true; } } @connected(who) { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
+                 "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 123; } message Y { int z; } channel foo(Y y) { x += y.z; }")) {
       server.startServer();
       SimpleExecutor routingExecutor = SimpleExecutor.create("routing");
       try {

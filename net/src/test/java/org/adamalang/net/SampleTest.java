@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class SampleTest {
   @Test
   public void ping() throws Exception {
-    try (TestBed bed = new TestBed( 20000, "@connected(who) { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
+    try (TestBed bed = new TestBed( 20000, "@connected { return true; } public int x; @construct { x = 123; transition #p in 0.5; } #p { x++; } ")) {
       bed.startServer();
       CountDownLatch latch = new CountDownLatch(1);
       bed.base.connect("127.0.0.1:20000", new Lifecycle() {

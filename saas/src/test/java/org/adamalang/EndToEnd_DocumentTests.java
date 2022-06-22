@@ -23,8 +23,8 @@ public class EndToEnd_DocumentTests {
       Assert.assertEquals("FINISH:{}", c3.next());
       Iterator<String> c4  =
           fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"space/set\",\"space\":\"newspace\",\"plan\":"+ EndToEnd_SpaceInfoTests.planFor(
-              "@static { create(who) { return true; } }" +
-                  "@connected(who) { return true; }" +
+              "@static { create { return true; } }" +
+                  "@connected { return true; }" +
                   "public int x = 1;" +
                   "message M { int z; }" +
                   "channel foo(M m) { x += m.z; }" +
