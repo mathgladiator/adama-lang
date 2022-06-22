@@ -175,6 +175,11 @@ public class Environment {
     return new Environment(document, state.scopeStateMachineTransition(), this);
   }
 
+  /** create a new environment which is for document policies */
+  public Environment scopeAsDocumentPolicy() {
+    return new Environment(document, state.scopeDocumentPolicy(), this);
+  }
+
   /** create a new environment which is for unit tests */
   public Environment scopeAsUnitTest() {
     return new Environment(document, state.scopeTesting(), this);

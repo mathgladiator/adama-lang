@@ -1,5 +1,5 @@
 @connected (who) {
-  return who == @no_one;
+  return @who == @no_one;
 }
 
 private client owner = @no_one;

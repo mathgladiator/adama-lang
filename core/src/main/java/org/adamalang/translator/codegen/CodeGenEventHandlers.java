@@ -130,7 +130,7 @@ public class CodeGenEventHandlers {
       shredder.put(event, new EventShred(event));
     }
     for (final DefineDocumentEvent dce : environment.document.events) {
-      shredder.get(dce.which).consider(dce, sb, environment);
+      shredder.get(dce.which).consider(dce, sb, environment.scopeAsDocumentPolicy());
     }
     for (DocumentEvent event : DocumentEvent.values()) {
       shredder.get(event).finish(sb);

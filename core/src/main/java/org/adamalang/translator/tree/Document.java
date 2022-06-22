@@ -196,7 +196,7 @@ public class Document implements TopLevelDocumentHandler {
 
   @Override
   public void add(final DefineDocumentEvent dce) {
-    typeCheckOrder.add(env -> dce.typing(env));
+    typeCheckOrder.add(env -> dce.typing(env.scopeAsDocumentPolicy()));
     events.add(dce);
   }
 
