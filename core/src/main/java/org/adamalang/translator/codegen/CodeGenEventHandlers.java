@@ -27,6 +27,7 @@ public class CodeGenEventHandlers {
       sb.append("}").writeNewline();
     } else {
       dce.code.writeJava(sb, environment);
+      sb.writeNewline();
     }
   }
 

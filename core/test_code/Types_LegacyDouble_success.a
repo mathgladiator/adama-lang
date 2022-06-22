@@ -28,6 +28,6 @@ private double assign;
   assign -= 17;
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

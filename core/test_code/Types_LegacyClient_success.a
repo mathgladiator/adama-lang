@@ -5,9 +5,9 @@ client y;
   transition #setup;
 }
 
-@connected(who) {
-  let eq = @no_one == who;
-  let neq = @no_one != who;
+@connected {
+  let eq = @no_one == @who;
+  let neq = @no_one != @who;
   return true;
 }
 

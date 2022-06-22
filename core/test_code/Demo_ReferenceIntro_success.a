@@ -1,8 +1,8 @@
 // static code runs without a document
 @static {
   // 1. a policy which is run to validate the given user can create the document
-  create(who) {
-    return who.isAdamaDeveloper();
+  create {
+    return @who.isAdamaDeveloper();
   }
 }
 
@@ -16,34 +16,34 @@ message ConsXYZ {
 }
 
 // 4. connect the constructor message to code
-@construct (client who, ConsXYZ c) {
+@construct (ConsXYZ c) {
   // 5. fill the document with state
-  creator = who;
+  creator = @who;
   x = c.x;
 }
 
 // 5. gate who can connect to the document
-@connected(who) {
-   return who == creator;
+@connected {
+   return @who == creator;
 }
 
 message Nothing {}
 message Param { int z; }
 
-channel square(client who, Nothing n) {
+channel square(Nothing n) {
   x = x * x;
 }
 
-channel zero(client who, Nothing n) {
+channel zero(Nothing n) {
   x = 0;
 }
 
-channel add(client who, Param p) {
+channel add(Param p) {
   x += p.z;
 }
 
-channel kill(client who, Nothing n) {
-  if (who == creator) {
+channel kill(Nothing n) {
+  if (@who == creator) {
     Document.destroy();
   }
 }

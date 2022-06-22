@@ -79,7 +79,7 @@ public class DefineConstructor extends Definition {
 
   @Override
   public void typing(final Environment environment) {
-    final var next = environment.scope();
+    final var next = environment.scopeAsPolicy();
     if (clientType != null) {
       next.define(clientVarToken.text, clientType, true, clientType);
     }

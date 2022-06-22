@@ -11,7 +11,7 @@ channel<M> foo;
 public formula y1 = foo;
 public formula y2 = @maybe(foo);
 
-@connected(who) {
+@connected {
   return true;
 }
 

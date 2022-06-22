@@ -9,6 +9,6 @@ public long big;
   big = (z + u);
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

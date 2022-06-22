@@ -18,6 +18,6 @@ public int y;
   y = E::Y.foo(1);
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

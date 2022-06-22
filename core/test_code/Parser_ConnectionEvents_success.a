@@ -1,9 +1,9 @@
 int x = 0;
-@connected(cv) {
+@connected {
   x++;
   return true;
 }
 
-@disconnected(cv) {
+@disconnected {
   x--;
 }

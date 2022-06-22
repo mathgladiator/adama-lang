@@ -27,7 +27,7 @@ public class MeteringPubSubTests {
   public void flow() throws Exception {
     DeploymentPlan plan =
         new DeploymentPlan(
-            "{\"versions\":{\"a\":\"public int x; @construct { x = 100; } @connected(who) { return true; }\"},\"default\":\"a\"}",
+            "{\"versions\":{\"a\":\"public int x; @construct { x = 100; } @connected { return true; }\"},\"default\":\"a\"}",
             (t, errorCode) -> {
               t.printStackTrace();
             });

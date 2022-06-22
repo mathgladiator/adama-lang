@@ -9,7 +9,7 @@ record Card {
   }
 }
 
-@connected(who) {
+@connected {
   return true;
 }
 

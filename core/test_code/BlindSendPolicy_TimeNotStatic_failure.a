@@ -1,5 +1,5 @@
 @static {
-  send(who) {
+  send {
     let x = Time.now();
     return false;
   }

@@ -10,8 +10,8 @@ public bool bOr3;
 public bool bAnd4;
 public bool bOr4;
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }
 
 @construct {

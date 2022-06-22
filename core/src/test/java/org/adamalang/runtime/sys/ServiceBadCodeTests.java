@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class ServiceBadCodeTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
-  private static final String BAD_CODE = "@can_attach(who) { int x = 1; while(true) { x++; } return true; } @attached(who, what) { while(true) {} } @static { create(who) { return true; } } @connected(who) { return true; } message M {} channel foo(M y) { while(true) {} }  ";
+  private static final String BAD_CODE = "@can_attach { int x = 1; while(true) { x++; } return true; } @attached(who, what) { while(true) {} } @static { create { return true; } } @connected { return true; } message M {} channel foo(M y) { while(true) {} }  ";
 
   @Test
   public void bad_code() throws Exception {

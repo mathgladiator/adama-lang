@@ -1,0 +1,10 @@
+@static(context) {
+  create {
+    return -1;
+  }
+  invent {
+    return "yo";
+  }
+  maximum_history = true;
+  delete_on_close = -1;
+}

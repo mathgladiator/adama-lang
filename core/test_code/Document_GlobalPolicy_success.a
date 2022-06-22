@@ -1,8 +1,8 @@
-@connected (who) {
+@connected {
   return true;
 }
 
-policy foo(who) {
+policy foo {
   return true;
 }
 

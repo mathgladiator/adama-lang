@@ -28,6 +28,8 @@ public class ServiceCatastropheTests {
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
       "@static { create { return true; } } public int x; @connected { x += 1; return true; } @disconnected { x -= 1; } message M {} channel foo(M y) { x += 1000; }";
+  private static final String SIMPLE_CODE_MSG_DELETES =
+      "@static { create { return true; } delete_on_close = true; } public int x; @connected { x += 1; return true; } @disconnected { x -= 1; } message M {} channel foo(M y) { x += 1000; }";
 
   @Test
   public void connect_failures_trigger_reload() throws Exception {
@@ -62,6 +64,57 @@ public class ServiceCatastropheTests {
       latch.run();
       realDataService.assertLogAt(0, "INIT:space/key:1->{\"__constructed\":true,\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}");
       realDataService.assertLogAt(1, "LOAD:space/key");
+    } finally {
+      service.shutdown();
+    }
+  }
+
+  @Test
+  public void failure_triggers_delete_based_on_config() throws Exception {
+    LivingDocumentFactory factory = LivingDocumentTests.compile(SIMPLE_CODE_MSG_DELETES);
+    MockInstantLivingDocumentFactoryFactory factoryFactory =
+        new MockInstantLivingDocumentFactoryFactory(factory);
+    TimeSource time = new MockTime();
+    MockFailureDataService failureDataService = new MockFailureDataService();
+    MockInstantDataService realDataService = new MockInstantDataService();
+    MockDelayDataService dataService = new MockDelayDataService(realDataService);
+    CoreService service = new CoreService(METRICS, factoryFactory, (bill) -> {}, dataService, time, 3);
+    service.tune(
+        (base) -> {
+          base.setMillisecondsAfterLoadForReconciliation(250);
+        });
+    try {
+      Runnable latch = realDataService.latchLogAt(5);
+      NullCallbackLatch created = new NullCallbackLatch();
+      service.create(ContextSupport.WRAP(ALICE), KEY, "{}", "1", created);
+      created.await_success();
+      MockStreamback streamback1 = new MockStreamback();
+      Runnable latch1 = streamback1.latchAt(3);
+      service.connect(ContextSupport.WRAP(ALICE), KEY, "{}", null, streamback1);
+      streamback1.await_began();
+      dataService.pause();
+      dataService.set(failureDataService);
+      dataService.unpause();
+      LatchCallback callback1 = new LatchCallback();
+      streamback1.get().send("foo", null, "{}", callback1);
+      callback1.await_failure(999);
+      latch1.run();
+      Assert.assertEquals("STATUS:Connected", streamback1.get(0));
+      Assert.assertEquals("{\"data\":{\"x\":1},\"seq\":4}", streamback1.get(1));
+      Assert.assertEquals("STATUS:Disconnected", streamback1.get(2));
+      dataService.pause();
+      dataService.set(realDataService);
+      dataService.unpause();
+
+      MockStreamback streamback2 = new MockStreamback();
+      service.connect(ContextSupport.WRAP(BOB), KEY, "{}", null, streamback2);
+      streamback2.await_failure(625676);
+      latch.run();
+      realDataService.assertLogAt(0, "INIT:space/key:1->{\"__constructed\":true,\"__entropy\":\"-4964420948893066024\",\"__messages\":null,\"__seq\":1}");
+      realDataService.assertLogAt(1, "LOAD:space/key");
+      realDataService.assertLogAt(2, "PATCH:space/key:2-3->{\"__seq\":3,\"__connection_id\":1,\"x\":1,\"__clients\":{\"0\":{\"agent\":\"alice\",\"authority\":\"test\"}},\"__messages\":null,\"__entropy\":\"323091568684100223\"}");
+      realDataService.assertLogAt(3, "PATCH:space/key:4-4->{\"__messages\":null,\"__seq\":4,\"__entropy\":\"-6153234687710755147\"}");
+      realDataService.assertLogAt(4, "DELETE:space/key");
     } finally {
       service.shutdown();
     }

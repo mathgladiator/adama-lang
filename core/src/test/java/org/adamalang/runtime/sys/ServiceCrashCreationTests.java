@@ -27,15 +27,15 @@ public class ServiceCrashCreationTests {
   private static final CoreMetrics METRICS = new CoreMetrics(new NoOpMetricsFactory());
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG_VAR1 =
-      "@static { create(who) { while(true) {} return true; } invent(who) { while(true) {} return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create { while(true) {} return true; } invent { while(true) {} return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_MSG_VAR2 =
-      "@static { create(who) { for(;;) {} return true; } invent(who) { for(;;) {} return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create { for(;;) {} return true; } invent { for(;;) {} return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_MSG_VAR3 =
-      "@static { create(who) { do {} while (true); return true; } invent(who) { do {} while (true); return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create { do {} while (true); return true; } invent { do {} while (true); return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String SIMPLE_CODE_MSG_VAR4 =
-      "@static { create(who) { for(;1 < 2;) {} return true; } invent(who) { for(;1 < 2;) {} return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create { for(;1 < 2;) {} return true; } invent { for(;1 < 2;) {} return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
   private static final String REJECT =
-      "@static { create(who) { return false; } invent(who) { return false; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create { return false; } invent { return false; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
 
   @Test
   public void cant_create_reject() throws Exception {

@@ -1503,7 +1503,6 @@ public class GeneratedMapsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public boolean __onConnected__0(NtClient __who) {");
-    gold.append("\n    NtClient who = __who;");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    return true;");

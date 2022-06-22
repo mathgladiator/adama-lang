@@ -1028,7 +1028,6 @@ public class GeneratedDeltaTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n    public boolean __POLICY_foo(NtClient __who){");
-    gold.append("\n      NtClient who = __who;");
     gold.append("\n      __code_cost += 2;");
     gold.append("\n      __track(0);");
     gold.append("\n      return b.get();");

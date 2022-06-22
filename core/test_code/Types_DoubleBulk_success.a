@@ -11,6 +11,6 @@ test PrimaryTest {
   assert sum == 2005.85;
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

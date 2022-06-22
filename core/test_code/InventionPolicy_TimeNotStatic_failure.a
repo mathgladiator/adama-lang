@@ -1,5 +1,5 @@
 @static {
-  invent (who) {
+  invent {
     let x = Time.now();
     return false;
   }

@@ -42,11 +42,11 @@ record Card {
   private auto points = suit == Suit::Hearts ? 1 : (suit == Suit::Spades && rank==Rank::Queen ? 13 : 0);
 
   // define a policy as to who can see the card
-  policy p(who) {
+  policy p {
     // if it is in hand on in the pot, then only the owner of the card can see it
     // the rules of hearts have cards face down
     if (place == Place::Hand || place == Place::Taken) {
-      return who == owner;
+      return @who == owner;
     }
     // if it is in the pot or in play, then anyone can see it
     if (place==Place::InPlay) {

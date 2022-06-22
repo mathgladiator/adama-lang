@@ -1,5 +1,5 @@
 @static {
-  create (who) {
+  create {
     if (1 == 2) {
       return false;
     }

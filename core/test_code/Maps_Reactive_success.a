@@ -1,6 +1,6 @@
 public map<int, int> my_map1;
 
-@connected (who) {
+@connected {
   return true;
 }
 

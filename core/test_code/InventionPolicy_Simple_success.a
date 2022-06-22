@@ -1,5 +1,5 @@
 @static {
-  invent (who) {
+  invent {
     return true;
   }
 }

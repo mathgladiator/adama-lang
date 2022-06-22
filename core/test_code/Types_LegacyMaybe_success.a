@@ -8,6 +8,6 @@ public maybe<string> ms;
   ms = "hi";
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

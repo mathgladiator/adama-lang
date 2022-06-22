@@ -25,7 +25,7 @@ public class ServiceCreateTests {
 
   private static final Key KEY = new Key("space", "key");
   private static final String SIMPLE_CODE_MSG =
-      "@static { create(who) { return true; } } public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }";
+      "@static { create { return true; } } public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }";
 
   @Test
   public void create_super_happy() throws Exception {

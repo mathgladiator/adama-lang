@@ -8,7 +8,7 @@ public formula my_size = latest.size();
 public formula my_type = latest.type();
 public formula my_valid = latest.valid();
 
-@can_attach(who) {
+@can_attach {
   return true;
 }
 

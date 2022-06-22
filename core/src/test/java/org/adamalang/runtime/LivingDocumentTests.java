@@ -73,7 +73,7 @@ public class LivingDocumentTests {
   public void bad_json() throws Exception {
     try {
       new RealDocumentSetup(
-          "@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }",
+          "@connected { return @who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }",
           "");
       Assert.fail();
     } catch (RuntimeException re) {
@@ -85,7 +85,7 @@ public class LivingDocumentTests {
   public void accept_array_message() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }");
+            "@connected { return @who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set[]> chan; #wait { foreach(x in chan.fetch(@no_one).await()) { t += x.v; }  }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     Assert.assertEquals(
         0,
@@ -133,7 +133,7 @@ public class LivingDocumentTests {
   public void command_unknown() throws Exception {
     String json;
     {
-      final var setup = new RealDocumentSetup("@construct {} @connected(who) { return true; }");
+      final var setup = new RealDocumentSetup("@construct {} @connected { return true; }");
       json = setup.document.json();
     }
     final var setup = new RealDocumentSetup("@construct {}", json);
@@ -164,7 +164,7 @@ public class LivingDocumentTests {
   public void futures_blocked() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
+            "@connected { return @who == @no_one; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
     Assert.assertTrue(
         (Boolean)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -176,7 +176,7 @@ public class LivingDocumentTests {
   public void futures_blocked_still_blocked_wrong_user() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
+            "@connected { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
     Assert.assertTrue(
         (Boolean)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -195,7 +195,7 @@ public class LivingDocumentTests {
   public void futures_blocked_then_unblocked() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
+            "@connected { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> chan; #wait { t = chan.fetch(@no_one).await().v; }");
     Assert.assertTrue(
         (Boolean)
             ((HashMap<String, Object>) new JsonStreamReader(setup.document.json()).readJavaTree())
@@ -215,7 +215,7 @@ public class LivingDocumentTests {
   public void futures_hydrate_missing_data() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }",
+            "@connected { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }",
             "{\"__state\":\"wait\",\"__constructed\":true,\"__entropy\":\"123\",\"__blocked_on\":\"cha\",\"__blocked\":true,\"__seq\":5,\"__connection_id\":1,\"__clients\":{\"0\":{\"agent\":\"?\",\"authority\":\"?\"}},\"__messages\":{\"0\":{\"nope\":true,\"who\":{\"agent\":\"?\",\"authority\":\"?\"},\"channel\":\"chb\",\"message\":{\"v\":50}}},\"__message_id\":1}");
     setup.document.send(
         ContextSupport.WRAP(NtClient.NO_ONE), null, "cha", "{\"v\":25}", new RealDocumentSetup.AssertInt(7));
@@ -233,7 +233,7 @@ public class LivingDocumentTests {
     {
       final var setup =
           new RealDocumentSetup(
-              "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }");
+              "@connected { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }");
       setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
       setup.document.send(
           ContextSupport.WRAP(NtClient.NO_ONE), null, "chb", "{\"v\":50}", new RealDocumentSetup.AssertInt(5));
@@ -246,7 +246,7 @@ public class LivingDocumentTests {
     }
     final var setup =
         new RealDocumentSetup(
-            "@connected(who) { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }",
+            "@connected { return true; } @construct { transition #wait; } int t = 0; message Set { int v; } channel<Set> cha; channel<Set> chb; #wait { t = cha.fetch(@no_one).await().v; t += chb.fetch(@no_one).await().v; }",
             persist);
     Assert.assertTrue(
         (Boolean)
@@ -337,7 +337,7 @@ public class LivingDocumentTests {
     try {
       final var setup =
           new RealDocumentSetup(
-              "@connected(who) { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();");
+              "@connected { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();");
       setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
       setup.document.createPrivateView(NtClient.NO_ONE, Perspective.DEAD, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
       setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
@@ -360,7 +360,7 @@ public class LivingDocumentTests {
     try {
       final var setup =
           new RealDocumentSetup(
-              "@connected(who) { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();",
+              "@connected { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();",
               null,
               false);
       setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
@@ -438,7 +438,7 @@ public class LivingDocumentTests {
   public void message_cause_rewind() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }",
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }",
             null,
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
@@ -456,7 +456,7 @@ public class LivingDocumentTests {
   public void simple_direct_message() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x = 123; }",
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x = 123; }",
             null,
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
@@ -473,7 +473,7 @@ public class LivingDocumentTests {
   public void message_cause_rewind_failure() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }",
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { Document.rewind(1); }",
             null,
             false);
     ((DumbDataService) setup.document.base.service).computesWork = false;
@@ -486,7 +486,7 @@ public class LivingDocumentTests {
   public void message_cause_self_destruct() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }",
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }",
             null,
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
@@ -500,7 +500,7 @@ public class LivingDocumentTests {
   public void message_cause_self_destruct_but_fails() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }",
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { Document.destroy(); }",
             null,
             false);
     ((DumbDataService) setup.document.base.service).deletesWork = false;
@@ -513,7 +513,7 @@ public class LivingDocumentTests {
   public void too_many_messages() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { }",
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { }",
             null,
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
@@ -535,7 +535,7 @@ public class LivingDocumentTests {
   public void message_abort() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x = 100; abort; }",
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x = 100; abort; }",
             null,
             false);
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
@@ -546,7 +546,7 @@ public class LivingDocumentTests {
   public void message_dedupe() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
     setup.assertCompare();
@@ -572,7 +572,7 @@ public class LivingDocumentTests {
   public void message_expire_single() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
     Assert.assertEquals(
@@ -604,7 +604,7 @@ public class LivingDocumentTests {
   public void message_expire_negative_limit() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
     try {
@@ -619,7 +619,7 @@ public class LivingDocumentTests {
   public void message_expire_multi() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @connected(who) { x = 42; return who == @no_one; } message M {} channel foo(M y) { x += 100; }");
+            "public int x; @connected { x = 42; return @who == @no_one; } message M {} channel foo(M y) { x += 100; }");
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
     setup.document.send(ContextSupport.WRAP(NtClient.NO_ONE), "send1", "foo", "{}", new RealDocumentSetup.AssertInt(4));
     setup.time.time += 250;
@@ -735,7 +735,7 @@ public class LivingDocumentTests {
 
   @Test
   public void blind_send_with_policy() throws Exception {
-    final var setup = new RealDocumentSetup("@static { send(who) { return true; } } @construct {} @connected(who) { return true; } message M {} channel<M> foo;");
+    final var setup = new RealDocumentSetup("@static { send { return true; } } @construct {} @connected { return true; } message M {} channel<M> foo;");
     setup.document.send(
         ContextSupport.WRAP(NtClient.NO_ONE), null, "foo", "{}", new RealDocumentSetup.AssertInt(3));
     setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(5));
@@ -747,7 +747,7 @@ public class LivingDocumentTests {
   public void multi_views() throws Exception {
     final var setup =
         new RealDocumentSetup(
-            "public int x; @construct { x = 123; } @connected (who) { x++; return true; }");
+            "public int x; @construct { x = 123; } @connected { x++; return true; }");
 
     RealDocumentSetup.GotView pv1 = new RealDocumentSetup.GotView();
     RealDocumentSetup.GotView pv2 = new RealDocumentSetup.GotView();

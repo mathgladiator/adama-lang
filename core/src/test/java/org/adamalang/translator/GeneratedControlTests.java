@@ -537,7 +537,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_x(NtClient client, RTxX msg) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_x(NtClient __who, RTxX msg) throws AbortMessageException {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
     gold.append("\n    lastValue.set(msg.v);");
@@ -3487,7 +3487,7 @@ public class GeneratedControlTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_x(NtClient client, RTxX msg) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_x(NtClient __who, RTxX msg) throws AbortMessageException {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
     gold.append("\n    lastV.set(msg.v);");

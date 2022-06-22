@@ -1,5 +1,5 @@
 @static {
-  send (who) {
+  send {
     return true;
   }
 }

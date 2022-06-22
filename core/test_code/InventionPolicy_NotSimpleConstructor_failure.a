@@ -1,11 +1,11 @@
 @static {
-  invent (who) {
+  invent {
     return true;
   }
 }
 
 message X {}
 
-@construct (client who, X arg) {
+@construct (X arg) {
 
 }

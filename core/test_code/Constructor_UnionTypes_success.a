@@ -10,8 +10,8 @@ message MB {
   bool u;
 }
 
-@construct (client who, MA a) {
+@construct (MA a) {
 }
 
-@construct (client who, MB b) {
+@construct (MB b) {
 }

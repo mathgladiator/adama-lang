@@ -19,6 +19,6 @@ string output2;
 #end {
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

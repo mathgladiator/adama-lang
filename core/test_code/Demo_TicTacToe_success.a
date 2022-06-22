@@ -1,6 +1,6 @@
 @static {
-  create(who) { return true; }
-  invent(who) { return true; }
+  create { return true; }
+  invent { return true; }
 }
 
 enum SquareState { Open, X, O }
@@ -38,14 +38,14 @@ public formula board = iterate _squares;
   stalemates = 0;
 }
 
-@connected (who) {
+@connected {
   if (playerX == @no_one) {
-    playerX = who;
+    playerX = @who;
     if (playerO != @no_one) {
       transition #initiate;
     }
   } else if (playerO == @no_one) {
-    playerO = who;
+    playerO = @who;
     if (playerX != @no_one) {
       transition #initiate;
     }

@@ -1288,7 +1288,7 @@ public class GeneratedTestingTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_chan(NtClient client, RTxX payload) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_chan(NtClient __who, RTxX payload) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    out.set(payload.x + payload.y);");

@@ -24,6 +24,6 @@ test Negate {
   assert -(1 + 4) == -5;
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

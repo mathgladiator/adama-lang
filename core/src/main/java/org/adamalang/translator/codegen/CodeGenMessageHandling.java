@@ -35,11 +35,7 @@ public class CodeGenMessageHandling {
         continue;
       }
       channelsDefined.add(handler.channel);
-      var clientVarToUse = "client";
       var payloadNameToUse = "payload";
-      if (handler.client != null) {
-        clientVarToUse = handler.client;
-      }
       if (handler.messageVar != null) {
         payloadNameToUse = handler.messageVar;
       }
@@ -101,11 +97,14 @@ public class CodeGenMessageHandling {
           dispatch.append(")(__task.message)));").writeNewline();
           dispatch.append("return;").tabDown().writeNewline();
           final var child = handler.prepareEnv(environment, associatedRecordType);
-          sb.append("private void handleChannelMessage_").append(handler.channel).append("(NtClient ").append(clientVarToUse).append(", RTx").append(handler.typeName);
+          sb.append("private void handleChannelMessage_").append(handler.channel).append("(NtClient __who, RTx").append(handler.typeName);
           if (handler.isArray) {
             sb.append("[]");
           }
           sb.append(" ").append(payloadNameToUse).append(") throws AbortMessageException {").tabUp().writeNewline();
+          if (handler.client != null) {
+            sb.append("NtClient ").append(handler.client).append(" = __who;").writeNewline();
+          }
           handler.code.specialWriteJava(sb, child, false, false);
           sb.tabDown().writeNewline().append("}").writeNewline();
         }

@@ -1037,7 +1037,7 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_goo(NtClient client, RTxX x) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_goo(NtClient __who, RTxX x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 1;");
     gold.append("\n");
     gold.append("\n  }");
@@ -2326,13 +2326,14 @@ public class GeneratedChannelsTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_chan1(NtClient c, RTxM m) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_chan1(NtClient __who, RTxM m) throws AbortMessageException {");
+    gold.append("\n    NtClient c = __who;");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    return;");
     gold.append("\n");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_chan2(NtClient client, RTxM m) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_chan2(NtClient __who, RTxM m) throws AbortMessageException {");
     gold.append("\n    __code_cost += 1;");
     gold.append("\n");
     gold.append("\n  }");

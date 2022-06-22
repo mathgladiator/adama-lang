@@ -18,7 +18,7 @@ table<AddOn> _addons;
 
 @static {
   // anyone can create
-  create(who) { return true; }
+  create { return true; }
 }
 
 message Arg {
@@ -26,20 +26,20 @@ message Arg {
   string description;
 }
 
-@construct(client who, Arg arg) {
-  owner = who;
+@construct(Arg arg) {
+  owner = @who;
   name = arg.name;
   description = arg.description;
 }
 
 // 4/7: connecting users
 
-@connected(who) {
+@connected {
   viewers++;
   return true;
 }
 
-@disconnected(who) {
+@disconnected {
   viewers--;
 }
 
@@ -59,8 +59,8 @@ channel create_new_add_on(AddAddOn arg) {
 message Nothing {
 }
 
-channel delete(client who, Nothing arg) {
-  if (owner == who) {
+channel delete(Nothing arg) {
+  if (owner == @who) {
     Document.destroy();
   }
 }

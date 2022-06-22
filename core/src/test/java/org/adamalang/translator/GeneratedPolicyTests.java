@@ -12,43 +12,83 @@ package org.adamalang.translator;
 import org.junit.Test;
 
 public class GeneratedPolicyTests extends GeneratedBase {
-  private String cached_ContextVariables_1 = null;
-  private String get_ContextVariables_1() {
-    if (cached_ContextVariables_1 != null) {
-      return cached_ContextVariables_1;
+  private String cached_ContextVariablesBadTypes_1 = null;
+  private String get_ContextVariablesBadTypes_1() {
+    if (cached_ContextVariablesBadTypes_1 != null) {
+      return cached_ContextVariablesBadTypes_1;
     }
-    cached_ContextVariables_1 = generateTestOutput(true, "ContextVariables_1", "./test_code/Policy_ContextVariables_success.a");
-    return cached_ContextVariables_1;
+    cached_ContextVariablesBadTypes_1 = generateTestOutput(false, "ContextVariablesBadTypes_1", "./test_code/Policy_ContextVariablesBadTypes_failure.a");
+    return cached_ContextVariablesBadTypes_1;
+  }
+
+  @Test
+  public void testContextVariablesBadTypesFailure() {
+    assertLiveFail(get_ContextVariablesBadTypes_1());
+  }
+
+  @Test
+  public void testContextVariablesBadTypesNotTerribleLineNumbers() {
+    assertNotTerribleLineNumbers(get_ContextVariablesBadTypes_1());
+  }
+
+  @Test
+  public void testContextVariablesBadTypesExceptionFree() {
+    assertExceptionFree(get_ContextVariablesBadTypes_1());
+  }
+
+  @Test
+  public void testContextVariablesBadTypesTODOFree() {
+    assertTODOFree(get_ContextVariablesBadTypes_1());
+  }
+
+  @Test
+  public void stable_ContextVariablesBadTypes_1() {
+    String live = get_ContextVariablesBadTypes_1();
+    StringBuilder gold = new StringBuilder();
+    gold.append("Path:Policy_ContextVariablesBadTypes_failure.a");
+    gold.append("\n--ISSUES-------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":2},\"end\":{\"line\":1,\"character\":8}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'bool' is unable to store type 'int'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":1,\"character\":9},\"end\":{\"line\":3,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'create' policy must return a boolean (DocumentEvents)\"},{\"range\":{\"start\":{\"line\":4,\"character\":2},\"end\":{\"line\":4,\"character\":8}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: the type 'bool' is unable to store type 'string'. (TypeCheckReferences)\"},{\"range\":{\"start\":{\"line\":4,\"character\":9},\"end\":{\"line\":6,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'invent' policy must return a boolean (DocumentEvents)\"},{\"range\":{\"start\":{\"line\":7,\"character\":20},\"end\":{\"line\":7,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'int', but the type is actually 'bool' (TypeCheckFailures)\"},{\"range\":{\"start\":{\"line\":8,\"character\":20},\"end\":{\"line\":8,\"character\":22}},\"severity\":1,\"source\":\"error\",\"message\":\"Type check failure: must have a type of 'bool', but the type is actually 'int' (TypeCheckFailures)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n");
+    gold.append("\nFailedValidation");
+    assertStable(live, gold);
+  }
+  private String cached_ContextVariables_2 = null;
+  private String get_ContextVariables_2() {
+    if (cached_ContextVariables_2 != null) {
+      return cached_ContextVariables_2;
+    }
+    cached_ContextVariables_2 = generateTestOutput(true, "ContextVariables_2", "./test_code/Policy_ContextVariables_success.a");
+    return cached_ContextVariables_2;
   }
 
   @Test
   public void testContextVariablesEmission() {
-    assertEmissionGood(get_ContextVariables_1());
+    assertEmissionGood(get_ContextVariables_2());
   }
 
   @Test
   public void testContextVariablesSuccess() {
-    assertLivePass(get_ContextVariables_1());
+    assertLivePass(get_ContextVariables_2());
   }
 
   @Test
   public void testContextVariablesGoodWillHappy() {
-    assertGoodWillHappy(get_ContextVariables_1());
+    assertGoodWillHappy(get_ContextVariables_2());
   }
 
   @Test
   public void testContextVariablesExceptionFree() {
-    assertExceptionFree(get_ContextVariables_1());
+    assertExceptionFree(get_ContextVariables_2());
   }
 
   @Test
   public void testContextVariablesTODOFree() {
-    assertTODOFree(get_ContextVariables_1());
+    assertTODOFree(get_ContextVariables_2());
   }
 
   @Test
-  public void stable_ContextVariables_1() {
-    String live = get_ContextVariables_1();
+  public void stable_ContextVariables_2() {
+    String live = get_ContextVariables_2();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Policy_ContextVariables_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -77,13 +117,13 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class ContextVariables_1 extends LivingDocument {");
+    gold.append("\npublic class ContextVariables_2 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public ContextVariables_1(DocumentMonitor __monitor) {");
+    gold.append("\n  public ContextVariables_2(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -266,9 +306,9 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaContextVariables_1 implements DeltaNode {");
+    gold.append("\n  private class DeltaContextVariables_2 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaContextVariables_1() {");
+    gold.append("\n    private DeltaContextVariables_2() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -276,7 +316,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(ContextVariables_1 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(ContextVariables_2 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -299,8 +339,8 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    ContextVariables_1 __self = this;");
-    gold.append("\n    DeltaContextVariables_1 __state = new DeltaContextVariables_1();");
+    gold.append("\n    ContextVariables_2 __self = this;");
+    gold.append("\n    DeltaContextVariables_2 __state = new DeltaContextVariables_2();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");
@@ -382,12 +422,10 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate__0(StaticState __static_state, NtClient __who, CoreRequestContext context) {");
-    gold.append("\n    NtClient who = __who;");
-    gold.append("\n    return (context.ip).equals(\"127.0.0.1\") && (context.origin).equals(\"internal://\") || (context.who).equals(who);");
+    gold.append("\n    return (context.ip).equals(\"127.0.0.1\") && (context.origin).equals(\"internal://\") || (context.who).equals(__who);");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanInvent__0(StaticState __static_state, NtClient __who, CoreRequestContext context) {");
-    gold.append("\n    NtClient who = __who;");
-    gold.append("\n    return (who).equals(context.who);");
+    gold.append("\n    return (__who).equals(context.who);");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    boolean __result = false;");
@@ -482,38 +520,38 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\nSuccess");
     assertStable(live, gold);
   }
-  private String cached_EmptyEnvironment_2 = null;
-  private String get_EmptyEnvironment_2() {
-    if (cached_EmptyEnvironment_2 != null) {
-      return cached_EmptyEnvironment_2;
+  private String cached_EmptyEnvironment_3 = null;
+  private String get_EmptyEnvironment_3() {
+    if (cached_EmptyEnvironment_3 != null) {
+      return cached_EmptyEnvironment_3;
     }
-    cached_EmptyEnvironment_2 = generateTestOutput(false, "EmptyEnvironment_2", "./test_code/Policy_EmptyEnvironment_failure.a");
-    return cached_EmptyEnvironment_2;
+    cached_EmptyEnvironment_3 = generateTestOutput(false, "EmptyEnvironment_3", "./test_code/Policy_EmptyEnvironment_failure.a");
+    return cached_EmptyEnvironment_3;
   }
 
   @Test
   public void testEmptyEnvironmentFailure() {
-    assertLiveFail(get_EmptyEnvironment_2());
+    assertLiveFail(get_EmptyEnvironment_3());
   }
 
   @Test
   public void testEmptyEnvironmentNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_EmptyEnvironment_2());
+    assertNotTerribleLineNumbers(get_EmptyEnvironment_3());
   }
 
   @Test
   public void testEmptyEnvironmentExceptionFree() {
-    assertExceptionFree(get_EmptyEnvironment_2());
+    assertExceptionFree(get_EmptyEnvironment_3());
   }
 
   @Test
   public void testEmptyEnvironmentTODOFree() {
-    assertTODOFree(get_EmptyEnvironment_2());
+    assertTODOFree(get_EmptyEnvironment_3());
   }
 
   @Test
-  public void stable_EmptyEnvironment_2() {
-    String live = get_EmptyEnvironment_2();
+  public void stable_EmptyEnvironment_3() {
+    String live = get_EmptyEnvironment_3();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Policy_EmptyEnvironment_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
@@ -522,43 +560,43 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
-  private String cached_Happy_3 = null;
-  private String get_Happy_3() {
-    if (cached_Happy_3 != null) {
-      return cached_Happy_3;
+  private String cached_Happy_4 = null;
+  private String get_Happy_4() {
+    if (cached_Happy_4 != null) {
+      return cached_Happy_4;
     }
-    cached_Happy_3 = generateTestOutput(true, "Happy_3", "./test_code/Policy_Happy_success.a");
-    return cached_Happy_3;
+    cached_Happy_4 = generateTestOutput(true, "Happy_4", "./test_code/Policy_Happy_success.a");
+    return cached_Happy_4;
   }
 
   @Test
   public void testHappyEmission() {
-    assertEmissionGood(get_Happy_3());
+    assertEmissionGood(get_Happy_4());
   }
 
   @Test
   public void testHappySuccess() {
-    assertLivePass(get_Happy_3());
+    assertLivePass(get_Happy_4());
   }
 
   @Test
   public void testHappyGoodWillHappy() {
-    assertGoodWillHappy(get_Happy_3());
+    assertGoodWillHappy(get_Happy_4());
   }
 
   @Test
   public void testHappyExceptionFree() {
-    assertExceptionFree(get_Happy_3());
+    assertExceptionFree(get_Happy_4());
   }
 
   @Test
   public void testHappyTODOFree() {
-    assertTODOFree(get_Happy_3());
+    assertTODOFree(get_Happy_4());
   }
 
   @Test
-  public void stable_Happy_3() {
-    String live = get_Happy_3();
+  public void stable_Happy_4() {
+    String live = get_Happy_4();
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Policy_Happy_success.a");
     gold.append("\n--EMISSION-----------------------------------------");
@@ -587,13 +625,13 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\nimport java.util.Map;");
     gold.append("\nimport java.util.Set;");
     gold.append("\nimport java.lang.Math;");
-    gold.append("\npublic class Happy_3 extends LivingDocument {");
+    gold.append("\npublic class Happy_4 extends LivingDocument {");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");
     gold.append("\n    long __sum = super.__memory();");
     gold.append("\n    return __sum;");
     gold.append("\n  }");
-    gold.append("\n  public Happy_3(DocumentMonitor __monitor) {");
+    gold.append("\n  public Happy_4(DocumentMonitor __monitor) {");
     gold.append("\n    super(__monitor);");
     gold.append("\n    __goodwillBudget = 100000;");
     gold.append("\n    __goodwillLimitOfBudget = 100000;");
@@ -776,9 +814,9 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n    __auto_table_row_id.__revert();");
     gold.append("\n    /* root */");
     gold.append("\n  }");
-    gold.append("\n  private class DeltaHappy_3 implements DeltaNode {");
+    gold.append("\n  private class DeltaHappy_4 implements DeltaNode {");
     gold.append("\n    private boolean __emitted;");
-    gold.append("\n    private DeltaHappy_3() {");
+    gold.append("\n    private DeltaHappy_4() {");
     gold.append("\n      __emitted = false;");
     gold.append("\n    }");
     gold.append("\n    @Override");
@@ -786,7 +824,7 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n      long __sum = 40;");
     gold.append("\n      return __sum;");
     gold.append("\n    }");
-    gold.append("\n    public void show(Happy_3 __item, PrivateLazyDeltaWriter __writer) {");
+    gold.append("\n    public void show(Happy_4 __item, PrivateLazyDeltaWriter __writer) {");
     gold.append("\n      PrivateLazyDeltaWriter __obj = __writer.planObject();");
     gold.append("\n      __obj.manifest();");
     gold.append("\n      if (__obj.end()) {");
@@ -809,8 +847,8 @@ public class GeneratedPolicyTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public PrivateView __createPrivateView(NtClient __who, Perspective ___perspective, AssetIdEncoder __encoder) {");
-    gold.append("\n    Happy_3 __self = this;");
-    gold.append("\n    DeltaHappy_3 __state = new DeltaHappy_3();");
+    gold.append("\n    Happy_4 __self = this;");
+    gold.append("\n    DeltaHappy_4 __state = new DeltaHappy_4();");
     gold.append("\n    RTx__ViewerType __viewerState = new RTx__ViewerType();");
     gold.append("\n    return new PrivateView(__who, ___perspective, __encoder) {");
     gold.append("\n      @Override");

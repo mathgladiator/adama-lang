@@ -14,6 +14,6 @@ public auto list_2 = iterate tbl shuffle;
   tbl <- {x:3, y:1};
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

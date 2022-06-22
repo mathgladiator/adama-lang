@@ -2543,10 +2543,9 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public boolean __onConnected__0(NtClient __who) {");
-    gold.append("\n    NtClient who = __who;");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(4);");
-    gold.append("\n    return (who).equals(NtClient.NO_ONE);");
+    gold.append("\n    return (__who).equals(NtClient.NO_ONE);");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");

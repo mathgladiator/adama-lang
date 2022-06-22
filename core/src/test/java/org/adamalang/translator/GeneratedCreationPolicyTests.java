@@ -47,7 +47,7 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:CreationPolicy_ControlFlowOpen_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":15},\"end\":{\"line\":5,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'create' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":9},\"end\":{\"line\":5,\"character\":3}},\"severity\":1,\"source\":\"error\",\"message\":\"The 'create' policy must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -422,7 +422,6 @@ public class GeneratedCreationPolicyTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate__0(StaticState __static_state, NtClient __who, CoreRequestContext __context) {");
-    gold.append("\n    NtClient who = __who;");
     gold.append("\n    return true;");
     gold.append("\n  }");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");

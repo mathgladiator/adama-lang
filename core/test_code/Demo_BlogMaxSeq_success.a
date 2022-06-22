@@ -1,8 +1,8 @@
 @static {
-  create(who) { return true; }
+  create { return true; }
 }
 
-@connected (who) {
+@connected {
   return true;
 }
 

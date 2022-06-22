@@ -17,6 +17,6 @@ public formula x = (iterate tbl).foo();
   tbl <- {x:4};
 }
 
-@connected (who) {
+@connected {
   return true;
 }

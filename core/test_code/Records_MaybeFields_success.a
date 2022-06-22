@@ -12,6 +12,6 @@ test PrimaryTest {
   (iterate lst).mi = 40;
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

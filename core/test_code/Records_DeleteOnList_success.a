@@ -14,6 +14,6 @@ public formula even = iterate t where (x % 2).getOrDefaultTo(-100) == 0;
  (iterate t where (x % 8).getOrDefaultTo(-100) == 0).delete();
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

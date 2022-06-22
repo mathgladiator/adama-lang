@@ -6,7 +6,7 @@ record X {
   use_policy<foo> bool b;
   use_policy<foo> string s;
 
-  policy foo(who) {
+  policy foo {
     return b;
   }
 }

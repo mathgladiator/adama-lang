@@ -478,7 +478,6 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public boolean __onCanAssetAttached__0(NtClient __who) {");
-    gold.append("\n    NtClient who = __who;");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    return true;");
@@ -605,7 +604,7 @@ public class GeneratedAssetsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Assets_CanAttach_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":17},\"end\":{\"line\":1,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_attach handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":12},\"end\":{\"line\":1,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @can_attach handler must return a boolean (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -1148,46 +1147,6 @@ public class GeneratedAssetsTests extends GeneratedBase {
     gold.append("\n--JAVA TEST RESULTS--------------------------------");
     gold.append("\n");
     gold.append("\nSuccess");
-    assertStable(live, gold);
-  }
-  private String cached_SoloArg_5 = null;
-  private String get_SoloArg_5() {
-    if (cached_SoloArg_5 != null) {
-      return cached_SoloArg_5;
-    }
-    cached_SoloArg_5 = generateTestOutput(false, "SoloArg_5", "./test_code/Assets_SoloArg_failure.a");
-    return cached_SoloArg_5;
-  }
-
-  @Test
-  public void testSoloArgFailure() {
-    assertLiveFail(get_SoloArg_5());
-  }
-
-  @Test
-  public void testSoloArgNotTerribleLineNumbers() {
-    assertNotTerribleLineNumbers(get_SoloArg_5());
-  }
-
-  @Test
-  public void testSoloArgExceptionFree() {
-    assertExceptionFree(get_SoloArg_5());
-  }
-
-  @Test
-  public void testSoloArgTODOFree() {
-    assertTODOFree(get_SoloArg_5());
-  }
-
-  @Test
-  public void stable_SoloArg_5() {
-    String live = get_SoloArg_5();
-    StringBuilder gold = new StringBuilder();
-    gold.append("Path:Assets_SoloArg_failure.a");
-    gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":15},\"end\":{\"line\":1,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @attached requires two parameters @attached(who, what) (DocumentEvents)\"}]\"--JAVA---------------------------------------------");
-    gold.append("\n");
-    gold.append("\nFailedValidation");
     assertStable(live, gold);
   }
 }

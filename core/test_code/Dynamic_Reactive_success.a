@@ -3,7 +3,7 @@ message X {
   dynamic ninja;
 }
 
-channel assoc(client who, X x) {
+channel assoc(X x) {
   food = x.ninja;
 }
 

@@ -1026,13 +1026,14 @@ public class GeneratedDynamicTests extends GeneratedBase {
     gold.append("\n      }");
     gold.append("\n    }");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_assoc(NtClient who, RTxX x) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_assoc(NtClient __who, RTxX x) throws AbortMessageException {");
     gold.append("\n    __code_cost += 2;");
     gold.append("\n    __track(0);");
     gold.append("\n    food.set(x.ninja);");
     gold.append("\n");
     gold.append("\n  }");
-    gold.append("\n  private void handleChannelMessage_assoc2(NtClient who, RTx__GenASSOC2 __message) throws AbortMessageException {");
+    gold.append("\n  private void handleChannelMessage_assoc2(NtClient __who, RTx__GenASSOC2 __message) throws AbortMessageException {");
+    gold.append("\n    NtClient who = __who;");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(1);");
     gold.append("\n    NtDynamic v = __message.v;");

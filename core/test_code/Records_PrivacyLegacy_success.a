@@ -1,5 +1,5 @@
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }
 
 public int open_int;
@@ -24,28 +24,28 @@ record X {
   use_policy<sane, sane2> int y;
   use_policy<sane, sane2, sane3> auto sum = x + 1;
 
-  policy sane(who) {
+  policy sane {
     return x < y;
   }
-  policy sane2(who) {
+  policy sane2 {
     return x < y;
   }
-  policy sane3(who) {
-    return who == @no_one;
+  policy sane3 {
+    return @who == @no_one;
   }
 
   require sane;
 }
 
 record Y {
-  policy nope(who) {
+  policy nope {
     return false;
   }
   require nope;
 }
 
 record Z {
-  policy yep(who) {
+  policy yep {
     return true;
   }
   require yep;

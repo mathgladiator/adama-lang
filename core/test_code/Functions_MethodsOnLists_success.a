@@ -39,6 +39,6 @@ public int v2;
   (iterate t).delete(); // no closure, no return type
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }

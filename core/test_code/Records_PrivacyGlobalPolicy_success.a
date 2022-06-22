@@ -1,4 +1,4 @@
-@connected (who) {
+@connected {
   return @who == @no_one;
 }
 
@@ -12,7 +12,7 @@ record X {
   use_policy<saneL> int x;
   use_policy<saneG> int y;
 
-  policy saneL(who) {
+  policy saneL {
     return x < y;
   }
 

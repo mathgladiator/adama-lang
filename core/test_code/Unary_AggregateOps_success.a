@@ -10,6 +10,6 @@ table<R> t;
   ++((iterate t).x);
 }
 
-@connected (who) {
-  return who == @no_one;
+@connected {
+  return @who == @no_one;
 }
