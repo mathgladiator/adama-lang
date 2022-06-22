@@ -112,6 +112,8 @@ public class Parser {
           return new BooleanConstant(token, false);
         case "@no_one":
           return new NoOneClientConstant(token);
+        case "@who":
+          return new WhoClientConstant(token);
         case "@i":
           return new ComplexConstant(0.0, 1.0, token);
         case "@nothing":

@@ -10,167 +10,130 @@
 package org.adamalang.translator.codegen;
 
 import org.adamalang.translator.env.Environment;
+import org.adamalang.translator.tree.Document;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.DefineDocumentEvent;
 import org.adamalang.translator.tree.definitions.DocumentEvent;
 
+import javax.print.Doc;
+import java.util.HashMap;
+
 /** responsible for writing event handlers */
 public class CodeGenEventHandlers {
-  public static void writeEventHandlers(final StringBuilderWithTabs sb, final Environment environment) {
-    // there can be multiple connected and disconnected handlers, we iterate them
-    var connectCount = 0;
-    var disconnectCount = 0;
-    var assetAttachCount = 0;
-    var askAssetAttachCount = 0;
-    var askCreationCount = 0;
-    var askInventionCount = 0;
-    var askSendWhileDisconnected = 0;
-    for (final DefineDocumentEvent dce : environment.document.events) {
+  private static void writeBody(DefineDocumentEvent dce, StringBuilderWithTabs sb, final Environment environment) {
+    sb.append("{");
+    sb.tabUp().writeNewline();
+    sb.append("NtClient ").append(dce.clientVarToken.text).append(" = __who;").writeNewline();
+    dce.code.specialWriteJava(sb, environment, false, true);
+    sb.append("}").writeNewline();
+  }
+
+  private static class EventShred {
+    private final DocumentEvent event;
+    private int count;
+
+    public EventShred(DocumentEvent event) {
+      this.event = event;
+      this.count = 0;
+    }
+
+    public void consider(DefineDocumentEvent dce, StringBuilderWithTabs sb, Environment environment) {
       String contextName = dce.contextVariable != null ? dce.contextVariable : "__context";
-      if (dce.which == DocumentEvent.ClientConnected) {
-        sb.append("public boolean __onConnected__" + connectCount + "(NtClient " + dce.clientVarToken.text + ") ");
-        dce.code.writeJava(sb, dce.nextEnvironment(environment));
-        connectCount++;
-      } else if (dce.which == DocumentEvent.ClientDisconnected) {
-        sb.append("public void __onDisconnected__" + disconnectCount + "(NtClient " + dce.clientVarToken.text + ") ");
-        dce.code.writeJava(sb, dce.nextEnvironment(environment));
-        disconnectCount++;
-      } else if (dce.which == DocumentEvent.AskCreation) {
-        sb.append("public static boolean __onCanCreate__" + askCreationCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ") ");
-        dce.code.writeJava(sb, dce.nextEnvironment(environment));
-        askCreationCount++;
-      } else if (dce.which == DocumentEvent.AskInvention) {
-        sb.append("public static boolean __onCanInvent__" + askInventionCount + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ")");
-        dce.code.writeJava(sb, dce.nextEnvironment(environment));
-        askInventionCount++;
-      } else if (dce.which == DocumentEvent.AskSendWhileDisconnected) {
-        sb.append("public static boolean __onCanSendWhileDisconnected__" + askSendWhileDisconnected + "(StaticState __static_state, NtClient " + dce.clientVarToken.text + ", CoreRequestContext " + contextName + ")");
-        dce.code.writeJava(sb, dce.nextEnvironment(environment));
-        askSendWhileDisconnected++;
-      } else if (dce.which == DocumentEvent.AskAssetAttachment) {
-        sb.append("public boolean __onCanAssetAttached__" + askAssetAttachCount + "(NtClient " + dce.clientVarToken.text + ") ");
-        dce.code.writeJava(sb, dce.nextEnvironment(environment));
-        askAssetAttachCount++;
-      } else if (dce.which == DocumentEvent.AssetAttachment) {
-        sb.append("public void __onAssetAttached__" + disconnectCount + "(NtClient " + dce.clientVarToken.text + ", NtAsset " + dce.parameterNameToken.text + ") ");
-        dce.code.writeJava(sb, dce.nextEnvironment(environment));
-        assetAttachCount++;
-      }
-      sb.writeNewline();
-    }
-    // join the connected handlers into one
-    sb.append("@Override").writeNewline();
-    sb.append("public boolean __onConnected(NtClient __cvalue) {").tabUp().writeNewline();
-    sb.append("boolean __result = false;").writeNewline();
-    for (var k = 0; k < connectCount; k++) {
-      sb.append("if (__onConnected__" + k + "(__cvalue)) __result = true;").writeNewline();
-    }
-    sb.append("return __result;");
-    sb.tabDown().writeNewline();
-    sb.append("}").writeNewline();
-
-    // join the disconnected handlers into one
-    sb.append("@Override").writeNewline();
-    if (disconnectCount == 0) {
-      sb.append("public void __onDisconnected(NtClient __cvalue) {}").writeNewline();
-    } else {
-      sb.append("public void __onDisconnected(NtClient __cvalue) {").tabUp().writeNewline();
-      for (var k = 0; k < disconnectCount; k++) {
-        sb.append("__onDisconnected__" + k + "(__cvalue);");
-        if (k == disconnectCount - 1) {
-          sb.tabDown();
+      if (event.isStaticPolicy) {
+        sb.append("public static boolean ").append(event.prefix).append("__" + count).append("(StaticState __static_state, NtClient __who, CoreRequestContext ").append(contextName).append(") ");
+        writeBody(dce, sb, dce.nextEnvironment(environment));
+      } else {
+        if (event.hasParameter) {
+          sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtClient __who, ").append(event.parameterType).append(" ").append(dce.parameterNameToken.text).append(") ");
+        } else {
+          sb.append("public ").append(event.returnType).append(" ").append(event.prefix).append("__" + count).append("(NtClient __who) ");
         }
-        sb.writeNewline();
+        writeBody(dce, sb, dce.nextEnvironment(environment));
       }
-      sb.append("}").writeNewline();
+      count++;
     }
 
-    // join the can asset attachment handlers into one
-    sb.append("@Override").writeNewline();
-    sb.append("public boolean __onCanAssetAttached(NtClient __cvalue) {").tabUp().writeNewline();
-    if (askAssetAttachCount > 0) {
-      sb.append("boolean __result = false;").writeNewline();
-      for (var k = 0; k < askAssetAttachCount; k++) {
-        sb.append("if (__onCanAssetAttached__" + k + "(__cvalue)) __result = true;").writeNewline();
-      }
-      sb.append("return __result;");
-    } else {
-      sb.append("return false;");
-    }
-    sb.tabDown().writeNewline();
-    sb.append("}").writeNewline();
-
-    // inject the can create policy
-    sb.append("public static boolean __onCanCreate(CoreRequestContext __context) {").tabUp().writeNewline();
-    if (askCreationCount > 0) {
-      sb.append("boolean __result = false;").writeNewline();
-      sb.append("StaticState __static_state = new StaticState();").writeNewline();
-      for (var k = 0; k < askCreationCount; k++) {
-        sb.append("if (__onCanCreate__" + k + "(__static_state, __context.who, __context)) {").tabUp().writeNewline();
-        sb.append("__result = true;").tabDown().writeNewline();
-        sb.append("} else {").tabUp().writeNewline();
-        sb.append("return false;").tabDown().writeNewline();
-        sb.append("}");
-      }
-      sb.append("return __result;");
-    } else {
-      sb.append("return false;");
-    }
-    sb.tabDown().writeNewline();
-    sb.append("}").writeNewline();
-
-    // inject the can invent a topic when the document doesn't exist
-    sb.append("public static boolean __onCanInvent(CoreRequestContext __context) {").tabUp().writeNewline();
-    if (askInventionCount > 0) {
-      sb.append("boolean __result = false;").writeNewline();
-      sb.append("StaticState __static_state = new StaticState();").writeNewline();
-      for (var k = 0; k < askInventionCount; k++) {
-        sb.append("if (__onCanInvent__" + k + "(__static_state, __context.who, __context)) {").tabUp().writeNewline();
-        sb.append("__result = true;").tabDown().writeNewline();
-        sb.append("} else {").tabUp().writeNewline();
-        sb.append("return false;").tabDown().writeNewline();
-        sb.append("}");
-      }
-      sb.append("return __result;");
-    } else {
-      sb.append("return false;");
-    }
-    sb.tabDown().writeNewline();
-    sb.append("}").writeNewline();
-
-    // inject the can send to the document when it doesn't exist
-    sb.append("public static boolean __onCanSendWhileDisconnected(CoreRequestContext __context) {").tabUp().writeNewline();
-    if (askSendWhileDisconnected > 0) {
-      sb.append("boolean __result = false;").writeNewline();
-      sb.append("StaticState __static_state = new StaticState();").writeNewline();
-      for (var k = 0; k < askSendWhileDisconnected; k++) {
-        sb.append("if (__onCanSendWhileDisconnected__" + k + "(__static_state, __context.who, __context)) {").tabUp().writeNewline();
-        sb.append("__result = true;").tabDown().writeNewline();
-        sb.append("} else {").tabUp().writeNewline();
-        sb.append("return false;").tabDown().writeNewline();
-        sb.append("}");
-      }
-      sb.append("return __result;");
-    } else {
-      sb.append("return false;");
-    }
-    sb.tabDown().writeNewline();
-    sb.append("}").writeNewline();
-
-    // join the disconnected handlers into one
-    sb.append("@Override").writeNewline();
-    if (assetAttachCount == 0) {
-      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {}").writeNewline();
-    } else {
-      sb.append("public void __onAssetAttached(NtClient __cvalue, NtAsset __asset) {").tabUp().writeNewline();
-      for (var k = 0; k < assetAttachCount; k++) {
-        sb.append("__onAssetAttached__" + k + "(__cvalue, __asset);");
-        if (k == assetAttachCount - 1) {
-          sb.tabDown();
+    public void finish(StringBuilderWithTabs sb) {
+      if (event.isStaticPolicy) {
+        sb.append("public static boolean " + event.prefix + "(CoreRequestContext __context) {").tabUp().writeNewline();
+        if (count > 0) {
+          sb.append("boolean __result = false;").writeNewline();
+          sb.append("StaticState __static_state = new StaticState();").writeNewline();
+          for (var k = 0; k < count; k++) {
+            sb.append("if (").append(event.prefix).append("__" + k).append("(__static_state, __context.who, __context)) {").tabUp().writeNewline();
+            sb.append("__result = true;").tabDown().writeNewline();
+            sb.append("} else {").tabUp().writeNewline();
+            sb.append("return false;").tabDown().writeNewline();
+            sb.append("}");
+          }
+          sb.append("return __result;");
+        } else {
+          sb.append("return false;");
         }
-        sb.writeNewline();
+        sb.tabDown().writeNewline();
+        sb.append("}").writeNewline();
+      } else {
+        if ("boolean".equals(event.returnType)) {
+          sb.append("@Override").writeNewline();
+          if (event.hasParameter) {
+            sb.append("public boolean ").append(event.prefix).append("(NtClient __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
+          } else {
+            sb.append("public boolean ").append(event.prefix).append("(NtClient __cvalue) {").tabUp().writeNewline();
+          }
+          if (count > 0) {
+            sb.append("boolean __result = false;").writeNewline();
+            for (var k = 0; k < count; k++) {
+              if (event.hasParameter) {
+                sb.append("if (").append(event.prefix).append("__" + k).append("(__cvalue, __pvalue)) __result = true;").writeNewline();
+              } else {
+                sb.append("if (").append(event.prefix).append("__" + k).append("(__cvalue)) __result = true;").writeNewline();
+              }
+            }
+            sb.append("return __result;");
+          } else {
+            sb.append("return false;");
+          }
+          sb.tabDown().writeNewline();
+          sb.append("}").writeNewline();
+        }
+        if ("void".equals(event.returnType)) {
+          sb.append("@Override").writeNewline();
+          if (event.hasParameter) {
+            sb.append("public void ").append(event.prefix).append("(NtClient __cvalue, ").append(event.parameterType).append(" __pvalue) {").tabUp().writeNewline();
+          } else {
+            sb.append("public void ").append(event.prefix).append("(NtClient __cvalue) {").tabUp().writeNewline();
+          }
+          if (count > 0) {
+            for (var k = 0; k < count; k++) {
+              if (event.hasParameter) {
+                sb.append(event.prefix).append("__" + k + "(__cvalue, __pvalue);");
+              } else {
+                sb.append(event.prefix).append("__" + k + "(__cvalue);");
+              }
+              if (k == count - 1) {
+                sb.tabDown();
+              }
+              sb.writeNewline();
+            }
+          } else {
+            sb.tabDown().writeNewline();
+          }
+          sb.append("}").writeNewline();
+        }
       }
-      sb.append("}").writeNewline();
+    }
+  }
+
+  public static void writeEventHandlers(final StringBuilderWithTabs sb, final Environment environment) {
+    HashMap<DocumentEvent, EventShred> shredder = new HashMap<>();
+    for (DocumentEvent event : DocumentEvent.values()) {
+      shredder.put(event, new EventShred(event));
+    }
+    for (final DefineDocumentEvent dce : environment.document.events) {
+      shredder.get(dce.which).consider(dce, sb, environment);
+    }
+    for (DocumentEvent event : DocumentEvent.values()) {
+      shredder.get(event).finish(sb);
     }
   }
 }

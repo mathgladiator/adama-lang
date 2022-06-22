@@ -22,8 +22,7 @@ public class CodeGenConstructor {
       if (dc.unifiedMessageTypeNameToUse != null) {
         messageTypeNameToUse = "RTx" + dc.unifiedMessageTypeNameToUse;
       }
-      sb.append("private void __construct").append("_" + idx).append("(NtClient ");
-      sb.append(dc.clientVarToken == null ? "__who" : dc.clientVarToken.text);
+      sb.append("private void __construct").append("_" + idx).append("(NtClient __who");
       sb.append(", ").append(messageTypeNameToUse).append(" ");
       sb.append(dc.messageNameToken == null ? "__object" : dc.messageNameToken.text);
       sb.append(") {");
@@ -31,6 +30,9 @@ public class CodeGenConstructor {
         sb.append("}").writeNewline();
       } else {
         sb.tabUp().writeNewline();
+        if (dc.clientVarToken != null) {
+          sb.append("NtClient ").append(dc.clientVarToken.text).append(" = __who;");
+        }
         dc.code.specialWriteJava(sb, environment, false, true);
         sb.append("}").writeNewline();
       }
@@ -38,7 +40,7 @@ public class CodeGenConstructor {
     }
     if (idx == 0) {
       sb.append("@Override").writeNewline();
-      sb.append("protected void __construct_intern(NtClient who, NtMessageBase message) {}").writeNewline();
+      sb.append("protected void __construct_intern(NtClient __who, NtMessageBase message) {}").writeNewline();
       sb.append("@Override").writeNewline();
       sb.append("protected NtMessageBase __parse_construct_arg(JsonStreamReader __reader) {").tabUp().writeNewline();
       sb.append("__reader.skipValue();").writeNewline();
