@@ -100,11 +100,13 @@ public class Base {
       } else if (env.element.hasAttr("rx:if")) {
         StatePath path = StatePath.resolve(env.element.attr("rx:if"), env.stateVar);
         String childStateVar = env.pool.ask();
-        env.writer.tab().append("$.IF(").append(eVar).append(", ").append(path.command);
-        env.writer.append(", '").append(path.name).append("', function(").append(childStateVar).append(") {").tabUp().newline();
-        Base.children(env.stateVar(childStateVar).parentVariable(eVar));
+        String parentVar = env.pool.ask();
+        env.writer.tab().append("$.IF(").append(eVar).append(",").append(path.command);
+        env.writer.append(",'").append(path.name).append("', function(").append(parentVar).append(",").append(childStateVar).append(") {").tabUp().newline();
+        Base.children(env.stateVar(childStateVar).parentVariable(parentVar));
         env.writer.tabDown().tab().append("});").newline();
         env.pool.give(childStateVar);
+        env.pool.give(parentVar);
       } else if (env.element.hasAttr("rx:ifnot")) {
 
       } else if (env.element.hasAttr("rx:scope")) {
@@ -116,12 +118,14 @@ public class Base {
         StatePath path = StatePath.resolve(env.element.attr("rx:switch"), env.stateVar);
         String childStateVar = env.pool.ask();
         String caseVar = env.pool.ask();
+        String parentVar = env.pool.ask();
         env.writer.tab().append("$.W(").append(eVar).append(", ").append(path.command);
-        env.writer.append(", '").append(path.name).append("', function(").append(childStateVar).append(", ").append(caseVar).append(") {").tabUp().newline();
-        Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(eVar));
+        env.writer.append(", '").append(path.name).append("', function(").append(parentVar).append(",").append(childStateVar).append(",").append(caseVar).append(") {").tabUp().newline();
+        Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(parentVar));
         env.writer.tabDown().tab().append("});").newline();
         env.pool.give(caseVar);
         env.pool.give(childStateVar);
+        env.pool.give(parentVar);
       } else {
         children(next);
       }
