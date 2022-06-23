@@ -57,10 +57,10 @@ export class Tree {
   // dispatch is the structural object mirroring the tree
   // callback is the function/object callback tree
   // insert_order is the order to fire events
-  __recAppendChange(dispatch: any, callback: any, insert_order: number, auto_delete: boolean) {
+  __recAppendChange(dispatch: any, callback: any, insert_order: number, auto_delete: boolean, holder: any) {
     if (Array.isArray(callback)) { // callback is an array (expand)
       for (var k = 0; k < callback.length; k++) {
-        this.__recAppendChange(dispatch, callback[k], insert_order, auto_delete);
+        this.__recAppendChange(dispatch, callback[k], insert_order, auto_delete, holder);
       }
     } else if (typeof (callback) == 'object') { // the callback is an object (recurse)
       // we for each item in the callback
@@ -71,9 +71,9 @@ export class Tree {
         }
         // recurse into that key
         if (key == '@e') {
-          this.__recAppendChange(dispatch, callback[key], insert_order, auto_delete);
+          this.__recAppendChange(dispatch, callback[key], insert_order, auto_delete, holder);
         } else {
-          this.__recAppendChange(dispatch[key], callback[key], insert_order, auto_delete);
+          this.__recAppendChange(dispatch[key], callback[key], insert_order, auto_delete, holder);
         }
       }
     } else if (typeof (callback) == 'function') { // callback is a function (append)
@@ -81,7 +81,7 @@ export class Tree {
       if (!('@e' in dispatch)) {
         dispatch['@e'] = [];
       }
-      dispatch['@e'].push({ cb: callback, order: insert_order, auto_delete: auto_delete });
+      dispatch['@e'].push({ cb: callback, order: insert_order, auto_delete: auto_delete, holder: holder});
     }
   }
 
@@ -100,8 +100,8 @@ export class Tree {
   }
 
   /** bind an event handler to the tree */
-  onTreeChange(callback: any) {
-    this.__recAppendChange(this.dispatch, callback, this.dispatch_count, false);
+  onTreeChange(callback: any, holder:any) {
+    this.__recAppendChange(this.dispatch, callback, this.dispatch_count, false, holder);
     this.dispatch_count++;
   }
 
@@ -342,10 +342,10 @@ export class Tree {
         if (item.change.append_result) {
           if (Array.isArray(result)) {
             for (var k = 0; k < result.length; k++) {
-              this.__recAppendChange(item.change.append_to, result[k], item.order, true);
+              this.__recAppendChange(item.change.append_to, result[k], item.order, true, null);
             }
           } else {
-            this.__recAppendChange(item.change.append_to, result, item.order, true);
+            this.__recAppendChange(item.change.append_to, result, item.order, true, null);
           }
         }
       } // else if item.change
