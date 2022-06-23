@@ -10,16 +10,15 @@
 package org.adamalang.rxhtml.template.elements;
 
 import org.adamalang.rxhtml.template.Environment;
+import org.adamalang.rxhtml.template.StatePath;
 
 public class Lookup {
   public static void write(Environment env) {
     env.assertHasParent();
-    String path = env.element.attr("path");
+    StatePath path = StatePath.resolve(env.element.attr("path"), env.stateVar);
     String transform = env.element.attr("transform");
-    String stateVarToUse = env.stateVar;
-    // TODO: parse the path to get a state variable
     if (transform == null || "".equals(transform)) {
-      env.writer.tab().append(env.parentVariable).append(".append($.L(").append(stateVarToUse).append(", '").append(path).append("'));").newline();
+      env.writer.tab().append(env.parentVariable).append(".append($.L(").append(path.command).append(", '").append(path.name).append("'));").newline();
     } else {
       // TODO sort out transforms
     }

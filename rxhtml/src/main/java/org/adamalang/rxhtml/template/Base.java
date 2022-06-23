@@ -59,11 +59,8 @@ public class Base {
             env.writer.tab().append("this.__dom.setAttribute('").append(attr.getKey()).append("', ").append(tree.js("this")).append(");").newline();
             env.writer.tabDown().tab().append("}).bind(").append(oVar).append(");").newline();
             for (Map.Entry<String, String> ve : vars.entrySet()) {
-              String path = ve.getValue();
-              String stateVarToUse = env.stateVar;
-              // TODO: scope state variable
-              String objVar = path;
-              env.writer.tab().append("$.Y(").append(stateVarToUse).append(",").append(oVar).append(",'").append(objVar).append("',").append(computeFoo).append(");").newline();
+              StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
+              env.writer.tab().append("$.Y(").append(path.command).append(",").append(oVar).append(",'").append(path.name).append("',").append(computeFoo).append(");").newline();
             }
             env.pool.give(oVar);
             env.pool.give(computeFoo);
@@ -89,32 +86,38 @@ public class Base {
         next = next.formVariable(eVar);
       }
 
+      boolean expand = env.element.hasAttr("rx:expand-view-state");
+
       if (env.element.hasAttr("rx:iterate")) {
-        String path = env.element.attr("rx:iterate");
-        String stateVarToUse = env.stateVar;
-        // TODO: parse the path to get a state variable
+        StatePath path = StatePath.resolve(env.element.attr("rx:iterate"), env.stateVar);
         String childStateVar = env.pool.ask();
-        env.writer.tab().append("$.I(").append(eVar).append(", ").append(stateVarToUse).append(", '").append(path).append("', function(").append(childStateVar).append(") {").tabUp().newline();
+        env.writer.tab().append("$.IT(").append(eVar).append(", ").append(path.command).append(", '").append(path.name).append("', function(").append(childStateVar).append(") {").tabUp().newline();
         String childDomVar = Base.write(env.stateVar(childStateVar).parentVariable(null).element(env.soloChild()), true);
         env.writer.tab().append("return ").append(childDomVar).append(";").newline();
         env.pool.give(childDomVar);
         env.writer.tabDown().tab().append("});").newline();
         env.pool.give(childStateVar);
+      } else if (env.element.hasAttr("rx:if")) {
+        StatePath path = StatePath.resolve(env.element.attr("rx:if"), env.stateVar);
+        String childStateVar = env.pool.ask();
+        env.writer.tab().append("$.IF(").append(eVar).append(", ").append(path.command);
+        env.writer.append(", '").append(path.name).append("', function(").append(childStateVar).append(") {").tabUp().newline();
+        Base.children(env.stateVar(childStateVar).parentVariable(eVar));
+        env.writer.tabDown().tab().append("});").newline();
+        env.pool.give(childStateVar);
+      } else if (env.element.hasAttr("rx:ifnot")) {
+
       } else if (env.element.hasAttr("rx:scope")) {
-        // TODO: think deeper about this in terms of if the object exists or doesn't; how do we hide something if it isn't present (as this forces creation a bit)
-        String path = env.element.attr("rx:scope");
-        // TODO: manipulate the state and evalute the path
+        StatePath path = StatePath.resolve(env.element.attr("rx:scope"), env.stateVar);
         String newStateVar = env.pool.ask();
-        env.writer.tab().append("var ").append(newStateVar).append(" = $.S(").append(env.stateVar).append(", '").append(path).append("');").newline();
+        env.writer.tab().append("var ").append(newStateVar).append(" = $.pI(").append(path.command).append(", '").append(path.name).append("');").newline();
         Base.children(env.stateVar(newStateVar));
       } else if (env.element.hasAttr("rx:switch")) {
-        String path = env.element.attr("rx:switch");
-        String stateVarToUse = env.stateVar;
-        // TODO: parse the path to get a state variable
+        StatePath path = StatePath.resolve(env.element.attr("rx:switch"), env.stateVar);
         String childStateVar = env.pool.ask();
         String caseVar = env.pool.ask();
-        env.writer.tab().append("$.W(").append(eVar).append(", ").append(stateVarToUse);
-        env.writer.append(", '").append(path).append("', function(").append(childStateVar).append(", ").append(caseVar).append(") {").tabUp().newline();
+        env.writer.tab().append("$.W(").append(eVar).append(", ").append(path.command);
+        env.writer.append(", '").append(path.name).append("', function(").append(childStateVar).append(", ").append(caseVar).append(") {").tabUp().newline();
         Base.children(env.stateVar(childStateVar).caseVar(caseVar).parentVariable(eVar));
         env.writer.tabDown().tab().append("});").newline();
         env.pool.give(caseVar);
