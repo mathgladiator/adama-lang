@@ -17,6 +17,42 @@ export class Tree {
     this.ondecide = function (outstanding: any) { };
   }
 
+  // convert the tree to a delta
+  toDelta(): any {
+    return this.__toDelta(this.tree);
+  }
+
+  __toDelta(st: any): any {
+    var delta: any = {};
+    for (var k in st) {
+      if (k[0] == '#' || k == "@o" || k == "__key") continue;
+      var v = st[k];
+      if ('#' + k in st) {
+        var d:any = {};
+        if ('@o' in st['#' + k]) {
+          var o = [];
+          for (var j = 0; j < v.length; j++) {
+            d[v[j].id] = this.__toDelta(v[j]);
+            o.push(v[j].id);
+          }
+          d['@o'] = o;
+        } else {
+          for (var j = 0; j < v.length; j++) {
+            d.push(this.__toDelta(v[j]));
+          }
+          d['@s'] = v.length;
+        }
+        delta[k] = d;
+      } else if (typeof(v) == 'object') {
+        delta[k] = this.__toDelta(v);
+      } else {
+        delta[k] = v;
+      }
+    }
+    return delta;
+  }
+
+
   // recursively append a change
   // dispatch is the structural object mirroring the tree
   // callback is the function/object callback tree
@@ -34,7 +70,11 @@ export class Tree {
           dispatch[key] = {};
         }
         // recurse into that key
-        this.__recAppendChange(dispatch[key], callback[key], insert_order, auto_delete);
+        if (key == '@e') {
+          this.__recAppendChange(dispatch, callback[key], insert_order, auto_delete);
+        } else {
+          this.__recAppendChange(dispatch[key], callback[key], insert_order, auto_delete);
+        }
       }
     } else if (typeof (callback) == 'function') { // callback is a function (append)
       // we have a function, so let's associate it to the node
@@ -137,6 +177,9 @@ export class Tree {
           if (childIsArray) {
             tree[key] = [];
             tree["#" + key] = {};
+            if ('@o' in child) {
+              tree["#" + key]['@o'] = true;
+            }
           } else {
             tree[key] = {};
           }
