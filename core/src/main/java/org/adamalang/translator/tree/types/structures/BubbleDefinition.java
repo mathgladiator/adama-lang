@@ -56,13 +56,15 @@ public class BubbleDefinition extends StructureComponent {
   @Override
   public void emit(final Consumer<Token> yielder) {
     yielder.accept(bubbleToken);
-    yielder.accept(openClient);
-    yielder.accept(clientVar);
-    if (comma != null) {
-      yielder.accept(comma);
-      yielder.accept(viewerStateName);
+    if (openClient != null) {
+      yielder.accept(openClient);
+      yielder.accept(clientVar);
+      if (comma != null) {
+        yielder.accept(comma);
+        yielder.accept(viewerStateName);
+      }
+      yielder.accept(closeClient);
     }
-    yielder.accept(closeClient);
     yielder.accept(nameToken);
     yielder.accept(equalsToken);
     expression.emit(yielder);
@@ -74,8 +76,10 @@ public class BubbleDefinition extends StructureComponent {
   }
 
   private Environment next(Environment environment) {
-    final var next = environment.scopeWithComputeContext(ComputeContext.Computation).scopeReactiveExpression();
-    next.define(clientVar.text, clientType, true, clientType);
+    final var next = environment.scopeWithComputeContext(ComputeContext.Computation).scopeReactiveExpression().scopeAsBubble();
+    if (clientVar != null) {
+      next.define(clientVar.text, clientType, true, clientType);
+    }
     if (viewerStateName != null) {
       next.define(viewerStateName.text, environment.document.viewerType, true, this);
     }
@@ -83,7 +87,13 @@ public class BubbleDefinition extends StructureComponent {
   }
 
   public void writeSetup(final StringBuilderWithTabs sb, final Environment environment) {
-    sb.append("public ").append(expressionType.getJavaConcreteType(environment)).append(" __COMPUTE_").append(nameToken.text).append("(NtClient ").append(clientVar.text).append(", RTx__ViewerType ").append(viewerStateName != null ? viewerStateName.text : "__viewerState").append(") {").tabUp().writeNewline();
+    sb.append("public ").append(expressionType.getJavaConcreteType(environment)).append(" __COMPUTE_").append(nameToken.text).append("(NtClient __who, RTx__ViewerType __viewer) {").tabUp().writeNewline();
+    if (clientVar != null) {
+      sb.append("NtClient ").append(clientVar.text).append(" = __who;").writeNewline();
+    }
+    if (viewerStateName != null) {
+      sb.append("RTx__ViewerType ").append(viewerStateName.text).append(" = __viewer;").writeNewline();
+    }
     sb.append("return ");
     expression.writeJava(sb, next(environment));
     sb.append(";").tabDown().writeNewline().append("}").writeNewline();

@@ -114,6 +114,8 @@ public class Parser {
           return new NoOneClientConstant(token);
         case "@who":
           return new WhoClientConstant(token);
+        case "@viewer":
+          return new ViewerConstant(token);
         case "@i":
           return new ComplexConstant(0.0, 1.0, token);
         case "@nothing":
@@ -549,16 +551,27 @@ public class Parser {
   }
 
   public BubbleDefinition define_bubble(final Token bubbleToken) throws AdamaLangException {
-    final var openClient = consumeExpectedSymbol("<");
-    final var clientVar = id();
-    final var comma = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
-    final var viewerStateName = comma != null ? id() : null;
-    final var closeClient = consumeExpectedSymbol(">");
-    final var nameToken = id();
-    final var equalsToken = consumeExpectedSymbol("=");
-    final var expression = expression();
-    final var semicolonToken = consumeExpectedSymbol(";");
-    return new BubbleDefinition(bubbleToken, openClient, clientVar, comma, viewerStateName, closeClient, nameToken, equalsToken, expression, semicolonToken);
+
+    final var openClient = tokens.popIf(t -> t.isSymbolWithTextEq("<"));
+    if (openClient != null) {
+      final var clientVar = id();
+      final var comma = tokens.popIf((t) -> t.isSymbolWithTextEq(","));
+      final var viewerStateName = comma != null ? id() : null;
+      final var closeClient = consumeExpectedSymbol(">");
+      final var nameToken = id();
+      final var equalsToken = consumeExpectedSymbol("=");
+      final var expression = expression();
+      final var semicolonToken = consumeExpectedSymbol(";");
+      return new BubbleDefinition(bubbleToken, openClient, clientVar, comma, viewerStateName, closeClient, nameToken, equalsToken, expression, semicolonToken);
+    } else {
+      final var nameToken = id();
+      final var equalsToken = consumeExpectedSymbol("=");
+      final var expression = expression();
+      final var semicolonToken = consumeExpectedSymbol(";");
+      return new BubbleDefinition(bubbleToken, null, null, null, null, null, nameToken, equalsToken, expression, semicolonToken);
+    }
+
+
   }
 
   public DefineDocumentEvent define_document_event_raw(final Token eventToken, final DocumentEvent which) throws AdamaLangException {

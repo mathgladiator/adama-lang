@@ -131,8 +131,8 @@ message Draw {
 This **message** encodes the product intent, and we can associate code to that message via a **channel**.
 
 ```adama
-channel draw_cards(client who, Draw d) {
-  (iterate deck where owner == @no_one shuffle limit d.count).owner = who;
+channel draw_cards(Draw d) {
+  (iterate deck where owner == @no_one shuffle limit d.count).owner = @who;
 }
 ```
 

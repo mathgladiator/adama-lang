@@ -18,10 +18,10 @@ import org.adamalang.translator.tree.types.natives.TyNativeClient;
 
 import java.util.function.Consumer;
 
-public class WhoClientConstant extends Expression {
+public class ViewerConstant extends Expression {
   public final Token token;
 
-  public WhoClientConstant(final Token token) {
+  public ViewerConstant(final Token token) {
     this.token = token;
     ingest(token);
   }
@@ -33,17 +33,17 @@ public class WhoClientConstant extends Expression {
 
   @Override
   protected TyType typingInternal(final Environment environment, final TyType suggestion) {
-    if (environment.state.isStatic() || environment.state.isMessageHandler() || environment.state.isPolicy() || environment.state.isBubble()) {
+    if (environment.state.isBubble()) {
       environment.mustBeComputeContext(this);
-      return new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, token).withPosition(this);
+      return environment.document.viewerType;
     } else {
-      environment.document.createError(this, "@who is only available from static policies, document policies, privacy policies, bubbles, and message handlers", "WHO");
+      environment.document.createError(this, "@viewer is only available in bubbles", "WHO");
       return null;
     }
   }
 
   @Override
   public void writeJava(final StringBuilder sb, final Environment environment) {
-    sb.append("__who");
+    sb.append("__viewer");
   }
 }

@@ -875,7 +875,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ComputedFields_4 extends LivingDocument {");
     gold.append("\n  private final RxGuard ___cake1;");
-    gold.append("\n  public int __COMPUTE_cake1(NtClient who, RTx__ViewerType __viewerState) {");
+    gold.append("\n  public int __COMPUTE_cake1(NtClient __who, RTx__ViewerType __viewer) {");
     gold.append("\n    return 1;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -2180,7 +2180,7 @@ public class GeneratedRecordsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Records_DuplicateViewerComputeFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2},\"end\":{\"line\":2,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":2},\"end\":{\"line\":3,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2},\"end\":{\"line\":5,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'y' was already defined (StructureDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":2,\"character\":2},\"end\":{\"line\":2,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":2},\"end\":{\"line\":3,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'x' was already defined (StructureDefine)\"},{\"range\":{\"start\":{\"line\":5,\"character\":2},\"end\":{\"line\":5,\"character\":15}},\"severity\":1,\"source\":\"error\",\"message\":\"Bubble 'y' was already defined (StructureDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

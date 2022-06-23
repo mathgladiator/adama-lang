@@ -8,7 +8,7 @@ Static policies are evaluated without any state precisely because that state is 
 
 ```adama
 @static {
-  create(who) {
+  create {
     return true;
   }
 }
@@ -18,8 +18,8 @@ The above policy allows anyone to create a document within your space (#rude), s
 
 ```adama
 @static {
-  create(who) {
-    return who.isAdamaDeveloper();
+  create {
+    return @who.isAdamaDeveloper();
   }
 }
 ```
@@ -33,10 +33,10 @@ That is, if a document is not found, then we internally create it if the inventi
 
 ```adama
 @static {
-  create(who) {
+  create {
     return false;
   }
-  invent(who) {
+  invent {
     return who.isAdamaDeveloper();
   }
 }

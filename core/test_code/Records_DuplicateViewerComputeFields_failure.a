@@ -1,8 +1,8 @@
 record R {
-  bubble<c> x = 1;
-  bubble<c> x = 2;
-  bubble<c> x = 1;
-  bubble<c> y = 1;
-  bubble<c> y = 1;
+  bubble x = 1;
+  bubble x = 2;
+  bubble x = 1;
+  bubble y = 1;
+  bubble y = 1;
 }
 

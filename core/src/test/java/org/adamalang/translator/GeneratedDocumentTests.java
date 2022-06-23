@@ -87,7 +87,7 @@ public class GeneratedDocumentTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Document_DuplicateComputeFields_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0},\"end\":{\"line\":1,\"character\":18}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'x' was already defined (GlobalDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":0},\"end\":{\"line\":3,\"character\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'y' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":1,\"character\":0},\"end\":{\"line\":1,\"character\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'x' was already defined (GlobalDefine)\"},{\"range\":{\"start\":{\"line\":3,\"character\":0},\"end\":{\"line\":3,\"character\":13}},\"severity\":1,\"source\":\"error\",\"message\":\"Global field 'y' was already defined (GlobalDefine)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);

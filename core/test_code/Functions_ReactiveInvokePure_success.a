@@ -3,4 +3,4 @@ function foo() -> int {
 }
 
 formula goo = foo();
-bubble<c> you = foo();
+bubble you = foo();

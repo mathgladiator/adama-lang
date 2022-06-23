@@ -18,7 +18,7 @@ table<AddOn> _addons;
 // 2/6: create documents with constructors
 @static {
   // policy: who can create? anyone!
-  create(who) { return true; }
+  create { return true; }
 }
 
 message Arg {
@@ -26,19 +26,19 @@ message Arg {
   string description;
 }
 
-@construct(client who, Arg arg) {
-  owner = who;
+@construct(Arg arg) {
+  owner = @who;
   name = arg.name;
   description = arg.description;
 }
 
 // 3/6: people connect with WebSocket
-@connected(who) {
+@connected {
   viewers++;
   return true;
 }
 
-@disconnected(who) {
+@disconnected {
   viewers--;
 }
 
@@ -57,8 +57,8 @@ channel create_new_add_on(AddAddOn arg) {
 message Nothing {
 }
 
-channel delete(client who, Nothing arg) {
-  if (owner == who) {
+channel delete(Nothing arg) {
+  if (owner == @who) {
     Document.destroy();
   }
 }

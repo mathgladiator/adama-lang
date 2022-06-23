@@ -3,10 +3,10 @@
 ```adama
 
 @static {
-  create(who) { return true; }
+  create { return true; }
 }
 
-@connected (who) {
+@connected {
   return true;
 }
 
@@ -16,7 +16,7 @@ message NotifyWrite {
   int db_seq;
 }
 
-channel notify(client who, NotifyWrite message) {
+channel notify(NotifyWrite message) {
   if (message.db_seq > max_db_seq) {
     max_db_seq = message.db_seq;
   }

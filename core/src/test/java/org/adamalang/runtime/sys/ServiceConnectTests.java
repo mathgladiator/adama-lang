@@ -41,7 +41,7 @@ public class ServiceConnectTests {
       "@static { create { return true; } } public int x; @connected { transition #crash; return @who == @no_one; } #crash { x = 1; while(x > 0) { x = 2; } } @can_attach { return true; } @attached (a) { x++; } ";
 
   private static final String MIRROR =
-      "@static { create { return true; } } public int x; @connected { x = 42; return @who == @no_one; } @can_attach { return true; } @attached (a) { x++; } view int z; bubble<who, viewer> zpx = viewer.z + x;";
+      "@static { create { return true; } } public int x; @connected { x = 42; return @who == @no_one; } @can_attach { return true; } @attached (a) { x++; } view int z; bubble zpx = @viewer.z + x;";
 
   @Test
   public void connect_super_happy_connect() throws Exception {

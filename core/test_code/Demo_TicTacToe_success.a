@@ -12,9 +12,9 @@ public int wins_X;
 public int wins_O;
 public int stalemates;
 
-bubble<who> your_role = playerX == who ? "X" : (playerO == who ? "O" : "Observer");
-bubble<who> your_turn = current == who;
-bubble<who> your_wins = playerX == who ? wins_X : (playerO == who ? wins_O : 0);
+bubble your_role = playerX == @who ? "X" : (playerO == @who ? "O" : "Observer");
+bubble your_turn = current == @who;
+bubble your_wins = playerX == @who ? wins_X : (playerO == @who ? wins_O : 0);
 
 record Square {
   public int id;

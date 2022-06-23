@@ -337,7 +337,7 @@ public class LivingDocumentTests {
     try {
       final var setup =
           new RealDocumentSetup(
-              "@connected { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();");
+              "@connected { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble x = inf();");
       setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));
       setup.document.createPrivateView(NtClient.NO_ONE, Perspective.DEAD, new JsonStreamReader("{}"), TestKey.ENCODER, new RealDocumentSetup.GotView());
       setup.document.invalidate(new RealDocumentSetup.AssertInt(5));
@@ -360,7 +360,7 @@ public class LivingDocumentTests {
     try {
       final var setup =
           new RealDocumentSetup(
-              "@connected { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble<who> x = inf();",
+              "@connected { return true; } function inf() -> int { int z = 0; while (z < 10000000) { z++; } return z; } bubble x = inf();",
               null,
               false);
       setup.document.connect(NtClient.NO_ONE, new RealDocumentSetup.AssertInt(3));

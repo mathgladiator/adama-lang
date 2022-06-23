@@ -4,10 +4,10 @@
 
 @static {
   // anyone can create
-  create(who) { return true; }
+  create { return true; }
 }
 
-@connected (who) {
+@connected {
    // let everyone connect; sure, what can go wrong
   return true;
 }
@@ -30,8 +30,8 @@ message PublishMessage {
 }
 
 // and then open a channel to accept the publish from any connected client
-channel publish(client who, PublishMessage message) {
-  _publishes <- {who: who, when: Time.now(), payload: message.payload };
+channel publish(PublishMessage message) {
+  _publishes <- {who: @who, when: Time.now(), payload: message.payload };
 
   // At this point, we encounter a key problem with maintaining a
   // log of publishes. Namely, the log is potentially infinite, so

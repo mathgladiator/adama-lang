@@ -2,6 +2,6 @@ procedure foo() -> int {
   return 4;
 }
 
-bubble<c> you = foo();
+bubble you = foo();
 
 public formula goo = foo();

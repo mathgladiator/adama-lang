@@ -68,7 +68,7 @@ public class InstanceClientTests {
     try (TestBed bed =
         new TestBed(
             10003,
-            "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble<who, viewer> zpx = viewer.z + x;")) {
+            "@static { create { return true; } } @connected { return true; } public int x; @construct { x = 1000; } message Y { int z; } channel foo(Y y) { x += y.z; } view int z; bubble zpx = @viewer.z + x;")) {
       bed.startServer();
       MockEvents events = new MockEvents();
       Runnable happy = events.latchAt(5);

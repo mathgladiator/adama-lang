@@ -115,12 +115,12 @@ procedure shuffle() {
 This assignment of ordering will memorize the results from shuffling. With a single statement, we can deal cards by assigning ownership.
 
 ```adama
-procedure deal_cards(client who, int count) {
+procedure deal_cards(int count) {
   (iterate deck             // look at the deck
     where owner == @no_one  // for each card that isn't own
     order by ordering asc   // follow the memoized ordering
     limit count             // deal only $count cards
-    ).owner = who;          // for each card, assign an owner to the card
+    ).owner = @who;          // for each card, assign an owner to the card
 }
 ```
 

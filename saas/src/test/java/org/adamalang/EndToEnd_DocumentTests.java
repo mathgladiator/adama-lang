@@ -28,7 +28,7 @@ public class EndToEnd_DocumentTests {
                   "public int x = 1;" +
                   "message M { int z; }" +
                   "channel foo(M m) { x += m.z; }" +
-                  "view int z; bubble<who, viewer> zpx = viewer.z + x;"
+                  "view int z; bubble zpx = @viewer.z + x;"
           ) + "}");
       Assert.assertEquals("FINISH:{}", c4.next());
       Iterator<String> c5 = fe.execute("{\"id\":7,\"identity\":\"" + devIdentity + "\",\"method\":\"document/create\",\"space\":\"newspace\",\"key\":\"a\",\"arg\":{}}");

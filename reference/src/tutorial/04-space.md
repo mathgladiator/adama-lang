@@ -7,15 +7,15 @@ The first thing we need to do is some ceremony around who can create documents.
 ```adama
 @static {
   // only allow users from the authority we just created
-  create(who) {
-    return who.fromAuthority("Z2YISR3YMJN29XZ2");
+  create {
+    return @who.fromAuthority("Z2YISR3YMJN29XZ2");
   }
 
   // Here "Inventing" is the act of creating the
   // document on demand with connect with no need 
   // for a create(...) call
-  invent(who) {
-    return who.fromAuthority("Z2YISR3YMJN29XZ2");
+  invent {
+    return @who.fromAuthority("Z2YISR3YMJN29XZ2");
   }
 }
 ```
@@ -28,8 +28,8 @@ Let's enable connections
 
 ```adama
 // let anyone into the document
-@connected (who) {
-  return who.fromAuthority("Z2YISR3YMJN29XZ2");
+@connected {
+  return @who.fromAuthority("Z2YISR3YMJN29XZ2");
 }
 ```
 
@@ -62,9 +62,9 @@ message Say {
 
 // the "channel" enables someone to send a message
 // bound to some code
-channel say(client who, Say what) {
+channel say(Say what) {
   // ingest the line into the chat
-  _chat <- {who:who, what:what.what, when: Time.now()};
+  _chat <- {who:@who, what:what.what, when: Time.now()};
   
   // since you are paying for the chat, let's cap the 
   // size to 50 total messages.

@@ -76,7 +76,7 @@ message M {
   int y;
 }
 
-@construct (who) {
+@construct {
   M m = {x:1, y:1};
 }
 ```

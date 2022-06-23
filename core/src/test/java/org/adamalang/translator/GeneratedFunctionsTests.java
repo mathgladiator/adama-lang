@@ -4736,7 +4736,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Functions_ReactiveCantInvokeProcedure_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":16},\"end\":{\"line\":4,\"character\":19}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive expressions can only invoke pure functions (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":6,\"character\":21},\"end\":{\"line\":6,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive expressions can only invoke pure functions (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":4,\"character\":13},\"end\":{\"line\":4,\"character\":16}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive expressions can only invoke pure functions (FunctionInvoke)\"},{\"range\":{\"start\":{\"line\":6,\"character\":21},\"end\":{\"line\":6,\"character\":24}},\"severity\":1,\"source\":\"error\",\"message\":\"Reactive expressions can only invoke pure functions (FunctionInvoke)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -4809,7 +4809,7 @@ public class GeneratedFunctionsTests extends GeneratedBase {
     gold.append("\npublic class ReactiveInvokePure_18 extends LivingDocument {");
     gold.append("\n  private final RxLazy<Integer> goo;");
     gold.append("\n  private final RxGuard ___you;");
-    gold.append("\n  public int __COMPUTE_you(NtClient c, RTx__ViewerType __viewerState) {");
+    gold.append("\n  public int __COMPUTE_you(NtClient __who, RTx__ViewerType __viewer) {");
     gold.append("\n    return __FUNC_0_foo();");
     gold.append("\n  }");
     gold.append("\n  @Override");

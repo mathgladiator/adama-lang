@@ -27,8 +27,8 @@ For a clear example, the below code illustrates valid Adama code which we will t
 @static {
 
   // 1. a policy which is run to validate the given user can create the document
-  create(who) {
-    return who.isAdamaDeveloper();
+  create {
+    return @who.isAdamaDeveloper();
   }
 }
 
@@ -42,8 +42,8 @@ message ConsXYZ {
 }
 
 // 4. connect the constructor message to code
-@construct (client who, ConsXYZ c) {
-  creator = who;
+@construct (ConsXYZ c) {
+  creator = @who;
   x = 100 + c.x;
 }
 ```
@@ -69,8 +69,8 @@ Once a document is created, documents can be read by connecting to the document.
 
 ```adama
 // 5. gate who can connect to the document
-@connected(who) {
-   return who == creator;
+@connected {
+   return @who == creator;
 }
 ```
 
@@ -86,15 +86,15 @@ For example, we can open a few channels to manipulate our document in various wa
 message Nothing {}
 message Param { int z; }
 
-channel square(client who, Nothing n) {
+channel square(Nothing n) {
   x = x * x;
 }
 
-channel zero(client who, Nothing n) {
+channel zero(Nothing n) {
   x = 0;
 } 
 
-channel add(client who, Param p) {
+channel add(Param p) {
   x += p.z;
 }
 ```
@@ -106,8 +106,8 @@ Access control is possible per channel, but it is worth noting that only connect
 Deleting happens from within the document via logic.
 
 ```adama
-channel kill(client who, Nothing n) {
-  if (who == creator) {
+channel kill(Nothing n) {
+  if (@who == creator) {
     Document.destroy();
   }
 }

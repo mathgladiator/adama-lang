@@ -15,7 +15,7 @@ This Adama code outlines a structure with just a name field. Messages are used e
 ```adama
 public string name;
 
-channel my_channel(client who, MyName msg) {
+channel my_channel(MyName msg) {
   name = msg.name;
 }
 ```
@@ -42,7 +42,7 @@ The most important property of messages is that they are *atomically* integrated
 ```adama
 public string name;
 
-channel my_channel(client who, MyName msg) {
+channel my_channel(MyName msg) {
   name = msg.name;
   if (name == "newbie") {
     @abort;
@@ -57,11 +57,11 @@ Mental Model: Old School Chat Room
 The mental model for the document is a receiver of messages from clients connected via a persistent connection. This persistent connection has signals based on client connectivity, and these meta signals are exposed via **@connected** and **@disconnected** events which are exceptionally useful. 
 
 ```adama
-@connected (who) {
+@connected {
   // keep track of who
 }
 
-@disconnected (who) {
+@disconnected {
  // remove who
 }
 ```

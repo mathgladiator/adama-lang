@@ -22,7 +22,9 @@ import org.adamalang.translator.tree.expressions.operators.BinaryExpression;
 import org.adamalang.translator.tree.expressions.operators.Parentheses;
 import org.adamalang.translator.tree.operands.BinaryOp;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.checking.ruleset.RuleSetCommon;
+import org.adamalang.translator.tree.types.natives.TyNativeClient;
 import org.adamalang.translator.tree.types.natives.TyNativeList;
 import org.adamalang.translator.tree.types.reactive.TyReactiveClient;
 import org.adamalang.translator.tree.types.reactive.TyReactiveEnum;
@@ -215,6 +217,13 @@ public class Where extends LinqExpression implements LatentCodeSnippet {
           }
         }
       });
+      if (environment.state.isBubble()) {
+        TyNativeClient clientType = new TyNativeClient(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("client"));
+        closureTyTypes.put("__who", clientType);
+        closureTypes.put("__who", clientType.getJavaConcreteType(environment));
+        closureTyTypes.put("__viewer", environment.document.viewerType);
+        closureTypes.put("__viewer", environment.document.viewerType.getJavaConcreteType(environment));
+      }
       final var next = watch.scopeWithComputeContext(ComputeContext.Computation);
       iterType = "RTx" + storageType.name();
       var toUse = next;

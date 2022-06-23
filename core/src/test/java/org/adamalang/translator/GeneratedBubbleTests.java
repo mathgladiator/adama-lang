@@ -80,7 +80,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\npublic class CanOnlyCallPure_1 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxGuard ___k;");
-    gold.append("\n  public int __COMPUTE_k(NtClient c, RTx__ViewerType __viewerState) {");
+    gold.append("\n  public int __COMPUTE_k(NtClient __who, RTx__ViewerType __viewer) {");
     gold.append("\n    return __FUNC_0_square((x.get() + 1) * (x.get() + 1));");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -570,7 +570,7 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\npublic class Define_2 extends LivingDocument {");
     gold.append("\n  private final RxInt32 x;");
     gold.append("\n  private final RxGuard ___k;");
-    gold.append("\n  public int __COMPUTE_k(NtClient c, RTx__ViewerType __viewerState) {");
+    gold.append("\n  public int __COMPUTE_k(NtClient __who, RTx__ViewerType __viewer) {");
     gold.append("\n    return (x.get() + 1) * (x.get() + 1);");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -1055,8 +1055,8 @@ public class GeneratedBubbleTests extends GeneratedBase {
     gold.append("\npublic class ViewerStateDefine_3 extends LivingDocument {");
     gold.append("\n  private final RxString str;");
     gold.append("\n  private final RxGuard ___cake;");
-    gold.append("\n  public String __COMPUTE_cake(NtClient who, RTx__ViewerType viewer) {");
-    gold.append("\n    return viewer.name + str.get();");
+    gold.append("\n  public String __COMPUTE_cake(NtClient __who, RTx__ViewerType __viewer) {");
+    gold.append("\n    return __viewer.name + str.get();");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  public long __memory() {");

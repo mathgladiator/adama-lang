@@ -180,6 +180,11 @@ public class Environment {
     return new Environment(document, state.scopePolicy(), this);
   }
 
+  /** create a new environment which is for a bubble */
+  public Environment scopeAsBubble() {
+    return new Environment(document, state.scopeBubble(), this);
+  }
+
   /** create a new environment which is for unit tests */
   public Environment scopeAsUnitTest() {
     return new Environment(document, state.scopeTesting(), this);

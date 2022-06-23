@@ -26553,7 +26553,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\nimport java.lang.Math;");
     gold.append("\npublic class ViewerCompute_113 extends LivingDocument {");
     gold.append("\n  private final RxGuard ___y;");
-    gold.append("\n  public int __COMPUTE_y(NtClient who, RTx__ViewerType __viewerState) {");
+    gold.append("\n  public int __COMPUTE_y(NtClient __who, RTx__ViewerType __viewer) {");
     gold.append("\n    return 2;");
     gold.append("\n  }");
     gold.append("\n  @Override");
@@ -26866,7 +26866,7 @@ public class GeneratedParserTests extends GeneratedBase {
     gold.append("\n        /* ok */");
     gold.append("\n      }");
     gold.append("\n    }");
-    gold.append("\n    public int __COMPUTE_x(NtClient who, RTx__ViewerType __viewerState) {");
+    gold.append("\n    public int __COMPUTE_x(NtClient __who, RTx__ViewerType __viewer) {");
     gold.append("\n      return 1;");
     gold.append("\n    }");
     gold.append("\n    @Override");

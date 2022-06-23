@@ -1,5 +1,5 @@
 record M {
-  bubble<who> x = 1;
+  bubble x = 1;
 }
 
-bubble<who> y = 2;
+bubble y = 2;

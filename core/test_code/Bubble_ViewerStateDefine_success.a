@@ -1,4 +1,4 @@
 view string name;
 string str;
 
-bubble<who, viewer> cake = viewer.name + str;
+bubble cake = @viewer.name + str;
