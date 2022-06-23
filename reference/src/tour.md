@@ -111,7 +111,7 @@ public formula deck_remaining = (iterate deck where owner == @no_one).size()
 Here **@no_one** is a special default value for the **client** type which indicates that cards are unassigned. We can leverage a **bubble** to share a viewer's hand (if they are a player and not a random observer).
 
 ```adama
-bubble<who> hand = iterate deck where owner == who;
+bubble hand = iterate deck where owner == @who;
 ```
 
 The bubble is special type of **formula** which allows data to be computed based on who is viewing the document. This allows people to have a personalized view of the document such as being able to see their hand. As the **deck** and rows within the **deck** experience change, the formulas update automatically based on precise static analysis. These changes propagate to all viewers in a predictable way.

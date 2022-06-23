@@ -37,7 +37,7 @@ channel say(client who, Say what) {
 // emit the data out
 view bool ordering;
 
-bubble<who, viewer> chat = viewer.ordering ? (iterate _chat order id desc) : (iterate _chat order id asc);
+bubble chat = @viewer.ordering ? (iterate _chat order id desc) : (iterate _chat order id asc);
 
 message Flux {
 }

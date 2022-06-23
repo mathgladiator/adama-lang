@@ -55,31 +55,6 @@ public class Workpad {
     MachineIdentity identity = MachineIdentity.fromFile(OverlordTests.prefixForLocalhost());
     DataBase db = new DataBase(getLocalIntegrationConfig(), new DataBaseMetrics(metrics, "wordpad"));
 
-    /*
-    int userId = Users.getOrCreateUserId(db, "test@test.com");
-    System.err.println("userId=" + userId);
-    int spaceId = Spaces.createSpace(db, userId, "chat");
-    System.err.println("spaceId=" + spaceId);
-    */
-    /*
-    SpaceInfo info = Spaces.getSpaceInfo(db, "chat");
-    System.err.println("spaceId=" + info.id + "/ownerId=" + info.owner);
-
-    ObjectNode plan = Json.newJsonObject();
-    plan.putObject("versions").put("file", "@static {\n" + "  // anyone can create\n" + "  create(who) { return true; }\n" + "  invent(who) { return true; }\n" + "  maximum_history = 100;\n" + "}\n" + "\n" + "// let anyone into the document\n" + "@connected (who) {\n" + "  return true;\n" + "}\n" + "\n" + "// the lines of chat\n" + "record Line {\n" + "  public client who;\n" + "  public string what;\n" + "  public long when;\n" + "}\n" + "\n" + "// the chat table\n" + "table<Line> _chat;\n" + "\n" + "// how someone communicates to the document\n" + "message Say {\n" + "  string what;\n" + "}\n" + "\n" + "// the \"channel\" which enables someone to say something\n" + "channel say(client who, Say what) {\n" + "  // ingest the line into the chat\n" + "  _chat <- {who:who, what:what.what, when: Time.now()};\n" + "\n" + "  (iterate _chat order by when desc offset 5).delete();\n" + "}\n" + "\n" + "// emit the data out\n" + "view bool ordering;\n" + "\n" + "bubble<who, viewer> chat = viewer.ordering ? (iterate _chat order id desc) : (iterate _chat order id asc);\n" + "\n" + "message Flux {\n" + "}\n" + "\n" + "channel flux(client w, Flux f) {\n" + "  (iterate _chat where who==w).what += \"x\";\n" + "}");
-    plan.put("default", "file");
-    plan.putArray("plan");
-    String planJson = plan.toString();
-
-    // hash the plan
-    MessageDigest digest = Hashing.md5();
-    digest.digest(planJson.getBytes(StandardCharsets.UTF_8));
-    String hash = Hashing.finishAndEncode(digest);
-    // Change the master plan
-    Spaces.setPlan(db, info.id, planJson, hash);
-    Deployments.deploy(db, "chat", identity.ip + ":8001", hash, planJson);
-    */
-
     Engine engine = new Engine(identity, TimeSource.REAL_TIME, new HashSet<>(Collections.singleton("127.0.0.1:8002")), 8100, 8101, new GossipMetricsImpl(metrics), EngineRole.Node);
     engine.start();
     CountDownLatch membership = new CountDownLatch(2);

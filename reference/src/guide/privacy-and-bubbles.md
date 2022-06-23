@@ -39,7 +39,7 @@ record Row {
 table<Row> tbl;
 
 // reveal mine via a formula where me represents the client viewing the document
-bubble<me> mine = iterate tbl where who == me;
+bubble mine = iterate tbl where who == @who;
 ```
 
 ## Diving Into Details
@@ -89,5 +89,5 @@ While privacy policies ensure compliance, we can leverage bubbles to efficiently
 ```adama
 table<Card> deck;
 
-bubble<who> hand = iterate deck where owner == who;
+bubble hand = iterate deck where owner == @who;
 ```

@@ -76,7 +76,7 @@ table<Card> deck;
 public auto hand = iterate deck where place == Place::Hand;
 
 // show all cards in the pot (this would be a different way of defining hand)
-bubble<who> my_take = iterate deck where place == Place::Taken && owner == who;
+bubble my_take = iterate deck where place == Place::Taken && owner == @who;
 
 // no real constructor
 message Empty {}
