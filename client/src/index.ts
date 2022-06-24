@@ -38,7 +38,7 @@ export class Tree {
           d['@o'] = o;
         } else {
           for (var j = 0; j < v.length; j++) {
-            d.push(this.__toDelta(v[j]));
+            d[j] = this.__toDelta(v[j]);
           }
           d['@s'] = v.length;
         }
@@ -65,14 +65,14 @@ export class Tree {
     } else if (typeof (callback) == 'object') { // the callback is an object (recurse)
       // we for each item in the callback
       for (var key in callback) {
-        // make sure it exists
-        if (!(key in dispatch)) {
-          dispatch[key] = {};
-        }
         // recurse into that key
         if (key == '@e') {
           this.__recAppendChange(dispatch, callback[key], insert_order, auto_delete, holder);
         } else {
+          // make sure it exists
+          if (!(key in dispatch)) {
+            dispatch[key] = {};
+          }
           this.__recAppendChange(dispatch[key], callback[key], insert_order, auto_delete, holder);
         }
       }
@@ -96,6 +96,37 @@ export class Tree {
         }
       }
       dispatch['@e'] = next;
+    }
+  }
+
+  filterHolders(fn: (x: any) => boolean) {
+    this.__filterHolders(this.dispatch, fn);
+  }
+
+  __filterHolders(dispatch: any, fn: (x: any) => boolean) {
+    if (Array.isArray(dispatch)) {
+      for (var k = 0; k < dispatch.length; k++) {
+        this.__filterHolders(dispatch[k], fn);
+      }
+    } else if (typeof(dispatch) == 'object') {
+      for (var key in dispatch) {
+        if (key == '@e') {
+          var evts: any = dispatch['@e'];
+          var nulls = 0;
+          for (var k = 0; k < evts.length; k++) {
+            var e = evts[k];
+            if (!fn(e.holder)) {
+              evts[k] = null;
+              nulls++;
+            }
+          }
+          if (nulls > 0) {
+            this.__collapse(dispatch);
+          }
+        } else {
+          this.__filterHolders(dispatch[key], fn);
+        }
+      }
     }
   }
 
@@ -173,14 +204,18 @@ export class Tree {
         // the child is either an ARRAY or a OBJECT
         var childIsArray = '@o' in child || '@s' in child;
         // the prior version doesn't exist, so we create the empty node so that it does exist
-        if (!(key in tree)) {
-          if (childIsArray) {
+        if (childIsArray) {
+          if (!(key in tree)) {
             tree[key] = [];
+          }
+          if (!(('#' + key) in tree)) {
             tree["#" + key] = {};
             if ('@o' in child) {
               tree["#" + key]['@o'] = true;
             }
-          } else {
+          }
+        } else {
+          if (!(key in tree)) {
             tree[key] = {};
           }
         }
@@ -237,22 +272,30 @@ export class Tree {
           }
           delete tree[key];
         } else {
-          // otherwise fire a change
-          var fireNew = false;
-          if (!(tree != null && key in tree)) {
-            if (dispatch && '+' in dispatch) {
-              fireNew = true;
-            }
+          // make sure the key exists
+          if (!(key in tree)) {
             tree[key] = {};
-          }
-          tree[key].__key = "" + key;
-          this.__recMergeAndDispatch(tree[key], (dispatch != null && key in dispatch) ? dispatch[key] : null, diff[key]);
-          if (fireNew) {
-            if (!(key in dispatch)) {
-              dispatch[key] = {};
+            tree[key].__key = "" + key;
+            // since we are creating an item, let's fire the '+' event right now
+            if (dispatch && '+' in dispatch) {
+              // ensure the dispatch object exists
+              if (!(key in dispatch)) {
+                dispatch[key] = {};
+              }
+              // for each '+' event
+              var dispatchAdd = dispatch['+'];
+              if ('@e' in dispatchAdd) {
+                var evts = dispatchAdd['@e'];
+                for (var k = 0; k < evts.length; k++) { // fire it now
+                  var evt = evts[k];
+                  // __recAppendChange(dispatch: any, callback: any, insert_order: number, auto_delete: boolean, holder: any) {
+                  this.__recAppendChange(dispatch[key], evt.cb({key:key}), evt.order, true, evt.order);
+                }
+              }
             }
-            this.__fire(dispatch['+'], {key: key, before: null, value: tree[key], append_result:true, append_to:dispatch[key]});
-          } else if (dispatch && '!' in dispatch) {
+          }
+          this.__recMergeAndDispatch(tree[key], (dispatch != null && key in dispatch) ? dispatch[key] : null, diff[key]);
+          if (dispatch && '!' in dispatch) {
             this.__fire(dispatch['!'], {key: key, value: tree[key]});
           }
         }
@@ -301,6 +344,20 @@ export class Tree {
     }
     this.__fire(dispatch, change);
   }
+
+  /** erase dispatches */
+  __collapse(dispatch: any) {
+    var d = dispatch['@e'];
+    var nxt = [];
+    for (var k = 0; k < d.length; k++) {
+      var evt = d[k];
+      if (evt !== null) {
+        nxt.push(evt);
+      }
+    }
+    dispatch['@e'] = nxt;
+  }
+
   /** phase: fire events and place them in the queue */
   __fire(dispatch: any, change: any) {
     if (dispatch) {
@@ -316,38 +373,42 @@ export class Tree {
           }
         }
         if (nulls > 0) {
-          var nxt = [];
-          for (var k = 0; k < d.length; k++) {
-            if (evt !== null) {
-              nxt.push(evt);
-            }
-          }
-          dispatch['@e'] = nxt;
+          this.__collapse(dispatch);
         }
       }
+    }
+  }
+  /** when a new event is added dynamically, we fire it directly against the tree */
+  __fireDirect(callback: any, tree: any) {
+    if (Array.isArray(callback)) { // callback is an array (expand)
+      for (var k = 0; k < callback.length; k++) {
+        this.__fireDirect(callback[k], tree)
+      }
+    } else if (typeof (callback) == 'object') {
+      for (var key in callback) {
+        if (key == '@e') {
+          this.__fireDirect(callback['@e'], tree);
+        } else {
+          if (key in tree) {
+            this.__fireDirect(callback[key], tree[key]);
+          }
+        }
+      }
+    } else {
+      callback({value:tree, before:null});
     }
   }
   /** phase: final phase is draining the queue of events in the order applied by the user */
   __drain() {
     this.queue.sort(function (a: any, b: any) { return a.order - b.order; });
     for (var k = 0; k < this.queue.length; k++) {
-      var item = this.queue[k]
+      var item = this.queue[k];
       var result = item.cb(item.change);
       if (item.change.clean) {
         this.__autoDelete(item.change.clean_on);
       }
       if (result === 'delete') {
         item.dispatch_list[item.index] = null;
-      } else if (typeof(result) === 'function' || typeof(result) === 'object' || Array.isArray(result)) {
-        if (item.change.append_result) {
-          if (Array.isArray(result)) {
-            for (var k = 0; k < result.length; k++) {
-              this.__recAppendChange(item.change.append_to, result[k], item.order, true, null);
-            }
-          } else {
-            this.__recAppendChange(item.change.append_to, result, item.order, true, null);
-          }
-        }
       } // else if item.change
     }
     this.queue = [];
