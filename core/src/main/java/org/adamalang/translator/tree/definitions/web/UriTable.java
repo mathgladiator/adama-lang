@@ -43,18 +43,25 @@ public class UriTable {
   }
 
   private final UriLevel root;
+  private int count;
 
   public UriTable() {
     this.root = new UriLevel();
+    this.count = 0;
+  }
+
+  public int size() {
+    return count;
   }
 
   public boolean map(Uri uri, UriAction action) {
     UriLevel level = uri.dive(root);
     if (level.action == null) {
+      count++;
       level.action = action;
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   }
 }

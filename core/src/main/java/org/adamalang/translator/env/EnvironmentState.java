@@ -27,6 +27,7 @@ public class EnvironmentState {
   private boolean testing;
   private boolean isPolicy;
   private boolean isBubble;
+  private boolean isWeb;
 
   private EnvironmentState(final EnvironmentState prior) {
     autoId = prior.autoId;
@@ -43,6 +44,7 @@ public class EnvironmentState {
     isStatic = prior.isStatic;
     isPolicy = prior.isPolicy;
     isBubble = prior.isBubble;
+    isWeb = prior.isWeb;
   }
 
   public EnvironmentState(final GlobalObjectPool globals, final CompilerOptions options) {
@@ -60,6 +62,7 @@ public class EnvironmentState {
     isStatic = false;
     isPolicy = false;
     isBubble = false;
+    isWeb = false;
   }
 
   public boolean hasNoCost() {
@@ -76,6 +79,10 @@ public class EnvironmentState {
 
   public boolean isBubble() {
     return isBubble;
+  }
+
+  public boolean isWeb() {
+    return isWeb;
   }
 
   public boolean isContextComputation() {
@@ -142,6 +149,12 @@ public class EnvironmentState {
   public EnvironmentState scopeBubble() {
     final var next = new EnvironmentState(this);
     next.isBubble = true;
+    return next;
+  }
+
+  public EnvironmentState scopeWeb() {
+    final var next = new EnvironmentState(this);
+    next.isWeb = true;
     return next;
   }
 

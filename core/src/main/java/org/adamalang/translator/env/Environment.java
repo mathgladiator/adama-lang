@@ -180,9 +180,14 @@ public class Environment {
     return new Environment(document, state.scopePolicy(), this);
   }
 
-  /** create a new environment which is for a bubble */
+  /** create a new environment which is a bubble */
   public Environment scopeAsBubble() {
     return new Environment(document, state.scopeBubble(), this);
+  }
+
+  /** create a new environment for web calls */
+  public Environment scopeAsWeb() {
+    return new Environment(document, state.scopeWeb(), this);
   }
 
   /** create a new environment which is for unit tests */

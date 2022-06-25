@@ -1,11 +1,31 @@
-@web get xyz {
-
+@web get / {
+  return {html:"root"};
 }
 
-@web get xyz / path0 {
-
+@web get /xyz {
+  return {html:"Hi"};
 }
 
-@web get xyz/$id : string/$val : double {
+@web get /xyz / path0 {
+  return {html:"HiPath0"};
+}
 
+@web get /xyz/$id : string/$val : double {
+  return {html:"Hi there" + id};
+}
+
+message M {
+  int x;
+}
+
+@web put / (M m) {
+  return {html:"Put Root"};
+}
+
+@web put /xyz (M m) {
+  return {html:"Hi XYZ"};
+}
+
+@web put /xyz/uv (M m) {
+  return {html:"PUT UV"};
 }

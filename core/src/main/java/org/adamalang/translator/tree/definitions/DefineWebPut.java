@@ -14,10 +14,11 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.statements.Block;
+import org.adamalang.translator.tree.statements.ControlFlow;
 
 import java.util.function.Consumer;
 
-public class DefineWebPost extends Definition implements UriAction {
+public class DefineWebPut extends Definition implements UriAction {
   public final Token webToken;
   public final Token postToken;
   public final Uri uri;
@@ -27,7 +28,7 @@ public class DefineWebPost extends Definition implements UriAction {
   public final Token closeParen;
   public final Block code;
 
-  public DefineWebPost(Token webToken, Token postToken, Uri uri, Token openParen, Token messageType, Token messageVariable, Token closeParen, Block code) {
+  public DefineWebPut(Token webToken, Token postToken, Uri uri, Token openParen, Token messageType, Token messageVariable, Token closeParen, Block code) {
     this.webToken = webToken;
     this.postToken = postToken;
     this.uri = uri;
@@ -52,9 +53,11 @@ public class DefineWebPost extends Definition implements UriAction {
 
   @Override
   public void typing(Environment environment) {
-    Environment env = environment.scopeAsReadOnlyBoundary();
+    Environment env = environment.scopeAsWeb();
     uri.extendInto(env);
     uri.typing(env);
-    code.typing(env);
+    if (code.typing(env) == ControlFlow.Open) {
+      environment.document.createError(this, String.format("The @web handlers must return a message"), "Web");
+    }
   }
 }

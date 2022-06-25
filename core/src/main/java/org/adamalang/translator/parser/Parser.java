@@ -438,17 +438,18 @@ public class Parser {
   }
 
   public Uri uri() throws AdamaLangException {
-    Uri uri = new Uri(id());
+    Uri uri = new Uri();
     Token hasMore;
     while ((hasMore = tokens.popIf((t) -> t.isSymbolWithTextEq("/"))) != null) {
       Token isParameter = tokens.popIf((t) -> t.isSymbolWithTextEq("$"));
-      Token uriMore = id();
       if (isParameter != null) {
+        Token parameter = id();
         Token colon = consumeExpectedSymbol(":");
         TyType type = native_type_base();
-        uri.extend(hasMore, isParameter, uriMore, colon, type);
+        uri.push(hasMore, isParameter, parameter, colon, type);
       } else {
-        uri.extend(hasMore, null, uriMore, null, null);
+        Token uriMore = tokens.popIf((t) -> t.isIdentifier());
+        uri.push(hasMore, null, uriMore, null, null);
       }
     }
     return uri;
@@ -459,9 +460,7 @@ public class Parser {
     if (getOrPutToken == null) {
       throw new ParseException("Parser was get or put after @web to indicate a read (i.e. get) or write (i.e. put) request", tokens.getLastTokenIfAvailable());
     }
-
     Uri uri = uri();
-
     if ("put".equals(getOrPutToken.text)) {
       final var open = consumeExpectedSymbol("(");
       final var messageTypeName = id();
@@ -470,7 +469,7 @@ public class Parser {
       final var body = block();
       // @web post URI / childPath / $var (messageType messageVar) {
       // }
-      DefineWebPost dwp = new DefineWebPost(webToken, getOrPutToken, uri, open, messageTypeName, messageVariableName, close, body);
+      DefineWebPut dwp = new DefineWebPut(webToken, getOrPutToken, uri, open, messageTypeName, messageVariableName, close, body);
       return (doc) -> doc.add(dwp);
     } else { // GET
       // @web get URI / childPath / $var {

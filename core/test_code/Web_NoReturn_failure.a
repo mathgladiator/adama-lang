@@ -1,0 +1,7 @@
+@web get /xyz/$z : int {
+}
+message M {
+  int x;
+}
+@web put /xyz/$z : int (M m) {
+}

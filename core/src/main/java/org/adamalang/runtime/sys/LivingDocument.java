@@ -29,6 +29,8 @@ import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.AssertionStats;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.reactives.*;
+import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebResponse;
 import org.adamalang.translator.jvm.LivingDocumentFactory;
 
 import java.util.*;
@@ -485,6 +487,9 @@ public abstract class LivingDocument implements RxParent {
       __invoke_label(__new_state);
     }
   }
+
+  /** code generated: respond to a get request */
+  protected abstract WebResponse __get(NtClient __who, WebGet __get);
 
   /** code generated: state machine labelslabels can be dynamically invoked */
   protected abstract void __invoke_label(String __new_state);

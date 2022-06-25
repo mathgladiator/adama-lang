@@ -14,6 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.definitions.web.UriAction;
 import org.adamalang.translator.tree.statements.Block;
+import org.adamalang.translator.tree.statements.ControlFlow;
 
 import java.util.function.Consumer;
 
@@ -42,9 +43,11 @@ public class DefineWebGet extends Definition implements UriAction {
 
   @Override
   public void typing(Environment environment) {
-    Environment env = environment.scopeAsReadOnlyBoundary();
+    Environment env = environment.scopeAsReadOnlyBoundary().scopeAsWeb();
     uri.extendInto(env);
     uri.typing(env);
-    code.typing(env);
+    if (code.typing(env) == ControlFlow.Open) {
+      environment.document.createError(this, String.format("The @web handlers must return a message"), "Web");
+    }
   }
 }

@@ -148,6 +148,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -477,6 +478,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -638,6 +643,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -1120,6 +1126,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  private void __step_setup() {");
     gold.append("\n    __code_cost += 18;");
     gold.append("\n    __track(0);");
@@ -1394,6 +1404,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -1813,6 +1824,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n    __queue_goo.clear();");
     gold.append("\n    __queue_duo.clear();");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  private void __step_neat() {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(3);");
@@ -1963,6 +1978,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -2327,6 +2343,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -2463,6 +2483,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -2842,6 +2863,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public boolean __onConnected__0(NtClient __who) {");
     gold.append("\n    __code_cost += 2;");
@@ -3010,6 +3035,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -3367,6 +3393,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -3531,6 +3561,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -3881,6 +3912,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  private void __step_begin() {");
     gold.append("\n    __code_cost += 4;");
     gold.append("\n    __track(0);");
@@ -4101,6 +4136,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -4438,6 +4474,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  private void __step_setup() {");
     gold.append("\n    __code_cost += 6;");
     gold.append("\n    __track(0);");
@@ -4617,6 +4657,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -5027,6 +5068,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  private void __step_setup() {");
     gold.append("\n    __code_cost += 16;");
     gold.append("\n    __track(0);");
@@ -5219,6 +5264,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -5630,6 +5676,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -5797,6 +5847,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -6135,6 +6186,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -6280,6 +6335,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -6618,6 +6674,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -6833,6 +6893,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -7215,6 +7276,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public boolean __onConnected__0(NtClient __who) {");
     gold.append("\n    __code_cost += 2;");
@@ -7371,6 +7436,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -7871,6 +7937,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public boolean __onConnected__0(NtClient __who) {");
     gold.append("\n    __code_cost += 2;");
@@ -8061,6 +8131,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -8408,6 +8479,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public boolean __onConnected__0(NtClient __who) {");
     gold.append("\n    __code_cost += 2;");
@@ -8568,6 +8643,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -9050,6 +9126,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -9205,6 +9285,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -9530,6 +9611,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -9675,6 +9760,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -10064,6 +10150,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
     gold.append("\n  private void __step_start() {");
     gold.append("\n    __code_cost += 3;");
     gold.append("\n    __track(0);");
@@ -10302,6 +10392,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -10659,6 +10750,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -10863,6 +10958,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -11175,6 +11271,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  protected void __reset_future_queues() {");
     gold.append("\n  }");
     gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");
     gold.append("\n  public static boolean __onCanCreate(CoreRequestContext __context) {");
     gold.append("\n    return false;");
@@ -11311,6 +11411,7 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\nimport org.adamalang.runtime.reactives.*;");
     gold.append("\nimport org.adamalang.runtime.stdlib.*;");
     gold.append("\nimport org.adamalang.runtime.sys.*;");
+    gold.append("\nimport org.adamalang.runtime.sys.web.*;");
     gold.append("\nimport java.util.function.Consumer;");
     gold.append("\nimport java.util.function.Function;");
     gold.append("\nimport java.util.ArrayList;");
@@ -11688,6 +11789,10 @@ public class GeneratedTypesTests extends GeneratedBase {
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __reset_future_queues() {");
+    gold.append("\n  }");
+    gold.append("\n  @Override");
+    gold.append("\n  protected WebResponse __get(NtClient __who, WebGet __request) {");
+    gold.append("\n    return null;");
     gold.append("\n  }");
     gold.append("\n  @Override");
     gold.append("\n  protected void __invoke_label(String __new_state) {}");

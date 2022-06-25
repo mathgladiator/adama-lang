@@ -71,7 +71,7 @@ public class Document implements TopLevelDocumentHandler {
   private int autoClassId;
   private String className;
   public final UriTable webGet;
-  public final UriTable webPost;
+  public final UriTable webPut;
 
   public Document() {
     autoClassId = 0;
@@ -97,7 +97,7 @@ public class Document implements TopLevelDocumentHandler {
     viewerType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__ViewerType"), new StructureStorage(StorageSpecialization.Message, true, null));
     types.put("__ViewerType", viewerType);
     webGet = new UriTable();
-    webPost = new UriTable();
+    webPut = new UriTable();
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
@@ -341,12 +341,12 @@ public class Document implements TopLevelDocumentHandler {
   }
 
   @Override
-  public void add(DefineWebPost dwp) {
+  public void add(DefineWebPut dwp) {
     typeCheckOrder.add((env) -> {
       dwp.typing(env);
     });
-    if (!webPost.map(dwp.uri, dwp)) {
-      createError(dwp, String.format("Web post path %s has a conflict", dwp.uri), "Web");
+    if (!webPut.map(dwp.uri, dwp)) {
+      createError(dwp, String.format("Web put path %s has a conflict", dwp.uri), "Web");
     }
   }
 
@@ -503,6 +503,7 @@ public class Document implements TopLevelDocumentHandler {
     }
     CodeGenFunctions.writeFunctionsJava(sb, environment);
     CodeGenMessageHandling.writeMessageHandlers(sb, environment);
+    CodeGenWeb.writeWebHandlers(sb, environment);
     CodeGenStateMachine.writeStateMachine(sb, environment);
     CodeGenEventHandlers.writeEventHandlers(sb, environment);
     CodeGenConfig.writeConfig(sb, environment);

@@ -126,7 +126,7 @@ public class StringBuilderDocumentHandler implements Consumer<Token>, TopLevelDo
   }
 
   @Override
-  public void add(DefineWebPost dwp) {
+  public void add(DefineWebPut dwp) {
     dwp.emit(this);
   }
 }

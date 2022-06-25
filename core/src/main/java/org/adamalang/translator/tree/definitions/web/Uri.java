@@ -24,53 +24,52 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Uri extends Definition {
-  private final Token base;
   private final ArrayList<Consumer<Consumer<Token>>> emission;
   private final TreeMap<String, TyType> variables;
   private final ArrayList<Function<UriTable.UriLevel, UriTable.UriLevel>> next;
   private final StringBuilder str;
 
-  public Uri(Token base) {
-    this.base = base;
+  public Uri() {
     this.emission = new ArrayList<>();
     this.variables = new TreeMap<>();
     this.next = new ArrayList<>();
     this.str = new StringBuilder();
-    ingest(base);
   }
 
-  public void extend(Token slash, Token dollarSign, Token id, Token colon, TyType type) {
+  public void push(Token slash, Token dollarSign, Token id, Token colon, TyType type) {
     ingest(slash);
     emission.add((y) -> y.accept(slash));
     str.append("/");
-    if (dollarSign != null) {
-      emission.add((y) -> y.accept(dollarSign));
-      str.append("$");
-    }
-    emission.add((y) -> y.accept(id));
-    str.append(id.text);
-    if (colon != null) {
-      ingest(type);
-      emission.add((y) -> y.accept(colon));
-      emission.add((y) -> type.emit(y));
-      variables.put(id.text, type);
-      str.append(":");
-      str.append(type.getAdamaType());
-    }
-    if (dollarSign != null) {
-      if (type instanceof TyNativeBoolean) {
-        next.add((level) -> level.next(id.text, level.bools));
-      } else if (type instanceof TyNativeInteger) {
-        next.add((level) -> level.next(id.text, level.ints));
-      } else if (type instanceof TyNativeLong) {
-        next.add((level) -> level.next(id.text, level.longs));
-      } else if (type instanceof TyNativeDouble) {
-        next.add((level) -> level.next(id.text, level.doubles));
-      } else if (type instanceof TyNativeString) {
-        next.add((level) -> level.next(id.text, level.strings));
+    if (id != null) {
+      if (dollarSign != null) {
+        emission.add((y) -> y.accept(dollarSign));
+        str.append("$");
       }
-    } else {
-      next.add((level) -> level.next(id.text, level.fixed));
+      emission.add((y) -> y.accept(id));
+      str.append(id.text);
+      if (colon != null) {
+        ingest(type);
+        emission.add((y) -> y.accept(colon));
+        emission.add((y) -> type.emit(y));
+        variables.put(id.text, type);
+        str.append(":");
+        str.append(type.getAdamaType());
+      }
+      if (dollarSign != null) {
+        if (type instanceof TyNativeBoolean) {
+          next.add((level) -> level.next(id.text, level.bools));
+        } else if (type instanceof TyNativeInteger) {
+          next.add((level) -> level.next(id.text, level.ints));
+        } else if (type instanceof TyNativeLong) {
+          next.add((level) -> level.next(id.text, level.longs));
+        } else if (type instanceof TyNativeDouble) {
+          next.add((level) -> level.next(id.text, level.doubles));
+        } else if (type instanceof TyNativeString) {
+          next.add((level) -> level.next(id.text, level.strings));
+        }
+      } else {
+        next.add((level) -> level.next(id.text, level.fixed));
+      }
     }
   }
 
@@ -90,7 +89,6 @@ public class Uri extends Definition {
 
   @Override
   public void emit(Consumer<Token> yielder) {
-    yielder.accept(base);
     for (Consumer<Consumer<Token>> emit : emission) {
       emit.accept(yielder);
     }

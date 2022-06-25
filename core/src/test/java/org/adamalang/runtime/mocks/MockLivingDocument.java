@@ -22,6 +22,8 @@ import org.adamalang.runtime.natives.NtClient;
 import org.adamalang.runtime.natives.NtMessageBase;
 import org.adamalang.runtime.ops.TestReportBuilder;
 import org.adamalang.runtime.sys.LivingDocument;
+import org.adamalang.runtime.sys.web.WebGet;
+import org.adamalang.runtime.sys.web.WebResponse;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -62,6 +64,11 @@ public class MockLivingDocument extends LivingDocument {
 
   @Override
   public PrivateView __createPrivateView(final NtClient __who, final Perspective __perspective, AssetIdEncoder encoder) {
+    return null;
+  }
+
+  @Override
+  protected WebResponse __get(NtClient __who, WebGet __get) {
     return null;
   }
 

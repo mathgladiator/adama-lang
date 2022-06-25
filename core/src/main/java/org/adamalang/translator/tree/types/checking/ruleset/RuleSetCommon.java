@@ -294,7 +294,7 @@ public class RuleSetCommon {
     return false;
   }
 
-  static boolean IsString(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsString(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeString || tyType instanceof TyReactiveString) {
@@ -305,7 +305,7 @@ public class RuleSetCommon {
     return false;
   }
 
-  static boolean IsDynamic(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsDynamic(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeDynamic || tyType instanceof TyReactiveDynamic) {
@@ -316,7 +316,7 @@ public class RuleSetCommon {
     return false;
   }
 
-  static boolean IsAsset(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
+  public static boolean IsAsset(final Environment environment, final TyType tyTypeOriginal, final boolean silent) {
     final var tyType = Resolve(environment, tyTypeOriginal, silent);
     if (tyType != null) {
       if (tyType instanceof TyNativeAsset || tyType instanceof TyReactiveAsset) {

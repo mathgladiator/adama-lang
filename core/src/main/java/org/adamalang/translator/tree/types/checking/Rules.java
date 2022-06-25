@@ -116,6 +116,10 @@ public class Rules {
     return RuleSetCommon.IsInteger(environment, tyType, silent);
   }
 
+  public boolean IsString(final TyType tyType, final boolean silent) {
+    return RuleSetCommon.IsString(environment, tyType, silent);
+  }
+
   /** FROM: RuleSetIterable */
   public boolean IsIterable(final TyType tyType, final boolean silent) {
     return RuleSetIterable.IsIterable(environment, tyType, silent);
@@ -147,6 +151,10 @@ public class Rules {
 
   public boolean IsNativeMessage(final TyType tyType, final boolean silent) {
     return RuleSetMessages.IsNativeMessage(environment, tyType, silent);
+  }
+
+  public boolean IsAsset(final TyType tyType, final boolean silent) {
+    return RuleSetCommon.IsAsset(environment, tyType, silent);
   }
 
   public boolean IsNumeric(final TyType tyType, final boolean silent) {
