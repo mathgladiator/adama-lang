@@ -18,30 +18,19 @@ public class Root {
     env.pool.give(parentVar);
     env.pool.give(stateVar);
     env.writer.tabDown().tab().append("});").newline();
-
-    /*
-    String rootVar = env.pool.ask();
-    env.writer.tab().append("$.register('").append(env.element.attr("name")).append("', function(_tree) {").newline().tabUp();
-    // TODO: This is a bit of a mess, so we should combine the root var, the delta tree + path into a variable?
-    env.writer.tab().append("var _ = {};").newline();
-    env.writer.tab().append("var ").append(rootVar).append(" = $.e('div');").newline();
-    Base.children(env.current("_tree.tree").parentVariable(rootVar).resetSubscriptionCounts());
-    env.writer.tab().append("_tree.onTreeChange(_);").newline();
-    env.writer.tab().append("return ").append(rootVar).append(";").newline();
-    env.writer.tabDown().tab().append("});").newline();
-    */
   }
 
   public static void page(Environment env) {
     // TODO: parse a mini-language around the path (similar to Adama's get (have first slash be optional, (/ ( text | $ var : type ))*
     // FOR now, have direct lookups
-    env.writer.tab().append("$.page('").append(env.element.attr("uri")).append("', function(vs) {").newline().tabUp();
+    String stateVar = env.pool.ask();
     String rootVar = env.pool.ask();
+    env.writer.tab().append("$.page('").append(env.element.attr("uri")).append("', function(").append(stateVar).append(") {").newline().tabUp();
     env.writer.tab().append("var ").append(rootVar).append(" = document.body;").newline();
-    Base.children(env.parentVariable(rootVar));
-    env.pool.give(rootVar);
-    // At this point, there is no root var as there is no connection. So, we need at least some kind of typing to help with this.
+    Base.children(env.parentVariable(rootVar).stateVar(stateVar));
     env.writer.tabDown().tab().append("});").newline();
+    env.pool.give(rootVar);
+    env.pool.give(stateVar);
   }
 
   public static String finish(Environment env) {

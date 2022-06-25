@@ -18,10 +18,19 @@ import org.jsoup.nodes.Comment;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 public class Base {
+
+  private static void writeDomSetter(Environment env, String var, String key, String expr) {
+    if (key.startsWith("json:")) {
+      env.writer.tab().append(var).append(".set_").append(key.substring(5).toLowerCase(Locale.ROOT)).append("(").append(expr).append(");").newline();
+    } else {
+      env.writer.tab().append(var).append(".setAttribute('").append(key).append("', ").append(expr).append(");").newline();
+    }
+  }
   public static String write(Environment env, boolean returnVariable) {
     String xmlns = env.element.hasAttr("xmlns") ? env.element.attr("xmlns") : null;
     if (env.element.tagName().equals("svg")) {
@@ -56,7 +65,7 @@ public class Base {
             env.writer.tab().append("var ").append(oVar).append(" = {};").newline();
             env.writer.tab().append(oVar).append(".__dom = ").append(eVar).append(";").newline();
             env.writer.tab().append("var ").append(computeFoo).append(" = (function() {").tabUp().newline();
-            env.writer.tab().append("this.__dom.setAttribute('").append(attr.getKey()).append("', ").append(tree.js("this")).append(");").newline();
+            writeDomSetter(env, "this.__dom", attr.getKey(), tree.js("this"));
             env.writer.tabDown().tab().append("}).bind(").append(oVar).append(");").newline();
             for (Map.Entry<String, String> ve : vars.entrySet()) {
               StatePath path = StatePath.resolve(ve.getValue(), env.stateVar);
@@ -67,12 +76,11 @@ public class Base {
             env.writer.tab().append(computeFoo).append("();").newline();
             env.writer.tabDown().tab().append("}").newline();
           } else {
-            env.writer.tab().append(eVar).append(".setAttribute('").append(attr.getKey()).append("', '").append(attr.getValue()).append("');").newline();
-            // env.writer.tab().append(eVar).append(".").append(realKey).append(" = '").append(attr.getValue()).append("';").newline();
+            // TODO: escape
+            writeDomSetter(env, eVar, attr.getKey(), "'" + attr.getValue() + "'");
           }
         } else {
-          env.writer.tab().append(eVar).append(".setAttribute('").append(attr.getKey()).append("', true);").newline();
-          // env.writer.tab().append(eVar).append(".").append(realKey).append(" = true;").newline();
+          writeDomSetter(env, eVar, attr.getKey(), "true");
         }
       }
 
