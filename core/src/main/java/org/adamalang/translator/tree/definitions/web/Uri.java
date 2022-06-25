@@ -41,6 +41,7 @@ public class Uri extends Definition {
     emission.add((y) -> y.accept(slash));
     str.append("/");
     if (id != null) {
+      ingest(id);
       if (dollarSign != null) {
         emission.add((y) -> y.accept(dollarSign));
         str.append("$");

@@ -31,6 +31,8 @@ public class DefineWebGet extends Definition implements UriAction {
     this.getToken = getToken;
     this.uri = uri;
     this.code = code;
+    ingest(webToken);
+    ingest(code);
   }
 
   @Override

@@ -37,6 +37,8 @@ public class DefineWebPut extends Definition implements UriAction {
     this.messageVariable = messageVariable;
     this.closeParen = closeParen;
     this.code = code;
+    ingest(webToken);
+    ingest(code);
   }
 
   @Override

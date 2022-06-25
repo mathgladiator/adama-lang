@@ -47,7 +47,7 @@ public class GeneratedWebTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Web_BadUriTypes_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":9},\"end\":{\"line\":0,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"The parameter type must be int, long, double, string, or boolean (WebUri)\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"},{\"range\":{\"start\":{\"line\":6,\"character\":9},\"end\":{\"line\":6,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"The parameter type must be int, long, double, string, or boolean (WebUri)\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":9},\"end\":{\"line\":0,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"The parameter type must be int, long, double, string, or boolean (WebUri)\"},{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":2,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"},{\"range\":{\"start\":{\"line\":6,\"character\":9},\"end\":{\"line\":6,\"character\":26}},\"severity\":1,\"source\":\"error\",\"message\":\"The parameter type must be int, long, double, string, or boolean (WebUri)\"},{\"range\":{\"start\":{\"line\":6,\"character\":0},\"end\":{\"line\":8,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
@@ -127,7 +127,7 @@ public class GeneratedWebTests extends GeneratedBase {
     StringBuilder gold = new StringBuilder();
     gold.append("Path:Web_NoReturn_failure.a");
     gold.append("\n--ISSUES-------------------------------------------");
-    gold.append("\n[{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"},{\"range\":{\"start\":{\"line\":2147483647,\"character\":2147483647},\"end\":{\"line\":0,\"character\":0}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"}]\"--JAVA---------------------------------------------");
+    gold.append("\n[{\"range\":{\"start\":{\"line\":0,\"character\":0},\"end\":{\"line\":1,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"},{\"range\":{\"start\":{\"line\":5,\"character\":0},\"end\":{\"line\":6,\"character\":1}},\"severity\":1,\"source\":\"error\",\"message\":\"The @web handlers must return a message (Web)\"}]\"--JAVA---------------------------------------------");
     gold.append("\n");
     gold.append("\nFailedValidation");
     assertStable(live, gold);
