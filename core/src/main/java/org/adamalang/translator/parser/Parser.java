@@ -17,6 +17,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.parser.token.TokenEngine;
 import org.adamalang.translator.tree.common.TokenizedItem;
 import org.adamalang.translator.tree.definitions.*;
+import org.adamalang.translator.tree.definitions.web.Uri;
 import org.adamalang.translator.tree.expressions.*;
 import org.adamalang.translator.tree.expressions.constants.*;
 import org.adamalang.translator.tree.expressions.linq.*;
@@ -436,8 +437,8 @@ public class Parser {
     return (handler) -> handler.add(staticDefn);
   }
 
-  public WebUri uri() throws AdamaLangException {
-    WebUri uri = new WebUri(id());
+  public Uri uri() throws AdamaLangException {
+    Uri uri = new Uri(id());
     Token hasMore;
     while ((hasMore = tokens.popIf((t) -> t.isSymbolWithTextEq("/"))) != null) {
       Token isParameter = tokens.popIf((t) -> t.isSymbolWithTextEq("$"));
@@ -459,25 +460,19 @@ public class Parser {
       throw new ParseException("Parser was get or put after @web to indicate a read (i.e. get) or write (i.e. put) request", tokens.getLastTokenIfAvailable());
     }
 
-    WebUri uri = uri();
+    Uri uri = uri();
 
     if ("put".equals(getOrPutToken.text)) {
-      final var openParen = consumeExpectedSymbol("(");
+      final var open = consumeExpectedSymbol("(");
       final var messageTypeName = id();
       final var messageVariableName = id();
       final var close = consumeExpectedSymbol(")");
       final var body = block();
-
-      // In terms of deduplication, it may be worth considering what it will take to add a __getMessageId() on a message.
-      // This may be some kind of annotation on a type within a message field, or an explicit call out.
-
-      // @web post URI / childPath / $var : int (messageType messageVar) {
+      // @web post URI / childPath / $var (messageType messageVar) {
       // }
-
-      // Helper method around DefineRPC and that stack, except it has a more dynamic dispatch
-      return null;
+      DefineWebPost dwp = new DefineWebPost(webToken, getOrPutToken, uri, open, messageTypeName, messageVariableName, close, body);
+      return (doc) -> doc.add(dwp);
     } else { // GET
-
       // @web get URI / childPath / $var {
       // }
       final var body = block();

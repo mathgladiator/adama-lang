@@ -24,6 +24,7 @@ import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.common.LatentCodeSnippet;
 import org.adamalang.translator.tree.common.StringBuilderWithTabs;
 import org.adamalang.translator.tree.definitions.*;
+import org.adamalang.translator.tree.definitions.web.UriTable;
 import org.adamalang.translator.tree.expressions.Expression;
 import org.adamalang.translator.tree.privacy.DefineCustomPolicy;
 import org.adamalang.translator.tree.types.TyType;
@@ -69,6 +70,8 @@ public class Document implements TopLevelDocumentHandler {
   private final ArrayList<Consumer<Environment>> typeCheckOrder;
   private int autoClassId;
   private String className;
+  public final UriTable webGet;
+  public final UriTable webPost;
 
   public Document() {
     autoClassId = 0;
@@ -93,6 +96,8 @@ public class Document implements TopLevelDocumentHandler {
     configs = new HashMap<>();
     viewerType = new TyNativeMessage(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("__ViewerType"), new StructureStorage(StorageSpecialization.Message, true, null));
     types.put("__ViewerType", viewerType);
+    webGet = new UriTable();
+    webPost = new UriTable();
   }
 
   public void writeTypeReflectionJson(JsonStreamWriter writer) {
@@ -330,6 +335,19 @@ public class Document implements TopLevelDocumentHandler {
     typeCheckOrder.add((env) -> {
       dwg.typing(env);
     });
+    if (!webGet.map(dwg.uri, dwg)) {
+      createError(dwg, String.format("Web get path %s has a conflict", dwg.uri), "Web");
+    }
+  }
+
+  @Override
+  public void add(DefineWebPost dwp) {
+    typeCheckOrder.add((env) -> {
+      dwp.typing(env);
+    });
+    if (!webPost.map(dwp.uri, dwp)) {
+      createError(dwp, String.format("Web post path %s has a conflict", dwp.uri), "Web");
+    }
   }
 
   @Override

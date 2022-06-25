@@ -52,4 +52,6 @@ public interface TopLevelDocumentHandler {
   void add(DefineStatic ds);
 
   void add(DefineWebGet dwg);
+
+  void add(DefineWebPost dwp);
 }

@@ -17,26 +17,36 @@ import org.adamalang.translator.tree.statements.Block;
 
 import java.util.function.Consumer;
 
-/** defines a URI to get a web resource */
-public class DefineWebGet extends Definition implements UriAction {
-
+public class DefineWebPost extends Definition implements UriAction {
   public final Token webToken;
-  public final Token getToken;
+  public final Token postToken;
   public final Uri uri;
+  public final Token openParen;
+  public final Token messageType;
+  public final Token messageVariable;
+  public final Token closeParen;
   public final Block code;
 
-  public DefineWebGet(Token webToken, Token getToken, Uri uri, Block code) {
+  public DefineWebPost(Token webToken, Token postToken, Uri uri, Token openParen, Token messageType, Token messageVariable, Token closeParen, Block code) {
     this.webToken = webToken;
-    this.getToken = getToken;
+    this.postToken = postToken;
     this.uri = uri;
+    this.openParen = openParen;
+    this.messageType = messageType;
+    this.messageVariable = messageVariable;
+    this.closeParen = closeParen;
     this.code = code;
   }
 
   @Override
   public void emit(Consumer<Token> yielder) {
     yielder.accept(webToken);
-    yielder.accept(getToken);
+    yielder.accept(postToken);
     uri.emit(yielder);
+    yielder.accept(openParen);
+    yielder.accept(messageType);
+    yielder.accept(messageVariable);
+    yielder.accept(closeParen);
     code.emit(yielder);
   }
 
