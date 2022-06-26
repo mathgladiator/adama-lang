@@ -14,6 +14,7 @@ import org.adamalang.translator.parser.token.Token;
 import org.adamalang.translator.tree.common.DocumentPosition;
 import org.adamalang.translator.tree.definitions.Definition;
 import org.adamalang.translator.tree.types.TyType;
+import org.adamalang.translator.tree.types.TypeBehavior;
 import org.adamalang.translator.tree.types.natives.*;
 
 import java.util.ArrayList;
@@ -76,6 +77,8 @@ public class Uri extends Definition {
           next.add((level) -> level.next(id.text, level.fixed));
         }
       } else {
+        str.append("*");
+        variables.put(id.text, new TyNativeString(TypeBehavior.ReadOnlyNativeValue, null, Token.WRAP("string")));
         next.add((level) -> level.next(id.text, level.strings).tail());
       }
     }

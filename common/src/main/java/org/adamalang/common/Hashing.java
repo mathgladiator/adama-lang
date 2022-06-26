@@ -18,6 +18,10 @@ public class Hashing {
     return forKnownAlgorithm("MD5");
   }
 
+  public static MessageDigest sha384() {
+    return forKnownAlgorithm("SHA-384");
+  }
+
   public static MessageDigest forKnownAlgorithm(String algorithm) {
     try {
       return MessageDigest.getInstance(algorithm);

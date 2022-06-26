@@ -1,0 +1,23 @@
+@web get / {
+  return {html:"root"};
+}
+
+@web get /fixed {
+  return {html:"root"};
+}
+
+@web get /path0/$x:int {
+  return {html:"path integer"};
+}
+
+@web get /path1/$x:double {
+  return {html:"path double"};
+}
+
+@web get /path2/$x:long/child {
+  return {html:"path long with child"};
+}
+
+@web get /path3/$a* {
+  return {html:"tail"};
+}

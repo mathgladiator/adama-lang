@@ -9,47 +9,96 @@
  */
 package org.adamalang.translator.tree.definitions.web;
 
-import java.util.HashMap;
+import org.adamalang.common.AlphaHex;
+import org.adamalang.common.Hashing;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /** a table which provides a recursive mapping of URIs to actions */
 public class UriTable {
   public class UriLevel {
-    public final HashMap<String, UriLevel> fixed;
-    public final HashMap<String, UriLevel> bools;
-    public final HashMap<String, UriLevel> ints;
-    public final HashMap<String, UriLevel> longs;
-    public final HashMap<String, UriLevel> doubles;
-    public final HashMap<String, UriLevel> strings;
+    public final TreeMap<String, UriLevel> fixed;
+    public final TreeMap<String, UriLevel> bools;
+    public final TreeMap<String, UriLevel> ints;
+    public final TreeMap<String, UriLevel> longs;
+    public final TreeMap<String, UriLevel> doubles;
+    public final TreeMap<String, UriLevel> strings;
     public boolean tail;
     public UriAction action;
+    public int count;
+    public String name;
 
     public UriLevel() {
-      this.fixed = new HashMap<>();
-      this.bools = new HashMap<>();
-      this.ints = new HashMap<>();
-      this.doubles = new HashMap<>();
-      this.longs = new HashMap<>();
-      this.strings = new HashMap<>();
+      this.fixed = new TreeMap<>();
+      this.bools = new TreeMap<>();
+      this.ints = new TreeMap<>();
+      this.doubles = new TreeMap<>();
+      this.longs = new TreeMap<>();
+      this.strings = new TreeMap<>();
       this.action = null;
       this.tail = false;
+      this.count = 0;
     }
 
-    public UriLevel next(String id, HashMap<String, UriLevel> map) {
+    public UriLevel next(String id, TreeMap<String, UriLevel> map) {
       UriLevel next = map.get(id);
       if (next == null) {
         next = new UriLevel();
         map.put(id, next);
+        count++;
       }
       return next;
     }
 
     public UriLevel tail() {
       this.tail = true;
+      count++;
       return this;
+    }
+
+    public boolean check() {
+      if (action != null || count > 0) {
+        return true;
+      }
+      return false;
+    }
+
+    private void walkAndAssign(String prefix, TreeMap<String, UriLevel> children, TreeSet<String> taken) {
+      for (Map.Entry<String, UriLevel> entry : children.entrySet()) {
+        entry.getValue().assignName(prefix + entry.getValue(), taken);
+      }
+    }
+
+    private void pickStableName(String stableCandidate, TreeSet<String> taken) {
+      for (int k = 1; k < stableCandidate.length(); k++) {
+        String candidate = stableCandidate.substring(0, k);
+        if (!taken.contains(candidate)) {
+          this.name = candidate;
+          taken.add(candidate);
+          return;
+        }
+      }
+      pickStableName(AlphaHex.encode(Hashing.sha384().digest((stableCandidate + ":" + stableCandidate).getBytes(StandardCharsets.UTF_8))), taken);
+    }
+
+    public void assignName(String prefix, TreeSet<String> taken) {
+      walkAndAssign(prefix + "fixed:", fixed, taken);
+      walkAndAssign(prefix + "bools:", bools, taken);
+      walkAndAssign(prefix + "ints:", ints, taken);
+      walkAndAssign(prefix + "longs:", longs, taken);
+      walkAndAssign(prefix + "doubles:", doubles, taken);
+      walkAndAssign(prefix + "strings:", strings, taken);
+      if (action != null) {
+        String testName = prefix + (tail ? "*TAIL" : "");
+        pickStableName(AlphaHex.encode(Hashing.sha384().digest(testName.getBytes(StandardCharsets.UTF_8))), taken);
+      }
     }
   }
 
-  private final UriLevel root;
+  public final UriLevel root;
   private int count;
 
   public UriTable() {
@@ -70,5 +119,10 @@ public class UriTable {
     } else {
       return false;
     }
+  }
+
+  public void ready(String prefix) {
+    TreeSet<String> taken = new TreeSet<>();
+    root.assignName(prefix, taken);
   }
 }
